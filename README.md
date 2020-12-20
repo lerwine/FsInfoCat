@@ -33,3 +33,41 @@ Written for WGU Software Development Capstone – C868
     - [PsSolutionManager](https://github.com/lerwine/PsSolutionManager)
     - [Visual Studio Code Toolkit](https://github.com/lerwine/LTEToolkit)
     - [WGU Software 2 Project](https://github.com/lerwine/WguScheduler356334)
+
+## Dev Environment Configuration
+
+### Basic Setup
+
+1. Download and run the [Visual Studio Code installer for Windows](https://go.microsoft.com/fwlink/?LinkID=534107).
+   - [Reference Page](https://code.visualstudio.com/docs/setup/setup-overview)
+2. Download and install [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download)
+   - If Visual Studio Code was running, you should restart it after intalling the .NET Core SDK.
+   - [Reference Page](https://code.visualstudio.com/docs/languages/dotnet)
+3. Open Visual Studio Code and Install C# Extension from Microsoft:
+   1. Click on Extensions Listing button ![Extensions Button](./img/ExtensionsButton.png)
+   2. Look for the C# extension and click 'Install' button if it is shown ![alt](./img/CsExtension.png).
+    - [Reference Page](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+4. Restart Visual Studio Code.
+5. Click on alert icon on the lower left ![Alert Icon](img/AlertIcon.png).
+   - If there are alerts for missing dependencies, click on the link to add missing dependencies.
+
+### Optional Setup
+
+1. Click on Extensions Listing button ![Extensions Button](./img/ExtensionsButton.png) and install recommended extensions.
+2. Install Library Manager:
+   1. Open Terminal (Ctrl+``)
+   2. Run command `dotnet tool install -g Microsoft.Web.LibraryManager.Cli`.
+3. Install NPM support for VS Code:
+    - From Extensions Listing, Look for the npm extesion and click 'Install' button if it is shown ![alt](./img/NpmExtension.png).
+    - [Reference Page](https://marketplace.visualstudio.com/items?itemName=eg2.vscode-npm-script)
+4. Install TypeScript Compiler
+   1. Open Terminal (Ctrl+``)
+   2. Run command `npm install -g typescript`
+5. Restart Visual Studio Code.
+
+### Manage JavaScript Libraries
+
+Restore All Libraries
+: `libman restore`
+Update Library to latest Version
+: `libman update [library.name]`
