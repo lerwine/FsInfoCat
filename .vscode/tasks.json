@@ -11,7 +11,17 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "transpile",
+            "type": "typescript",
+            "tsconfig": "src/FsInfoCat.WebApp/ClientApp/tsconfig.json",
+            "problemMatcher": "$tsc"
         },
         {
             "label": "publish",
