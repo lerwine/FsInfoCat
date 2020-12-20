@@ -33,8 +33,10 @@ namespace FsInfoCat.WebApp
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+            else
+                app.UseExceptionHandler("/index.html#!/error");
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
 

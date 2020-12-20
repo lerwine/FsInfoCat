@@ -5,5 +5,12 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="angularjs.TypeScript.DefinitelyTyped" Version="6.5.6" />
+    <PackageReference Include="bootstrap-table.TypeScript.DefinitelyTyped" Version="0.0.6" />
+    <PackageReference Include="bootstrap.TypeScript.DefinitelyTyped" Version="0.9.8" />
+    <PackageReference Include="jquery.TypeScript.DefinitelyTyped" Version="3.1.2" />
+  </ItemGroup>
+
 
 </Project>

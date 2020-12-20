@@ -1,22 +1,25 @@
 {
-  "version": "1.0",
-  "defaultProvider": "cdnjs",
-  "libraries": [
-    {
-      "library": "twitter-bootstrap@4.5.3",
-      "destination": "wwwroot/lib/twitter-bootstrap/"
-    },
-    {
-      "library": "popper.js@2.6.0",
-      "destination": "wwwroot/lib/popper.js/"
-    },
-    {
-      "library": "jquery@3.5.1",
-      "destination": "wwwroot/lib/jquery/"
-    },
-    {
-      "library": "angular.js@1.8.2",
-      "destination": "wwwroot/lib/angular.js/"
-    }
-  ]
+    "version": "1.0",
+    "defaultProvider": "cdnjs",
+    "libraries": [{
+            "library": "twitter-bootstrap@4.5.3",
+            "destination": "wwwroot/lib/twitter-bootstrap/"
+        },
+        {
+            "library": "popper.js@2.6.0",
+            "destination": "wwwroot/lib/popper.js/"
+        },
+        {
+            "library": "jquery@3.5.1",
+            "destination": "wwwroot/lib/jquery/"
+        },
+        {
+            "library": "angular.js@1.8.2",
+            "destination": "wwwroot/lib/angular.js/"
+        },
+        {
+            "library": "angular-route@1.8.2",
+            "destination": "wwwroot/lib/angular.js/"
+        }
+    ]
 }

@@ -3,16 +3,18 @@
   "compilerOptions": {
     "baseUrl": "./",
     "module": "esnext",
-    "outDir": "../wwwroot/js",
-    "sourceMap": true,
+    "outDir": "../wwwroot",
+    "sourceMap": false,
     "declaration": false,
-    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2015",
+    "typeRoots": ["./node_modules/@types"],
     "lib": [
       "es2017",
       "dom"
     ]
-  }
+  },
+  "include": ["./app.ts"],
+  "exclude": ["./node_modules", "./node_modules/**/*.d.ts"]
 }
