@@ -16,6 +16,7 @@ Written for WGU Software Development Capstone – C868
 - References
   - [GDI+ Property Item Descriptions](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-property-item-descriptions)
   - [Configuration Manager Client WMI Programming](https://msdn.microsoft.com/en-us/library/cc144081.aspx)
+  - [Routing to controller actions in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-5.0)
   - Gists
     - [Get volume information for desktop app](https://gist.github.com/lerwine/37745116cc8366f58b13f1713927a9bd)
     - [Struct objects which contain 64, 128, 256 and 384-bit hashes](https://gist.github.com/lerwine/b953694061acb834984dce238834c3f5)
