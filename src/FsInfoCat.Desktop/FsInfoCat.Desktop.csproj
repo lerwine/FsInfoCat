@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <ItemGroup>
+    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>FsInfoCat.Desktop</RootNamespace>
+    <AssemblyName>FsInfoCat</AssemblyName>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>
