@@ -1,0 +1,51 @@
+
+IF OBJECT_ID('dbo.MediaVolume', 'U') IS NOT NULL
+DROP TABLE dbo.MediaVolume
+GO
+IF OBJECT_ID('dbo.MediaHost', 'U') IS NOT NULL
+DROP TABLE dbo.MediaHost
+GO
+-- Create MediaHost table in the specified schema
+CREATE TABLE dbo.MediaHost
+(
+    HostID UNIQUEIDENTIFIER NOT NULL, -- primary key column
+    CreatedOn DATETIME NOT NULL,
+    CreatedBy NVARCHAR(256) NOT NULL,
+    ModifiedOn DATETIME NOT NULL,
+    ModifiedBy NVARCHAR(256) NOT NULL,
+    MachineName NVARCHAR(256) NOT NULL,
+    IsWindows BIT NOT NULL DEFAULT 0,
+    IsInactive BIT NOT NULL DEFAULT 0,
+    Notes NTEXT NOT NULL DEFAULT '',
+    CONSTRAINT PK_MediaHost PRIMARY KEY CLUSTERED
+    (
+        HostID ASC
+    ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+
+-- Create MediaVolume table in the specified schema
+CREATE TABLE dbo.MediaVolume
+(
+    VolumeID UNIQUEIDENTIFIER NOT NULL, -- primary key column
+    HostID UNIQUEIDENTIFIER NULL,
+    CreatedOn DATETIME NOT NULL,
+    CreatedBy NVARCHAR(256) NOT NULL,
+    ModifiedOn DATETIME NOT NULL,
+    ModifiedBy NVARCHAR(256) NOT NULL,
+    RootPathName NVARCHAR(1024) NOT NULL,
+    FileSystemName NVARCHAR(128) NOT NULL,
+    VolumeName NVARCHAR(128) NOT NULL,
+    SerialNumber BIGINT NOT NULL,
+    MaxNameLength BIGINT NOT NULL,
+    Flags INT NOT NULL,
+    IsInactive BIT NOT NULL DEFAULT 0,
+    Notes NTEXT NOT NULL DEFAULT '',
+    CONSTRAINT PK_MediaVolume PRIMARY KEY CLUSTERED
+    (
+        VolumeID ASC
+    ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+);
+ALTER TABLE dbo.MediaVolume WITH CHECK ADD CONSTRAINT FK_MediaVolume_Host FOREIGN KEY(HostID)
+REFERENCES dbo.MediaHost (HostID)
+ON DELETE CASCADE;
+ALTER TABLE dbo.MediaVolume CHECK CONSTRAINT FK_MediaVolume_Host;
