@@ -26,7 +26,7 @@ namespace FsInfoCat.WebApp.Controllers
             _context = context;
         }
 
-        // GET: api/Login/admin/kbdf1901*MC
+        // GET: api/Login/admin/{password}
         [HttpGet("{userName}/{password}")]
         public async Task<ActionResult<RegisteredUser>> Login(string userName, string password)
         {
