@@ -346,10 +346,10 @@ namespace FsInfoCat.Desktop.ViewModels
             RunPendingJobCommand = new RelayCommand(OnRunPendingJob, false, true);
             RunAllPendingJobsCommand = new RelayCommand(OnRunAllPendingJobs, false, true);
             StopJobCommand = new RelayCommand(OnStopJob, false, true);
-            SettingsCommand = new RelayCommand(OnSettings, false, true);
-            ExitCommand = new RelayCommand(OnExit, false, true);
-            HelpCommand = new RelayCommand(OnHelp, false, true);
-            AboutCommand = new RelayCommand(OnAbout, false, true);
+            SettingsCommand = new RelayCommand(OnSettings, false);
+            ExitCommand = new RelayCommand(OnExit, false);
+            HelpCommand = new RelayCommand(OnHelp, false);
+            AboutCommand = new RelayCommand(OnAbout, false);
         }
 
         private void OnJobTaskDone(Task task)

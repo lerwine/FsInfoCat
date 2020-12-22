@@ -5,10 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:FsInfoCat.Desktop"
     xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
-    xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModels"
-    mc:Ignorable="d"
-    x:Class="FsInfoCat.Desktop.MainWindow" DataContext="{DynamicResource MainWindowViewModel}"
-    Title="{DynamicResource ApplicationTitle}" Height="450" Width="800">
+    xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModels" mc:Ignorable="d" x:Class="FsInfoCat.Desktop.MainWindow" DataContext="{DynamicResource MainWindowViewModel}" Title="{DynamicResource ApplicationTitle}" Height="450" Width="800">
     <Window.Resources>
     </Window.Resources>
     <Window.InputBindings>
@@ -41,9 +38,9 @@
         -->
     </Window.InputBindings>
     <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Stop" CanExecute="StopJobCommand.OnCanExecute" Executed="StopJobCommand.OnExecuted" />
-        <CommandBinding Command="ApplicationCommands.Close" CanExecute="ExitCommand.OnCanExecute" Executed="ExitCommand.OnExecuted" />
-        <CommandBinding Command="ApplicationCommands.Help" CanExecute="HelpCommand.OnCanExecute" Executed="HelpCommand.OnExecuted" />
+        <CommandBinding Command="ApplicationCommands.Stop" CanExecute="OnStopJobCanExecute" Executed="OnStopJobExecuted" />
+        <CommandBinding Command="ApplicationCommands.Close" CanExecute="OnExitCanExecute" Executed="OnExitExecuted" />
+        <CommandBinding Command="ApplicationCommands.Help" CanExecute="OnHelpCanExecute" Executed="OnHelpExecuted" />
         <!--
         <CommandBinding Command="ApplicationCommands.ContextMenu" CanExecute="ContextMenuCommand.OnCanExecute" Executed="ContextMenuCommand.OnExecuted" />
         <CommandBinding Command="ApplicationCommands.Copy" CanExecute="CopyCommand.OnCanExecute" Executed="CopyCommand.OnExecuted" />

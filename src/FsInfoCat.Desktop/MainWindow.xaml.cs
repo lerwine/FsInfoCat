@@ -24,5 +24,35 @@ namespace FsInfoCat.Desktop
         {
             InitializeComponent();
         }
+
+        public void OnStopJobCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            ((ViewModels.MainWindowViewModel)DataContext).StopJobCommand.OnCanExecute(sender, e);
+        }
+
+        public void OnStopJobExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            ((ViewModels.MainWindowViewModel)DataContext).StopJobCommand.OnExecuted(sender, e);
+        }
+
+        public void OnExitCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            ((ViewModels.MainWindowViewModel)DataContext).ExitCommand.OnCanExecute(sender, e);
+        }
+
+        public void OnExitExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            ((ViewModels.MainWindowViewModel)DataContext).ExitCommand.OnExecuted(sender, e);
+        }
+        public void OnHelpCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            ((ViewModels.MainWindowViewModel)DataContext).HelpCommand.OnCanExecute(sender, e);
+        }
+
+        public void OnHelpExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            ((ViewModels.MainWindowViewModel)DataContext).HelpCommand.OnExecuted(sender, e);
+        }
+
     }
 }
