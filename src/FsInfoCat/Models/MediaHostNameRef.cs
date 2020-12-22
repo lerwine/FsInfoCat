@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace FsInfoCat.WebApp.Models
+namespace FsInfoCat.Models
 {
     public class MediaHostNameRef
     {

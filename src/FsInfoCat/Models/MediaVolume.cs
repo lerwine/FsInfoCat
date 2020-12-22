@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FsInfoCat.WebApp.Models
+namespace FsInfoCat.Models
 {
     public class MediaVolume
     {

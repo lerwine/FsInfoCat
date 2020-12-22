@@ -1,6 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
-using FsInfoCat.WebApp.Models;
+using FsInfoCat.Models;
 
 namespace FsInfoCat.WebApp.Data
 {
