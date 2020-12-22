@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -24,13 +25,21 @@ namespace FsInfoCat.WebApp
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
         {
             services.AddControllers();
 
+            string connectionString = Configuration.GetConnectionString("FsInfoCat");
+            if (env.IsDevelopment())
+            {
+                var builder = new SqlConnectionStringBuilder(connectionString);
+                builder.Password = Configuration["DB:Password"];
+                connectionString = builder.ConnectionString;
+            }
+
             // Add framework services.
             services.AddDbContext<Data.FsInfoDataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

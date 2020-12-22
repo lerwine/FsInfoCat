@@ -54,7 +54,14 @@ Written for WGU Software Development Capstone – C868
 5. Click on alert icon on the lower left ![Alert Icon](img/AlertIcon.png).
    - If there are alerts for missing dependencies, click on the link to add missing dependencies.
 
-### Optional Setup
+### Production Setup
+
+#### Configure DB Connection
+
+ 1. If the `Project/PropertyGroup/UserSecretsId` element exists in the `src\FsInfoCat.WebApp\FsInfoCat.WebApp.csproj` file, remove it.
+ 2. Modify the `ConnectionStrings/FsInfoCat` property in the `src\FsInfoCat.WebApp\appsettings.json` file, setting values as appropriate and adding the `Password` key/value pair.
+
+### Development Setup
 
 1. Click on Extensions Listing button ![Extensions Button](./img/ExtensionsButton.png) and install recommended extensions.
 2. Install Library Manager:
@@ -67,6 +74,11 @@ Written for WGU Software Development Capstone – C868
    1. Open Terminal (Ctrl+``)
    2. Run command `npm install -g typescript`
 5. Restart Visual Studio Code.
+6. Enable secret storage and store database password:
+   1. If the `Project/PropertyGroup/UserSecretsId` element exists in the `src\FsInfoCat.WebApp\FsInfoCat.WebApp.csproj` file, remove it.
+   2. Open a terminal and change to the `src/FsInfoCat.WebApp` directory.
+   3. Run the command: `dotnet user-secrets init`
+   4. Run the command: `dotnet user-secrets set "DB:Password" "password in quotes"`
 
 ### Manage JavaScript Libraries
 
