@@ -5,7 +5,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,6 +21,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FsInfoCat.Models;
 
 namespace FsInfoCat.Desktop.ViewModels
 {
@@ -26,36 +32,29 @@ namespace FsInfoCat.Desktop.ViewModels
         private object _syncRoot = new object();
         private CancellationTokenSource _tokenSource = null;
 
-        #region RawBaseWebApiURI Property Members
+        #region "Raw base web API URI" (RawBaseWebApiUri) Property Members
 
         /// <summary>
-        /// Defines the name for the <see cref="RawBaseWebApiURI"/> dependency property.
+        /// Defines the name for the <see cref="RawBaseWebApiUri" /> dependency property.
         /// </summary>
-        public const string DependencyPropertyName_RawBaseWebApiURI = "RawBaseWebApiURI";
+        public const string PropertyName_RawBaseWebApiUri = "RawBaseWebApiUri";
 
         /// <summary>
-        /// Identifies the <see cref="RawBaseWebApiURI"/> dependency property.
+        /// Identifies the <see cref="RawBaseWebApiUri" /> dependency property.
         /// </summary>
-        public static readonly DependencyProperty RawBaseWebApiURIProperty = DependencyProperty.Register(DependencyPropertyName_RawBaseWebApiURI, typeof(string), typeof(AppSettingsViewModel),
+        public static readonly DependencyProperty RawBaseWebApiUriProperty = DependencyProperty.Register(PropertyName_RawBaseWebApiUri, typeof(string), typeof(AppSettingsViewModel),
                 new PropertyMetadata("",
-                    (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AppSettingsViewModel).RawBaseWebApiURI_PropertyChanged(e.OldValue as string, e.NewValue as string),
-                    (DependencyObject d, object baseValue) => CoerceNonNull(baseValue as string)));
+                    (d, e) => (d as AppSettingsViewModel).OnRawBaseWebApiUriPropertyChanged(e.OldValue as string, e.NewValue as string),
+                    (d, baseValue) => CoerceRawBaseWebApiUriValue(baseValue as string)
+            )
+        );
 
-        /// <summary>
-        /// Raw Base URI for web API calls.
-        /// </summary>
-        public string RawBaseWebApiURI
-        {
-            get { return GetValue(RawBaseWebApiURIProperty) as string; }
-            set { SetValue(RawBaseWebApiURIProperty, value); }
-        }
-
-        private void RawBaseWebApiURI_PropertyChanged(string oldValue, string newValue)
+        private void OnRawBaseWebApiUriPropertyChanged(string oldValue, string newValue)
         {
             if (string.IsNullOrWhiteSpace(newValue))
             {
-                ValidatedBaseWebApiURI = "";
-                BaseWebApiURIErrorMessage = "Not Provided";
+                ValidatedBaseWebApiUri = "";
+                BaseWebApiUriErrorMessage = "Not Provided";
                 RegisterCommand.IsEnabled = false;
                 HostIdRegistrationMessage = "";
             }
@@ -63,9 +62,9 @@ namespace FsInfoCat.Desktop.ViewModels
             {
                 if (uri.IsAbsoluteUri)
                 {
-                    ValidatedBaseWebApiURI = uri.AbsoluteUri;
-                    BaseWebApiURIErrorMessage = "";
-                    if (RegisteredHostId.Length > 0 && ValidatedBaseWebApiURI == RegisteredBaseWebApiURI)
+                    ValidatedBaseWebApiUri = uri.AbsoluteUri;
+                    BaseWebApiUriErrorMessage = "";
+                    if (RegisteredHostId.Length > 0 && ValidatedBaseWebApiUri == RegisteredBaseWebApiUri)
                     {
                         HostIdRegistrationMessage = "";
                         RegisterCommand.IsEnabled = false;
@@ -78,85 +77,117 @@ namespace FsInfoCat.Desktop.ViewModels
                 }
                 else
                 {
-                    ValidatedBaseWebApiURI = "";
+                    ValidatedBaseWebApiUri = "";
                     HostIdRegistrationMessage = "";
-                    BaseWebApiURIErrorMessage = "URI not absolute";
+                    BaseWebApiUriErrorMessage = "URI not absolute";
                     RegisterCommand.IsEnabled = false;
                 }
             }
             else
             {
-                ValidatedBaseWebApiURI = "";
-                BaseWebApiURIErrorMessage = "Invalid URI";
+                ValidatedBaseWebApiUri = "";
+                BaseWebApiUriErrorMessage = "Invalid URI";
                 RegisterCommand.IsEnabled = false;
                 HostIdRegistrationMessage = "";
             }
         }
 
-        /// <summary>
-        /// Converts null strings to empty string
-        /// </summary>
-        /// <param name="baseValue">The source value.</param>
-        /// <returns>The coerced value.</returns>
-        public static string CoerceNonNull(string value)
+        public static string CoerceRawBaseWebApiUriValue(string value)
         {
-            return (null == value) ? "" : value;
+            if (null == value)
+                return "";
+            return value;
+        }
+
+        /// <summary>
+        /// Raw base web API URI
+        /// </summary>
+        public string RawBaseWebApiUri
+        {
+            get
+            {
+                if (CheckAccess())
+                    return (string)(GetValue(RawBaseWebApiUriProperty));
+                return Dispatcher.Invoke(() => (string)(GetValue(RawBaseWebApiUriProperty)));
+            }
+            set
+            {
+                if (CheckAccess())
+                    SetValue(RawBaseWebApiUriProperty, value);
+                else
+                    Dispatcher.Invoke(() => SetValue(RawBaseWebApiUriProperty, value));
+            }
         }
 
         #endregion
 
-        #region BaseWebApiURIErrorMessage Property Members
+        #region "Base web API URI error message" (BaseWebApiUriErrorMessage) Property Members
 
         /// <summary>
-        /// Defines the name for the <see cref="BaseWebApiURIErrorMessage"/> dependency property.
+        /// Defines the name for the <see cref="BaseWebApiUriErrorMessage" /> dependency property.
         /// </summary>
-        public const string PropertyName_BaseWebApiURIErrorMessage = "BaseWebApiURIErrorMessage";
+        public const string PropertyName_BaseWebApiUriErrorMessage = "BaseWebApiUriErrorMessage";
 
-        private static readonly DependencyPropertyKey BaseWebApiURIErrorMessagePropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_BaseWebApiURIErrorMessage, typeof(string),
-            typeof(AppSettingsViewModel), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="BaseWebApiURIErrorMessage"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty BaseWebApiURIErrorMessageProperty = BaseWebApiURIErrorMessagePropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey BaseWebApiUriErrorMessagePropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_BaseWebApiUriErrorMessage, typeof(string), typeof(AppSettingsViewModel),
+                new PropertyMetadata("", null,
+                    (d, baseValue) => CoerceBaseWebApiUriErrorMessageValue(baseValue as string)
+            )
+        );
 
         /// <summary>
-        /// Path to folder which contains filesystem resources
+        /// Identifies the <see cref="BaseWebApiUriErrorMessage" /> dependency property.
         /// </summary>
-        public string BaseWebApiURIErrorMessage
+        public static readonly DependencyProperty BaseWebApiUriErrorMessageProperty = BaseWebApiUriErrorMessagePropertyKey.DependencyProperty;
+
+        public static string CoerceBaseWebApiUriErrorMessageValue(string value)
         {
-            get { return GetValue(BaseWebApiURIErrorMessageProperty) as string; }
-            private set { SetValue(BaseWebApiURIErrorMessagePropertyKey, value); }
+            if (null == value)
+                return "";
+            return value;
+        }
+
+        /// <summary>
+        /// Base web API URI error message
+        /// </summary>
+        public string BaseWebApiUriErrorMessage
+        {
+            get
+            {
+                if (CheckAccess())
+                    return (string)(GetValue(BaseWebApiUriErrorMessageProperty));
+                return Dispatcher.Invoke(() => (string)(GetValue(BaseWebApiUriErrorMessageProperty)));
+            }
+            private set
+            {
+                if (CheckAccess())
+                    SetValue(BaseWebApiUriErrorMessagePropertyKey, value);
+                else
+                    Dispatcher.Invoke(() => SetValue(BaseWebApiUriErrorMessagePropertyKey, value));
+            }
         }
 
         #endregion
 
-        #region ValidatedBaseWebApiURI Property Members
+        #region "Validated base Web API URI" (ValidatedBaseWebApiUri) Property Members
 
         /// <summary>
-        /// Defines the name for the <see cref="ValidatedBaseWebApiURI"/> dependency property.
+        /// Defines the name for the <see cref="ValidatedBaseWebApiUri" /> dependency property.
         /// </summary>
-        public const string PropertyName_ValidatedBaseWebApiURI = "ValidatedBaseWebApiURI";
+        public const string PropertyName_ValidatedBaseWebApiUri = "ValidatedBaseWebApiUri";
 
-        private static readonly DependencyPropertyKey ValidatedBaseWebApiURIPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_ValidatedBaseWebApiURI, typeof(string),
-            typeof(AppSettingsViewModel), new PropertyMetadata("",
-                    (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AppSettingsViewModel).ValidatedBaseWebApiURI_PropertyChanged(e.OldValue as string, e.NewValue as string)));
+        private static readonly DependencyPropertyKey ValidatedBaseWebApiUriPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_ValidatedBaseWebApiUri, typeof(string), typeof(AppSettingsViewModel),
+                new PropertyMetadata("",
+                    (d, e) => (d as AppSettingsViewModel).OnValidatedBaseWebApiUriPropertyChanged(e.OldValue as string, e.NewValue as string),
+                    (d, baseValue) => CoerceValidatedBaseWebApiUriValue(baseValue as string)
+            )
+        );
 
         /// <summary>
-        /// Identifies the <see cref="ValidatedBaseWebApiURI"/> dependency property.
+        /// Identifies the <see cref="ValidatedBaseWebApiUri" /> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ValidatedBaseWebApiURIProperty = ValidatedBaseWebApiURIPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ValidatedBaseWebApiUriProperty = ValidatedBaseWebApiUriPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Path to folder which contains filesystem resources
-        /// </summary>
-        public string ValidatedBaseWebApiURI
-        {
-            get { return GetValue(ValidatedBaseWebApiURIProperty) as string; }
-            private set { SetValue(ValidatedBaseWebApiURIPropertyKey, value); }
-        }
-
-        private void ValidatedBaseWebApiURI_PropertyChanged(string oldValue, string newValue)
+        private void OnValidatedBaseWebApiUriPropertyChanged(string oldValue, string newValue)
         {
             if (_noSaveOnChange)
                 return;
@@ -164,91 +195,181 @@ namespace FsInfoCat.Desktop.ViewModels
             SavePropertiesAsync();
         }
 
-        #endregion
-
-        #region HostIdRegistrationMessage Property Members
+        public static string CoerceValidatedBaseWebApiUriValue(string value)
+        {
+            if (null == value)
+                return "";
+            return value;
+        }
 
         /// <summary>
-        /// Defines the name for the <see cref="HostIdRegistrationMessage"/> dependency property.
+        /// Validated base Web API URI
+        /// </summary>
+        public string ValidatedBaseWebApiUri
+        {
+            get
+            {
+                if (CheckAccess())
+                    return (string)(GetValue(ValidatedBaseWebApiUriProperty));
+                return Dispatcher.Invoke(() => (string)(GetValue(ValidatedBaseWebApiUriProperty)));
+            }
+            private set
+            {
+                if (CheckAccess())
+                    SetValue(ValidatedBaseWebApiUriPropertyKey, value);
+                else
+                    Dispatcher.Invoke(() => SetValue(ValidatedBaseWebApiUriPropertyKey, value));
+            }
+        }
+
+        #endregion
+
+        #region "Host ID registration message" (HostIdRegistrationMessage) Property Members
+
+        /// <summary>
+        /// Defines the name for the <see cref="HostIdRegistrationMessage" /> dependency property.
         /// </summary>
         public const string PropertyName_HostIdRegistrationMessage = "HostIdRegistrationMessage";
 
-        private static readonly DependencyPropertyKey HostIdRegistrationMessagePropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_HostIdRegistrationMessage, typeof(string),
-            typeof(AppSettingsViewModel), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey HostIdRegistrationMessagePropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_HostIdRegistrationMessage, typeof(string), typeof(AppSettingsViewModel),
+                new PropertyMetadata("", null,
+                    (d, baseValue) => CoerceHostIdRegistrationMessageValue(baseValue as string)
+            )
+        );
 
         /// <summary>
-        /// Identifies the <see cref="HostIdRegistrationMessage"/> dependency property.
+        /// Identifies the <see cref="HostIdRegistrationMessage" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty HostIdRegistrationMessageProperty = HostIdRegistrationMessagePropertyKey.DependencyProperty;
 
+        public static string CoerceHostIdRegistrationMessageValue(string value)
+        {
+            if (null == value)
+                return "";
+            return value;
+        }
+
         /// <summary>
-        /// Path to folder which contains filesystem resources
+        /// Host ID registration message
         /// </summary>
         public string HostIdRegistrationMessage
         {
-            get { return GetValue(HostIdRegistrationMessageProperty) as string; }
-            private set { SetValue(HostIdRegistrationMessagePropertyKey, value); }
+            get
+            {
+                if (CheckAccess())
+                    return (string)(GetValue(HostIdRegistrationMessageProperty));
+                return Dispatcher.Invoke(() => (string)(GetValue(HostIdRegistrationMessageProperty)));
+            }
+            private set
+            {
+                if (CheckAccess())
+                    SetValue(HostIdRegistrationMessagePropertyKey, value);
+                else
+                    Dispatcher.Invoke(() => SetValue(HostIdRegistrationMessagePropertyKey, value));
+            }
         }
 
         #endregion
 
-        #region RegisteredBaseWebApiURI Property Members
+        #region "Registered base web API URI" (RegisteredBaseWebApiUri) Property Members
 
         /// <summary>
-        /// Defines the name for the <see cref="RegisteredBaseWebApiURI"/> dependency property.
+        /// Defines the name for the <see cref="RegisteredBaseWebApiUri" /> dependency property.
         /// </summary>
-        public const string PropertyName_RegisteredBaseWebApiURI = "RegisteredBaseWebApiURI";
+        public const string PropertyName_RegisteredBaseWebApiUri = "RegisteredBaseWebApiUri";
 
-        private static readonly DependencyPropertyKey RegisteredBaseWebApiURIPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_RegisteredBaseWebApiURI, typeof(string),
-            typeof(AppSettingsViewModel), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="RegisteredBaseWebApiURI"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RegisteredBaseWebApiURIProperty = RegisteredBaseWebApiURIPropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey RegisteredBaseWebApiUriPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_RegisteredBaseWebApiUri, typeof(string), typeof(AppSettingsViewModel),
+                new PropertyMetadata("", null,
+                    (d, baseValue) => CoerceRegisteredBaseWebApiUriValue(baseValue as string)
+            )
+        );
 
         /// <summary>
-        /// Path to folder which contains filesystem resources
+        /// Identifies the <see cref="RegisteredBaseWebApiUri" /> dependency property.
         /// </summary>
-        public string RegisteredBaseWebApiURI
+        public static readonly DependencyProperty RegisteredBaseWebApiUriProperty = RegisteredBaseWebApiUriPropertyKey.DependencyProperty;
+
+        public static string CoerceRegisteredBaseWebApiUriValue(string value)
         {
-            get { return GetValue(RegisteredBaseWebApiURIProperty) as string; }
-            private set { SetValue(RegisteredBaseWebApiURIPropertyKey, value); }
+            if (null == value)
+                return "";
+            return value;
+        }
+
+        /// <summary>
+        /// Registered base web API URI
+        /// </summary>
+        public string RegisteredBaseWebApiUri
+        {
+            get
+            {
+                if (CheckAccess())
+                    return (string)(GetValue(RegisteredBaseWebApiUriProperty));
+                return Dispatcher.Invoke(() => (string)(GetValue(RegisteredBaseWebApiUriProperty)));
+            }
+            private set
+            {
+                if (CheckAccess())
+                    SetValue(RegisteredBaseWebApiUriPropertyKey, value);
+                else
+                    Dispatcher.Invoke(() => SetValue(RegisteredBaseWebApiUriPropertyKey, value));
+            }
         }
 
         #endregion
 
-        #region RegisteredHostId Property Members
+        #region "Registered host ID" (RegisteredHostId) Property Members
 
         /// <summary>
-        /// Defines the name for the <see cref="RegisteredHostId"/> dependency property.
+        /// Defines the name for the <see cref="RegisteredHostId" /> dependency property.
         /// </summary>
         public const string PropertyName_RegisteredHostId = "RegisteredHostId";
 
-        private static readonly DependencyPropertyKey RegisteredHostIdPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_RegisteredHostId, typeof(string),
-            typeof(AppSettingsViewModel), new PropertyMetadata("",
-                    (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AppSettingsViewModel).RegisteredHostId_PropertyChanged(e.OldValue as string, e.NewValue as string)));
+        private static readonly DependencyPropertyKey RegisteredHostIdPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_RegisteredHostId, typeof(string), typeof(AppSettingsViewModel),
+                new PropertyMetadata("",
+                    (d, e) => (d as AppSettingsViewModel).OnRegisteredHostIdPropertyChanged(e.OldValue as string, e.NewValue as string),
+                    (d, baseValue) => CoerceRegisteredHostIdValue(baseValue as string)
+            )
+        );
 
         /// <summary>
-        /// Identifies the <see cref="RegisteredHostId"/> dependency property.
+        /// Identifies the <see cref="RegisteredHostId" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty RegisteredHostIdProperty = RegisteredHostIdPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Path to folder which contains filesystem resources
-        /// </summary>
-        public string RegisteredHostId
-        {
-            get { return GetValue(RegisteredHostIdProperty) as string; }
-            private set { SetValue(RegisteredHostIdPropertyKey, value); }
-        }
-
-        private void RegisteredHostId_PropertyChanged(string oldValue, string newValue)
+        private void OnRegisteredHostIdPropertyChanged(string oldValue, string newValue)
         {
             if (_noSaveOnChange)
                 return;
             Properties.Settings.Default.RegisteredHostId = newValue;
             SavePropertiesAsync();
+        }
+
+        public static string CoerceRegisteredHostIdValue(string value)
+        {
+            if (null == value)
+                return "";
+            return value;
+        }
+
+        /// <summary>
+        /// Registered host ID
+        /// </summary>
+        public string RegisteredHostId
+        {
+            get
+            {
+                if (CheckAccess())
+                    return (string)(GetValue(RegisteredHostIdProperty));
+                return Dispatcher.Invoke(() => (string)(GetValue(RegisteredHostIdProperty)));
+            }
+            private set
+            {
+                if (CheckAccess())
+                    SetValue(RegisteredHostIdPropertyKey, value);
+                else
+                    Dispatcher.Invoke(() => SetValue(RegisteredHostIdPropertyKey, value));
+            }
         }
 
         #endregion
@@ -259,8 +380,33 @@ namespace FsInfoCat.Desktop.ViewModels
 
         protected virtual void OnRegister(object parameter)
         {
-            // TODO: Invoke web API to register
-            HostIdRegistrationMessage = "Registration not implemented";
+            Task.Factory.StartNew(() =>
+            {
+                string uri = ValidatedBaseWebApiUri;
+                UriBuilder builder = new UriBuilder(uri);
+                builder.Path = "api/MediaHost";
+                MediaHostNameRef hostNameRef = new MediaHostNameRef();
+                hostNameRef.IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
+                hostNameRef.MachineName = Environment.MachineName;
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                JsonContent content = JsonContent.Create<MediaHostNameRef>(hostNameRef);
+                HttpResponseMessage response = ((App)(App.Current)).HttpClient.PostAsJsonAsync(builder.Uri, content).Result;
+                MediaHost result = response.Content.ReadFromJsonAsync<MediaHost>().Result;
+                if (null != result)
+                {
+                    RegisteredBaseWebApiUri = uri;
+                    RegisteredHostId = result.HostID.ToString("n");
+                    HostIdRegistrationMessage = "Registration successful";
+                }
+                else
+                    HostIdRegistrationMessage = "Registration failed";
+            }).ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                    HostIdRegistrationMessage = "Registration failed: " + ((string.IsNullOrWhiteSpace(task.Exception.Message)) ? task.Exception.GetType().Name : task.Exception.Message);
+                else if (!task.IsCompletedSuccessfully)
+                    HostIdRegistrationMessage = "Registration canceled";
+            });
         }
 
         #endregion
@@ -268,7 +414,7 @@ namespace FsInfoCat.Desktop.ViewModels
         public AppSettingsViewModel()
         {
             RegisterCommand = new Commands.RelayCommand(OnRegister, false, true);
-            RawBaseWebApiURI = Properties.Settings.Default.BaseWebApiURI;
+            RawBaseWebApiUri = Properties.Settings.Default.BaseWebApiURI;
             RegisteredHostId = Properties.Settings.Default.RegisteredHostId;
             _noSaveOnChange = false;
         }

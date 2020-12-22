@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -16,6 +17,8 @@ namespace FsInfoCat.Desktop
         public const string AppResourceName_MainWindowViewModel = "MainWindowViewModel";
         public const string AppResourceName_AppSettingsViewModel = "AppSettingsViewModel";
         public const string AppResourceName_WorkerProgressViewModel = "WorkerProgressViewModel";
+
+        public HttpClient HttpClient { get; } = new HttpClient();
 
         public static TWindow GetWindowByDataContext<TWindow, TDataContext>(TDataContext obj)
             where TWindow : Window
