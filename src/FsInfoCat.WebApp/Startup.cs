@@ -51,7 +51,7 @@ namespace FsInfoCat.WebApp
             else
                 app.UseExceptionHandler("/index.html#!/error");
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
 

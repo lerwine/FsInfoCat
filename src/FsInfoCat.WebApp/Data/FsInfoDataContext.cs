@@ -11,6 +11,8 @@ namespace FsInfoCat.WebApp.Data
         {
         }
 
+        public DbSet<RegisteredUser> RegisteredUser { get; set; }
+
         public DbSet<MediaHost> MediaHost { get; set; }
 
         public DbSet<MediaVolume> MediaVolume { get; set; }
