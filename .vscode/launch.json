@@ -4,11 +4,22 @@
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
    "configurations": [
+       {
+           "name": ".NET Core Launch (desktop)",
+           "type": "coreclr",
+           "request": "launch",
+           "preLaunchTask": "buildDesktop",
+           "program": "${workspaceFolder}/src/FsInfoCat.Desktop/bin/Debug/netcoreapp3.1/FsInfoCat.dll",
+           "args": [],
+           "cwd": "${workspaceFolder}",
+           "stopAtEntry": false,
+           "console": "internalConsole"
+       },
         {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "buildWebApp",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/FsInfoCat.WebApp/bin/Debug/netcoreapp3.1/FsInfoCat.WebApp.dll",
             "args": [],
