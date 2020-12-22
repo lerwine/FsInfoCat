@@ -78,7 +78,7 @@ Written for WGU Software Development Capstone – C868
    1. If the `Project/PropertyGroup/UserSecretsId` element exists in the `src\FsInfoCat.WebApp\FsInfoCat.WebApp.csproj` file, remove it.
    2. Open a terminal and change to the `src/FsInfoCat.WebApp` directory.
    3. Run the command: `dotnet user-secrets init`
-   4. Run the command: `dotnet user-secrets set "DB:Password" "password in quotes"`
+   4. Run the command: `dotnet user-secrets set "DBPassword" "password in quotes"`
 
 ### Manage JavaScript Libraries
 

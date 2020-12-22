@@ -25,15 +25,16 @@ namespace FsInfoCat.WebApp
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
             string connectionString = Configuration.GetConnectionString("FsInfoCat");
-            if (env.IsDevelopment())
+            string pwd = Configuration["DBPassword"];
+            if (!String.IsNullOrEmpty(pwd))
             {
                 var builder = new SqlConnectionStringBuilder(connectionString);
-                builder.Password = Configuration["DB:Password"];
+                builder.Password = pwd;
                 connectionString = builder.ConnectionString;
             }
 
