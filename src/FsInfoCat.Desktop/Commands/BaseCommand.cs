@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 
 namespace FsInfoCat.Desktop.Commands
 {
@@ -143,6 +144,11 @@ namespace FsInfoCat.Desktop.Commands
             return _CanExecute();
         }
 
+        public void OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = OnCanExecute(e.Parameter);
+        }
+
         private bool _CanExecute()
         {
             return IsEnabled && (AllowSimultaneousExecute || _execCount == 0);
@@ -173,6 +179,11 @@ namespace FsInfoCat.Desktop.Commands
         /// </summary>
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
         protected abstract void OnExecute(object parameter);
+
+        public void OnExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            Execute(e.Parameter);
+        }
 
         /// <summary>
         /// Method used to raise the <see cref="CanExecuteChanged"/> event to indicate that the return value of the <see cref="CanExecute"/> method has changed.
