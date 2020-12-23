@@ -9,12 +9,14 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2015",
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": [
+        "../../../typings"
+    ],
     "lib": [
       "es2017",
       "dom"
     ]
   },
-  "include": ["./app.ts"],
+  "include": ["./app.ts", "./index.ts", "./login.ts"],
   "exclude": ["./node_modules", "./node_modules/**/*.d.ts"]
 }
