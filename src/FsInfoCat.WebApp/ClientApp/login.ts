@@ -118,7 +118,7 @@ module login {
                 this.$scope.hasErrorMessage = false;
                 this.$scope.hasLoginErrorMessageDetail = false;
                 try {
-
+                    // TODO: Consult web service to log in.
                 } finally {
                     if (this.$scope.hasErrorMessage) {
                         this.$scope.loginButtonDisabled = false;
