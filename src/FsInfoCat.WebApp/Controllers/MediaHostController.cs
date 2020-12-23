@@ -28,16 +28,16 @@ namespace FsInfoCat.WebApp.Controllers
         //     _logger = logger;
         // }
 
-        // GET: api/MediaHost
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<MediaHost>>> Get()
+        // GET: api/MediaHost/all
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<MediaHost>>> GetAll()
         {
             if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
                 return await Task.FromResult((ActionResult<IEnumerable<MediaHost>>)null);
             return await _context.MediaHost.ToListAsync();
         }
 
-        // GET: api/MediaHost/[id]
+        // GET: api/MediaHost/get/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<MediaHost>> GetById(Guid id)
         {
@@ -50,7 +50,7 @@ namespace FsInfoCat.WebApp.Controllers
 
         // POST: api/MediaHost
         [HttpPost]
-        public async Task<ActionResult<MediaHost>> Register(MediaHostNameRef host)
+        public async Task<ActionResult<MediaHost>> Register(MediaHostRegRequest host)
         {
             string uc;
             if (null == host || string.IsNullOrWhiteSpace(host.MachineName) || !DottedNameRegex.IsMatch((uc = host.MachineName.ToUpper())) || null == User || null == User.Identity || !User.Identity.IsAuthenticated)
@@ -76,7 +76,7 @@ namespace FsInfoCat.WebApp.Controllers
             });
         }
 
-        // DELETE: api/MediaHost/[id]
+        // DELETE: api/MediaHost/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> UnRegister(Guid id)
         {
@@ -91,7 +91,7 @@ namespace FsInfoCat.WebApp.Controllers
             });
         }
 
-        // GET: api/MediaHost/activate/[id]
+        // GET: api/MediaHost/activate/{id}
         [HttpGet("activate/{id}")]
         public async Task<ActionResult<bool>> Activate(Guid id)
         {
