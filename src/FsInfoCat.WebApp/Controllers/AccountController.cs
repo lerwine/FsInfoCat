@@ -17,17 +17,17 @@ namespace FsInfoCat.WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LoginController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly FsInfoCat.WebApp.Data.FsInfoDataContext _context;
 
-        public LoginController(FsInfoCat.WebApp.Data.FsInfoDataContext context)
+        public AccountController(FsInfoCat.WebApp.Data.FsInfoDataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Login/admin/{password}
-        [HttpGet("{userName}/{password}")]
+        // POST: api/Account/login
+        [HttpPost("login")]
         public async Task<ActionResult<RegisteredUser>> Login(string userName, string password)
         {
             RegisteredUser user = _context.RegisteredUser.FirstOrDefault(u => u.LoginName == userName);
@@ -43,8 +43,8 @@ namespace FsInfoCat.WebApp.Controllers
             return user;
         }
 
-        // GET: api/Login
-        [HttpGet]
+        // GET: api/Account/logout
+        [HttpGet("logout")]
         public async Task Logout()
         {
             await HttpContext.SignOutAsync();
@@ -105,9 +105,29 @@ namespace FsInfoCat.WebApp.Controllers
             return true;
         }
 
-        // POST: api/Login/create
+        // POST: api/Account/create
         [HttpPost("create")]
         public async Task<ActionResult<RegisteredUser>> Create(string userName, string password, bool isAdmin)
+        {
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password) || null == User || null == User.Identity || !User.Identity.IsAuthenticated || User.Claims.First(c => c.Subject.Name == "role").Value != "Admin")
+                return await Task.FromResult((RegisteredUser)null);
+
+            RegisteredUser user = _context.RegisteredUser.FirstOrDefault(u => string.Equals(u.LoginName, userName, StringComparison.InvariantCultureIgnoreCase));
+            if (null != user)
+                return null;
+            user = new RegisteredUser();
+            user.CreatedBy = user.ModifiedBy = User.Claims.First(c => c.Subject.Name == "user").Value;
+            user.CreatedOn = user.ModifiedOn = DateTime.Now;
+            user.Role = (isAdmin) ? "Admin" : "Member";
+            user.PwHash = GetPwHash(password);
+            await _context.RegisteredUser.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        // GET: api/Account/activate/{id}
+        [HttpGet("activate/{id}")]
+        public async Task<ActionResult<RegisteredUser>> Activate(string userName, string password, bool isAdmin)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password) || null == User || null == User.Identity || !User.Identity.IsAuthenticated || User.Claims.First(c => c.Subject.Name == "role").Value != "Admin")
                 return await Task.FromResult((RegisteredUser)null);
