@@ -385,11 +385,11 @@ namespace FsInfoCat.Desktop.ViewModels
                 string uri = ValidatedBaseWebApiUri;
                 UriBuilder builder = new UriBuilder(uri);
                 builder.Path = "api/MediaHost";
-                MediaHostNameRef hostNameRef = new MediaHostNameRef();
+                MediaHostRegRequest hostNameRef = new MediaHostRegRequest();
                 hostNameRef.IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
                 hostNameRef.MachineName = Environment.MachineName;
                 JsonSerializerOptions options = new JsonSerializerOptions();
-                JsonContent content = JsonContent.Create<MediaHostNameRef>(hostNameRef);
+                JsonContent content = JsonContent.Create<MediaHostRegRequest>(hostNameRef);
                 HttpResponseMessage response = ((App)(App.Current)).HttpClient.PostAsJsonAsync(builder.Uri, content).Result;
                 MediaHost result = response.Content.ReadFromJsonAsync<MediaHost>().Result;
                 if (null != result)

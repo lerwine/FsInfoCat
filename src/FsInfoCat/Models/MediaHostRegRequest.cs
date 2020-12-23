@@ -4,8 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Models
 {
-    public class MediaHostNameRef
+    public class MediaHostRegRequest
     {
+        public string DisplayName { get; set; }
         public string MachineName { get; set; }
         public bool IsWindows { get; set; }
     }

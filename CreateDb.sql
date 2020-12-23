@@ -13,9 +13,10 @@ CREATE TABLE dbo.RegisteredUser
 (
     UserID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     CreatedOn DATETIME NOT NULL,
-    CreatedBy NVARCHAR(256) NOT NULL,
+    CreatedBy NVARCHAR(32) NOT NULL,
     ModifiedOn DATETIME NOT NULL,
-    ModifiedBy NVARCHAR(256) NOT NULL,
+    ModifiedBy NVARCHAR(32) NOT NULL,
+    DisplayName NVARCHAR(256) NOT NULL DEFAULT '',
     LoginName NVARCHAR(32) NOT NULL,
     PwHash NVARCHAR(80) NOT NULL,
     [Role] NVARCHAR(32) NOT NULL,
@@ -32,9 +33,10 @@ CREATE TABLE dbo.MediaHost
 (
     HostID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     CreatedOn DATETIME NOT NULL,
-    CreatedBy NVARCHAR(256) NOT NULL,
+    CreatedBy NVARCHAR(32) NOT NULL,
     ModifiedOn DATETIME NOT NULL,
-    ModifiedBy NVARCHAR(256) NOT NULL,
+    ModifiedBy NVARCHAR(32) NOT NULL,
+    DisplayName NVARCHAR(256) NOT NULL DEFAULT '',
     MachineName NVARCHAR(256) NOT NULL,
     IsWindows BIT NOT NULL DEFAULT 0,
     IsInactive BIT NOT NULL DEFAULT 0,
@@ -51,11 +53,12 @@ CREATE TABLE dbo.MediaVolume
     VolumeID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     HostID UNIQUEIDENTIFIER NULL,
     CreatedOn DATETIME NOT NULL,
-    CreatedBy NVARCHAR(256) NOT NULL,
+    CreatedBy NVARCHAR(32) NOT NULL,
     ModifiedOn DATETIME NOT NULL,
-    ModifiedBy NVARCHAR(256) NOT NULL,
+    ModifiedBy NVARCHAR(32) NOT NULL,
+    DisplayName NVARCHAR(256) NOT NULL DEFAULT '',
     RootPathName NVARCHAR(1024) NOT NULL,
-    FileSystemName NVARCHAR(128) NOT NULL,
+    FileSystemName NVARCHAR(256) NOT NULL,
     VolumeName NVARCHAR(128) NOT NULL,
     SerialNumber BIGINT NOT NULL,
     MaxNameLength BIGINT NOT NULL,

@@ -7,6 +7,11 @@ namespace FsInfoCat.Models
     public class MediaHost
     {
         public const string PATTERN_DOTTED_NAME = @"^[a-z][a-z\d_]*(\.[a-z][a-z\d_]*)$";
+        private string _createdBy = "";
+        private string _modifiedBy = "";
+        private string _displayName = "";
+        private string _machineName = "";
+        private string _notes = "";
 
         [MinLength(32)]
         [MaxLength(32)]
@@ -21,10 +26,9 @@ namespace FsInfoCat.Models
         [DataType(DataType.DateTime)]
         public DateTime CreatedOn { get; set; }
 
-        private string _createdBy = "";
         [Required()]
         [MinLength(1)]
-        [MaxLength(256)]
+        [MaxLength(RegisteredUser.Max_Length_Login_Name)]
         [Display(Name = "Created By")]
         [DataType(DataType.Text)]
         [RegularExpression(PATTERN_DOTTED_NAME)]
@@ -39,10 +43,9 @@ namespace FsInfoCat.Models
         [DataType(DataType.DateTime)]
         public DateTime ModifiedOn { get; set; }
 
-        private string _modifiedBy = "";
         [Required()]
         [MinLength(1)]
-        [MaxLength(256)]
+        [MaxLength(RegisteredUser.Max_Length_Login_Name)]
         [Display(Name = "Modified By")]
         [DataType(DataType.Text)]
         [RegularExpression(PATTERN_DOTTED_NAME)]
@@ -52,7 +55,15 @@ namespace FsInfoCat.Models
             set { _modifiedBy = (null == value) ? "" : value; }
         }
 
-        private string _machineName = "";
+        [MaxLength(256)]
+        [Display(Name = "Display Name")]
+        [DataType(DataType.Text)]
+        public string DisplayName
+        {
+            get { return _displayName; }
+            set { _displayName = (null == value) ? "" : value; }
+        }
+
         [Required()]
         [MinLength(1)]
         [MaxLength(256)]
@@ -71,7 +82,6 @@ namespace FsInfoCat.Models
         [Display(Name = "Is Inactive")]
         public bool IsInactive { get; set; }
 
-        private string _notes = "";
         [Required()]
         [Display(Name = "Notes")]
         [DataType(DataType.MultilineText)]
