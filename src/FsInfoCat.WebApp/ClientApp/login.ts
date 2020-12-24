@@ -15,7 +15,7 @@ module login {
         inputControlsDisabled: boolean;
     }
 
-    class mainController implements ng.IController {
+    class MainController implements ng.IController {
         readonly [Symbol.toStringTag]: string = app.MAIN_CONTROLLER_NAME;
 
         private _loginError: any | undefined;
@@ -72,6 +72,10 @@ module login {
                 this.$scope.errorMessage = message;
             if (this.$scope.loginErrorDetail !== details)
                 this.$scope.loginErrorDetail = details;
+        }
+
+        static getControllerInjectable(): ng.Injectable<ng.IControllerConstructor> {
+            return ['$scope', '$window', '$log', MainController];
         }
 
         constructor(private $scope: ILoginScope, private $window: ng.IWindowService, private $log: ng.ILogService) {
@@ -161,5 +165,5 @@ module login {
     * @type {ng.IModule}
     */
     export let mainModule: ng.IModule = rootBroadcaster.register(angular.module(app.MAIN_MODULE_NAME, []))
-        .controller(app.MAIN_CONTROLLER_NAME, ['$scope', app.MAIN_NAV_SERVICE_NAME, mainController]);
+        .controller(app.MAIN_CONTROLLER_NAME, MainController.getControllerInjectable());
 }

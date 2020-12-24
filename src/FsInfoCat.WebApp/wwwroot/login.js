@@ -1,6 +1,6 @@
 var login;
 (function (login) {
-    class mainController {
+    class MainController {
         constructor($scope, $window, $log) {
             this.$scope = $scope;
             this.$window = $window;
@@ -104,6 +104,9 @@ var login;
             if (this.$scope.loginErrorDetail !== details)
                 this.$scope.loginErrorDetail = details;
         }
+        static getControllerInjectable() {
+            return ['$scope', '$window', '$log', MainController];
+        }
         doLogin(event) {
             try {
                 app.preventEventDefault(event, true);
@@ -152,5 +155,5 @@ var login;
     * @type {ng.IModule}
     */
     login.mainModule = rootBroadcaster.register(angular.module(app.MAIN_MODULE_NAME, []))
-        .controller(app.MAIN_CONTROLLER_NAME, ['$scope', app.MAIN_NAV_SERVICE_NAME, mainController]);
+        .controller(app.MAIN_CONTROLLER_NAME, MainController.getControllerInjectable());
 })(login || (login = {}));

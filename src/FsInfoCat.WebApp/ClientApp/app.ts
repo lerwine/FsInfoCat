@@ -1725,18 +1725,30 @@ module app {
         subTitle: string;
     }
 
+    type IMainControllerConstructor<T  extends mainControllerBase<IMainScope>> =
+        (new (...args: any[]) => T) |
+        ((...args: any[]) => (void | T));
+
     export class mainControllerBase<T extends IMainScope> implements ng.IController {
         readonly [Symbol.toStringTag]: string = MAIN_CONTROLLER_NAME;
-        constructor(protected $scope: T, protected mainNavigation: mainNavigationService) {
+
+        protected static baseGetControllerInjectable<T extends IMainScope, U extends mainControllerBase<T>>(c: IMainControllerConstructor<U>): ng.Injectable<IMainControllerConstructor<U>> {
+            return ['$scope', '$window', '$log', app.MAIN_NAV_SERVICE_NAME, c];
+        }
+
+        constructor(protected $scope: T, protected $window: ng.IWindowService, protected $log: ng.ILogService, protected mainNavigation: mainNavigationService) {
             $scope.pageTitle = mainNavigation.pageTitle();
             this.onSubTitleChanged(mainNavigation.pageSubTitle());
             mainNavigation.onPageTitleChanged($scope, this.onTitleChanged, this);
         }
+
         private onTitleChanged(newValue: string): void { this.$scope.pageTitle = newValue; }
+
         private onSubTitleChanged(newValue?: string): void {
             this.$scope.subTitle = (typeof newValue === "string") ? newValue : "";
             this.$scope.showSubtitle = this.$scope.subTitle.length > 0;
         }
+
         $doCheck(): void { }
     }
 
