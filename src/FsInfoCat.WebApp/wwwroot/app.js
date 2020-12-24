@@ -1164,6 +1164,14 @@ var app;
         HttpResponseStatusRanges[HttpResponseStatusRanges["MAXRANGE_SERVER_ERROR_EXCL"] = 600] = "MAXRANGE_SERVER_ERROR_EXCL";
         HttpResponseStatusRanges[HttpResponseStatusRanges["MAXRANGE_EXCL"] = 600] = "MAXRANGE_EXCL";
     })(HttpResponseStatusRanges || (HttpResponseStatusRanges = {}));
+    let UserRole;
+    (function (UserRole) {
+        UserRole[UserRole["None"] = 0] = "None";
+        UserRole[UserRole["Viewer"] = 1] = "Viewer";
+        UserRole[UserRole["User"] = 2] = "User";
+        UserRole[UserRole["Crawler"] = 3] = "Crawler";
+        UserRole[UserRole["Admin"] = 4] = "Admin";
+    })(UserRole = app.UserRole || (app.UserRole = {}));
     function __toHttpResponseStatusValueInRange(response) {
         if (response >= HttpResponseStatusRanges.MINRANGE && response < HttpResponseStatusRanges.MAXRANGE_EXCL)
             return Math.floor(response);

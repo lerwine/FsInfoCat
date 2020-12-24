@@ -1,8 +1,9 @@
 var login;
 (function (login) {
     class mainController {
-        constructor($scope, $log) {
+        constructor($scope, $window, $log) {
             this.$scope = $scope;
+            this.$window = $window;
             this.$log = $log;
             this[Symbol.toStringTag] = app.MAIN_CONTROLLER_NAME;
             $scope.password = "";
@@ -16,17 +17,15 @@ var login;
             $scope.$watch("userName", () => {
                 $log.debug("Watch raised for 'mainController.userName'");
                 if (app.isNilOrWhiteSpace(this.$scope.userName)) {
-                    $scope.errorMessage = "Username not provided";
-                    $scope.hasErrorMessage = true;
+                    this.loginError = "Username not provided";
                     $scope.loginButtonDisabled = true;
                 }
                 else if (app.isNilOrWhiteSpace(this.$scope.password)) {
-                    $scope.errorMessage = "Password not provided";
-                    $scope.hasErrorMessage = true;
+                    this.loginError = "Password not provided";
                     $scope.loginButtonDisabled = true;
                 }
                 else {
-                    $scope.hasErrorMessage = false;
+                    this.loginError = "";
                     $scope.loginButtonDisabled = false;
                 }
                 $scope.hasLoginErrorMessageDetail = false;
@@ -35,12 +34,11 @@ var login;
                 $log.debug("Watch raised for 'mainController.password'");
                 if (!app.isNilOrWhiteSpace(this.$scope.userName)) {
                     if (app.isNilOrWhiteSpace(this.$scope.password)) {
-                        $scope.errorMessage = "Password not provided";
-                        $scope.hasErrorMessage = true;
+                        this.loginError = "Password not provided";
                         $scope.loginButtonDisabled = true;
                     }
                     else {
-                        $scope.hasErrorMessage = false;
+                        this.loginError = "";
                         $scope.loginButtonDisabled = false;
                     }
                     $scope.hasLoginErrorMessageDetail = false;
@@ -115,17 +113,36 @@ var login;
                 this.$scope.inputControlsDisabled = true;
                 this.$scope.hasErrorMessage = false;
                 this.$scope.hasLoginErrorMessageDetail = false;
-                try {
-                }
-                finally {
-                    if (this.$scope.hasErrorMessage) {
-                        this.$scope.loginButtonDisabled = false;
-                        this.$scope.inputControlsDisabled = false;
+                const item = {
+                    loginName: this.$scope.userName,
+                    password: this.$scope.password
+                };
+                fetch("api/Account/login", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(item)
+                })
+                    .then(response => response.json())
+                    .then((data) => {
+                    if (data.Success) {
+                        this.$window.location.href = 'index.html';
                     }
                     else {
-                        // TODO: Redirect for successful login.
+                        this.$scope.loginButtonDisabled = false;
+                        this.$scope.inputControlsDisabled = false;
+                        this.loginError = data.Message;
                     }
-                }
+                    return data;
+                })
+                    .catch(error => {
+                    this.$scope.loginButtonDisabled = false;
+                    this.$scope.inputControlsDisabled = false;
+                    this.$log.error('Unexpected error while attempting to log in.', error);
+                    this.loginError = error;
+                });
             }
         }
         $doCheck() { }
