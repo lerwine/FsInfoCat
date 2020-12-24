@@ -23,7 +23,9 @@ namespace FsInfoCat.WebApp
         public const string CookieScheme = "FsInfoCat";
         public const string SettingsKey_ConnectionString = "FsInfoCat";
         public const string SettingsKey_DBPassword = "DBPassword";
-        public const string UrlPath_ExceptionHandler = "/index.html#!/error";
+        public const string UrlPath_ExceptionHandler = "/error.html#!/error";
+        public const string UrlPath_DeniedHandler = "/error.html#!/denied";
+        public const string UrlPath_LoginHandler = "/login.html";
 
         public Startup(IConfiguration configuration)
         {
@@ -41,8 +43,8 @@ namespace FsInfoCat.WebApp
             services.AddAuthentication(cookieScheme) // Sets the default scheme to cookies
                 .AddCookie(cookieScheme, options =>
                 {
-                    options.AccessDeniedPath = "/account/denied";
-                    options.LoginPath = "/account/login";
+                    options.AccessDeniedPath = UrlPath_DeniedHandler;
+                    options.LoginPath = UrlPath_LoginHandler;
                 });
 
             // Example of how to customize a particular instance of cookie options and

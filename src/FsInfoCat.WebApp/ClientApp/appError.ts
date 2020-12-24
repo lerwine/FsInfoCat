@@ -1,4 +1,4 @@
-module index {
+module appError {
     class mainController extends app.mainControllerBase<app.IMainScope> {
         constructor($scope: app.IMainScope, mainNavigation: app.mainNavigationService) {
             super($scope, mainNavigation);
@@ -14,7 +14,8 @@ module index {
         .controller(app.MAIN_CONTROLLER_NAME, ['$scope', app.MAIN_NAV_SERVICE_NAME, mainController])
         .config(['$routeProvider', '$locationProvider', app.MAIN_NAV_PROVIDER_NAME, function ($routeProvider: ng.route.IRouteProvider, mainNavigationProvider: app.mainNavigationServiceProvider): void {
             $routeProvider
-                .when('/home', { templateUrl: 'Template/Home.htm' })
-                .otherwise({ redirectTo: '/home' });
+            .when('/error', { templateUrl: 'Template/Error.htm' })
+            .when('/denied', { templateUrl: 'Template/Denied.htm' })
+                .otherwise({ redirectTo: '/error' });
         }]);
 }

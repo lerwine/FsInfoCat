@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:ng="http://angularjs.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>FsInfoCat - Unexpected Error</title>
+    <script>
+        //<![CDATA[
+        var url = new URL(document.location.href);
+        url.hash = "";
+        url.search = "";
+        var segments = url.pathname.split("/");
+        var i = segments.length - 1;
+        if (segments[0].length == 0) {
+            i--;
+            segments.shift();
+        }
+        if (i > 1 && segments[i - 1].length == 0) {
+            i--;
+            segments.pop();
+        }
+        if (i > 0 && segments[i].match(/\.html?$/i))
+            segments.pop();
+        url.pathname = (segments.length == 0) ? "/" : "/" + segments.join("/");
+        document.write('<base href="' + url.href + '" />');
+        //]]>
+    </script>
+    <meta name="description" content="Filesystem content information cataloging and analysis tool">
+    <meta name="viewport" content="width=1024, initial-scale=1.0" />
+    <link rel="stylesheet" href="lib/twitter-bootstrap/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="lib/angular.js/angular-csp.css" type="text/css">
+    <link rel="stylesheet" href="css/site.css" type="text/css" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <script src="lib/jquery/jquery.js"></script>
+    <script src="lib/twitter-bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="lib/angular.js/angular.js"></script>
+    <script src="lib/angular.js/angular-route.js"></script>
+    <script src="app.js"></script>
+    <script src="appError.js"></script>
+</head>
+
+<body ng-app="mainModule" ng-controller="mainController">
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <header class="container-fluid p-1">
+        <h1>{{ pageTitle }}</h1>
+        <h2 ng-show="showSubtitle">{{ subTitle }}</h2>
+        <nav class="container-fluid navbar navbar-expand-sm p-1 mr-auto">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="/home" class="nav-link">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <section class="mainSectionClass">
+            <ng-view></ng-view>
+        </section>
+    </div>
+    <footer class="container-fluid">&copy; Leonard T. Erwine 2019.</footer>
+</body>
+
+</html>

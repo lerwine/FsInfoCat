@@ -17,6 +17,6 @@
       "dom"
     ]
   },
-  "include": ["./app.ts", "./index.ts", "./login.ts"],
+  "include": ["./app.ts", "./index.ts", "./login.ts", "./appError.ts"],
   "exclude": ["./node_modules", "./node_modules/**/*.d.ts"]
 }
