@@ -20,6 +20,10 @@
         {
             "library": "angular-route@1.8.2",
             "destination": "wwwroot/lib/angular.js/"
+        },
+        {
+            "library": "angular-cookies@1.8.2",
+            "destination": "wwwroot/lib/angular.js/"
         }
     ]
 }
