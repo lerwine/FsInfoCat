@@ -18,6 +18,7 @@ namespace FsInfoCat.WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly FsInfoCat.WebApp.Data.FsInfoDataContext _context;
@@ -30,6 +31,8 @@ namespace FsInfoCat.WebApp.Controllers
 
         // POST: api/Account/login
         [HttpPost("login")]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<RequestResponse<AppUser>>> Login(UserLoginRequest userLogin)
         {
             RegisteredUser user = _context.RegisteredUser.FirstOrDefault(u => u.LoginName == userLogin.LoginName);
@@ -131,6 +134,7 @@ namespace FsInfoCat.WebApp.Controllers
         // POST: api/Account/create
         [HttpPost("create")]
         [Authorize(Roles = AppUser.Role_Name_Admin)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<RequestResponse<RegisteredUser>>> Create(string userName, string password, UserRole role)
         {
             if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrEmpty(password))

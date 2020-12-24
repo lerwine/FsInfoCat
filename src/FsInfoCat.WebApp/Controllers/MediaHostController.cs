@@ -13,6 +13,7 @@ namespace FsInfoCat.WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class MediaHostController : ControllerBase
     {
         private readonly FsInfoCat.WebApp.Data.FsInfoDataContext _context;
@@ -54,6 +55,7 @@ namespace FsInfoCat.WebApp.Controllers
         // POST: api/MediaHost
         [HttpPost]
         [Authorize(Roles = AppUser.Role_Name_Crawler)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<RequestResponse<MediaHost>>> Register(MediaHostRegRequest host)
         {
             string uc;
