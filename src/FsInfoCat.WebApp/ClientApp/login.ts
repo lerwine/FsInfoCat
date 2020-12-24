@@ -1,5 +1,10 @@
 module login {
-    interface LoginScope extends ng.IScope {
+    interface IUserLoginRequest {
+        loginName: string,
+        password: string
+    }
+
+    interface ILoginScope extends ng.IScope {
         userName: string;
         password: string;
         hasErrorMessage: boolean;
@@ -69,7 +74,7 @@ module login {
                 this.$scope.loginErrorDetail = details;
         }
 
-        constructor(private $scope: LoginScope, private $log: ng.ILogService) {
+        constructor(private $scope: ILoginScope, private $window: ng.IWindowService, private $log: ng.ILogService) {
             $scope.password = "";
             $scope.userName = "";
             $scope.hasErrorMessage = true;
@@ -81,15 +86,13 @@ module login {
             $scope.$watch("userName", () => {
                 $log.debug("Watch raised for 'mainController.userName'");
                 if (app.isNilOrWhiteSpace(this.$scope.userName)) {
-                    $scope.errorMessage = "Username not provided";
-                    $scope.hasErrorMessage = true;
+                    this.loginError = "Username not provided";
                     $scope.loginButtonDisabled = true;
                 } else if (app.isNilOrWhiteSpace(this.$scope.password)) {
-                    $scope.errorMessage = "Password not provided";
-                    $scope.hasErrorMessage = true;
+                    this.loginError = "Password not provided";
                     $scope.loginButtonDisabled = true;
                 } else {
-                    $scope.hasErrorMessage = false;
+                    this.loginError = "";
                     $scope.loginButtonDisabled = false;
                 }
                 $scope.hasLoginErrorMessageDetail = false;
@@ -98,11 +101,10 @@ module login {
                 $log.debug("Watch raised for 'mainController.password'");
                 if (!app.isNilOrWhiteSpace(this.$scope.userName)) {
                     if (app.isNilOrWhiteSpace(this.$scope.password)) {
-                        $scope.errorMessage = "Password not provided";
-                        $scope.hasErrorMessage = true;
+                        this.loginError = "Password not provided";
                         $scope.loginButtonDisabled = true;
                     } else {
-                        $scope.hasErrorMessage = false;
+                        this.loginError = "";
                         $scope.loginButtonDisabled = false;
                     }
                     $scope.hasLoginErrorMessageDetail = false;
@@ -117,16 +119,37 @@ module login {
                 this.$scope.inputControlsDisabled = true;
                 this.$scope.hasErrorMessage = false;
                 this.$scope.hasLoginErrorMessageDetail = false;
-                try {
-                    // TODO: Consult web service to log in.
-                } finally {
-                    if (this.$scope.hasErrorMessage) {
+
+                const item: IUserLoginRequest = {
+                    loginName: this.$scope.userName,
+                    password: this.$scope.password
+                };
+
+                fetch("api/Account/login", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(item)
+                })
+                    .then(response => response.json())
+                    .then<app.IRequestResponse<app.IAppUser>, never>((data: app.IRequestResponse<app.IAppUser>) => {
+                        if (data.Success) {
+                            this.$window.location.href = 'index.html';
+                        } else {
+                            this.$scope.loginButtonDisabled = false;
+                            this.$scope.inputControlsDisabled = false;
+                            this.loginError = data.Message;
+                        }
+                        return data;
+                    })
+                    .catch(error => {
                         this.$scope.loginButtonDisabled = false;
                         this.$scope.inputControlsDisabled = false;
-                    } else {
-                        // TODO: Redirect for successful login.
-                    }
-                }
+                        this.$log.error('Unexpected error while attempting to log in.', error);
+                        this.loginError = error;
+                    });
             }
         }
 

@@ -1254,6 +1254,68 @@ module app {
         MAXRANGE_EXCL = 600
     }
 
+    type GUIDString = string & { length: 32 };
+
+    export interface IRequestResponse<T>
+    {
+        Result?: T;
+        Success: boolean;
+        Message: string;
+    }
+
+    export enum UserRole
+    {
+        None = 0,
+        Viewer = 1,
+        User = 2,
+        Crawler = 3,
+        Admin = 4
+    }
+
+    export interface IAppUser {
+        UserID: GUIDString;
+        DisplayName: string;
+        LoginName: string;
+        PwHash: string;
+        Role: UserRole;
+        Notes: string;
+        CreatedOn: string;
+        CreatedBy: GUIDString;
+        ModifiedOn: string;
+        ModifiedBy: GUIDString;
+    }
+
+    export interface IMediaHost {
+        HostID: GUIDString;
+        DisplayName: string;
+        MachineName: string;
+        IsWindows: boolean;
+        IsInactive: boolean;
+        Notes: string;
+        CreatedOn: string;
+        CreatedBy: GUIDString;
+        ModifiedOn: string;
+        ModifiedBy: GUIDString;
+    }
+
+    export interface IMediaVolume {
+        VolumeID: GUIDString;
+        HostID?: GUIDString;
+        DisplayName: string;
+        RootPathName: string;
+        FileSystemName: string;
+        VolumeName: string;
+        SerialNumber: number;
+        MaxNameLength: number;
+        FileSystemFeature: number;
+        IsInactive: boolean;
+        Notes: string;
+        CreatedOn: string;
+        CreatedBy: GUIDString;
+        ModifiedOn: string;
+        ModifiedBy: GUIDString;
+    }
+
     function __toHttpResponseStatusValueInRange(response: number): number | undefined {
         if (response >= HttpResponseStatusRanges.MINRANGE && response < HttpResponseStatusRanges.MAXRANGE_EXCL)
             return Math.floor(response);
