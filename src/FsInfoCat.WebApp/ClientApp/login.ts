@@ -75,10 +75,10 @@ module login {
         }
 
         static getControllerInjectable(): ng.Injectable<ng.IControllerConstructor> {
-            return ['$scope', '$window', '$log', MainController];
+            return ['$scope', '$window', '$cookies', '$log', MainController];
         }
 
-        constructor(private $scope: ILoginScope, private $window: ng.IWindowService, private $log: ng.ILogService) {
+        constructor(private $scope: ILoginScope, private $window: ng.IWindowService, private $cookies: ng.cookies.ICookiesService, private $log: ng.ILogService) {
             $scope.password = "";
             $scope.userName = "";
             $scope.hasErrorMessage = true;
@@ -87,6 +87,7 @@ module login {
             $scope.loginErrorDetail = "";
             $scope.loginButtonDisabled = true;
             $scope.inputControlsDisabled = false;
+            var c = this.$cookies.getAll();
             $scope.$watch("userName", () => {
                 $log.debug("Watch raised for 'mainController.userName'");
                 if (app.isNilOrWhiteSpace(this.$scope.userName)) {
@@ -123,6 +124,7 @@ module login {
                 this.$scope.inputControlsDisabled = true;
                 this.$scope.hasErrorMessage = false;
                 this.$scope.hasLoginErrorMessageDetail = false;
+                var c = this.$cookies.getAll();
 
                 const item: IUserLoginRequest = {
                     loginName: this.$scope.userName,
@@ -137,15 +139,19 @@ module login {
                     },
                     body: JSON.stringify(item)
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        var j = response.json();
+                        return j;
+                    })
                     .then<app.IRequestResponse<app.IAppUser>, never>((data: app.IRequestResponse<app.IAppUser>) => {
+                        var c = this.$cookies.getAll();
                         if (data.success) {
                             this.$window.location.href = 'index.html';
                         } else {
                             this.$scope.loginButtonDisabled = false;
                             this.$scope.inputControlsDisabled = false;
                             this.loginError = data.message;
-                        }
+                        };
                         return data;
                     })
                     .catch(error => {
@@ -164,6 +170,6 @@ module login {
     * The main module for this app.
     * @type {ng.IModule}
     */
-    export let mainModule: ng.IModule = rootBroadcaster.register(angular.module(app.MAIN_MODULE_NAME, []))
+    export let mainModule: ng.IModule = rootBroadcaster.register(angular.module(app.MAIN_MODULE_NAME, ['ngCookies']))
         .controller(app.MAIN_CONTROLLER_NAME, MainController.getControllerInjectable());
 }

@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -38,14 +41,37 @@ namespace FsInfoCat.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            string cookieScheme = Configuration[CookieScheme];
-            services.AddAuthentication(cookieScheme) // Sets the default scheme to cookies
-                .AddCookie(cookieScheme, options =>
+            services.AddAntiforgery();
+            // string cookieScheme = Configuration[CookieScheme];
+            services.AddAuthentication(CookieScheme) // Sets the default scheme to cookies
+                .AddCookie(CookieScheme, options =>
                 {
                     options.AccessDeniedPath = UrlPath_DeniedHandler;
                     options.LoginPath = UrlPath_LoginHandler;
+                    // options.LogoutPath = UrlPath_LogoutHandler;
                 });
+
+
+            // services.AddAuthorization(options =>
+            // {
+            //     // This policy cannot succeed since the claim is never added
+            //     options.AddPolicy("Impossible", policy =>
+            //     {
+            //         policy.AuthenticationSchemes.Add("Api");
+            //         policy.RequireClaim("Never");
+            //     });
+            //     options.AddPolicy("Api", policy =>
+            //     {
+            //         policy.AuthenticationSchemes.Add("Api");
+            //         policy.RequireClaim(ClaimTypes.NameIdentifier);
+            //         policy.RequireClaim(ClaimTypes.Name);
+            //     });
+            //     options.AddPolicy("Api-Manager", policy =>
+            //     {
+            //         policy.AuthenticationSchemes.Add("Api");
+            //         policy.Requirements.Add(new OperationAuthorizationRequirement { Name = "Edit" });
+            //     });
+            // });
 
             // Example of how to customize a particular instance of cookie options and
             // is able to also use other services.
@@ -76,7 +102,7 @@ namespace FsInfoCat.WebApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

@@ -13,7 +13,7 @@ namespace FsInfoCat.WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     public class MediaHostController : ControllerBase
     {
         private readonly FsInfoCat.WebApp.Data.FsInfoDataContext _context;
@@ -32,7 +32,7 @@ namespace FsInfoCat.WebApp.Controllers
 
         // GET: api/MediaHost/all
         [HttpGet("all")]
-        [Authorize(Roles = AppUser.Role_Name_Viewer)]
+        // [Authorize(Roles = AppUser.Role_Name_Viewer)]
         public async Task<ActionResult<IEnumerable<MediaHost>>> GetAll()
         {
             if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
@@ -42,7 +42,7 @@ namespace FsInfoCat.WebApp.Controllers
 
         // GET: api/MediaHost/get/{id}
         [HttpGet("{id}")]
-        [Authorize(Roles = AppUser.Role_Name_Viewer)]
+        // [Authorize(Roles = AppUser.Role_Name_Viewer)]
         public async Task<ActionResult<MediaHost>> GetById(Guid id)
         {
             if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
@@ -54,8 +54,8 @@ namespace FsInfoCat.WebApp.Controllers
 
         // POST: api/MediaHost
         [HttpPost]
-        [Authorize(Roles = AppUser.Role_Name_Crawler)]
-        [ValidateAntiForgeryToken]
+        // [Authorize(Roles = AppUser.Role_Name_Crawler)]
+        // [ValidateAntiForgeryToken]
         public async Task<ActionResult<RequestResponse<MediaHost>>> Register(MediaHostRegRequest host)
         {
             string uc;
@@ -75,7 +75,7 @@ namespace FsInfoCat.WebApp.Controllers
 
         // DELETE: api/MediaHost/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = AppUser.Role_Name_Admin)]
+        // [Authorize(Roles = AppUser.Role_Name_Admin)]
         public async Task<ActionResult<bool>> UnRegister(Guid id)
         {
             return await _context.MediaHost.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
@@ -89,7 +89,7 @@ namespace FsInfoCat.WebApp.Controllers
 
         // GET: api/MediaHost/activate/{id}
         [HttpGet("activate/{id}")]
-        [Authorize(Roles = AppUser.Role_Name_Crawler)]
+        // [Authorize(Roles = AppUser.Role_Name_Crawler)]
         public async Task<ActionResult<bool>> Activate(Guid id)
         {
             return await _context.MediaHost.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
@@ -104,7 +104,7 @@ namespace FsInfoCat.WebApp.Controllers
 
         // GET: api/MediaHost/deactivate/[id]
         [HttpGet("deactivate/{id}")]
-        [Authorize(Roles = AppUser.Role_Name_Crawler)]
+        // [Authorize(Roles = AppUser.Role_Name_Crawler)]
         public async Task<ActionResult<bool>> Deactivate(Guid id)
         {
             return await _context.MediaHost.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
