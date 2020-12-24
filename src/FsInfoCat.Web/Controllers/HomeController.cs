@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FsInfoCat.Web.Models;
 
 namespace FsInfoCat.Web.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
+        private readonly FsInfoCat.Web.Data.FsInfoDataContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(FsInfoCat.Web.Data.FsInfoDataContext context, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
