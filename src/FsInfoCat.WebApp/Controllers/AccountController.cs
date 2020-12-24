@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -26,21 +27,28 @@ namespace FsInfoCat.WebApp.Controllers
             _context = context;
         }
 
+
         // POST: api/Account/login
         [HttpPost("login")]
-        public async Task<ActionResult<RegisteredUser>> Login(string userName, string password)
+        public async Task<ActionResult<RequestResponse<AppUser>>> Login(UserLoginRequest userLogin)
         {
-            RegisteredUser user = _context.RegisteredUser.FirstOrDefault(u => u.LoginName == userName);
-            if (null == user || user.IsInactive || !CheckPwHash(user.PwHash, password))
-                return null;
-            var claims = new List<Claim>
-            {
-                new Claim("user", user.LoginName),
-                new Claim("role", user.Role)
-            };
+            RegisteredUser user = _context.RegisteredUser.FirstOrDefault(u => u.LoginName == userLogin.LoginName);
+            if (null == user || !CheckPwHash(user.PwHash, userLogin.Password))
+                return new RequestResponse<AppUser>(null, "Invalid username or password");
 
-            await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
-            return user;
+            RequestResponse<AppUser> result = new RequestResponse<AppUser>(new AppUser(user), (user.Role != UserRole.None) ? "" : "User account is inactive");
+            if (result.Success)
+            {
+                List<Claim> claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString("n")),
+                    new Claim(ClaimTypes.Name, (string.IsNullOrWhiteSpace(user.DisplayName)) ? user.LoginName : user.DisplayName)
+                };
+                foreach (UserRole role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.None && r <= user.Role))
+                    claims.Add(new Claim(ClaimTypes.Role, role.ToString("F")));
+                await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", ClaimTypes.NameIdentifier, ClaimTypes.Role)));
+            }
+            return result;
         }
 
         // GET: api/Account/logout
@@ -70,33 +78,48 @@ namespace FsInfoCat.WebApp.Controllers
             return sb.ToString();
         }
 
+        public const int Hash_Bytes_Length = 64;
+        public const int Salt_Bytes_Length = 8;
+
+        public static string ToPwHash(string rawPw, byte[] salt = null)
+        {
+            if (string.IsNullOrEmpty(rawPw))
+                return "";
+            if (null == salt)
+            {
+                salt = new byte[Salt_Bytes_Length];
+                using (RNGCryptoServiceProvider cryptoServiceProvider = new RNGCryptoServiceProvider())
+                    cryptoServiceProvider.GetBytes(salt);
+            }
+            else if (salt.Length != Salt_Bytes_Length)
+                throw new ArgumentException("Invalid salt length", "salt");
+            using (SHA512 sha = SHA512.Create())
+            {
+                sha.ComputeHash(salt.Concat(Encoding.ASCII.GetBytes(rawPw)).ToArray());
+                return Convert.ToBase64String(sha.Hash.Concat(salt).ToArray());
+            }
+        }
+
         public static bool CheckPwHash(string pwHash, string rawPw)
         {
             if (string.IsNullOrEmpty(pwHash))
                 return string.IsNullOrEmpty(rawPw);
-            if (pwHash.Length != 80 || string.IsNullOrEmpty(rawPw))
+            if (pwHash.Length != RegisteredUser.Encoded_Pw_Hash_Length || string.IsNullOrEmpty(rawPw))
                 return false;
-            byte[] salt = new byte[8];
-            for (int i = 0; i < 8; i++)
+            byte[] hash;
+            try
             {
-                if (int.TryParse(pwHash.Substring(i << 1, 2), NumberStyles.HexNumber, null, out int s))
-                    salt[i] = (byte)s;
-                else
+                if ((hash = Convert.FromBase64String(pwHash)).Length != (Salt_Bytes_Length + Hash_Bytes_Length))
                     return false;
             }
-            byte[] hash = new byte[32];
-            for (int i = 0; i < 32; i++)
+            catch
             {
-                if (int.TryParse(pwHash.Substring(16 + (i << 1), 2), NumberStyles.HexNumber, null, out int s))
-                    hash[i] = (byte)s;
-                else
-                    return false;
+                return false;
             }
-            byte[] bytes = Encoding.ASCII.GetBytes(rawPw);
-            using (SHA256 sha = SHA256.Create())
+            using (SHA512 sha = SHA512.Create())
             {
-                sha.ComputeHash(salt.Concat(bytes).ToArray());
-                for (int i = 0; i < 32; i++)
+                sha.ComputeHash(Encoding.ASCII.GetBytes(rawPw).Concat(hash.Skip(Hash_Bytes_Length)).ToArray());
+                for (int i = 0; i < Hash_Bytes_Length; i++)
                 {
                     if (sha.Hash[i] != hash[i])
                         return false;
@@ -107,43 +130,20 @@ namespace FsInfoCat.WebApp.Controllers
 
         // POST: api/Account/create
         [HttpPost("create")]
-        public async Task<ActionResult<RegisteredUser>> Create(string userName, string password, bool isAdmin)
+        [Authorize(Roles = AppUser.Role_Name_Admin)]
+        public async Task<ActionResult<RequestResponse<RegisteredUser>>> Create(string userName, string password, UserRole role)
         {
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password) || null == User || null == User.Identity || !User.Identity.IsAuthenticated || User.Claims.First(c => c.Subject.Name == "role").Value != "Admin")
-                return await Task.FromResult((RegisteredUser)null);
-
+            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrEmpty(password))
+                return await Task.FromResult(new RequestResponse<RegisteredUser>(null, "Invalid credentials"));
             RegisteredUser user = _context.RegisteredUser.FirstOrDefault(u => string.Equals(u.LoginName, userName, StringComparison.InvariantCultureIgnoreCase));
-            if (null != user)
-                return null;
-            user = new RegisteredUser();
-            user.CreatedBy = user.ModifiedBy = User.Claims.First(c => c.Subject.Name == "user").Value;
-            user.CreatedOn = user.ModifiedOn = DateTime.Now;
-            user.Role = (isAdmin) ? "Admin" : "Member";
-            user.PwHash = GetPwHash(password);
-            await _context.RegisteredUser.AddAsync(user);
-            await _context.SaveChangesAsync();
-            return user;
+            RequestResponse<RegisteredUser> result = new RequestResponse<RegisteredUser>(user, (null != user) ? "A user with that login name already exists" : "");
+            if (result.Success)
+            {
+                result.Result = new RegisteredUser(userName, ToPwHash(password), role, new Guid(User.Identity.Name));
+                await _context.RegisteredUser.AddAsync(result.Result);
+                await _context.SaveChangesAsync();
+            }
+            return result;
         }
-
-        // GET: api/Account/activate/{id}
-        [HttpGet("activate/{id}")]
-        public async Task<ActionResult<RegisteredUser>> Activate(string userName, string password, bool isAdmin)
-        {
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password) || null == User || null == User.Identity || !User.Identity.IsAuthenticated || User.Claims.First(c => c.Subject.Name == "role").Value != "Admin")
-                return await Task.FromResult((RegisteredUser)null);
-
-            RegisteredUser user = _context.RegisteredUser.FirstOrDefault(u => string.Equals(u.LoginName, userName, StringComparison.InvariantCultureIgnoreCase));
-            if (null != user)
-                return null;
-            user = new RegisteredUser();
-            user.CreatedBy = user.ModifiedBy = User.Claims.First(c => c.Subject.Name == "user").Value;
-            user.CreatedOn = user.ModifiedOn = DateTime.Now;
-            user.Role = (isAdmin) ? "Admin" : "Member";
-            user.PwHash = GetPwHash(password);
-            await _context.RegisteredUser.AddAsync(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
-
     }
 }
