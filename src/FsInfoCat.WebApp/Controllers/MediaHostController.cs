@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace FsInfoCat.WebApp.Controllers
 
         // GET: api/MediaHost/all
         [HttpGet("all")]
+        [Authorize(Roles = AppUser.Role_Name_Viewer)]
         public async Task<ActionResult<IEnumerable<MediaHost>>> GetAll()
         {
             if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
@@ -39,6 +41,7 @@ namespace FsInfoCat.WebApp.Controllers
 
         // GET: api/MediaHost/get/{id}
         [HttpGet("{id}")]
+        [Authorize(Roles = AppUser.Role_Name_Viewer)]
         public async Task<ActionResult<MediaHost>> GetById(Guid id)
         {
             if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
@@ -50,27 +53,19 @@ namespace FsInfoCat.WebApp.Controllers
 
         // POST: api/MediaHost
         [HttpPost]
-        public async Task<ActionResult<MediaHost>> Register(MediaHostRegRequest host)
+        [Authorize(Roles = AppUser.Role_Name_Crawler)]
+        public async Task<ActionResult<RequestResponse<MediaHost>>> Register(MediaHostRegRequest host)
         {
             string uc;
-            if (null == host || string.IsNullOrWhiteSpace(host.MachineName) || !DottedNameRegex.IsMatch((uc = host.MachineName.ToUpper())) || null == User || null == User.Identity || !User.Identity.IsAuthenticated)
-                return await Task.FromResult((MediaHost)null);
-            return await _context.MediaHost.FirstOrDefaultAsync(h => String.Equals(uc, h.MachineName, StringComparison.InvariantCulture)).ContinueWith<MediaHost>(task =>
+            if (null == host || string.IsNullOrWhiteSpace(host.MachineName) || !DottedNameRegex.IsMatch((uc = host.MachineName.ToUpper())))
+                return await Task.FromResult(new RequestResponse<MediaHost>(null, "Registration failed."));
+            return await _context.MediaHost.FirstOrDefaultAsync(h => String.Equals(uc, h.MachineName, StringComparison.InvariantCulture)).ContinueWith<RequestResponse<MediaHost>>(task =>
             {
+                RequestResponse<MediaHost> result;
                 if (null != task.Result)
-                {
-                    if (task.Result.IsWindows != host.IsWindows)
-                        return null;
-                    return task.Result;
-                }
-                MediaHost result = new MediaHost();
-                result.HostID = Guid.NewGuid();
-                result.CreatedBy = result.ModifiedBy = User.Identity.Name;
-                result.CreatedOn = result.ModifiedOn = DateTime.Now;
-                result.IsInactive = false;
-                result.IsWindows = host.IsWindows;
-                result.MachineName = uc;
-                _context.MediaHost.Add(result);
+                    return new RequestResponse<MediaHost>(task.Result, (task.Result.IsWindows == host.IsWindows) ? "" : "System type mismatch.");
+                result = new RequestResponse<MediaHost>(new MediaHost(uc, host.IsWindows, new Guid(User.Identity.Name)));
+                _context.MediaHost.Add(result.Result);
                 _context.SaveChanges();
                 return result;
             });
@@ -78,10 +73,9 @@ namespace FsInfoCat.WebApp.Controllers
 
         // DELETE: api/MediaHost/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = AppUser.Role_Name_Admin)]
         public async Task<ActionResult<bool>> UnRegister(Guid id)
         {
-            if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
-                return await Task.FromResult(false);
             return await _context.MediaHost.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
                 if (null == task.Result)
                     return false;
@@ -93,10 +87,9 @@ namespace FsInfoCat.WebApp.Controllers
 
         // GET: api/MediaHost/activate/{id}
         [HttpGet("activate/{id}")]
+        [Authorize(Roles = AppUser.Role_Name_Crawler)]
         public async Task<ActionResult<bool>> Activate(Guid id)
         {
-            if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
-                return await Task.FromResult(false);
             return await _context.MediaHost.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
                 if (null == task.Result || !task.Result.IsInactive)
                     return false;
@@ -109,10 +102,9 @@ namespace FsInfoCat.WebApp.Controllers
 
         // GET: api/MediaHost/deactivate/[id]
         [HttpGet("deactivate/{id}")]
+        [Authorize(Roles = AppUser.Role_Name_Crawler)]
         public async Task<ActionResult<bool>> Deactivate(Guid id)
         {
-            if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
-                return await Task.FromResult(false);
             return await _context.MediaHost.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
                 if (null == task.Result || task.Result.IsInactive)
                     return false;

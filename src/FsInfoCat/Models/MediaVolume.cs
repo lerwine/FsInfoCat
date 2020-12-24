@@ -5,24 +5,17 @@ namespace FsInfoCat.Models
 {
     public class MediaVolume
     {
-        private string _createdBy = "";
-        private string _modifiedBy = "";
         private string _displayName = "";
         private string _rootPathName = "";
         private string _fileSystemName = "";
         private string _volumeName = "";
         private string _notes = "";
 
-        [MinLength(32)]
-        [MaxLength(32)]
         [Required()]
         [Key()]
-        [RegularExpression(@"^[\da-f]{32}$")]
         [Display(Name = "ID")]
         public Guid VolumeID { get; set; }
 
-        [MaxLength(32)]
-        [RegularExpression(@"^([\da-f]{32})?$")]
         [Display(Name = "Host ID")]
         public Guid? HostID { get; set; }
 
@@ -31,17 +24,9 @@ namespace FsInfoCat.Models
         [DataType(DataType.DateTime)]
         public DateTime CreatedOn { get; set; }
 
-
         [Required()]
-        [MinLength(1)]
-        [MaxLength(RegisteredUser.Max_Length_Login_Name)]
         [Display(Name = "Created By")]
-        [DataType(DataType.Text)]
-        public string CreatedBy
-        {
-            get { return _createdBy; }
-            set { _createdBy = (null == value) ? "" : value; }
-        }
+        public Guid CreatedBy { get; set; }
 
         [Required()]
         [Display(Name = "Modified On")]
@@ -49,15 +34,8 @@ namespace FsInfoCat.Models
         public DateTime ModifiedOn { get; set; }
 
         [Required()]
-        [MinLength(1)]
-        [MaxLength(RegisteredUser.Max_Length_Login_Name)]
         [Display(Name = "Modified By")]
-        [DataType(DataType.Text)]
-        public string ModifiedBy
-        {
-            get { return _modifiedBy; }
-            set { _modifiedBy = (null == value) ? "" : value; }
-        }
+        public Guid ModifiedBy { get; set; }
 
         [MaxLength(256)]
         [Display(Name = "Display Name")]

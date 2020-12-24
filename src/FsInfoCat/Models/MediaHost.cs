@@ -7,17 +7,23 @@ namespace FsInfoCat.Models
     public class MediaHost
     {
         public const string PATTERN_DOTTED_NAME = @"^[a-z][a-z\d_]*(\.[a-z][a-z\d_]*)$";
-        private string _createdBy = "";
-        private string _modifiedBy = "";
         private string _displayName = "";
         private string _machineName = "";
         private string _notes = "";
 
-        [MinLength(32)]
-        [MaxLength(32)]
+        public MediaHost() { }
+
+        public MediaHost(string machineName, bool isWindows, Guid createdBy)
+        {
+            HostID = Guid.NewGuid();
+            MachineName = machineName;
+            IsWindows = isWindows;
+            CreatedOn = ModifiedOn = DateTime.Now;
+            CreatedBy = ModifiedBy = createdBy;
+        }
+
         [Required()]
         [Key()]
-        [RegularExpression(@"^[\da-f]{32}$")]
         [Display(Name = "ID")]
         public Guid HostID { get; set; }
 
@@ -27,16 +33,8 @@ namespace FsInfoCat.Models
         public DateTime CreatedOn { get; set; }
 
         [Required()]
-        [MinLength(1)]
-        [MaxLength(RegisteredUser.Max_Length_Login_Name)]
         [Display(Name = "Created By")]
-        [DataType(DataType.Text)]
-        [RegularExpression(PATTERN_DOTTED_NAME)]
-        public string CreatedBy
-        {
-            get { return _createdBy; }
-            set { _createdBy = (null == value) ? "" : value; }
-        }
+        public Guid CreatedBy { get; set; }
 
         [Required()]
         [Display(Name = "Modified On")]
@@ -44,16 +42,8 @@ namespace FsInfoCat.Models
         public DateTime ModifiedOn { get; set; }
 
         [Required()]
-        [MinLength(1)]
-        [MaxLength(RegisteredUser.Max_Length_Login_Name)]
         [Display(Name = "Modified By")]
-        [DataType(DataType.Text)]
-        [RegularExpression(PATTERN_DOTTED_NAME)]
-        public string ModifiedBy
-        {
-            get { return _modifiedBy; }
-            set { _modifiedBy = (null == value) ? "" : value; }
-        }
+        public Guid ModifiedBy { get; set; }
 
         [MaxLength(256)]
         [Display(Name = "Display Name")]
