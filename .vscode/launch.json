@@ -21,9 +21,9 @@
             "request": "launch",
             "preLaunchTask": "buildWebApp",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/FsInfoCat.WebApp/bin/Debug/netcoreapp3.1/FsInfoCat.WebApp.dll",
+            "program": "${workspaceFolder}/src/FsInfoCat.Web/bin/Debug/netcoreapp3.1/FsInfoCat.Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/FsInfoCat.WebApp",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.Web",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
@@ -35,7 +35,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/ClientApp": "${workspaceFolder}/src/FsInfoCat.WebApp/ClientApp"
+                "/ClientApp": "${workspaceFolder}/src/FsInfoCat.Web/ClientApp"
             }
         },
         {

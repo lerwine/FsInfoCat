@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/FsInfoCat.WebApp/FsInfoCat.WebApp.csproj",
+                "${workspaceFolder}/src/FsInfoCat.Web/FsInfoCat.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
         {
             "label": "transpile",
             "type": "typescript",
-            "tsconfig": "src/FsInfoCat.WebApp/ClientApp/tsconfig.json",
+            "tsconfig": "src/FsInfoCat.Web/ClientApp/tsconfig.json",
             "problemMatcher": "$tsc"
         },
         {
@@ -42,7 +42,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/FsInfoCat.WebApp/FsInfoCat.WebApp.csproj",
+                "${workspaceFolder}/src/FsInfoCat.Web/FsInfoCat.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -55,7 +55,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/src/FsInfoCat.WebApp/FsInfoCat.WebApp.csproj",
+                "${workspaceFolder}/src/FsInfoCat.Web/FsInfoCat.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
