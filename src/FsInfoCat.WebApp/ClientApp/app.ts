@@ -1258,9 +1258,9 @@ module app {
 
     export interface IRequestResponse<T>
     {
-        Result?: T;
-        Success: boolean;
-        Message: string;
+        result?: T;
+        success: boolean;
+        message: string;
     }
 
     export enum UserRole
@@ -1273,47 +1273,47 @@ module app {
     }
 
     export interface IAppUser {
-        UserID: GUIDString;
-        DisplayName: string;
-        LoginName: string;
-        PwHash: string;
-        Role: UserRole;
-        Notes: string;
-        CreatedOn: string;
-        CreatedBy: GUIDString;
-        ModifiedOn: string;
-        ModifiedBy: GUIDString;
+        userID: GUIDString;
+        displayName: string;
+        loginName: string;
+        pwHash: string;
+        role: UserRole;
+        notes: string;
+        createdOn: string;
+        createdBy: GUIDString;
+        modifiedOn: string;
+        modifiedBy: GUIDString;
     }
 
     export interface IMediaHost {
-        HostID: GUIDString;
-        DisplayName: string;
-        MachineName: string;
-        IsWindows: boolean;
-        IsInactive: boolean;
-        Notes: string;
-        CreatedOn: string;
-        CreatedBy: GUIDString;
-        ModifiedOn: string;
-        ModifiedBy: GUIDString;
+        hostID: GUIDString;
+        displayName: string;
+        machineName: string;
+        isWindows: boolean;
+        isInactive: boolean;
+        notes: string;
+        createdOn: string;
+        createdBy: GUIDString;
+        modifiedOn: string;
+        modifiedBy: GUIDString;
     }
 
     export interface IMediaVolume {
-        VolumeID: GUIDString;
-        HostID?: GUIDString;
-        DisplayName: string;
-        RootPathName: string;
-        FileSystemName: string;
-        VolumeName: string;
-        SerialNumber: number;
-        MaxNameLength: number;
-        FileSystemFeature: number;
-        IsInactive: boolean;
-        Notes: string;
-        CreatedOn: string;
-        CreatedBy: GUIDString;
-        ModifiedOn: string;
-        ModifiedBy: GUIDString;
+        volumeID: GUIDString;
+        hostID?: GUIDString;
+        displayName: string;
+        rootPathName: string;
+        fileSystemName: string;
+        volumeName: string;
+        serialNumber: number;
+        maxNameLength: number;
+        fileSystemFeature: number;
+        isInactive: boolean;
+        notes: string;
+        createdOn: string;
+        createdBy: GUIDString;
+        modifiedOn: string;
+        modifiedBy: GUIDString;
     }
 
     function __toHttpResponseStatusValueInRange(response: number): number | undefined {

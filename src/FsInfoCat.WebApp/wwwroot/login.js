@@ -127,13 +127,13 @@ var login;
                 })
                     .then(response => response.json())
                     .then((data) => {
-                    if (data.Success) {
+                    if (data.success) {
                         this.$window.location.href = 'index.html';
                     }
                     else {
                         this.$scope.loginButtonDisabled = false;
                         this.$scope.inputControlsDisabled = false;
-                        this.loginError = data.Message;
+                        this.loginError = data.message;
                     }
                     return data;
                 })
