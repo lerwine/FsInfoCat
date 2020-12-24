@@ -4,15 +4,15 @@ var index;
         static getControllerInjectable() {
             return MainController.baseGetControllerInjectable(MainController);
         }
-        constructor($scope, $window, $log, mainNavigation) {
-            super($scope, $window, $log, mainNavigation);
+        constructor($scope, $window, $cookies, $log, mainNavigation) {
+            super($scope, $window, $cookies, $log, mainNavigation);
         }
     }
     /**
     * The main module for this app.
     * @type {ng.IModule}
     */
-    index.mainModule = rootBroadcaster.register(angular.module(app.MAIN_MODULE_NAME, ['ngRoute']))
+    index.mainModule = rootBroadcaster.register(angular.module(app.MAIN_MODULE_NAME, ['ngCookies', 'ngRoute']))
         .provider(app.MAIN_NAV_SERVICE_NAME, app.mainNavigationServiceProvider)
         .controller(app.MAIN_CONTROLLER_NAME, MainController.getControllerInjectable())
         .config(['$routeProvider', '$locationProvider', app.MAIN_NAV_PROVIDER_NAME, function ($routeProvider, mainNavigationProvider) {

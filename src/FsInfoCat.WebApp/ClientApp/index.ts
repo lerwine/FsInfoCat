@@ -4,8 +4,8 @@ module index {
             return MainController.baseGetControllerInjectable(MainController);
         }
 
-        constructor($scope: app.IMainScope, $window: ng.IWindowService, $log: ng.ILogService, mainNavigation: app.mainNavigationService) {
-            super($scope, $window, $log, mainNavigation);
+        constructor($scope: app.IMainScope, $window: ng.IWindowService, $cookies: ng.cookies.ICookiesService, $log: ng.ILogService, mainNavigation: app.mainNavigationService) {
+            super($scope, $window, $cookies, $log, mainNavigation);
         }
     }
 
@@ -13,7 +13,7 @@ module index {
     * The main module for this app.
     * @type {ng.IModule}
     */
-    export let mainModule: ng.IModule = rootBroadcaster.register(angular.module(app.MAIN_MODULE_NAME, ['ngRoute']))
+    export let mainModule: ng.IModule = rootBroadcaster.register(angular.module(app.MAIN_MODULE_NAME, ['ngCookies', 'ngRoute']))
         .provider(app.MAIN_NAV_SERVICE_NAME, app.mainNavigationServiceProvider)
         .controller(app.MAIN_CONTROLLER_NAME, MainController.getControllerInjectable())
         .config(['$routeProvider', '$locationProvider', app.MAIN_NAV_PROVIDER_NAME, function ($routeProvider: ng.route.IRouteProvider, mainNavigationProvider: app.mainNavigationServiceProvider): void {

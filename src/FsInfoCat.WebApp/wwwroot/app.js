@@ -1552,18 +1552,20 @@ var app;
     }
     app.mainNavigationService = mainNavigationService;
     class mainControllerBase {
-        constructor($scope, $window, $log, mainNavigation) {
+        constructor($scope, $window, $cookies, $log, mainNavigation) {
             this.$scope = $scope;
             this.$window = $window;
+            this.$cookies = $cookies;
             this.$log = $log;
             this.mainNavigation = mainNavigation;
             this[Symbol.toStringTag] = app.MAIN_CONTROLLER_NAME;
+            var c = $cookies.getAll();
             $scope.pageTitle = mainNavigation.pageTitle();
             this.onSubTitleChanged(mainNavigation.pageSubTitle());
             mainNavigation.onPageTitleChanged($scope, this.onTitleChanged, this);
         }
         static baseGetControllerInjectable(c) {
-            return ['$scope', '$window', '$log', app.MAIN_NAV_SERVICE_NAME, c];
+            return ['$scope', '$window', '$cookies', '$log', app.MAIN_NAV_SERVICE_NAME, c];
         }
         onTitleChanged(newValue) { this.$scope.pageTitle = newValue; }
         onSubTitleChanged(newValue) {

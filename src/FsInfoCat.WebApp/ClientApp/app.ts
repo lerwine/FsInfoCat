@@ -1733,10 +1733,11 @@ module app {
         readonly [Symbol.toStringTag]: string = MAIN_CONTROLLER_NAME;
 
         protected static baseGetControllerInjectable<T extends IMainScope, U extends mainControllerBase<T>>(c: IMainControllerConstructor<U>): ng.Injectable<IMainControllerConstructor<U>> {
-            return ['$scope', '$window', '$log', app.MAIN_NAV_SERVICE_NAME, c];
+            return ['$scope', '$window', '$cookies', '$log', app.MAIN_NAV_SERVICE_NAME, c];
         }
 
-        constructor(protected $scope: T, protected $window: ng.IWindowService, protected $log: ng.ILogService, protected mainNavigation: mainNavigationService) {
+        constructor(protected $scope: T, protected $window: ng.IWindowService, protected $cookies: ng.cookies.ICookiesService, protected $log: ng.ILogService, protected mainNavigation: mainNavigationService) {
+            var c = $cookies.getAll();
             $scope.pageTitle = mainNavigation.pageTitle();
             this.onSubTitleChanged(mainNavigation.pageSubTitle());
             mainNavigation.onPageTitleChanged($scope, this.onTitleChanged, this);
