@@ -36,24 +36,6 @@ namespace FsInfoCat.Models
         [Display(Name = "ID")]
         public Guid UserID { get; set; }
 
-        [Required()]
-        [Display(Name = "Created On")]
-        [DataType(DataType.DateTime)]
-        public DateTime CreatedOn { get; set; }
-
-        [Required()]
-        [Display(Name = "Created By")]
-        public Guid CreatedBy { get; set; }
-
-        [Required()]
-        [Display(Name = "Modified On")]
-        [DataType(DataType.DateTime)]
-        public DateTime ModifiedOn { get; set; }
-
-        [Required()]
-        [Display(Name = "Modified By")]
-        public Guid ModifiedBy { get; set; }
-
         public string Name => (string.IsNullOrWhiteSpace(_displayName)) ? _loginName : _displayName;
 
         [MaxLength(256)]
@@ -95,6 +77,24 @@ namespace FsInfoCat.Models
             get { return _notes; }
             set { _notes = (null == value) ? "" : value; }
         }
+
+        [Required()]
+        [Display(Name = "Created On")]
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedOn { get; set; }
+
+        [Required()]
+        [Display(Name = "Created By")]
+        public Guid CreatedBy { get; set; }
+
+        [Required()]
+        [Display(Name = "Modified On")]
+        [DataType(DataType.DateTime)]
+        public DateTime ModifiedOn { get; set; }
+
+        [Required()]
+        [Display(Name = "Modified By")]
+        public Guid ModifiedBy { get; set; }
 
         static AppUser()
         {

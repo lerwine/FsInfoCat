@@ -27,24 +27,6 @@ namespace FsInfoCat.Models
         [Display(Name = "ID")]
         public Guid HostID { get; set; }
 
-        [Required()]
-        [Display(Name = "Created On")]
-        [DataType(DataType.DateTime)]
-        public DateTime CreatedOn { get; set; }
-
-        [Required()]
-        [Display(Name = "Created By")]
-        public Guid CreatedBy { get; set; }
-
-        [Required()]
-        [Display(Name = "Modified On")]
-        [DataType(DataType.DateTime)]
-        public DateTime ModifiedOn { get; set; }
-
-        [Required()]
-        [Display(Name = "Modified By")]
-        public Guid ModifiedBy { get; set; }
-
         [MaxLength(256)]
         [Display(Name = "Display Name")]
         [DataType(DataType.Text)]
@@ -81,6 +63,23 @@ namespace FsInfoCat.Models
             set { _notes = (null == value) ? "" : value; }
         }
 
+        [Required()]
+        [Display(Name = "Created On")]
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedOn { get; set; }
+
+        [Required()]
+        [Display(Name = "Created By")]
+        public Guid CreatedBy { get; set; }
+
+        [Required()]
+        [Display(Name = "Modified On")]
+        [DataType(DataType.DateTime)]
+        public DateTime ModifiedOn { get; set; }
+
+        [Required()]
+        [Display(Name = "Modified By")]
+        public Guid ModifiedBy { get; set; }
 
         public ICollection<MediaVolume> Volumes { get; set; }
     }
