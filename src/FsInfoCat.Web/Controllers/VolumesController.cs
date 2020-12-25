@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using FsInfoCat.Models;
 using FsInfoCat.Web.Data;
 
@@ -13,10 +14,12 @@ namespace FsInfoCat.Web.Controllers
     public class VolumesController : Controller
     {
         private readonly FsInfoDataContext _context;
+        private readonly ILogger<VolumesController> _logger;
 
-        public VolumesController(FsInfoDataContext context)
+        public VolumesController(FsInfoDataContext context, ILogger<VolumesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Volumes
@@ -53,7 +56,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // POST: Volumes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -88,7 +91,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // POST: Volumes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
