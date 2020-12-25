@@ -4,23 +4,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Models
 {
-    public class MediaHost
+    public class HostDevice
     {
         public const string PATTERN_DOTTED_NAME = @"^[a-z][a-z\d_]*(\.[a-z][a-z\d_]*)$";
+        public const string PATTERN_MACHINE_NAME = @"^\s*(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?\s*$";
         private string _displayName = "";
         private string _machineName = "";
         private string _notes = "";
-
-        public MediaHost() { }
-
-        public MediaHost(string machineName, bool isWindows, Guid createdBy)
-        {
-            HostID = Guid.NewGuid();
-            MachineName = machineName;
-            IsWindows = isWindows;
-            CreatedOn = ModifiedOn = DateTime.Now;
-            CreatedBy = ModifiedBy = createdBy;
-        }
 
         [Required()]
         [Key()]
@@ -29,7 +19,6 @@ namespace FsInfoCat.Models
 
         [MaxLength(256)]
         [Display(Name = "Display Name")]
-        [DataType(DataType.Text)]
         public string DisplayName
         {
             get { return _displayName; }
@@ -40,8 +29,7 @@ namespace FsInfoCat.Models
         [MinLength(1)]
         [MaxLength(256)]
         [Display(Name = "Machine Name")]
-        [DataType(DataType.Text)]
-        [RegularExpression(PATTERN_DOTTED_NAME)]
+        [RegularExpression(PATTERN_MACHINE_NAME, ErrorMessage = "Invalid host name")]
         public string MachineName
         {
             get { return _machineName; }
@@ -63,6 +51,8 @@ namespace FsInfoCat.Models
             set { _notes = (null == value) ? "" : value; }
         }
 
+        public ICollection<Volume> Volumes { get; set; }
+
         [Required()]
         [Display(Name = "Created On")]
         [DataType(DataType.DateTime)]
@@ -81,6 +71,16 @@ namespace FsInfoCat.Models
         [Display(Name = "Modified By")]
         public Guid ModifiedBy { get; set; }
 
-        public ICollection<MediaVolume> Volumes { get; set; }
+        public HostDevice() { }
+
+        public HostDevice(string machineName, bool isWindows, Guid createdBy)
+        {
+            HostID = Guid.NewGuid();
+            MachineName = machineName;
+            IsWindows = isWindows;
+            CreatedOn = ModifiedOn = DateTime.Now;
+            CreatedBy = ModifiedBy = createdBy;
+        }
+
     }
 }

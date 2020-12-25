@@ -8,7 +8,9 @@ namespace FsInfoCat.Models
         private string _loginName = "";
         private string _password = "";
 
+        [Required()]
         [Display(Name = "Login Name")]
+        [RegularExpression(@"\S+", ErrorMessage = "Please provide the login name")]
         /// <summary>
         /// Gets the user's login name.
         /// /// </summary>
@@ -18,7 +20,9 @@ namespace FsInfoCat.Models
             set { _loginName = (null == value) ? "" : value; }
         }
 
+        [Required()]
         [Display(Name = "Password")]
+        [RegularExpression(@"\S+", ErrorMessage = "Please enter the password")]
         /// <summary>
         /// Gets the hash for the user's password.
         /// </summary>
@@ -27,7 +31,5 @@ namespace FsInfoCat.Models
             get { return _password; }
             set { _password = (null == value) ? "" : value; }
         }
-
-
     }
 }

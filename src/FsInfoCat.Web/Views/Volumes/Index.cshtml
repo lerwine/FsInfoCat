@@ -1,0 +1,113 @@
+@model IEnumerable<FsInfoCat.Models.Volume>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Host)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RootPathName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileSystemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VolumeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SerialNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxNameLength)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Flags)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsInactive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Notes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedBy)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Host.MachineName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RootPathName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileSystemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VolumeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SerialNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxNameLength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Flags)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsInactive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModifiedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModifiedBy)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.VolumeID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.VolumeID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.VolumeID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

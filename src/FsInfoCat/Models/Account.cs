@@ -3,22 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Models
 {
-    public class RegisteredUser : AppUser
+    public class Account : AppUser
     {
-
         public const int Encoded_Pw_Hash_Length = 96;
         private string _pwHash = "";
-
-        public RegisteredUser() { }
-
-        public RegisteredUser(string userName, string pwHash, UserRole role, Guid createdBy)
-        {
-            LoginName = userName;
-            PwHash = pwHash;
-            Role = role;
-            CreatedOn = ModifiedOn = DateTime.Now;
-            CreatedBy = ModifiedBy = createdBy;
-        }
 
         [Required()]
         [MinLength(Encoded_Pw_Hash_Length)]
@@ -36,5 +24,12 @@ namespace FsInfoCat.Models
 
         [Display(Name = "Is Inactive")]
         public bool IsInactive => Role == UserRole.None;
+
+        public Account() { }
+
+        public Account(string userName, string pwHash, UserRole role, Guid createdBy) : base(userName, role, createdBy)
+        {
+            PwHash = pwHash;
+        }
     }
 }

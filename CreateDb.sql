@@ -1,17 +1,17 @@
 
-IF OBJECT_ID('dbo.MediaVolume', 'U') IS NOT NULL
-DROP TABLE dbo.MediaVolume
+IF OBJECT_ID('dbo.Volume', 'U') IS NOT NULL
+DROP TABLE dbo.Volume
 GO
-IF OBJECT_ID('dbo.MediaHost', 'U') IS NOT NULL
-DROP TABLE dbo.MediaHost
+IF OBJECT_ID('dbo.HostDevice', 'U') IS NOT NULL
+DROP TABLE dbo.HostDevice
 GO
-IF OBJECT_ID('dbo.RegisteredUser', 'U') IS NOT NULL
-DROP TABLE dbo.RegisteredUser
+IF OBJECT_ID('dbo.Account', 'U') IS NOT NULL
+DROP TABLE dbo.Account
 GO
--- Create MediaHost table in the specified schema
-CREATE TABLE dbo.RegisteredUser
+-- Create HostDevice table in the specified schema
+CREATE TABLE dbo.Account
 (
-    UserID UNIQUEIDENTIFIER NOT NULL, -- primary key column
+    AccountID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     CreatedOn DATETIME NOT NULL,
     CreatedBy UNIQUEIDENTIFIER NOT NULL,
     ModifiedOn DATETIME NOT NULL,
@@ -21,28 +21,28 @@ CREATE TABLE dbo.RegisteredUser
     PwHash NCHAR(96) NOT NULL,
     [Role] TINYINT NOT NULL,
     Notes NTEXT NOT NULL DEFAULT '',
-    CONSTRAINT PK_RegisteredUser PRIMARY KEY CLUSTERED
+    CONSTRAINT PK_Account PRIMARY KEY CLUSTERED
     (
-        UserID ASC
+        AccountID ASC
     ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 DECLARE @CreatedOn DATETIME;
 SET @CreatedOn = GETDATE();
-INSERT INTO dbo.RegisteredUser (UserID, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy,
+INSERT INTO dbo.Account (AccountID, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy,
         DisplayName, LoginName, PwHash, [Role], Notes)
     Values ('00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000',
         'FS InfoCat Administrator', 'admin', 'XrVxbJmeSwCzNtQp6PpepBE8WUh1nfhPGlQCBoIOaS6ho6+7UH/lGnJgH0w2hF2oFzxDrQ6liVHWDldtFawAetBTWV+jCsFG', 4, '');
-ALTER TABLE dbo.RegisteredUser WITH CHECK ADD CONSTRAINT FK_RegisteredUser_CreatedBy FOREIGN KEY(CreatedBy)
-    REFERENCES dbo.RegisteredUser (UserID)
+ALTER TABLE dbo.Account WITH CHECK ADD CONSTRAINT FK_Account_CreatedBy FOREIGN KEY(CreatedBy)
+    REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
-ALTER TABLE dbo.RegisteredUser CHECK CONSTRAINT FK_RegisteredUser_CreatedBy;
-ALTER TABLE dbo.RegisteredUser WITH CHECK ADD CONSTRAINT FK_RegisteredUser_ModifiedBy FOREIGN KEY(ModifiedBy)
-    REFERENCES dbo.RegisteredUser (UserID)
+ALTER TABLE dbo.Account CHECK CONSTRAINT FK_Account_CreatedBy;
+ALTER TABLE dbo.Account WITH CHECK ADD CONSTRAINT FK_Account_ModifiedBy FOREIGN KEY(ModifiedBy)
+    REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
-ALTER TABLE dbo.RegisteredUser CHECK CONSTRAINT FK_RegisteredUser_ModifiedBy;
+ALTER TABLE dbo.Account CHECK CONSTRAINT FK_Account_ModifiedBy;
 
--- Create MediaHost table in the specified schema
-CREATE TABLE dbo.MediaHost
+-- Create HostDevice table in the specified schema
+CREATE TABLE dbo.HostDevice
 (
     HostID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     CreatedOn DATETIME NOT NULL,
@@ -54,22 +54,22 @@ CREATE TABLE dbo.MediaHost
     IsWindows BIT NOT NULL DEFAULT 0,
     IsInactive BIT NOT NULL DEFAULT 0,
     Notes NTEXT NOT NULL DEFAULT '',
-    CONSTRAINT PK_MediaHost PRIMARY KEY CLUSTERED
+    CONSTRAINT PK_HostDevice PRIMARY KEY CLUSTERED
     (
         HostID ASC
     ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
-ALTER TABLE dbo.MediaHost WITH CHECK ADD CONSTRAINT FK_MediaHost_CreatedBy FOREIGN KEY(CreatedBy)
-    REFERENCES dbo.RegisteredUser (UserID)
+ALTER TABLE dbo.HostDevice WITH CHECK ADD CONSTRAINT FK_HostDevice_CreatedBy FOREIGN KEY(CreatedBy)
+    REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
-ALTER TABLE dbo.MediaHost CHECK CONSTRAINT FK_MediaHost_CreatedBy;
-ALTER TABLE dbo.MediaHost WITH CHECK ADD CONSTRAINT FK_MediaHost_ModifiedBy FOREIGN KEY(ModifiedBy)
-    REFERENCES dbo.RegisteredUser (UserID)
+ALTER TABLE dbo.HostDevice CHECK CONSTRAINT FK_HostDevice_CreatedBy;
+ALTER TABLE dbo.HostDevice WITH CHECK ADD CONSTRAINT FK_HostDevice_ModifiedBy FOREIGN KEY(ModifiedBy)
+    REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
-ALTER TABLE dbo.MediaHost CHECK CONSTRAINT FK_MediaHost_ModifiedBy;
+ALTER TABLE dbo.HostDevice CHECK CONSTRAINT FK_HostDevice_ModifiedBy;
 
--- Create MediaVolume table in the specified schema
-CREATE TABLE dbo.MediaVolume
+-- Create Volume table in the specified schema
+CREATE TABLE dbo.Volume
 (
     VolumeID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     HostID UNIQUEIDENTIFIER NULL,
@@ -86,20 +86,20 @@ CREATE TABLE dbo.MediaVolume
     Flags INT NOT NULL,
     IsInactive BIT NOT NULL DEFAULT 0,
     Notes NTEXT NOT NULL DEFAULT '',
-    CONSTRAINT PK_MediaVolume PRIMARY KEY CLUSTERED
+    CONSTRAINT PK_Volume PRIMARY KEY CLUSTERED
     (
         VolumeID ASC
     ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 );
-ALTER TABLE dbo.MediaVolume WITH CHECK ADD CONSTRAINT FK_MediaVolume_Host FOREIGN KEY(HostID)
-    REFERENCES dbo.MediaHost (HostID)
+ALTER TABLE dbo.Volume WITH CHECK ADD CONSTRAINT FK_Volume_Host FOREIGN KEY(HostID)
+    REFERENCES dbo.HostDevice (HostID)
     ON DELETE CASCADE;
-ALTER TABLE dbo.MediaVolume CHECK CONSTRAINT FK_MediaVolume_Host;
-ALTER TABLE dbo.MediaVolume WITH CHECK ADD CONSTRAINT FK_MediaVolume_CreatedBy FOREIGN KEY(CreatedBy)
-    REFERENCES dbo.RegisteredUser (UserID)
+ALTER TABLE dbo.Volume CHECK CONSTRAINT FK_Volume_Host;
+ALTER TABLE dbo.Volume WITH CHECK ADD CONSTRAINT FK_Volume_CreatedBy FOREIGN KEY(CreatedBy)
+    REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
-ALTER TABLE dbo.MediaVolume CHECK CONSTRAINT FK_MediaVolume_CreatedBy;
-ALTER TABLE dbo.MediaVolume WITH CHECK ADD CONSTRAINT FK_MediaVolume_ModifiedBy FOREIGN KEY(ModifiedBy)
-    REFERENCES dbo.RegisteredUser (UserID)
+ALTER TABLE dbo.Volume CHECK CONSTRAINT FK_Volume_CreatedBy;
+ALTER TABLE dbo.Volume WITH CHECK ADD CONSTRAINT FK_Volume_ModifiedBy FOREIGN KEY(ModifiedBy)
+    REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
-ALTER TABLE dbo.MediaVolume CHECK CONSTRAINT FK_MediaVolume_ModifiedBy;
+ALTER TABLE dbo.Volume CHECK CONSTRAINT FK_Volume_ModifiedBy;

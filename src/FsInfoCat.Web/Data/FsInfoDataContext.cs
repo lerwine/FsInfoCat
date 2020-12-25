@@ -11,10 +11,12 @@ namespace FsInfoCat.Web.Data
         {
         }
 
-        public DbSet<RegisteredUser> RegisteredUser { get; set; }
+        public DbSet<FsInfoCat.Models.Account> Account { get; set; }
 
-        public DbSet<MediaHost> MediaHost { get; set; }
+        public DbSet<HostDevice> HostDevice { get; set; }
 
-        public DbSet<MediaVolume> MediaVolume { get; set; }
+        public DbSet<FsInfoCat.Models.Volume> Volume { get; set; }
+
+        // public DbSet<FsInfoCat.Models.Volume> Volume { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace FsInfoCat.Models
         [Required()]
         [Key()]
         [Display(Name = "ID")]
-        public Guid UserID { get; set; }
+        public Guid AccountID { get; set; }
 
         public string Name => (string.IsNullOrWhiteSpace(_displayName)) ? _loginName : _displayName;
 
@@ -120,11 +120,19 @@ namespace FsInfoCat.Models
 
         }
 
+        protected AppUser(string userName, UserRole role, Guid createdBy)
+        {
+            LoginName = userName;
+            Role = role;
+            CreatedOn = ModifiedOn = DateTime.Now;
+            CreatedBy = ModifiedBy = createdBy;
+        }
+
         public AppUser(AppUser user)
         {
             if (null == user)
                 throw new ArgumentNullException("user");
-            UserID = user.UserID;
+            AccountID = user.AccountID;
             CreatedBy = user.CreatedBy;
             CreatedOn = user.CreatedOn;
             ModifiedBy = user.ModifiedBy;

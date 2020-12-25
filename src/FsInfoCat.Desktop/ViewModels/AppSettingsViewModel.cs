@@ -384,14 +384,14 @@ namespace FsInfoCat.Desktop.ViewModels
             {
                 string uri = ValidatedBaseWebApiUri;
                 UriBuilder builder = new UriBuilder(uri);
-                builder.Path = "api/MediaHost";
-                MediaHostRegRequest hostNameRef = new MediaHostRegRequest();
+                builder.Path = "api/HostDevice";
+                HostDeviceRegRequest hostNameRef = new HostDeviceRegRequest();
                 hostNameRef.IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
                 hostNameRef.MachineName = Environment.MachineName;
                 JsonSerializerOptions options = new JsonSerializerOptions();
-                JsonContent content = JsonContent.Create<MediaHostRegRequest>(hostNameRef);
+                JsonContent content = JsonContent.Create<HostDeviceRegRequest>(hostNameRef);
                 HttpResponseMessage response = ((App)(App.Current)).HttpClient.PostAsJsonAsync(builder.Uri, content).Result;
-                MediaHost result = response.Content.ReadFromJsonAsync<MediaHost>().Result;
+                HostDevice result = response.Content.ReadFromJsonAsync<HostDevice>().Result;
                 if (null != result)
                 {
                     RegisteredBaseWebApiUri = uri;

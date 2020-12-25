@@ -9,56 +9,86 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using FsInfoCat.Models;
+using FsInfoCat.Web.Data;
 
-namespace FsInfoCat.WebApp.Controllers
+namespace FsInfoCat.Web.API
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize]
-    public class AccountController : ControllerBase
+    [Authorize]
+    public class AuthController : ControllerBase
     {
-        private readonly FsInfoCat.WebApp.Data.FsInfoDataContext _context;
+        public const int Hash_Bytes_Length = 64;
+        public const int Salt_Bytes_Length = 8;
+        private readonly FsInfoDataContext _context;
+        private readonly ILogger<AuthController> _logger;
 
-        public AccountController(FsInfoCat.WebApp.Data.FsInfoDataContext context)
+        public AuthController(FsInfoDataContext context, ILogger<AuthController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-
-        // POST: api/Account/login
-        [HttpPost("login")]
-        // [AllowAnonymous]
-        // [ValidateAntiForgeryToken]
-        public async Task<ActionResult<RequestResponse<AppUser>>> Login(UserLoginRequest userLogin)
+        public static async Task<ActionResult<RequestResponse<AppUser>>> Login(UserLoginRequest request, FsInfoDataContext dbContext, HttpContext httpContext, ILogger logger)
         {
-            Account user = _context.Account.FirstOrDefault(u => u.LoginName == userLogin.LoginName);
-            if (null == user || !CheckPwHash(user.PwHash, userLogin.Password))
+            Account user;
+            try
+            {
+                user = dbContext.Account.FirstOrDefault(u => u.LoginName == request.LoginName);
+            }
+            catch (Exception exc)
+            {
+                // TODO: Log exception
+                return new RequestResponse<AppUser>(null, (string.IsNullOrWhiteSpace(exc.Message)) ?
+                    "An unexpected " + exc.GetType().Name + " occurred while accessing the database." :
+                    "An unexpected error occurred while accessing the database: " + exc.Message);
+            }
+            if (null == user || !CheckPwHash(user.PwHash, request.Password))
                 return new RequestResponse<AppUser>(null, "Invalid username or password");
 
-            RequestResponse<AppUser> result = new RequestResponse<AppUser>(new AppUser(user), (user.Role != UserRole.None) ? "" : "User account is inactive");
-            if (result.Success)
+            if (user.Role == UserRole.None)
+                return new RequestResponse<AppUser>(null, "Your account has been disabled");
+
+            List<Claim> claims = new List<Claim>
             {
-                List<Claim> claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.AccountID.ToString("n")),
-                    new Claim(ClaimTypes.Name, (string.IsNullOrWhiteSpace(user.DisplayName)) ? user.LoginName : user.DisplayName)
-                };
-                foreach (UserRole role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.None && r <= user.Role))
-                    claims.Add(new Claim(ClaimTypes.Role, role.ToString("F")));
-                await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", ClaimTypes.NameIdentifier, ClaimTypes.Role)));
-            }
-            return result;
+                new Claim(ClaimTypes.NameIdentifier, user.AccountID.ToString("n")),
+                new Claim(ClaimTypes.Name, (string.IsNullOrWhiteSpace(user.DisplayName)) ? user.LoginName : user.DisplayName)
+            };
+            foreach (UserRole role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.None && r <= user.Role))
+                claims.Add(new Claim(ClaimTypes.Role, role.ToString("F")));
+            await httpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", ClaimTypes.NameIdentifier, ClaimTypes.Role)));
+            return new RequestResponse<AppUser>(new AppUser(user));
         }
 
-        // GET: api/Account/logout
-        [HttpGet("logout")]
-        public async Task Logout()
+        public static async Task<ActionResult<RequestResponse<bool>>> Logout(ClaimsPrincipal user, HttpContext httpContext, ILogger logger)
         {
-            await HttpContext.SignOutAsync();
+            if (null != user && null != user.Identity && user.Identity.IsAuthenticated)
+            {
+                await httpContext.SignOutAsync();
+                return new RequestResponse<bool>(true);
+            }
+            return new RequestResponse<bool>(false);
+        }
+
+        // POST: /api/Auth/Login
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult<RequestResponse<AppUser>>> Login(UserLoginRequest request)
+        {
+            return await Login(request, _context, HttpContext, _logger);
+        }
+
+        // POST: /api/Auth/Logout
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult<RequestResponse<bool>>> Logout()
+        {
+            return await Logout(User, HttpContext, _logger);
         }
 
         public static string GetPwHash(string pw)
@@ -80,9 +110,6 @@ namespace FsInfoCat.WebApp.Controllers
             }
             return sb.ToString();
         }
-
-        public const int Hash_Bytes_Length = 64;
-        public const int Salt_Bytes_Length = 8;
 
         public static string ToPwHash(string rawPw, byte[] salt = null)
         {
@@ -129,25 +156,6 @@ namespace FsInfoCat.WebApp.Controllers
                 }
             }
             return true;
-        }
-
-        // POST: api/Account/create
-        [HttpPost("create")]
-        // [Authorize(Roles = AppUser.Role_Name_Admin)]
-        // [ValidateAntiForgeryToken]
-        public async Task<ActionResult<RequestResponse<Account>>> Create(string userName, string password, UserRole role)
-        {
-            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrEmpty(password))
-                return await Task.FromResult(new RequestResponse<Account>(null, "Invalid credentials"));
-            Account user = _context.Account.FirstOrDefault(u => string.Equals(u.LoginName, userName, StringComparison.InvariantCultureIgnoreCase));
-            RequestResponse<Account> result = new RequestResponse<Account>(user, (null != user) ? "A user with that login name already exists" : "");
-            if (result.Success)
-            {
-                result.Result = new Account(userName, ToPwHash(password), role, new Guid(User.Identity.Name));
-                await _context.Account.AddAsync(result.Result);
-                await _context.SaveChangesAsync();
-            }
-            return result;
         }
     }
 }

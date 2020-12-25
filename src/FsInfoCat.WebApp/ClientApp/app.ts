@@ -1285,7 +1285,7 @@ module app {
         modifiedBy: GUIDString;
     }
 
-    export interface IMediaHost {
+    export interface IHostDevice {
         hostID: GUIDString;
         displayName: string;
         machineName: string;
@@ -1298,7 +1298,7 @@ module app {
         modifiedBy: GUIDString;
     }
 
-    export interface IMediaVolume {
+    export interface IVolume {
         volumeID: GUIDString;
         hostID?: GUIDString;
         displayName: string;
