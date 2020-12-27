@@ -25,6 +25,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FsInfoCat.Models;
 using FsInfoCat.Desktop.Commands;
+
 namespace FsInfoCat.Desktop.ViewModels
 {
     public class AppSettingsViewModel : DependencyObject
