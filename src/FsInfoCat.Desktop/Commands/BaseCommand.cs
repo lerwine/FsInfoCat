@@ -11,7 +11,6 @@ namespace FsInfoCat.Desktop.Commands
     public abstract class BaseCommand : DependencyObject, System.Windows.Input.ICommand
     {
         private readonly object _syncRoot = new object();
-        private bool _allowSimultaneousExecute2;
         private bool _canExecute = true;
         private int _execCount = 0;
 
