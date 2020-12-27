@@ -7,9 +7,8 @@ using System.Linq;
 
 namespace FsInfoCat.Models
 {
-    public class AppUser
+    public class AppUser : IModficationAuditable
     {
-        public const int Max_Length_Login_Name = 32;
         public const string Role_Name_Viewer = "viewer";
         public const string Role_Name_User = "user";
         public const string Role_Name_Crawler = "crawler";
@@ -27,19 +26,23 @@ namespace FsInfoCat.Models
             return (null != roleName && _FromRoleNameMap.ContainsKey(roleName)) ? _FromRoleNameMap[roleName] : UserRole.None;
         }
 
-        private string _displayName = "";
-        private string _loginName = "";
-        private string _notes = "";
+        #region Properties
 
         [Required()]
         [Key()]
         [Display(Name = "ID")]
         public Guid AccountID { get; set; }
 
-        public string Name => (string.IsNullOrWhiteSpace(_displayName)) ? _loginName : _displayName;
+        #region DisplayName
 
-        [MaxLength(256)]
-        [Display(Name = "Display Name")]
+        public const int Max_Length_DisplayName = 256;
+        public const string DisplayName_DisplayName = "Display name";
+        public const string PropertyName_DisplayName = "DisplayName";
+        public const string Error_Message_DisplayName = "Display name too long.";
+        private string _displayName = "";
+
+        [MaxLength(Max_Length_DisplayName, ErrorMessage = Error_Message_DisplayName)]
+        [Display(Name = DisplayName_DisplayName)]
         [DataType(DataType.Text)]
         public string DisplayName
         {
@@ -47,10 +50,23 @@ namespace FsInfoCat.Models
             set { _displayName = (null == value) ? "" : value; }
         }
 
+        #endregion
+
+        #region LoginName
+
+        public const int Max_Length_Login_Name = 32;
+        public const string DisplayName_LoginName = "Login name";
+        public const string PropertyName_LoginName = "LoginName";
+        public const string Error_Message_Login_Empty = "Login name cannot be empty.";
+        public const string Error_Message_Login_Length = "Login name too long.";
+        public const string Error_Message_Login_Invalid = "Invalid login name.";
+        private string _loginName = "";
+
         [Required()]
-        [MinLength(1)]
-        [MaxLength(Max_Length_Login_Name)]
-        [Display(Name = "Login Name")]
+        [MinLength(1, ErrorMessage = Error_Message_Login_Empty)]
+        [MaxLength(Max_Length_Login_Name, ErrorMessage = Error_Message_Login_Length)]
+        [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Error_Message_Login_Invalid)]
+        [Display(Name = DisplayName_LoginName)]
         [DataType(DataType.Text)]
         /// <summary>
         /// Gets the user's login name.
@@ -60,6 +76,7 @@ namespace FsInfoCat.Models
             get { return _loginName; }
             set { _loginName = (null == value) ? "" : value; }
         }
+        #endregion
 
         [Required()]
         [Display(Name = "User Role")]
@@ -68,6 +85,10 @@ namespace FsInfoCat.Models
         /// Gets the role of the user.
         /// </summary>
         public UserRole Role { get; set; }
+
+        #region Notes
+
+        private string _notes = "";
 
         [Required()]
         [Display(Name = "Notes")]
@@ -78,23 +99,23 @@ namespace FsInfoCat.Models
             set { _notes = (null == value) ? "" : value; }
         }
 
-        [Required()]
-        [Display(Name = "Created On")]
-        [DataType(DataType.DateTime)]
+        #endregion
+
+        #region Audit
+
         public DateTime CreatedOn { get; set; }
 
-        [Required()]
-        [Display(Name = "Created By")]
         public Guid CreatedBy { get; set; }
 
-        [Required()]
-        [Display(Name = "Modified On")]
-        [DataType(DataType.DateTime)]
         public DateTime ModifiedOn { get; set; }
 
-        [Required()]
-        [Display(Name = "Modified By")]
         public Guid ModifiedBy { get; set; }
+
+        #endregion
+
+        #endregion
+
+        #region Constructors
 
         static AppUser()
         {
@@ -117,14 +138,13 @@ namespace FsInfoCat.Models
 
         protected AppUser()
         {
-
+            CreatedOn = ModifiedOn = DateTime.UtcNow;
         }
 
-        protected AppUser(string userName, UserRole role, Guid createdBy)
+        protected AppUser(string userName, UserRole role, Guid createdBy) : this()
         {
             LoginName = userName;
             Role = role;
-            CreatedOn = ModifiedOn = DateTime.Now;
             CreatedBy = ModifiedBy = createdBy;
         }
 
@@ -141,6 +161,64 @@ namespace FsInfoCat.Models
             ModifiedOn = user.ModifiedOn;
             Role = user.Role;
             Notes = user.Notes;
+        }
+
+        #endregion
+
+        public void Normalize()
+        {
+            if (AccountID.Equals(Guid.Empty))
+                AccountID = Guid.NewGuid();
+            _loginName = _loginName.Trim();
+            if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
+                _displayName = _loginName;
+            _notes = _notes.Trim();
+        }
+
+        protected virtual void Validate(List<ValidationResult> result, string propertyName)
+        {
+            switch (propertyName)
+            {
+                case PropertyName_DisplayName:
+                case DisplayName_DisplayName:
+                    if (_displayName.Length > Max_Length_DisplayName)
+                        result.Add(new ValidationResult(Error_Message_DisplayName, new string[] { PropertyName_DisplayName }));
+                    break;
+                case PropertyName_LoginName:
+                case DisplayName_LoginName:
+                    if (_loginName.Length == 0)
+                        result.Add(new ValidationResult(Error_Message_Login_Empty, new string[] { PropertyName_LoginName }));
+                    else if (_loginName.Length > Max_Length_DisplayName)
+                        result.Add(new ValidationResult(Error_Message_Login_Length, new string[] { PropertyName_LoginName }));
+                    else if (!ModelHelper.DottedNameRegex.IsMatch(_loginName))
+                        result.Add(new ValidationResult(Error_Message_Login_Invalid, new string[] { PropertyName_LoginName }));
+                    break;
+            }
+        }
+
+        public IList<ValidationResult> ValidateAll()
+        {
+            List<ValidationResult> result = new List<ValidationResult>();
+            Normalize();
+            OnValidateAll(result);
+            return result;
+        }
+
+        protected virtual void OnValidateAll(List<ValidationResult> result)
+        {
+            Validate(result, PropertyName_DisplayName);
+            Validate(result, PropertyName_LoginName);
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            List<ValidationResult> result = new List<ValidationResult>();
+            Normalize();
+            if (string.IsNullOrEmpty(validationContext.DisplayName))
+                OnValidateAll(result);
+            else
+                Validate(result, validationContext.DisplayName);
+            return result;
         }
     }
 }

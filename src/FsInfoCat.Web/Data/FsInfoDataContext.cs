@@ -11,11 +11,11 @@ namespace FsInfoCat.Web.Data
         {
         }
 
-        public DbSet<FsInfoCat.Models.Account> Account { get; set; }
+        public DbSet<Account> Account { get; set; }
 
         public DbSet<HostDevice> HostDevice { get; set; }
 
-        public DbSet<FsInfoCat.Models.Volume> Volume { get; set; }
+        public DbSet<Volume> Volume { get; set; }
 
         // public DbSet<FsInfoCat.Models.Volume> Volume { get; set; }
     }

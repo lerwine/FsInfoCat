@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using FsInfoCat.Models;
 using FsInfoCat.Web.Data;
 
@@ -14,12 +13,10 @@ namespace FsInfoCat.Web.Controllers
     public class HostDevicesController : Controller
     {
         private readonly FsInfoDataContext _context;
-        private readonly ILogger<HostDevicesController> _logger;
 
-        public HostDevicesController(FsInfoDataContext context, ILogger<HostDevicesController> logger)
+        public HostDevicesController(FsInfoDataContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         // GET: HostDevices
@@ -53,11 +50,11 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // POST: HostDevices/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HostID,DisplayName,MachineName,IsWindows,IsInactive,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] HostDevice hostDevice)
+        public async Task<IActionResult> Create([Bind("HostID,DisplayName,MachineIdentifer,MachineName,IsWindows,IsInactive,Notes,CreatedOn,ModifiedOn")] HostDevice hostDevice)
         {
             if (ModelState.IsValid)
             {
@@ -86,11 +83,11 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // POST: HostDevices/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("HostID,DisplayName,MachineName,IsWindows,IsInactive,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] HostDevice hostDevice)
+        public async Task<IActionResult> Edit(Guid id, [Bind("HostID,DisplayName,MachineIdentifer,MachineName,IsWindows,IsInactive,Notes,CreatedOn,ModifiedOn")] HostDevice hostDevice)
         {
             if (id != hostDevice.HostID)
             {

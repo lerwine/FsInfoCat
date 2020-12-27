@@ -4,10 +4,7 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:FsInfoCat.Desktop"
-    xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
     xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModels" mc:Ignorable="d" x:Class="FsInfoCat.Desktop.MainWindow" DataContext="{DynamicResource MainWindowViewModel}" Title="{DynamicResource ApplicationTitle}" Height="450" Width="800">
-    <Window.Resources>
-    </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="F5" Command="{Binding RunPendingJobCommand, Mode=OneWay}" Gesture="F5" />
         <KeyBinding Key="F6" Command="{Binding RunAllPendingJobsCommand, Mode=OneWay}" Gesture="F6" />
@@ -73,7 +70,7 @@
         <Menu x:Name="topMenu">
             <MenuItem Header="Pending Job">
                 <MenuItem Header="Run" Command="{Binding RunPendingJobCommand, Mode=OneWay}" InputGestureText="F5" />
-                <MenuItem Header="Run All" Command="{Binding OpenDocRunAllPendingJobsCommandumentCommand, Mode=OneWay}" InputGestureText="F6" />
+                <MenuItem Header="Run All" Command="{Binding RunAllPendingJobsCommand, Mode=OneWay}" InputGestureText="F6" />
                 <MenuItem Header="Cancel" Command="ApplicationCommands.Stop" InputGestureText="Shift+F5" />
             </MenuItem>
             <MenuItem Header="Settings" Command="{Binding SettingsCommand, Mode=OneWay}" InputGestureText="F10" />

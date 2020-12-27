@@ -5,7 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FsInfoCat.Desktop"
         mc:Ignorable="d"
+        xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
+        xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModels"
         Title="Settings" Height="450" Width="800">
+    <Window.Resources>
+        <cvt:StringToVisibilityConverter x:Key="StringToVisibility" />
+    </Window.Resources>
     <Grid>
 
     </Grid>

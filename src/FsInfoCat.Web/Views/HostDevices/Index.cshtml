@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.DisplayName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.MachineIdentifer)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.MachineName)
             </th>
             <th>
@@ -31,13 +34,7 @@
                 @Html.DisplayNameFor(model => model.CreatedOn)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.ModifiedOn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedBy)
             </th>
             <th></th>
         </tr>
@@ -47,6 +44,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MachineIdentifer)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.MachineName)
@@ -64,13 +64,7 @@
                 @Html.DisplayFor(modelItem => item.CreatedOn)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.ModifiedOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedBy)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.HostID">Edit</a> |

@@ -21,7 +21,7 @@ Function Get-SaltBytes {
     Param(
         [Parameter(Mandatory = $true)]
         [ValidateLength(96, 96)]
-        [ValidatePattern('[A-Za-z\d+/]{52}')]
+        [ValidatePattern('[A-Za-z\d+/]{96}')]
         [string]$Base64EncodedHash
     )
     [Convert]::FromBase64String($Base64EncodedHash) | Select-Object -Skip 64;
@@ -33,7 +33,7 @@ Function Test-PasswordHash {
         [string]$Password,
         [Parameter(Mandatory = $true)]
         [ValidateLength(96, 96)]
-        [ValidatePattern('[A-Za-z\d+/]{52}')]
+        [ValidatePattern('[A-Za-z\d+/]{96}')]
         [string]$ExpectedHash
     )
 

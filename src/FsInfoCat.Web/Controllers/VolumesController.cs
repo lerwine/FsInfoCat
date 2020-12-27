@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using FsInfoCat.Models;
 using FsInfoCat.Web.Data;
 
@@ -14,19 +13,16 @@ namespace FsInfoCat.Web.Controllers
     public class VolumesController : Controller
     {
         private readonly FsInfoDataContext _context;
-        private readonly ILogger<VolumesController> _logger;
 
-        public VolumesController(FsInfoDataContext context, ILogger<VolumesController> logger)
+        public VolumesController(FsInfoDataContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         // GET: Volumes
         public async Task<IActionResult> Index()
         {
-            var fsInfoDataContext = _context.Volume.Include(v => v.Host);
-            return View(await fsInfoDataContext.ToListAsync());
+            return View(await _context.Volume.ToListAsync());
         }
 
         // GET: Volumes/Details/5
@@ -38,7 +34,6 @@ namespace FsInfoCat.Web.Controllers
             }
 
             var volume = await _context.Volume
-                .Include(v => v.Host)
                 .FirstOrDefaultAsync(m => m.VolumeID == id);
             if (volume == null)
             {
@@ -51,16 +46,15 @@ namespace FsInfoCat.Web.Controllers
         // GET: Volumes/Create
         public IActionResult Create()
         {
-            ViewData["HostID"] = new SelectList(_context.HostDevice, "HostID", "MachineName");
             return View();
         }
 
         // POST: Volumes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VolumeID,HostID,DisplayName,RootPathName,FileSystemName,VolumeName,SerialNumber,MaxNameLength,Flags,IsInactive,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Volume volume)
+        public async Task<IActionResult> Create([Bind("VolumeID,HostID,DisplayName,RootPathName,FileSystemName,VolumeName,SerialNumber,MaxNameLength,Flags,IsInactive,Notes,CreatedOn,ModifiedOn")] Volume volume)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +63,6 @@ namespace FsInfoCat.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HostID"] = new SelectList(_context.HostDevice, "HostID", "MachineName", volume.HostID);
             return View(volume);
         }
 
@@ -86,16 +79,15 @@ namespace FsInfoCat.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["HostID"] = new SelectList(_context.HostDevice, "HostID", "MachineName", volume.HostID);
             return View(volume);
         }
 
         // POST: Volumes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("VolumeID,HostID,DisplayName,RootPathName,FileSystemName,VolumeName,SerialNumber,MaxNameLength,Flags,IsInactive,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Volume volume)
+        public async Task<IActionResult> Edit(Guid id, [Bind("VolumeID,HostID,DisplayName,RootPathName,FileSystemName,VolumeName,SerialNumber,MaxNameLength,Flags,IsInactive,Notes,CreatedOn,ModifiedOn")] Volume volume)
         {
             if (id != volume.VolumeID)
             {
@@ -122,7 +114,6 @@ namespace FsInfoCat.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HostID"] = new SelectList(_context.HostDevice, "HostID", "MachineName", volume.HostID);
             return View(volume);
         }
 
@@ -135,7 +126,6 @@ namespace FsInfoCat.Web.Controllers
             }
 
             var volume = await _context.Volume
-                .Include(v => v.Host)
                 .FirstOrDefaultAsync(m => m.VolumeID == id);
             if (volume == null)
             {

@@ -3,6 +3,6 @@
     xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModels"
     xmlns:local="clr-namespace:FsInfoCat.Desktop">
     <ViewModel:AppSettingsViewModel x:Key="AppSettingsViewModel" />
-    <ViewModel:MainWindowViewModel x:Key="MainWindowViewModel" />
     <ViewModel:WorkerProgressViewModel x:Key="WorkerProgressViewModel" />
+    <ViewModel:MainWindowViewModel x:Key="MainWindowViewModel" />
 </ResourceDictionary>

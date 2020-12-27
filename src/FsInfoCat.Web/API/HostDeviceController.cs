@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
@@ -15,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using FsInfoCat.Models;
 using FsInfoCat.Web.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Web.API
 {
@@ -32,7 +32,7 @@ namespace FsInfoCat.Web.API
             _logger = logger;
         }
 
-        // GET: api/HostDevice/get/{id}
+        // GET: api/HostDevice/GetById/{id}
         [HttpGet("{id}")]
         [Authorize(Roles = AppUser.Role_Name_Viewer)]
         public async Task<ActionResult<HostDevice>> GetById(Guid id)
@@ -42,29 +42,52 @@ namespace FsInfoCat.Web.API
             return await _context.HostDevice.FindAsync(id);
         }
 
-        public static readonly Regex MachineNameRegex = new Regex(HostDevice.PATTERN_MACHINE_NAME, RegexOptions.Compiled);
-        // POST: api/HostDevice
+
+        // POST: api/HostDevice/Register
         [HttpPost]
         [Authorize(Roles = AppUser.Role_Name_Crawler)]
         // [ValidateAntiForgeryToken]
         public async Task<ActionResult<RequestResponse<HostDevice>>> Register(HostDeviceRegRequest host)
         {
-            string uc;
-            if (null == host || string.IsNullOrWhiteSpace(host.MachineName) || !MachineNameRegex.IsMatch((uc = host.MachineName.ToUpper())))
-                return await Task.FromResult(new RequestResponse<HostDevice>(null, "Registration failed."));
-            return await _context.HostDevice.FirstOrDefaultAsync(h => String.Equals(uc, host.MachineName, StringComparison.InvariantCulture)).ContinueWith<RequestResponse<HostDevice>>(task =>
+            if (null != host)
+                return await Task.FromResult(new RequestResponse<HostDevice>(null, "Invalid request."));
+            IList<ValidationResult> validation = host.ValidateAll();
+            if (validation.Count > 0)
+                return await Task.FromResult(new RequestResponse<HostDevice>(null, validation[0].ErrorMessage));
+            IQueryable<HostDevice> hostDevices = from d in _context.HostDevice select d;
+            if (host.MachineIdentifer.Length == 0)
+                hostDevices = hostDevices.Where(h => string.Equals(host.MachineName, h.MachineName, StringComparison.InvariantCulture));
+            else
+                hostDevices = hostDevices.Where(h => string.Equals(host.MachineName, h.MachineName, StringComparison.InvariantCulture) ||
+                    string.Equals(host.MachineIdentifer, h.MachineIdentifer, StringComparison.InvariantCulture));
+            HostDevice matching = (await hostDevices.AsNoTracking().ToListAsync()).FirstOrDefault();
+            RequestResponse<HostDevice> result;
+            if (null == matching)
             {
-                RequestResponse<HostDevice> result;
-                if (null != task.Result)
-                    return new RequestResponse<HostDevice>(task.Result, (task.Result.IsWindows == host.IsWindows) ? "" : "System type mismatch.");
-                result = new RequestResponse<HostDevice>(new HostDevice(uc, host.IsWindows, new Guid(User.Identity.Name)));
+                result = new RequestResponse<HostDevice>(new HostDevice(host, new Guid(User.Identity.Name)));
                 _context.HostDevice.Add(result.Result);
-                _context.SaveChanges();
-                return result;
-            });
+                await _context.SaveChangesAsync();
+            }
+            else if (host.IsWindows != matching.IsWindows)
+                result = new RequestResponse<HostDevice>(matching, "System type mismatch");
+            else
+            {
+                if (host.DisplayName != matching.DisplayName || host.MachineIdentifer != matching.MachineIdentifer || host.MachineName != matching.MachineName)
+                {
+                    matching.DisplayName = host.DisplayName;
+                    matching.MachineIdentifer = host.MachineIdentifer;
+                    matching.MachineName = host.MachineName;
+                    matching.ModifiedOn = DateTime.UtcNow;
+                    matching.ModifiedBy = new Guid(User.Identity.Name);
+                    _context.HostDevice.Update(matching);
+                    await _context.SaveChangesAsync();
+                }
+                result = new RequestResponse<HostDevice>(matching);
+            }
+            return result;
         }
 
-        // DELETE: api/HostDevice/{id}
+        // DELETE: api/HostDevice/UnRegister/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = AppUser.Role_Name_Admin)]
         public async Task<ActionResult<bool>> UnRegister(Guid id)

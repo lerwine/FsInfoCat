@@ -18,6 +18,11 @@
                 <span asp-validation-for="DisplayName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="MachineIdentifer" class="control-label"></label>
+                <input asp-for="MachineIdentifer" class="form-control" />
+                <span asp-validation-for="MachineIdentifer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="MachineName" class="control-label"></label>
                 <input asp-for="MachineName" class="form-control" />
                 <span asp-validation-for="MachineName" class="text-danger"></span>
@@ -43,19 +48,9 @@
                 <span asp-validation-for="CreatedOn" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ModifiedOn" class="control-label"></label>
                 <input asp-for="ModifiedOn" class="form-control" />
                 <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

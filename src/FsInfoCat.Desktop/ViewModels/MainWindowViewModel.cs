@@ -350,6 +350,19 @@ namespace FsInfoCat.Desktop.ViewModels
             ExitCommand = new RelayCommand(OnExit, false);
             HelpCommand = new RelayCommand(OnHelp, false);
             AboutCommand = new RelayCommand(OnAbout, false);
+            App.AppSettingsViewModel.RegisteredHostIdPropertyChanged += OnRegisteredHostIdPropertyChanged;
+            OnRegisteredHostIdPropertyChanged(App.AppSettingsViewModel, EventArgs.Empty);
+        }
+
+        private void OnRegisteredHostIdPropertyChanged(object sender, EventArgs e)
+        {
+            if (!CheckAccess())
+            {
+                Dispatcher.Invoke(() => OnRegisteredHostIdPropertyChanged(sender, e));
+                return;
+            }
+
+            throw new NotImplementedException();
         }
 
         private void OnJobTaskDone(Task task)

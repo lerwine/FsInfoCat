@@ -15,7 +15,7 @@
             <input type="hidden" asp-for="VolumeID" />
             <div class="form-group">
                 <label asp-for="HostID" class="control-label"></label>
-                <select asp-for="HostID" class="form-control" asp-items="ViewBag.HostID"></select>
+                <input asp-for="HostID" class="form-control" />
                 <span asp-validation-for="HostID" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -69,19 +69,9 @@
                 <span asp-validation-for="CreatedOn" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ModifiedOn" class="control-label"></label>
                 <input asp-for="ModifiedOn" class="form-control" />
                 <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

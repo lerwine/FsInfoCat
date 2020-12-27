@@ -40,6 +40,7 @@ ALTER TABLE dbo.Account WITH CHECK ADD CONSTRAINT FK_Account_ModifiedBy FOREIGN 
     REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
 ALTER TABLE dbo.Account CHECK CONSTRAINT FK_Account_ModifiedBy;
+CREATE UNIQUE CLUSTERED INDEX IDX_Account_LoginName ON dbo.Account (LoginName);
 
 -- Create HostDevice table in the specified schema
 CREATE TABLE dbo.HostDevice
@@ -50,6 +51,7 @@ CREATE TABLE dbo.HostDevice
     ModifiedOn DATETIME NOT NULL,
     ModifiedBy UNIQUEIDENTIFIER NOT NULL,
     DisplayName NVARCHAR(256) NOT NULL DEFAULT '',
+    MachineIdentifer NVARCHAR(256) NOT NULL,
     MachineName NVARCHAR(256) NOT NULL,
     IsWindows BIT NOT NULL DEFAULT 0,
     IsInactive BIT NOT NULL DEFAULT 0,
@@ -57,7 +59,10 @@ CREATE TABLE dbo.HostDevice
     CONSTRAINT PK_HostDevice PRIMARY KEY CLUSTERED
     (
         HostID ASC
-    ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+    CONSTRAINT AK_HostDevice_MachineIdentifier UNIQUE(DisplayName),
+    CONSTRAINT AK_HostDevice_MachineIdentifer UNIQUE(MachineIdentifer),
+    CONSTRAINT AK_HostDevice_MachineName UNIQUE(MachineName)
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 ALTER TABLE dbo.HostDevice WITH CHECK ADD CONSTRAINT FK_HostDevice_CreatedBy FOREIGN KEY(CreatedBy)
     REFERENCES dbo.Account (AccountID)
@@ -67,6 +72,7 @@ ALTER TABLE dbo.HostDevice WITH CHECK ADD CONSTRAINT FK_HostDevice_ModifiedBy FO
     REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
 ALTER TABLE dbo.HostDevice CHECK CONSTRAINT FK_HostDevice_ModifiedBy;
+CREATE UNIQUE CLUSTERED INDEX IDX_HostDevice_MachineIdentifer ON dbo.HostDevice (MachineIdentifer);
 
 -- Create Volume table in the specified schema
 CREATE TABLE dbo.Volume
@@ -103,3 +109,4 @@ ALTER TABLE dbo.Volume WITH CHECK ADD CONSTRAINT FK_Volume_ModifiedBy FOREIGN KE
     REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
 ALTER TABLE dbo.Volume CHECK CONSTRAINT FK_Volume_ModifiedBy;
+CREATE UNIQUE CLUSTERED INDEX IDX_Volume_SerialNumber ON dbo.Volume (SerialNumber);
