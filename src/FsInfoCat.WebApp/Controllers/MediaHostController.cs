@@ -59,15 +59,15 @@ namespace FsInfoCat.WebApp.Controllers
         // [ValidateAntiForgeryToken]
         public async Task<ActionResult<RequestResponse<HostDevice>>> Register(HostDeviceRegRequest host)
         {
-            string uc;
-            if (null == host || string.IsNullOrWhiteSpace(host.MachineName) || !DottedNameRegex.IsMatch((uc = host.MachineName.ToUpper())))
+            string machineName;
+            if (null == host || string.IsNullOrWhiteSpace(host.MachineName) || !DottedNameRegex.IsMatch((machineName = host.MachineName.ToUpper())))
                 return await Task.FromResult(new RequestResponse<HostDevice>(null, "Registration failed."));
-            return await _context.HostDevice.FirstOrDefaultAsync(h => String.Equals(uc, h.MachineName, StringComparison.InvariantCulture)).ContinueWith<RequestResponse<HostDevice>>(task =>
+            return await _context.HostDevice.FirstOrDefaultAsync(h => String.Equals(machineName, h.MachineName, StringComparison.InvariantCulture)).ContinueWith<RequestResponse<HostDevice>>(task =>
             {
                 RequestResponse<HostDevice> result;
                 if (null != task.Result)
                     return new RequestResponse<HostDevice>(task.Result, (task.Result.IsWindows == host.IsWindows) ? "" : "System type mismatch.");
-                result = new RequestResponse<HostDevice>(new HostDevice(uc, host.IsWindows, new Guid(User.Identity.Name)));
+                result = new RequestResponse<HostDevice>(new HostDevice(host.MachineIdentifer, machineName, host.IsWindows, new Guid(User.Identity.Name)));
                 _context.HostDevice.Add(result.Result);
                 _context.SaveChanges();
                 return result;
