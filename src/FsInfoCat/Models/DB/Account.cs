@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace FsInfoCat.Models
+namespace FsInfoCat.Models.DB
 {
     [DisplayColumn("AccountID", "DisplayName", false)]
     public class Account : AppUser

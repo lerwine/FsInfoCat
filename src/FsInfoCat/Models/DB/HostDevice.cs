@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
-namespace FsInfoCat.Models
+namespace FsInfoCat.Models.DB
 {
     [DisplayColumn("HostID", "DisplayName", false)]
     public class HostDevice : IModficationAuditable

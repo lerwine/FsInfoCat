@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using FsInfoCat.Models;
+using FsInfoCat.Models.DB;
 using FsInfoCat.Web.Data;
 
 namespace FsInfoCat.Web.Controllers

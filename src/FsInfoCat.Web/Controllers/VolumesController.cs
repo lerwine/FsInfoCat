@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using FsInfoCat.Models;
+using FsInfoCat.Models.DB;
 using FsInfoCat.Web.Data;
 
 namespace FsInfoCat.Web.Controllers
@@ -50,7 +50,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // POST: Volumes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -83,7 +83,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // POST: Volumes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]

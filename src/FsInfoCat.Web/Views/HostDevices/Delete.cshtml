@@ -1,4 +1,4 @@
-@model FsInfoCat.Models.HostDevice
+@model FsInfoCat.Models.DB.HostDevice
 
 @{
     ViewData["Title"] = "Delete";
@@ -60,7 +60,7 @@
             @Html.DisplayFor(model => model.ModifiedOn)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="HostID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |

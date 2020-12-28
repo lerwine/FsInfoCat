@@ -24,6 +24,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FsInfoCat.Models;
+using FsInfoCat.Models.DB;
 using FsInfoCat.Desktop.Commands;
 
 namespace FsInfoCat.Desktop.ViewModels

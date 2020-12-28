@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using FsInfoCat.Models;
+using FsInfoCat.Models.DB;
 using FsInfoCat.Web.Data;
 
 namespace FsInfoCat.Web.API

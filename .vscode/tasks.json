@@ -27,6 +27,22 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
+            "dependsOn": [
+                "buildWebApp"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "buildLibrary",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}src/FsInfoCat/FsInfoCat.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
             "group": "build",
             "problemMatcher": "$msCompile"
         },

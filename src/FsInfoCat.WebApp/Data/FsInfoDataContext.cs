@@ -1,6 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
-using FsInfoCat.Models;
+using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.WebApp.Data
 {
@@ -11,10 +11,10 @@ namespace FsInfoCat.WebApp.Data
         {
         }
 
-        public DbSet<FsInfoCat.Models.Account> Account { get; set; }
+        public DbSet<Account> Account { get; set; }
 
         public DbSet<HostDevice> HostDevice { get; set; }
 
-        public DbSet<FsInfoCat.Models.Volume> Volume { get; set; }
+        public DbSet<Volume> Volume { get; set; }
     }
 }

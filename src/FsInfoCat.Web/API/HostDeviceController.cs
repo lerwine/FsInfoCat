@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using FsInfoCat.Models.DB;
 using FsInfoCat.Models;
 using FsInfoCat.Web.Data;
 using System.ComponentModel.DataAnnotations;

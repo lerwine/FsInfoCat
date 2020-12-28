@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using FsInfoCat.Models;
+using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.WebApp.Controllers
 {
