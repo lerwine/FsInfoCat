@@ -8,7 +8,7 @@ GO
 IF OBJECT_ID('dbo.Account', 'U') IS NOT NULL
 DROP TABLE dbo.Account
 GO
--- Create HostDevice table in the specified schema
+-- Create Account table in the specified schema
 CREATE TABLE dbo.Account
 (
     AccountID UNIQUEIDENTIFIER NOT NULL, -- primary key column

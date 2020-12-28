@@ -39,7 +39,7 @@ $Sb = [System.Text.StringBuilder]::new();
     } else {
         $_.Gesture = $_.Modifiers + '+' + $_.Key;
     }
-    
+
     $Element = $_;
     switch ($Get) {
         'CommandBindings' {

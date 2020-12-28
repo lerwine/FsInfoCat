@@ -5,7 +5,8 @@ Param(
 )
 
 $FilePath = $PSScriptRoot | Join-Path -ChildPath "src\FsInfoCat\Models\$Name.cs";
-@"
+if (-not [System.IO.File]::Exists($FilePath)) {
+    @"
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -71,6 +72,14 @@ namespace FsInfoCat.Models
     }
 }
 "@ | Out-File -FilePath $FilePath;
+    $Choices = [System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]]::new();
+    $Choices.Add([System.Management.Automation.Host.ChoiceDescription]::new('yes'));
+    $Choices.Add([System.Management.Automation.Host.ChoiceDescription]::new('no'));
+    if ($Host.UI.PromptForChoice('New Model', "A new model was created.`n`t$FilePath`n`n" +
+        "Create controller and views, now?`nIf you answer 'no', you can edit the model and re-run this script later to create them.", $Choices, 1) -ne 0) {
+        return;
+    }
+}
 $FilePath = (Get-Command -Name 'dotnet').Path;
 Push-Location;
 try {

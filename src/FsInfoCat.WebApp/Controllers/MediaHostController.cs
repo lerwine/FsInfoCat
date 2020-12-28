@@ -50,7 +50,7 @@ namespace FsInfoCat.WebApp.Controllers
             return await _context.HostDevice.FindAsync(id);
         }
 
-        public static readonly Regex DottedNameRegex = new Regex(HostDevice.PATTERN_DOTTED_NAME, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        public static readonly Regex DottedNameRegex = new Regex(ModelHelper.PATTERN_DOTTED_NAME, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         // POST: api/HostDevice
         [HttpPost]
