@@ -40,28 +40,12 @@ namespace FsInfoCat.Models
             target.ModifiedOn = DateTime.Now;
             if (isCreate)
             {
-                target.CreatedOn = target.ModifiedOn;
-                if (target is IModificationAccountAuditable)
-                {
-                    IModificationAccountAuditable a = (IModificationAccountAuditable)target;
-                    a.CreatedBy = a.ModifiedBy = modifiedBy;
-                }
-                target.CreatedBy = target.ModifiedBy = modifiedBy.AccountID;
+                target.CreatedOn = target.ModifiedOn; = modifiedBy.AccountID;
             }
             else
             {
                 if (null == (target.CreatedOn = (target.CreatedOn)))
                     target.CreatedOn = CoerceAsLocalTimeOrDefault(target.CreatedOn, target.ModifiedOn);
-                if (target is IModificationAccountAuditable)
-                {
-                    IModificationAccountAuditable a = (IModificationAccountAuditable)target;
-                    a.ModifiedBy = modifiedBy;
-                    if (null == a.CreatedBy)
-                    {
-                        a.CreatedBy = modifiedBy;
-                        target.CreatedBy = modifiedBy.AccountID;
-                    }
-                }
                 target.ModifiedBy = modifiedBy.AccountID;
             }
             return target.ValidateAll();
