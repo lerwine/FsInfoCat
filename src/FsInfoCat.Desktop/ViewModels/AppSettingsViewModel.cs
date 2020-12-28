@@ -52,25 +52,26 @@ namespace FsInfoCat.Desktop.ViewModels
 
         public event EventHandler<VmPropertyChangedEventArgs<bool, Uri, Guid>> IsRegisteredWithWebApiChanged;
 
-        private void OnWebApiValidationChanged(Uri validatedUri, Uri registeredUri, Guid registeredHostId)
+        private void OnWebApiValidationChanged(Uri validatedUri, Uri registeredUri, Guid registeredHostId, bool isBusy)
         {
             bool isEmptyMessage;
             bool raiseEvent;
             bool isRegistered;
             bool wasRegistered = IsRegisteredWithWebApi;
+
             if (null == registeredUri)
             {
                 raiseEvent = wasRegistered;
                 isRegistered = false;
                 isEmptyMessage = null == validatedUri;
-                RegisterCommand.IsEnabled = !isEmptyMessage;
+                RegisterCommand.IsEnabled = !(isEmptyMessage || isBusy);
             }
             else
             {
                 isRegistered = isEmptyMessage = !registeredHostId.Equals(Guid.Empty);
                 if (null != validatedUri && validatedUri.AbsoluteUri != registeredUri.AbsoluteUri)
                 {
-                    RegisterCommand.IsEnabled = true;
+                    RegisterCommand.IsEnabled = !isBusy;
                     raiseEvent = true;
                 }
                 else
@@ -336,7 +337,7 @@ namespace FsInfoCat.Desktop.ViewModels
             }
             if (_saveOnChange)
                 SavePropertiesAsync();
-            OnWebApiValidationChanged(newValue, RegisteredBaseWebApiUri, RegisteredHostId);
+            OnWebApiValidationChanged(newValue, RegisteredBaseWebApiUri, RegisteredHostId, IsBusy);
         }
 
         /// <summary>
@@ -431,7 +432,8 @@ namespace FsInfoCat.Desktop.ViewModels
             if (_saveOnChange)
                 SavePropertiesAsync();
 
-            OnWebApiValidationChanged(ValidatedBaseWebApiUri, newValue, RegisteredHostId);
+            OnWebApiValidationChanged(ValidatedBaseWebApiUri, newValue, RegisteredHostId, IsBusy);
+            OnWebApiValidationChanged(ValidatedBaseWebApiUri, RegisteredBaseWebApiUri, RegisteredHostId, IsBusy);
 
             EventHandler<VmPropertyChangedEventArgs<Uri>> eventHandler = RegisteredBaseWebApiUriChanged;
             if (null != eventHandler)
@@ -499,7 +501,7 @@ namespace FsInfoCat.Desktop.ViewModels
             EventHandler<VmPropertyChangedEventArgs<Guid>> eventHandler = RegisteredHostIdPropertyChanged;
             if (null != eventHandler)
                 eventHandler.Invoke(this, new VmPropertyChangedEventArgs<Guid>(RegisteredHostIdProperty, settingsGuid, newValue));
-            OnWebApiValidationChanged(ValidatedBaseWebApiUri, RegisteredBaseWebApiUri, newValue);
+            OnWebApiValidationChanged(ValidatedBaseWebApiUri, RegisteredBaseWebApiUri, newValue, IsBusy);
         }
 
         /// <summary>
@@ -524,17 +526,64 @@ namespace FsInfoCat.Desktop.ViewModels
 
         #endregion
 
+        #region "Is busy" (IsBusy) Property Members
+
+        /// <summary>
+        /// Defines the name for the <see cref="IsBusy" /> dependency property.
+        /// </summary>
+        public const string PropertyName_IsBusy = "IsBusy";
+
+        private static readonly DependencyPropertyKey IsBusyPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_IsBusy, typeof(bool), typeof(AppSettingsViewModel),
+                new PropertyMetadata(false,
+                    (d, e) => (d as AppSettingsViewModel).OnIsBusyPropertyChanged(e.OldValue as bool?, (bool)(e.NewValue)),
+                    ViewModelHelper.CoerceAsBoolean
+            )
+        );
+
+        /// <summary>
+        /// Identifies the <see cref="IsBusy" /> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsBusyProperty = IsBusyPropertyKey.DependencyProperty;
+
+        private void OnIsBusyPropertyChanged(bool? oldValue, bool newValue)
+        {
+            OnWebApiValidationChanged(ValidatedBaseWebApiUri, RegisteredBaseWebApiUri, RegisteredHostId, newValue);
+        }
+
+        /// <summary>
+        /// Is busy
+        /// </summary>
+        public bool IsBusy
+        {
+            get
+            {
+                if (CheckAccess())
+                    return (bool)(GetValue(IsBusyProperty));
+                return Dispatcher.Invoke(() => (bool)(GetValue(IsBusyProperty)));
+            }
+            private set
+            {
+                if (CheckAccess())
+                    SetValue(IsBusyPropertyKey, value);
+                else
+                    Dispatcher.Invoke(() => SetValue(IsBusyPropertyKey, value));
+            }
+        }
+
+        #endregion
+
         #region Register Command Property Members
 
         public Commands.RelayCommand RegisterCommand { get; }
 
-        protected virtual void OnRegister(object parameter)
+        private Task<UrlAndID> RegisterAsync()
         {
-            Task.Factory.StartNew(() =>
+            IsBusy = true;
+            Task<UrlAndID> t = Task.Factory.StartNew<UrlAndID>(() =>
             {
                 Uri uri = ValidatedBaseWebApiUri;
                 if (null == uri)
-                    return;
+                    return null;
 
                 HostDeviceRegRequest request = new HostDeviceRegRequest();
                 try
@@ -559,25 +608,37 @@ namespace FsInfoCat.Desktop.ViewModels
                 request.MachineName = Environment.MachineName;
                 JsonSerializerOptions options = new JsonSerializerOptions();
                 JsonContent content = JsonContent.Create<HostDeviceRegRequest>(request);
-                HttpResponseMessage response = ((App)(App.Current)).HttpClient.PostAsJsonAsync(builder.Uri, content).Result;
+                HttpResponseMessage response = ((App)App.Current).HttpClient.PostAsJsonAsync(builder.Uri, content).Result;
                 RequestResponse<HostDevice> result = response.Content.ReadFromJsonAsync<RequestResponse<HostDevice>>().Result;
                 if (null == result)
                     HostIdRegistrationMessage = "Registration failed";
-                else if (result.Success)
-                {
-                    RegisteredBaseWebApiUri = uri;
-                    RegisteredHostId = result.Result.HostID;
-                    HostIdRegistrationMessage = (string.IsNullOrWhiteSpace(result.Message)) ? "Registration successful" : result.Message;
-                }
                 else
+                {
+                    if (result.Success)
+                    {
+                        RegisteredBaseWebApiUri = uri;
+                        RegisteredHostId = result.Result.HostID;
+                        HostIdRegistrationMessage = (string.IsNullOrWhiteSpace(result.Message)) ? "Registration successful" : result.Message;
+                        return new UrlAndID(uri, result.Result.HostID);
+                    }
                     HostIdRegistrationMessage = (string.IsNullOrWhiteSpace(result.Message)) ? "Registration failed" : result.Message;
-            }).ContinueWith(task =>
+                }
+                return null;
+            });
+            t.ContinueWith(task =>
             {
                 if (task.IsFaulted)
                     HostIdRegistrationMessage = "Registration failed: " + ((string.IsNullOrWhiteSpace(task.Exception.Message)) ? task.Exception.GetType().Name : task.Exception.Message);
                 else if (!task.IsCompletedSuccessfully)
                     HostIdRegistrationMessage = "Registration canceled";
+                IsBusy = false;
             });
+            return t;
+        }
+
+        protected virtual void OnRegister(object parameter)
+        {
+            RegisterAsync();
         }
 
         #endregion
@@ -622,6 +683,19 @@ namespace FsInfoCat.Desktop.ViewModels
                     (o as CancellationTokenSource).Dispose();
                 }, _tokenSource);
             }
+        }
+
+        private Task<UrlAndID> GetRemoteHostUri()
+        {
+            Uri uri = RegisteredBaseWebApiUri;
+            Guid id = RegisteredHostId;
+            if (null == uri || id.Equals(Guid.Empty))
+            {
+                if (null != (uri = ValidatedBaseWebApiUri))
+                    return RegisterAsync();
+                return Task.FromResult<UrlAndID>(null);
+            }
+            return Task.FromResult(new UrlAndID(uri, id));
         }
 
     }
