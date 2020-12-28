@@ -5,56 +5,32 @@ using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models
 {
-    public class HostDeviceRegRequest : IValidatableModel
+    public class HostDeviceRegRequest : IHostDeviceReg
     {
-        #region DisplayName
-
         private string _displayName = "";
+        private string _machineIdentifer = "";
+        private string _machineName = "";
 
-        [MaxLength(HostDevice.Max_Length_DisplayName, ErrorMessage = HostDevice.Error_Message_DisplayName)]
-        [Display(Name = HostDevice.DisplayName_DisplayName)]
         public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = (null == value) ? "" : value; }
         }
 
-        #endregion
-
-        #region MachineIdentifer
-
-        private string _machineIdentifer = "";
-
-        // TODO: Add this to db script and view
-        [MaxLength(HostDevice.Max_Length_MachineIdentifer, ErrorMessage = HostDevice.Error_Message_MachineIdentifer)]
-        [Display(Name = HostDevice.DisplayName_MachineIdentifer)]
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
             set { _machineIdentifer = (null == value) ? "" : value; }
         }
 
-        #endregion
-
-        #region MachineName
-
-        private string _machineName = "";
-
-        [Required()]
-        [MinLength(1)]
-        [MaxLength(HostDevice.Max_Length_MachineName, ErrorMessage = HostDevice.Error_Message_MachineName_Length)]
-        [Display(Name = HostDevice.DisplayName_MachineName)]
-        [RegularExpression(ModelHelper.PATTERN_MACHINE_NAME, ErrorMessage = HostDevice.Error_Message_MachineName_Invalid)]
         public string MachineName
         {
             get { return _machineName; }
             set { _machineName = (null == value) ? "" : value; }
         }
-
-        #endregion
-
-        [Display(Name = "Is Windows OS")]
         public bool IsWindows { get; set; }
+
+        Guid IHostDeviceReg.HostID { get => Guid.Empty; set => throw new NotSupportedException(); }
 
         public void Normalize()
         {

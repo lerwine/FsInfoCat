@@ -1,38 +1,23 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Models
 {
-    public class UserLoginRequest : IValidatableModel
+    public class UserLoginRequest : IUserCredentials
     {
+        public const string PropertyName_Password = "Password";
+        public const string DisplayName_Password = "Password";
+        public const string Error_Message_Password = "Please enter the password";
+
         private string _loginName = "";
         private string _password = "";
 
-        [Required()]
-        [MinLength(1, ErrorMessage = AppUser.Error_Message_Login_Empty)]
-        [MaxLength(AppUser.Max_Length_Login_Name, ErrorMessage = AppUser.Error_Message_Login_Length)]
-        [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = AppUser.Error_Message_Login_Invalid)]
-        [Display(Name = AppUser.DisplayName_LoginName)]
-        [DataType(DataType.Text)]
-        /// <summary>
-        /// Gets the user's login name.
-        /// /// </summary>
         public string LoginName
         {
             get { return _loginName; }
             set { _loginName = (null == value) ? "" : value; }
         }
 
-        public const string PropertyName_Password = "Password";
-        public const string DisplayName_Password = "Password";
-        public const string Error_Message_Password = "Please enter the password";
-        [Required()]
-        [Display(Name = DisplayName_Password)]
-        [RegularExpression(@"\S+", ErrorMessage = Error_Message_Password)]
-        /// <summary>
-        /// Gets the hash for the user's password.
-        /// </summary>
         public string Password
         {
             get { return _password; }

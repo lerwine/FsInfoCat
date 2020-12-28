@@ -1,19 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Models.DB
 {
     [DisplayColumn("HostID", "DisplayName", false)]
-    public class HostDevice : IModficationAuditable
+    public class HostDevice : IHostDevice
     {
         #region Properties
 
-        [Required()]
-        [Key()]
-        [Display(Name = "ID")]
         public Guid HostID { get; set; }
 
         #region DisplayName
@@ -24,8 +19,6 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_DisplayName = "Display name too long.";
         private string _displayName = "";
 
-        [MaxLength(Max_Length_DisplayName, ErrorMessage = Error_Message_DisplayName)]
-        [Display(Name = DisplayName_DisplayName)]
         public string DisplayName
         {
             get { return _displayName; }
@@ -42,8 +35,6 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_MachineIdentifer = "Machine identifier too long.";
         private string _machineIdentifer = "";
 
-        [MaxLength(Max_Length_MachineIdentifer, ErrorMessage = Error_Message_MachineIdentifer)]
-        [Display(Name = DisplayName_MachineIdentifer)]
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
@@ -62,11 +53,6 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_MachineName_Invalid = "Invalid machine name";
         private string _machineName = "";
 
-        [Required()]
-        [MinLength(1)]
-        [MaxLength(Max_Length_MachineName, ErrorMessage = Error_Message_MachineName_Length)]
-        [Display(Name = DisplayName_MachineName)]
-        [RegularExpression(ModelHelper.PATTERN_MACHINE_NAME, ErrorMessage = Error_Message_MachineName_Invalid)]
         public string MachineName
         {
             get { return _machineName; }
@@ -75,19 +61,14 @@ namespace FsInfoCat.Models.DB
 
         #endregion
 
-        [Display(Name = "Is Windows")]
         public bool IsWindows { get; set; }
 
-        [Display(Name = "Is Inactive")]
         public bool IsInactive { get; set; }
 
         #region Notes
 
         private string _notes = "";
 
-        [Required()]
-        [Display(Name = "Notes")]
-        [DataType(DataType.MultilineText)]
         public string Notes
         {
             get { return _notes; }

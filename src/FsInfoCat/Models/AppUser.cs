@@ -7,8 +7,20 @@ using System.Linq;
 
 namespace FsInfoCat.Models
 {
-    public class AppUser : IModficationAuditable
+    public class AppUser : IAppUser
     {
+        #region Fields
+
+        public const int Max_Length_DisplayName = 256;
+        public const string DisplayName_DisplayName = "Display name";
+        public const string PropertyName_DisplayName = "DisplayName";
+        public const string Error_Message_DisplayName = "Display name too long.";
+        public const int Max_Length_Login_Name = 32;
+        public const string DisplayName_LoginName = "Login name";
+        public const string PropertyName_LoginName = "LoginName";
+        public const string Error_Message_Login_Empty = "Login name cannot be empty.";
+        public const string Error_Message_Login_Length = "Login name too long.";
+        public const string Error_Message_Login_Invalid = "Invalid login name.";
         public const string Role_Name_Viewer = "viewer";
         public const string Role_Name_User = "user";
         public const string Role_Name_Crawler = "crawler";
@@ -16,92 +28,34 @@ namespace FsInfoCat.Models
         private static readonly ReadOnlyDictionary<string, UserRole> _FromRoleNameMap;
         private static readonly ReadOnlyDictionary<UserRole, string> _ToRoleNameMap;
 
-        public static string ToRoleName(UserRole role)
-        {
-            return (_ToRoleNameMap.ContainsKey(role)) ? _ToRoleNameMap[role] : null;
-        }
+        private string _displayName = "";
+        private string _loginName = "";
+        private string _notes = "";
 
-        public static UserRole FromRoleName(string roleName)
-        {
-            return (null != roleName && _FromRoleNameMap.ContainsKey(roleName)) ? _FromRoleNameMap[roleName] : UserRole.None;
-        }
+        #endregion
 
         #region Properties
 
-        [Required()]
-        [Key()]
-        [Display(Name = "ID")]
         public Guid AccountID { get; set; }
 
-        #region DisplayName
-
-        public const int Max_Length_DisplayName = 256;
-        public const string DisplayName_DisplayName = "Display name";
-        public const string PropertyName_DisplayName = "DisplayName";
-        public const string Error_Message_DisplayName = "Display name too long.";
-        private string _displayName = "";
-
-        [MaxLength(Max_Length_DisplayName, ErrorMessage = Error_Message_DisplayName)]
-        [Display(Name = DisplayName_DisplayName)]
-        [DataType(DataType.Text)]
         public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = (null == value) ? "" : value; }
         }
 
-        #endregion
-
-        #region LoginName
-
-        public const int Max_Length_Login_Name = 32;
-        public const string DisplayName_LoginName = "Login name";
-        public const string PropertyName_LoginName = "LoginName";
-        public const string Error_Message_Login_Empty = "Login name cannot be empty.";
-        public const string Error_Message_Login_Length = "Login name too long.";
-        public const string Error_Message_Login_Invalid = "Invalid login name.";
-        private string _loginName = "";
-
-        [Required()]
-        [MinLength(1, ErrorMessage = Error_Message_Login_Empty)]
-        [MaxLength(Max_Length_Login_Name, ErrorMessage = Error_Message_Login_Length)]
-        [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Error_Message_Login_Invalid)]
-        [Display(Name = DisplayName_LoginName)]
-        [DataType(DataType.Text)]
-        /// <summary>
-        /// Gets the user's login name.
-        /// /// </summary>
         public string LoginName
         {
             get { return _loginName; }
             set { _loginName = (null == value) ? "" : value; }
         }
-        #endregion
-
-        [Required()]
-        [Display(Name = "User Role")]
-        [EnumDataType(typeof(UserRole))]
-        /// <summary>
-        /// Gets the role of the user.
-        /// </summary>
         public UserRole Role { get; set; }
 
-        #region Notes
-
-        private string _notes = "";
-
-        [Required()]
-        [Display(Name = "Notes")]
-        [DataType(DataType.MultilineText)]
         public string Notes
         {
             get { return _notes; }
             set { _notes = (null == value) ? "" : value; }
         }
-
-        #endregion
-
-        #region Audit
 
         public DateTime CreatedOn { get; set; }
 
@@ -110,8 +64,6 @@ namespace FsInfoCat.Models
         public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedBy { get; set; }
-
-        #endregion
 
         #endregion
 
@@ -219,6 +171,16 @@ namespace FsInfoCat.Models
             else
                 Validate(result, validationContext.DisplayName);
             return result;
+        }
+
+        public static string ToRoleName(UserRole role)
+        {
+            return (_ToRoleNameMap.ContainsKey(role)) ? _ToRoleNameMap[role] : null;
+        }
+
+        public static UserRole FromRoleName(string roleName)
+        {
+            return (null != roleName && _FromRoleNameMap.ContainsKey(roleName)) ? _FromRoleNameMap[roleName] : UserRole.None;
         }
     }
 }

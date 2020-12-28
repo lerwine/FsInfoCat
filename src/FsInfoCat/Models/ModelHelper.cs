@@ -38,15 +38,16 @@ namespace FsInfoCat.Models
             if (null == modifiedBy)
                 throw new ArgumentNullException("modifiedBy");
             target.ModifiedOn = DateTime.Now;
+            target.ModifiedBy = modifiedBy.AccountID;
             if (isCreate)
             {
-                target.CreatedOn = target.ModifiedOn; = modifiedBy.AccountID;
+                target.CreatedOn = target.ModifiedOn;
+                target.CreatedBy = target.ModifiedBy;
             }
             else
             {
                 if (null == (target.CreatedOn = (target.CreatedOn)))
                     target.CreatedOn = CoerceAsLocalTimeOrDefault(target.CreatedOn, target.ModifiedOn);
-                target.ModifiedBy = modifiedBy.AccountID;
             }
             return target.ValidateAll();
         }
