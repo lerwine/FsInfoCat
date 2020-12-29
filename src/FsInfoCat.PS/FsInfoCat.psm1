@@ -1,4 +1,14 @@
-Add-Type -Path $($PSScriptRoot | Join-Path -ChildPath 'FsInfoCat.PS.dll');
+$Path = $PSScriptRoot | Join-Path -ChildPath 'FsInfoCat.PS.dll';
+if ($Path | Test-Path -PathType Leaf) {
+    Add-Type -Path $Path -ErrorAction Stop;
+} else {
+    $Path = $PSScriptRoot | Join-Path -ChildPath 'bin\Debug\FsInfoCat.PS.dll';
+    if ($Path | Test-Path -PathType Leaf) {
+        Add-Type -Path $Path -ErrorAction Stop;
+    } else {
+        Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath 'bin\Release\FsInfoCat.PS.dll') -ErrorAction Stop;
+    }
+}
 
 Function Test-CsClassName {
     [CmdletBinding()]
@@ -163,6 +173,7 @@ Function Read-YesOrNo {
 }
 
 Function Convert-ToCommentLines {
+    [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
         [xml]$Xml,
@@ -330,6 +341,7 @@ namespace FsInfoCat.Desktop.ViewModels
 }
 
 Function New-MvcScaffold {
+    [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
         [ValidatePattern('^[A-Z][A-Z\da-z]*([A-Z\d][A-Z\da-z]*)*$')]
@@ -617,4 +629,73 @@ Function Read-DependencyProperty {
             }
         }
     }
+}
+Function ConvertTo-PasswordHash {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$Password,
+        [byte[]]$Salt
+    )
+    $SaltBytes = $Salt;
+    if (-not $PSBoundParameters.ContainsKey('Salt')) {
+        $SaltBytes = New-Object -TypeName 'System.Byte[]' -ArgumentList 8;
+        $RNGCryptoServiceProvider = [System.Security.Cryptography.RNGCryptoServiceProvider]::new();
+        $RNGCryptoServiceProvider.GetBytes($SaltBytes);
+        $RNGCryptoServiceProvider.Dispose();
+    }
+    $SHA512 = [System.Security.Cryptography.SHA512]::Create();
+    $SHA512.ComputeHash(([byte[]]([System.Text.Encoding]::ASCII.GetBytes($Password) + $SaltBytes))) | Out-Null;
+    [Convert]::ToBase64String(([byte[]]($SHA512.Hash + $SaltBytes))) | Write-Output;
+    $SHA512.Dispose();
+}
+
+Function Get-SaltBytes {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(96, 96)]
+        [ValidatePattern('[A-Za-z\d+/]{96}')]
+        [string]$Base64EncodedHash
+    )
+    [Convert]::FromBase64String($Base64EncodedHash) | Select-Object -Skip 64;
+}
+
+Function Test-PasswordHash {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$Password,
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(96, 96)]
+        [ValidatePattern('[A-Za-z\d+/]{96}')]
+        [string]$ExpectedHash
+    )
+
+    ($ExpectedHash -eq (ConvertTo-PasswordHash -Password $Password -Salt (Get-SaltBytes -Base64EncodedHash $ExpectedHash))) | Write-Output;
+}
+
+Function Get-InitializationQueries {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$AdministrativePassword
+    )
+    $PwHash = ConvertTo-PasswordHash -Password $AdministrativePassword;
+    $HostID = [Guid]::NewGuid().ToString('d');
+    $MachineIdentifier = [FsInfoCat.PS.FsInfoCatUtil]::GetLocalMachineSID();
+    $MachineName = [System.Environment]::MachineName;
+    @"
+-- The next query should be executed immediately after the 'SET @CreatedOn = GETDATE();' statement.
+INSERT INTO dbo.Account (AccountID, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy,
+        DisplayName, LoginName, PwHash, [Role], Notes)
+    Values ('00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000',
+        'FS InfoCat Administrator', 'admin', '$PwHash', 4, '');
+
+-- The next query should be executed at the end of the setup script.
+INSERT INTO dbo.HostDevice (HostID, DisplayName, MachineIdentifer, MachineName, IsWindows, IsInactive, Notes,
+        CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
+    VALUES('$HostID', NULL, '$MachineIdentifier', '$MachineName', 1, 0, '',
+        @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
+"@ | Write-Host;
 }
