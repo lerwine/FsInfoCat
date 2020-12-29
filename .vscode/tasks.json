@@ -34,6 +34,22 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "buildPS",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "dependsOn": [
+                "buildWebApp"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "buildLibrary",
             "command": "dotnet",
             "type": "process",
