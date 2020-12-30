@@ -14,14 +14,14 @@ namespace FsInfoCat.Web.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<WebHostContributor>().HasNoKey();
+            modelBuilder.Entity<HostContributor>().HasNoKey();
         }
 
         public DbSet<Account> Account { get; set; }
 
         public DbSet<HostDevice> HostDevice { get; set; }
 
-        public DbSet<WebHostContributor> WebHostContributor { get; set; }
+        public DbSet<HostContributor> WebHostContributor { get; set; }
 
         public DbSet<Volume> Volume { get; set; }
 

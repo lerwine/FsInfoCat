@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.Models.DB
 {
-    public class WebHostContributor
+    public class HostContributor
     {
         [Required()]
         [Display(Name = "User ID")]

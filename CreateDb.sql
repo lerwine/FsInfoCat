@@ -1,8 +1,8 @@
 IF OBJECT_ID('dbo.Volume', 'U') IS NOT NULL
 DROP TABLE dbo.Volume
 GO
-IF OBJECT_ID('dbo.WebHostContributor', 'U') IS NOT NULL
-DROP TABLE dbo.WebHostContributor
+IF OBJECT_ID('dbo.HostContributor', 'U') IS NOT NULL
+DROP TABLE dbo.HostContributor
 GO
 IF OBJECT_ID('dbo.HostDevice', 'U') IS NOT NULL
 DROP TABLE dbo.HostDevice
@@ -78,31 +78,31 @@ ALTER TABLE dbo.HostDevice CHECK CONSTRAINT FK_HostDevice_ModifiedBy;
 CREATE UNIQUE INDEX IDX_HostDevice_MachineIdentifer ON dbo.HostDevice (MachineIdentifer);
 
 -- Create HostDevice table in the specified schema
-CREATE TABLE dbo.WebHostContributor
+CREATE TABLE dbo.HostContributor
 (
     HostID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     AccountID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     CreatedOn DATETIME NOT NULL,
     CreatedBy UNIQUEIDENTIFIER NOT NULL,
-    CONSTRAINT PK_WebHostContributor PRIMARY KEY CLUSTERED
+    CONSTRAINT PK_HostContributor PRIMARY KEY CLUSTERED
     (
         HostID ASC,
         AccountID
     ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
-    CONSTRAINT AK_WebHostContributor UNIQUE(HostID, AccountID)
+    CONSTRAINT AK_HostContributor UNIQUE(HostID, AccountID)
 ) ON [PRIMARY];
-ALTER TABLE dbo.WebHostContributor WITH CHECK ADD CONSTRAINT FK_WebHostContributor_Host FOREIGN KEY(HostID)
+ALTER TABLE dbo.HostContributor WITH CHECK ADD CONSTRAINT FK_HostContributor_Host FOREIGN KEY(HostID)
     REFERENCES dbo.HostDevice (HostID)
     ON DELETE CASCADE;
-ALTER TABLE dbo.WebHostContributor CHECK CONSTRAINT FK_WebHostContributor_Host;
-ALTER TABLE dbo.WebHostContributor WITH CHECK ADD CONSTRAINT FK_WebHostContributor_Account FOREIGN KEY(AccountID)
+ALTER TABLE dbo.HostContributor CHECK CONSTRAINT FK_HostContributor_Host;
+ALTER TABLE dbo.HostContributor WITH CHECK ADD CONSTRAINT FK_HostContributor_Account FOREIGN KEY(AccountID)
     REFERENCES dbo.Account (AccountID)
     ON DELETE CASCADE;
-ALTER TABLE dbo.WebHostContributor CHECK CONSTRAINT FK_WebHostContributor_Account;
-ALTER TABLE dbo.WebHostContributor WITH CHECK ADD CONSTRAINT FK_WebHostContributor_CreatedBy FOREIGN KEY(CreatedBy)
+ALTER TABLE dbo.HostContributor CHECK CONSTRAINT FK_HostContributor_Account;
+ALTER TABLE dbo.HostContributor WITH CHECK ADD CONSTRAINT FK_HostContributor_CreatedBy FOREIGN KEY(CreatedBy)
     REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;
-ALTER TABLE dbo.WebHostContributor CHECK CONSTRAINT FK_WebHostContributor_CreatedBy;
+ALTER TABLE dbo.HostContributor CHECK CONSTRAINT FK_HostContributor_CreatedBy;
 
 -- Create Volume table in the specified schema
 CREATE TABLE dbo.Volume
