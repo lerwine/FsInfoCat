@@ -586,27 +586,9 @@ namespace FsInfoCat.Desktop.ViewModels
                 if (null == uri)
                     return null;
 
-                HostDeviceRegRequest request = new HostDeviceRegRequest();
-                try
-                {
-                    using (DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",Computer"))
-                    {
-                        DirectoryEntry d = directoryEntry.Children.OfType<DirectoryEntry>().FirstOrDefault();
-                        if (null == d)
-                            throw new Exception("Computer directory entry not found");
-                        request.MachineIdentifer = new SecurityIdentifier((byte[])d.InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
-                    }
-                }
-                catch (Exception exc)
-                {
-                    if (string.IsNullOrWhiteSpace(exc.Message))
-                        throw;
-                    throw new Exception("Encountered an exception while trying to retrieve computer SID - " + exc.Message, exc);
-                }
+                HostDeviceRegRequest request = HostDeviceRegRequest.CreateForLocal();
                 UriBuilder builder = new UriBuilder(uri);
                 builder.Path = "/api/HostDevice/Register";
-                request.IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
-                request.MachineName = Environment.MachineName;
                 JsonSerializerOptions options = new JsonSerializerOptions();
                 JsonContent content = JsonContent.Create<HostDeviceRegRequest>(request);
                 HttpResponseMessage response = ((App)App.Current).HttpClient.PostAsJsonAsync(builder.Uri, content).Result;

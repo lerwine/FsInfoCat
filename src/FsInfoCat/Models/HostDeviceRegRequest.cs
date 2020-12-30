@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.DirectoryServices;
+using System.Linq;
+using System.Security.Principal;
 using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models
@@ -99,6 +102,32 @@ namespace FsInfoCat.Models
             else
                 Validate(result, validationContext.DisplayName);
             return result;
+        }
+
+        public static HostDeviceRegRequest CreateForLocal()
+        {
+            HostDeviceRegRequest request = new HostDeviceRegRequest
+            {
+                IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT,
+                MachineName = Environment.MachineName
+            };
+            try
+            {
+                using (DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",Computer"))
+                {
+                    DirectoryEntry d = directoryEntry.Children.OfType<DirectoryEntry>().FirstOrDefault();
+                    if (null == d)
+                        throw new Exception("Computer directory entry not found");
+                    request.MachineIdentifer = new SecurityIdentifier((byte[])d.InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
+                }
+            }
+            catch (Exception exc)
+            {
+                if (string.IsNullOrWhiteSpace(exc.Message))
+                    throw;
+                throw new Exception("Encountered an exception while trying to retrieve computer SID - " + exc.Message, exc);
+            }
+            return request;
         }
     }
 }
