@@ -1,18 +1,17 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.Models.DB
 {
     public class WebHostContributor
     {
         [Required()]
-        [Key()]
         [Display(Name = "User ID")]
-        Guid AccountID { get; set; }
+        public Guid AccountID { get; set; }
 
         [Required()]
-        [Key()]
         [Display(Name = "Host ID")]
-        Guid HostID { get; set; }
+        public Guid HostID { get; set; }
     }
 }

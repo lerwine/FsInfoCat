@@ -20,9 +20,9 @@ namespace FsInfoCat.Web
         public const string SettingsKey_ConnectionString = "FsInfoCat";
         public const string SettingsKey_DBPassword = "DBPassword";
         public const string UrlPath_ExceptionHandler = "/Home/Error";
-        public const string UrlPath_AccessDeniedHandler = "/Account/AccessDenied";
-        public const string UrlPath_LoginHandler = "/Account/Login";
-        public const string UrlPath_LogoutHandler = "/Account/Logout";
+        public const string UrlPath_AccessDeniedHandler = "/Accounts/AccessDenied";
+        public const string UrlPath_LoginHandler = "/Accounts/Login";
+        public const string UrlPath_LogoutHandler = "/Accounts/Logout";
 
         public Startup(IConfiguration configuration)
         {

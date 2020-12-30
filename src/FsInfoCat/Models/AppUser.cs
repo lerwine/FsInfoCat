@@ -36,33 +36,61 @@ namespace FsInfoCat.Models
 
         #region Properties
 
+        [Required()]
+        [Key()]
+        [Display(Name = "ID")]
         public Guid AccountID { get; set; }
 
+        [MaxLength(Max_Length_DisplayName, ErrorMessage = Error_Message_DisplayName)]
+        [Display(Name = DisplayName_DisplayName)]
+        [DataType(DataType.Text)]
         public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = (null == value) ? "" : value; }
         }
 
+        [Required()]
+        [MinLength(1, ErrorMessage = Error_Message_Login_Empty)]
+        [MaxLength(Max_Length_Login_Name, ErrorMessage = Error_Message_Login_Length)]
+        [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Error_Message_Login_Invalid)]
+        [Display(Name = DisplayName_LoginName)]
         public string LoginName
         {
             get { return _loginName; }
             set { _loginName = (null == value) ? "" : value; }
         }
+
+        [Required()]
+        [Display(Name = "User Role")]
+        [EnumDataType(typeof(UserRole))]
         public UserRole Role { get; set; }
 
+        [Required()]
+        [Display(Name = "Notes")]
+        [DataType(DataType.MultilineText)]
         public string Notes
         {
             get { return _notes; }
             set { _notes = (null == value) ? "" : value; }
         }
 
+        [Editable(false)]
+        [Display(Name = "Created On")]
+        [DataType(DataType.DateTime)]
         public DateTime CreatedOn { get; set; }
 
+        [Editable(false)]
+        [Display(Name = "Created By")]
         public Guid CreatedBy { get; set; }
 
+        [Editable(false)]
+        [Display(Name = "Modified On")]
+        [DataType(DataType.DateTime)]
         public DateTime ModifiedOn { get; set; }
 
+        [Editable(false)]
+        [Display(Name = "Modified By")]
         public Guid ModifiedBy { get; set; }
 
         #endregion

@@ -11,23 +11,34 @@ namespace FsInfoCat.Models
         private string _machineIdentifer = "";
         private string _machineName = "";
 
+        [MaxLength(DB.HostDevice.Max_Length_DisplayName, ErrorMessage = DB.HostDevice.Error_Message_DisplayName)]
+        [Display(Name = DB.HostDevice.DisplayName_DisplayName)]
         public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = (null == value) ? "" : value; }
         }
 
+        [MaxLength(DB.HostDevice.Max_Length_MachineIdentifer, ErrorMessage = DB.HostDevice.Error_Message_MachineIdentifer)]
+        [Display(Name = DB.HostDevice.DisplayName_MachineIdentifer)]
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
             set { _machineIdentifer = (null == value) ? "" : value; }
         }
 
+        [Required()]
+        [MinLength(1)]
+        [MaxLength(DB.HostDevice.Max_Length_MachineName, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Length)]
+        [Display(Name = DB.HostDevice.DisplayName_MachineName)]
+        [RegularExpression(ModelHelper.PATTERN_MACHINE_NAME, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Invalid)]
         public string MachineName
         {
             get { return _machineName; }
             set { _machineName = (null == value) ? "" : value; }
         }
+
+        [Display(Name = "Is Windows OS")]
         public bool IsWindows { get; set; }
 
         Guid IHostDeviceReg.HostID { get => Guid.Empty; set => throw new NotSupportedException(); }

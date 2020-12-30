@@ -157,7 +157,7 @@ namespace FsInfoCat.Web.Controllers
             return _context.Account.Any(e => e.AccountID == id);
         }
 
-        // /Account/Login
+        // /Accounts/Login
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
@@ -173,12 +173,18 @@ namespace FsInfoCat.Web.Controllers
         public async Task<IActionResult> Login(UserLoginRequest request, string returnUrl = null)
         {
             if (!ModelState.IsValid)
+            {
+                ViewData["ReturnUrl"] = returnUrl;
+                ViewData["ErrorMessage"] = "";
+                ViewData["ShowError"] = false;
                 return View(request);
+            }
 
             ActionResult<RequestResponse<AppUser>> result = await FsInfoCat.Web.API.AuthController.Login(request, _context, HttpContext, _logger);
             if (result.Value.Success)
             {
                 ViewData["ErrorMessage"] = "";
+                ViewData["ShowError"] = false;
                 ViewData["ShowError"] = false;
                 if (Url.IsLocalUrl(returnUrl))
                     return Redirect(returnUrl);
@@ -193,7 +199,7 @@ namespace FsInfoCat.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await FsInfoCat.Web.API.AuthController.Logout(User, HttpContext, _logger);
-            return Redirect("/Account/Login");
+            return Redirect("/Accounts/Login");
         }
     }
 }

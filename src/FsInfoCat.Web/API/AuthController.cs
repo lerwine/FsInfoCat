@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using FsInfoCat.Models;
 using FsInfoCat.Models.DB;
 using FsInfoCat.Web.Data;
+using Microsoft.Data.SqlClient;
 
 namespace FsInfoCat.Web.API
 {
@@ -41,6 +42,13 @@ namespace FsInfoCat.Web.API
             try
             {
                 user = dbContext.Account.FirstOrDefault(u => u.LoginName == request.LoginName);
+            }
+            catch (SqlException exc)
+            {
+                // TODO: Log exception
+                return new RequestResponse<AppUser>(null, (string.IsNullOrWhiteSpace(exc.Message)) ?
+                    "An unexpected " + exc.GetType().Name + " occurred while accessing the database." :
+                    "An unexpected error occurred while accessing the database: " + exc.Message);
             }
             catch (Exception exc)
             {

@@ -11,6 +11,12 @@ namespace FsInfoCat.Web.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<WebHostContributor>().HasNoKey();
+        }
+
         public DbSet<Account> Account { get; set; }
 
         public DbSet<HostDevice> HostDevice { get; set; }
