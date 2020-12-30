@@ -21,7 +21,7 @@ namespace FsInfoCat.Web.Data
 
         public DbSet<HostDevice> HostDevice { get; set; }
 
-        public DbSet<HostContributor> WebHostContributor { get; set; }
+        public DbSet<HostContributor> HostContributor { get; set; }
 
         public DbSet<Volume> Volume { get; set; }
 

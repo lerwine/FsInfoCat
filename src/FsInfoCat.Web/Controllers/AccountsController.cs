@@ -26,12 +26,14 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts
+        [Authorize(Roles = "viewer")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Account.ToListAsync());
         }
 
         // GET: Accounts/Details/5
+        [Authorize(Roles = "viewer")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -50,6 +52,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts/Create
+        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
         public IActionResult Create()
         {
             return View();
@@ -60,6 +63,7 @@ namespace FsInfoCat.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
         public async Task<IActionResult> Create([Bind("PwHash,AccountID,DisplayName,LoginName,Role,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Account account)
         {
             if (ModelState.IsValid)
@@ -73,6 +77,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts/Edit/5
+        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -93,6 +98,7 @@ namespace FsInfoCat.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
         public async Task<IActionResult> Edit(Guid id, [Bind("PwHash,AccountID,DisplayName,LoginName,Role,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Account account)
         {
             if (id != account.AccountID)
@@ -124,6 +130,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts/Delete/5
+        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -144,6 +151,7 @@ namespace FsInfoCat.Web.Controllers
         // POST: Accounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var account = await _context.Account.FindAsync(id);
@@ -184,7 +192,7 @@ namespace FsInfoCat.Web.Controllers
             if (result.Value.Success)
             {
                 ViewData["ErrorMessage"] = "";
-                ViewData["ShowError"] = false;
+                ViewData["ReturnUrl"] = returnUrl;
                 ViewData["ShowError"] = false;
                 if (Url.IsLocalUrl(returnUrl))
                     return Redirect(returnUrl);
@@ -196,9 +204,13 @@ namespace FsInfoCat.Web.Controllers
             return View(request);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await FsInfoCat.Web.API.AuthController.Logout(User, HttpContext, _logger);
+            ViewData["ErrorMessage"] = "";
+            ViewData["ReturnUrl"] = "";
+            ViewData["ShowError"] = false;
             return Redirect("/Accounts/Login");
         }
     }

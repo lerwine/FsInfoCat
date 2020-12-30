@@ -5,13 +5,17 @@ namespace FsInfoCat.Models
     public enum UserRole : byte
     {
         None = 0,
-        [AmbientValue(AppUser.Role_Name_Viewer)]
+
+        [AmbientValue(ModelHelper.Role_Name_Viewer)]
         Viewer = 1,
-        [AmbientValue(AppUser.Role_Name_User)]
+
+        [AmbientValue(ModelHelper.Role_Name_User)]
         User = 2,
-        [AmbientValue(AppUser.Role_Name_Crawler)]
+
+        [AmbientValue(ModelHelper.Role_Name_App_Contrib)]
         Crawler = 3,
-        [AmbientValue(AppUser.Role_Name_Admin)]
+
+        [AmbientValue(ModelHelper.Role_Name_Admin)]
         Admin = 4
     }
 }

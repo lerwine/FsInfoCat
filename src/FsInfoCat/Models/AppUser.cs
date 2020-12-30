@@ -21,10 +21,6 @@ namespace FsInfoCat.Models
         public const string Error_Message_Login_Empty = "Login name cannot be empty.";
         public const string Error_Message_Login_Length = "Login name too long.";
         public const string Error_Message_Login_Invalid = "Invalid login name.";
-        public const string Role_Name_Viewer = "viewer";
-        public const string Role_Name_User = "user";
-        public const string Role_Name_Crawler = "crawler";
-        public const string Role_Name_Admin = "admin";
         private static readonly ReadOnlyDictionary<string, UserRole> _FromRoleNameMap;
         private static readonly ReadOnlyDictionary<UserRole, string> _ToRoleNameMap;
 

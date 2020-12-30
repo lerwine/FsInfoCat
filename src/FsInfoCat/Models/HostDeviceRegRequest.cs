@@ -106,11 +106,6 @@ namespace FsInfoCat.Models
 
         public static HostDeviceRegRequest CreateForLocal()
         {
-            HostDeviceRegRequest request = new HostDeviceRegRequest
-            {
-                IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT,
-                MachineName = Environment.MachineName
-            };
             try
             {
                 using (DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",Computer"))
@@ -118,7 +113,12 @@ namespace FsInfoCat.Models
                     DirectoryEntry d = directoryEntry.Children.OfType<DirectoryEntry>().FirstOrDefault();
                     if (null == d)
                         throw new Exception("Computer directory entry not found");
-                    request.MachineIdentifer = new SecurityIdentifier((byte[])d.InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
+                    return new HostDeviceRegRequest
+                    {
+                        IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT,
+                        MachineName = Environment.MachineName,
+                        MachineIdentifer = new SecurityIdentifier((byte[])d.InvokeGet("objectSID"), 0).AccountDomainSid.ToString()
+                    };
                 }
             }
             catch (Exception exc)
@@ -127,7 +127,6 @@ namespace FsInfoCat.Models
                     throw;
                 throw new Exception("Encountered an exception while trying to retrieve computer SID - " + exc.Message, exc);
             }
-            return request;
         }
     }
 }

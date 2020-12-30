@@ -70,7 +70,21 @@ namespace FsInfoCat.Web.API
             };
             foreach (UserRole role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.None && r <= user.Role))
                 claims.Add(new Claim(ClaimTypes.Role, role.ToString("F")));
-            await httpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", ClaimTypes.NameIdentifier, ClaimTypes.Role)));
+            HostDeviceRegRequest deviceReg = HostDeviceRegRequest.CreateForLocal();
+            HostDevice host = await HostDeviceController.LookUp(dbContext, deviceReg.MachineName, deviceReg.MachineIdentifer);
+            if (null != host && host.AllowCrawl)
+            {
+                if (user.Role >= UserRole.Crawler)
+                    claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
+                else
+                {
+                    HostContributor c = await HostDeviceController.Find(dbContext, user.AccountID, host.HostID);
+                    if (null != c)
+                        claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
+                }
+            }
+            ClaimsPrincipal cp = new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", ClaimTypes.NameIdentifier, ClaimTypes.Role));
+            await httpContext.SignInAsync(cp);
             return new RequestResponse<AppUser>(new AppUser(user));
         }
 

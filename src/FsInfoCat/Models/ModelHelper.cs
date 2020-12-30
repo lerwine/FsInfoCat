@@ -8,6 +8,12 @@ namespace FsInfoCat.Models
 {
     public class ModelHelper
     {
+        public const string Role_Name_Viewer = "viewer";
+        public const string Role_Name_User = "user";
+        public const string Role_Name_Host_Contrib = "host-contrib";
+        public const string Role_Name_App_Contrib = "app-contrib";
+        public const string Role_Name_Any_Contrib = "host-contrib,app-contrib";
+        public const string Role_Name_Admin = "admin";
         public const string PATTERN_DOTTED_NAME = @"(?i)^\s*([a-z][a-z\d_]*(\.[a-z][a-z\d_]*)*)\s*$";
         public const string PATTERN_MACHINE_NAME = @"^\s*(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?\s*$";
         public const string PATTERN_PATH_OR_URL = @"(?i)^([a-z]:[\\/]$|file:///[a-z]:/$|([a-z]:|[\\/]{2}([a-z]+(-[a-z\d]+)*(\.[a-z]+(-[a-z\d]+)*)*|(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)(\.(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)){3}))([\\/][^\\/:""<>|*?\x00-\x19]+)+[\\/]?$|file://(/[a-z]:|[a-z]+(-[a-z\d]+)*(\.[a-z]+(-[a-z\d]+)*)*|(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)(\.(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)){3})?([\\/][^\\/:""<>|*?\x00-\x19]+)+/?$)";

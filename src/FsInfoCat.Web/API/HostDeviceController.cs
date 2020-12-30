@@ -35,7 +35,7 @@ namespace FsInfoCat.Web.API
 
         // GET: api/HostDevice/GetById/{id}
         [HttpGet("{id}")]
-        [Authorize(Roles = AppUser.Role_Name_Viewer)]
+        [Authorize(Roles = ModelHelper.Role_Name_Viewer)]
         public async Task<ActionResult<HostDevice>> GetById(Guid id)
         {
             if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
@@ -43,54 +43,71 @@ namespace FsInfoCat.Web.API
             return await _context.HostDevice.FindAsync(id);
         }
 
-
-        // POST: api/HostDevice/Register
-        [HttpPost]
-        [Authorize(Roles = AppUser.Role_Name_Crawler)]
-        // [ValidateAntiForgeryToken]
-        public async Task<ActionResult<RequestResponse<HostDevice>>> Register(HostDeviceRegRequest host)
+        public static async Task<HostContributor> Find(FsInfoDataContext dbContext, Guid accountID, Guid hostID)
         {
-            if (null != host)
+            IQueryable<HostContributor> contributors = from c in dbContext.HostContributor select c;
+            return (await contributors.Where(c => c.AccountID.Equals(accountID) && c.HostID.Equals(hostID)).AsNoTracking().ToListAsync()).FirstOrDefault();
+        }
+
+        public static async Task<HostDevice> LookUp(FsInfoDataContext dbContext, string machineName, string machineIdentifer)
+        {
+            if (string.IsNullOrWhiteSpace(machineName))
+                return null;
+            IQueryable<HostDevice> hostDevices = from d in dbContext.HostDevice select d;
+            if (string.IsNullOrWhiteSpace(machineIdentifer))
+                hostDevices = hostDevices.Where(h => string.Equals(machineName, h.MachineName, StringComparison.InvariantCulture));
+            else
+                hostDevices = hostDevices.Where(h => string.Equals(machineName, h.MachineName, StringComparison.InvariantCulture) &&
+                    string.Equals(machineIdentifer, h.MachineIdentifer, StringComparison.InvariantCulture));
+            return (await hostDevices.AsNoTracking().ToListAsync()).FirstOrDefault();
+        }
+
+        public static async Task<RequestResponse<HostDevice>> Register(Guid userId, FsInfoDataContext dbContext, HostDeviceRegRequest request)
+        {
+            if (null == request)
                 return await Task.FromResult(new RequestResponse<HostDevice>(null, "Invalid request."));
-            IList<ValidationResult> validation = host.ValidateAll();
+            IList<ValidationResult> validation = request.ValidateAll();
             if (validation.Count > 0)
                 return await Task.FromResult(new RequestResponse<HostDevice>(null, validation[0].ErrorMessage));
-            IQueryable<HostDevice> hostDevices = from d in _context.HostDevice select d;
-            if (host.MachineIdentifer.Length == 0)
-                hostDevices = hostDevices.Where(h => string.Equals(host.MachineName, h.MachineName, StringComparison.InvariantCulture));
-            else
-                hostDevices = hostDevices.Where(h => string.Equals(host.MachineName, h.MachineName, StringComparison.InvariantCulture) ||
-                    string.Equals(host.MachineIdentifer, h.MachineIdentifer, StringComparison.InvariantCulture));
-            HostDevice matching = (await hostDevices.AsNoTracking().ToListAsync()).FirstOrDefault();
+            HostDevice matching = await LookUp(dbContext, request.MachineName, request.MachineIdentifer);
             RequestResponse<HostDevice> result;
             if (null == matching)
             {
-                result = new RequestResponse<HostDevice>(new HostDevice(host, new Guid(User.Identity.Name)));
-                _context.HostDevice.Add(result.Result);
-                await _context.SaveChangesAsync();
+                result = new RequestResponse<HostDevice>(new HostDevice(request, userId));
+                dbContext.HostDevice.Add(result.Result);
+                await dbContext.SaveChangesAsync();
             }
-            else if (host.IsWindows != matching.IsWindows)
+            else if (request.IsWindows != matching.IsWindows)
                 result = new RequestResponse<HostDevice>(matching, "System type mismatch");
             else
             {
-                if (host.DisplayName != matching.DisplayName || host.MachineIdentifer != matching.MachineIdentifer || host.MachineName != matching.MachineName)
+                if (request.DisplayName != matching.DisplayName || request.MachineIdentifer != matching.MachineIdentifer || request.MachineName != matching.MachineName)
                 {
-                    matching.DisplayName = host.DisplayName;
-                    matching.MachineIdentifer = host.MachineIdentifer;
-                    matching.MachineName = host.MachineName;
+                    matching.DisplayName = request.DisplayName;
+                    matching.MachineIdentifer = request.MachineIdentifer;
+                    matching.MachineName = request.MachineName;
                     matching.ModifiedOn = DateTime.UtcNow;
-                    matching.ModifiedBy = new Guid(User.Identity.Name);
-                    _context.HostDevice.Update(matching);
-                    await _context.SaveChangesAsync();
+                    matching.ModifiedBy = userId;
+                    dbContext.HostDevice.Update(matching);
+                    await dbContext.SaveChangesAsync();
                 }
                 result = new RequestResponse<HostDevice>(matching);
             }
             return result;
         }
 
+        // POST: api/HostDevice/Register
+        [HttpPost]
+        [Authorize(Roles = ModelHelper.Role_Name_App_Contrib)]
+        // [ValidateAntiForgeryToken]
+        public async Task<ActionResult<RequestResponse<HostDevice>>> Register(HostDeviceRegRequest host)
+        {
+            return await Register(new Guid(User.Identity.Name), _context, host);
+        }
+
         // DELETE: api/HostDevice/UnRegister/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = AppUser.Role_Name_Admin)]
+        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
         public async Task<ActionResult<bool>> UnRegister(Guid id)
         {
             return await _context.HostDevice.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
