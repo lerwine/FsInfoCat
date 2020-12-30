@@ -14,5 +14,7 @@ namespace FsInfoCat.Models
         string MachineName { get; set; }
 
         bool IsWindows { get; set; }
+
+        bool AllowCrawl { get; set; }
     }
 }

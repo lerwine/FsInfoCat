@@ -25,6 +25,9 @@
                 @Html.DisplayNameFor(model => model.IsWindows)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.AllowCrawl)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.IsInactive)
             </th>
             <th>
@@ -53,6 +56,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsWindows)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AllowCrawl)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsInactive)

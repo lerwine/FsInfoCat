@@ -77,6 +77,9 @@ namespace FsInfoCat.Models.DB
         [Display(Name = "Is Windows OS")]
         public bool IsWindows { get; set; }
 
+        [Display(Name = "Allow Local Crawl")]
+        public bool AllowCrawl { get; set; }
+
         [Display(Name = "Is Inactive")]
         public bool IsInactive { get; set; }
 
@@ -94,8 +97,6 @@ namespace FsInfoCat.Models.DB
         }
 
         #endregion
-
-        public ICollection<Volume> Volumes { get; set; }
 
         #region Audit
 

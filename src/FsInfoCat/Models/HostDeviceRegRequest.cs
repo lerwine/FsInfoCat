@@ -41,6 +41,9 @@ namespace FsInfoCat.Models
         [Display(Name = "Is Windows OS")]
         public bool IsWindows { get; set; }
 
+        [Display(Name = "Allow Local Crawl")]
+        public bool AllowCrawl { get; set; }
+
         Guid IHostDeviceReg.HostID { get => Guid.Empty; set => throw new NotSupportedException(); }
 
         public void Normalize()

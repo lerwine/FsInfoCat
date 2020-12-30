@@ -52,6 +52,7 @@ CREATE TABLE dbo.HostDevice
     MachineIdentifer NVARCHAR(256) NOT NULL,
     MachineName NVARCHAR(256) NOT NULL,
     IsWindows BIT NOT NULL DEFAULT 0,
+    AllowCrawl BIT NOT NULL DEFAULT 0,
     IsInactive BIT NOT NULL DEFAULT 0,
     Notes NTEXT NOT NULL DEFAULT '',
     CreatedOn DATETIME NOT NULL,
@@ -140,7 +141,7 @@ ALTER TABLE dbo.Volume WITH CHECK ADD CONSTRAINT FK_Volume_ModifiedBy FOREIGN KE
 ALTER TABLE dbo.Volume CHECK CONSTRAINT FK_Volume_ModifiedBy;
 CREATE UNIQUE INDEX IDX_Volume_SerialNumber ON dbo.Volume (SerialNumber);
 
-INSERT INTO dbo.HostDevice (HostID, DisplayName, MachineIdentifer, MachineName, IsWindows, IsInactive, Notes,
+INSERT INTO dbo.HostDevice (HostID, DisplayName, MachineIdentifer, MachineName, IsWindows, AllowCrawl, IsInactive, Notes,
         CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
-    VALUES('1fd51535-1bd1-4ab2-acd9-3e152f1da4e2', '', 'S-1-5-21-1530418785-1729549302-3382320463', 'DESKTOP-G10FC12', 1, 0, '',
+    VALUES('1fd51535-1bd1-4ab2-acd9-3e152f1da4e2', '', 'S-1-5-21-1530418785-1729549302-3382320463', 'DESKTOP-G10FC12', 1, 1, 0, '',
         @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
