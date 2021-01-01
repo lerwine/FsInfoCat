@@ -165,7 +165,7 @@ namespace FsInfoCat.Models
             CreatedBy = ModifiedBy = creator.AccountID;
         }
 
-        public AppUser(AppUser user)
+        public AppUser(IAppUser user)
         {
             if (null == user)
                 throw new ArgumentNullException("user");
