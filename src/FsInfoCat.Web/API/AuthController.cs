@@ -114,71 +114,14 @@ namespace FsInfoCat.Web.API
             return await Logout(User, HttpContext, _logger);
         }
 
-        public static string GetPwHash(string pw)
-        {
-            if (string.IsNullOrEmpty(pw))
-                return "";
-            byte[] bytes = Encoding.ASCII.GetBytes(pw);
-            byte[] salt = new byte[8];
-            using (RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider())
-                provider.GetBytes(salt);
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in salt)
-                sb.Append(b.ToString("x2"));
-            using (SHA256 sha = SHA256.Create())
-            {
-                sha.ComputeHash(salt.Concat(bytes).ToArray());
-                foreach (byte b in sha.Hash)
-                    sb.Append(b.ToString("x2"));
-            }
-            return sb.ToString();
-        }
-
-        public static string ToPwHash(string rawPw, byte[] salt = null)
-        {
-            if (string.IsNullOrEmpty(rawPw))
-                return "";
-            if (null == salt)
-            {
-                salt = new byte[Salt_Bytes_Length];
-                using (RNGCryptoServiceProvider cryptoServiceProvider = new RNGCryptoServiceProvider())
-                    cryptoServiceProvider.GetBytes(salt);
-            }
-            else if (salt.Length != Salt_Bytes_Length)
-                throw new ArgumentException("Invalid salt length", "salt");
-            using (SHA512 sha = SHA512.Create())
-            {
-                sha.ComputeHash(salt.Concat(Encoding.ASCII.GetBytes(rawPw)).ToArray());
-                return Convert.ToBase64String(sha.Hash.Concat(salt).ToArray());
-            }
-        }
-
+        // TODO: Replace this with using PwHash directly
         public static bool CheckPwHash(string pwHash, string rawPw)
         {
-            if (string.IsNullOrEmpty(pwHash))
-                return string.IsNullOrEmpty(rawPw);
-            if (pwHash.Length != Account.Encoded_Pw_Hash_Length || string.IsNullOrEmpty(rawPw))
-                return false;
-            byte[] hash;
-            try
-            {
-                if ((hash = Convert.FromBase64String(pwHash)).Length != (Salt_Bytes_Length + Hash_Bytes_Length))
-                    return false;
-            }
-            catch
-            {
-                return false;
-            }
-            using (SHA512 sha = SHA512.Create())
-            {
-                sha.ComputeHash(Encoding.ASCII.GetBytes(rawPw).Concat(hash.Skip(Hash_Bytes_Length)).ToArray());
-                for (int i = 0; i < Hash_Bytes_Length; i++)
-                {
-                    if (sha.Hash[i] != hash[i])
-                        return false;
-                }
-            }
-            return true;
+            if (string.IsNullOrEmpty(rawPw))
+                return string.IsNullOrWhiteSpace(pwHash);
+            PwHash? hash;
+            try { hash = PwHash.Import(pwHash); } catch { hash = null; }
+            return hash.HasValue && hash.Value.Test(rawPw);
         }
     }
 }
