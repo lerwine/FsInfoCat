@@ -10,8 +10,9 @@ namespace FsInfoCat.Models
         string DisplayName { get; set; }
 
         /// <summary>
-        /// Unique identifier for the machine; usually aa SID string.
+        /// Unique identifier for the machine.
         /// </summary>
+        /// <remarks>For Windows machines, this is the machine SID string. For Linux machines, this is the GUID string from /etc/machine-id</remarks>
         string MachineIdentifer { get; set; }
 
         /// <summary>
@@ -19,6 +20,11 @@ namespace FsInfoCat.Models
         /// </summary>
         string MachineName { get; set; }
 
+        // TODO: Change to an enum or formatted string that will distinguish host types
+        /// <summary>
+        /// Indicates if the host machine is a windows machine.
+        /// </summary>
+        /// <value></value>
         bool IsWindows { get; set; }
 
         /// <summary>

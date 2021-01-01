@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.DirectoryServices;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using FsInfoCat.Models.DB;
@@ -108,17 +109,35 @@ namespace FsInfoCat.Models
         {
             try
             {
-                using (DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",Computer"))
+                switch (Environment.OSVersion.Platform)
                 {
-                    DirectoryEntry d = directoryEntry.Children.OfType<DirectoryEntry>().FirstOrDefault();
-                    if (null == d)
-                        throw new Exception("Computer directory entry not found");
-                    return new HostDeviceRegRequest
-                    {
-                        IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT,
-                        MachineName = Environment.MachineName,
-                        MachineIdentifer = new SecurityIdentifier((byte[])d.InvokeGet("objectSID"), 0).AccountDomainSid.ToString()
-                    };
+                    case PlatformID.Win32NT:
+                        using (DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + "/Administrator"))
+                        {
+                            return new HostDeviceRegRequest
+                            {
+                                IsWindows = true,
+                                MachineName = Environment.MachineName,
+                                MachineIdentifer = new SecurityIdentifier((byte[])directoryEntry.InvokeGet("objectSID"), 0).AccountDomainSid.ToString()
+                            };
+                        }
+                    case PlatformID.Unix:
+                        string s = File.ReadAllText("/etc/machine-id");
+                        if (Guid.TryParse(s.Trim(), out Guid id))
+                            return new HostDeviceRegRequest
+                            {
+                                IsWindows = false,
+                                MachineName = Environment.MachineName,
+                                MachineIdentifer = id.ToString("d")
+                            };
+                        return new HostDeviceRegRequest
+                        {
+                            IsWindows = false,
+                            MachineName = Environment.MachineName,
+                            MachineIdentifer = s
+                        };
+                    default:
+                        throw new NotSupportedException("Platform " + Environment.OSVersion.Platform.ToString("F") + " is not supported.");
                 }
             }
             catch (Exception exc)
