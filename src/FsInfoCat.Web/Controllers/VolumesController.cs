@@ -54,7 +54,7 @@ namespace FsInfoCat.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VolumeID,HostID,DisplayName,RootPathName,FileSystemName,VolumeName,SerialNumber,MaxNameLength,Flags,IsInactive,Notes,CreatedOn,ModifiedOn")] Volume volume)
+        public async Task<IActionResult> Create([Bind("VolumeID,HostDeviceID,DisplayName,RootPathName,FileSystemName,VolumeName,SerialNumber,MaxNameLength,Flags,IsInactive,Notes,CreatedOn,ModifiedOn")] Volume volume)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace FsInfoCat.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("VolumeID,HostID,DisplayName,RootPathName,FileSystemName,VolumeName,SerialNumber,MaxNameLength,Flags,IsInactive,Notes,CreatedOn,ModifiedOn")] Volume volume)
+        public async Task<IActionResult> Edit(Guid id, [Bind("VolumeID,HostDeviceID,DisplayName,RootPathName,FileSystemName,VolumeName,SerialNumber,MaxNameLength,Flags,IsInactive,Notes,CreatedOn,ModifiedOn")] Volume volume)
         {
             if (id != volume.VolumeID)
             {

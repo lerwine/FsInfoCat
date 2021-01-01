@@ -34,7 +34,7 @@ namespace FsInfoCat.Web.Controllers
             }
 
             var hostDevice = await _context.HostDevice
-                .FirstOrDefaultAsync(m => m.HostID == id);
+                .FirstOrDefaultAsync(m => m.HostDeviceID == id);
             if (hostDevice == null)
             {
                 return NotFound();
@@ -54,11 +54,11 @@ namespace FsInfoCat.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HostID,DisplayName,MachineIdentifer,MachineName,IsWindows,IsInactive,Notes,CreatedOn,ModifiedOn")] HostDevice hostDevice)
+        public async Task<IActionResult> Create([Bind("HostDeviceID,DisplayName,MachineIdentifer,MachineName,IsWindows,IsInactive,Notes,CreatedOn,ModifiedOn")] HostDevice hostDevice)
         {
             if (ModelState.IsValid)
             {
-                hostDevice.HostID = Guid.NewGuid();
+                hostDevice.HostDeviceID = Guid.NewGuid();
                 _context.Add(hostDevice);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,9 +87,9 @@ namespace FsInfoCat.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("HostID,DisplayName,MachineIdentifer,MachineName,IsWindows,IsInactive,Notes,CreatedOn,ModifiedOn")] HostDevice hostDevice)
+        public async Task<IActionResult> Edit(Guid id, [Bind("HostDeviceID,DisplayName,MachineIdentifer,MachineName,IsWindows,IsInactive,Notes,CreatedOn,ModifiedOn")] HostDevice hostDevice)
         {
-            if (id != hostDevice.HostID)
+            if (id != hostDevice.HostDeviceID)
             {
                 return NotFound();
             }
@@ -103,7 +103,7 @@ namespace FsInfoCat.Web.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HostDeviceExists(hostDevice.HostID))
+                    if (!HostDeviceExists(hostDevice.HostDeviceID))
                     {
                         return NotFound();
                     }
@@ -126,7 +126,7 @@ namespace FsInfoCat.Web.Controllers
             }
 
             var hostDevice = await _context.HostDevice
-                .FirstOrDefaultAsync(m => m.HostID == id);
+                .FirstOrDefaultAsync(m => m.HostDeviceID == id);
             if (hostDevice == null)
             {
                 return NotFound();
@@ -148,7 +148,7 @@ namespace FsInfoCat.Web.Controllers
 
         private bool HostDeviceExists(Guid id)
         {
-            return _context.HostDevice.Any(e => e.HostID == id);
+            return _context.HostDevice.Any(e => e.HostDeviceID == id);
         }
     }
 }

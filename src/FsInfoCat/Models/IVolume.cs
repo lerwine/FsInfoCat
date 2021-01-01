@@ -7,7 +7,7 @@ namespace FsInfoCat.Models
     {
         Guid VolumeID { get; set; }
 
-        Guid? HostID { get; set; }
+        Guid? HostDeviceID { get; set; }
 
         string DisplayName { get; set; }
 

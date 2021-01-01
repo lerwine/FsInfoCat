@@ -47,7 +47,7 @@ namespace FsInfoCat.Models
         [Display(Name = "Allow Local Crawl")]
         public bool AllowCrawl { get; set; }
 
-        Guid IHostDeviceReg.HostID { get => Guid.Empty; set => throw new NotSupportedException(); }
+        Guid IHostDeviceReg.HostDeviceID { get => Guid.Empty; set => throw new NotSupportedException(); }
 
         public void Normalize()
         {

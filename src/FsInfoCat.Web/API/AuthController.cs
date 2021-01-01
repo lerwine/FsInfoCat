@@ -71,14 +71,14 @@ namespace FsInfoCat.Web.API
             foreach (UserRole role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.None && r <= user.Role))
                 claims.Add(new Claim(ClaimTypes.Role, role.ToString("F")));
             HostDeviceRegRequest deviceReg = HostDeviceRegRequest.CreateForLocal();
-            HostDevice host = await HostDeviceController.LookUp(dbContext, deviceReg.MachineName, deviceReg.MachineIdentifer);
+            HostDevice host = await HostDevice.LookUp(dbContext.HostDevice, deviceReg.MachineName, deviceReg.MachineIdentifer);
             if (null != host && host.AllowCrawl)
             {
                 if (user.Role >= UserRole.Crawler)
                     claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
                 else
                 {
-                    HostContributor c = await HostDeviceController.Find(dbContext, user.AccountID, host.HostID);
+                    HostContributor c = await HostContributor.Lookup(dbContext.HostContributor, user.AccountID, host.HostDeviceID);
                     if (null != c)
                         claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
                 }

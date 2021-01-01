@@ -600,9 +600,9 @@ namespace FsInfoCat.Desktop.ViewModels
                     if (result.Success)
                     {
                         RegisteredBaseWebApiUri = uri;
-                        RegisteredHostId = result.Result.HostID;
+                        RegisteredHostId = result.Result.HostDeviceID;
                         HostIdRegistrationMessage = (string.IsNullOrWhiteSpace(result.Message)) ? "Registration successful" : result.Message;
-                        return new UrlAndID(uri, result.Result.HostID);
+                        return new UrlAndID(uri, result.Result.HostDeviceID);
                     }
                     HostIdRegistrationMessage = (string.IsNullOrWhiteSpace(result.Message)) ? "Registration failed" : result.Message;
                 }
