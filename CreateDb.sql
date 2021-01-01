@@ -18,7 +18,7 @@ CREATE TABLE dbo.Account
     CreatedBy UNIQUEIDENTIFIER NOT NULL,
     ModifiedOn DATETIME NOT NULL,
     ModifiedBy UNIQUEIDENTIFIER NOT NULL,
-    DisplayName NVARCHAR(256) NOT NULL DEFAULT '',
+    DisplayName NVARCHAR(128) NOT NULL DEFAULT '',
     LoginName NVARCHAR(32) NOT NULL,
     PwHash NCHAR(96) NOT NULL,
     [Role] TINYINT NOT NULL,
@@ -48,9 +48,9 @@ CREATE UNIQUE INDEX IDX_Account_LoginName ON dbo.Account (LoginName);
 CREATE TABLE dbo.HostDevice
 (
     HostID UNIQUEIDENTIFIER NOT NULL, -- primary key column
-    DisplayName NVARCHAR(256) NOT NULL DEFAULT '',
-    MachineIdentifer NVARCHAR(256) NOT NULL,
-    MachineName NVARCHAR(256) NOT NULL,
+    DisplayName NVARCHAR(128) NOT NULL DEFAULT '',
+    MachineIdentifer NVARCHAR(128) NOT NULL,
+    MachineName NVARCHAR(128) NOT NULL,
     IsWindows BIT NOT NULL DEFAULT 0,
     AllowCrawl BIT NOT NULL DEFAULT 0,
     IsInactive BIT NOT NULL DEFAULT 0,
@@ -113,7 +113,7 @@ CREATE TABLE dbo.Volume
     CreatedBy UNIQUEIDENTIFIER NOT NULL,
     ModifiedOn DATETIME NOT NULL,
     ModifiedBy UNIQUEIDENTIFIER NOT NULL,
-    DisplayName NVARCHAR(256) NOT NULL DEFAULT '',
+    DisplayName NVARCHAR(128) NOT NULL DEFAULT '',
     RootPathName NVARCHAR(1024) NOT NULL,
     FileSystemName NVARCHAR(256) NOT NULL,
     VolumeName NVARCHAR(128) NOT NULL,

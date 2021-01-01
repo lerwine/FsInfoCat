@@ -16,7 +16,7 @@ namespace FsInfoCat.Models.DB
 
         #region DisplayName
 
-        public const int Max_Length_DisplayName = 256;
+        public const int Max_Length_DisplayName = 128;
         public const string DisplayName_DisplayName = "Display name";
         public const string PropertyName_DisplayName = "DisplayName";
         public const string Error_Message_DisplayName = "Display name too long.";
@@ -36,7 +36,7 @@ namespace FsInfoCat.Models.DB
 
         public const string DisplayName_MachineIdentifer = "Machine Unique Identifier";
         public const string PropertyName_MachineIdentifer = "MachineIdentifer";
-        public const int Max_Length_MachineIdentifer = 256;
+        public const int Max_Length_MachineIdentifer = 128;
         public const string Error_Message_MachineIdentifer = "Machine identifier too long.";
         private string _machineIdentifer = "";
 
@@ -55,7 +55,7 @@ namespace FsInfoCat.Models.DB
 
         public const string DisplayName_MachineName = "Machine name";
         public const string PropertyName_MachineName = "MachineName";
-        public const int Max_Length_MachineName = 256;
+        public const int Max_Length_MachineName = 128;
         public const string Error_Message_MachineName_Empty = "Machine name cannot be empty";
         public const string Error_Message_MachineName_Length = "Machine name too long.";
         public const string Error_Message_MachineName_Invalid = "Invalid machine name";

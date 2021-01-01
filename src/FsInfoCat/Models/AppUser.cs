@@ -11,7 +11,7 @@ namespace FsInfoCat.Models
     {
         #region Fields
 
-        public const int Max_Length_DisplayName = 256;
+        public const int Max_Length_DisplayName = 128;
         public const string DisplayName_DisplayName = "Display name";
         public const string PropertyName_DisplayName = "DisplayName";
         public const string Error_Message_DisplayName = "Display name too long.";
@@ -143,8 +143,6 @@ namespace FsInfoCat.Models
 
         public void Normalize()
         {
-            if (AccountID.Equals(Guid.Empty))
-                AccountID = Guid.NewGuid();
             _loginName = _loginName.Trim();
             if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
                 _displayName = _loginName;
