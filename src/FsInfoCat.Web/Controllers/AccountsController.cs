@@ -26,14 +26,14 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts
-        [Authorize(Roles = "viewer")]
+        [Authorize(Roles = ModelHelper.Role_Name_Viewer)]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Account.ToListAsync());
         }
 
         // GET: Accounts/Details/5
-        [Authorize(Roles = "viewer")]
+        [Authorize(Roles = ModelHelper.Role_Name_Viewer)]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)

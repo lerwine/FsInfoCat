@@ -38,28 +38,7 @@ namespace FsInfoCat.Web.API
         [Authorize(Roles = ModelHelper.Role_Name_Viewer)]
         public async Task<ActionResult<HostDevice>> GetById(Guid id)
         {
-            if (null == User || null == User.Identity || !User.Identity.IsAuthenticated)
-                return await Task.FromResult((ActionResult<HostDevice>)null);
             return await _context.HostDevice.FindAsync(id);
-        }
-
-        public static async Task<HostContributor> Find(FsInfoDataContext dbContext, Guid accountID, Guid hostID)
-        {
-            IQueryable<HostContributor> contributors = from c in dbContext.HostContributor select c;
-            return (await contributors.Where(c => c.AccountID.Equals(accountID) && c.HostID.Equals(hostID)).AsNoTracking().ToListAsync()).FirstOrDefault();
-        }
-
-        public static async Task<HostDevice> LookUp(FsInfoDataContext dbContext, string machineName, string machineIdentifer)
-        {
-            if (string.IsNullOrWhiteSpace(machineName))
-                return null;
-            IQueryable<HostDevice> hostDevices = from d in dbContext.HostDevice select d;
-            if (string.IsNullOrWhiteSpace(machineIdentifer))
-                hostDevices = hostDevices.Where(h => string.Equals(machineName, h.MachineName, StringComparison.InvariantCulture));
-            else
-                hostDevices = hostDevices.Where(h => string.Equals(machineName, h.MachineName, StringComparison.InvariantCulture) &&
-                    string.Equals(machineIdentifer, h.MachineIdentifer, StringComparison.InvariantCulture));
-            return (await hostDevices.AsNoTracking().ToListAsync()).FirstOrDefault();
         }
 
         public static async Task<RequestResponse<HostDevice>> Register(Guid userId, FsInfoDataContext dbContext, HostDeviceRegRequest request)
@@ -69,7 +48,7 @@ namespace FsInfoCat.Web.API
             IList<ValidationResult> validation = request.ValidateAll();
             if (validation.Count > 0)
                 return await Task.FromResult(new RequestResponse<HostDevice>(null, validation[0].ErrorMessage));
-            HostDevice matching = await LookUp(dbContext, request.MachineName, request.MachineIdentifer);
+            HostDevice matching = await HostDevice.LookUp(dbContext.HostDevice, request.MachineName, request.MachineIdentifer);
             RequestResponse<HostDevice> result;
             if (null == matching)
             {

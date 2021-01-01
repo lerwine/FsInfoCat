@@ -682,7 +682,7 @@ Function Get-InitializationQueries {
         [string]$AdministrativePassword
     )
     $PwHash = ConvertTo-PasswordHash -Password $AdministrativePassword;
-    $HostID = [Guid]::NewGuid().ToString('d');
+    $HostDeviceID = [Guid]::NewGuid().ToString('d');
     $MachineIdentifier = [FsInfoCat.PS.FsInfoCatUtil]::GetLocalMachineSID();
     $MachineName = [System.Environment]::MachineName;
     @"
@@ -693,9 +693,9 @@ INSERT INTO dbo.Account (AccountID, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy
         'FS InfoCat Administrator', 'admin', '$PwHash', 4, '');
 
 -- The next query should be executed at the end of the setup script.
-INSERT INTO dbo.HostDevice (HostID, DisplayName, MachineIdentifer, MachineName, IsWindows, IsInactive, Notes,
+INSERT INTO dbo.HostDevice (HostDeviceID, DisplayName, MachineIdentifer, MachineName, IsWindows, IsInactive, Notes,
         CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
-    VALUES('$HostID', NULL, '$MachineIdentifier', '$MachineName', 1, 0, '',
+    VALUES('$HostDeviceID', NULL, '$MachineIdentifier', '$MachineName', 1, 0, '',
         @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
 "@ | Write-Host;
 }
