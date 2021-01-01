@@ -13,9 +13,9 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="HostID" class="control-label"></label>
-                <input asp-for="HostID" class="form-control" />
-                <span asp-validation-for="HostID" class="text-danger"></span>
+                <label asp-for="HostDeviceID" class="control-label"></label>
+                <input asp-for="HostDeviceID" class="form-control" />
+                <span asp-validation-for="HostDeviceID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DisplayName" class="control-label"></label>
@@ -61,16 +61,6 @@
                 <label asp-for="Notes" class="control-label"></label>
                 <textarea asp-for="Notes" class="form-control"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -39,30 +39,36 @@
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
+</div>
+<dl class="row">
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.CreatedOn)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.CreatedOn)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.CreatedBy)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.CreatorName)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.ModifiedOn)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.ModifiedOn)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.ModifiedBy)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.ModifierName)
+    </dd>
 </div>
 
 <div>

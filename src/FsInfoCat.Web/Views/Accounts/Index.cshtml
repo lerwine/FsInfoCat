@@ -13,9 +13,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PwHash)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.DisplayName)
             </th>
             <th>
@@ -23,9 +20,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notes)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedOn)
@@ -46,9 +40,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PwHash)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.DisplayName)
             </td>
             <td>
@@ -58,19 +49,16 @@
                 @Html.DisplayFor(modelItem => item.Role)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.CreatedOn)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
+                @Html.DisplayFor(modelItem => item.CreatorName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ModifiedOn)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModifiedBy)
+                @Html.DisplayFor(modelItem => item.ModifierName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AccountID">Edit</a> |
