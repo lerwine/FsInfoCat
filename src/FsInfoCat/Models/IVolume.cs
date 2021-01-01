@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models
 {
@@ -7,7 +8,13 @@ namespace FsInfoCat.Models
     {
         Guid VolumeID { get; set; }
 
+        string Name { get; }
+
         Guid? HostDeviceID { get; set; }
+
+        HostDevice Host { get; set; }
+
+        string HostName { get; }
 
         string DisplayName { get; set; }
 

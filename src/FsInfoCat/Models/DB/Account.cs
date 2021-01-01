@@ -42,6 +42,11 @@ namespace FsInfoCat.Models.DB
             PwHash = pwHash;
         }
 
+        public Account(string userName, string pwHash, UserRole role, Account creator) : base(userName, role, creator)
+        {
+            PwHash = pwHash;
+        }
+
         protected override void Validate(List<ValidationResult> result, string propertyName)
         {
             switch (propertyName)

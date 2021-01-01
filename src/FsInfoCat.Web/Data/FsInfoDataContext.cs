@@ -14,7 +14,37 @@ namespace FsInfoCat.Web.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<HostContributor>().HasNoKey();
+            modelBuilder.Entity<Account>()
+                .HasOne(p => p.Creator)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
+            modelBuilder.Entity<Account>()
+                .HasOne(p => p.Modifier)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
+            modelBuilder.Entity<HostDevice>()
+                .HasOne(p => p.Creator)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
+            modelBuilder.Entity<HostDevice>()
+                .HasOne(p => p.Modifier)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
+            modelBuilder.Entity<Volume>()
+                .HasOne(p => p.Creator)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
+            modelBuilder.Entity<Volume>()
+                .HasOne(p => p.Modifier)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
+            // modelBuilder.Entity<HostContributor>().HasNoKey();
+            modelBuilder.Entity<HostContributor>()
+                .HasKey(c => new { c.AccountID, c.HostDeviceID });
+            modelBuilder.Entity<HostContributor>()
+                .HasOne(p => p.Creator)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
         }
 
         public DbSet<Account> Account { get; set; }

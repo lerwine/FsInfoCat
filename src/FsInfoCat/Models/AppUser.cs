@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models
 {
@@ -37,6 +38,15 @@ namespace FsInfoCat.Models
         [Display(Name = "ID")]
         public Guid AccountID { get; set; }
 
+        public string Name
+        {
+            get
+            {
+                string n = _displayName;
+                return (string.IsNullOrWhiteSpace(n)) ? _loginName : n;
+            }
+        }
+
         [MaxLength(Max_Length_DisplayName, ErrorMessage = Error_Message_DisplayName)]
         [Display(Name = DisplayName_DisplayName)]
         [DataType(DataType.Text)]
@@ -46,7 +56,7 @@ namespace FsInfoCat.Models
             set { _displayName = (null == value) ? "" : value; }
         }
 
-        [Required()]
+        [Required(ErrorMessage = Error_Message_Login_Empty)]
         [MinLength(1, ErrorMessage = Error_Message_Login_Empty)]
         [MaxLength(Max_Length_Login_Name, ErrorMessage = Error_Message_Login_Length)]
         [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Error_Message_Login_Invalid)]
@@ -62,7 +72,6 @@ namespace FsInfoCat.Models
         [EnumDataType(typeof(UserRole))]
         public UserRole Role { get; set; }
 
-        [Required()]
         [Display(Name = "Notes")]
         [DataType(DataType.MultilineText)]
         public string Notes
@@ -80,6 +89,17 @@ namespace FsInfoCat.Models
         [Display(Name = "Created By")]
         public Guid CreatedBy { get; set; }
 
+        public Account Creator { get; set; }
+
+        public string CreatorName
+        {
+            get
+            {
+                Account account = Creator;
+                return (null == account) ? "" : account.Name;
+            }
+        }
+
         [Editable(false)]
         [Display(Name = "Modified On")]
         [DataType(DataType.DateTime)]
@@ -88,6 +108,17 @@ namespace FsInfoCat.Models
         [Editable(false)]
         [Display(Name = "Modified By")]
         public Guid ModifiedBy { get; set; }
+
+        public Account Modifier { get; set; }
+
+        public string ModifierName
+        {
+            get
+            {
+                Account account = Modifier;
+                return (null == account) ? "" : account.Name;
+            }
+        }
 
         #endregion
 
@@ -124,13 +155,25 @@ namespace FsInfoCat.Models
             CreatedBy = ModifiedBy = createdBy;
         }
 
+        protected AppUser(string userName, UserRole role, Account creator) : this()
+        {
+            if (null == creator)
+                throw new ArgumentNullException("creator");
+            LoginName = userName;
+            Role = role;
+            Creator = Modifier = creator;
+            CreatedBy = ModifiedBy = creator.AccountID;
+        }
+
         public AppUser(AppUser user)
         {
             if (null == user)
                 throw new ArgumentNullException("user");
             AccountID = user.AccountID;
+            Creator = user.Creator;
             CreatedBy = user.CreatedBy;
             CreatedOn = user.CreatedOn;
+            Modifier = user.Modifier;
             ModifiedBy = user.ModifiedBy;
             LoginName = user.LoginName;
             DisplayName = user.DisplayName;
@@ -147,6 +190,12 @@ namespace FsInfoCat.Models
             if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
                 _displayName = _loginName;
             _notes = _notes.Trim();
+            CreatedOn = ModelHelper.CoerceAsLocalTime(CreatedOn);
+            ModifiedOn = ModelHelper.CoerceAsLocalTime(ModifiedOn);
+            if (null != Creator)
+                CreatedBy = Creator.AccountID;
+            if (null != Modifier)
+                ModifiedBy = Modifier.AccountID;
         }
 
         protected virtual void Validate(List<ValidationResult> result, string propertyName)
@@ -162,7 +211,7 @@ namespace FsInfoCat.Models
                 case DisplayName_LoginName:
                     if (_loginName.Length == 0)
                         result.Add(new ValidationResult(Error_Message_Login_Empty, new string[] { PropertyName_LoginName }));
-                    else if (_loginName.Length > Max_Length_DisplayName)
+                    else if (_loginName.Length > Max_Length_Login_Name)
                         result.Add(new ValidationResult(Error_Message_Login_Length, new string[] { PropertyName_LoginName }));
                     else if (!ModelHelper.DottedNameRegex.IsMatch(_loginName))
                         result.Add(new ValidationResult(Error_Message_Login_Invalid, new string[] { PropertyName_LoginName }));
@@ -193,6 +242,11 @@ namespace FsInfoCat.Models
             else
                 Validate(result, validationContext.DisplayName);
             return result;
+        }
+
+        public override string ToString()
+        {
+            return "[AccountID=" + AccountID.ToString("d") + "; LoginName=\"" + LoginName.Replace("\"", "\\\"") + "\"; LoginName=\"" + DisplayName.Replace("\"", "\\\"") + "\"; Role=" + Role.ToString("F") + "]";
         }
 
         public static string ToRoleName(UserRole role)

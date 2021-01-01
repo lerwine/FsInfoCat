@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models
 {
@@ -9,8 +10,16 @@ namespace FsInfoCat.Models
 
         Guid CreatedBy { get; set; }
 
+        Account Creator { get; set; }
+
+        string CreatorName { get; }
+
         DateTime ModifiedOn { get; set; }
 
         Guid ModifiedBy { get; set; }
+
+        Account Modifier { get; set; }
+
+        string ModifierName { get; }
     }
 }

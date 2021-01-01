@@ -7,6 +7,8 @@ namespace FsInfoCat.Models
     {
         Guid AccountID { get; set; }
 
+        string Name { get; }
+
         string DisplayName { get; set; }
 
         /// <summary>

@@ -1,18 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace FsInfoCat.Models.DB
 {
-    [DisplayColumn("HostID", "DisplayName", false)]
+    [DisplayColumn("HostDeviceID", "DisplayName", false)]
     public class HostDevice : IHostDevice
     {
         #region Properties
 
+        public string Name
+        {
+            get
+            {
+                string n = _displayName;
+                if (string.IsNullOrWhiteSpace(n))
+                {
+                    n = _machineName;
+                    if (string.IsNullOrWhiteSpace(n))
+                        n = _machineIdentifer;
+                }
+                return n;
+            }
+        }
+
         [Required()]
         [Key()]
         [Display(Name = "ID")]
-        public Guid HostID { get; set; }
+        public Guid HostDeviceID { get; set; }
 
         #region DisplayName
 
@@ -109,6 +127,17 @@ namespace FsInfoCat.Models.DB
         [Display(Name = "Created By")]
         public Guid CreatedBy { get; set; }
 
+        public Account Creator { get; set; }
+
+        public string CreatorName
+        {
+            get
+            {
+                Account account = Creator;
+                return (null == account) ? "" : account.Name;
+            }
+        }
+
         [Editable(false)]
         [Display(Name = "Modified On")]
         [DataType(DataType.DateTime)]
@@ -117,6 +146,17 @@ namespace FsInfoCat.Models.DB
         [Editable(false)]
         [Display(Name = "Modified By")]
         public Guid ModifiedBy { get; set; }
+
+        public Account Modifier { get; set; }
+
+        public string ModifierName
+        {
+            get
+            {
+                Account account = Modifier;
+                return (null == account) ? "" : account.Name;
+            }
+        }
 
         #endregion
 
@@ -129,37 +169,64 @@ namespace FsInfoCat.Models.DB
             CreatedOn = ModifiedOn = DateTime.UtcNow;
         }
 
-        public HostDevice(string machineIdentifer, string machineName, bool isWindows, Guid createdBy) : this()
+        protected HostDevice(HostDevice host)
         {
-            HostID = Guid.NewGuid();
-            MachineIdentifer = machineIdentifer;
-            MachineName = machineName;
-            IsWindows = isWindows;
-            CreatedBy = ModifiedBy = createdBy;
+            if (null == host)
+                throw new ArgumentNullException("host");
+            HostDeviceID = host.HostDeviceID;
+            DisplayName = host.DisplayName;
+            MachineIdentifer = host.MachineIdentifer;
+            MachineName = host.MachineName;
+            AllowCrawl = host.AllowCrawl;
+            IsWindows = host.IsWindows;
+            CreatedOn = host.CreatedOn;
+            CreatedBy = host.CreatedBy;
+            ModifiedOn = host.ModifiedOn;
+            ModifiedBy = host.ModifiedBy;
         }
 
         public HostDevice(HostDeviceRegRequest request, Guid createdBy) : this()
         {
             if (null == request)
                 throw new ArgumentNullException("request");
-            HostID = Guid.NewGuid();
+            HostDeviceID = Guid.NewGuid();
             MachineIdentifer = request.MachineIdentifer;
             MachineName = request.MachineName;
+            AllowCrawl = request.AllowCrawl;
             IsWindows = request.IsWindows;
             CreatedBy = ModifiedBy = createdBy;
+        }
+
+        public HostDevice(HostDeviceRegRequest request, Account createdBy) : this()
+        {
+            if (null == request)
+                throw new ArgumentNullException("request");
+            HostDeviceID = Guid.NewGuid();
+            MachineIdentifer = request.MachineIdentifer;
+            MachineName = request.MachineName;
+            AllowCrawl = request.AllowCrawl;
+            IsWindows = request.IsWindows;
+            Creator = Modifier = createdBy;
+            CreatedBy = ModifiedBy = createdBy.AccountID;
         }
 
         #endregion
 
         public void Normalize()
         {
-            if (HostID.Equals(Guid.Empty))
-                HostID = Guid.NewGuid();
+            if (HostDeviceID.Equals(Guid.Empty))
+                HostDeviceID = Guid.NewGuid();
             _machineIdentifer = ModelHelper.CoerceAsWsNormalized(_machineIdentifer);
             _machineName = _machineName.Trim();
             if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
                 _displayName = _machineName;
             _notes = _notes.Trim();
+            CreatedOn = ModelHelper.CoerceAsLocalTime(CreatedOn);
+            ModifiedOn = ModelHelper.CoerceAsLocalTime(ModifiedOn);
+            if (null != Creator)
+                CreatedBy = Creator.AccountID;
+            if (null != Modifier)
+                ModifiedBy = Modifier.AccountID;
         }
 
         public IList<ValidationResult> ValidateAll()
@@ -212,6 +279,19 @@ namespace FsInfoCat.Models.DB
             else
                 Validate(result, validationContext.DisplayName);
             return result;
+        }
+
+        public static async Task<HostDevice> LookUp(DbSet<HostDevice> dbSet, string machineName, string machineIdentifer)
+        {
+            if (string.IsNullOrWhiteSpace(machineName))
+                return null;
+            IQueryable<HostDevice> hostDevices = from d in dbSet select d;
+            if (string.IsNullOrWhiteSpace(machineIdentifer))
+                hostDevices = hostDevices.Where(h => string.Equals(machineName, h.MachineName, StringComparison.InvariantCulture));
+            else
+                hostDevices = hostDevices.Where(h => string.Equals(machineName, h.MachineName, StringComparison.InvariantCulture) &&
+                    string.Equals(machineIdentifer, h.MachineIdentifer, StringComparison.InvariantCulture));
+            return (await hostDevices.AsNoTracking().ToListAsync()).FirstOrDefault();
         }
     }
 }
