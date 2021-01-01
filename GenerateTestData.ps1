@@ -165,4 +165,3 @@ foreach ($AppUser in $AppUserCollection) {
                         ModifiedOn = $ModifiedOnNormalized, ModifiedBy = $ModifiedBy }),
                 },
 "@
-}
