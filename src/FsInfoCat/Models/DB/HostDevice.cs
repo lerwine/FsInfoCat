@@ -66,7 +66,6 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_MachineIdentifer = "Machine identifier too long.";
         private string _machineIdentifer = "";
 
-        // TODO: Add this to db script and view
 #if CORE
         [MaxLength(DB.HostDevice.Max_Length_MachineIdentifer, ErrorMessage = DB.HostDevice.Error_Message_MachineIdentifer)]
         [Display(Name = DB.HostDevice.DisplayName_MachineIdentifer)]

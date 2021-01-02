@@ -83,7 +83,6 @@ namespace FsInfoCat.Models.DB
         }
 #if CORE
 
-        // TODO: Move this to HostContributor
         public static async Task<HostContributor> Lookup(DbSet<HostContributor> dbSet, Guid accountID, Guid HostDeviceID)
         {
             IQueryable<HostContributor> contributors = from c in dbSet select c;
