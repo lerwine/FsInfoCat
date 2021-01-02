@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 #if WINDOWS
 using System.DirectoryServices;
+using System.Security.Principal;
 #else
 using System.IO;
 #endif
 using System.Linq;
-using System.Security.Principal;
 using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models
