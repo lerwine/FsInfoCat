@@ -1,15 +1,3 @@
-$Path = $PSScriptRoot | Join-Path -ChildPath 'FsInfoCat.PsDesktop.dll';
-if ($Path | Test-Path -PathType Leaf) {
-    Add-Type -Path $Path -ErrorAction Stop;
-} else {
-    $Path = $PSScriptRoot | Join-Path -ChildPath 'bin\Debug\FsInfoCat.PsDesktop.dll';
-    if ($Path | Test-Path -PathType Leaf) {
-        Add-Type -Path $Path -ErrorAction Stop;
-    } else {
-        Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath 'bin\Release\FsInfoCat.PsDesktop.dll') -ErrorAction Stop;
-    }
-}
-
 Function Test-CsClassName {
     [CmdletBinding()]
     Param(
