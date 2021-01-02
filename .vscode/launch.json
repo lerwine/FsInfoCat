@@ -18,7 +18,7 @@
         {
             "name": "Debug PS Module",
             "type": "PowerShell",
-            "preLaunchTask": "buildPsWindows",
+            "preLaunchTask": "buildPsDesktop",
             "request": "launch",
             "script": "${workspaceFolder}/src/FsInfoCat.PS/Test/TestModule.ps1",
             "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test"
