@@ -55,7 +55,7 @@ namespace FsInfoCat.Web.Controllers
         [Authorize(Roles = ModelHelper.Role_Name_Admin)]
         public IActionResult Create()
         {
-            return View();
+            return View(new EditAccount(null) { ChangePassword = true });
         }
 
         // POST: Accounts/Create
@@ -64,16 +64,29 @@ namespace FsInfoCat.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = ModelHelper.Role_Name_Admin)]
-        public async Task<IActionResult> Create([Bind("PwHash,AccountID,DisplayName,LoginName,Role,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Account account)
+        public async Task<IActionResult> Create([Bind("DisplayName,LoginName,ChangePassword,Password,Confirm,Role,Notes")] EditAccount editAccount)
         {
             if (ModelState.IsValid)
             {
+                Account account = new Account(editAccount);
+                Guid createdBy = account.CreatedBy = account.ModifiedBy = new Guid(User.Identity.Name);
+                account.CreatedOn = account.ModifiedOn = DateTime.Now;
                 account.AccountID = Guid.NewGuid();
                 _context.Add(account);
+                UserCredential userCredential = new UserCredential
+                {
+                    AccountID = account.AccountID,
+                    PwHash = PwHash.Create(editAccount.Password).Value.ToString(),
+                    CreatedBy = createdBy,
+                    CreatedOn = account.CreatedOn,
+                    ModifiedBy = createdBy,
+                    ModifiedOn = account.CreatedOn
+                };
+                _context.Add(userCredential);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(account);
+            return View(editAccount);
         }
 
         // GET: Accounts/Edit/5
@@ -90,7 +103,7 @@ namespace FsInfoCat.Web.Controllers
             {
                 return NotFound();
             }
-            return View(account);
+            return View(new EditAccount(account));
         }
 
         // POST: Accounts/Edit/5
@@ -99,34 +112,55 @@ namespace FsInfoCat.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = ModelHelper.Role_Name_Admin)]
-        public async Task<IActionResult> Edit(Guid id, [Bind("PwHash,AccountID,DisplayName,LoginName,Role,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Account account)
+        public async Task<IActionResult> Edit(Guid id, [Bind("AccountID,DisplayName,LoginName,ChangePassword,Password,Confirm,Role,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] EditAccount editAccount)
         {
-            if (id != account.AccountID)
-            {
+            if (id != editAccount.AccountID)
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    Account account = new Account(editAccount);
+                    account.ModifiedOn = DateTime.Now;
+                    account.ModifiedBy = new Guid(User.Identity.Name);
+                    if (editAccount.ChangePassword)
+                    {
+                        UserCredential userCredential = await UserCredential.LookUp(_context.UserCredential, id);
+                        Guid updatedBy = new Guid(User.Identity.Name);
+                        if (null == userCredential)
+                        {
+                            userCredential = new UserCredential
+                            {
+                                AccountID = id,
+                                PwHash = PwHash.Create(editAccount.Password).Value.ToString(),
+                                CreatedBy = updatedBy,
+                                CreatedOn = DateTime.Now,
+                                ModifiedBy = updatedBy
+                            };
+                            userCredential.ModifiedOn = userCredential.CreatedOn;
+                            _context.Add(userCredential);
+                        }
+                        else
+                        {
+                            userCredential.ModifiedOn = DateTime.Now;
+                            userCredential.ModifiedBy = updatedBy;
+                            userCredential.PwHash = PwHash.Create(editAccount.Password).Value.ToString();
+                            _context.Update(userCredential);
+                        }
+                    }
                     _context.Update(account);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountExists(account.AccountID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
+                    if (AccountExists(id))
                         throw;
-                    }
+                    return NotFound();
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(account);
+            return View(editAccount);
         }
 
         // GET: Accounts/Delete/5
@@ -165,6 +199,11 @@ namespace FsInfoCat.Web.Controllers
             return _context.Account.Any(e => e.AccountID == id);
         }
 
+        private bool CredentialExists(Guid id)
+        {
+            return _context.UserCredential.Any(e => e.AccountID == id);
+        }
+
         // /Accounts/Login
         [HttpGet]
         [AllowAnonymous]
@@ -188,7 +227,7 @@ namespace FsInfoCat.Web.Controllers
                 return View(request);
             }
 
-            ActionResult<RequestResponse<AppUser>> result = await FsInfoCat.Web.API.AuthController.Login(request, _context, HttpContext, _logger);
+            ActionResult<RequestResponse<Account>> result = await FsInfoCat.Web.API.AuthController.Login(request, _context, HttpContext, _logger);
             if (result.Value.Success)
             {
                 ViewData["ErrorMessage"] = "";

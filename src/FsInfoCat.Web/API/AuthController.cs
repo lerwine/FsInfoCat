@@ -36,32 +36,32 @@ namespace FsInfoCat.Web.API
             _logger = logger;
         }
 
-        public static async Task<ActionResult<RequestResponse<AppUser>>> Login(UserLoginRequest request, FsInfoDataContext dbContext, HttpContext httpContext, ILogger logger)
+        public static async Task<ActionResult<RequestResponse<Account>>> Login(UserLoginRequest request, FsInfoDataContext dbContext, HttpContext httpContext, ILogger logger)
         {
             Account user;
             try
             {
-                user = dbContext.Account.FirstOrDefault(u => u.LoginName == request.LoginName);
+                user = dbContext.Account.Include<Account, UserCredential>(t => t.UserCredential).FirstOrDefault(u => u.LoginName == request.LoginName);
             }
             catch (SqlException exc)
             {
                 // TODO: Log exception
-                return new RequestResponse<AppUser>(null, (string.IsNullOrWhiteSpace(exc.Message)) ?
+                return new RequestResponse<Account>(null, (string.IsNullOrWhiteSpace(exc.Message)) ?
                     "An unexpected " + exc.GetType().Name + " occurred while accessing the database." :
                     "An unexpected error occurred while accessing the database: " + exc.Message);
             }
             catch (Exception exc)
             {
                 // TODO: Log exception
-                return new RequestResponse<AppUser>(null, (string.IsNullOrWhiteSpace(exc.Message)) ?
+                return new RequestResponse<Account>(null, (string.IsNullOrWhiteSpace(exc.Message)) ?
                     "An unexpected " + exc.GetType().Name + " occurred while accessing the database." :
                     "An unexpected error occurred while accessing the database: " + exc.Message);
             }
-            if (null == user || !CheckPwHash(user.PwHash, request.Password))
-                return new RequestResponse<AppUser>(null, "Invalid username or password");
+            if (null == user || null == user.UserCredential || !CheckPwHash(user.UserCredential.PwHash, request.Password))
+                return new RequestResponse<Account>(null, "Invalid username or password");
 
             if (user.Role == UserRole.None)
-                return new RequestResponse<AppUser>(null, "Your account has been disabled");
+                return new RequestResponse<Account>(null, "Your account has been disabled");
 
             List<Claim> claims = new List<Claim>
             {
@@ -85,7 +85,7 @@ namespace FsInfoCat.Web.API
             }
             ClaimsPrincipal cp = new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", ClaimTypes.NameIdentifier, ClaimTypes.Role));
             await httpContext.SignInAsync(cp);
-            return new RequestResponse<AppUser>(new AppUser(user));
+            return new RequestResponse<Account>(new Account(user));
         }
 
         public static async Task<ActionResult<RequestResponse<bool>>> Logout(ClaimsPrincipal user, HttpContext httpContext, ILogger logger)
@@ -101,7 +101,7 @@ namespace FsInfoCat.Web.API
         // POST: /api/Auth/Login
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult<RequestResponse<AppUser>>> Login(UserLoginRequest request)
+        public async Task<ActionResult<RequestResponse<Account>>> Login(UserLoginRequest request)
         {
             return await Login(request, _context, HttpContext, _logger);
         }

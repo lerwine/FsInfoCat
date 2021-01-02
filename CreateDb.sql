@@ -10,30 +10,48 @@ GO
 IF OBJECT_ID('dbo.Account', 'U') IS NOT NULL
 DROP TABLE dbo.Account
 GO
+
+DECLARE @CreatedOn DATETIME;
+SET @CreatedOn = GETDATE();
+
 -- Create Account table in the specified schema
-CREATE TABLE dbo.Account
+CREATE TABLE dbo.UserCredential
 (
     AccountID UNIQUEIDENTIFIER NOT NULL, -- primary key column
+    PwHash NCHAR(96) NOT NULL,
     CreatedOn DATETIME NOT NULL,
     CreatedBy UNIQUEIDENTIFIER NOT NULL,
     ModifiedOn DATETIME NOT NULL,
     ModifiedBy UNIQUEIDENTIFIER NOT NULL,
+    CONSTRAINT PK_UserCredential PRIMARY KEY CLUSTERED
+    (
+        AccountID ASC
+    ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+INSERT INTO dbo.Account (AccountID, PwHash, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
+    Values ('00000000-0000-0000-0000-000000000000', 'XrVxbJmeSwCzNtQp6PpepBE8WUh1nfhPGlQCBoIOaS6ho6+7UH/lGnJgH0w2hF2oFzxDrQ6liVHWDldtFawAetBTWV+jCsFG',
+        @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
+
+-- Create Account table in the specified schema
+CREATE TABLE dbo.Account
+(
+    AccountID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     DisplayName NVARCHAR(128) NOT NULL DEFAULT '',
     LoginName NVARCHAR(32) NOT NULL,
-    PwHash NCHAR(96) NOT NULL,
     [Role] TINYINT NOT NULL,
     Notes NTEXT NOT NULL DEFAULT '',
+    CreatedOn DATETIME NOT NULL,
+    CreatedBy UNIQUEIDENTIFIER NOT NULL,
+    ModifiedOn DATETIME NOT NULL,
+    ModifiedBy UNIQUEIDENTIFIER NOT NULL,
     CONSTRAINT PK_Account PRIMARY KEY CLUSTERED
     (
         AccountID ASC
     ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
-DECLARE @CreatedOn DATETIME;
-SET @CreatedOn = GETDATE();
-INSERT INTO dbo.Account (AccountID, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy,
-        DisplayName, LoginName, PwHash, [Role], Notes)
-    Values ('00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000',
-        'FS InfoCat Administrator', 'admin', 'XrVxbJmeSwCzNtQp6PpepBE8WUh1nfhPGlQCBoIOaS6ho6+7UH/lGnJgH0w2hF2oFzxDrQ6liVHWDldtFawAetBTWV+jCsFG', 4, '');
+INSERT INTO dbo.Account (AccountID, DisplayName, LoginName, [Role], Notes, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
+    Values ('00000000-0000-0000-0000-000000000000', 'FS InfoCat Administrator', 'admin', 4, '',
+        @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
 ALTER TABLE dbo.Account WITH CHECK ADD CONSTRAINT FK_Account_CreatedBy FOREIGN KEY(CreatedBy)
     REFERENCES dbo.Account (AccountID)
     ON DELETE NO ACTION;

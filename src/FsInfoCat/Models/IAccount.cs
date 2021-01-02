@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Models
 {
-    public interface IAppUser : ILogin, IModficationAuditable
+    public interface IAccount : ILogin, IModficationAuditable
     {
         Guid AccountID { get; set; }
 

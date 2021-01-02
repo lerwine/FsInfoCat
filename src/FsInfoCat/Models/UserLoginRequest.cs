@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models
 {
@@ -14,10 +15,10 @@ namespace FsInfoCat.Models
 
 #if CORE
         [Required()]
-        [MinLength(1, ErrorMessage = AppUser.Error_Message_Login_Empty)]
-        [MaxLength(AppUser.Max_Length_Login_Name, ErrorMessage = AppUser.Error_Message_Login_Length)]
-        [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = AppUser.Error_Message_Login_Invalid)]
-        [Display(Name = AppUser.DisplayName_LoginName)]
+        [MinLength(1, ErrorMessage = Account.Error_Message_Login_Empty)]
+        [MaxLength(Account.Max_Length_Login_Name, ErrorMessage = Account.Error_Message_Login_Length)]
+        [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Account.Error_Message_Login_Invalid)]
+        [Display(Name = Account.DisplayName_LoginName)]
 #endif
         public string LoginName
         {
@@ -43,7 +44,7 @@ namespace FsInfoCat.Models
 
         private void OnValidateAll(List<ValidationResult> result)
         {
-            Validate(result, AppUser.PropertyName_LoginName);
+            Validate(result, Account.PropertyName_LoginName);
             Validate(result, PropertyName_Password);
         }
 
@@ -55,14 +56,14 @@ namespace FsInfoCat.Models
                     if (_password.Length == 0)
                         result.Add(new ValidationResult(Error_Message_Password, new string[] { PropertyName_Password }));
                     break;
-                case AppUser.PropertyName_LoginName:
-                case AppUser.DisplayName_LoginName:
+                case Account.PropertyName_LoginName:
+                case Account.DisplayName_LoginName:
                     if (_loginName.Length == 0)
-                        result.Add(new ValidationResult(AppUser.Error_Message_Login_Empty, new string[] { AppUser.PropertyName_LoginName }));
-                    else if (_loginName.Length > AppUser.Max_Length_DisplayName)
-                        result.Add(new ValidationResult(AppUser.Error_Message_Login_Length, new string[] { AppUser.PropertyName_LoginName }));
+                        result.Add(new ValidationResult(Account.Error_Message_Login_Empty, new string[] { Account.PropertyName_LoginName }));
+                    else if (_loginName.Length > Account.Max_Length_DisplayName)
+                        result.Add(new ValidationResult(Account.Error_Message_Login_Length, new string[] { Account.PropertyName_LoginName }));
                     else if (!ModelHelper.DottedNameRegex.IsMatch(_loginName))
-                        result.Add(new ValidationResult(AppUser.Error_Message_Login_Invalid, new string[] { AppUser.PropertyName_LoginName }));
+                        result.Add(new ValidationResult(Account.Error_Message_Login_Invalid, new string[] { Account.PropertyName_LoginName }));
                     break;
             }
         }

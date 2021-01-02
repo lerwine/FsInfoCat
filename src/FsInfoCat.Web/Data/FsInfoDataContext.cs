@@ -47,6 +47,8 @@ namespace FsInfoCat.Web.Data
                 .HasForeignKey(p => p.CreatedBy);
         }
 
+        public DbSet<UserCredential> UserCredential { get; set; }
+
         public DbSet<Account> Account { get; set; }
 
         public DbSet<HostDevice> HostDevice { get; set; }
