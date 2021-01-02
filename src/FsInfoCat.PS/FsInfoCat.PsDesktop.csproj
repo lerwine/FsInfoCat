@@ -70,7 +70,6 @@
         </Content>
         <Content Include="FsInfoCat.psm1">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <OutputFile></OutputFile>
         </Content>
         <Content Include="about_FsInfoCat.help.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
