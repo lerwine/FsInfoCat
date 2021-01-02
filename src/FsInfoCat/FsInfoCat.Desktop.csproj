@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{89701734-C4A8-450B-9ADF-A24F351C6599}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>FsInfoCat</RootNamespace>
+        <AssemblyName>FsInfoCatLib</AssemblyName>
+        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <TargetFrameworkProfile />
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Desktop\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE;DESKTOP</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <!-- <DocumentationFile>bin\Debug\FsInfoCat.PsDesktop.XML</DocumentationFile> -->
+        <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Desktop\Release\</OutputPath>
+        <DefineConstants>TRACE;DESKTOP</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <!-- <DocumentationFile>bin\Release\FsInfoCat.PsDesktop.XML</DocumentationFile> -->
+        <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.DirectoryServices" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.ComponentModel.DataAnnotations" />
+        <Reference Include="System.Management.Automation, Version=4.0.30319, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.PowerShell.Commands.Management, Version=4.0.30319, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Management\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Management.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.PowerShell.Commands.Utility, Version=4.0.30319, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Utility\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Utility.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="FileSystemFeature.cs" />
+        <Compile Include="MD5Checksum.cs" />
+        <Compile Include="PendingJobType.cs" />
+        <Compile Include="PwHash.cs" />
+        <Compile Include="VolumeInformation.cs" />
+        <Compile Include="Models\AppUser.cs" />
+        <Compile Include="Models\HostDeviceRegRequest.cs" />
+        <Compile Include="Models\IAppUser.cs" />
+        <Compile Include="Models\IHostDevice.cs" />
+        <Compile Include="Models\IHostDeviceReg.cs" />
+        <Compile Include="Models\ILogin.cs" />
+        <Compile Include="Models\IModficationAuditable.cs" />
+        <Compile Include="Models\INormalizable.cs" />
+        <Compile Include="Models\IUserCredentials.cs" />
+        <Compile Include="Models\IValidatableModel.cs" />
+        <Compile Include="Models\IVolume.cs" />
+        <Compile Include="Models\ModelHelper.cs" />
+        <Compile Include="Models\RequestResponse.cs" />
+        <Compile Include="Models\UserLoginRequest.cs" />
+        <Compile Include="Models\UserRole.cs" />
+        <Compile Include="Models\DB\Account.cs" />
+        <Compile Include="Models\DB\HostContributor.cs" />
+        <Compile Include="Models\DB\HostDevice.cs" />
+        <Compile Include="Models\DB\Volume.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs">
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <PropertyGroup>
+        <PostBuildEvent>del "$(TargetDir)/*.nlp"
+del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
+    </PropertyGroup>
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

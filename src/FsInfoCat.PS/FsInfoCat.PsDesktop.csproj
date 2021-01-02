@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{13B95235-FCA5-4752-8E8D-82DE423D55C2}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>FsInfoCat.PS</RootNamespace>
+        <AssemblyName>FsInfoCat.PS</AssemblyName>
+        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <TargetFrameworkProfile />
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>..\..\Debug\Desktop\FsInfoCat\</OutputPath>
+        <DefineConstants>DEBUG;TRACE;DESKTOP;WINDOWS</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <!-- <DocumentationFile>bin\Debug\FsInfoCat.PS.XML</DocumentationFile> -->
+        <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>..\..\Release\Desktop\FsInfoCat\</OutputPath>
+        <DefineConstants>TRACE;DESKTOP;WINDOWS</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <!-- <DocumentationFile>bin\Release\FsInfoCat.PsDesktop.XML</DocumentationFile> -->
+        <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.DirectoryServices" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Management.Automation, Version=4.0.30319, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.PowerShell.Commands.Management, Version=4.0.30319, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Management\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Management.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.PowerShell.Commands.Utility, Version=4.0.30319, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Utility\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Utility.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\FsInfoCat\FsInfoCat.Desktop.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="CsTypeModel.cs" />
+        <Compile Include="ChoiceValueDescription.cs" />
+        <Compile Include="FsInfoCatUtil.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs">
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="FsInfoCatDesktop.psd1">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="FsInfoCat.psm1">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <OutputFile></OutputFile>
+        </Content>
+        <Content Include="about_FsInfoCat.help.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <PropertyGroup>
+        <PostBuildEvent>copy "$(TargetDir)\FsInfoCatDesktop.psd1" "$(TargetDir)\FsInfoCat.psd1"
+del "$(TargetDir)\FsInfoCatDesktop.psd1"
+del "$(TargetDir)\*.nlp"
+del "$(TargetDir)\mscorlib.dll"
+del "$(TargetDir)\Microsoft.PowerShell.Commands.Management.dll"
+del "$(TargetDir)\Microsoft.PowerShell.Commands.Utility.dll"
+del "$(TargetDir)\System.Management.Automation.dll"</PostBuildEvent>
+    </PropertyGroup>
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

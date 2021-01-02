@@ -18,37 +18,47 @@ namespace FsInfoCat.Models
         private string _machineIdentifer = "";
         private string _machineName = "";
 
+#if CORE
         [MaxLength(DB.HostDevice.Max_Length_DisplayName, ErrorMessage = DB.HostDevice.Error_Message_DisplayName)]
         [Display(Name = DB.HostDevice.DisplayName_DisplayName)]
+#endif
         public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = (null == value) ? "" : value; }
         }
 
+#if CORE
         [MaxLength(DB.HostDevice.Max_Length_MachineIdentifer, ErrorMessage = DB.HostDevice.Error_Message_MachineIdentifer)]
         [Display(Name = DB.HostDevice.DisplayName_MachineIdentifer)]
+#endif
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
             set { _machineIdentifer = (null == value) ? "" : value; }
         }
 
+#if CORE
         [Required()]
         [MinLength(1)]
         [MaxLength(DB.HostDevice.Max_Length_MachineName, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Length)]
         [Display(Name = DB.HostDevice.DisplayName_MachineName)]
         [RegularExpression(ModelHelper.PATTERN_MACHINE_NAME, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Invalid)]
+#endif
         public string MachineName
         {
             get { return _machineName; }
             set { _machineName = (null == value) ? "" : value; }
         }
 
+#if CORE
         [Display(Name = "Is Windows OS")]
+#endif
         public bool IsWindows { get; set; }
 
+#if CORE
         [Display(Name = "Allow Local Crawl")]
+#endif
         public bool AllowCrawl { get; set; }
 
         Guid IHostDeviceReg.HostDeviceID { get => Guid.Empty; set => throw new NotSupportedException(); }

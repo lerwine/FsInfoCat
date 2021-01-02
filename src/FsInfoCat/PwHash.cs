@@ -131,7 +131,7 @@ namespace FsInfoCat
                 _hashBits6 == other._hashBits6 && _hashBits7 == other._hashBits7 && _saltBits == other._saltBits;
         }
 
-        public bool Equals([AllowNull] string other)
+        public bool Equals(string other)
         {
             if (string.IsNullOrWhiteSpace(other))
                 return false;
@@ -156,6 +156,7 @@ namespace FsInfoCat
 
         public override int GetHashCode()
         {
+#if CORE
             HashCode hashCode = new HashCode();
             hashCode.Add(_hashBits0);
             hashCode.Add(_hashBits1);
@@ -167,6 +168,27 @@ namespace FsInfoCat
             hashCode.Add(_hashBits7);
             hashCode.Add(_saltBits);
             return hashCode.ToHashCode();
+#else
+            if ((_saltBits & 1UL) == 1UL)
+                return (_hashBits0.GetHashCode() & 0x0000000f) |
+                    (_hashBits1.GetHashCode() & 0x000000f0) |
+                    (_hashBits2.GetHashCode() & 0x00000700) |
+                    (_hashBits3.GetHashCode() & 0x00007800) |
+                    (_hashBits4.GetHashCode() & 0x00038000) |
+                    (_hashBits5.GetHashCode() & 0x003c0000) |
+                    (_hashBits6.GetHashCode() & 0x01c00000) |
+                    (_hashBits7.GetHashCode() & 0x1e000000) |
+                    (int)(_saltBits.GetHashCode() & 0xe0000000);
+            return (_hashBits0.GetHashCode() & 0x0000000f) |
+                (_hashBits1.GetHashCode() & 0x00000070) |
+                (_hashBits2.GetHashCode() & 0x00000780) |
+                (_hashBits3.GetHashCode() & 0x00003800) |
+                (_hashBits4.GetHashCode() & 0x0003c000) |
+                (_hashBits5.GetHashCode() & 0x001c0000) |
+                (_hashBits6.GetHashCode() & 0x01e00000) |
+                (_hashBits7.GetHashCode() & 0x1e000000) |
+                (int)(_saltBits.GetHashCode() & 0xe0000000);
+#endif
         }
     }
 }

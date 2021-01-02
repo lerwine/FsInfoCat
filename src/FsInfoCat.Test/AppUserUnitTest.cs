@@ -188,6 +188,16 @@ namespace Tests
         {
         }
 
+        [Test]
+        public void AttributesTest()
+        {
+            Type type = typeof(AppUser);
+            System.Reflection.PropertyInfo property = type.GetProperty("AccountID");
+            object[] attributes = property.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.RequiredAttribute), true);
+            Assert.IsNotNull(attributes);
+            Assert.AreNotEqual(0, attributes.Length);
+        }
+
         [TestCaseSource("GetNormalizeTestCases")]
         public void NormalizeTest(AppUser target, AppUser expected)
         {

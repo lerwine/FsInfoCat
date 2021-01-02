@@ -2,7 +2,6 @@ using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using FsInfoCat.Models;
-using FsInfoCat.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 

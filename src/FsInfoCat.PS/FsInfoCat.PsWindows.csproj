@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Configurations>Release;Debug;Release;Debug;Release</Configurations>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>FsInfoCat.PS</RootNamespace>
+        <AssemblyName>FsInfoCat.PS</AssemblyName>
+        <Company>Leonard T. Erwine</Company>
+        <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
+        <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
+        <Product>PowerShell Module FsInfoCat.PS</Product>
+        <Copyright>Copyright © Leonard Thomas Erwine 2021</Copyright>
+        <AssemblyVersion>0.1.0.0</AssemblyVersion>
+        <FileVersion>0.1.0.0</FileVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <OutputPath>..\..\Debug\Core\Windows\FsInfoCat\</OutputPath>
+        <DefineConstants>DEBUG;TRACE;CORE;WINDOWS</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <OutputPath>..\..\Release\Core\Windows\FsInfoCat\</OutputPath>
+        <DefineConstants>TRACE;CORE;WINDOWS</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.PowerShell.Commands.Management" Version="7.0.3" />
+        <PackageReference Include="Microsoft.PowerShell.Commands.Utility" Version="7.0.3" />
+        <PackageReference Include="Microsoft.PowerShell.Security" Version="7.0.3" />
+        <PackageReference Include="System.Management.Automation" Version="7.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FsInfoCat\FsInfoCat.Windows.csproj" />
+    </ItemGroup>
+
+</Project>

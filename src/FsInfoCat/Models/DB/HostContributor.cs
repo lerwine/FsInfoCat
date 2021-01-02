@@ -2,14 +2,18 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+#if CORE
 using Microsoft.EntityFrameworkCore;
+#endif
 
 namespace FsInfoCat.Models.DB
 {
     public class HostContributor : INormalizable
     {
+#if CORE
         [Required()]
         [Display(Name = "User ID")]
+#endif
         public Guid AccountID { get; set; }
 
         public Account Account { get; set; }
@@ -26,8 +30,10 @@ namespace FsInfoCat.Models.DB
             }
         }
 
+#if CORE
         [Required()]
         [Display(Name = "Host ID")]
+#endif
         public Guid HostDeviceID { get; set; }
 
         public HostDevice Host { get; set; }
@@ -41,13 +47,17 @@ namespace FsInfoCat.Models.DB
             }
         }
 
+#if CORE
         [Editable(false)]
         [Display(Name = "Created On")]
         [DataType(DataType.DateTime)]
+#endif
         public DateTime CreatedOn { get; set; }
 
+#if CORE
         [Editable(false)]
         [Display(Name = "Created By")]
+#endif
         public Guid CreatedBy { get; set; }
 
         public Account Creator { get; set; }
@@ -71,6 +81,7 @@ namespace FsInfoCat.Models.DB
             if (null != Creator)
                 CreatedBy = Creator.AccountID;
         }
+#if CORE
 
         // TODO: Move this to HostContributor
         public static async Task<HostContributor> Lookup(DbSet<HostContributor> dbSet, Guid accountID, Guid HostDeviceID)
@@ -78,5 +89,6 @@ namespace FsInfoCat.Models.DB
             IQueryable<HostContributor> contributors = from c in dbSet select c;
             return (await contributors.Where(c => c.AccountID.Equals(accountID) && c.HostDeviceID.Equals(HostDeviceID)).AsNoTracking().ToListAsync()).FirstOrDefault();
         }
+#endif
     }
 }

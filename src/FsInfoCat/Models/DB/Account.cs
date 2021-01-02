@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.Models.DB
 {
+#if CORE
     [DisplayColumn("AccountID", "DisplayName", false)]
+#endif
     public class Account : AppUser
     {
         public const int Encoded_Pw_Hash_Length = 96;
@@ -17,12 +19,14 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_PwHash_Invalid = "Password hash invalid.";
         private string _pwHash = "";
 
+#if CORE
         [Required(ErrorMessage = Error_Message_PwHash_Empty)]
         [MinLength(Encoded_Pw_Hash_Length, ErrorMessage = Error_Message_PwHash_Short)]
         [MaxLength(Encoded_Pw_Hash_Length, ErrorMessage = Error_Message_PwHash_Long)]
         [RegularExpression(ModelHelper.PATTERN_BASE64, ErrorMessage = Error_Message_PwHash_Invalid)]
         [Display(Name = DisplayName_PwHash)]
         [DataType(DataType.Text)]
+#endif
         /// <summary>
         /// Gets the hash for the user's password.
         /// </summary>
@@ -32,7 +36,9 @@ namespace FsInfoCat.Models.DB
             set { _pwHash = (null == value) ? "" : value; }
         }
 
+#if CORE
         [Display(Name = "Is Inactive")]
+#endif
         public bool IsInactive => Role == UserRole.None;
 
         public Account() { }
