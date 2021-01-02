@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Desktop", "FsInfo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Web", "FsInfoCat.Web\FsInfoCat.Web.csproj", "{5CBA4455-83D2-4F0D-8952-0765D6D3A6A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.PS", "FsInfoCat.PS\FsInfoCat.PS.csproj", "{9B027363-5E25-445E-BCA0-37644E9ED92F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.PsDesktop", "FsInfoCat.PsDesktop\FsInfoCat.PsDesktop.csproj", "{9B027363-5E25-445E-BCA0-37644E9ED92F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfocat.Test", "FsInfoCat.Test\FsInfocat.Test.csproj", "{93472E85-F0BD-49E3-A3D6-59EF03C524E0}"
 EndProject

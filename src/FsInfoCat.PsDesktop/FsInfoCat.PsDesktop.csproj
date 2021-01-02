@@ -7,8 +7,8 @@
     <ProjectGuid>{9B027363-5E25-445E-BCA0-37644E9ED92F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FsInfoCat.PS</RootNamespace>
-    <AssemblyName>FsInfoCat.PS</AssemblyName>
+    <RootNamespace>FsInfoCat.PsDesktop</RootNamespace>
+    <AssemblyName>FsInfoCat.PsDesktop</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <!-- <DocumentationFile>bin\Debug\FsInfoCat.PS.XML</DocumentationFile> -->
+    <!-- <DocumentationFile>bin\Debug\FsInfoCat.PsDesktop.XML</DocumentationFile> -->
     <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -31,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <!-- <DocumentationFile>bin\Release\FsInfoCat.PS.XML</DocumentationFile> -->
+    <!-- <DocumentationFile>bin\Release\FsInfoCat.PsDesktop.XML</DocumentationFile> -->
     <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <ItemGroup>

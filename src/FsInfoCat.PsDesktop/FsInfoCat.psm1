@@ -1,12 +1,12 @@
-$Path = $PSScriptRoot | Join-Path -ChildPath 'FsInfoCat.PS.dll';
+$Path = $PSScriptRoot | Join-Path -ChildPath 'FsInfoCat.PsDesktop.dll';
 if ($Path | Test-Path -PathType Leaf) {
     Add-Type -Path $Path -ErrorAction Stop;
 } else {
-    $Path = $PSScriptRoot | Join-Path -ChildPath 'bin\Debug\FsInfoCat.PS.dll';
+    $Path = $PSScriptRoot | Join-Path -ChildPath 'bin\Debug\FsInfoCat.PsDesktop.dll';
     if ($Path | Test-Path -PathType Leaf) {
         Add-Type -Path $Path -ErrorAction Stop;
     } else {
-        Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath 'bin\Release\FsInfoCat.PS.dll') -ErrorAction Stop;
+        Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath 'bin\Release\FsInfoCat.PsDesktop.dll') -ErrorAction Stop;
     }
 }
 
@@ -683,7 +683,7 @@ Function Get-InitializationQueries {
     )
     $PwHash = ConvertTo-PasswordHash -Password $AdministrativePassword;
     $HostDeviceID = [Guid]::NewGuid().ToString('d');
-    $MachineIdentifier = [FsInfoCat.PS.FsInfoCatUtil]::GetLocalMachineSID();
+    $MachineIdentifier = [FsInfoCat.PsDesktop.FsInfoCatUtil]::GetLocalMachineSID();
     $MachineName = [System.Environment]::MachineName;
     @"
 -- The next query should be executed immediately after the 'SET @CreatedOn = GETDATE();' statement.

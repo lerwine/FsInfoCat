@@ -3,7 +3,7 @@ using System.Linq;
 using System.DirectoryServices;
 using System.Security.Principal;
 
-namespace FsInfoCat.PS
+namespace FsInfoCat.PsDesktop
 {
     public static class FsInfoCatUtil
     {

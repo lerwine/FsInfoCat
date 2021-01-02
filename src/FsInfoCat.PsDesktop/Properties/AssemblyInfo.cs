@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FSInfoCat PowerShell Library")]
-[assembly: AssemblyDescription("Supporting CLR Library for PowerShell Module FsInfoCat.PS")]
+[assembly: AssemblyDescription("Supporting CLR Library for PowerShell Module FsInfoCat.PsDesktop")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Leonard T. Erwine")]
-[assembly: AssemblyProduct("PowerShell Module FsInfoCat.PS")]
+[assembly: AssemblyProduct("PowerShell Module FsInfoCat.PsDesktop")]
 [assembly: AssemblyCopyright("Copyright © Leonard Thomas Erwine 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

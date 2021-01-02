@@ -7,7 +7,7 @@ using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Text.RegularExpressions;
 
-namespace FsInfoCat.PS
+namespace FsInfoCat.PsDesktop
 {
     public class CsTypeModel
     {

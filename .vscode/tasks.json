@@ -39,7 +39,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
+                "${workspaceFolder}/src/FsInfoCat.PsDesktop/FsInfoCat.PsDesktop.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

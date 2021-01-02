@@ -6,7 +6,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 
-namespace FsInfoCat.PS
+namespace FsInfoCat.PsDesktop
 {
     public class ChoiceValueDescription : IEquatable<ChoiceValueDescription>, IComparable<ChoiceValueDescription>
     {
