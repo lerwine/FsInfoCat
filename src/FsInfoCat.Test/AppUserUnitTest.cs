@@ -22,7 +22,7 @@ namespace Tests
                         ModifiedOn = new DateTime(2014, 2, 14, 13, 41, 25, 171, DateTimeKind.Unspecified), ModifiedBy = Guid.Empty }),
                     new AppUser(new Account { AccountID = Guid.Empty, DisplayName = "FS InfoCat Administrator", LoginName = "admin",
                         Role = UserRole.Admin, Notes = "",
-                        CreatedOn = new DateTime(2014, 2, 14, 13, 41, 25, 171, DateTimeKind.Local), CreatedBy = Guid.Empty,
+                        CreatedOn = new DateTime(2014, 2, 14, 18, 41, 25, 171, DateTimeKind.Utc).ToLocalTime(), CreatedBy = Guid.Empty,
                         ModifiedOn = new DateTime(2014, 2, 14, 13, 41, 25, 171, DateTimeKind.Local), ModifiedBy = Guid.Empty }),
                 },
                 new object[]
@@ -55,7 +55,7 @@ namespace Tests
                         ModifiedOn = new DateTime(2015, 8, 3, 16, 45, 24, 631, DateTimeKind.Unspecified), ModifiedBy = new Guid("90b932df-3ab5-4299-a3f3-dd1655cbf93e") }),
                     new AppUser(new Account { AccountID = new Guid("96077af4-e35d-45b5-9094-02213cd0ba80"), DisplayName = "Nur Murillo", LoginName = "",
                         Role = UserRole.Crawler, Notes = "",
-                        CreatedOn = new DateTime(2015, 1, 8, 8, 19, 32, 381, DateTimeKind.Local), CreatedBy = new Guid("7050184e-a998-4088-b547-d70cd806b2c7"),
+                        CreatedOn = new DateTime(2015, 1, 8, 13, 19, 32, 381, DateTimeKind.Utc).ToLocalTime(), CreatedBy = new Guid("7050184e-a998-4088-b547-d70cd806b2c7"),
                         ModifiedOn = new DateTime(2015, 8, 3, 16, 45, 24, 631, DateTimeKind.Local), ModifiedBy = new Guid("90b932df-3ab5-4299-a3f3-dd1655cbf93e") }),
                 },
                 new object[]
@@ -66,8 +66,8 @@ namespace Tests
                         ModifiedOn = new DateTime(2020, 3, 17, 20, 9, 49, 842, DateTimeKind.Utc), ModifiedBy = Guid.Empty }),
                     new AppUser(new Account { AccountID = new Guid("0cf932e4-be15-4797-84ec-3eb9d86a9376"), DisplayName = "", LoginName = "",
                         Role = UserRole.Crawler, Notes = "",
-                        CreatedOn = new DateTime(2015, 4, 22, 16, 11, 52, 39, DateTimeKind.Local), CreatedBy = new Guid("7050184e-a998-4088-b547-d70cd806b2c7"),
-                        ModifiedOn = new DateTime(2020, 3, 17, 16, 9, 49, 842, DateTimeKind.Local), ModifiedBy = Guid.Empty }),
+                        CreatedOn = new DateTime(2015, 4, 22, 20, 11, 52, 39, DateTimeKind.Utc).ToLocalTime(), CreatedBy = new Guid("7050184e-a998-4088-b547-d70cd806b2c7"),
+                        ModifiedOn = new DateTime(2020, 3, 17, 20, 9, 49, 842, DateTimeKind.Utc).ToLocalTime(), ModifiedBy = Guid.Empty }),
                 }
             };
         }
