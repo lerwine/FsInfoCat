@@ -132,7 +132,7 @@ namespace FsInfoCat.Models
                 throw new Exception("Encountered an exception while trying to retrieve computer SID - " + exc.Message, exc);
             }
 #elif LINUX
-            if (Environment.OSVersion.Platform != Unix)
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
                 throw new NotSupportedException("Platform " + Environment.OSVersion.Platform.ToString("F") + " is not supported.");
             try
             {
