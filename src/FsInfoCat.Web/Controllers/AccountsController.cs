@@ -76,12 +76,12 @@ namespace FsInfoCat.Web.Controllers
                 UserCredential userCredential = new UserCredential
                 {
                     AccountID = account.AccountID,
-                    PwHash = PwHash.Create(editAccount.Password).Value.ToString(),
                     CreatedBy = createdBy,
                     CreatedOn = account.CreatedOn,
                     ModifiedBy = createdBy,
                     ModifiedOn = account.CreatedOn
                 };
+                userCredential.SetPasswordHash(PwHash.Create(editAccount.Password));
                 _context.Add(userCredential);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -133,19 +133,19 @@ namespace FsInfoCat.Web.Controllers
                             userCredential = new UserCredential
                             {
                                 AccountID = id,
-                                PwHash = PwHash.Create(editAccount.Password).Value.ToString(),
                                 CreatedBy = updatedBy,
                                 CreatedOn = DateTime.Now,
                                 ModifiedBy = updatedBy
                             };
                             userCredential.ModifiedOn = userCredential.CreatedOn;
+                            userCredential.SetPasswordHash(PwHash.Create(editAccount.Password));
                             _context.Add(userCredential);
                         }
                         else
                         {
                             userCredential.ModifiedOn = DateTime.Now;
                             userCredential.ModifiedBy = updatedBy;
-                            userCredential.PwHash = PwHash.Create(editAccount.Password).Value.ToString();
+                            userCredential.SetPasswordHash(PwHash.Create(editAccount.Password));
                             _context.Update(userCredential);
                         }
                     }

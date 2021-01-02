@@ -57,7 +57,7 @@ namespace FsInfoCat.Web.API
                     "An unexpected " + exc.GetType().Name + " occurred while accessing the database." :
                     "An unexpected error occurred while accessing the database: " + exc.Message);
             }
-            if (null == user || null == user.UserCredential || !CheckPwHash(user.UserCredential.PwHash, request.Password))
+            if (null == user || null == user.UserCredential || !CheckPwHash(user.UserCredential.HashString, request.Password))
                 return new RequestResponse<Account>(null, "Invalid username or password");
 
             if (user.Role == UserRole.None)

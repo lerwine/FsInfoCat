@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 #if CORE
@@ -19,7 +20,8 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_PwHash_Short = "Password hash too short.";
         public const string Error_Message_PwHash_Long = "Password hash too long.";
         public const string Error_Message_PwHash_Invalid = "Password hash invalid.";
-        private string _pwHash = "";
+        private string _hashString = "";
+        private PwHash? _pwHash = null;
 
 #if CORE
         [Key()]
@@ -35,14 +37,47 @@ namespace FsInfoCat.Models.DB
         [RegularExpression(ModelHelper.PATTERN_BASE64, ErrorMessage = Error_Message_PwHash_Invalid)]
         [Display(Name = DisplayName_PwHash)]
         [DataType(DataType.Text)]
+        [Column("PwHash")]
 #endif
         /// <summary>
         /// Gets the hash for the user's password.
         /// </summary>
-        public string PwHash
+        public string HashString
         {
-            get { return _pwHash; }
-            set { _pwHash = (null == value) ? "" : value; }
+            get
+            {
+                string h = _hashString;
+                if (null == h)
+                    _hashString = h = (_pwHash.HasValue) ? _pwHash.Value.ToString() : "";
+                return h;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    _hashString = "";
+                    _pwHash = null;
+                }
+                else
+                {
+                    PwHash? h = PwHash.Import(value);
+                    if (h.HasValue)
+                    {
+                        _pwHash = h;
+                        _hashString = null;
+                    }
+                    else
+                        throw new ArgumentException("Invalid hash string");
+                }
+            }
+        }
+
+        public PwHash? PasswordHash => _pwHash;
+
+        public void SetPasswordHash(PwHash? value)
+        {
+            _pwHash = value;
+            _hashString = null;
         }
 
 #if CORE
@@ -111,13 +146,13 @@ namespace FsInfoCat.Models.DB
             {
                 case PropertyName_PwHash:
                 case DisplayName_PwHash:
-                    if (_pwHash.Length == 0)
+                    if (_hashString.Length == 0)
                         result.Add(new ValidationResult(Error_Message_PwHash_Empty, new string[] { PropertyName_PwHash }));
-                    else if (_pwHash.Length > Encoded_Pw_Hash_Length)
+                    else if (_hashString.Length > Encoded_Pw_Hash_Length)
                         result.Add(new ValidationResult(Error_Message_PwHash_Long, new string[] { PropertyName_PwHash }));
-                    else if (_pwHash.Length < Encoded_Pw_Hash_Length)
+                    else if (_hashString.Length < Encoded_Pw_Hash_Length)
                         result.Add(new ValidationResult(Error_Message_PwHash_Short, new string[] { PropertyName_PwHash }));
-                    else if (!ModelHelper.Base64Regex.IsMatch(_pwHash))
+                    else if (!ModelHelper.Base64Regex.IsMatch(_hashString))
                         result.Add(new ValidationResult(Error_Message_PwHash_Invalid, new string[] { PropertyName_PwHash }));
                     break;
             }

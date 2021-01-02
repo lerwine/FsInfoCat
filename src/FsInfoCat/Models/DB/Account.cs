@@ -209,7 +209,7 @@ namespace FsInfoCat.Models.DB
             Role = role;
             UserCredential = new UserCredential
             {
-                PwHash = pwHash,
+                HashString = pwHash,
                 CreatedOn = DateTime.Now,
                 CreatedBy = createdBy
             };
@@ -234,7 +234,7 @@ namespace FsInfoCat.Models.DB
             Creator = creator;
             UserCredential = new UserCredential
             {
-                PwHash = pwHash,
+                HashString = pwHash,
                 CreatedOn = DateTime.Now,
                 Creator = creator
             };
