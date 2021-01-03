@@ -1,4 +1,8 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+var UserRole;
+(function (UserRole) {
+    UserRole[UserRole["None"] = 0] = "None";
+    UserRole[UserRole["Viewer"] = 1] = "Viewer";
+    UserRole[UserRole["User"] = 2] = "User";
+    UserRole[UserRole["Crawler"] = 3] = "Crawler";
+    UserRole[UserRole["Admin"] = 4] = "Admin";
+})(UserRole || (UserRole = {}));
