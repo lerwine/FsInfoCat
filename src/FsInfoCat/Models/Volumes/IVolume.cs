@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using FsInfoCat.Models.DB;
 
-namespace FsInfoCat.Models
+namespace FsInfoCat.Models.Volumes
 {
     public interface IVolume : IModficationAuditable
     {

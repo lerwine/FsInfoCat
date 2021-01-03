@@ -17,6 +17,9 @@ using FsInfoCat.Models;
 using FsInfoCat.Models.DB;
 using FsInfoCat.Web.Data;
 using Microsoft.Data.SqlClient;
+using FsInfoCat.Models.Accounts;
+using FsInfoCat.Models.HostDevices;
+using FsInfoCat.Util;
 
 namespace FsInfoCat.Web.API
 {

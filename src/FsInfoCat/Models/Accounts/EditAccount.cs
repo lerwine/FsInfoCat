@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using FsInfoCat.Models.DB;
 
-namespace FsInfoCat.Models
+namespace FsInfoCat.Models.Accounts
 {
     public class EditAccount : IAccount
     {

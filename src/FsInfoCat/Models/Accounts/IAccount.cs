@@ -1,7 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using FsInfoCat.Models.Accounts;
 
-namespace FsInfoCat.Models
+namespace FsInfoCat.Models.Accounts
 {
     public interface IAccount : ILogin, IModficationAuditable
     {

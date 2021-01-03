@@ -2,6 +2,7 @@ using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using FsInfoCat.Models;
+using FsInfoCat.Models.HostDevices;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 

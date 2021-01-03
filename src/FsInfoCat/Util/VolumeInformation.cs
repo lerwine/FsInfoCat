@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace FsInfoCat
+namespace FsInfoCat.Util
 {
     /// <summary>
     /// Contains information about a filesystem volume.

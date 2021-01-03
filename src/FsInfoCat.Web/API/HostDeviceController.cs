@@ -16,6 +16,7 @@ using FsInfoCat.Models.DB;
 using FsInfoCat.Models;
 using FsInfoCat.Web.Data;
 using System.ComponentModel.DataAnnotations;
+using FsInfoCat.Models.HostDevices;
 
 namespace FsInfoCat.Web.API
 {

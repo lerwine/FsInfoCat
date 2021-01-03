@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using FsInfoCat.Models.Accounts;
 
-namespace FsInfoCat.Models
+namespace FsInfoCat.Models.Accounts
 {
     public enum UserRole : byte
     {

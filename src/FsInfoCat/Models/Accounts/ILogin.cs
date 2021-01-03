@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FsInfoCat.Models
+namespace FsInfoCat.Models.Accounts
 {
     public interface ILogin : IValidatableModel
     {

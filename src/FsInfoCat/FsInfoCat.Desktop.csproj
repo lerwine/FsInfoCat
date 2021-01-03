@@ -56,32 +56,33 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="FileSystemFeature.cs" />
-        <Compile Include="MD5Checksum.cs" />
         <Compile Include="PendingJobType.cs" />
-        <Compile Include="PwHash.cs" />
-        <Compile Include="VolumeInformation.cs" />
-        <Compile Include="Models\AppUser.cs" />
-        <Compile Include="Models\HostDeviceRegRequest.cs" />
-        <Compile Include="Models\IAppUser.cs" />
-        <Compile Include="Models\IHostDevice.cs" />
-        <Compile Include="Models\IHostDeviceReg.cs" />
-        <Compile Include="Models\ILogin.cs" />
         <Compile Include="Models\IModficationAuditable.cs" />
         <Compile Include="Models\INormalizable.cs" />
-        <Compile Include="Models\IUserCredentials.cs" />
         <Compile Include="Models\IValidatableModel.cs" />
-        <Compile Include="Models\IVolume.cs" />
         <Compile Include="Models\ModelHelper.cs" />
         <Compile Include="Models\RequestResponse.cs" />
-        <Compile Include="Models\UserLoginRequest.cs" />
-        <Compile Include="Models\UserRole.cs" />
+        <Compile Include="Models\Accounts\EditAccount.cs" />
+        <Compile Include="Models\Accounts\IAccount.cs" />
+        <Compile Include="Models\Accounts\ILogin.cs" />
+        <Compile Include="Models\Accounts\IUserCredentials.cs" />
+        <Compile Include="Models\Accounts\UserLoginRequest.cs" />
+        <Compile Include="Models\Accounts\UserRole.cs" />
         <Compile Include="Models\DB\Account.cs" />
         <Compile Include="Models\DB\HostContributor.cs" />
         <Compile Include="Models\DB\HostDevice.cs" />
+        <Compile Include="Models\DB\UserCredential.cs" />
         <Compile Include="Models\DB\Volume.cs" />
+        <Compile Include="Models\HostDevices\HostDeviceRegRequest.cs" />
+        <Compile Include="Models\HostDevices\IHostDevice.cs" />
+        <Compile Include="Models\HostDevices\IHostDeviceReg.cs" />
+        <Compile Include="Models\Volumes\IVolume.cs" />
         <Compile Include="Properties\AssemblyInfo.cs">
             <SubType>Code</SubType>
         </Compile>
+        <Compile Include="Util\MD5Checksum.cs" />
+        <Compile Include="Util\PwHash.cs" />
+        <Compile Include="Util\VolumeInformation.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <PropertyGroup>

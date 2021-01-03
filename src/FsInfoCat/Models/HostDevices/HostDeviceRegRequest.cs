@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using FsInfoCat.Models.DB;
 
-namespace FsInfoCat.Models
+namespace FsInfoCat.Models.HostDevices
 {
     public class HostDeviceRegRequest : IHostDeviceReg
     {

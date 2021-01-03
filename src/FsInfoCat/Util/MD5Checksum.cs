@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace FsInfoCat
+namespace FsInfoCat.Util
 {
     /// <summary>
     /// Represents a 128-bit MD5 checksumm value.

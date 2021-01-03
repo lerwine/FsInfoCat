@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using FsInfoCat.Models;
 using FsInfoCat.Models.DB;
+using FsInfoCat.Models.HostDevices;
 using Microsoft.EntityFrameworkCore;
 
 namespace FsInfoCat.Web.Models

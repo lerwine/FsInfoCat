@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FsInfoCat
+namespace FsInfoCat.Util
 {
     [StructLayout(LayoutKind.Explicit)]
     public struct PwHash : IEquatable<PwHash>, IEquatable<string>
@@ -47,6 +47,16 @@ namespace FsInfoCat
 
         [FieldOffset(HASH_BYTES_LENGTH)]
         private readonly ulong _saltBits;
+
+        public ulong HashBits0 => _hashBits0;
+        public ulong HashBits1 => _hashBits1;
+        public ulong HashBits2 => _hashBits2;
+        public ulong HashBits3 => _hashBits3;
+        public ulong HashBits4 => _hashBits4;
+        public ulong HashBits5 => _hashBits5;
+        public ulong HashBits6 => _hashBits6;
+        public ulong HashBits7 => _hashBits7;
+        public ulong SaltBits => _saltBits;
 
         private PwHash(byte[] sha512Hash, ulong salt)
         {
