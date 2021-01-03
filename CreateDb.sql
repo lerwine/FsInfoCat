@@ -7,6 +7,9 @@ GO
 IF OBJECT_ID('dbo.HostDevice', 'U') IS NOT NULL
 DROP TABLE dbo.HostDevice
 GO
+IF OBJECT_ID('dbo.UserCredential', 'U') IS NOT NULL
+DROP TABLE dbo.UserCredential
+GO
 IF OBJECT_ID('dbo.Account', 'U') IS NOT NULL
 DROP TABLE dbo.Account
 GO
@@ -27,8 +30,8 @@ CREATE TABLE dbo.UserCredential
     (
         AccountID ASC
     ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
-INSERT INTO dbo.Account (AccountID, PwHash, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
+) ON [PRIMARY];
+INSERT INTO dbo.UserCredential (AccountID, PwHash, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
     Values ('00000000-0000-0000-0000-000000000000', 'XrVxbJmeSwCzNtQp6PpepBE8WUh1nfhPGlQCBoIOaS6ho6+7UH/lGnJgH0w2hF2oFzxDrQ6liVHWDldtFawAetBTWV+jCsFG',
         @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
 
