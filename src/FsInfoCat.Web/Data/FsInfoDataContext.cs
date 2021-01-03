@@ -21,6 +21,10 @@ namespace FsInfoCat.Web.Data
                 .HasOne(p => p.Modifier)
                 .WithMany()
                 .HasForeignKey(p => p.CreatedBy);
+            modelBuilder.Entity<Account>()
+                .HasOne(a => a.UserCredential)
+                .WithOne(c => c.Account)
+                .HasForeignKey<UserCredential>(c => c.AccountID);
             modelBuilder.Entity<HostDevice>()
                 .HasOne(p => p.Creator)
                 .WithMany()
@@ -37,13 +41,27 @@ namespace FsInfoCat.Web.Data
                 .HasOne(p => p.Modifier)
                 .WithMany()
                 .HasForeignKey(p => p.CreatedBy);
-            // modelBuilder.Entity<HostContributor>().HasNoKey();
+            modelBuilder.Entity<Volume>()
+                .HasOne(p => p.Host)
+                .WithMany()
+                .HasForeignKey(p => p.HostDeviceID);
             modelBuilder.Entity<HostContributor>()
                 .HasKey(c => new { c.AccountID, c.HostDeviceID });
             modelBuilder.Entity<HostContributor>()
                 .HasOne(p => p.Creator)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedBy);
+                .HasForeignKey(p => p.CreatedBy)
+                .IsRequired();
+            modelBuilder.Entity<HostContributor>()
+                .HasOne(p => p.Host)
+                .WithMany()
+                .HasForeignKey(p => p.HostDeviceID)
+                .IsRequired();
+            modelBuilder.Entity<HostContributor>()
+                .HasOne(p => p.Account)
+                .WithMany()
+                .HasForeignKey(p => p.AccountID)
+                .IsRequired();
         }
 
         public DbSet<UserCredential> UserCredential { get; set; }
