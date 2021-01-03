@@ -1,0 +1,20 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+      "baseUrl": "./",
+      "module": "esnext",
+      "outDir": "../wwwroot/js",
+      "sourceMap": false,
+      "declaration": false,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "target": "es2015",
+      "typeRoots": ["../../../typings"],
+      "lib": [
+        "es2017",
+        "dom"
+      ]
+    },
+    "include": ["./site.ts"],
+    "exclude": ["./node_modules", "./node_modules/**/*.d.ts"]
+  }
