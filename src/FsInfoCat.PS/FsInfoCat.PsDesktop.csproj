@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -57,23 +57,27 @@
         <ProjectReference Include="..\FsInfoCat\FsInfoCat.Desktop.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="CsTypeModel.cs" />
         <Compile Include="ChoiceValueDescription.cs" />
+        <Compile Include="CsTypeModel.cs" />
         <Compile Include="FsInfoCatUtil.cs" />
         <Compile Include="Properties\AssemblyInfo.cs">
             <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="FsInfoCatDesktop.psd1">
+        <Content Include="about_FsInfoCat.help.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="FsInfoCat.psm1">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="about_FsInfoCat.help.txt">
+        <Content Include="FsInfoCatDesktop.psd1">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="FsInfoCat.psd1" />
+        <None Include="Test\TestModule.ps1" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <PropertyGroup>
