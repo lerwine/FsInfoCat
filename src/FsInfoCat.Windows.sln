@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.TestWindows", "Fs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Web", "FsInfoCat.Web\FsInfoCat.Web.csproj", "{64B81133-2E70-43B8-B85F-6FA325162BB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Desktop", "FsInfoCat.Desktop\FsInfoCat.Desktop.csproj", "{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,5 +74,17 @@ Global
 		{64B81133-2E70-43B8-B85F-6FA325162BB2}.Release|x64.Build.0 = Release|AnyCPU
 		{64B81133-2E70-43B8-B85F-6FA325162BB2}.Release|x86.ActiveCfg = Release|AnyCPU
 		{64B81133-2E70-43B8-B85F-6FA325162BB2}.Release|x86.Build.0 = Release|AnyCPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Debug|x64.Build.0 = Debug|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Debug|x86.Build.0 = Debug|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Release|AnyCPU.Build.0 = Release|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Release|x64.ActiveCfg = Release|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Release|x64.Build.0 = Release|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CF2633E-6575-4755-A22D-D0CBF6A5EE44}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
