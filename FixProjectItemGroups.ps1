@@ -65,8 +65,3 @@ try {
     $ProjectXml.WriteTo($XmlWriter);
     $XmlWriter.Flush();
 } finally { $XmlWriter.Close() }
-<#
-(Get-ChildItem -Path 'C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat' -Recurse -Filter '*.cs') | Where-Object { -not ($_.StartsWith('obj\') -or $_.StartsWith('bin\')) } | ForEach-Object { $_.FullName.Substring(43) } | Sort-Object | ForEach-Object {
-"        <Compile Include=`"$_`" />"
-}
-#>
