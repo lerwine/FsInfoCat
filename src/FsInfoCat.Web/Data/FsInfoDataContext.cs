@@ -25,6 +25,14 @@ namespace FsInfoCat.Web.Data
                 .HasOne(a => a.UserCredential)
                 .WithOne(c => c.Account)
                 .HasForeignKey<UserCredential>(c => c.AccountID);
+            modelBuilder.Entity<UserCredential>()
+                .HasOne(p => p.Creator)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
+            modelBuilder.Entity<UserCredential>()
+                .HasOne(p => p.Modifier)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy);
             modelBuilder.Entity<HostDevice>()
                 .HasOne(p => p.Creator)
                 .WithMany()
