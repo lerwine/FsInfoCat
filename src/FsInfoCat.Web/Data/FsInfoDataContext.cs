@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using FsInfoCat.Models.DB;
 

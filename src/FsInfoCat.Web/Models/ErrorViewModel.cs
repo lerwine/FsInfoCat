@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat.Web.Models
 {
     public class ErrorViewModel

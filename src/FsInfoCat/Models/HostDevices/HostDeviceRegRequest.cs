@@ -7,7 +7,6 @@ using System.Security.Principal;
 #else
 using System.IO;
 #endif
-using System.Linq;
 using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models.HostDevices

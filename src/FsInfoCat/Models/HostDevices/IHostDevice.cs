@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace FsInfoCat.Models.HostDevices
 {
     public interface IHostDevice : IHostDeviceReg, IModficationAuditable
