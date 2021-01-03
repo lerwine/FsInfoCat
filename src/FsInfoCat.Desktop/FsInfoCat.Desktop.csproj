@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <ItemGroup>
-    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
+    <ProjectReference Include="..\FsInfoCat\FsInfoCat.Windows.csproj" />
   </ItemGroup>
 
   <ItemGroup>
