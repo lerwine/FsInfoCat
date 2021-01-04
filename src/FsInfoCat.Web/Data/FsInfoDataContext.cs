@@ -20,7 +20,7 @@ namespace FsInfoCat.Web.Data
             modelBuilder.Entity<Account>()
                 .HasOne(p => p.Modifier)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedBy);
+                .HasForeignKey(p => p.ModifiedBy);
             modelBuilder.Entity<Account>()
                 .HasOne(a => a.UserCredential)
                 .WithOne(c => c.Account)
@@ -32,7 +32,7 @@ namespace FsInfoCat.Web.Data
             modelBuilder.Entity<UserCredential>()
                 .HasOne(p => p.Modifier)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedBy);
+                .HasForeignKey(p => p.ModifiedBy);
             modelBuilder.Entity<HostDevice>()
                 .HasOne(p => p.Creator)
                 .WithMany()
@@ -40,7 +40,7 @@ namespace FsInfoCat.Web.Data
             modelBuilder.Entity<HostDevice>()
                 .HasOne(p => p.Modifier)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedBy);
+                .HasForeignKey(p => p.ModifiedBy);
             modelBuilder.Entity<Volume>()
                 .HasOne(p => p.Creator)
                 .WithMany()
@@ -48,7 +48,7 @@ namespace FsInfoCat.Web.Data
             modelBuilder.Entity<Volume>()
                 .HasOne(p => p.Modifier)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedBy);
+                .HasForeignKey(p => p.ModifiedBy);
             modelBuilder.Entity<Volume>()
                 .HasOne(p => p.Host)
                 .WithMany()
