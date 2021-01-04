@@ -117,7 +117,7 @@ namespace FsInfoCat.Models.HostDevices
             return result;
         }
 
-        public static HostDeviceRegRequest CreateForLocal()
+        public static string GetLocalMachineIdentifier()
         {
 #if WINDOWS
             if (Environment.OSVersion.Platform != PlatformID.Win32NT)
@@ -125,14 +125,7 @@ namespace FsInfoCat.Models.HostDevices
             try
             {
                 using (DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + "/Administrator"))
-                {
-                    return new HostDeviceRegRequest
-                    {
-                        IsWindows = true,
-                        MachineName = Environment.MachineName,
-                        MachineIdentifer = new SecurityIdentifier((byte[])directoryEntry.InvokeGet("objectSID"), 0).AccountDomainSid.ToString()
-                    };
-                        }
+                    return new SecurityIdentifier((byte[])directoryEntry.InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
             }
             catch (Exception exc)
             {
@@ -146,19 +139,7 @@ namespace FsInfoCat.Models.HostDevices
             try
             {
                 string s = File.ReadAllText("/etc/machine-id");
-                if (Guid.TryParse(s.Trim(), out Guid id))
-                    return new HostDeviceRegRequest
-                    {
-                        IsWindows = false,
-                        MachineName = Environment.MachineName,
-                        MachineIdentifer = id.ToString("d")
-                    };
-                return new HostDeviceRegRequest
-                {
-                    IsWindows = false,
-                    MachineName = Environment.MachineName,
-                    MachineIdentifer = s
-                };
+                return (Guid.TryParse(s.Trim(), out Guid id)) ? id.ToString("d") : id;
             }
             catch (Exception exc)
             {
@@ -169,6 +150,19 @@ namespace FsInfoCat.Models.HostDevices
 #else
             throw new NotSupportedException("CreateForLocal is not supported.");
 #endif
+        }
+        public static HostDeviceRegRequest CreateForLocal()
+        {
+            return new HostDeviceRegRequest
+            {
+#if WINDOWS
+                IsWindows = true,
+#else
+                IsWindows = false,
+#endif
+                MachineName = Environment.MachineName,
+                MachineIdentifer = GetLocalMachineIdentifier()
+            };
         }
     }
 }

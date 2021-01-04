@@ -59,7 +59,6 @@
     <ItemGroup>
         <Compile Include="ChoiceValueDescription.cs" />
         <Compile Include="CsTypeModel.cs" />
-        <Compile Include="FsInfoCatUtil.cs" />
         <Compile Include="Properties\AssemblyInfo.cs">
             <SubType>Code</SubType>
         </Compile>
