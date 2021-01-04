@@ -86,7 +86,7 @@ namespace FsInfoCat.Models.DB
         public static async Task<HostContributor> Lookup(DbSet<HostContributor> dbSet, Guid accountID, Guid HostDeviceID)
         {
             IQueryable<HostContributor> contributors = from c in dbSet select c;
-            return (await contributors.Where(c => c.AccountID.Equals(accountID) && c.HostDeviceID.Equals(HostDeviceID)).AsNoTracking().ToListAsync()).FirstOrDefault();
+            return (await contributors.Where(c => c.AccountID == accountID && c.HostDeviceID == HostDeviceID).AsNoTracking().ToListAsync()).FirstOrDefault();
         }
 #endif
     }

@@ -316,10 +316,9 @@ namespace FsInfoCat.Models.DB
                 return null;
             IQueryable<HostDevice> hostDevices = from d in dbSet select d;
             if (string.IsNullOrWhiteSpace(machineIdentifer))
-                hostDevices = hostDevices.Where(h => string.Equals(machineName, h.MachineName, StringComparison.InvariantCulture));
+                hostDevices = hostDevices.Where(h => machineName == h.MachineName);
             else
-                hostDevices = hostDevices.Where(h => string.Equals(machineName, h.MachineName, StringComparison.InvariantCulture) &&
-                    string.Equals(machineIdentifer, h.MachineIdentifer, StringComparison.InvariantCulture));
+                hostDevices = hostDevices.Where(h => machineName == h.MachineName && machineIdentifer == h.MachineIdentifer);
             return (await hostDevices.AsNoTracking().ToListAsync()).FirstOrDefault();
         }
 #endif

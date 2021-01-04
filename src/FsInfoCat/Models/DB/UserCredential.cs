@@ -186,7 +186,7 @@ namespace FsInfoCat.Models.DB
         public static async Task<UserCredential> LookUp(DbSet<UserCredential> dbSet, Guid accountId)
         {
             IQueryable<UserCredential> userCredentials = from d in dbSet select d;
-            userCredentials = userCredentials.Where(h => h.AccountID.Equals(accountId));
+            userCredentials = userCredentials.Where(h => h.AccountID == accountId);
             return (await userCredentials.AsNoTracking().ToListAsync()).FirstOrDefault();
         }
 #endif

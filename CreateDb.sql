@@ -65,6 +65,15 @@ ALTER TABLE dbo.Account WITH CHECK ADD CONSTRAINT FK_Account_ModifiedBy FOREIGN 
 ALTER TABLE dbo.Account CHECK CONSTRAINT FK_Account_ModifiedBy;
 CREATE UNIQUE INDEX IDX_Account_LoginName ON dbo.Account (LoginName);
 
+ALTER TABLE dbo.UserCredential WITH CHECK ADD CONSTRAINT FK_UserCredential_CreatedBy FOREIGN KEY(CreatedBy)
+    REFERENCES dbo.Account (AccountID)
+    ON DELETE NO ACTION;
+ALTER TABLE dbo.UserCredential CHECK CONSTRAINT FK_UserCredential_CreatedBy;
+ALTER TABLE dbo.UserCredential WITH CHECK ADD CONSTRAINT FK_UserCredential_ModifiedBy FOREIGN KEY(ModifiedBy)
+    REFERENCES dbo.Account (AccountID)
+    ON DELETE NO ACTION;
+ALTER TABLE dbo.UserCredential CHECK CONSTRAINT FK_UserCredential_ModifiedBy;
+
 -- Create HostDevice table in the specified schema
 CREATE TABLE dbo.HostDevice
 (
