@@ -225,6 +225,28 @@ namespace FsInfoCat.Util
             return (hash.HasValue) ? hash.Value.Test(rawPw) : string.IsNullOrEmpty(rawPw);
         }
 
+        public static bool Test(string base64EncodedHash, string rawPw)
+        {
+            if (string.IsNullOrWhiteSpace(base64EncodedHash))
+                return string.IsNullOrEmpty(rawPw);
+            byte[] data;
+            try { data = Convert.FromBase64String(base64EncodedHash); }
+            catch (Exception exc) { throw new ArgumentException("Invalid base-64 string", "base64EncodedHash", exc); }
+            if (data.Length != TOTAL_BYTES_LENGTH)
+                throw new ArgumentException("Invalid data length", "base64EncodedHash");
+            if (string.IsNullOrEmpty(rawPw))
+                return false;
+            byte[] salt = new byte[SALT_BYTES_LENGTH];
+            Array.Copy(data, salt, SALT_BYTES_LENGTH);
+            byte[] hash = ComputeHash(rawPw, salt);
+            for (int i = 0; i < hash.Length; i++)
+            {
+                if (hash[i] != data[i])
+                    return false;
+            }
+            return true;
+        }
+
         public bool Test(string rawPw)
         {
             if (string.IsNullOrEmpty(rawPw))
