@@ -618,58 +618,66 @@ Function Read-DependencyProperty {
         }
     }
 }
+
 Function ConvertTo-PasswordHash {
     [CmdletBinding()]
+    [OutputType([FsInfoCat.Util.PwHash])]
     Param(
-        [Parameter(Mandatory = $true)]
-        [string]$Password,
-        [byte[]]$Salt
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowEmptyString]
+        [AllowNull]
+        [string]$RawPwd,
+        [System.UInt64]$Salt
     )
-    $SaltBytes = $Salt;
-    if (-not $PSBoundParameters.ContainsKey('Salt')) {
-        $SaltBytes = New-Object -TypeName 'System.Byte[]' -ArgumentList 8;
-        $RNGCryptoServiceProvider = [System.Security.Cryptography.RNGCryptoServiceProvider]::new();
-        $RNGCryptoServiceProvider.GetBytes($SaltBytes);
-        $RNGCryptoServiceProvider.Dispose();
+    Process {
+        if ($PSBoundParameters.ContainsKey('Salt')) {
+            [FsInfoCat.Util.PwHash]::Create($RawPwd, $Salt);
+        } else {
+            [FsInfoCat.Util.PwHash]::Create($RawPwd);
+        }
     }
-    $SHA512 = [System.Security.Cryptography.SHA512]::Create();
-    $SHA512.ComputeHash(([byte[]]([System.Text.Encoding]::ASCII.GetBytes($Password) + $SaltBytes))) | Out-Null;
-    [Convert]::ToBase64String(([byte[]]($SHA512.Hash + $SaltBytes))) | Write-Output;
-    $SHA512.Dispose();
-}
-
-Function Get-SaltBytes {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [ValidateLength(96, 96)]
-        [ValidatePattern('[A-Za-z\d+/]{96}')]
-        [string]$Base64EncodedHash
-    )
-    [Convert]::FromBase64String($Base64EncodedHash) | Select-Object -Skip 64;
 }
 
 Function Test-PasswordHash {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "String")]
     Param(
-        [Parameter(Mandatory = $true)]
-        [string]$Password,
-        [Parameter(Mandatory = $true)]
-        [ValidateLength(96, 96)]
-        [ValidatePattern('[A-Za-z\d+/]{96}')]
-        [string]$ExpectedHash
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowEmptyString]
+        [AllowNull]
+        [string]$RawPwd,
+        [Parameter(Mandatory = $true, ParameterSetName = "PwHash")]
+        [AllowNull]
+        [Nullable[FsInfoCat.Util.PwHash]]$PwHash,
+        [Parameter(Mandatory = $true, ParameterSetName = "String")]
+        [AllowEmptyString]
+        [AllowNull]
+        [string]$EncodedPwHash
     )
 
-    ($ExpectedHash -eq (ConvertTo-PasswordHash -Password $Password -Salt (Get-SaltBytes -Base64EncodedHash $ExpectedHash))) | Write-Output;
+    Begin {
+        $PwHashObj = $null;
+        if ($PSBoundParameters.ContainsKey('String')) {
+            $PwHashObj = [FsInfoCat.Util.PwHash]::Import($EncodedPwHash);
+        } else {
+            $PwHashObj = $PwHash;
+        }
+    }
+    Process {
+        if ([string]::IsNullOrEmpty($RawPwd)) {
+            ($null -eq $PwHashObj) | Write-Output;
+        } else {
+            ($null -ne $PwHashObj -and $PwHashObj.Test($RawPwd)) | Write-Output;
+        }
+    }
 }
 
 Function Get-InitializationQueries {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
-        [string]$AdministrativePassword
+        [string]$RawAdminPwd
     )
-    $PwHash = ConvertTo-PasswordHash -Password $AdministrativePassword;
+    $PwHash = ConvertTo-PasswordHash -RawPwd $RawAdminPwd;
     $HostDeviceID = [Guid]::NewGuid().ToString('d');
     $MachineIdentifier = [FsInfoCat.PsDesktop.FsInfoCatUtil]::GetLocalMachineSID();
     $MachineName = [System.Environment]::MachineName;
