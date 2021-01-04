@@ -677,21 +677,20 @@ Function Get-InitializationQueries {
         [Parameter(Mandatory = $true)]
         [string]$RawAdminPwd
     )
-    $PwHash = ConvertTo-PasswordHash -RawPwd $RawAdminPwd;
+    $PwHash = (ConvertTo-PasswordHash -RawPwd $RawAdminPwd).ToString();
     $HostDeviceID = [Guid]::NewGuid().ToString('d');
     $MachineIdentifier = [FsInfoCat.PsDesktop.FsInfoCatUtil]::GetLocalMachineSID();
     $MachineName = [System.Environment]::MachineName;
     @"
--- The next query should be executed immediately after the 'SET @CreatedOn = GETDATE();' statement.
-INSERT INTO dbo.Account (AccountID, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy,
-        DisplayName, LoginName, PwHash, [Role], Notes)
-    Values ('00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000',
-        'FS InfoCat Administrator', 'admin', '$PwHash', 4, '');
+-- Insert this query immediately before the 'CREATE TABLE dbo.Account' statement
+INSERT INTO dbo.UserCredential (AccountID, PwHash, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
+    Values ('00000000-0000-0000-0000-000000000000', '$PwHash',
+        @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
 
 -- The next query should be executed at the end of the setup script.
-INSERT INTO dbo.HostDevice (HostDeviceID, DisplayName, MachineIdentifer, MachineName, IsWindows, IsInactive, Notes,
+INSERT INTO dbo.HostDevice (HostDeviceID, DisplayName, MachineIdentifer, MachineName, IsWindows, AllowCrawl, IsInactive, Notes,
         CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
-    VALUES('$HostDeviceID', NULL, '$MachineIdentifier', '$MachineName', 1, 0, '',
+    VALUES('$HostDeviceID'', '', '$MachineIdentifier', '$MachineName', 1, 1, 0, '',
         @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
 "@ | Write-Host;
 }
