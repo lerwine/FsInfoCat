@@ -145,7 +145,7 @@ namespace FsInfoCat.Models.HostDevices
             {
                 if (string.IsNullOrWhiteSpace(exc.Message))
                     throw;
-                throw new Exception("Encountered an exception while trying to retrieve computer SID - " + exc.Message, exc);
+                throw new Exception("Encountered an exception while trying to retrieve computer GUID - " + exc.Message, exc);
             }
 #else
             throw new NotSupportedException("CreateForLocal is not supported.");
