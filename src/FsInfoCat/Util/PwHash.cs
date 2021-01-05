@@ -314,23 +314,23 @@ namespace FsInfoCat.Util
             return hashCode.ToHashCode();
 #else
             if ((_saltBits & 1UL) == 1UL)
-                return (_hashBits0.GetHashCode() & 0x0000000f) |
-                    (_hashBits1.GetHashCode() & 0x000000f0) |
-                    (_hashBits2.GetHashCode() & 0x00000700) |
-                    (_hashBits3.GetHashCode() & 0x00007800) |
-                    (_hashBits4.GetHashCode() & 0x00038000) |
-                    (_hashBits5.GetHashCode() & 0x003c0000) |
-                    (_hashBits6.GetHashCode() & 0x01c00000) |
-                    (_hashBits7.GetHashCode() & 0x1e000000) |
+                return (_hashBits000_03f.GetHashCode() & 0x0000000f) |
+                    (_hashBits040_07f.GetHashCode() & 0x000000f0) |
+                    (_hashBits080_0bf.GetHashCode() & 0x00000700) |
+                    (_hashBits0c0_0ff.GetHashCode() & 0x00007800) |
+                    (_hashBits100_13f.GetHashCode() & 0x00038000) |
+                    (_hashBits140_17f.GetHashCode() & 0x003c0000) |
+                    (_hashBits180_1bf.GetHashCode() & 0x01c00000) |
+                    (_hashBits1c0_1ff.GetHashCode() & 0x1e000000) |
                     (int)(_saltBits.GetHashCode() & 0xe0000000);
-            return (_hashBits0.GetHashCode() & 0x0000000f) |
-                (_hashBits1.GetHashCode() & 0x00000070) |
-                (_hashBits2.GetHashCode() & 0x00000780) |
-                (_hashBits3.GetHashCode() & 0x00003800) |
-                (_hashBits4.GetHashCode() & 0x0003c000) |
-                (_hashBits5.GetHashCode() & 0x001c0000) |
-                (_hashBits6.GetHashCode() & 0x01e00000) |
-                (_hashBits7.GetHashCode() & 0x1e000000) |
+            return (_hashBits000_03f.GetHashCode() & 0x0000000f) |
+                (_hashBits040_07f.GetHashCode() & 0x00000070) |
+                (_hashBits080_0bf.GetHashCode() & 0x00000780) |
+                (_hashBits0c0_0ff.GetHashCode() & 0x00003800) |
+                (_hashBits100_13f.GetHashCode() & 0x0003c000) |
+                (_hashBits140_17f.GetHashCode() & 0x001c0000) |
+                (_hashBits180_1bf.GetHashCode() & 0x01e00000) |
+                (_hashBits1c0_1ff.GetHashCode() & 0x1e000000) |
                 (int)(_saltBits.GetHashCode() & 0xe0000000);
 #endif
         }
