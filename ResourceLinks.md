@@ -4,6 +4,7 @@
 
 - References
   - [Markdown Syntax](https://www.markdownguide.org/cheat-sheet/)
+  - [Writing a T4 Text Template](https://docs.microsoft.com/en-us/visualstudio/modeling/writing-a-t4-text-template?view=vs-2019)
   - [GDI+ Property Item Descriptions](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-property-item-descriptions)
   - [Configuration Manager Client WMI Programming](https://msdn.microsoft.com/en-us/library/cc144081.aspx)
   - Core
