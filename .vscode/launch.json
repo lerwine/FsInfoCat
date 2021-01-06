@@ -47,6 +47,17 @@
             }
         },
         {
+            "name": "Debug test template host",
+            "type": "clr",
+            "preLaunchTask": "Build Text Template Host",
+            "request": "launch",
+            "program": "${workspaceFolder}/dev/StandaloneT4Host/bin/Debug/net472/StandaloneT4Host.exe",
+            "args": ["${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PsDesktop.csproj"],
+            "cwd": "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",
