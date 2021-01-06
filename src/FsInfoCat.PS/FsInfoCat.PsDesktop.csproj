@@ -78,9 +78,6 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <None Include="FsInfoCat.tt">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
         <None Include="Test\TestModule.ps1">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
