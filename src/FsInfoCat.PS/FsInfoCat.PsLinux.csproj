@@ -55,7 +55,7 @@
         </None>
     </ItemGroup>
 
-    <Target Name="PreBuild" AfterTargets="PostBuildEvent">
+    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
         <Exec Command="$(ProjectDir)..\..\dev\StandaloneT4Host\bin\Debug\net472\StandaloneT4Host.exe &quot;$(ProjectPath)&quot;" />
     </Target>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
