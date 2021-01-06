@@ -1,0 +1,45 @@
+TOPIC
+    about_DevHelper
+
+SHORT DESCRIPTION
+    Development PowerShell module for FS InfoCat.
+
+LONG DESCRIPTION
+    Dev Helper PowerShell module for FsInfoCat dev support.
+
+EXPORTED COMMANDS
+    Following is a list of commands exported by this module:
+
+    Test-CsClassName
+        Test-CsClassName [-Name] <string>  [<CommonParameters>]
+
+    Test-FileInfo
+        Test-FileInfo -Path <string> -AssertExists  [<CommonParameters>]
+        Test-FileInfo -Path <string> -AsCreated  [<CommonParameters>]
+        Test-FileInfo -Path <string> [-AssertNotExists]  [<CommonParameters>]
+
+    Read-CsClassName
+        Read-CsClassName [[-Prompt] <string>]  [<CommonParameters>]
+
+    Read-Choice
+        Read-Choice [-Options] <Object[]> [-Caption] <string> [-Message] <string> [[-DefaultChoice] <Object>] [-GridView]  [<CommonParameters>]
+
+    Read-YesOrNo
+        Read-YesOrNo [-Caption] <string> [-Message] <string> [[-Default] <bool>]  [<CommonParameters>]
+
+    Convert-ToCommentLines
+        Convert-ToCommentLines [-Xml] <xml> [-Contents]  [<CommonParameters>]
+
+    New-WpfWindowScaffold
+        New-WpfWindowScaffold [-Name] <string>  [<CommonParameters>]
+
+    New-MvcScaffold
+        New-MvcScaffold [-Name] <string>  [<CommonParameters>]
+
+    Read-CsTypeModel
+        Read-CsTypeModel [-Prompt] <string>  [<CommonParameters>]
+
+    New-DependencyProperty
+        New-DependencyProperty [-Name] <string> [-PropertyType] <CsTypeModel> [-ModelType] <string> [-ReadOnly] [-HandlePropertyChanged] [-HandleCoerceValue] [-ExposeChangedEvent] [<CommonParameters>]
+
+SEE ALSO

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 
-namespace FsInfoCat.PS
+namespace DevHelper
 {
     public class ChoiceValueDescription : IEquatable<ChoiceValueDescription>, IComparable<ChoiceValueDescription>
     {

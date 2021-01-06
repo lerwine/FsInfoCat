@@ -5,11 +5,11 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{13B95235-FCA5-4752-8E8D-82DE423D55C2}</ProjectGuid>
+        <ProjectGuid>{909B33DC-2382-4D82-840D-9892A27274D9}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>FsInfoCat.PS</RootNamespace>
-        <AssemblyName>FsInfoCat.PS</AssemblyName>
+        <RootNamespace>DevHelper</RootNamespace>
+        <AssemblyName>DevHelper</AssemblyName>
         <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <TargetFrameworkProfile />
@@ -18,7 +18,7 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
-        <OutputPath>..\..\Debug\Desktop\FsInfoCat\</OutputPath>
+        <OutputPath>bin\Debug\DevHelper\</OutputPath>
         <DefineConstants>DEBUG;TRACE;DESKTOP;WINDOWS</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
@@ -28,7 +28,7 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <OutputPath>..\..\Release\Desktop\FsInfoCat\</OutputPath>
+        <OutputPath>bin\Release\DevHelper\</OutputPath>
         <DefineConstants>TRACE;DESKTOP;WINDOWS</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
@@ -54,52 +54,18 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\FsInfoCat\FsInfoCat.Desktop.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="FsCrawlJob.cs" />
+        <Compile Include="ChoiceValueDescription.cs" />
+        <Compile Include="CsTypeModel.cs" />
         <Compile Include="Properties\AssemblyInfo.cs">
             <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
-    <ItemGroup>
-        <Content Include="about_FsInfoCat.help.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="FsInfoCat.psd1">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="FsInfoCat.psm1">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="FsInfoCat.PS\FsInfoCat.PS.psd1">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="FsInfoCat.tt">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
-        <None Include="FsInfoCat.PS\FsInfoCat.PS.tt">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
-        <None Include="Test\TestModule.ps1">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
-        <Exec Command="$(ProjectDir)..\..\dev\StandaloneT4Host\bin\Debug\net472\StandaloneT4Host.exe &quot;$(ProjectPath)&quot;" />
-    </Target>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="copy &quot;$(TargetDir)FsInfoCatLib.dll&quot; &quot;$(TargetDir)FsInfoCat.PS\FsInfoCatLib.dll&quot; /Y;" />
-        <Exec Command="copy &quot;$(TargetDir)FsInfoCatLib.pdb&quot; &quot;$(TargetDir)FsInfoCat.PS\FsInfoCatLib.pdb&quot; /Y" />
-        <Exec Command="copy &quot;$(TargetDir)FsInfoCat.PS.dll&quot; &quot;$(TargetDir)FsInfoCat.PS\FsInfoCat.PS.dll&quot; /Y" />
-        <Exec Command="copy &quot;$(TargetDir)FsInfoCat.PS.pdb&quot; &quot;$(TargetDir)FsInfoCat.PS\FsInfoCat.PS.pdb&quot; /Y" />
         <Exec Command="del &quot;$(TargetDir)*.nlp&quot;" />
-        <Exec Command="del &quot;$(TargetDir)*.dll&quot;" />
-        <Exec Command="del &quot;$(TargetDir)*.pdb&quot;" />
         <Exec Command="del &quot;$(TargetDir)*.deps.json&quot;" />
+        <Exec Command="del &quot;$(TargetDir)Microsoft.*&quot;" />
+        <Exec Command="del &quot;$(TargetDir)System.*&quot;" />
     </Target>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

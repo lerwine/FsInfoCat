@@ -47,10 +47,14 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <None Include="Test\TestModule.ps1">
+        <None Include="FsInfoCat.tt">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
         <None Include="FsInfoCat.PS\FsInfoCat.PS.tt">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+        <None Include="Properties\AssemblyInfo.cs" />
+        <None Include="Test\TestModule.ps1">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
     </ItemGroup>

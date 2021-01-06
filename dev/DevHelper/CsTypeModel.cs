@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace FsInfoCat.PS
+namespace DevHelper
 {
     public class CsTypeModel
     {
