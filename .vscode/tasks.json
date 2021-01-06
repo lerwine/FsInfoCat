@@ -313,6 +313,20 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "Build Text Template Host",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "--configuration:Debug",
+                "${workspaceFolder}/dev/StandaloneT4Host/StandaloneT4Host.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "Transpile TypeScript",
             "type": "typescript",
             "tsconfig": "src/FsInfoCat.Web/ClientApp/tsconfig.json",
