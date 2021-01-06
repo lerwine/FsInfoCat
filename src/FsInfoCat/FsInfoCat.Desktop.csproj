@@ -85,10 +85,12 @@
         <Compile Include="Util\VolumeInformation.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <PropertyGroup>
-        <PostBuildEvent>del "$(TargetDir)/*.nlp"
-del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
-    </PropertyGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="del &quot;$(TargetDir)*.nlp&quot;" />
+        <Exec Command="del &quot;$(TargetDir)mscorlib.*&quot;" />
+        <Exec Command="del &quot;$(TargetDir)Microsoft.*&quot;" />
+        <Exec Command="del &quot;$(TargetDir)System.*&quot;" />
+    </Target>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -32,4 +32,8 @@
         <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
     </ItemGroup>
 
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="del &quot;$(TargetDir)*.nlp&quot;" />
+        <Exec Command="del &quot;$(TargetDir)*.deps.json&quot;" />
+    </Target>
 </Project>

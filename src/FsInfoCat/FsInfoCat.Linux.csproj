@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CD042851-2228-4B29-AE1F-3ED1E6AC1A1E}</ProjectGuid>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FsInfoCat</RootNamespace>
-    <AssemblyName>FsInfoCatLib</AssemblyName>
-    <Company>Leonard T. Erwine</Company>
-    <AssemblyTitle>FS InfoCat Common Library</AssemblyTitle>
-    <Description>Supporting CLR Library for FS InfoCat</Description>
-    <Product>FS InfoCat Common Library</Product>
-    <Copyright>Copyright © Leonard Thomas Erwine 2021</Copyright>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Core\Linux\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;CORE;LINUX</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Core\Linux\Release\</OutputPath>
-    <DefineConstants>TRACE;CORE;LINUX</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
-    <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{CD042851-2228-4B29-AE1F-3ED1E6AC1A1E}</ProjectGuid>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>FsInfoCat</RootNamespace>
+        <AssemblyName>FsInfoCatLib</AssemblyName>
+        <Company>Leonard T. Erwine</Company>
+        <AssemblyTitle>FS InfoCat Common Library</AssemblyTitle>
+        <Description>Supporting CLR Library for FS InfoCat</Description>
+        <Product>FS InfoCat Common Library</Product>
+        <Copyright>Copyright © Leonard Thomas Erwine 2021</Copyright>
+        <AssemblyVersion>0.1.0.0</AssemblyVersion>
+        <FileVersion>0.1.0.0</FileVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <OutputPath>bin\Core\Linux\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE;CORE;LINUX</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <OutputPath>bin\Core\Linux\Release\</OutputPath>
+        <DefineConstants>TRACE;CORE;LINUX</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
+        <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="del &quot;$(TargetDir)*.nlp&quot;" />
+        <Exec Command="del &quot;$(TargetDir)*.deps.json&quot;" />
+    </Target>
 </Project>
