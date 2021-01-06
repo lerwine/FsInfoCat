@@ -151,7 +151,7 @@ foreach ($AppUser in $AppUserCollection) {
             break;
         }
     }
-    
+
     @"
                 new object[]
                 {
@@ -165,3 +165,4 @@ foreach ($AppUser in $AppUserCollection) {
                         ModifiedOn = $ModifiedOnNormalized, ModifiedBy = $ModifiedBy }),
                 },
 "@
+}
