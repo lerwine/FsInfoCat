@@ -67,6 +67,9 @@
         <Content Include="about_FsInfoCat.help.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Example.ps1">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="FsInfoCat.psd1">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -82,9 +85,6 @@
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
         <None Include="FsInfoCat.PS\FsInfoCat.PS.tt">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
-        <None Include="Test\TestModule.ps1">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
     </ItemGroup>
