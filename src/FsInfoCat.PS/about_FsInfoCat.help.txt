@@ -15,10 +15,15 @@ EXPORTED COMMANDS
         (<string> ...) | ConvertTo-PasswordHash [-Salt <System.UInt64>]  [<CommonParameters>]
 
     Test-PasswordHash
-        Test-PasswordHash -RawPwd <string> -AssertExists [-EncodedPwHash <string>]  [<CommonParameters>]
+        Test-PasswordHash -RawPwd <string> [-EncodedPwHash <string>]  [<CommonParameters>]
+        (<string> ...) | Test-PasswordHash [-EncodedPwHash <string>]  [<CommonParameters>]
         Test-PasswordHash -PwHash <Nullable<FsInfoCat.Util.PwHash>>  [<CommonParameters>]
 ]
     Get-InitializationQueries
         Get-InitializationQueries -RawAdminPwd <string>  [<CommonParameters>]
+
+    Start-FsCrawlJob
+        Start-FsCrawlJob -RootPath <string[]> [-MaxDepth <int>]  [<CommonParameters>]
+        (<string> ...) | Start-FsCrawlJob [-MaxDepth <int>]  [<CommonParameters>]
 
 SEE ALSO
