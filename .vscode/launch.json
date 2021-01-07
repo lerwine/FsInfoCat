@@ -5,12 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug PS Module",
-            "type": "PowerShell",
+            "name": "Debug Desktop PS Module",
+            "type": "clr",
             "preLaunchTask": "Build PS Desktop",
             "request": "launch",
-            "script": "${workspaceFolder}/src/FsInfoCat.PS/Test/TestModule.ps1",
-            "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test"
+            "program": "powershell_ise",
+            "args": [
+                "${workspaceFolder}/src/FsInfoCat.PS/Example.ps1"
+            ],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "integratedTerminal"
         },
         {
             "name": "Debug desktop app",
@@ -44,6 +49,25 @@
             },
             "sourceFileMap": {
                 "/ClientApp": "${workspaceFolder}/src/FsInfoCat.Web/ClientApp"
+            }
+        },
+        {
+            "name": "Debug MyCore",
+            "type": "coreclr",
+            "request": "launch",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/MyCore/bin/Debug/netcoreapp3.1/MyCore.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/MyCore/bin/Debug/netcoreapp3.1",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/Home"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
             }
         },
         {
