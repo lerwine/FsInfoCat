@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -14,13 +15,14 @@ namespace FsInfoCat.PS
     public class FsCrawlJob : Job
     {
         private string _statusMessage = "Initializing";
+        private bool _hasMoreData = false;
+        private string _location = "";
         public override string StatusMessage => _statusMessage;
 
-        // TODO: Implement this
-        public override bool HasMoreData => throw new System.NotImplementedException();
+        public override bool HasMoreData => _hasMoreData;
 
         // TODO: Implement this
-        public override string Location => throw new System.NotImplementedException();
+        public override string Location => _location;
 
         public int MaxDepth { get; }
 
