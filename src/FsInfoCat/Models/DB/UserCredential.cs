@@ -5,9 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using FsInfoCat.Util;
-#if CORE
-using Microsoft.EntityFrameworkCore;
-#endif
 
 namespace FsInfoCat.Models.DB
 {
@@ -23,14 +20,11 @@ namespace FsInfoCat.Models.DB
         private string _hashString = "";
         private PwHash? _pwHash = null;
 
-#if CORE
         [Key()]
         [Required()]
         [Display(Name = "ID")]
-#endif
         public Guid AccountID { get; set; }
 
-#if CORE
         [Required(ErrorMessage = Error_Message_PwHash_Empty)]
         [MinLength(Encoded_Pw_Hash_Length, ErrorMessage = Error_Message_PwHash_Short)]
         [MaxLength(Encoded_Pw_Hash_Length, ErrorMessage = Error_Message_PwHash_Long)]
@@ -38,7 +32,6 @@ namespace FsInfoCat.Models.DB
         [Display(Name = DisplayName_PwHash)]
         [DataType(DataType.Text)]
         [Column("PwHash")]
-#endif
         /// <summary>
         /// Gets the hash for the user's password.
         /// </summary>
@@ -80,17 +73,13 @@ namespace FsInfoCat.Models.DB
             _hashString = null;
         }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Created On")]
         [DataType(DataType.DateTime)]
-#endif
         public DateTime CreatedOn { get; set; }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Created By")]
-#endif
         public Guid CreatedBy { get; set; }
 
         public Account Creator { get; set; }
@@ -104,17 +93,13 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Modified On")]
         [DataType(DataType.DateTime)]
-#endif
         public DateTime ModifiedOn { get; set; }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Modified By")]
-#endif
         public Guid ModifiedBy { get; set; }
 
         public Account Modifier { get; set; }
@@ -181,14 +166,5 @@ namespace FsInfoCat.Models.DB
             OnValidateAll(result);
             return result;
         }
-#if CORE
-
-        public static async Task<UserCredential> LookUp(DbSet<UserCredential> dbSet, Guid accountId)
-        {
-            IQueryable<UserCredential> userCredentials = from d in dbSet select d;
-            userCredentials = userCredentials.Where(h => h.AccountID == accountId);
-            return (await userCredentials.AsNoTracking().ToListAsync()).FirstOrDefault();
-        }
-#endif
     }
 }

@@ -9,9 +9,7 @@ using FsInfoCat.Models.Accounts;
 namespace FsInfoCat.Models.DB
 {
 
-#if CORE
     [DisplayColumn("AccountID", "DisplayName", false)]
-#endif
     public class Account : IAccount
     {
         #region Fields
@@ -39,11 +37,9 @@ namespace FsInfoCat.Models.DB
 
         #region Properties
 
-#if CORE
         [Required()]
         [Key()]
         [Display(Name = "ID")]
-#endif
         public Guid AccountID { get; set; }
 
         public string Name
@@ -55,33 +51,28 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-#if CORE
+
         [MaxLength(Max_Length_DisplayName, ErrorMessage = Error_Message_DisplayName)]
         [Display(Name = DisplayName_DisplayName)]
         [DataType(DataType.Text)]
-#endif
         public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Required(ErrorMessage = Error_Message_Login_Empty)]
         [MinLength(1, ErrorMessage = Error_Message_Login_Empty)]
         [MaxLength(Max_Length_Login_Name, ErrorMessage = Error_Message_Login_Length)]
         [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Error_Message_Login_Invalid)]
         [Display(Name = DisplayName_LoginName)]
-#endif
         public string LoginName
         {
             get { return _loginName; }
             set { _loginName = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Display(Name = "Role")]
-#endif
         public string RoleDisplay
         {
             get
@@ -97,11 +88,9 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-#if CORE
         [Required()]
         [Display(Name = "Role")]
         [EnumDataType(typeof(UserRole))]
-#endif
         public UserRole Role
         {
             get { return _role; }
@@ -115,32 +104,24 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-#if CORE
         [Display(Name = "Is Inactive")]
-#endif
         public bool IsInactive => Role == UserRole.None;
 
-#if CORE
         [Display(Name = "Notes")]
         [DataType(DataType.MultilineText)]
-#endif
         public string Notes
         {
             get { return _notes; }
             set { _notes = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Created On")]
         [DataType(DataType.DateTime)]
-#endif
         public DateTime CreatedOn { get; set; }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Created By")]
-#endif
         public Guid CreatedBy { get; set; }
 
         public Account Creator { get; set; }
@@ -154,17 +135,13 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Modified On")]
         [DataType(DataType.DateTime)]
-#endif
         public DateTime ModifiedOn { get; set; }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Modified By")]
-#endif
         public Guid ModifiedBy { get; set; }
 
         public Account Modifier { get; set; }

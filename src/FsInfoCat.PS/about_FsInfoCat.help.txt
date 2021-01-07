@@ -22,8 +22,4 @@ EXPORTED COMMANDS
     Get-InitializationQueries
         Get-InitializationQueries -RawAdminPwd <string>  [<CommonParameters>]
 
-    Start-FsCrawlJob
-        Start-FsCrawlJob -RootPath <string[]> [-MaxDepth <int>]  [<CommonParameters>]
-        (<string> ...) | Start-FsCrawlJob [-MaxDepth <int>]  [<CommonParameters>]
-
 SEE ALSO

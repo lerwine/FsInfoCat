@@ -125,7 +125,7 @@ namespace FsInfoCat.Web.Controllers
                     account.ModifiedBy = new Guid(User.Identity.Name);
                     if (editAccount.ChangePassword)
                     {
-                        UserCredential userCredential = await UserCredential.LookUp(_context.UserCredential, id);
+                        UserCredential userCredential = await ViewModelHelper.LookUp(_context.UserCredential, id);
                         Guid updatedBy = new Guid(User.Identity.Name);
                         if (null == userCredential)
                         {

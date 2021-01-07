@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\FsInfoCat.props" />
+
+    <PropertyGroup>
+        <ProjectGuid>{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}</ProjectGuid>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="nunit" Version="3.12.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
+        <ProjectReference Include="..\FsInfoCat.PS\FsInfoCat.PS.csproj" />
+        <ProjectReference Include="..\FsInfoCat.Web\FsInfoCat.Web.csproj" />
+    </ItemGroup>
+</Project>

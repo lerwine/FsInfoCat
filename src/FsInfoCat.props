@@ -1,0 +1,76 @@
+<Project>
+
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <DefineConstants Condition=" '$(DefineConstants)' == '' ">TRACE</DefineConstants>
+        <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
+        <!-- Un-comment next line to force OS platform -->
+        <!-- <OsPlatform>Linux</OsPlatform> -->
+    </PropertyGroup>
+
+    <Choose>
+        <When Condition=" '$(OsPlatform)' == '' And $([MSBuild]::IsOsPlatform(`Windows`)) ">
+            <PropertyGroup>
+                <OsPlatform>Windows</OsPlatform>
+            </PropertyGroup>
+        </When>
+        <When Condition=" '$(OsPlatform)' == '' And $([MSBuild]::IsOsPlatform(`OSX`)) ">
+            <PropertyGroup>
+                <OsPlatform>OSX</OsPlatform>
+            </PropertyGroup>
+        </When>
+        <When Condition=" '$(OsPlatform)' == '' And $([MSBuild]::IsOsPlatform(`FreeBSD`)) ">
+            <PropertyGroup>
+                <OsPlatform>FreeBSD</OsPlatform>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <OsPlatform Condition=" '$(OsPlatform)' != 'Linux' ">Linux</OsPlatform>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
+
+    <Choose>
+        <When Condition=" '$(OsPlatform)' == 'Windows' ">
+            <PropertyGroup>
+                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*WINDOWS(;.*)*$'))">$(DefineConstants);WINDOWS</DefineConstants>
+            </PropertyGroup>
+        </When>
+        <When Condition=" '$(OsPlatform)' == 'OSX' ">
+            <PropertyGroup>
+                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*OSX(;.*)*$'))">$(DefineConstants);OSX</DefineConstants>
+            </PropertyGroup>
+        </When>
+        <When Condition=" '$(OsPlatform)' == 'FreeBSD' ">
+            <PropertyGroup>
+                <OsPlatform>FreeBSD</OsPlatform>
+                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*FREEBSD(;.*)*$'))">$(DefineConstants);FREEBSD</DefineConstants>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*LINUX(;.*)*$'))">$(DefineConstants);LINUX</DefineConstants>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*DEBUG(;.*)*$'))">DEBUG;$(DefineConstants)</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <!-- <DocumentationFile>bin\Debug\FsInfoCat.PS.XML</DocumentationFile> -->
+        <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+
+</Project>

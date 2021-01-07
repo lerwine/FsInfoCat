@@ -27,7 +27,7 @@ namespace FsInfoCat.Web.Models
         public static async Task<AppHostIndexViewModel> Create(DbSet<HostDevice> dbSet, ClaimsPrincipal user)
         {
             HostDeviceRegRequest regRequest = HostDeviceRegRequest.CreateForLocal();
-            HostDevice host = await HostDevice.LookUp(dbSet, regRequest.MachineName, regRequest.MachineIdentifer);
+            HostDevice host = await ViewModelHelper.LookUp(dbSet, regRequest.MachineName, regRequest.MachineIdentifer);
             if (null == host)
                 return new AppHostIndexViewModel(regRequest, new Guid(user.Identity.Name));
             return new AppHostIndexViewModel(host);

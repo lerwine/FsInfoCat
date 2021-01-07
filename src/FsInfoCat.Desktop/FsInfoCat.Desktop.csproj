@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
+    <Import Project="..\FsInfoCat.props" />
+
   <ItemGroup>
-    <ProjectReference Include="..\FsInfoCat\FsInfoCat.Windows.csproj" />
+    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -11,6 +13,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+        <OutputPath>bin\$(Configuration)\$(OsPlatform)\</OutputPath>
     <RootNamespace>FsInfoCat.Desktop</RootNamespace>
     <AssemblyName>FsInfoCat</AssemblyName>
     <UseWPF>true</UseWPF>

@@ -32,11 +32,9 @@ namespace FsInfoCat.Models.Accounts
         private bool _isAppContrib = false;
         private bool _isAdmin = false;
 
-#if CORE
         [Required()]
         [Key()]
         [Display(Name = "ID")]
-#endif
         public Guid AccountID { get; set; }
 
         public string Name
@@ -48,58 +46,46 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [MaxLength(Account.Max_Length_DisplayName, ErrorMessage = Account.Error_Message_DisplayName)]
         [Display(Name = Account.DisplayName_DisplayName)]
         [DataType(DataType.Text)]
-#endif
         public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Required(ErrorMessage = Account.Error_Message_Login_Empty)]
         [MinLength(1, ErrorMessage = Account.Error_Message_Login_Empty)]
         [MaxLength(Account.Max_Length_Login_Name, ErrorMessage = Account.Error_Message_Login_Length)]
         [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Account.Error_Message_Login_Invalid)]
         [Display(Name = Account.DisplayName_LoginName)]
-#endif
         public string LoginName
         {
             get { return _loginName; }
             set { _loginName = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Display(Name = "Change Password")]
-#endif
         public bool ChangePassword { get; set; }
 
-#if CORE
         [Display(Name = DisplayName_Password)]
         [DataType(DataType.Text)]
-#endif
         public string Password
         {
             get { return _password; }
             set { _password = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Display(Name = DisplayName_Confirm)]
         [DataType(DataType.Text)]
-#endif
         public string Confirm
         {
             get { return _confirm; }
             set { _confirm = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Display(Name = "Role")]
-#endif
         public string RoleDisplay
         {
             get
@@ -115,11 +101,9 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [Required()]
         [Display(Name = "Role")]
         [EnumDataType(typeof(UserRole))]
-#endif
         public UserRole Role
         {
             get { return _role; }
@@ -147,9 +131,7 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [Display(Name = DisplayName_Inactive)]
-#endif
         public bool IsInactive
         {
             get { return !_isViewer; }
@@ -164,9 +146,7 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [Display(Name = DisplayName_Viewer)]
-#endif
         public bool IsViewer
         {
             get { return _isViewer; }
@@ -184,9 +164,7 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [Display(Name = DisplayName_Normal_User)]
-#endif
         public bool IsUser
         {
             get { return _isUser; }
@@ -211,9 +189,7 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [Display(Name = DisplayName_App_Contributor)]
-#endif
         public bool IsAppContrib
         {
             get { return _isAppContrib; }
@@ -238,9 +214,7 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [Display(Name = DisplayName_App_Administrator)]
-#endif
         public bool IsAdmin
         {
             get { return _isAdmin; }
@@ -255,27 +229,21 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [Display(Name = "Notes")]
         [DataType(DataType.MultilineText)]
-#endif
         public string Notes
         {
             get { return _notes; }
             set { _notes = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Created On")]
         [DataType(DataType.DateTime)]
-#endif
         public DateTime CreatedOn { get; set; }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Created By")]
-#endif
         public Guid CreatedBy { get; set; }
 
         public Account Creator { get; set; }
@@ -289,17 +257,14 @@ namespace FsInfoCat.Models.Accounts
             }
         }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Modified On")]
         [DataType(DataType.DateTime)]
-#endif
         public DateTime ModifiedOn { get; set; }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Modified By")]
-#endif
+
         public Guid ModifiedBy { get; set; }
 
         public Account Modifier { get; set; }

@@ -13,24 +13,20 @@ namespace FsInfoCat.Models.Accounts
         private string _loginName = "";
         private string _password = "";
 
-#if CORE
         [Required()]
         [MinLength(1, ErrorMessage = Account.Error_Message_Login_Empty)]
         [MaxLength(Account.Max_Length_Login_Name, ErrorMessage = Account.Error_Message_Login_Length)]
         [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Account.Error_Message_Login_Invalid)]
         [Display(Name = Account.DisplayName_LoginName)]
-#endif
         public string LoginName
         {
             get { return _loginName; }
             set { _loginName = (null == value) ? "" : value; }
         }
 
-#if CORE
         [Required()]
         [Display(Name = UserLoginRequest.DisplayName_Password)]
         [RegularExpression(@"\S+", ErrorMessage = UserLoginRequest.Error_Message_Password)]
-#endif
         public string Password
         {
             get { return _password; }

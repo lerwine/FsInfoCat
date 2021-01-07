@@ -5,28 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Desktop PS Module",
+            "name": "Debug PS Module",
             "type": "clr",
-            "preLaunchTask": "Build PS Desktop",
+            "preLaunchTask": "Build PS Module (Current OS)",
             "request": "launch",
             "program": "powershell_ise",
             "args": [
-                "${workspaceFolder}/src/FsInfoCat.PS/Example.ps1"
+                "Example.ps1"
             ],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.PS",
             "stopAtEntry": false,
             "console": "integratedTerminal"
-        },
-        {
-            "name": "Debug desktop app",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "Build Desktop App",
-            "program": "${workspaceFolder}/src/FsInfoCat.Desktop/bin/Debug/netcoreapp3.1/FsInfoCat.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
-            "console": "internalConsole"
         },
         {
             "name": "Debug web app",
@@ -52,23 +41,15 @@
             }
         },
         {
-            "name": "Debug MyCore",
+            "name": "Debug desktop app",
             "type": "coreclr",
             "request": "launch",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MyCore/bin/Debug/netcoreapp3.1/MyCore.dll",
+            "preLaunchTask": "Build Desktop App",
+            "program": "${workspaceFolder}/src/FsInfoCat.Desktop/bin/Debug/netcoreapp3.1/FsInfoCat.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/MyCore/bin/Debug/netcoreapp3.1",
+            "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
-                "uriFormat": "%s/Home"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            }
+            "console": "internalConsole"
         },
         {
             "name": "Debug test template host",
@@ -76,7 +57,7 @@
             "preLaunchTask": "Build Text Template Host",
             "request": "launch",
             "program": "${workspaceFolder}/dev/StandaloneT4Host/bin/Debug/net472/StandaloneT4Host.exe",
-            "args": ["${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PsDesktop.csproj"],
+            "args": ["${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj"],
             "cwd": "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS",
             "stopAtEntry": false,
             "console": "internalConsole"

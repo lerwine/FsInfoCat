@@ -1,17 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UserSecretsId>6e695feb-4201-4efd-9047-fbc8a286541c</UserSecretsId>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DefineConstants>DEBUG;TRACE;CORE;WINDOWS</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <DefineConstants>TRACE;CORE;WINDOWS</DefineConstants>
-    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1">
@@ -24,7 +17,9 @@
         <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
     </ItemGroup>
+
     <ItemGroup>
-        <ProjectReference Include="..\FsInfoCat\FsInfoCat.Windows.csproj" />
+        <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
     </ItemGroup>
+
 </Project>

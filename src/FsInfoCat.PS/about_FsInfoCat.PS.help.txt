@@ -1,0 +1,17 @@
+TOPIC
+    about_FsInfoCat
+
+SHORT DESCRIPTION
+    PowerShell module for FS InfoCat.
+
+LONG DESCRIPTION
+    Provides utility functions for communicating with the FS InfoCat web application.
+
+EXPORTED COMMANDS
+    Following is a list of commands exported by this module:
+
+    Start-FsCrawlJob
+        Start-FsCrawlJob -RootPath <string[]> [-MaxDepth <int>]  [<CommonParameters>]
+        (<string> ...) | Start-FsCrawlJob [-MaxDepth <int>]  [<CommonParameters>]
+
+SEE ALSO

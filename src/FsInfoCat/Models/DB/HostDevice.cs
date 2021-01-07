@@ -4,15 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using FsInfoCat.Models.HostDevices;
-#if CORE
-using Microsoft.EntityFrameworkCore;
-#endif
 
 namespace FsInfoCat.Models.DB
 {
-#if CORE
     [DisplayColumn("HostDeviceID", "DisplayName", false)]
-#endif
     public class HostDevice : IHostDevice
     {
         #region Properties
@@ -32,11 +27,9 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-#if CORE
         [Required()]
         [Key()]
         [Display(Name = "ID")]
-#endif
         public Guid HostDeviceID { get; set; }
 
         #region DisplayName
@@ -47,10 +40,8 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_DisplayName = "Display name too long.";
         private string _displayName = "";
 
-#if CORE
         [MaxLength(DB.HostDevice.Max_Length_DisplayName, ErrorMessage = DB.HostDevice.Error_Message_DisplayName)]
         [Display(Name = DB.HostDevice.DisplayName_DisplayName)]
-#endif
         public string DisplayName
         {
             get { return _displayName; }
@@ -67,10 +58,8 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_MachineIdentifer = "Machine identifier too long.";
         private string _machineIdentifer = "";
 
-#if CORE
         [MaxLength(DB.HostDevice.Max_Length_MachineIdentifer, ErrorMessage = DB.HostDevice.Error_Message_MachineIdentifer)]
         [Display(Name = DB.HostDevice.DisplayName_MachineIdentifer)]
-#endif
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
@@ -89,13 +78,11 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_MachineName_Invalid = "Invalid machine name";
         private string _machineName = "";
 
-#if CORE
         [Required()]
         [MinLength(1)]
         [MaxLength(DB.HostDevice.Max_Length_MachineName, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Length)]
         [Display(Name = DB.HostDevice.DisplayName_MachineName)]
         [RegularExpression(ModelHelper.PATTERN_MACHINE_NAME, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Invalid)]
-#endif
         public string MachineName
         {
             get { return _machineName; }
@@ -104,30 +91,22 @@ namespace FsInfoCat.Models.DB
 
         #endregion
 
-#if CORE
         [Display(Name = "Is Windows OS")]
-#endif
         public bool IsWindows { get; set; }
 
-#if CORE
         [Display(Name = "Allow Local Crawl")]
-#endif
         public bool AllowCrawl { get; set; }
 
-#if CORE
         [Display(Name = "Is Inactive")]
-#endif
         public bool IsInactive { get; set; }
 
         #region Notes
 
         private string _notes = "";
 
-#if CORE
         [Required()]
         [Display(Name = "Notes")]
         [DataType(DataType.MultilineText)]
-#endif
         public string Notes
         {
             get { return _notes; }
@@ -138,17 +117,13 @@ namespace FsInfoCat.Models.DB
 
         #region Audit
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Created On")]
         [DataType(DataType.DateTime)]
-#endif
         public DateTime CreatedOn { get; set; }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Created By")]
-#endif
         public Guid CreatedBy { get; set; }
 
         public Account Creator { get; set; }
@@ -162,17 +137,13 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Modified On")]
         [DataType(DataType.DateTime)]
-#endif
         public DateTime ModifiedOn { get; set; }
 
-#if CORE
         [Editable(false)]
         [Display(Name = "Modified By")]
-#endif
         public Guid ModifiedBy { get; set; }
 
         public Account Modifier { get; set; }
@@ -308,19 +279,5 @@ namespace FsInfoCat.Models.DB
                 Validate(result, validationContext.DisplayName);
             return result;
         }
-#if CORE
-
-        public static async Task<HostDevice> LookUp(DbSet<HostDevice> dbSet, string machineName, string machineIdentifer)
-        {
-            if (string.IsNullOrWhiteSpace(machineName))
-                return null;
-            IQueryable<HostDevice> hostDevices = from d in dbSet select d;
-            if (string.IsNullOrWhiteSpace(machineIdentifer))
-                hostDevices = hostDevices.Where(h => machineName == h.MachineName);
-            else
-                hostDevices = hostDevices.Where(h => machineName == h.MachineName && machineIdentifer == h.MachineIdentifer);
-            return (await hostDevices.AsNoTracking().ToListAsync()).FirstOrDefault();
-        }
-#endif
     }
 }

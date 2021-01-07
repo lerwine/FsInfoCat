@@ -15,7 +15,7 @@ RootModule = 'FsInfoCat.psm1'
 ModuleVersion = '0.1'
 
 # Supported PSEditions
-CompatiblePSEditions = @('Desktop')
+CompatiblePSEditions = @('Core', 'Desktop')
 
 # ID used to uniquely identify this module
 GUID = 'fc9c3e2e-257f-45e8-b233-49115f58c375'
@@ -54,7 +54,7 @@ CLRVersion = '4.0'
 # RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
-RequiredAssemblies = @('FsInfoCat.PS\FsInfoCatLib.dll')
+RequiredAssemblies = @('FsInfoCat.dll')
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
 # ScriptsToProcess = @()
@@ -66,7 +66,7 @@ RequiredAssemblies = @('FsInfoCat.PS\FsInfoCatLib.dll')
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @('FsInfoCat.PS')
+NestedModules = @('FsInfoCat.PS.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @('ConvertTo-PasswordHash', 'Get-SaltBytes', 'Test-PasswordHash', 'Get-InitializationQueries')

@@ -41,7 +41,7 @@ namespace FsInfoCat.Web.API
             IList<ValidationResult> validation = request.ValidateAll();
             if (validation.Count > 0)
                 return await Task.FromResult(new RequestResponse<HostDevice>(null, validation[0].ErrorMessage));
-            HostDevice matching = await HostDevice.LookUp(dbContext.HostDevice, request.MachineName, request.MachineIdentifer);
+            HostDevice matching = await ViewModelHelper.LookUp(dbContext.HostDevice, request.MachineName, request.MachineIdentifer);
             RequestResponse<HostDevice> result;
             if (null == matching)
             {
