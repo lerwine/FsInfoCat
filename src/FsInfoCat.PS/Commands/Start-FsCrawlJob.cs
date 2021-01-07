@@ -11,18 +11,18 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string[] RootPath { get; set; }
 
-        [Parameter(HelpMessage = "Maximum crawl depth", Mandatory = true)]
+        [Parameter(HelpMessage = "Maximum crawl depth")]
         public int MaxDepth { get; set; }
-
-        [Parameter(HelpMessage = "Maximum number of files", Mandatory = true)]
-        public long MaxFiles { get; set; }
-
-        [Parameter(HelpMessage = "Maximum result packet size in bytes", Mandatory = true)]
-        public long MaxSize { get; set; }
 
         protected override void ProcessRecord()
         {
-            // TODO: Implement this
+            try {
+                throw new NotImplementedException();
+            } catch (Exception e)
+            {
+                WriteError(new ErrorRecord(e, "1", ErrorCategory.NotImplemented, RootPath));
+            }
+
         }
     }
 }
