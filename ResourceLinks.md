@@ -113,22 +113,22 @@ Describes how you can use classes to create your own custom types.
 - [vscode-powershell/launch.json at master · PowerShell/vscode-powershell](https://github.com/PowerShell/vscode-powershell/blob/master/examples/.vscode/launch.json)
 Provides PowerShell language and debugging support for Visual Studio Code - PowerShell/vscode-powershell
 - PowerShell Jobs
-- [about_Job_Details - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_job_details?view=powershell-7.1)
-Provides details about background jobs on local and remote computers.
-- [about_Jobs - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_jobs?view=powershell-7.1)
-Provides information about how PowerShell background jobs run a command or expression in the background without interacting with the current session.
-- [about_Thread_Jobs - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_thread_jobs?view=powershell-7.1)
-Provides information about PowerShell thread-based jobs. A thread job is a type of background job that runs a command or expression in a separate thread within the current session process.
+  - [about_Job_Details - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_job_details?view=powershell-7.1)
+  Provides details about background jobs on local and remote computers.
+  - [about_Jobs - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_jobs?view=powershell-7.1)
+  Provides information about how PowerShell background jobs run a command or expression in the background without interacting with the current session.
+  - [about_Thread_Jobs - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_thread_jobs?view=powershell-7.1)
+  Provides information about PowerShell thread-based jobs. A thread job is a type of background job that runs a command or expression in a separate thread within the current session process.
 - PowerShell Security
-- [PasswordCredential Class (Windows.Security.Credentials) - Windows UWP applications | Microsoft Docs](https://docs.microsoft.com/en-us/uwp/api/Windows.Security.Credentials.PasswordCredential?view=winrt-19041)
-Represents the password credential store.
-- [PowerShell Certificate Pinning – PowerShell Magazine](https://www.powershellmagazine.com/2013/12/17/powershell-certificate-pinning/)
-- [about_Logging-Windows - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows?view=powershell-7.1)
-PowerShell logs internal operations from the engine, providers, and cmdlets to the Windows event log.
-- [about_Logging_Non-Windows - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_non-windows?view=powershell-7.1)
-PowerShell logs internal operations from the engine, providers, and cmdlets.
-- [about_Signing - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.1)
-Explains how to sign scripts so that they comply with the PowerShell execution policies.
+  - [PasswordCredential Class (Windows.Security.Credentials) - Windows UWP applications | Microsoft Docs](https://docs.microsoft.com/en-us/uwp/api/Windows.Security.Credentials.PasswordCredential?view=winrt-19041)
+  Represents the password credential store.
+  - [PowerShell Certificate Pinning – PowerShell Magazine](https://www.powershellmagazine.com/2013/12/17/powershell-certificate-pinning/)
+  - [about_Logging-Windows - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows?view=powershell-7.1)
+  PowerShell logs internal operations from the engine, providers, and cmdlets to the Windows event log.
+  - [about_Logging_Non-Windows - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_non-windows?view=powershell-7.1)
+  PowerShell logs internal operations from the engine, providers, and cmdlets.
+  - [about_Signing - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.1)
+  Explains how to sign scripts so that they comply with the PowerShell execution policies.
 
 ### Testing
 
