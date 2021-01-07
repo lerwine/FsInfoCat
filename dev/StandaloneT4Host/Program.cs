@@ -43,7 +43,7 @@ namespace StandaloneT4Host
             }
             if (!fileInfo.Exists)
             {
-                Console.Error.WriteLine("Project file not found.");
+                Console.Error.WriteLine("Project file not found (" + fileInfo.FullName + ").");
                 return (int)(ExitCodes.ProjectPathNotFound);
             }
             ProjectInfo currentProject;
@@ -97,7 +97,7 @@ namespace StandaloneT4Host
             }).Where(a => a.Items.Length > 0).ToArray();
             if (toProcess.Length == 0)
             {
-                Console.WriteLine("No text templates found.");
+                Console.WriteLine("No text templates found (" + currentProject.ProjectFile.FullName + ").");
                 return (int)(ExitCodes.NoTemplateFiles);
             }
 
