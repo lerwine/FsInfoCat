@@ -23,17 +23,17 @@ namespace FsInfoCat.Models.Crawl
             set { _childNodes = value; }
         }
 
-        private Collection<CrawlError> _errors = null;
-        public Collection<CrawlError> Errors
+        private Collection<ICrawlMessage> _messages = null;
+        public Collection<ICrawlMessage> Messages
         {
             get
             {
-                Collection<CrawlError> errors = _errors;
-                if (null == errors)
-                    _errors = errors = new Collection<CrawlError>();
-                return errors;
+                Collection<ICrawlMessage> messages = _messages;
+                if (null == messages)
+                    _messages = messages = new Collection<ICrawlMessage>();
+                return messages;
             }
-            set { _errors = value; }
+            set { _messages = value; }
         }
 
         public DateTime CreationTime { get; set; }
@@ -80,29 +80,6 @@ namespace FsInfoCat.Models.Crawl
                 }
             }
             return root;
-        }
-
-        public static FsDirectory Import(DirectoryInfo directory, int i, IFsDirectory container)
-        {
-            string name;
-            try
-            {
-                name = directory.Name;
-            }
-            catch (Exception exc)
-            {
-                container.Errors.Add(new CrawlError(exc, "Enumerating file #" + (i + 1).ToString()));
-                return null;
-            }
-            FsDirectory item = new FsDirectory { Name = name };
-            try { item.CreationTime = directory.CreationTimeUtc; }
-            catch (Exception exc) { item.Errors.Add(new CrawlError(exc, "Getting file creation time")); }
-            try { item.LastWriteTime = directory.LastWriteTimeUtc; }
-            catch (Exception exc) { item.Errors.Add(new CrawlError(exc, "Getting file last write time")); }
-            try { item.Attributes = (int)directory.Attributes; }
-            catch (Exception exc) { item.Errors.Add(new CrawlError(exc, "Getting file system attributes")); }
-            container.ChildNodes.Add(item);
-            return item;
         }
     }
 }

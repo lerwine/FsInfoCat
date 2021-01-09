@@ -17,17 +17,17 @@ namespace FsInfoCat.Models.Crawl
             set { _roots = value; }
         }
 
-        private Collection<CrawlError> _errors = null;
-        public Collection<CrawlError> Errors
+        private Collection<ICrawlMessage> _messages = null;
+        public Collection<ICrawlMessage> Messages
         {
             get
             {
-                Collection<CrawlError> errors = _errors;
-                if (null == errors)
-                    _errors = errors = new Collection<CrawlError>();
-                return errors;
+                Collection<ICrawlMessage> messages = _messages;
+                if (null == messages)
+                    _messages = messages = new Collection<ICrawlMessage>();
+                return messages;
             }
-            set { _errors = value; }
+            set { _messages = value; }
         }
 
         public string MachineName { get; set; }

@@ -1,164 +1,87 @@
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
 using FsInfoCat.Models.Crawl;
-using FsInfoCat.Models.HostDevices;
 
 namespace FsInfoCat.PS
 {
     public class FsCrawlJob : Job
     {
-        private string _statusMessage = "Initializing";
-        private bool _hasMoreData = false;
-        private string _location = "";
+        public const int ACTIVITY_ID = 0;
+        public const string ACTIVITY = "Crawl Subdirectory";
+        private object _syncRoot = new object();
+        private bool _isRunning = false;
+        private string _statusMessage;
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private Task<Tuple<bool, FsHost>> _task;
+        private readonly CrawlWorker _worker;
+
         public override string StatusMessage => _statusMessage;
 
-        public override bool HasMoreData => _hasMoreData;
+        public override bool HasMoreData => _isRunning || Output.Count > 0 || Error.Count > 0 || Warning.Count > 0 || Verbose.Count > 0 || Progress.Count > 0 || Debug.Count > 0 || Information.Count > 0;
 
-        // TODO: Implement this
-        public override string Location => _location;
+        public override string Location => "";
 
-        public int MaxDepth { get; }
+        public bool RanToCompletion => _worker.RanToCompletion;
 
-        public ReadOnlyCollection<string> RootPaths { get; }
-
-        private readonly CancellationTokenSource _cancellationTokenSource;
-
-        public CancellationToken CancellationToken { get; }
-
-        private readonly Task<FsHost> _task;
-
-        public FsCrawlJob(int maxDepth, params string[] rootPath) : this(null, maxDepth) { }
-
-        public FsCrawlJob(string friendlyName, int maxDepth, params string[] rootPath)
-            : base(null, friendlyName)
+        internal FsCrawlJob(string friendlyName, int maxDepth, long maxItems, long ttl, Collection<string> rootPath) : base(null, friendlyName)
         {
-            MaxDepth = (maxDepth < 0) ? int.MaxValue : maxDepth;
-            RootPaths = new ReadOnlyCollection<string>(rootPath);
-            _cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken = _cancellationTokenSource.Token;
-            _task = Task.Factory.StartNew<FsHost>(Run, new object[] { (maxDepth < 0) ? 0 : maxDepth, rootPath, new Action<string>(s => _statusMessage = (null == s) ? "" : s.Trim()), _cancellationTokenSource.Token }, _cancellationTokenSource.Token);
+            _worker = new CrawlWorker(_cancellationTokenSource.Token, maxDepth, maxItems, ttl, rootPath, this);
         }
 
-        public static FsHost Run(object args)
+        internal FsCrawlJob(string friendlyName, int maxDepth, long maxItems, DateTime stopAt, Collection<string> rootPath) : base(null, friendlyName)
         {
-            object[] argArray = (object[])args;
-            int maxDepth = (int)argArray[0];
-            string[] rootPath = (string[])argArray[1];
-            Action<string> setStatusMessage = (Action<string>)argArray[2];
-            CancellationToken token = (CancellationToken)argArray[3];
-            FsHost result = new FsHost { MachineName = Environment.MachineName };
-            if (token.IsCancellationRequested)
-                return result;
-            string machineIdentifier;
-            try { machineIdentifier = HostDeviceRegRequest.GetLocalMachineIdentifier(); }
-            catch (Exception exc)
-            {
-                result.Errors.Add(new CrawlError(exc, "Getting machine identifier"));
-                return result;
-            }
-            for (int i = 0; i < rootPath.Length; i++)
-            {
-                if (token.IsCancellationRequested)
-                    break;
-                DirectoryInfo startDi;
-                FsRoot fsRoot;
-                IFsDirectory parentBranch;
-                string path = rootPath[i];
-                try
-                {
-                    if (null == path)
-                        throw new Exception("Null path at position " + i.ToString());
-                    if (path.Trim().Length == 0)
-                        throw new Exception("Empty path at position " + i.ToString());
-                }
-                catch (Exception exc)
-                {
-                    result.Errors.Add(new CrawlError(exc, "Getting file system root at position " + i.ToString()));
-                    continue;
-                }
-                try
-                {
-                    try { startDi = new DirectoryInfo(path); }
-                    catch (Exception e) { throw new Exception("Invalid path at position " + i.ToString() + ": " + path, e); }
-                    if (!startDi.Exists)
-                        throw new Exception("Path not found at position " + i.ToString() + ": " + path);
-                    fsRoot = FsDirectory.GetRoot(result, startDi, out parentBranch);
-                }
-                catch (Exception exc)
-                {
-                    result.Errors.Add(new CrawlError(exc, "Getting file system root at position " + i.ToString() + ": " + path));
-                    continue;
-                }
-                parentBranch.ChildNodes.Clear();
-                Run(startDi, parentBranch, fsRoot, (maxDepth < 1) ? 0 : maxDepth, setStatusMessage, token);
-            }
-            return result;
+            _worker = new CrawlWorker(_cancellationTokenSource.Token, maxDepth, maxItems, stopAt, rootPath, this);
         }
 
-        public static void Run(DirectoryInfo directory, IFsDirectory container, IEqualityComparer<IFsChildNode> comparer, int maxDepth, Action<string> setStatusMessage, CancellationToken cancellationToken)
+        internal void StartJob(object state)
         {
-            FileInfo[] filesArray;
-            if (cancellationToken.IsCancellationRequested)
-                return;
-            try { setStatusMessage("Crawling " + directory.FullName); }
-            catch (Exception exc)
+            _isRunning = true;
+            _task = Task.Factory.StartNew<Tuple<bool, FsHost>>(() =>
             {
-                container.Errors.Add(new CrawlError(exc, "Getting directory full name"));
-                return;
-            }
-            try
+                SetJobState(JobState.Running);
+                return RunNext(state);
+            }, _cancellationTokenSource.Token);
+            _task.ContinueWith(CrawlCompleted, state, _cancellationTokenSource.Token);
+        }
+
+        private void CrawlCompleted(Task<Tuple<bool, FsHost>> task, object state)
+        {
+            JobState jobState;
+            if (task.IsCanceled)
+                jobState = JobState.Stopped;
+            else
             {
-                if (null == (filesArray = directory.GetFiles()))
-                    filesArray = new FileInfo[0];
-            }
-            catch (Exception exc)
-            {
-                container.Errors.Add(new CrawlError(exc, "Enumerating files"));
-                filesArray = new FileInfo[0];
-            }
-            for (int i = 0; i < filesArray.Length; i++)
-            {
-                if (cancellationToken.IsCancellationRequested)
+                Tuple<bool, FsHost> result = task.Result;
+                if (result.Item1)
+                {
+                    if (null != result.Item2)
+                        Output.Add(PSObject.AsPSObject(result.Item2));
+                    _task = Task.Factory.StartNew<Tuple<bool, FsHost>>(RunNext, state, _cancellationTokenSource.Token);
+                    _task.ContinueWith(CrawlCompleted, _cancellationTokenSource.Token, _cancellationTokenSource.Token);
                     return;
-                FsFile.Import(filesArray[i], i, container);
+                }
+                jobState = JobState.Completed;
             }
-            if (--maxDepth < 0 || cancellationToken.IsCancellationRequested)
-                return;
-            DirectoryInfo[] directoriesArray;
-            try
-            {
-                if (null == (directoriesArray = directory.GetDirectories()) || directoriesArray.Length == 0 || cancellationToken.IsCancellationRequested)
-                    return;
-            }
-            catch (Exception exc)
-            {
-                container.Errors.Add(new CrawlError(exc, "Enumerating files"));
-                return;
-            }
-            var subDirs = directoriesArray.Select((d, i) => new
-            {
-                FS = (cancellationToken.IsCancellationRequested) ? null : FsDirectory.Import(d, i, container),
-                DI = d
-            }).Where(d => null != d.FS).ToArray();
-            foreach (var d in subDirs)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    return;
-                Run(d.DI, d.FS, comparer, maxDepth, setStatusMessage, cancellationToken);
-            }
+            _isRunning = false;
+            Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, (_worker.RanToCompletion) ? "Completed" : "Aborted") { RecordType = ProgressRecordType.Completed });
+            SetJobState(jobState);
+        }
+
+        private Tuple<bool, FsHost> RunNext(object state)
+        {
+            return new Tuple<bool, FsHost>(_worker.ProcessNext(out FsHost result), result);
         }
 
         public override void StopJob()
         {
             if (!_cancellationTokenSource.IsCancellationRequested)
+            {
+                SetJobState(JobState.Stopping);
                 _cancellationTokenSource.Cancel(true);
+            }
         }
 
         protected override void Dispose(bool disposing)

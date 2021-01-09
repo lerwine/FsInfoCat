@@ -4,6 +4,6 @@ namespace FsInfoCat.Models.Crawl
 {
     public interface IFsNode
     {
-         Collection<CrawlError> Errors { get; set; }
+         Collection<ICrawlMessage> Messages { get; set; }
     }
 }
