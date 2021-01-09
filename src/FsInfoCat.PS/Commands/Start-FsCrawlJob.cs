@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Threading;
+using FsInfoCat.Models.Crawl;
 
 namespace FsInfoCat.PS.Commands
 {
@@ -69,8 +70,7 @@ namespace FsInfoCat.PS.Commands
             }
             catch (Exception e)
             {
-#warning Need a real errorId
-                WriteError(new ErrorRecord(e, "1", ErrorCategory.NotSpecified, RootPath));
+                WriteError(new ErrorRecord(e, Enum.GetName(typeof(MessageId), MessageId.UnexpectedError), ErrorCategory.NotSpecified, RootPath));
             }
         }
     }
