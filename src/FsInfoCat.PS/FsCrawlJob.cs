@@ -10,10 +10,12 @@ namespace FsInfoCat.PS
     public class FsCrawlJob : Job
     {
         public const int ACTIVITY_ID = 0;
+
         public const string ACTIVITY = "Crawl Subdirectory";
+
         private object _syncRoot = new object();
         private bool _isRunning = false;
-        private string _statusMessage;
+        private string _statusMessage = "";
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private Task<Tuple<bool, FsHost>> _task;
         private readonly CrawlWorker _worker;

@@ -33,20 +33,10 @@ namespace FsInfoCat.Models.Crawl
         /// </summary>
         public uint MaxNameLength { get; set; }
 
-        private FileSystemFeature _flags;
-
         /// <summary>
         /// Gets a value that indicates the volume capabilities and attributes.
         /// </summary>
-        public FileSystemFeature Flags
-        {
-            get { return _flags; }
-            set
-            {
-                if (value == _flags)
-                    return;
-            }
-        }
+        public FileSystemFeature Flags { get; set; }
 
         private Collection<IFsChildNode> _childNodes = null;
         public Collection<IFsChildNode> ChildNodes

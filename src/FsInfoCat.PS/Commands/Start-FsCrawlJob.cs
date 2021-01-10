@@ -7,8 +7,7 @@ using FsInfoCat.Models.Crawl;
 namespace FsInfoCat.PS.Commands
 {
     // Start-FsCrawlJob
-    [Cmdlet(VerbsLifecycle.Start, "FsCrawlJob")]
-    [CmdletBinding(DefaultParameterSetName = PARAMETER_SET_NAME_EXPIRE_BY_AGE)]
+    [Cmdlet(VerbsLifecycle.Start, "FsCrawlJob", DefaultParameterSetName = PARAMETER_SET_NAME_EXPIRE_BY_AGE)]
     [OutputType(typeof(FsCrawlJob))]
     public class Start_FsCrawlJob : PSCmdlet
     {
@@ -35,7 +34,7 @@ namespace FsInfoCat.PS.Commands
         [ValidateRange(0L, MAX_VALUE_TTL)]
         public long Ttl { get; set; } = 0L;
 
-        [Parameter(HelpMessage = "Date/Time when crawl will be stopped if it has not already completed.", ParameterSetName = PARAMETER_SET_NAME_EXPIRE_AT_DATE_TIME)]
+        [Parameter(HelpMessage = "Date/Time when crawl will be stopped if it has not already completed.", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_EXPIRE_AT_DATE_TIME)]
         [ValidateNotNull()]
         public DateTime StopAt { get; set; }
 

@@ -6,10 +6,14 @@ $VerbosePreference = [System.Management.Automation.ActionPreference]::Continue;
 $PSModuleAutoLoadingPreference = [System.Management.Automation.ActionPreference]::Continue;
 $ProgressPreference = [System.Management.Automation.ActionPreference]::Continue;
 
-if ($null -ne (Import-Module -Name (($PSScriptRoot | Join-Path -ChildPath '..\..\Debug\Windows\FsInfoCat')))) {
-    $PwHash = [FsInfoCat.Util.PwHash]::Import('XrVxbJmeSwCzNtQp6PpepBE8WUh1nfhPGlQCBoIOaS6ho6+7UH/lGnJgH0w2hF2oFzxDrQ6liVHWDldtFawAetBTWV+jCsFG');
-    if ($null -eq $PwHash) {
-        Write-Error -Message 'Error parsing base-64 hash' -Category InvalidResult -ErrorId 'PwHash' -ErrorAction Stop;
-    }
-}
-Start-FsCrawlJob -RootPath '.'
+if ($null -eq (Import-Module -Name (($PSScriptRoot | Join-Path -ChildPath 'bin\Debug\Windows\netstandard2.0\FsInfoCat.psd1')) -PassThru)) { return }
+$FsCrawlJob = Start-FsCrawlJob -RootPath '.';
+$Result = Receive-Job -Job $FsCrawlJob -Wait;
+
+<#
+
+$Error[0].Exception.StackTrace
+$Error[0].Exception.FileName
+$Error[0].Exception.FusionLog
+
+#>
