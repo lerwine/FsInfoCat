@@ -1,66 +1,105 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
-    <ProjectGuid>{7C4CC727-8001-4E91-BF15-A3814598C07B}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FsInfoCat.PS.Desktop</RootNamespace>
-    <AssemblyName>FsInfoCat.PS</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\FsInfoCat.PS\Commands\Start-FsCrawlJob.cs">
-      <Link>Start-FsCrawlJob.cs</Link>
-    </Compile>
-    <Compile Include="..\FsInfoCat.PS\CrawlWorker.cs">
-      <Link>CrawlWorker.cs</Link>
-    </Compile>
-    <Compile Include="..\FsInfoCat.PS\FsCrawlJob.cs">
-      <Link>FsCrawlJob.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj">
-      <Project>{c85e9d76-5ceb-4a3f-8f5f-8e66117037b1}</Project>
-      <Name>FsInfoCat.Desktop</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+<Project ToolsVersion="15.0"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
+        <ProjectGuid>{7C4CC727-8001-4E91-BF15-A3814598C07B}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>FsInfoCat.PS.Desktop</RootNamespace>
+        <AssemblyName>FsInfoCat.PS</AssemblyName>
+        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <Deterministic>true</Deterministic>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Xml" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\FsInfoCat.PS\Commands\Start-FsCrawlJob.cs">
+            <Link>Start-FsCrawlJob.cs</Link>
+        </Compile>
+        <Compile Include="..\FsInfoCat.PS\CrawlWorker.cs">
+            <Link>CrawlWorker.cs</Link>
+        </Compile>
+        <Compile Include="..\FsInfoCat.PS\FsCrawlJob.cs">
+            <Link>FsCrawlJob.cs</Link>
+        </Compile>
+        <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="..\FsInfoCat.PS\about_FsInfoCat.help.txt">
+            <Link>about_FsInfoCat.help.txt</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\FsInfoCat.PS\about_FsInfoCat.PS.help.txt">
+            <Link>about_FsInfoCat.PS.help.txt</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\FsInfoCat.PS\FsInfoCat.psd1">
+            <Link>FsInfoCat.psd1</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\FsInfoCat.PS\FsInfoCat.psm1">
+            <Link>FsInfoCat.psm1</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\FsInfoCat.PS\Example.ps1">
+            <Link>Example.ps1</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj">
+            <Project>{c85e9d76-5ceb-4a3f-8f5f-8e66117037b1}</Project>
+            <Name>FsInfoCat.Desktop</Name>
+        </ProjectReference>
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+        <Exec Command="$(ProjectDir)..\..\dev\StandaloneT4Host\bin\Debug\net472\StandaloneT4Host.exe &quot;$(ProjectDir)..\FsInfoCat.PS\FsInfoCat.PS.csproj&quot;" />
+    </Target>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Condition=" !Exists('..\..\$(Configuration)') " Command="mkdir &quot;..\..\$(Configuration)&quot;" />
+        <Exec Condition=" !Exists('..\..\$(Configuration)\Desktop') " Command="mkdir &quot;..\..\$(Configuration)\Desktop&quot;" />
+        <Exec Condition=" !Exists('..\..\$(Configuration)\Desktop\FsInfoCat') " Command="mkdir &quot;..\..\$(Configuration)\Desktop\FsInfoCat&quot;" />
+        <Exec Command="copy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(FsInfoCatDeploy)$(TargetFileName)&quot; /Y" />
+        <Exec Command="copy &quot;$(TargetDir)$(MSBuildProjectName).pdb&quot; &quot;$(FsInfoCatDeploy)$(MSBuildProjectName).pdb&quot; /Y" />
+        <Exec Command="copy &quot;$(TargetDir)FsInfoCat.dll&quot; &quot;$(FsInfoCatDeploy)FsInfoCat.dll&quot; /Y" />
+        <Exec Command="copy &quot;$(TargetDir)FsInfoCat.pdb&quot; &quot;$(FsInfoCatDeploy)FsInfoCat.pdb&quot; /Y" />
+        <Exec Command="copy &quot;$(TargetDir)*.psd1&quot; &quot;$(FsInfoCatDeploy)&quot; /Y" />
+        <Exec Command="copy &quot;$(TargetDir)*.psm1&quot; &quot;$(FsInfoCatDeploy)&quot; /Y" />
+        <Exec Command="copy &quot;$(TargetDir)*.ps1&quot; &quot;$(FsInfoCatDeploy)&quot; /Y" />
+        <Exec Command="copy &quot;$(TargetDir)*.help.txt&quot; &quot;$(FsInfoCatDeploy)&quot; /Y" />
+    </Target>
 </Project>
