@@ -2,19 +2,24 @@
 
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Choose>
-            <When Condition=" '$(DefineConstants)' == '' ">
-                <DefineConstants>TRACE;CORE</DefineConstants>
-            </When>
-            <Otherwise>
-                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*TRACE(;.*)*$'))">$(DefineConstants);TRACE</DefineConstants>
-                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*CORE(;.*)*$'))">$(DefineConstants);CORE</DefineConstants>
-            </Otherwise>
-        </Choose>
         <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
         <!-- Un-comment next line to force OS platform -->
         <!-- <OsPlatform>Linux</OsPlatform> -->
     </PropertyGroup>
+
+    <Choose>
+        <When Condition=" '$(DefineConstants)' == '' ">
+            <PropertyGroup>
+                <DefineConstants>TRACE;CORE</DefineConstants>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*TRACE(;.*)*$'))">$(DefineConstants);TRACE</DefineConstants>
+                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*CORE(;.*)*$'))">$(DefineConstants);CORE</DefineConstants>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
 
     <Choose>
         <When Condition=" '$(OsPlatform)' == '' And $([MSBuild]::IsOsPlatform(`Windows`)) ">
