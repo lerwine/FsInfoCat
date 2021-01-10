@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Desktop", "FsInfoCat.Desktop\FsInfoCat.Desktop.csproj", "{C85E9D76-5CEB-4A3F-8F5F-8E66117037B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.PS.Desktop", "FsInfoCat.PS.Desktop\FsInfoCat.PS.Desktop.csproj", "{7C4CC727-8001-4E91-BF15-A3814598C07B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Desktop.PS", "FsInfoCat.Desktop.PS\FsInfoCat.Desktop.PS.csproj", "{7C4CC727-8001-4E91-BF15-A3814598C07B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

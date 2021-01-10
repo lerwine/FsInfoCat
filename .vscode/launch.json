@@ -14,7 +14,7 @@
             "windows": {
                 "preLaunchTask": "Build PS Module (.NET Framework)",
                 "program": "powershell_ise",
-                "cwd": "${workspaceFolder}/src/FsInfoCat.PS.Desktop",
+                "cwd": "${workspaceFolder}/src/FsInfoCat.Desktop.PS",
             },
             "linux": {
                 "preLaunchTask": "Build PS Module (.NET Core, Current OS)",

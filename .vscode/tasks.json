@@ -86,7 +86,7 @@
             "type": "process","args": [
                 "build",
                 "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.PS.Desktop/FsInfoCat.PS.Desktop.csproj",
+                "${workspaceFolder}/src/FsInfoCat.Desktop.PS/FsInfoCat.Desktop.PS.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -317,7 +317,7 @@
             "args": [
                 "publish",
                 "--configuration:Release",
-                "${workspaceFolder}/src/FsInfoCat.PS.Desktop/FsInfoCat.PS.Desktop.csproj",
+                "${workspaceFolder}/src/FsInfoCat.Desktop.PS/FsInfoCat.Desktop.PS.csproj",
                 "/property:GenerateFullPaths=true",
                 "/property:OsPlatform=Windows",
                 "/consoleloggerparameters:NoSummary"
