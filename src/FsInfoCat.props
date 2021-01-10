@@ -2,7 +2,8 @@
 
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <DefineConstants Condition=" '$(DefineConstants)' == '' ">TRACE</DefineConstants>
+        <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*TRACE(;.*)*$'))">$(DefineConstants);TRACE</DefineConstants>
+        <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*CORE(;.*)*$'))">$(DefineConstants);CORE</DefineConstants>
         <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
         <!-- Un-comment next line to force OS platform -->
         <!-- <OsPlatform>Linux</OsPlatform> -->
