@@ -1,22 +1,155 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
-    <Import Project="..\FsInfoCat.props" />
-
-  <ItemGroup>
-    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
-  </ItemGroup>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-        <OutputPath>bin\$(Configuration)\$(OsPlatform)\</OutputPath>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C85E9D76-5CEB-4A3F-8F5F-8E66117037B1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FsInfoCat.Desktop</RootNamespace>
-    <AssemblyName>FsInfoCat</AssemblyName>
-    <UseWPF>true</UseWPF>
+    <AssemblyName>FsInfoCat.Desktop</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\FsInfoCat\FileSystemFeature.cs">
+      <Link>FileSystemFeature.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Accounts\EditAccount.cs">
+      <Link>EditAccount.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Accounts\IAccount.cs">
+      <Link>IAccount.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Accounts\ILogin.cs">
+      <Link>ILogin.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Accounts\IUserCredentials.cs">
+      <Link>IUserCredentials.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Accounts\UserLoginRequest.cs">
+      <Link>UserLoginRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Accounts\UserRole.cs">
+      <Link>UserRole.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\CrawlError.cs">
+      <Link>CrawlError.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\CrawlWarning.cs">
+      <Link>CrawlWarning.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\FsDirectory.cs">
+      <Link>FsDirectory.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\FsFile.cs">
+      <Link>FsFile.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\FsHost.cs">
+      <Link>FsHost.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\FsRoot.cs">
+      <Link>FsRoot.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\ICrawlMessage.cs">
+      <Link>ICrawlMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\IFsChildNode.cs">
+      <Link>IFsChildNode.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\IFsDirectory.cs">
+      <Link>IFsDirectory.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\IFsNode.cs">
+      <Link>IFsNode.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Crawl\MessageId.cs">
+      <Link>MessageId.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\DB\Account.cs">
+      <Link>Account.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\DB\HostContributor.cs">
+      <Link>HostContributor.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\DB\HostDevice.cs">
+      <Link>HostDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\DB\UserCredential.cs">
+      <Link>UserCredential.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\DB\Volume.cs">
+      <Link>Volume.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\HostDevices\HostDeviceRegRequest.cs">
+      <Link>HostDeviceRegRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\HostDevices\IHostDevice.cs">
+      <Link>IHostDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\HostDevices\IHostDeviceReg.cs">
+      <Link>IHostDeviceReg.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\IModficationAuditable.cs">
+      <Link>IModficationAuditable.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\INormalizable.cs">
+      <Link>INormalizable.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\IValidatableModel.cs">
+      <Link>IValidatableModel.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\ModelHelper.cs">
+      <Link>ModelHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\RequestResponse.cs">
+      <Link>RequestResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Models\Volumes\IVolume.cs">
+      <Link>IVolume.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Util\MD5Checksum.cs">
+      <Link>MD5Checksum.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Util\PwHash.cs">
+      <Link>PwHash.cs</Link>
+    </Compile>
+    <Compile Include="..\FsInfoCat\Util\VolumeInformation.cs">
+      <Link>VolumeInformation.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

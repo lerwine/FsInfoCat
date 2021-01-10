@@ -1,8 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModels"
-    xmlns:local="clr-namespace:FsInfoCat.Desktop">
-    <ViewModel:AppSettingsViewModel x:Key="AppSettingsViewModel" />
-    <ViewModel:WorkerProgressViewModel x:Key="WorkerProgressViewModel" />
-    <ViewModel:MainWindowViewModel x:Key="MainWindowViewModel" />
-</ResourceDictionary>

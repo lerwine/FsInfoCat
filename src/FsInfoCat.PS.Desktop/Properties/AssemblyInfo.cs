@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FsInfoCat.Desktop")]
+[assembly: AssemblyTitle("FsInfoCat.PS.Desktop")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FsInfoCat.Desktop")]
+[assembly: AssemblyProduct("FsInfoCat.PS.Desktop")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c85e9d76-5ceb-4a3f-8f5f-8e66117037b1")]
+[assembly: Guid("7c4cc727-8001-4e91-bf15-a3814598c07b")]
 
 // Version information for an assembly consists of the following four values:
 //
