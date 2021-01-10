@@ -311,6 +311,20 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "Publish PS Module (.NET Framework)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "--configuration:Release",
+                "${workspaceFolder}/src/FsInfoCat.PS.Desktop/FsInfoCat.PS.Desktop.csproj",
+                "/property:GenerateFullPaths=true",
+                "/property:OsPlatform=Windows",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "Publish PS Module (Linux)",
             "command": "dotnet",
             "type": "process",
