@@ -50,6 +50,19 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "Build Common Library (.NET Framework)",
+            "command": "dotnet",
+            "type": "process","args": [
+                "build",
+                "--configuration:Debug",
+                "${workspaceFolder}/src/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "Build Web App",
             "command": "dotnet",
             "type": "process",
@@ -62,6 +75,19 @@
                 "${workspaceFolder}/src/FsInfoCat.Web/FsInfoCat.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/property:OsPlatform=Windows",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build PS Module (.NET Framework)",
+            "command": "dotnet",
+            "type": "process","args": [
+                "build",
+                "--configuration:Debug",
+                "${workspaceFolder}/src/FsInfoCat.PS.Desktop/FsInfoCat.PS.Desktop.csproj",
+                "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": "build",

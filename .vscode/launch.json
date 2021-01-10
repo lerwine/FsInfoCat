@@ -5,15 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug PS Module",
+            "name": "Debug PS Module (Current OS)",
             "type": "clr",
-            "preLaunchTask": "Build PS Module (.NET Core, Current OS)",
             "request": "launch",
-            "program": "powershell_ise",
             "args": [
                 "Example.ps1"
             ],
-            "cwd": "${workspaceFolder}/src/FsInfoCat.PS",
+            "windows": {
+                "preLaunchTask": "Build PS Module (.NET Framework)",
+                "program": "powershell_ise",
+                "cwd": "${workspaceFolder}/src/FsInfoCat.PS.Desktop",
+            },
+            "linux": {
+                "preLaunchTask": "Build PS Module (.NET Core, Current OS)",
+                "program": "pwsh",
+                "cwd": "${workspaceFolder}/src/FsInfoCat.PS",
+            },
+            "osx": {
+                "preLaunchTask": "Build PS Module (.NET Core, Current OS)",
+                "program": "pwsh",
+                "cwd": "${workspaceFolder}/src/FsInfoCat.PS",
+            },
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },
