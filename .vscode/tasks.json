@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build All (Current OS)",
+            "label": "Build All (.NET Core, Current OS)",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -19,7 +19,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Tests (Current OS)",
+            "label": "Run Tests (.NET Core, Current OS)",
             "command": "dotnet",
             "type": "process",
             "group": {
@@ -37,7 +37,7 @@
             }
         },
         {
-            "label": "Build Common Library (Current OS)",
+            "label": "Build Common Library (.NET Core, Current OS)",
             "command": "dotnet",
             "type": "process","args": [
                 "build",
@@ -68,22 +68,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build Desktop App",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Windows",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build PS Module (Current OS)",
+            "label": "Build PS Module (.NET Core, Current OS)",
             "command": "dotnet",
             "type": "process","args": [
                 "build",
@@ -96,7 +81,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build Test Project (Current OS)",
+            "label": "Build Test Project (.NET Core, Current OS)",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -128,7 +113,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Publish All (Windows)",
+            "label": "Publish All (.NET Core, Windows)",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -156,7 +141,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build All (Windows)",
+            "label": "Build All (.NET Core, Windows)",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -192,7 +177,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Tests (Windows)",
+            "label": "Run Tests (.NET Core, Windows)",
             "command": "dotnet",
             "type": "process",
             "group": {
@@ -230,7 +215,7 @@
             }
         },
         {
-            "label": "Build Common Library (Windows)",
+            "label": "Build Common Library (.NET Core, Windows)",
             "command": "dotnet",
             "type": "process","args": [
                 "build",
@@ -258,7 +243,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build PS Module (Windows)",
+            "label": "Build PS Module (.NET Core, Windows)",
             "command": "dotnet",
             "type": "process","args": [
                 "build",
@@ -286,7 +271,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Publish PS Module (Windows)",
+            "label": "Publish PS Module (.NET Core, Windows)",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -314,7 +299,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build Test Project (Windows)",
+            "label": "Build Test Project (.NET Core, Windows)",
             "command": "dotnet",
             "type": "process",
             "args": [

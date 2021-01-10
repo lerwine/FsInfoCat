@@ -7,7 +7,7 @@
         {
             "name": "Debug PS Module",
             "type": "clr",
-            "preLaunchTask": "Build PS Module (Current OS)",
+            "preLaunchTask": "Build PS Module (.NET Core, Current OS)",
             "request": "launch",
             "program": "powershell_ise",
             "args": [
@@ -39,17 +39,6 @@
             "sourceFileMap": {
                 "/ClientApp": "${workspaceFolder}/src/FsInfoCat.Web/ClientApp"
             }
-        },
-        {
-            "name": "Debug desktop app",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "Build Desktop App",
-            "program": "${workspaceFolder}/src/FsInfoCat.Desktop/bin/Debug/netcoreapp3.1/FsInfoCat.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
-            "console": "internalConsole"
         },
         {
             "name": "Debug test template host",
