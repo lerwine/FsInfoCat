@@ -5,27 +5,54 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug PS Module (Current OS)",
+            "name": "Debug PS Module (.NET Framework)",
             "type": "clr",
             "request": "launch",
             "args": [
-                "Example.ps1"
+                "DebugSetup.ps1"
             ],
-            "windows": {
-                "preLaunchTask": "Build PS Module (.NET Framework)",
-                "program": "powershell_ise",
-                "cwd": "${workspaceFolder}/src/FsInfoCat.Desktop.PS",
-            },
-            "linux": {
-                "preLaunchTask": "Build PS Module (.NET Core, Current OS)",
-                "program": "pwsh",
-                "cwd": "${workspaceFolder}/src/FsInfoCat.PS",
-            },
-            "osx": {
-                "preLaunchTask": "Build PS Module (.NET Core, Current OS)",
-                "program": "pwsh",
-                "cwd": "${workspaceFolder}/src/FsInfoCat.PS",
-            },
+            "preLaunchTask": "Build PS Module (.NET Framework)",
+            "program": "powershell_ise",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.Desktop.PS",
+            "stopAtEntry": false,
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug PS Module (.NET Core, Current OS)",
+            "type": "clr",
+            "request": "launch",
+            "args": [
+                "DebugSetup.ps1"
+            ],
+            "preLaunchTask": "Build PS Module (.NET Core, Current OS)",
+            "program": "pwsh",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.PS",
+            "stopAtEntry": false,
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Test PS Module (.NET Framework)",
+            "type": "clr",
+            "request": "launch",
+            "args": [
+                "Invoke-Tests.ps1"
+            ],
+            "preLaunchTask": "Build PS Module (.NET Framework)",
+            "program": "powershell",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.Desktop.PS",
+            "stopAtEntry": false,
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Test PS Module (.NET Core, Current OS)",
+            "type": "clr",
+            "request": "launch",
+            "args": [
+                "Invoke-Tests.ps1"
+            ],
+            "preLaunchTask": "Build PS Module (.NET Core, Current OS)",
+            "program": "pwsh",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.PS",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },

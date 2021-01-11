@@ -19,7 +19,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Tests (.NET Core, Current OS)",
+            "label": "Run Unit Tests (.NET Core, Current OS)",
             "command": "dotnet",
             "type": "process",
             "group": {
@@ -203,7 +203,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Tests (.NET Core, Windows)",
+            "label": "Run Unit Tests (.NET Core, Windows)",
             "command": "dotnet",
             "type": "process",
             "group": {
@@ -222,7 +222,7 @@
             }
         },
         {
-            "label": "Run Tests (Linux)",
+            "label": "Run Unit Tests (Linux)",
             "command": "dotnet",
             "type": "process",
             "group": {
