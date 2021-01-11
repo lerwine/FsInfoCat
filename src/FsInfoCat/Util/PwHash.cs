@@ -300,19 +300,6 @@ namespace FsInfoCat.Util
 
         public override int GetHashCode()
         {
-// #if CORE
-//             HashCode hashCode = new HashCode();
-//             hashCode.Add(_hashBits000_03f);
-//             hashCode.Add(_hashBits040_07f);
-//             hashCode.Add(_hashBits080_0bf);
-//             hashCode.Add(_hashBits0c0_0ff);
-//             hashCode.Add(_hashBits100_13f);
-//             hashCode.Add(_hashBits140_17f);
-//             hashCode.Add(_hashBits180_1bf);
-//             hashCode.Add(_hashBits1c0_1ff);
-//             hashCode.Add(_saltBits);
-//             return hashCode.ToHashCode();
-// #else
             if ((_saltBits & 1UL) == 1UL)
                 return (_hashBits000_03f.GetHashCode() & 0x0000000f) |
                     (_hashBits040_07f.GetHashCode() & 0x000000f0) |
@@ -332,7 +319,6 @@ namespace FsInfoCat.Util
                 (_hashBits180_1bf.GetHashCode() & 0x01e00000) |
                 (_hashBits1c0_1ff.GetHashCode() & 0x1e000000) |
                 (int)(_saltBits.GetHashCode() & 0xe0000000);
-// #endif
         }
     }
 }
