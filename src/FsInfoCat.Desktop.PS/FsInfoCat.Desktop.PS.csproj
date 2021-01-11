@@ -47,13 +47,13 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="..\FsInfoCat.PS\**\*.cs" Exclude="..\FsInfoCat.PS\obj\**\*.*;..\FsInfoCat.PS\bin\**\*.*">
+        <Compile Include="..\FsInfoCat.PS\**\*.cs" Exclude="..\FsInfoCat.PS\obj\**\*.*;..\FsInfoCat.PS\bin\**\*.*;Test/**/*.*">
             <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
         </Compile>
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="..\FsInfoCat.PS\*.help.txt;..\FsInfoCat.PS\*.psd1;..\FsInfoCat.PS\*.psm1;..\FsInfoCat.PS\*.ps1" Exclude="..\FsInfoCat.PS\obj\**\*.*;..\FsInfoCat.PS\bin\**\*.*">
+        <Content Include="..\FsInfoCat.PS\*.help.txt;..\FsInfoCat.PS\*.psd1;..\FsInfoCat.PS\*.psm1;..\FsInfoCat.PS\*.ps1" Exclude="..\FsInfoCat.PS\obj\**\*.*;..\FsInfoCat.PS\bin\**\*.*;Test/**/*.*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <Link>%(Filename)%(Extension)</Link>
         </Content>
@@ -76,7 +76,6 @@
         <Exec Command="copy &quot;$(TargetDir)*.pdb&quot; &quot;$(FsInfoCatDeploy)/&quot; /Y" />
         <Exec Command="copy &quot;$(TargetDir)*.psd1&quot; &quot;$(FsInfoCatDeploy)&quot; /Y" />
         <Exec Command="copy &quot;$(TargetDir)*.psm1&quot; &quot;$(FsInfoCatDeploy)&quot; /Y" />
-        <Exec Command="copy &quot;$(TargetDir)*.ps1&quot; &quot;$(FsInfoCatDeploy)&quot; /Y" />
         <Exec Command="copy &quot;$(TargetDir)*.help.txt&quot; &quot;$(FsInfoCatDeploy)&quot; /Y" />
     </Target>
 </Project>

@@ -30,10 +30,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="*.help.txt;*.psd1;*.psm1;*.ps1">
+        <Content Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Include="*.tt">
+        <None Include="*.tt;Test/**/*.*">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
     </ItemGroup>
