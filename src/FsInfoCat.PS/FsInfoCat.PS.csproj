@@ -30,22 +30,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="about_FsInfoCat.help.txt">
+        <Content Include="*.help.txt;*.psd1;*.psm1;*.ps1">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="about_FsInfoCat.PS.help.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="FsInfoCat.psd1">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="FsInfoCat.psm1">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="Example.ps1">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <None Include="FsInfoCat.tt">
+        <None Include="*.tt">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
     </ItemGroup>
