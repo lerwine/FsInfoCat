@@ -67,6 +67,7 @@ namespace FsInfoCat.Models.Crawl
 
         private EqualityComparer<string> GetNameComparer()
         {
+#warning Need to implement GetNameComparer
             throw new NotImplementedException();
         }
 
