@@ -91,8 +91,7 @@ namespace FsInfoCat.Util
         /// <param name="directory">A child <seealso cref="DirectoryInfo"/> of the volume information to retrieve or null for the volume that contains the system directory.</param>
         public VolumeInformation(DirectoryInfo directory)
         {
-            if (directory == null)
-                _root = new DirectoryInfo(Environment.SystemDirectory).Root;
+            _root = ((directory == null) ? new DirectoryInfo(Environment.SystemDirectory) : directory).Root;
 
             StringBuilder volumeNameBuffer = new StringBuilder(InteropStringCapacity);
             StringBuilder fsn = new StringBuilder(InteropStringCapacity);
