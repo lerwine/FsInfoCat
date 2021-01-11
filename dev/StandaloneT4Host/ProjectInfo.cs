@@ -22,7 +22,6 @@ namespace StandaloneT4Host
         public Version AssemblyVersion { get; }
         public Version FileVersion { get; }
         public bool IsCompatible { get; }
-        public ReadOnlyCollection<ProjectItem> Items { get; }
 
         public ProjectInfo(ProjectInfo projectInfo, IEnumerable<FileInfo> include)
         {
@@ -40,21 +39,6 @@ namespace StandaloneT4Host
             AssemblyVersion = projectInfo.AssemblyVersion;
             FileVersion = projectInfo.FileVersion;
             IsCompatible = projectInfo.IsCompatible;
-            Items = new ReadOnlyCollection<ProjectItem>(include.Select(f =>
-            {
-                ProjectItem m = projectInfo.Items.FirstOrDefault(i => null != i.ItemFile && ProjectItem.NameComparer.Equals(i.ItemFile.FullName, f.FullName));
-                if (null != m)
-                    return m;
-
-                DirectoryInfo d = f.Directory;
-                int depth = 0;
-                while (!ProjectItem.NameComparer.Equals(d.FullName, ProjectFile.DirectoryName)) {
-                    if (null == (d = d.Parent))
-                        throw new Exception("Item does not belong to project");
-                    depth++;
-                }
-                return new ProjectItem(f, depth);
-            }).ToArray());
         }
 
         public ProjectInfo(FileInfo projectFile)
@@ -111,20 +95,6 @@ namespace StandaloneT4Host
             s = getNodeText(xmlDocument, "/msb:Project/msb:PropertyGroup/msb:FileVersion");
             FileVersion = (string.IsNullOrWhiteSpace(s) || !Version.TryParse(s, out version)) ? null : version;
             IsCompatible = null != Sdk && !string.IsNullOrWhiteSpace(TargetFramework) && xmlDocument.DocumentElement.NamespaceURI.Length == 0;
-            Collection<ProjectItem> items = new Collection<ProjectItem>();
-            foreach (XmlAttribute attribute in xmlDocument.SelectNodes("/msb:Project/msb:ItemGroup/msb:*/@Include", nsmgr))
-            {
-                XmlElement e = (XmlElement)attribute.OwnerElement.SelectSingleNode("msb:CopyToOutputDirectory", nsmgr);
-                string copyToOutputDirectory = (null == e || e.IsEmpty) ? null : e.InnerText;
-                e = (XmlElement)attribute.OwnerElement.SelectSingleNode("msb:SubType", nsmgr);
-                string subType = (null == e || e.IsEmpty) ? null : e.InnerText;
-                e = (XmlElement)attribute.OwnerElement.SelectSingleNode("msb:DependentUpon", nsmgr);
-                string dependentUpon = (null == e || e.IsEmpty) ? null : e.InnerText;
-                items.Add(new ProjectItem(attribute.OwnerElement.LocalName, attribute.Value, copyToOutputDirectory, subType, dependentUpon, this));
-            }
-            if (IsCompatible)
-                ProjectItem.Fill(projectFile.Directory, items);
-            Items = new ReadOnlyCollection<ProjectItem>(items);
         }
 
     }
