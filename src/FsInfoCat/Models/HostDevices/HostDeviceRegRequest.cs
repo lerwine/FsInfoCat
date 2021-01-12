@@ -138,7 +138,7 @@ namespace FsInfoCat.Models.HostDevices
                 throw new Exception("Encountered an exception while trying to retrieve computer GUID - " + exc.Message, exc);
             }
 #else
-            throw new NotSupportedException("CreateForLocal is not supported.");
+            throw new NotSupportedException("GetLocalMachineIdentifier is not supported.");
 #endif
         }
         public static HostDeviceRegRequest CreateForLocal()
