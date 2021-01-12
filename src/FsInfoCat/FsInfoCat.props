@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ProjectGuid>{F624D84F-6E2D-4656-BD1B-060586988EBC}</ProjectGuid>
+        <AssemblyTitle>FS InfoCat Common Library</AssemblyTitle>
+        <Description>Supporting CLR Library for FS InfoCat</Description>
+        <Product>FS InfoCat Common Library</Product>
+    </PropertyGroup>
+
+</Project>

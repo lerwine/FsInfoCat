@@ -1,56 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\FsInfoCat-Common.props" />
-
     <PropertyGroup>
-        <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
-        <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
-        <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
-        <Product>PowerShell Module FsInfoCat.PS</Product>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(IsNetFramework)' != 'true' ">
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <OutputPath>bin\$(Configuration)\$(OsPlatform)\NetCore\</OutputPath>
-        <FsInfoCatDeploy>..\..\$(Configuration)\$(OsPlatform)\NetCore\FsInfoCat\</FsInfoCatDeploy>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(IsNetFramework)' == 'true' ">
-        <TargetFramework>net461</TargetFramework>
-        <OutputPath>bin\$(Configuration)\NetFramework\</OutputPath>
-        <FsInfoCatDeploy>..\..\$(Configuration)\$(OsPlatform)\NetFramework\FsInfoCat\</FsInfoCatDeploy>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-preview-06">
-            <PrivateAssets>All</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    </ItemGroup>
+    <Import Project="..\FsInfoCat.NetCore.props" />
+    <Import Project="FsInfoCat.PS.props" />
 
     <ItemGroup>
         <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <PsFile Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </PsFile>
-        <None Include="*.tt;Test/**/*.*">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
-        <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </CompiledBinaries>
-    </ItemGroup>
+    <Import Project="FsInfoCat.PS.targets" />
 
-    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
-        <Exec Command="$(ProjectDir)..\..\dev\StandaloneT4Host\bin\Debug\net472\StandaloneT4Host.exe &quot;$(ProjectPath)&quot;" />
-    </Target>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <MakeDir Directories="$(FsInfoCatDeploy)" />
-        <Copy SourceFiles="@(PsFile)" DestinationFiles="@(PsFile->'$(FsInfoCatDeploy)%(RecursiveDir)%(Filename)%(Extension)')" />
-        <Copy SourceFiles="@(CompiledBinaries)" DestinationFolder="$(FsInfoCatDeploy)" />
-    </Target>
 </Project>

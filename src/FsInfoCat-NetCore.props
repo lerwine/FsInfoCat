@@ -1,0 +1,28 @@
+<Project>
+
+    <Choose>
+        <When Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'NetFrameworkDebug' ">
+            <PropertyGroup>
+                <Configuration>NetCoreDebug</Configuration>
+            </PropertyGroup>
+        </When>
+        <When Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'NetFrameworkRelease' ">
+            <PropertyGroup>
+                <Configuration>NetCoreRelease</Configuration>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <Configuration Condition=" '$(Configuration)' != 'NetCoreRelease' ">NetCoreDebug</Configuration>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
+
+    <PropertyGroup>
+        <Configurations>NetCoreDebug;NetCoreRelease</Configurations>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+
+    <Import Project="FsInfoCat-Common.props" />
+
+</Project>

@@ -1,37 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\FsInfoCat-Common.props" />
-
     <PropertyGroup>
-        <ProjectGuid>{F624D84F-6E2D-4656-BD1B-060586988EBC}</ProjectGuid>
-        <AssemblyTitle>FS InfoCat Common Library</AssemblyTitle>
-        <Description>Supporting CLR Library for FS InfoCat</Description>
-        <Product>FS InfoCat Common Library</Product>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(IsNetFramework)' != 'true' ">
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <OutputPath>bin\$(Configuration)\$(OsPlatform)\</OutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(IsNetFramework)' == 'true' ">
-        <TargetFramework>net461</TargetFramework>
-        <OutputPath>bin\$(Configuration)\NetFramework\</OutputPath>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-        <PackageReference Condition=" '$(OsPlatform)' == 'Windows' " Include="System.DirectoryServices" Version="5.0.0" />
-        <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
-    </ItemGroup>
-
-    <Target Name="DisplayMessages">
-        <Message Text="Project File Name = $(MSBuildProjectFile)" />
-        <Message Text="Project Extension = $(MSBuildProjectExtension)" />
-        <Message Text="Configuration = $(Configuration)" />
-        <Message Text="OsPlatform = $(OsPlatform)" />
-        <Message Text="DefineConstants = $(DefineConstants)" />
-    </Target>
+    <Import Project="..\FsInfoCat.NetCore.props" />
+    <Import Project="FsInfoCat.props" />
+    <Import Project="FsInfoCat.targets" />
 
 </Project>

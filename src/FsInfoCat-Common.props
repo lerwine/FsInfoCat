@@ -1,10 +1,7 @@
 <Project>
 
     <PropertyGroup>
-        <Configurations>Debug;Release;DebugNetFramework;ReleaseNetFramework</Configurations>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
-        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <Company>Leonard T. Erwine</Company>
         <Copyright>Copyright © Leonard Thomas Erwine 2021</Copyright>
         <!-- Specify major, minor and build numbers only here. Revision number will be calculated according to OsPlatform and whether it is .net framework -->
@@ -13,6 +10,19 @@
         <!-- Un-comment next line to force OS platform -->
         <!-- <OsPlatform>Linux</OsPlatform> -->
     </PropertyGroup>
+
+    <Choose>
+        <When Condition=" '$(Configuration)' == 'NetCoreRelease' Or '$(Configuration)' == 'NetCoreRelease' ">
+            <PropertyGroup>
+                <IsNetFramework>true</IsNetFramework>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <IsNetFramework>false</IsNetFramework>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
 
     <Choose>
         <When Condition=" '$(DefineConstants)' == '' ">
