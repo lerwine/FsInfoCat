@@ -36,6 +36,7 @@
                 "panel": "shared"
             }
         },
+
         {
             "label": "Build Common Library (.NET Core, Current OS)",
             "command": "dotnet",
@@ -43,19 +44,6 @@
                 "build",
                 "--configuration:Debug",
                 "${workspaceFolder}/src/FsInfoCat/FsInfoCat.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build Common Library (.NET Framework)",
-            "command": "dotnet",
-            "type": "process","args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -88,6 +76,7 @@
                 "--configuration:Debug",
                 "${workspaceFolder}/src/FsInfoCat.Desktop.PS/FsInfoCat.Desktop.PS.csproj",
                 "/property:GenerateFullPaths=true",
+                "/property:IsNetFramework=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": "build",
@@ -101,6 +90,7 @@
                 "--configuration:Debug",
                 "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
                 "/property:GenerateFullPaths=true",
+                "/property:IsNetFramework=false",
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": "build",
