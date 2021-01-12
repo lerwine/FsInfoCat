@@ -1,56 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0"
-    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <ProjectGuid>{7C4CC727-8001-4E91-BF15-A3814598C07B}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>FsInfoCat.Desktop.PS</RootNamespace>
         <AssemblyName>FsInfoCat.PS</AssemblyName>
-        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <Deterministic>true</Deterministic>
+        <TargetFramework>net461</TargetFramework>
         <FsInfoCatDeploy>..\..\$(Configuration)\Desktop\FsInfoCat\</FsInfoCatDeploy>
+        <Company>Leonard T. Erwine</Company>
+        <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
+        <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
+        <Product>PowerShell Module FsInfoCat.PS</Product>
+        <Copyright>Copyright © Leonard Thomas Erwine 2021</Copyright>
+        <AssemblyVersion>0.1.0.0</AssemblyVersion>
+        <FileVersion>0.1.0.0</FileVersion>
+        <OsPlatform>Windows</OsPlatform>
     </PropertyGroup>
+
+    <Choose>
+        <When Condition=" '$(DefineConstants)' == '' ">
+            <PropertyGroup>
+                <DefineConstants>TRACE;NETFRAMEWORK</DefineConstants>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*TRACE(;.*)*$'))">$(DefineConstants);TRACE</DefineConstants>
+                <DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*NETFRAMEWORK(;.*)*$'))">$(DefineConstants);NETFRAMEWORK</DefineConstants>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
+
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
-        </Reference>
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Net.Http" />
-        <Reference Include="System.Xml" />
-    </ItemGroup>
+
     <ItemGroup>
         <Compile Include="..\FsInfoCat.PS\**\*.cs" Exclude="..\FsInfoCat.PS\obj\**\*.*;..\FsInfoCat.PS\bin\**\*.*;Test/**/*.*">
             <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
         </Compile>
-        <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="..\FsInfoCat.PS\*.help.txt;..\FsInfoCat.PS\*.psd1;..\FsInfoCat.PS\*.psm1;..\FsInfoCat.PS\*.ps1" Exclude="..\FsInfoCat.PS\obj\**\*.*;..\FsInfoCat.PS\bin\**\*.*;Test/**/*.*">
@@ -59,15 +59,17 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj">
-            <Project>{c85e9d76-5ceb-4a3f-8f5f-8e66117037b1}</Project>
-            <Name>FsInfoCat.Desktop</Name>
-        </ProjectReference>
+        <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj" />
     </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <ItemGroup>
+      <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
+      <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    </ItemGroup>
+
     <Target Name="PreBuild" AfterTargets="PreBuildEvent">
         <Exec Command="$(ProjectDir)..\..\dev\StandaloneT4Host\bin\Debug\net472\StandaloneT4Host.exe &quot;$(ProjectDir)..\FsInfoCat.PS\FsInfoCat.PS.csproj&quot;" />
     </Target>
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <Exec Condition=" !Exists('..\..\$(Configuration)') " Command="mkdir &quot;..\..\$(Configuration)&quot;" />
         <Exec Condition=" !Exists('..\..\$(Configuration)\Desktop') " Command="mkdir &quot;..\..\$(Configuration)\Desktop&quot;" />
