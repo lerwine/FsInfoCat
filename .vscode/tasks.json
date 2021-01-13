@@ -147,27 +147,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Unit Tests (.NET Framework)",
-            "command": "dotnet",
-            "type": "process",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "args": [
-                "test",
-                "--configuration:NetFrameworkDebug",
-                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.NetFramework.csproj",
-                "/property:OsPlatform=Windows",
-                "/property:IsNetFramework=true"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "Run Unit Tests (.NET Core)",
+            "label": "Run Unit Tests",
             "command": "dotnet",
             "type": "process",
             "group": {

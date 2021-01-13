@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.NetFramework", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.PS.NetFramework", "FsInfoCat.PS\FsInfoCat.PS.NetFramework.csproj", "{D6A47138-19EF-4860-9C80-64C78EAFDEEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Test.NetFramework", "FsInfoCat.Test\FsInfoCat.Test.NetFramework.csproj", "{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}"
-EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,17 +44,5 @@ Global
 		{D6A47138-19EF-4860-9C80-64C78EAFDEEE}.NetFrameworkRelease|x64.Build.0 = NetFrameworkDebug|Any CPU
 		{D6A47138-19EF-4860-9C80-64C78EAFDEEE}.NetFrameworkRelease|x86.ActiveCfg = NetFrameworkDebug|Any CPU
 		{D6A47138-19EF-4860-9C80-64C78EAFDEEE}.NetFrameworkRelease|x86.Build.0 = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkDebug|Any CPU.ActiveCfg = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkDebug|Any CPU.Build.0 = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkDebug|x64.ActiveCfg = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkDebug|x64.Build.0 = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkDebug|x86.ActiveCfg = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkDebug|x86.Build.0 = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkRelease|Any CPU.ActiveCfg = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkRelease|Any CPU.Build.0 = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkRelease|x64.ActiveCfg = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkRelease|x64.Build.0 = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkRelease|x86.ActiveCfg = NetFrameworkDebug|Any CPU
-		{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}.NetFrameworkRelease|x86.Build.0 = NetFrameworkDebug|Any CPU
 	EndGlobalSection
 EndGlobal

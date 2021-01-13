@@ -13,8 +13,7 @@
 | Build Test Project (.NET Core)        | FsInfoCat.Test.csproj              | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
 | Build Common Library (.NET Framework) | FsInfoCat.NetFramework.csproj      | NetFrameworkDebug   | Windows    | net461          | n/a                                    |
 | Build Common Library (.NET Core)      | FsInfoCat.csproj                   | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
-| Run Unit Tests (.NET Framework)       | FsInfoCat.Test.NetFramework.csproj | NetFrameworkDebug   | Windows    | net461          | n/a                                    |
-| Run Unit Tests (.NET Core)            | FsInfoCat.Test.csproj              | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
+| Run Unit Tests                        | FsInfoCat.Test.csproj              | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
 | Publish Web App                       | FsInfoCat.Web.csproj               | NetCoreRelease      | OSX        | netcoreapp3.1   | ?                                      |
 | Publish All (.NET Core, Windows)      | FsInfoCat.sln                      | NetCoreRelease      | Windows    | netcoreapp3.1   | ?                                      |
 | Publish Module (Windows PowerShell)   | FsInfoCat.PS.NetFramework.csproj   | NetFrameworkRelease | Windows    | net461          | Release/Windows/NetFramework/FsInfoCat |
