@@ -12,14 +12,11 @@
         </CompiledBinaries>
     </ItemGroup>
 
-    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
-        <Exec Command="$(ProjectDir)..\..\dev\StandaloneT4Host\bin\Debug\net472\StandaloneT4Host.exe &quot;$(ProjectPath)&quot;" />
-    </Target>
+    <Import Project="..\T4.targets" />
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <MakeDir Directories="$(FsInfoCatDeploy)" />
-        <Copy SourceFiles="@(PsFile)" DestinationFiles="@(PsFile->'$(FsInfoCatDeploy)%(RecursiveDir)%(Filename)%(Extension)')" />
-        <Copy SourceFiles="@(CompiledBinaries)" DestinationFiles="@(CompiledBinaries->'$(FsInfoCatDeploy)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(IsPublishable)' == 'true' ">
+        <MakeDir Directories="$(PsModuleDistroFolder)" />
+        <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroZip)" />
     </Target>
 
 </Project>

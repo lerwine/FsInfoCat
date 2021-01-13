@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <Configurations>NetFrameworkDebug;NetFrameworkRelease</Configurations>
-        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
 
     <Choose>

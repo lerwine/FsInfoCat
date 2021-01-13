@@ -1,10 +1,5 @@
-Param(
-    [Parameter(Mandatory = $true)]
-    [string]$FsInfoCatModulePath
-)
-
 BeforeAll {
-    Import-Module $FsInfoCatModulePath -ErrorAction Stop;
+    Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../Setup/bin/FsInfoCat') -ErrorAction Stop;
 }
 
 Describe "ConvertTo-PasswordHash -RawPwd '<Password>'" -ForEach @(

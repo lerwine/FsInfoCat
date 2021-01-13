@@ -1,0 +1,11 @@
+<Project>
+
+    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+        <MakeDir Directories="$(SetupBinFolder)" />
+        <Unzip Condition=" !$([System.IO.File]::Exists('$(T4HostExe)')) " SourceFiles="$(T4DistroZip)"
+            DestinationFolder="$(T4BinFolder)"
+            OverwriteReadOnlyFiles="true" />
+        <Exec Command="$(T4HostExe) &quot;$(ProjectPath)&quot;" />
+    </Target>
+
+</Project>
