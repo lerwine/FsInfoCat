@@ -16,13 +16,13 @@ namespace StandaloneT4Host
         enum ExitCodes
         {
             Success = 0,
-            NoProject,
-            InvalidProjectPath,
-            ProjectPathNotFound,
-            InvalidProjectFile,
-            InvalidTemplateFile,
-            NoTemplateFiles,
-            OtherError
+            NoProject = 1,
+            InvalidProjectPath = 2,
+            ProjectPathNotFound = 3,
+            InvalidProjectFile = 4,
+            InvalidTemplateFile = 5,
+            NoTemplateFiles = 6,
+            OtherError = 7
         }
         const int EXIT_CODE_NO_PROJECT = 1;
         static readonly Regex NewLineRegex = new Regex(@"\r\n?|\n", RegexOptions.Compiled);
