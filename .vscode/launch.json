@@ -54,7 +54,7 @@
             "request": "launch",
             "program": "powershell",
             "args": [
-                "Invoke-Tests.ps1",
+                "Invoke-FsInfoCatTests.ps1",
                 "-FsInfoCatModulePath",
                 "../../../Debug/Windows/NetCore/FsInfoCat"
             ],
@@ -71,21 +71,21 @@
             "program": "pwsh",
             "windows": {
                 "args": [
-                    "Invoke-Tests.ps1",
+                    "Invoke-FsInfoCatTests.ps1",
                     "-FsInfoCatModulePath",
                     "../../../Debug/Windows/NetCore/FsInfoCat"
                 ]
             },
             "linux": {
                 "args": [
-                    "Invoke-Tests.ps1",
+                    "Invoke-FsInfoCatTests.ps1",
                     "-FsInfoCatModulePath",
                     "../../../Debug/Linux/FsInfoCat"
                 ]
             },
             "osx": {
                 "args": [
-                    "Invoke-Tests.ps1",
+                    "Invoke-FsInfoCatTests.ps1",
                     "-FsInfoCatModulePath",
                     "../../../Debug/OSX/FsInfoCat"
                 ]
