@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <Choose>
-        <When Condition=" '$(Configuration)' == 'NetCoreRelease' Or '$(Configuration)' == 'NetCoreRelease' ">
+        <When Condition=" '$(Configuration)' == 'NetCoreRelease' Or '$(Configuration)' == 'NetFrameworkRelease' ">
             <PropertyGroup>
                 <IsNetFramework>true</IsNetFramework>
             </PropertyGroup>

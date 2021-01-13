@@ -5,7 +5,7 @@
         <UserSecretsId>6e695feb-4201-4efd-9047-fbc8a286541c</UserSecretsId>
     </PropertyGroup>
 
-    <Import Project="..\FsInfoCat.NetCore.props" />
+    <Import Project="..\FsInfoCat-NetCore.props" />
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
 
     <PropertyGroup>
         <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
@@ -13,12 +13,10 @@
                 <FsInfoCatDeploy>..\..\$(Configuration)\$(OsPlatform)\NetFramework\FsInfoCat\</FsInfoCatDeploy>
             </PropertyGroup>
         </When>
-        <When Condition=" $(OsPlatform)' == 'Windows' ">
+        <When Condition=" '$(OsPlatform)' == 'Windows' ">
             <PropertyGroup>
                 <FsInfoCatDeploy>..\..\$(Configuration)\$(OsPlatform)\NetCore\FsInfoCat\</FsInfoCatDeploy>
             </PropertyGroup>
-        </When>
-        <When Condition=" '$(IsNetFramework)' == 'true' Or '$(OsPlatform)' == 'Windows' ">
         </When>
         <Otherwise>
             <PropertyGroup>
