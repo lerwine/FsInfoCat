@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net461</TargetFramework>
+        <AssemblyName>FsInfoCat.PS</AssemblyName>
     </PropertyGroup>
 
     <Import Project="..\FsInfoCat-NetFramework.props" />
