@@ -33,10 +33,23 @@ namespace FsInfoCat.Models.Crawl
         /// </summary>
         public uint MaxNameLength { get; set; }
 
+        private FileSystemFeature _flags;
+
         /// <summary>
         /// Gets a value that indicates the volume capabilities and attributes.
         /// </summary>
-        public FileSystemFeature Flags { get; set; }
+        public FileSystemFeature Flags
+        {
+            get => _flags;
+            set
+            {
+                if (_flags == value)
+                    return;
+                bool wasCaseSensitive = _flags.HasFlag(FileSystemFeature.CaseSensitiveSearch);
+                if ((_flags = value).HasFlag(FileSystemFeature.CaseSensitiveSearch) != wasCaseSensitive)
+                    _nameComparer = null;
+            }
+        }
 
         private Collection<IFsChildNode> _childNodes = null;
         public Collection<IFsChildNode> ChildNodes
@@ -64,11 +77,15 @@ namespace FsInfoCat.Models.Crawl
             set { _messages = value; }
         }
 
+        private IEqualityComparer<string> _nameComparer = null;
 
-        private EqualityComparer<string> GetNameComparer()
+        private IEqualityComparer<string> GetNameComparer()
         {
-#warning Need to implement GetNameComparer
-            throw new NotImplementedException();
+            IEqualityComparer<string> nameComparer = _nameComparer;
+            if (null == nameComparer)
+                _nameComparer = nameComparer = (_flags.HasFlag(FileSystemFeature.CaseSensitiveSearch)) ?
+                    StringComparer.InvariantCultureIgnoreCase : StringComparer.InvariantCulture;
+            return nameComparer;
         }
 
         public T Find<T>(IEnumerable<IFsChildNode> source, string name)
