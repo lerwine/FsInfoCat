@@ -11,6 +11,13 @@
         <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-preview-06">
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    </ItemGroup>
+
     <Import Project="FsInfoCat.PS.targets" />
 
 </Project>

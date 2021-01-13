@@ -1,13 +1,6 @@
 <Project>
 
     <ItemGroup>
-        <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-preview-06">
-            <PrivateAssets>All</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PsFile Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </PsFile>

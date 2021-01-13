@@ -7,6 +7,13 @@
 
     <Import Project="..\FsInfoCat-NetFramework.props" />
     <Import Project="FsInfoCat.props" />
+
+    <ItemGroup>
+        <Reference Include="System.ComponentModel.DataAnnotations" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="System.DirectoryServices" />
+    </ItemGroup>
+
     <Import Project="FsInfoCat.targets" />
 
 </Project>
