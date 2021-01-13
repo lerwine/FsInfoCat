@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Util
 {
@@ -20,6 +21,9 @@ namespace FsInfoCat.Util
         public const int HASH_BYTES_LENGTH = 64;
         public const int SALT_BYTES_LENGTH = 8;
         public const int TOTAL_BYTES_LENGTH = HASH_BYTES_LENGTH + SALT_BYTES_LENGTH;
+        public const string PASSWORD_VALIDATION_PATTERN = @"^(?=(.*[!@#$%^&*()_+-=\[\]\\;',./_+{}|:""<>?]){2})(?=(.*[a-z]){2})(?=(.*[A-Z]){2})(?=(.*\d){2}).{10}";
+        public const string PASSWORD_VALIDATION_MESSAGE = "Password must be at least 10 characters long, contain at least 2 symbols, 2 upper case letters, 2 lower case letters and 2 numbers!";
+        public static readonly Regex PasswordValidationRegex = new Regex(PASSWORD_VALIDATION_PATTERN, RegexOptions.Compiled);
 
         [FieldOffset(0)]
         private readonly ulong _hashBits000_03f;
