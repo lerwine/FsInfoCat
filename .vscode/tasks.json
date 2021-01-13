@@ -2,14 +2,15 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build All (.NET Core, Current OS)",
+            "label": "Build All (.NET Core)",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "--configuration:Debug",
+                "--configuration:NetCoreDebug",
                 "${workspaceFolder}/src/FsInfoCat.sln",
                 "/property:GenerateFullPaths=true",
+                "/property:IsNetFramework=false",
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": {
@@ -19,35 +20,22 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Unit Tests (.NET Core, Current OS)",
+            "label": "Build All (.NET Framework)",
             "command": "dotnet",
             "type": "process",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
             "args": [
-                "test",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
-        },
-
-        {
-            "label": "Build Common Library (.NET Core, Current OS)",
-            "command": "dotnet",
-            "type": "process","args": [
                 "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat/FsInfoCat.csproj",
+                "--configuration:NetFrameworkDebug",
+                "${workspaceFolder}/src/FsInfoCat.NetFramework.sln",
                 "/property:GenerateFullPaths=true",
+                "/property:OsPlatform=Windows",
+                "/property:IsNetFramework=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "group": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": "$msCompile"
         },
         {
@@ -59,23 +47,25 @@
             ],
             "args": [
                 "build",
-                "--configuration:Debug",
+                "--configuration:NetCoreDebug",
                 "${workspaceFolder}/src/FsInfoCat.Web/FsInfoCat.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/property:OsPlatform=Windows",
+                "/property:IsNetFramework=false",
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build PS Module (.NET Framework)",
+            "label": "Build Module (Windows PowerShell)",
             "command": "dotnet",
             "type": "process","args": [
                 "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Desktop.PS/FsInfoCat.Desktop.PS.csproj",
+                "--configuration:NetFrameworkDebug",
+                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.NetFramework.csproj",
                 "/property:GenerateFullPaths=true",
+                "/property:OsPlatform=Windows",
                 "/property:IsNetFramework=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -83,11 +73,11 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build PS Module (.NET Core, Current OS)",
+            "label": "Build Module (PS Core)",
             "command": "dotnet",
             "type": "process","args": [
                 "build",
-                "--configuration:Debug",
+                "--configuration:NetCoreDebug",
                 "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
                 "/property:GenerateFullPaths=true",
                 "/property:IsNetFramework=false",
@@ -97,18 +87,103 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build Test Project (.NET Core, Current OS)",
+            "label": "Build Test Project (.NET Framework)",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj",
+                "--configuration:NetFrameworkDebug",
+                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.NetFramework.csproj",
                 "/property:GenerateFullPaths=true",
+                "/property:OsPlatform=Windows",
+                "/property:IsNetFramework=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Test Project (.NET Core)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "--configuration:NetCoreDebug",
+                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj",
+                "/property:GenerateFullPaths=true",
+                "/property:IsNetFramework=false",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Common Library (.NET Framework)",
+            "command": "dotnet",
+            "type": "process","args": [
+                "build",
+                "--configuration:NetFrameworkDebug",
+                "${workspaceFolder}/src/FsInfoCat/FsInfoCat.NetFramework.csproj",
+                "/property:GenerateFullPaths=true",
+                "/property:OsPlatform=Windows",
+                "/property:IsNetFramework=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Common Library (.NET Core)",
+            "command": "dotnet",
+            "type": "process","args": [
+                "build",
+                "--configuration:NetCoreDebug",
+                "${workspaceFolder}/src/FsInfoCat/FsInfoCat.csproj",
+                "/property:GenerateFullPaths=true",
+                "/property:IsNetFramework=false",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Run Unit Tests (.NET Framework)",
+            "command": "dotnet",
+            "type": "process",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "args": [
+                "test",
+                "--configuration:NetFrameworkDebug",
+                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.NetFramework.csproj",
+                "/property:OsPlatform=Windows",
+                "/property:IsNetFramework=true"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Run Unit Tests (.NET Core)",
+            "command": "dotnet",
+            "type": "process",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "args": [
+                "test",
+                "--configuration:NetCoreDebug",
+                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj",
+                "/property:IsNetFramework=false"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
         },
         {
             "label": "Publish Web App",
@@ -119,11 +194,11 @@
             ],
             "args": [
                 "publish",
-                "--configuration:Release",
+                "--configuration:NetCoreRelease",
                 "${workspaceFolder}/src/FsInfoCat.Web/FsInfoCat.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/property:OsPlatform=Windows",
-                "/configuration:Release",
+                "/property:IsNetFramework=false",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
@@ -134,228 +209,56 @@
             "type": "process",
             "args": [
                 "publish",
-                "--configuration:Release",
+                "--configuration:NetCoreRelease",
                 "${workspaceFolder}/src/FsInfoCat.sln",
                 "/property:GenerateFullPaths=true",
                 "/property:OsPlatform=Windows",
+                "/property:IsNetFramework=false",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Publish All (Linux)",
+            "label": "Publish Module (Windows PowerShell)",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "publish",
-                "--configuration:Release",
-                "${workspaceFolder}/src/FsInfoCat.sln",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Linux",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build All (.NET Core, Windows)",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.sln",
+                "--configuration:NetFrameworkRelease",
+                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.NetFramework.csproj",
                 "/property:GenerateFullPaths=true",
                 "/property:OsPlatform=Windows",
+                "/property:IsNetFramework=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build All (Linux)",
+            "label": "Publish Module (PS Core, Linux)",
             "command": "dotnet",
             "type": "process",
             "args": [
-                "build",
-                "--configuration:Debug",
+                "publish",
+                "--configuration:NetCoreRelease",
                 "${workspaceFolder}/src/FsInfoCat.sln",
                 "/property:GenerateFullPaths=true",
                 "/property:OsPlatform=Linux",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Unit Tests (.NET Core, Windows)",
-            "command": "dotnet",
-            "type": "process",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "args": [
-                "test",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj",
-                "/property:OsPlatform=Windows"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "Run Unit Tests (Linux)",
-            "command": "dotnet",
-            "type": "process",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "args": [
-                "test",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj",
-                "/property:OsPlatform=Linux"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "Build Common Library (.NET Core, Windows)",
-            "command": "dotnet",
-            "type": "process","args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat/FsInfoCat.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Windows",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build Common Library (Linux)",
-            "command": "dotnet",
-            "type": "process","args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat/FsInfoCat.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Linux",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build PS Module (.NET Core, Windows)",
-            "command": "dotnet",
-            "type": "process","args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Windows",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build PS Module (Linux)",
-            "command": "dotnet",
-            "type": "process","args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Linux",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Publish PS Module (.NET Core, Windows)",
+            "label": "Publish Module (PS Core, OSX)",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "publish",
-                "--configuration:Release",
-                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
+                "--configuration:NetCoreRelease",
+                "${workspaceFolder}/src/FsInfoCat.sln",
                 "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Windows",
+                "/property:OsPlatform=OSX",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Publish PS Module (.NET Framework)",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "--configuration:Release",
-                "${workspaceFolder}/src/FsInfoCat.Desktop.PS/FsInfoCat.Desktop.PS.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Windows",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Publish PS Module (Linux)",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "--configuration:Release",
-                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Linux",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build Test Project (.NET Core, Windows)",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Windows",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build Test Project (Linux)",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "--configuration:Debug",
-                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Linux",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
             "problemMatcher": "$msCompile"
         },
         {
