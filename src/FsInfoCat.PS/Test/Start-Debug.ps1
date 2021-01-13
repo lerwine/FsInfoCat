@@ -1,6 +1,5 @@
 Param(
-    [Parameter(Mandatory = $true)]
-    [string]$FsInfoCatModulePath
+    [string]$FsInfoCatModulePath = '../../../Debug/Windows/NetFramework/FsInfoCat'
 )
 
 $InformationPreference = [System.Management.Automation.ActionPreference]::Continue;

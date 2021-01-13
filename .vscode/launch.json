@@ -11,9 +11,7 @@
             "preLaunchTask": "Build Module (Windows PowerShell)",
             "program": "powershell_ise",
             "args": [
-                "Start-Debug.ps1",
-                "-FsInfoCatModulePath",
-                "../../../Debug/Windows/NetFramework/FsInfoCat"
+                "Start-Debug.ps1"
             ],
             "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
             "stopAtEntry": false,
