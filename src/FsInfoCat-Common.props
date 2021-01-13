@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <Choose>
-        <When Condition=" '$(Configuration)' == 'NetCoreRelease' Or '$(Configuration)' == 'NetFrameworkRelease' ">
+        <When Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetFrameworkRelease' ">
             <PropertyGroup>
                 <IsNetFramework>true</IsNetFramework>
             </PropertyGroup>
@@ -73,7 +73,7 @@
             </Choose>
         </When>
         <Otherwise>
-            <PropertyGroup Condition=" '$(OsPlatform)' =! 'Windows' And '$(OsPlatform)' =! 'OSX' ">
+            <PropertyGroup Condition=" '$(OsPlatform)' != 'Windows' And '$(OsPlatform)' != 'OSX' ">
                 <OsPlatform>Linux</OsPlatform>
             </PropertyGroup>
         </Otherwise>

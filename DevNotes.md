@@ -5,7 +5,7 @@
 | Name                                  | Project / Solution                 | Config Name         | OsPlatform | TargetFramework | Publish Dir                            |
 | ------------------------------------- | ---------------------------------- | ------------------- | ---------- | --------------- | -------------------------------------- |
 | Build All (.NET Core)                 | FsInfoCat.sln                      | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
-| Build All (.NET Framework)            | FsInfoCat.NetFramework.sln         | NetFrameworkDebug   | Windows    | net461          | n/a                                    |
+| Build All (.NET Framework)            | FsInfoCat-NetFramework.sln         | NetFrameworkDebug   | Windows    | net461          | n/a                                    |
 | Build Web App                         | FsInfoCat.Web.csproj               | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
 | Build Module (Windows PowerShell)     | FsInfoCat.PS.NetFramework.csproj   | NetFrameworkDebug   | Windows    | net461          | Debug/Windows/NetFramework/FsInfoCat   |
 | Build Module (PS Core)                | FsInfoCat.PS.csproj                | NetCoreDebug        | (any)      | netcoreapp3.1   | (by config/OS)                         |
