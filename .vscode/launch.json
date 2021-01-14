@@ -23,27 +23,9 @@
             "request": "launch",
             "preLaunchTask": "Build Module (PS Core)",
             "program": "pwsh",
-            "windows": {
-                "args": [
-                    "Start-Debug.ps1",
-                    "-FsInfoCatModulePath",
-                    "../../../Debug/Windows/NetCore/FsInfoCat"
-                ]
-            },
-            "linux": {
-                "args": [
-                    "Start-Debug.ps1",
-                    "-FsInfoCatModulePath",
-                    "../../../Debug/Linux/FsInfoCat"
-                ]
-            },
-            "osx": {
-                "args": [
-                    "Start-Debug.ps1",
-                    "-FsInfoCatModulePath",
-                    "../../../Debug/OSX/FsInfoCat"
-                ]
-            },
+            "args": [
+                "Start-Debug.ps1"
+            ],
             "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
             "stopAtEntry": false,
             "console": "integratedTerminal"
@@ -54,12 +36,10 @@
             "request": "launch",
             "program": "powershell",
             "args": [
-                "Invoke-FsInfoCatTests.ps1",
-                "-FsInfoCatModulePath",
-                "../../../Debug/Windows/NetCore/FsInfoCat"
+                "Invoke-FsInfoCatTests.ps1"
             ],
             "preLaunchTask": "Build PS Module (.NET Framework)",
-            "cwd": "${workspaceFolder}/src/FsInfoCat.Desktop.PS/Test",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },
@@ -69,27 +49,9 @@
             "request": "launch",
             "preLaunchTask": "Build Module (PS Core)",
             "program": "pwsh",
-            "windows": {
-                "args": [
-                    "Invoke-FsInfoCatTests.ps1",
-                    "-FsInfoCatModulePath",
-                    "../../../Debug/Windows/NetCore/FsInfoCat"
-                ]
-            },
-            "linux": {
-                "args": [
-                    "Invoke-FsInfoCatTests.ps1",
-                    "-FsInfoCatModulePath",
-                    "../../../Debug/Linux/FsInfoCat"
-                ]
-            },
-            "osx": {
-                "args": [
-                    "Invoke-FsInfoCatTests.ps1",
-                    "-FsInfoCatModulePath",
-                    "../../../Debug/OSX/FsInfoCat"
-                ]
-            },
+            "args": [
+                "Invoke-FsInfoCatTests.ps1"
+            ],
             "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
             "stopAtEntry": false,
             "console": "integratedTerminal"
@@ -122,9 +84,9 @@
             "type": "clr",
             "preLaunchTask": "Build Text Template Host",
             "request": "launch",
-            "program": "${workspaceFolder}/dev/StandaloneT4Host/bin/Debug/net472/StandaloneT4Host.exe",
+            "program": "${workspaceFolder}/Setup/bin/T4/StandaloneT4Host.exe",
             "args": ["${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj"],
-            "cwd": "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS",
+            "cwd": "${workspaceFolder}/Setup/bin/T4",
             "stopAtEntry": false,
             "console": "internalConsole"
         },

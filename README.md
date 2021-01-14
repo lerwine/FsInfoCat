@@ -11,5 +11,9 @@ Written for WGU Software Development Capstone – C868
     - [C768 Google Support Site](https://sites.google.com/wgu.edu/c768-techcomm-version2/home)
   - [Task 2](https://github.com/lerwine/FsInfoCat/blob/main/WGU/Task2)
 - [Resource Links](ResourceLinks.md)
-- [Pre-Production Environment Setup and Configuration](PreProdSetup.md)
+- Setup / Install Instructions
+  - [Production Environment](Setup/ProdEnvSetup.md)
+  - [Testing Environment](Setup/TestEnvSetup.md)
+  - [Development Environment](Setup/DevEnvSetup.md)
+- [Pre-Production Environment Setup and Configuration](Setup/PreProdSetup.md)
 - [Development Notes](DevNotes.md)

@@ -1,7 +1,3 @@
-Param(
-    [string]$FsInfoCatModulePath = '../../../Debug/Windows/NetFramework/FsInfoCat'
-)
-
 $InformationPreference = [System.Management.Automation.ActionPreference]::Continue;
 $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Continue;
 $WarningPreference = [System.Management.Automation.ActionPreference]::Continue;
@@ -10,9 +6,9 @@ $VerbosePreference = [System.Management.Automation.ActionPreference]::Continue;
 $PSModuleAutoLoadingPreference = [System.Management.Automation.ActionPreference]::Continue;
 $ProgressPreference = [System.Management.Automation.ActionPreference]::Continue;
 
-if ($null -eq (Import-Module -Name (($PSScriptRoot | Join-Path -ChildPath $FsInfoCatModulePath)) -PassThru)) { return }
-$FsCrawlJob = Start-FsCrawlJob -RootPath '.';
-$Result = Receive-Job -Job $FsCrawlJob -Wait;
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../Setup/bin/FsInfoCat') -ErrorAction Stop;
+$FsCrawlJob = Start-FsCrawlJob -RootPath '.' -ErrorAction Stop;
+$Result = Receive-Job -Job $FsCrawlJob -Wait -ErrorAction Stop;
 
 <#
 

@@ -11,6 +11,7 @@
 
 - [NuGet Gallery | Packages](https://www.nuget.org/packages)
 - [PowerShell Gallery | Home](https://www.powershellgallery.com/)
+- [Documentation for Visual Studio Code](https://code.visualstudio.com/docs)
 - [cdnjs - The #1 free and open source CDN built to make life easier for developers](https://cdnjs.com/)
 Simple. Fast. Reliable. Content delivery at its finest. cdnjs is a free and open-source CDN service trusted by over 11% of all websites, powered by Cloudflare. We make it faster and easier to load library files on your websites.
 

@@ -13,10 +13,7 @@
                 "/property:IsNetFramework=false",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": "$msCompile"
         },
         {
@@ -31,6 +28,9 @@
                 "/property:OsPlatform=Windows",
                 "/property:IsNetFramework=true",
                 "/consoleloggerparameters:NoSummary"
+            ],
+            "dependsOn": [
+                "Build Text Template Host"
             ],
             "group": {
                 "kind": "build",
@@ -81,22 +81,6 @@
                 "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj",
                 "/property:GenerateFullPaths=true",
                 "/property:IsNetFramework=false",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build Test Project (.NET Framework)",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "--configuration:NetFrameworkDebug",
-                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.NetFramework.csproj",
-                "/property:GenerateFullPaths=true",
-                "/property:OsPlatform=Windows",
-                "/property:IsNetFramework=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": "build",
@@ -248,7 +232,7 @@
             "args": [
                 "build",
                 "--configuration:Debug",
-                "${workspaceFolder}/dev/StandaloneT4Host/StandaloneT4Host.csproj",
+                "${workspaceFolder}/dev/src/StandaloneT4Host/StandaloneT4Host.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

@@ -1,22 +1,14 @@
 # Dev Environment Setup and Configuration
 
-## Initial Setup
-
-1. Download and run the [Visual Studio Code installer for Windows](https://go.microsoft.com/fwlink/?LinkID=534107).
-   - [Reference Page](https://code.visualstudio.com/docs/setup/setup-overview)
-2. Download and install [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download)
-   - If Visual Studio Code was running, you should restart it after intalling the .NET Core SDK.
-   - [Reference Page](https://code.visualstudio.com/docs/languages/dotnet)
-3. Open Visual Studio Code and Install C# Extension from Microsoft:
-   1. Click on Extensions Listing button ![Extensions Button](./img/ExtensionsButton.png)
-   2. Look for the C# extension and click 'Install' button if it is shown ![alt](./img/CsExtension.png).
-    - [Reference Page](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
-4. Restart Visual Studio Code.
-5. Clone the repository (<https://github.com/lerwine/FsInfoCat.git>) locally, and open the folder in Visual Studio Code (*File* &rArr; *Open Folder...*).
-6. Add missing dependencies.
-   - As the project is loaded, watch for the alerts for missing dependencies. Alternative, you can click on alert icon on the lower left corner ![Alert Icon](img/AlertIcon.png) to see if there are any. If there are alerts for missing dependencies, click on the link to add those missing dependencies.
-
 ## Intialize Database
+
+### Install prerequisite global tools
+
+Open Terminal (Ctrl+\`) and run the following commands:
+
+```powershell
+dotnet tool install --global dotnet-user-secrets
+```
 
 After the database has been created, you will need to create the password hash for administrative login:
 
@@ -26,7 +18,7 @@ After the database has been created, you will need to create the password hash f
 administrative account. Replace the existing password hash with the one that was generated in step 1.
 4. Open a connection to the database and execute the script to create the tables. Any existing tables will be deleted and re-created.
 
-## Configure Database Connection
+### Configure Database Connection
 
 1. Open the `src\FsInfoCat.Web\FsInfoCat.Web.csproj` file. If the `UserSecretsId` element existings within `Project/PropertyGroup`, remove it.
 2. Open the `src\FsInfoCat.Web\appsettings.json` file and modify the `ConnectionStrings/FsInfoCat` property. This contains a sequence of *key*__=__*value* pairs that are separated by semicolons.
@@ -40,12 +32,49 @@ administrative account. Replace the existing password hash with the one that was
     dotnet user-secrets set "DBPassword" "password in quotes"`
     ```
 
+## Testing Setup
+
+These steps are required in order to run the unit tests.
+
+### Upgrade Pester
+
+> The instructions in this section are adapted from the [Install Instructions on Pester's website](https://pester.dev/docs/introduction/installation).
+
+Before upgrading Pester, check to see if you are already running version 5 (or later). Open Terminal (Ctrl+\`) and run the following command:
+
+```powershell
+(Get-Module -ListAvailable -Name 'Pester') | Select-Object -ExpandProperty 'Version'
+```
+
+#### Upgrading from version 3
+
+Open PowerShell as administrator and run the following commands:
+
+```powershell
+$module = "$($env:ProgramFiles)\WindowsPowerShell\Modules\Pester";
+takeown /F $module /A /R
+icacls $module /reset
+icacls $module /grant "*S-1-5-32-544:F" /inheritance:d /T
+Remove-Item -Path $module -Recurse -Force -Confirm:$false
+Install-Module -Name Pester -Force -SkipPublisherCheck
+```
+
+#### Upgrading from version 4
+
+Open PowerShell as administrator and run the following commands:
+
+```powershell
+Uninstall-Module -Name Pester -Force -ErrorAction Stop
+Install-Module -Name Pester -Force -SkipPublisherCheck
+```
+
 ## Development Setup
 
 These steps are required for active development and are not required for the testing environent.
 
-1. Open Visual Studio Code and click on Extensions Listing button ![Extensions Button](./img/ExtensionsButton.png) and install recommended extensions.
+### Visual Studio Code Setup
 
+1. Open Visual Studio Code and click on Extensions Listing button ![Extensions Button](./img/ExtensionsButton.png) and install recommended extensions.
 2. Install NPM support for VS Code:
     - From Extensions Listing, Look for the npm extesion and click 'Install' button if it is shown
     ![alt](./img/NpmExtension.png).
@@ -54,3 +83,13 @@ These steps are required for active development and are not required for the tes
    1. Open Terminal (Ctrl+\`)
    2. Run command `npm install -g typescript`
 4. Restart Visual Studio Code.
+
+### Global Tools setup
+
+Open Terminal (Ctrl+\`) and run the following commands:
+
+```powershell
+dotnet tool install --global dotnet-ef
+dotnet tool install --global dotnet-aspnet-codegenerator
+dotnet tool install --global Microsoft.Web.LibraryManager.Cli
+```

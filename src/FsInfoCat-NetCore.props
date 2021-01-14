@@ -20,7 +20,6 @@
 
     <PropertyGroup>
         <Configurations>NetCoreDebug;NetCoreRelease</Configurations>
-        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
 
     <Import Project="FsInfoCat-Common.props" />

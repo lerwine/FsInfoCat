@@ -5,37 +5,12 @@
         <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
         <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
         <Product>PowerShell Module FsInfoCat.PS</Product>
+        <OutputPath Condition=" '$(IsPublishable)' != 'true' ">$(PsModuleFolder)</OutputPath>
+        <AppendRuntimeIdentifierToOutputPath Condition=" '$(IsPublishable)' != 'true' ">false</AppendRuntimeIdentifierToOutputPath>
+        <AppendTargetFrameworkToOutputPath Condition=" '$(IsPublishable)' != 'true' ">false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
-    <Choose>
-        <When Condition=" '$(Configuration)' == 'NetCoreRelease' Or '$(Configuration)' == 'NetFrameworkRelease' ">
-            <PropertyGroup>
-                <FsInfoCatDeploy>..\..\Release</FsInfoCatDeploy>
-            </PropertyGroup>
-        </When>
-        <Otherwise>
-            <PropertyGroup>
-                <FsInfoCatDeploy>..\..\Debug</FsInfoCatDeploy>
-            </PropertyGroup>
-        </Otherwise>
-    </Choose>
-
-    <Choose>
-        <When Condition=" '$(IsNetFramework)' == 'true' ">
-            <PropertyGroup>
-                <FsInfoCatDeploy>$(FsInfoCatDeploy)\$(OsPlatform)\NetFramework\FsInfoCat\</FsInfoCatDeploy>
-            </PropertyGroup>
-        </When>
-        <When Condition=" '$(OsPlatform)' == 'Windows' ">
-            <PropertyGroup>
-                <FsInfoCatDeploy>$(FsInfoCatDeploy)\$(OsPlatform)\NetCore\FsInfoCat\</FsInfoCatDeploy>
-            </PropertyGroup>
-        </When>
-        <Otherwise>
-            <PropertyGroup>
-                <FsInfoCatDeploy>$(FsInfoCatDeploy)\$(OsPlatform)\FsInfoCat\</FsInfoCatDeploy>
-            </PropertyGroup>
-        </Otherwise>
-    </Choose>
-
+    <PropertyGroup>
+        <FsInfoCatDebugModuleManifest>$(FsInfoCatDebugModule)FsInfoCat.psd1</FsInfoCatDebugModuleManifest>
+    </PropertyGroup>
 </Project>
