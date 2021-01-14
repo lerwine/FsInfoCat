@@ -3,9 +3,14 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net472</TargetFramework>
-        <OutputPath>$(T4BinFolder)</OutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+
+    <Import Project="..\..\..\src\FsInfoCat-Common.props" />
+
+    <PropertyGroup>
+        <OutputPath>$(T4BinFolder)</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,7 +24,13 @@
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <MakeDir Directories="$(UtilDistroFolder)" />
-        <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(T4DistroZip)" />
+        <Delete Files="$(T4DistroZip)" Condition=" $([System.IO.File]::Exists('$(T4DistroZip)')) " />
+        <ZipDirectory SourceDirectory="$(T4BinFolder)" DestinationFile="$(T4DistroZip)" />
     </Target>
+
+    <!-- <Target Name="PostBuild" AfterTargets="Publish">
+        <MakeDir Directories="$(UtilDistroFolder)" />
+        <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(T4DistroZip)" />
+    </Target> -->
 
 </Project>

@@ -9,18 +9,18 @@
         <FileVersion>$(AssemblyVersion)</FileVersion>
         <Company>Leonard T. Erwine</Company>
         <Copyright>Copyright © Leonard Thomas Erwine 2021</Copyright>
-        <SolutionDir>$([MSBuild]::EnsureTrailingSlash('$([System.IO.Directory]::GetParent(ProjectDir))'))</SolutionDir>
-        <RepositoryRootDir>$([MSBuild]::EnsureTrailingSlash('$([System.IO.Directory]::GetParent(SolutionDir))'))</RepositoryRootDir>
+        <SolutionDir>$([MSBuild]::EnsureTrailingSlash('$([System.IO.Directory]::GetParent(ProjectDir).FullName)'))</SolutionDir>
+        <RepositoryRootDir>$([MSBuild]::EnsureTrailingSlash('$([System.IO.Directory]::GetParent(SolutionDir).FullName)'))</RepositoryRootDir>
         <DistroFolder>$(RepositoryRootDir)Setup\Distro\</DistroFolder>
         <UtilDistroFolder>$(DistroFolder)Util\</UtilDistroFolder>
         <T4DistroZip>$(UtilDistroFolder)T4.zip</T4DistroZip>
         <SetupBinFolder>$(RepositoryRootDir)Setup\bin\</SetupBinFolder>
         <T4BinFolder>$(SetupBinFolder)T4\</T4BinFolder>
         <T4HostExe>$(T4BinFolder)StandaloneT4Host.exe</T4HostExe>
-        <PsModuleFolder>$(SetupBinFolder)$(TargetName)</PsModuleFolder>
-        <PsModuleManfest>$(PsModuleFolder)$(TargetName).psd1</PsModuleManfest>
-        <PsModuleDistroFolder>$(DistroFolder)PS</PsModuleDistroFolder>
-        <PsModuleDistroZip>$(PsModuleDistroFolder)$(TargetName)-$(OsPlatform)-$(TargetFramework.Replace(".", "")).zip</PsModuleDistroZip>
+        <PsModuleFolder>$(SetupBinFolder)FsInfoCat\</PsModuleFolder>
+        <PsModuleManfest>$(PsModuleFolder)FsInfoCat.psd1</PsModuleManfest>
+        <PsModuleDistroFolder>$(DistroFolder)PS\</PsModuleDistroFolder>
+        <PsModuleDistroZip>$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFramework.Replace(".", "")).zip</PsModuleDistroZip>
     </PropertyGroup>
 
     <Choose>

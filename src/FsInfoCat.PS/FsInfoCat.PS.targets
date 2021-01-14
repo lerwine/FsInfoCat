@@ -1,21 +1,21 @@
 <Project>
 
     <ItemGroup>
-        <PsFile Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </PsFile>
+        <PsFile Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*" />
+        <Content Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <None Include="*.tt;Test/**/*.*">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
-        <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </CompiledBinaries>
+        <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb" />
     </ItemGroup>
 
     <Import Project="..\T4.targets" />
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(IsPublishable)' == 'true' ">
+    <Target Name="PostBuild" AfterTargets="Publish">
         <MakeDir Directories="$(PsModuleDistroFolder)" />
+        <Delete Files="$(PsModuleDistroZip)" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroZip)')) " />
         <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroZip)" />
     </Target>
 

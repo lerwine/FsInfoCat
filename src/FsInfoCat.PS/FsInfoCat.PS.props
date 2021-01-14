@@ -5,12 +5,9 @@
         <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
         <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
         <Product>PowerShell Module FsInfoCat.PS</Product>
-        <OutputPath Condition=" '$(IsPublishable)' != 'true' ">$(PsModuleFolder)</OutputPath>
-        <AppendRuntimeIdentifierToOutputPath Condition=" '$(IsPublishable)' != 'true' ">false</AppendRuntimeIdentifierToOutputPath>
-        <AppendTargetFrameworkToOutputPath Condition=" '$(IsPublishable)' != 'true' ">false</AppendTargetFrameworkToOutputPath>
+        <OutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">$(PsModuleFolder)</OutputPath>
+        <AppendRuntimeIdentifierToOutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">false</AppendRuntimeIdentifierToOutputPath>
+        <AppendTargetFrameworkToOutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <FsInfoCatDebugModuleManifest>$(FsInfoCatDebugModule)FsInfoCat.psd1</FsInfoCatDebugModuleManifest>
-    </PropertyGroup>
 </Project>
