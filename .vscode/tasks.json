@@ -198,6 +198,21 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "Publish Module (PS Core, Windows)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "--configuration:NetCoreRelease",
+                "${workspaceFolder}/src/FsInfoCat.sln",
+                "/property:GenerateFullPaths=true",
+                "/property:OsPlatform=Windows",
+                "/property:IsNetFramework=false",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "Publish Module (PS Core, Linux)",
             "command": "dotnet",
             "type": "process",
