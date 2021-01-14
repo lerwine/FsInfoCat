@@ -1,5 +1,9 @@
 # Dev Environment Setup and Configuration
 
+> [Home](../../README.md) | [Setup and Configuration](../README.md) | [Development Operations](doc/DevOps.md)
+
+-------------------------------------------------------------------------------------------------------------
+
 ## Intialize Database
 
 ### Install prerequisite global tools
@@ -90,6 +94,10 @@ Open Terminal (Ctrl+\`) and run the following commands:
 
 ```powershell
 dotnet tool install --global dotnet-ef
-dotnet tool install --global dotnet-aspnet-codegenerator
+dotnet tool install --global dotnet-aspnet-codegenerator --version 3.1.4
 dotnet tool install --global Microsoft.Web.LibraryManager.Cli
 ```
+
+-------------------------------------------------------------------------------------------------------------
+
+> [Home](../../README.md) | [Setup and Configuration](../README.md) | [Development Operations](doc/DevOps.md)
