@@ -11,6 +11,12 @@
         <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Build" Version="15.9.20" />
+      <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
+      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
+    </ItemGroup>
+
     <Import Project="..\T4.targets" />
 
     <Target Name="PostBuild" AfterTargets="Publish">

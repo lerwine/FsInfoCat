@@ -1,12 +1,14 @@
 <Contents>
-  <SingleFile>
+  <Template FileName="SingleFile.zip">
     <File Name="File1.txt" Length="2951" Attributes="32" CreationTime="2021-01-14T00:29:46-05:00" LastWriteTime="2021-01-14T00:29:46-05:00" />
-  </SingleFile>
-  <MultiFile>
+  </Template>
+  <Template FileName="MultiFile.zip">
     <File Name="Lorem Ipsum.docx" Length="15163" Attributes="32" CreationTime="2021-01-14T00:32:58-05:00" LastWriteTime="2021-01-14T00:32:58-05:00" />
     <File Name="Lorem Ipsum.pdf" Length="61559" Attributes="32" CreationTime="2021-01-14T00:34:30-05:00" LastWriteTime="2021-01-14T00:34:30-05:00" />
-  </MultiFile>
-  <ThreeDeep>
+  </Template>
+  <Template FileName="ThreeDeep.zip">
+    <File Name="Lorem Ipsum.docx" Length="15163" Attributes="32" CreationTime="2021-01-14T00:32:58-05:00" LastWriteTime="2021-01-14T00:32:58-05:00" />
+    <File Name="Lorem Ipsum.pdf" Length="61559" Attributes="32" CreationTime="2021-01-14T00:34:30-05:00" LastWriteTime="2021-01-14T00:34:30-05:00" />
     <Folder Name="Graphics" Attributes="16" CreationTime="2021-01-14T00:38:18.6723781-05:00" LastWriteTime="2021-01-14T00:38:33.2018893-05:00">
       <Folder Name="Drawings" Attributes="16" CreationTime="2021-01-14T00:38:03.9541683-05:00" LastWriteTime="2021-01-14T00:39:30.1920359-05:00">
         <File Name="button-1.svg" Length="4052" Attributes="32" CreationTime="2020-10-01T23:00:55.8975058-04:00" LastWriteTime="2020-10-01T23:00:55.8985023-04:00" />
@@ -19,8 +21,8 @@
         <File Name="GeorgiaPhotoShoot.jpg" Length="286296" Attributes="32" CreationTime="2019-11-23T20:35:48.2952299-05:00" LastWriteTime="2019-05-02T10:31:59-04:00" />
       </Folder>
     </Folder>
-  </ThreeDeep>
-  <SevenDeep>
+  </Template>
+  <Template FileName="SixDeep.zip">
     <Folder Name="Graphics" Attributes="16" CreationTime="2021-01-14T00:55:42.1816832-05:00" LastWriteTime="2021-01-14T00:55:42.1847777-05:00">
       <Folder Name="Artwork" Attributes="16" CreationTime="2021-01-14T00:55:42.1847777-05:00" LastWriteTime="2021-01-14T00:55:42.1882418-05:00">
         <Folder Name="Albums" Attributes="16" CreationTime="2021-01-14T00:55:42.1882418-05:00" LastWriteTime="2021-01-14T00:55:42.2213376-05:00">
@@ -73,5 +75,111 @@
         </Folder>
       </Folder>
     </Folder>
-  </SevenDeep>
+  </Template>
+  <Test>
+    <Template FileName="SingleFile.zip" />
+  </Test>
+  <Test MaxDepth="0">
+    <Template FileName="SingleFile.zip" />
+  </Test>
+  <Test MaxDepth="1">
+    <Template FileName="SingleFile.zip" />
+  </Test>
+  <Test MaxDepth="2">
+    <Template FileName="SingleFile.zip" />
+  </Test>
+  <Test MaxItems="1">
+    <Template FileName="SingleFile.zip" />
+  </Test>
+  <Test MaxDepth="0" MaxItems="1">
+    <Template FileName="SingleFile.zip" />
+  </Test>
+  <Test MaxItems="2">
+    <Template FileName="SingleFile.zip" />
+  </Test>
+  <Test MaxDepth="2" MaxItems="2">
+    <Template FileName="SingleFile.zip" />
+  </Test>
+  <Test>
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxDepth="0">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxDepth="1">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxDepth="2">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxDepth="3">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxItems="1">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxDepth="0" MaxItems="1">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxDepth="1" MaxItems="2">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxDepth="2" MaxItems="3">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test MaxDepth="3" MaxItems="4">
+    <Template FileName="MultiFile.zip" />
+  </Test>
+  <Test>
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxDepth="0">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxDepth="2">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxDepth="3">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxDepth="4">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxItems="1">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxItems="2">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxItems="10">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxItems="11">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxItems="12">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxDepth="0" MaxItems="5">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test MaxDepth="1" MaxItems="5">
+    <Template FileName="MultiFile.zip" />
+    <Template FileName="ThreeDeep.zip" />
+  </Test>
+  <Test>
+    <Template FileName="SingleFile.zip" />
+    <Template FileName="SixDeep.zip" />
+  </Test>
 </Contents>
