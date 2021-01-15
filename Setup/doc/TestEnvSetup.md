@@ -19,3 +19,7 @@
 ## Database Setup
 
 1. Follow the instructions in [](DatabaseSetup.md) to initialize the database
+
+-------------------------------------------------------------------
+
+> [Home](../../README.md) | [Setup and Configuration](../README.md)

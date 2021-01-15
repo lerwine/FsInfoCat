@@ -4,5 +4,6 @@
     },
     "[csharp]": {
         "files.trimTrailingWhitespace": true
-    }
+    },
+    "powershell.codeFormatting.addWhitespaceAroundPipe": true
 }

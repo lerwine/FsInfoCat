@@ -1,26 +1,44 @@
 # Resource Links
 
+- [Resource Links](#resource-links)
+  - [General](#general)
+  - [Library Repositories](#library-repositories)
+  - [Client Side APIs](#client-side-apis)
+  - [.NET Core API](#net-core-api)
+    - [ASP.NET](#aspnet)
+      - [Client Side](#client-side)
+    - [Entity Framework](#entity-framework)
+    - [Testing](#testing)
+    - [WPF](#wpf)
+  - [PowerShell](#powershell)
+  - [Gists](#gists)
+  - [Old Projects](#old-projects)
+
+> [Home](../../README.md) | [Setup and Configuration](../README.md)
+
+-------------------------------------------------------------------
+
 ## General
 
 - [Markdown Syntax](https://www.markdownguide.org/cheat-sheet/)
 - [Writing a T4 Text Template](https://docs.microsoft.com/en-us/visualstudio/modeling/writing-a-t4-text-template?view=vs-2019)
 - [GDI+ Property Item Descriptions](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-property-item-descriptions)
 - [Configuration Manager Client WMI Programming](https://msdn.microsoft.com/en-us/library/cc144081.aspx)
+- [Documentation for Visual Studio Code](https://code.visualstudio.com/docs)
 
 ## Library Repositories
 
 - [NuGet Gallery | Packages](https://www.nuget.org/packages)
 - [PowerShell Gallery | Home](https://www.powershellgallery.com/)
-- [Documentation for Visual Studio Code](https://code.visualstudio.com/docs)
 - [cdnjs - The #1 free and open source CDN built to make life easier for developers](https://cdnjs.com/)
 Simple. Fast. Reliable. Content delivery at its finest. cdnjs is a free and open-source CDN service trusted by over 11% of all websites, powered by Cloudflare. We make it faster and easier to load library files on your websites.
 
-## Client Site References
+## Client Side APIs
 
 - [Introduction · Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
 Get started with Bootstrap, the world’s most popular framework for building responsive, mobile-first sites, with BootstrapCDN and a template starter page.
 
-## .NET Core
+## .NET Core API
 
 - [.NET API browser | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/api/?view=netcore-3.1)
 - [.NET CLI | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/tools/)
@@ -77,7 +95,31 @@ Overview of creating and configuring a model with Entity Framework Core
 General introductory overview of Entity Framework Core
 - [c# - How do I use IValidatableObject? - Stack Overflow](https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject)
 
-### PowerShell
+### Testing
+
+- [Integration tests in ASP.NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0#test-app-prerequisites)
+Learn how integration tests ensure that an app's components function correctly at the infrastructure level, including the database, file system, and network.
+- [Logging and tracing - .NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/logging-tracing)
+An introduction to .NET Core logging and tracing.
+- [NUnit Documentation | NUnit Docs](https://docs.nunit.org/articles/nunit/intro.html)
+- [dotnet-trace diagnostic tool - .NET CLI | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace)
+Learn how to install and use the dotnet-trace CLI tool to collect .NET traces of a running process without the native profiler, by using the .NET EventPipe.
+
+### WPF
+
+- [GitHub - microsoft/WPF-Samples: Repository for WPF related samples](https://github.com/Microsoft/WPF-Samples)
+Repository for WPF related samples. Contribute to microsoft/WPF-Samples development by creating an account on GitHub.
+- [What is Windows Presentation Foundation - WPF .NET | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-5.0)
+This article gives an overview about what Windows Presentation Foundation (WPF) is as it relates to .NET and what features are provided.
+- [Windows Presentation Foundation (WPF) for .NET Core documentation | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-5.0&preserve-view=true)
+Learn about using Windows Presentation Foundation, an open-source, graphical user interface for Windows, on .NET Core.
+- [c# - How to use System.ComponentModel.DataAnnotations in WPF or Winforms application - Stack Overflow](https://stackoverflow.com/questions/6854759/how-to-use-system-componentmodel-dataannotations-in-wpf-or-winforms-application)
+
+> [Home](../../README.md) | [Setup and Configuration](../README.md)
+
+-------------------------------------------------------------------
+
+## PowerShell
 
 - [Basics of Writing a PowerShell Module with C#, Part 2: Debugging – PowerShell Magazine](https://www.powershellmagazine.com/2014/04/08/basics-of-writing-a-powershell-module-with-c-part-2-debugging/)
 - [CimCmdlets Module - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/cimcmdlets/?view=powershell-7.1)
@@ -131,25 +173,9 @@ Provides PowerShell language and debugging support for Visual Studio Code - Powe
   - [about_Signing - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.1)
   Explains how to sign scripts so that they comply with the PowerShell execution policies.
 
-### Testing
+> [Home](../../README.md) | [Setup and Configuration](../README.md)
 
-- [Integration tests in ASP.NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0#test-app-prerequisites)
-Learn how integration tests ensure that an app's components function correctly at the infrastructure level, including the database, file system, and network.
-- [Logging and tracing - .NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/logging-tracing)
-An introduction to .NET Core logging and tracing.
-- [NUnit Documentation | NUnit Docs](https://docs.nunit.org/articles/nunit/intro.html)
-- [dotnet-trace diagnostic tool - .NET CLI | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace)
-Learn how to install and use the dotnet-trace CLI tool to collect .NET traces of a running process without the native profiler, by using the .NET EventPipe.
-
-### WPF
-
-- [GitHub - microsoft/WPF-Samples: Repository for WPF related samples](https://github.com/Microsoft/WPF-Samples)
-Repository for WPF related samples. Contribute to microsoft/WPF-Samples development by creating an account on GitHub.
-- [What is Windows Presentation Foundation - WPF .NET | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-5.0)
-This article gives an overview about what Windows Presentation Foundation (WPF) is as it relates to .NET and what features are provided.
-- [Windows Presentation Foundation (WPF) for .NET Core documentation | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-5.0&preserve-view=true)
-Learn about using Windows Presentation Foundation, an open-source, graphical user interface for Windows, on .NET Core.
-- [c# - How to use System.ComponentModel.DataAnnotations in WPF or Winforms application - Stack Overflow](https://stackoverflow.com/questions/6854759/how-to-use-system-componentmodel-dataannotations-in-wpf-or-winforms-application)
+-------------------------------------------------------------------
 
 ## Gists
 
@@ -171,3 +197,7 @@ Learn about using Windows Presentation Foundation, an open-source, graphical use
 - [PsSolutionManager](https://github.com/lerwine/PsSolutionManager)
 - [Visual Studio Code Toolkit](https://github.com/lerwine/LTEToolkit)
 - [WGU Software 2 Project](https://github.com/lerwine/WguScheduler356334)
+
+-------------------------------------------------------------------
+
+> [Home](../../README.md) | [Setup and Configuration](../README.md)

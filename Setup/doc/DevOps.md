@@ -1,6 +1,30 @@
 # Development Notes
 
-## Tasks
+- [Development Notes](#development-notes)
+  - [Git Commands](#git-commands)
+    - [Update forked repository from upstream](#update-forked-repository-from-upstream)
+  - [Build Tasks](#build-tasks)
+  - [MVC Web App CRUD scaffolding](#mvc-web-app-crud-scaffolding)
+  - [WPF Desktop App Window MVVM scaffolding](#wpf-desktop-app-window-mvvm-scaffolding)
+  - [Creating Dependency Properties for WPF View Models (Desktop App)](#creating-dependency-properties-for-wpf-view-models-desktop-app)
+  - [Generating and testing password hashes](#generating-and-testing-password-hashes)
+
+> [Home](../../README.md) | [Setup and Configuration](../README.md)
+
+-------------------------------------------------------------------
+
+## Git Commands
+
+### Update forked repository from upstream
+
+```powershell
+git pull --tags origin main
+git fetch upstream
+git merge upstream/main
+git push origin main:main
+```
+
+## Build Tasks
 
 | Name                                  | Project / Solution                 | Config Name         | OsPlatform | TargetFramework | Publish Dir                            |
 | ------------------------------------- | ---------------------------------- | ------------------- | ---------- | --------------- | -------------------------------------- |

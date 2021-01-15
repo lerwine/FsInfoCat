@@ -1,27 +1,195 @@
-$FsInfoCatModulePath = $PSScriptRoot | Join-Path -ChildPath '../Setup/bin/FSInfoCat';
+Param(
+    # Path to FSInfoCat module, relative to the current script.
+    [string]$FsInfoCatModulePath = '..\Setup\bin\FSInfoCat',
+    
+    # Path to the published and packaged FSInfoCat modules.
+    [string]$FsInfoCatDistroPath = '..\Distro\PS',
 
+    # Path to the published and packaged FSInfoCat modules.
+    [string]$WebProjectFile = '..\..\src\FsInfoCat.Web\FsInfoCat.Web.csproj',
+
+    [string]$ProdAppSettingsFile = '..\..\src\FsInfoCat.Web\appsettings.json',
+
+    [string]$DevAppSettingsFile = '..\..\src\FsInfoCat.Web\appsettings.Development.json'
+)
+
+Function Find-MsBuildBinFolder {
+    [CmdletBinding()]
+    Param()
+    
+    if ($null -eq $Script:__Find_MsBuild_YearRegex) {
+        $Script:__Find_MsBuild_YearRegex = [System.Text.RegularExpressions.Regex]::new('^2[01]\d\d$');
+        $Script:__Find_MsBuild_VersionRegex = [System.Text.RegularExpressions.Regex]::new('^v?(?<major>\d{1,9})(\.(?<minor>\d{1,9})(\.(?<build>\d{1,9})(\.(?<revision>\d{1,9}))?)?)?$');
+    }
+
+    (@(@((&{
+        (((${Env:ProgramFiles(x86)}, $Env:ProgramFiles) | ForEach-Object { $_ | Join-Path -ChildPath 'Microsoft Visual Studio' } | Where-Object { $_ | Test-Path -PathType Container } | Get-ChildItem -Directory) | ForEach-Object {
+            New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{ Match = $Script:__Find_MsBuild_YearRegex.Match($_.Name); RootPath = $_.FullName }
+        } | Where-Object { $_.Match.Success } | ForEach-Object {
+            $Item = $_;
+            (('BuildTools', 'Enterprise', 'Professional', 'Community') | ForEach-Object { ($Item.RootPath | Join-Path -ChildPath $_) | Join-Path -ChildPath 'MSBuild' } | Where-Object { $_ | Test-Path -PathType Container } | Get-ChildItem -Directory) | ForEach-Object {
+                New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+                    Year = [int]::Parse($Item.Match.Value);
+                    Match = $Script:__Find_MsBuild_VersionRegex.Match($_.Name);
+                    Name = $_.Name;
+                    BasePath = $_.FullName;
+                    Level = 2;
+                };
+            }
+        }) | Where-Object { $_.Match.Success -or $_.Name -eq 'Current' }
+        (($Env:ProgramFiles | Join-Path -ChildPath 'MSBuild') | Get-ChildItem -Directory) | ForEach-Object {
+            New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+                Match = $Script:__Find_MsBuild_VersionRegex.Match($_.Name);
+                Name = $_.Name;
+                BasePath = $_.FullName;
+                Level = 1;
+            };
+        } | Where-Object { $_.Match.Success }
+    }) | ForEach-Object { $_ | Add-Member -MemberType NoteProperty -Name 'Path' -Value ($_.BasePath | Join-Path -ChildPath 'Bin') -PassThru }) + @(
+        (($env:WinDir | Join-Path -ChildPath 'Microsoft.NET\Framework') | Get-ChildItem -Directory) | ForEach-Object {
+            New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+                Match = $Script:__Find_MsBuild_VersionRegex.Match($_.Name);
+                Name = $_.Name;
+                Path = $_.FullName;
+                Level = 0;
+            };
+        } | Where-Object { $_.Match.Success }
+    )) | Where-Object { ($_.Path | Join-Path -ChildPath 'Microsoft.Build.Engine.dll') | Test-Path -PathType Leaf } | ForEach-Object {
+        if ($_.Match.Success) {
+            if ($_.Match.Groups['minor'].Success) {
+                if ($_.Match.Groups['build'].Success) {
+                    if ($_.Match.Groups['revision'].Success) {
+                        $_ | Add-Member -MemberType NoteProperty -Name 'Version' -Value ([Version]::new([int]::Parse($_.Match.Groups['major'].Value), [int]::Parse($_.Match.Groups['minor'].Value), [int]::Parse($_.Match.Groups['build'].Value), [int]::Parse($_.Match.Groups['revision'].Value))) -PassThru;
+                    } else {
+                        $_ | Add-Member -MemberType NoteProperty -Name 'Version' -Value ([Version]::new([int]::Parse($_.Match.Groups['major'].Value), [int]::Parse($_.Match.Groups['minor'].Value), [int]::Parse($_.Match.Groups['build'].Value))) -PassThru;
+                    }
+                } else {
+                    $_ | Add-Member -MemberType NoteProperty -Name 'Version' -Value ([Version]::new([int]::Parse($_.Match.Groups['major'].Value), [int]::Parse($_.Match.Groups['minor'].Value))) -PassThru;
+                }
+            } else {
+                $_ | Add-Member -MemberType NoteProperty -Name 'Version' -Value ([Version]::new([int]::Parse($_.Match.Groups['major'].Value), 0)) -PassThru;
+            }
+        } else {
+            $Item = $_;
+            switch ($Item.Year) {
+                2019 { $Item | Add-Member -MemberType NoteProperty -Name 'Version' -Value ([Version]::new(16, 0)) -PassThru; break; } 
+                2017 { $Item | Add-Member -MemberType NoteProperty -Name 'Version' -Value ([Version]::new(15, 0)) -PassThru; break; }
+                default {
+                    if ($Item.Year -gt 2019) {
+                        $Item | Add-Member -MemberType NoteProperty -Name 'Version' -Value ([Version]::new($Item.Year, 0)) -PassThru;
+                    } else {
+                        $Item | Add-Member -MemberType NoteProperty -Name 'Version' -Value ([Version]::new(0, 0, 0, 0)) -PassThru;
+                    }
+                }
+            }
+        }
+    } | Where-Object { $_.Version.Major -ge 4 } | Sort-Object -Property 'Level', 'Version' -Descending) | Select-Object -First 1 -ExpandProperty 'Path';
+}
+
+$FsInfoCatModulePath = $PSScriptRoot | Join-Path -ChildPath $FsInfoCatModulePath;
+$FsInfoCatDistroPath = $PSScriptRoot | Join-Path -ChildPath $FsInfoCatDistroPath;
+$WebProjectFile = $PSScriptRoot | Join-Path -ChildPath $WebProjectFile;
+$ProdAppSettingsFile = $PSScriptRoot | Join-Path -ChildPath $ProdAppSettingsFile;
+$DevAppSettingsFile = $PSScriptRoot | Join-Path -ChildPath $DevAppSettingsFile;
+
+<#
 if (-not (($FsInfoCatModulePath | Test-Path -PathType Container) -and $null -ne (Import-Module -Name $FsInfoCatModulePath -ErrorAction Ignore -PassThru))) {
-    $ArchivePath = '../Distro/PS/FSInfoCat-Windows-netcoreapp31.zip';
+    $ArchivePath = $FsInfoCatDistroPath | Join-Path -ChildPath 'FSInfoCat-Windows-netcoreapp31.zip';
     if ($PSVersionTable.PSEdition -eq 'Desktop') {
-        $ArchivePath = '../Distro/PS/FSInfoCat-Windows-net461.zip';
+        $ArchivePath = $FsInfoCatDistroPath | Join-Path -ChildPath 'FSInfoCat-Windows-net461.zip';
     } else {
         if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Unix) {
-            $ArchivePath = '../Distro/PS/FSInfoCat-Linux-netcoreapp31.zip';
+            $ArchivePath = $FsInfoCatDistroPath | Join-Path -ChildPath 'FSInfoCat-Linux-netcoreapp31.zip';
         } else {
             if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::MacOSX) {
-                $ArchivePath = '../Distro/PS/FSInfoCat-OSX-netcoreapp31.zip';
+                $ArchivePath = $FsInfoCatDistroPath | Join-Path -ChildPath 'FSInfoCat-OSX-netcoreapp31.zip';
             }
         }
     }
     Expand-Archive -Path ($PSScriptRoot | Join-Path -ChildPath $ArchivePath) -DestinationPath $FsInfoCatModulePath -ErrorAction Stop;
     Import-Module -Name $FsInfoCatModulePath -ErrorAction Stop;
 }
+#>
+$ProdAppSettingsJson = $null;
+$ProdAppSettingsJson = [System.IO.File]::ReadAllText($ProdAppSettingsFile) | ConvertFrom-Json -ErrorAction Continue;
+if ($null -eq $ProdAppSettingsJson) {
+    Write-Warning -Message 'Failed to load web application production settings';
+    return;
+}
 
-$SqlConnectionStringBuilder = New-Object -TypeName 'System.Data.SqlClient.SqlConnectionStringBuilder' -Property @{
-    Authentication = [System.Data.SqlClient.SqlAuthenticationMethod]::SqlPassword;
-    ApplicationName = 'Initialize-FsInfoCatDb.ps1';
-    WorkstationID = [System.Environment]::MachineName;
-};
+if ($null -eq $ProdAppSettingsJson.ConnectionStrings) {
+    $ProdAppSettingsJson | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value (New-Object -TypeName 'System.Management.Automation.PSObject');
+}
+
+if ($null -eq $ProdAppSettingsJson.ConnectionStrings.FsInfoCat) {
+    $ProdAppSettingsJson.ConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value 'Server=tcp:c868dbserver.database.windows.net,1433;Initial Catalog=FsInfoCat;Persist Security Info=False;User ID=fsinfocatadmin;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;';
+}
+
+$ProdSqlConnectionStringBuilder = $null;
+$ProdSqlConnectionStringBuilder = New-Object -TypeName 'System.Data.SqlClient.SqlConnectionStringBuilder' -ArgumentList $ProdAppSettingsJson.ConnectionStrings.FsInfoCat -ErrorAction Continue;
+if ($null -eq $ProdSqlConnectionStringBuilder) {
+    Write-Warning -Message 'Failed to parse production connection string';
+    return;
+}
+
+$DevAppSettingsJson = $null;
+$DevAppSettingsJson = [System.IO.File]::ReadAllText($DevAppSettingsFile) | ConvertFrom-Json -ErrorAction Continue;
+if ($null -eq $DevAppSettingsJson) {
+    Write-Warning -Message 'Failed to load web application dev settings';
+    return;
+}
+
+if ($null -eq $DevAppSettingsJson.ConnectionStrings) {
+    $DevAppSettingsJson | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value (New-Object -TypeName 'System.Management.Automation.PSObject');
+}
+
+if ($null -eq $DevAppSettingsJson.ConnectionStrings.FsInfoCat) {
+    $DevAppSettingsJson.ConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $ProdSqlConnectionStringBuilder.ConnectionString;
+}
+
+$DevSqlConnectionStringBuilder = $null;
+$DevSqlConnectionStringBuilder = New-Object -TypeName 'System.Data.SqlClient.SqlConnectionStringBuilder' -ArgumentList $DevAppSettingsJson.ConnectionStrings.FsInfoCat -ErrorAction Continue;
+if ($null -eq $DevSqlConnectionStringBuilder) {
+    Write-Warning -Message 'Failed to parse dev connection string';
+    return;
+}
+
+@"
+ApplicationName = '$($DevSqlConnectionStringBuilder.ApplicationName)';
+Authentication = '$($DevSqlConnectionStringBuilder.Authentication)';
+ConnectTimeout = '$($DevSqlConnectionStringBuilder.ConnectTimeout)';
+DataSource = '$($DevSqlConnectionStringBuilder.DataSource)';
+InitialCatalog = '$($DevSqlConnectionStringBuilder.InitialCatalog)';
+PersistSecurityInfo = '$($DevSqlConnectionStringBuilder.PersistSecurityInfo)';
+UserID = '$($DevSqlConnectionStringBuilder.UserID)';
+MultipleActiveResultSets = '$($DevSqlConnectionStringBuilder.MultipleActiveResultSets)';
+Encrypt = '$($DevSqlConnectionStringBuilder.Encrypt)';
+TrustServerCertificate = '$($DevSqlConnectionStringBuilder.TrustServerCertificate)';
+AsynchronousProcessing = '$($DevSqlConnectionStringBuilder.AsynchronousProcessing)';
+ConnectionReset = '$($DevSqlConnectionStringBuilder.ConnectionReset)';
+ConnectRetryCount = '$($DevSqlConnectionStringBuilder.ConnectRetryCount)';
+ConnectRetryInterval = '$($DevSqlConnectionStringBuilder.ConnectRetryInterval)';
+IntegratedSecurity = '$($DevSqlConnectionStringBuilder.IntegratedSecurity)';
+LoadBalanceTimeout = '$($DevSqlConnectionStringBuilder.LoadBalanceTimeout)';
+MaxPoolSize = '$($DevSqlConnectionStringBuilder.MaxPoolSize)';
+MinPoolSize = '$($DevSqlConnectionStringBuilder.MinPoolSize)';
+MultiSubnetFailover = '$($DevSqlConnectionStringBuilder.MultiSubnetFailover)';
+NetworkLibrary = '$($DevSqlConnectionStringBuilder.NetworkLibrary)';
+PacketSize = '$($DevSqlConnectionStringBuilder.PacketSize)';
+PoolBlockingPeriod = '$($DevSqlConnectionStringBuilder.PoolBlockingPeriod)';
+Pooling = '$($DevSqlConnectionStringBuilder.Pooling)';
+Replication = '$($DevSqlConnectionStringBuilder.Replication)';
+TransactionBinding = '$($DevSqlConnectionStringBuilder.TransactionBinding)';
+TransparentNetworkIPResolution = '$($DevSqlConnectionStringBuilder.TransparentNetworkIPResolution)';
+Enlist = '$($DevSqlConnectionStringBuilder.Enlist)';
+FailoverPartner = '$($DevSqlConnectionStringBuilder.FailoverPartner)';
+TypeSystemVersion = '$($DevSqlConnectionStringBuilder.TypeSystemVersion)';
+UserInstance = '$($DevSqlConnectionStringBuilder.UserInstance)';
+WorkstationID = '$($DevSqlConnectionStringBuilder.WorkstationID)';
+"@
+
+
+<#
 $SqlConnectionStringBuilder.PSBase.DataSource = ([string](Read-Host -Prompt 'Database server name'))
 if ([string]::IsNullOrWhiteSpace($SqlConnectionStringBuilder.PSBase.DataSource)) { return }
 $SqlConnectionStringBuilder.PSBase.InitialCatalog = Read-Host -Prompt 'Initial Catalog (db name)';
@@ -134,3 +302,5 @@ try {
     $SqlConnection.Dispose();
     Write-Progress -Activity 'Initializing database' -Status 'Finished' -Completed;
 }
+
+#>
