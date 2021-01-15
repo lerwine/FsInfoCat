@@ -1,74 +1,74 @@
 <Contents>
   <Template FileName="SingleFile.zip">
-    <File Name="File1.txt" Length="2951" Attributes="32" CreationTime="2021-01-14T00:29:46-05:00" LastWriteTime="2021-01-14T00:29:46-05:00" />
+    <File Name="File1.txt" Length="2951" Attributes="32" CreationTime="2021-01-14T00:29:46-05:00" LastWriteTime="2021-01-14T00:29:46-05:00" Depth="0" />
   </Template>
   <Template FileName="MultiFile.zip">
-    <File Name="Lorem Ipsum.docx" Length="15163" Attributes="32" CreationTime="2021-01-14T00:32:58-05:00" LastWriteTime="2021-01-14T00:32:58-05:00" />
-    <File Name="Lorem Ipsum.pdf" Length="61559" Attributes="32" CreationTime="2021-01-14T00:34:30-05:00" LastWriteTime="2021-01-14T00:34:30-05:00" />
+    <File Name="Lorem Ipsum.docx" Length="15163" Attributes="32" CreationTime="2021-01-14T00:32:58-05:00" LastWriteTime="2021-01-14T00:32:58-05:00" Depth="0" />
+    <File Name="Lorem Ipsum.pdf" Length="61559" Attributes="32" CreationTime="2021-01-14T00:34:30-05:00" LastWriteTime="2021-01-14T00:34:30-05:00" Depth="0" />
   </Template>
   <Template FileName="ThreeDeep.zip">
-    <File Name="Lorem Ipsum.docx" Length="15163" Attributes="32" CreationTime="2021-01-14T00:32:58-05:00" LastWriteTime="2021-01-14T00:32:58-05:00" />
-    <File Name="Lorem Ipsum.pdf" Length="61559" Attributes="32" CreationTime="2021-01-14T00:34:30-05:00" LastWriteTime="2021-01-14T00:34:30-05:00" />
-    <Folder Name="Graphics" Attributes="16" CreationTime="2021-01-14T00:38:18.6723781-05:00" LastWriteTime="2021-01-14T00:38:33.2018893-05:00">
-      <Folder Name="Drawings" Attributes="16" CreationTime="2021-01-14T00:38:03.9541683-05:00" LastWriteTime="2021-01-14T00:39:30.1920359-05:00">
-        <File Name="button-1.svg" Length="4052" Attributes="32" CreationTime="2020-10-01T23:00:55.8975058-04:00" LastWriteTime="2020-10-01T23:00:55.8985023-04:00" />
-        <File Name="drawing.svg" Length="1851" Attributes="32" CreationTime="2020-10-01T15:51:14.6385521-04:00" LastWriteTime="2020-10-01T15:56:32.0796876-04:00" />
-        <File Name="example.svg" Length="1389" Attributes="32" CreationTime="2020-10-01T15:58:44.2879878-04:00" LastWriteTime="2020-10-01T19:35:51.0301224-04:00" />
+    <File Name="Lorem Ipsum.docx" Length="15163" Attributes="32" CreationTime="2021-01-14T00:32:58-05:00" LastWriteTime="2021-01-14T00:32:58-05:00" Depth="0" />
+    <File Name="Lorem Ipsum.pdf" Length="61559" Attributes="32" CreationTime="2021-01-14T00:34:30-05:00" LastWriteTime="2021-01-14T00:34:30-05:00" Depth="0" />
+    <Folder Name="Graphics" Attributes="16" CreationTime="2021-01-14T00:38:18.6723781-05:00" LastWriteTime="2021-01-14T00:38:33.2018893-05:00" Depth="1">
+      <Folder Name="Drawings" Attributes="16" CreationTime="2021-01-14T00:38:03.9541683-05:00" LastWriteTime="2021-01-14T00:39:30.1920359-05:00" Depth="2">
+        <File Name="button-1.svg" Length="4052" Attributes="32" CreationTime="2020-10-01T23:00:55.8975058-04:00" LastWriteTime="2020-10-01T23:00:55.8985023-04:00" Depth="2" />
+        <File Name="drawing.svg" Length="1851" Attributes="32" CreationTime="2020-10-01T15:51:14.6385521-04:00" LastWriteTime="2020-10-01T15:56:32.0796876-04:00" Depth="2" />
+        <File Name="example.svg" Length="1389" Attributes="32" CreationTime="2020-10-01T15:58:44.2879878-04:00" LastWriteTime="2020-10-01T19:35:51.0301224-04:00" Depth="2" />
       </Folder>
-      <Folder Name="Pictures" Attributes="16" CreationTime="2021-01-14T00:35:51.5493482-05:00" LastWriteTime="2021-01-14T00:36:32.144156-05:00">
-        <File Name="Georgia.jpeg" Length="431476" Attributes="32" CreationTime="2021-01-14T00:36:00.1991659-05:00" LastWriteTime="2020-11-15T16:45:44-05:00" />
-        <File Name="GeorgiaBop.jpg" Length="338261" Attributes="32" CreationTime="2019-11-23T20:35:39.79724-05:00" LastWriteTime="2019-07-16T10:35:54-04:00" />
-        <File Name="GeorgiaPhotoShoot.jpg" Length="286296" Attributes="32" CreationTime="2019-11-23T20:35:48.2952299-05:00" LastWriteTime="2019-05-02T10:31:59-04:00" />
+      <Folder Name="Pictures" Attributes="16" CreationTime="2021-01-14T00:35:51.5493482-05:00" LastWriteTime="2021-01-14T00:36:32.144156-05:00" Depth="2">
+        <File Name="Georgia.jpeg" Length="431476" Attributes="32" CreationTime="2021-01-14T00:36:00.1991659-05:00" LastWriteTime="2020-11-15T16:45:44-05:00" Depth="2" />
+        <File Name="GeorgiaBop.jpg" Length="338261" Attributes="32" CreationTime="2019-11-23T20:35:39.79724-05:00" LastWriteTime="2019-07-16T10:35:54-04:00" Depth="2" />
+        <File Name="GeorgiaPhotoShoot.jpg" Length="286296" Attributes="32" CreationTime="2019-11-23T20:35:48.2952299-05:00" LastWriteTime="2019-05-02T10:31:59-04:00" Depth="2" />
       </Folder>
     </Folder>
   </Template>
   <Template FileName="SixDeep.zip">
-    <Folder Name="Graphics" Attributes="16" CreationTime="2021-01-14T00:55:42.1816832-05:00" LastWriteTime="2021-01-14T00:55:42.1847777-05:00">
-      <Folder Name="Artwork" Attributes="16" CreationTime="2021-01-14T00:55:42.1847777-05:00" LastWriteTime="2021-01-14T00:55:42.1882418-05:00">
-        <Folder Name="Albums" Attributes="16" CreationTime="2021-01-14T00:55:42.1882418-05:00" LastWriteTime="2021-01-14T00:55:42.2213376-05:00">
-          <Folder Name="Folk" Attributes="16" CreationTime="2021-01-14T00:55:42.1914841-05:00" LastWriteTime="2021-01-14T00:55:42.1955073-05:00">
-            <Folder Name="John Denver" Attributes="16" CreationTime="2021-01-14T00:55:42.1955073-05:00" LastWriteTime="2021-01-14T00:55:42.1997597-05:00">
-              <File Name="Rocky Mountain High_Moment.jpg" Length="918944" Attributes="32" CreationTime="2021-01-14T00:50:48-05:00" LastWriteTime="2021-01-14T00:50:48-05:00" />
+    <Folder Name="Graphics" Attributes="16" CreationTime="2021-01-14T00:55:42.1816832-05:00" LastWriteTime="2021-01-14T00:55:42.1847777-05:00" Depth="1">
+      <Folder Name="Artwork" Attributes="16" CreationTime="2021-01-14T00:55:42.1847777-05:00" LastWriteTime="2021-01-14T00:55:42.1882418-05:00" Depth="2">
+        <Folder Name="Albums" Attributes="16" CreationTime="2021-01-14T00:55:42.1882418-05:00" LastWriteTime="2021-01-14T00:55:42.2213376-05:00" Depth="3">
+          <Folder Name="Folk" Attributes="16" CreationTime="2021-01-14T00:55:42.1914841-05:00" LastWriteTime="2021-01-14T00:55:42.1955073-05:00" Depth="4">
+            <Folder Name="John Denver" Attributes="16" CreationTime="2021-01-14T00:55:42.1955073-05:00" LastWriteTime="2021-01-14T00:55:42.1997597-05:00" Depth="5">
+              <File Name="Rocky Mountain High_Moment.jpg" Length="918944" Attributes="32" CreationTime="2021-01-14T00:50:48-05:00" LastWriteTime="2021-01-14T00:50:48-05:00" Depth="5" />
             </Folder>
           </Folder>
-          <Folder Name="Pop-Rock" Attributes="16" CreationTime="2021-01-14T00:55:42.2213376-05:00" LastWriteTime="2021-01-14T00:55:42.4797897-05:00">
-            <File Name="AlbumArt_{B5020207-474E-4720-3686-C02EC6059A00}_Large.jpg" Length="62364" Attributes="38" CreationTime="2020-08-24T20:37:08-04:00" LastWriteTime="2020-08-24T20:37:08-04:00" />
-            <File Name="AlbumArt_{B5020207-474E-4720-3686-C02EC6059A00}_Small.jpg" Length="62364" Attributes="38" CreationTime="2020-08-24T20:37:08-04:00" LastWriteTime="2020-08-24T20:37:08-04:00" />
-            <File Name="AlbumArt_{B5020207-474E-4720-4E46-362E2D891200}_Large.jpg" Length="23019" Attributes="38" CreationTime="2020-08-24T20:37:24-04:00" LastWriteTime="2020-08-24T20:37:24-04:00" />
-            <File Name="AlbumArt_{B5020207-474E-4720-4E46-362E2D891200}_Small.jpg" Length="23019" Attributes="38" CreationTime="2020-08-24T20:37:24-04:00" LastWriteTime="2020-08-24T20:37:24-04:00" />
-            <Folder Name="ELO" Attributes="16" CreationTime="2021-01-14T00:55:42.2753157-05:00" LastWriteTime="2021-01-14T00:55:42.3678312-05:00">
-              <Folder Name="ELO II" Attributes="16" CreationTime="2021-01-14T00:55:42.2790379-05:00" LastWriteTime="2021-01-14T00:55:42.350206-05:00">
-                <File Name="AlbumArtSmall.jpg" Length="52002" Attributes="38" CreationTime="2020-07-17T01:28:30-04:00" LastWriteTime="2020-07-17T01:28:30-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-4D79-2C2E3D37CE00}_Large.jpg" Length="52002" Attributes="38" CreationTime="2020-07-17T01:28:30-04:00" LastWriteTime="2020-07-17T01:28:30-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-4D79-2C2E3D37CE00}_Small.jpg" Length="52002" Attributes="38" CreationTime="2020-07-17T01:28:30-04:00" LastWriteTime="2020-07-17T01:28:30-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-A7CD-282C0EA1D300}_Large.jpg" Length="37684" Attributes="38" CreationTime="2020-07-17T01:28:24-04:00" LastWriteTime="2020-07-17T01:28:24-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-A7CD-282C0EA1D300}_Small.jpg" Length="37684" Attributes="38" CreationTime="2020-07-17T01:28:24-04:00" LastWriteTime="2020-07-17T01:28:24-04:00" />
-                <File Name="Folder.jpg" Length="52002" Attributes="38" CreationTime="2020-07-17T01:28:30-04:00" LastWriteTime="2020-07-17T01:28:30-04:00" />
+          <Folder Name="Pop-Rock" Attributes="16" CreationTime="2021-01-14T00:55:42.2213376-05:00" LastWriteTime="2021-01-14T00:55:42.4797897-05:00" Depth="4">
+            <File Name="AlbumArt_{B5020207-474E-4720-3686-C02EC6059A00}_Large.jpg" Length="62364" Attributes="38" CreationTime="2020-08-24T20:37:08-04:00" LastWriteTime="2020-08-24T20:37:08-04:00" Depth="4" />
+            <File Name="AlbumArt_{B5020207-474E-4720-3686-C02EC6059A00}_Small.jpg" Length="62364" Attributes="38" CreationTime="2020-08-24T20:37:08-04:00" LastWriteTime="2020-08-24T20:37:08-04:00" Depth="4" />
+            <File Name="AlbumArt_{B5020207-474E-4720-4E46-362E2D891200}_Large.jpg" Length="23019" Attributes="38" CreationTime="2020-08-24T20:37:24-04:00" LastWriteTime="2020-08-24T20:37:24-04:00" Depth="4" />
+            <File Name="AlbumArt_{B5020207-474E-4720-4E46-362E2D891200}_Small.jpg" Length="23019" Attributes="38" CreationTime="2020-08-24T20:37:24-04:00" LastWriteTime="2020-08-24T20:37:24-04:00" Depth="4" />
+            <Folder Name="ELO" Attributes="16" CreationTime="2021-01-14T00:55:42.2753157-05:00" LastWriteTime="2021-01-14T00:55:42.3678312-05:00" Depth="5">
+              <Folder Name="ELO II" Attributes="16" CreationTime="2021-01-14T00:55:42.2790379-05:00" LastWriteTime="2021-01-14T00:55:42.350206-05:00" Depth="6">
+                <File Name="AlbumArtSmall.jpg" Length="52002" Attributes="38" CreationTime="2020-07-17T01:28:30-04:00" LastWriteTime="2020-07-17T01:28:30-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-4D79-2C2E3D37CE00}_Large.jpg" Length="52002" Attributes="38" CreationTime="2020-07-17T01:28:30-04:00" LastWriteTime="2020-07-17T01:28:30-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-4D79-2C2E3D37CE00}_Small.jpg" Length="52002" Attributes="38" CreationTime="2020-07-17T01:28:30-04:00" LastWriteTime="2020-07-17T01:28:30-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-A7CD-282C0EA1D300}_Large.jpg" Length="37684" Attributes="38" CreationTime="2020-07-17T01:28:24-04:00" LastWriteTime="2020-07-17T01:28:24-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-A7CD-282C0EA1D300}_Small.jpg" Length="37684" Attributes="38" CreationTime="2020-07-17T01:28:24-04:00" LastWriteTime="2020-07-17T01:28:24-04:00" Depth="6" />
+                <File Name="Folder.jpg" Length="52002" Attributes="38" CreationTime="2020-07-17T01:28:30-04:00" LastWriteTime="2020-07-17T01:28:30-04:00" Depth="6" />
               </Folder>
-              <Folder Name="Face The Music" Attributes="16" CreationTime="2021-01-14T00:55:42.3678312-05:00" LastWriteTime="2021-01-14T00:55:42.465748-05:00">
-                <File Name="AlbumArtSmall.jpg" Length="79707" Attributes="38" CreationTime="2020-07-17T01:40:56-04:00" LastWriteTime="2020-07-17T01:40:56-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-19CD-332E169CBA00}_Large.jpg" Length="80351" Attributes="38" CreationTime="2020-07-17T01:40:52-04:00" LastWriteTime="2020-07-17T01:40:52-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-19CD-332E169CBA00}_Small.jpg" Length="80351" Attributes="38" CreationTime="2020-07-17T01:40:52-04:00" LastWriteTime="2020-07-17T01:40:52-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-753E-58283BDADD00}_Large.jpg" Length="30457" Attributes="38" CreationTime="2020-07-17T01:40:36-04:00" LastWriteTime="2020-07-17T01:40:36-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-753E-58283BDADD00}_Small.jpg" Length="8008" Attributes="38" CreationTime="2020-07-17T01:40:36-04:00" LastWriteTime="2020-07-17T01:40:36-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-CC2B-2B383B82A000}_Large.jpg" Length="79707" Attributes="38" CreationTime="2020-07-17T01:40:56-04:00" LastWriteTime="2020-07-17T01:40:56-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-CC2B-2B383B82A000}_Small.jpg" Length="79707" Attributes="38" CreationTime="2020-07-17T01:40:56-04:00" LastWriteTime="2020-07-17T01:40:56-04:00" />
-                <File Name="Folder.jpg" Length="79707" Attributes="38" CreationTime="2020-07-17T01:40:56-04:00" LastWriteTime="2020-07-17T01:40:56-04:00" />
+              <Folder Name="Face The Music" Attributes="16" CreationTime="2021-01-14T00:55:42.3678312-05:00" LastWriteTime="2021-01-14T00:55:42.465748-05:00" Depth="6">
+                <File Name="AlbumArtSmall.jpg" Length="79707" Attributes="38" CreationTime="2020-07-17T01:40:56-04:00" LastWriteTime="2020-07-17T01:40:56-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-19CD-332E169CBA00}_Large.jpg" Length="80351" Attributes="38" CreationTime="2020-07-17T01:40:52-04:00" LastWriteTime="2020-07-17T01:40:52-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-19CD-332E169CBA00}_Small.jpg" Length="80351" Attributes="38" CreationTime="2020-07-17T01:40:52-04:00" LastWriteTime="2020-07-17T01:40:52-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-753E-58283BDADD00}_Large.jpg" Length="30457" Attributes="38" CreationTime="2020-07-17T01:40:36-04:00" LastWriteTime="2020-07-17T01:40:36-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-753E-58283BDADD00}_Small.jpg" Length="8008" Attributes="38" CreationTime="2020-07-17T01:40:36-04:00" LastWriteTime="2020-07-17T01:40:36-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-CC2B-2B383B82A000}_Large.jpg" Length="79707" Attributes="38" CreationTime="2020-07-17T01:40:56-04:00" LastWriteTime="2020-07-17T01:40:56-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-CC2B-2B383B82A000}_Small.jpg" Length="79707" Attributes="38" CreationTime="2020-07-17T01:40:56-04:00" LastWriteTime="2020-07-17T01:40:56-04:00" Depth="6" />
+                <File Name="Folder.jpg" Length="79707" Attributes="38" CreationTime="2020-07-17T01:40:56-04:00" LastWriteTime="2020-07-17T01:40:56-04:00" Depth="6" />
               </Folder>
             </Folder>
-            <Folder Name="Queen" Attributes="16" CreationTime="2021-01-14T00:55:42.4797897-05:00" LastWriteTime="2021-01-14T00:55:42.5631079-05:00">
-              <Folder Name="Queen I" Attributes="16" CreationTime="2021-01-14T00:55:42.4838544-05:00" LastWriteTime="2021-01-14T00:55:42.5422221-05:00">
-                <File Name="AlbumArtSmall.jpg" Length="75853" Attributes="38" CreationTime="2020-08-24T20:37:46-04:00" LastWriteTime="2020-08-24T20:37:46-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-08FA-1A2014CB5F00}_Large.jpg" Length="75853" Attributes="38" CreationTime="2020-08-24T20:37:46-04:00" LastWriteTime="2020-08-24T20:37:46-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-08FA-1A2014CB5F00}_Small.jpg" Length="75853" Attributes="38" CreationTime="2020-08-24T20:37:46-04:00" LastWriteTime="2020-08-24T20:37:46-04:00" />
-                <File Name="Folder.jpg" Length="75853" Attributes="38" CreationTime="2020-08-24T20:37:46-04:00" LastWriteTime="2020-08-24T20:37:46-04:00" />
-                <File Name="queen.jpg" Length="776500" Attributes="32" CreationTime="2011-07-18T19:45:08-04:00" LastWriteTime="2011-07-18T19:45:08-04:00" />
+            <Folder Name="Queen" Attributes="16" CreationTime="2021-01-14T00:55:42.4797897-05:00" LastWriteTime="2021-01-14T00:55:42.5631079-05:00" Depth="5">
+              <Folder Name="Queen I" Attributes="16" CreationTime="2021-01-14T00:55:42.4838544-05:00" LastWriteTime="2021-01-14T00:55:42.5422221-05:00" Depth="6">
+                <File Name="AlbumArtSmall.jpg" Length="75853" Attributes="38" CreationTime="2020-08-24T20:37:46-04:00" LastWriteTime="2020-08-24T20:37:46-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-08FA-1A2014CB5F00}_Large.jpg" Length="75853" Attributes="38" CreationTime="2020-08-24T20:37:46-04:00" LastWriteTime="2020-08-24T20:37:46-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-08FA-1A2014CB5F00}_Small.jpg" Length="75853" Attributes="38" CreationTime="2020-08-24T20:37:46-04:00" LastWriteTime="2020-08-24T20:37:46-04:00" Depth="6" />
+                <File Name="Folder.jpg" Length="75853" Attributes="38" CreationTime="2020-08-24T20:37:46-04:00" LastWriteTime="2020-08-24T20:37:46-04:00" Depth="6" />
+                <File Name="queen.jpg" Length="776500" Attributes="32" CreationTime="2011-07-18T19:45:08-04:00" LastWriteTime="2011-07-18T19:45:08-04:00" Depth="6" />
               </Folder>
-              <Folder Name="Queen II" Attributes="16" CreationTime="2021-01-14T00:55:42.5631079-05:00" LastWriteTime="2021-01-14T00:55:42.6071847-05:00">
-                <File Name="AlbumArtSmall.jpg" Length="46140" Attributes="38" CreationTime="2020-08-24T20:38:06-04:00" LastWriteTime="2020-08-24T20:38:06-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-E443-2C2E57F92400}_Large.jpg" Length="46140" Attributes="38" CreationTime="2020-08-24T20:38:06-04:00" LastWriteTime="2020-08-24T20:38:06-04:00" />
-                <File Name="AlbumArt_{B5020207-474E-4720-E443-2C2E57F92400}_Small.jpg" Length="46140" Attributes="38" CreationTime="2020-08-24T20:38:06-04:00" LastWriteTime="2020-08-24T20:38:06-04:00" />
-                <File Name="Folder.jpg" Length="46140" Attributes="38" CreationTime="2020-08-24T20:38:06-04:00" LastWriteTime="2020-08-24T20:38:06-04:00" />
+              <Folder Name="Queen II" Attributes="16" CreationTime="2021-01-14T00:55:42.5631079-05:00" LastWriteTime="2021-01-14T00:55:42.6071847-05:00" Depth="6">
+                <File Name="AlbumArtSmall.jpg" Length="46140" Attributes="38" CreationTime="2020-08-24T20:38:06-04:00" LastWriteTime="2020-08-24T20:38:06-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-E443-2C2E57F92400}_Large.jpg" Length="46140" Attributes="38" CreationTime="2020-08-24T20:38:06-04:00" LastWriteTime="2020-08-24T20:38:06-04:00" Depth="6" />
+                <File Name="AlbumArt_{B5020207-474E-4720-E443-2C2E57F92400}_Small.jpg" Length="46140" Attributes="38" CreationTime="2020-08-24T20:38:06-04:00" LastWriteTime="2020-08-24T20:38:06-04:00" Depth="6" />
+                <File Name="Folder.jpg" Length="46140" Attributes="38" CreationTime="2020-08-24T20:38:06-04:00" LastWriteTime="2020-08-24T20:38:06-04:00" Depth="6" />
               </Folder>
             </Folder>
           </Folder>
@@ -76,110 +76,172 @@
       </Folder>
     </Folder>
   </Template>
-  <Test>
-    <Template FileName="SingleFile.zip" />
+  <Test TestNumber="0">
+    <Root>
+      <Template>SingleFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="0">
-    <Template FileName="SingleFile.zip" />
+  <Test TestNumber="1" MaxDepth="0">
+    <Root>
+      <Template>SingleFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="1">
-    <Template FileName="SingleFile.zip" />
+  <Test TestNumber="2" MaxDepth="1">
+    <Root>
+      <Template>SingleFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="2">
-    <Template FileName="SingleFile.zip" />
+  <Test TestNumber="3" MaxDepth="2">
+    <Root>
+      <Template>SingleFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxItems="1">
-    <Template FileName="SingleFile.zip" />
+  <Test TestNumber="4" MaxItems="1">
+    <Root>
+      <Template>SingleFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="0" MaxItems="1">
-    <Template FileName="SingleFile.zip" />
+  <Test TestNumber="5" MaxDepth="0" MaxItems="1">
+    <Root>
+      <Template>SingleFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxItems="2">
-    <Template FileName="SingleFile.zip" />
+  <Test TestNumber="6" MaxItems="2">
+    <Root>
+      <Template>SingleFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="2" MaxItems="2">
-    <Template FileName="SingleFile.zip" />
+  <Test TestNumber="7" MaxDepth="2" MaxItems="2">
+    <Root>
+      <Template>SingleFile.zip</Template>
+    </Root>
   </Test>
-  <Test>
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="8">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="0">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="9" MaxDepth="0">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="1">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="10" MaxDepth="1">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="2">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="11" MaxDepth="2">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="3">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="12" MaxDepth="3">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxItems="1">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="13" MaxItems="1">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="0" MaxItems="1">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="14" MaxDepth="0" MaxItems="1">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="1" MaxItems="2">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="15" MaxDepth="1" MaxItems="2">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="2" MaxItems="3">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="16" MaxDepth="2" MaxItems="3">
+    <Root>
+      <Template>MultiFile.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="3" MaxItems="4">
-    <Template FileName="MultiFile.zip" />
+  <Test TestNumber="17" MaxDepth="3" MaxItems="4">
+    <Root>
+      <Template>MultiFil7e.zip</Template>
+    </Root>
   </Test>
-  <Test>
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="18">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="0">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="19" MaxDepth="0">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="2">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="20" MaxDepth="2">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="3">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="21" MaxDepth="3">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="4">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="22" MaxDepth="4">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxItems="1">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="23" MaxItems="1">
+    <Root>
+      <Template>MultiFil3e.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxItems="2">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="24" MaxItems="2">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxItems="10">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="25" MaxItems="10">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxItems="11">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="26" MaxItems="11">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxItems="12">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="27" MaxItems="12">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="0" MaxItems="5">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="28" MaxDepth="0" MaxItems="5">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test MaxDepth="1" MaxItems="5">
-    <Template FileName="MultiFile.zip" />
-    <Template FileName="ThreeDeep.zip" />
+  <Test TestNumber="29" MaxDepth="1" MaxItems="5">
+    <Root>
+      <Template>MultiFile.zip</Template>
+      <Template>ThreeDeep.zip</Template>
+    </Root>
   </Test>
-  <Test>
-    <Template FileName="SingleFile.zip" />
-    <Template FileName="SixDeep.zip" />
+  <Test TestNumber="30">
+    <Root>
+      <Template>SingleFile.zip</Template>
+      <Template>SixDeep.zip</Template>
+    </Root>
   </Test>
 </Contents>
