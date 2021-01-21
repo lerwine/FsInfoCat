@@ -87,6 +87,34 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "Build Module (TestHelper)",
+            "command": "dotnet",
+            "type": "process","args": [
+                "build",
+                "--configuration:NetCoreDebug",
+                "${workspaceFolder}/dev/src/TestHelper/TestHelper.csproj",
+                "/property:GenerateFullPaths=true",
+                "/property:IsNetFramework=false",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Module (DevHelper)",
+            "command": "dotnet",
+            "type": "process","args": [
+                "build",
+                "--configuration:NetCoreDebug",
+                "${workspaceFolder}/dev/src/DevHelper/DevHelper.csproj",
+                "/property:GenerateFullPaths=true",
+                "/property:IsNetFramework=false",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "Build Test Project (.NET Core)",
             "command": "dotnet",
             "type": "process",
@@ -242,6 +270,20 @@
         },
         {
             "label": "Build Text Template Host",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "--configuration:Debug",
+                "${workspaceFolder}/dev/src/StandaloneT4Host/StandaloneT4Host.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Text Template Host (TestHelper)",
             "command": "dotnet",
             "type": "process",
             "args": [

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandaloneT4Host", "Standal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevHelper", "DevHelper\DevHelper.csproj", "{909B33DC-2382-4D82-840D-9892A27274D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelper", "TestHelper\TestHelper.csproj", "{8D912F24-FD89-4B0B-AC1D-37225673522E}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +46,17 @@ Global
 		{909B33DC-2382-4D82-840D-9892A27274D9}.Release|x64.Build.0 = Debug|AnyCPU
 		{909B33DC-2382-4D82-840D-9892A27274D9}.Release|x86.ActiveCfg = Debug|AnyCPU
 		{909B33DC-2382-4D82-840D-9892A27274D9}.Release|x86.Build.0 = Debug|AnyCPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Debug|x64.Build.0 = Debug|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Debug|x86.Build.0 = Debug|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|AnyCPU.Build.0 = Release|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|x64.ActiveCfg = Release|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|x64.Build.0 = Release|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|x86.ActiveCfg = Release|Any CPU
+		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
