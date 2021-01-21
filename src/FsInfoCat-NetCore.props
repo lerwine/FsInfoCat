@@ -1,5 +1,15 @@
 <Project>
 
+    <PropertyGroup>
+        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+$(MSBuildThisFile) Top:
+    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
+            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
+              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
+                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
+          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
+    </PropertyGroup>
+
     <Choose>
         <When Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'NetFrameworkDebug' ">
             <PropertyGroup>

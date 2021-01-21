@@ -1,6 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+$(MSBuildThisFile) Top:
+    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
+            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
+              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
+                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
+          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <ProjectGuid>{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}</ProjectGuid>
         <IsPackable>false</IsPackable>
         <TargetFramework>netcoreapp3.1</TargetFramework>

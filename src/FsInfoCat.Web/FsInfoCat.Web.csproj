@@ -1,6 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
+        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+$(MSBuildThisFile) Top:
+    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
+            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
+              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
+                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
+          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UserSecretsId>6e695feb-4201-4efd-9047-fbc8a286541c</UserSecretsId>
     </PropertyGroup>
@@ -23,5 +33,15 @@
     <ItemGroup>
         <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+$(MSBuildThisFile) Bottom:
+    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
+            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
+              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
+                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
+          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
+    </PropertyGroup>
 
 </Project>

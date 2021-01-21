@@ -1,0 +1,30 @@
+<Project>
+
+    <Target Name="ReportCustomVars">
+        <Message Importance="High" Text="FsInfoCatTrace:$(FsInfoCatTrace)" />
+        <Message Importance="High" Text="MSBuildProjectDirectory: $(MSBuildProjectDirectory)" />
+        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
+        <Message Importance="High" Text="AssemblyVersion: $(AssemblyVersion)" />
+        <Message Importance="High" Text="Configuration: $(Configuration)" />
+        <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
+        <Message Importance="High" Text="OutputPath: $(OutputPath)" />
+        <Message Importance="High" Text="OsPlatform: $(OsPlatform)" />
+        <Message Importance="High" Text="RepositoryRootDir: $(RepositoryRootDir)" />
+        <Message Importance="High" Text="DevFolder: $(DevFolder)" />
+        <Message Importance="High" Text="DevSlnDir: $(DevSlnDir)" />
+        <Message Importance="High" Text="FsInfoCatSlnDir: $(FsInfoCatSlnDir)" />
+        <Message Importance="High" Text="SetupFolder: $(SetupFolder)" />
+        <Message Importance="High" Text="SetupBinFolder: $(SetupBinFolder)" />
+        <Message Importance="High" Text="T4BinFolder: $(T4BinFolder)" />
+        <Message Importance="High" Text="T4HostExe: $(T4HostExe)" />
+        <Message Importance="High" Text="PsModuleFolder: $(PsModuleFolder)" />
+        <Message Importance="High" Text="PsModuleManfest: $(PsModuleManfest)" />
+        <Message Importance="High" Text="DistroFolder: $(DistroFolder)" />
+        <Message Importance="High" Text="UtilDistroFolder: $(UtilDistroFolder)" />
+        <Message Importance="High" Text="T4DistroZip: $(T4DistroZip)" />
+        <Message Importance="High" Text="PsModuleDistroFolder: $(PsModuleDistroFolder)" />
+        <Message Importance="High" Text="PsModuleDistroZip: $(PsModuleDistroZip)" />
+        <Message Importance="High" Text="MSBuildToolsPath: $(MSBuildToolsPath)" />
+    </Target>
+
+</Project>

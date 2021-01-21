@@ -1,6 +1,16 @@
 <Project>
 
     <PropertyGroup>
+        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+$(MSBuildThisFile) Top:
+    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
+            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
+              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
+                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
+          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
         <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
         <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>

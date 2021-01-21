@@ -1,14 +1,16 @@
 <Project>
 
     <ItemGroup>
-        <PsFile Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*" />
-        <Content Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
+        <Content Include="*.help.txt;*.dll-help.xml;*.psm1-help.xml;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
         <None Include="*.tt;Test/**/*.*">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
         </None>
-        <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb" />
+        <!-- <PsFile Include="*.help.txt;*.dll-help.xml;*.psm1-help.xml;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*" />
+        <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb" /> -->
     </ItemGroup>
 
     <ItemGroup>
@@ -22,6 +24,8 @@
     <Target Name="PostBuild" AfterTargets="Publish">
         <MakeDir Directories="$(PsModuleDistroFolder)" />
         <Delete Files="$(PsModuleDistroZip)" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroZip)')) " />
+        <Message Importance="High" Text="$(MSBuildThisFile): Published module deployed to $(PublishDir)" />
+        <Message Importance="High" Text="$(MSBuildThisFile): Creating distributable ZIP file $(PsModuleDistroZip)" />
         <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroZip)" />
     </Target>
 
