@@ -79,7 +79,7 @@ namespace FsInfoCat.Models.Crawl
 
         private IEqualityComparer<string> _nameComparer = null;
 
-        private IEqualityComparer<string> GetNameComparer()
+        public IEqualityComparer<string> GetNameComparer()
         {
             IEqualityComparer<string> nameComparer = _nameComparer;
             if (null == nameComparer)
@@ -88,7 +88,7 @@ namespace FsInfoCat.Models.Crawl
             return nameComparer;
         }
 
-        public T Find<T>(IEnumerable<IFsChildNode> source, string name)
+        public T FindByName<T>(IEnumerable<IFsChildNode> source, string name)
             where T : class, IFsChildNode
         {
             if (string.IsNullOrEmpty(name))

@@ -65,7 +65,7 @@ namespace FsInfoCat.Models.Crawl
             else
             {
                 root = GetRoot(host, directory.Parent, out IFsDirectory parent);
-                branch = root.Find<FsDirectory>(parent.ChildNodes, directory.Name);
+                branch = root.FindByName<FsDirectory>(parent.ChildNodes, directory.Name);
                 if (null == branch)
                 {
                     FsDirectory childDir = new FsDirectory
