@@ -9,7 +9,7 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule = 'DevHelper.psm1'
+    RootModule = 'DevHelperLib.dll'
 
     # Version number of this module.
     ModuleVersion = '0.1'
@@ -18,7 +18,7 @@
     CompatiblePSEditions = @('Core', 'Desktop')
 
     # ID used to uniquely identify this module
-    GUID = '909b33dc-2382-4d82-840d-9892a27274d9'
+    GUID = '0a5db3f8-4ff8-43ac-9714-9b47416098e1'
 
     # Author of this module
     Author = 'Leonard T. Erwine'
@@ -30,7 +30,7 @@
     Copyright = '(c) 2021 Leonard T. Erwine. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'Dev Helper PowerShell Module for FsInfoCat dev support.'
+    Description = 'Dev Helper PowerShell Library for FsInfoCat dev support.'
 
     # Minimum version of the Windows PowerShell engine required by this module
     # PowerShellVersion = '5.0'
@@ -66,15 +66,13 @@
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules = @('DevHelperLib.psd1')
+    # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Test-CsClassName', 'Test-FileInfo', 'Read-CsClassName', 'Read-Choice', 'Read-YesOrNo', 'Convert-ToCommentLines',
-        'New-WpfWindowScaffold', 'New-MvcScaffold', 'Read-CsTypeModel', 'New-DependencyProperty', 'Read-DependencyProperty',
-        'New-XmlWriterSettings')
+    FunctionsToExport = @()
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport = '*'
+    CmdletsToExport = @('Export-Xml')
 
     # Variables to export from this module
     VariablesToExport = '*'

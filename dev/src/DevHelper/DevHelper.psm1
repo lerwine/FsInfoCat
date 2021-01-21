@@ -618,3 +618,101 @@ Function Read-DependencyProperty {
         }
     }
 }
+
+Function New-XmlWriterSettings {
+    [CmdletBinding(DefaultParameterSetName = 'Pipeline')]
+    Param(
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [bool]$DoNotCheckCharacters = $false,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [bool]$CloseOutput = $false,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [System.Xml.ConformanceLevel]$ConformanceLevel = [System.Xml.ConformanceLevel]::Auto,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [bool]$DoNotEscapeUriAttributes = $false,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [System.Text.UTF8Encoding]$Encoding = (New-Object -TypeName 'System.Text.UTF8Encoding' -ArgumentList $false, $true),
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [bool]$Indent = $false,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [string]$IndentChars = '  ',
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [bool]$OmitDuplicateNamespaces = $false,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [string]$NewLineChars = [System.Environment]::NewLine,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [System.Xml.NewLineHandling]$NewLineHandling = [System.Xml.NewLineHandling]::Replace,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [bool]$NewLineOnAttributes = $false,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [bool]$OmitXmlDeclaration = $false,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [bool]$NoAutoCloseTag = $false,
+
+        [Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Alias('XmlWriterSettings')]
+        # XmlWriterSettings to clone.
+        [System.Xml.XmlWriterSettings]$Settings
+    )
+
+    Process {
+        $XmlWriterSettings = $null;
+        if ($PSBoundParameters.ContainsKey('Settings')) {
+            $XmlWriterSettings = $Settings.Clone();
+            if ($PSBoundParameters.ContainsKey('DoNotCheckCharacters')) { $XmlWriterSettings.CheckCharacters = -not $DoNotCheckCharacters }
+            if ($PSBoundParameters.ContainsKey('CloseOutput')) { $XmlWriterSettings.CloseOutput = $CloseOutput }
+            if ($PSBoundParameters.ContainsKey('ConformanceLevel')) { $XmlWriterSettings.ConformanceLevel = $ConformanceLevel }
+            if ($PSBoundParameters.ContainsKey('DoNotEscapeUriAttributes')) { $XmlWriterSettings.DoNotEscapeUriAttributes = $DoNotEscapeUriAttributes }
+            if ($PSBoundParameters.ContainsKey('Encoding')) { $XmlWriterSettings.Encoding = $Encoding }
+            if ($PSBoundParameters.ContainsKey('Indent')) { $XmlWriterSettings.Indent = $Indent }
+            if ($PSBoundParameters.ContainsKey('IndentChars')) { $XmlWriterSettings.IndentChars = $IndentChars }
+            if ($PSBoundParameters.ContainsKey('OmitDuplicateNamespaces')) {
+                if ($OmitDuplicateNamespaces) {
+                    $XmlWriterSettings.NamespaceHandling = [System.Xml.NamespaceHandling]::OmitDuplicates;
+                } else {
+                    $XmlWriterSettings.NamespaceHandling = [System.Xml.NamespaceHandling]::Default;
+                }
+            }
+            if ($PSBoundParameters.ContainsKey('NewLineChars')) { $XmlWriterSettings.NewLineChars = $NewLineChars }
+            if ($PSBoundParameters.ContainsKey('NewLineHandling')) { $XmlWriterSettings.NewLineHandling = $NewLineHandling }
+            if ($PSBoundParameters.ContainsKey('NewLineOnAttributes')) { $XmlWriterSettings.NewLineOnAttributes = $NewLineOnAttributes }
+            if ($PSBoundParameters.ContainsKey('OmitXmlDeclaration')) { $XmlWriterSettings.OmitXmlDeclaration = $OmitXmlDeclaration }
+            if ($PSBoundParameters.ContainsKey('NoAutoCloseTag')) { $XmlWriterSettings.WriteEndDocumentOnClose = -not $NoAutoCloseTag }
+        } else {
+            $XmlWriterSettings = New-Object -TypeName 'System.Xml.XmlWriterSettings' -Property @{
+                Async = false;
+                CheckCharacters = -not $DoNotCheckCharacters;
+                CloseOutput = $CloseOutput;
+                ConformanceLevel = $ConformanceLevel;
+                DoNotEscapeUriAttributes = $DoNotEscapeUriAttributes;
+                Encoding = $Encoding;
+                Indent = $Indent;
+                IndentChars = $IndentChars;
+                NamespaceHandling = $NamespaceHandling;
+                NewLineChars = $NewLineChars;
+                NewLineHandling = $NewLineHandling;
+                NewLineOnAttributes = $NewLineOnAttributes;
+                OmitXmlDeclaration = $OmitXmlDeclaration;
+                WriteEndDocumentOnClose = -not $NoAutoCloseTag;
+            };
+            if ($OmitDuplicateNamespaces) {
+                $XmlWriterSettings.NamespaceHandling = [System.Xml.NamespaceHandling]::OmitDuplicates;
+            } else {
+                $XmlWriterSettings.NamespaceHandling = [System.Xml.NamespaceHandling]::Default;
+            }
+        }
+        $XmlWriterSettings | Write-Output;
+    }
+}
