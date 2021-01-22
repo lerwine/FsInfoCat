@@ -1,0 +1,24 @@
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="NetCoreBuild.xsd">
+
+    <ItemGroup>
+        <Content Include="*.help.txt;*.dll-help.xml;*.psm1-help.xml;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+        </Content>
+        <None Include="*.tt;Test/**/*.*">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+        </None>
+        <!-- <PsFile Include="*.help.txt;*.dll-help.xml;*.psm1-help.xml;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*" />
+        <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb" /> -->
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="Publish">
+        <MakeDir Directories="$(PsModuleDistroFolder)" />
+        <Delete Files="$(PsModuleDistroZip)" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroZip)')) " />
+        <Message Importance="High" Text="$(MSBuildThisFile): Published module deployed to $(PublishDir)" />
+        <Message Importance="High" Text="$(MSBuildThisFile): Creating distributable ZIP file $(PsModuleDistroZip)" />
+        <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroZip)" />
+    </Target>
+
+</Project>

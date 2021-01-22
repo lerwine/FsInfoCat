@@ -1,6 +1,6 @@
-<Project>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Resources/Build/NetCoreBuild.xsd">
 
-    <Target Name="ReportCustomVars">
+    <Target Name="CheckCustomVars">
         <Message Importance="High" Text="FsInfoCatTrace:$(FsInfoCatTrace)" />
         <Message Importance="High" Text="MSBuildProjectDirectory: $(MSBuildProjectDirectory)" />
         <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />

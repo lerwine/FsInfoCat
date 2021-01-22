@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Resources/Build/NetCoreBuild.xsd">
 
     <PropertyGroup>
         <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
@@ -9,7 +9,6 @@ $(MSBuildThisFile) Top:
                  OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
           RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
     </PropertyGroup>
-
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -36,6 +35,6 @@ $(MSBuildThisFile) Top:
         </None>
     </ItemGroup>
 
-    <Import Project="..\..\..\src\T4.targets" />
+    <Import Project="$(T4BuildTargets)" />
 
 </Project>

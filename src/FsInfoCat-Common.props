@@ -1,4 +1,4 @@
-<Project>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../Resources/Build/NetCoreBuild.xsd">
 
     <PropertyGroup>
         <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)

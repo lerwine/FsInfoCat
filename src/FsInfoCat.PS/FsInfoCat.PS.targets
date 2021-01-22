@@ -1,17 +1,4 @@
-<Project>
-
-    <ItemGroup>
-        <Content Include="*.help.txt;*.dll-help.xml;*.psm1-help.xml;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-        </Content>
-        <None Include="*.tt;Test/**/*.*">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-        </None>
-        <!-- <PsFile Include="*.help.txt;*.dll-help.xml;*.psm1-help.xml;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*" />
-        <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb" /> -->
-    </ItemGroup>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Resources/Build/NetCoreBuild.xsd">
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Build" Version="15.9.20" />
@@ -19,7 +6,7 @@
       <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
     </ItemGroup>
 
-    <Import Project="..\T4.targets" />
+    <Import Project="$(T4BuildTargets)" />
 
     <Target Name="PostBuild" AfterTargets="Publish">
         <MakeDir Directories="$(PsModuleDistroFolder)" />

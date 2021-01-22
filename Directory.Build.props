@@ -1,4 +1,4 @@
-<Project>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Resources/Build/NetCoreBuild.xsd">
 
     <PropertyGroup>
         <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
@@ -23,10 +23,15 @@ $(MSBuildThisFile) Top:
     <PropertyGroup>
         <DevFolder>$(RepositoryRootDir)dev\</DevFolder>
         <DevSlnDir>$(DevFolder)src\</DevSlnDir>
+        <FsInfoCatSlnDir>$(RepositoryRootDir)src\</FsInfoCatSlnDir>
     </PropertyGroup>
 
     <PropertyGroup>
-        <FsInfoCatSlnDir>$(RepositoryRootDir)src\</FsInfoCatSlnDir>
+        <ResourcesDir>$(RepositoryRootDir)Resources\</ResourcesDir>
+        <BuildResourcesDir>$(ResourcesDir)Build\</BuildResourcesDir>
+        <PsModuleBuildProps>$(BuildResourcesDir)PsModule.Targets</PsModuleBuildProps>
+        <PsModuleBuildTargets>$(BuildResourcesDir)PsModule.Targets</PsModuleBuildTargets>
+        <T4BuildTargets>$(BuildResourcesDir)PsModule.Targets</T4BuildTargets>
     </PropertyGroup>
 
     <PropertyGroup>

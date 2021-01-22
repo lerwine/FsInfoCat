@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:attributeGroup name="ConditionalGroup">
+        <xs:attribute name="Condition" type="xs:string" use="optional" />
+        <xs:attribute name="Label" type="xs:string" use="optional" />
+    </xs:attributeGroup>
+    <xs:complexType name="PropertyType">
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="ImportType">
+        <xs:attribute name="Project" type="xs:string" use="required" />
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="ChooseConditionalType">
+        <xs:sequence>
+            <xs:element name="When" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element name="PropertyGroup" type="PropertyGroupType" />
+                        <xs:element name="Choose" type="ChooseConditionalType" />
+                    </xs:choice>
+                    <xs:attributeGroup ref="ConditionalGroup" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Otherwise" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element name="PropertyGroup" type="PropertyGroupType" />
+                        <xs:element name="Choose" type="ChooseConditionalType" />
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TrueFalsePropertyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:boolean">
+                <xs:attributeGroup ref="ConditionalGroup" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="StringPropertyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attributeGroup ref="ConditionalGroup" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="TargetFrameworkType">
+        <xs:simpleContent>
+            <xs:restriction base="StringPropertyType">
+                <xs:enumeration value="netcoreapp3.1"></xs:enumeration>
+                <xs:enumeration value="netcoreapp2.1"></xs:enumeration>
+                <xs:enumeration value="netcoreapp2.0"></xs:enumeration>
+                <xs:enumeration value="netstandard2.0"></xs:enumeration>
+                <xs:enumeration value="net461"></xs:enumeration>
+                <xs:enumeration value="net472"></xs:enumeration>
+                <xs:attributeGroup ref="ConditionalGroup" />
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="CopyToOutputDirectoryType">
+        <xs:simpleContent>
+            <xs:restriction base="StringPropertyType">
+                <xs:enumeration value="Always"></xs:enumeration>
+                <xs:enumeration value="Never"></xs:enumeration>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="OsTypePropertyType">
+        <xs:simpleContent>
+            <xs:restriction base="StringPropertyType">
+                <xs:enumeration value="Windows"></xs:enumeration>
+                <xs:enumeration value="OSX"></xs:enumeration>
+                <xs:enumeration value="Linux"></xs:enumeration>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="OutputTypePropertyType">
+        <xs:simpleContent>
+            <xs:restriction base="StringPropertyType">
+                <xs:enumeration value="Exe"></xs:enumeration>
+                <xs:enumeration value="Lib"></xs:enumeration>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:group name="CustomElements">
+        <xs:choice>
+            <xs:element name="FsInfoCatTrace" type="StringPropertyType" />
+            <xs:element name="IsNetFramework" type="TrueFalsePropertyType" />
+            <xs:element name="OsPlatform" type="OsTypePropertyType" />
+            <xs:element name="RepositoryRootDir" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>/</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DevFolder" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>dev/</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DevSlnDir" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>dev/src/</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="FsInfoCatSlnDir" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>src/</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResourcesDir" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Resources/</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BuildResourcesDir" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Resources/Build/</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PsModuleBuildProps" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Resources\Build\PsModule.props</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="T4BuildTargets" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Resources\Build\T4.targets</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PsModuleBuildTargets" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Resources\Build\PsModule.targets</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SetupFolder" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SetupBinFolder" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\bin\</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="T4BinFolder" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\bin\T4\</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="T4HostExe" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\bin\T4\StandaloneT4Host.exe</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PsModuleFolder" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\bin\FsInfoCat</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PsModuleManfest" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\bin\FsInfoCat\FsInfoCat.psd1</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DistroFolder" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\Distro</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UtilDistroFolder" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\Distro\Util</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="T4DistroZip" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\Distro\Util\T4.zip</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PsModuleDistroFolder" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\Distro\PS</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PsModuleDistroZip" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>Setup\Distro\PS\FsInfoCat-Windows-netcoreapp31.zip</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="PropertyGroupType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:group ref="CustomElements" />
+            <xs:element name="OutputPath" type="StringPropertyType" />
+            <xs:element name="TargetFramework" type="TargetFrameworkType" />
+            <xs:element name="AssemblyName" type="StringPropertyType" />
+            <xs:element name="Configuration" type="StringPropertyType" />
+            <xs:element name="Configurations" type="StringPropertyType" />
+            <xs:element name="DefineConstants" type="StringPropertyType" />
+            <xs:element name="AssemblyVersion" type="StringPropertyType" />
+            <xs:element name="OutputType" type="OutputTypePropertyType" />
+            <xs:element name="FileVersion" type="StringPropertyType" />
+            <xs:element name="DebugSymbols" type="TrueFalsePropertyType" />
+            <xs:element name="IsPackable" type="TrueFalsePropertyType" />
+            <xs:element name="Optimize" type="TrueFalsePropertyType" />
+            <xs:element name="DebugType" type="StringPropertyType" />
+            <xs:element name="ErrorReport" type="StringPropertyType" />
+            <xs:element name="WarningLevel" type="StringPropertyType" />
+            <xs:element name="UserSecretsId" type="StringPropertyType" />
+            <xs:element name="ProjectGuid" type="StringPropertyType" />
+            <xs:element name="AssemblyTitle" type="StringPropertyType" />
+            <xs:element name="Description" type="StringPropertyType" />
+            <xs:element name="Product" type="StringPropertyType" />
+            <xs:element name="Company" type="StringPropertyType" />
+            <xs:element name="Copyright" type="StringPropertyType" />
+            <xs:element name="Platform" type="PlatformType" />
+            <xs:element name="AppendRuntimeIdentifierToOutputPath" type="TrueFalsePropertyType" />
+            <xs:element name="AppendTargetFrameworkToOutputPath" type="TrueFalsePropertyType" />
+        </xs:choice>
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="MakeDirType">
+        <xs:attribute name="Directories" type="xs:string" use="required" />
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="DeleteType">
+        <xs:attribute name="Files" type="xs:string" />
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="MessageType">
+        <xs:attribute name="Text" type="xs:string" />
+        <xs:attribute name="Importance">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="High"></xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="PlatformType">
+        <xs:simpleContent>
+            <xs:restriction base="StringPropertyType">
+                <xs:enumeration value="AnyCPU"></xs:enumeration>
+                <xs:attributeGroup ref="ConditionalGroup" />
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="UnzipType">
+        <xs:attribute name="SourceFiles" type="xs:string" />
+        <xs:attribute name="DestinationFolder" type="xs:string" />
+        <xs:attribute name="OverwriteReadOnlyFiles" type="xs:boolean" />
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="ZipDirectoryType">
+        <xs:attributeGroup ref="ConditionalGroup" />
+        <xs:attribute name="SourceDirectory" type="xs:string" />
+        <xs:attribute name="DestinationFile" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="CallTargetType">
+        <xs:attribute name="Targets" type="xs:string" />
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="ExecType">
+        <xs:attribute name="Command" type="xs:string" />
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="TargetType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="PackageReference" type="ReferenceType" />
+            <xs:element name="MakeDir" type="MakeDirType" />
+            <xs:element name="Delete" type="DeleteType" />
+            <xs:element name="Error" type="MessageType" />
+            <xs:element name="Message" type="MessageType" />
+            <xs:element name="ZipDirectory" type="ZipDirectoryType" />
+            <xs:element name="Unzip" type="UnzipType" />
+            <xs:element name="CallTarget" type="CallTargetType" />
+            <xs:element name="Exec" type="ExecType" />
+        </xs:choice>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+        <xs:attribute name="AfterTargets" type="xs:string" />
+        <xs:attribute name="BeforeTargets" type="xs:string" />
+        <xs:attribute name="Include" type="xs:string" />
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="ItemType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="CopyToOutputDirectory" type="CopyToOutputDirectoryType" />
+            <xs:element name="CopyToPublishDirectory" type="CopyToOutputDirectoryType" />
+        </xs:choice>
+        <xs:attribute name="Include" type="xs:string" />
+        <xs:attribute name="Exclude" type="xs:string" />
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:complexType name="ReferenceType">
+        <xs:complexContent>
+            <xs:extension base="ItemType">
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="IncludeAssets" type="StringPropertyType" />
+                    <xs:element name="PrivateAssets" type="StringPropertyType" />
+                    <xs:element name="SpecificVersion" type="StringPropertyType" />
+                    <xs:element name="HintPath" type="StringPropertyType" />
+                </xs:choice>
+                <xs:attribute name="Version" type="xs:string" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ItemGroupType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="PackageReference" type="ReferenceType" />
+            <xs:element name="ProjectReference" type="ReferenceType" />
+            <xs:element name="Reference" type="ReferenceType" />
+            <xs:element name="Content" type="ItemType" />
+            <xs:element name="None" type="ItemType" />
+        </xs:choice>
+        <xs:attributeGroup ref="ConditionalGroup" />
+    </xs:complexType>
+    <xs:element name="Project">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="PropertyGroup" type="PropertyGroupType" />
+                <xs:element name="Choose" type="ChooseConditionalType" />
+                <xs:element name="Import" type="ImportType" />
+                <xs:element name="ItemGroup" type="ItemGroupType" />
+                <xs:element name="Target" type="TargetType" />
+            </xs:choice>
+            <xs:attribute name="Sdk">
+                <xs:simpleType>
+                    <xs:restriction base="xs:normalizedString">
+                        <xs:enumeration value="Microsoft.NET.Sdk"></xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

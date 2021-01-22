@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Resources/Build/NetCoreBuild.xsd">
 
     <PropertyGroup>
         <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
@@ -33,7 +33,7 @@ $(MSBuildThisFile) Top:
     </ItemGroup>
 
     <Target Name="PreBuild" AfterTargets="PreBuildEvent">
-        <CallTarget Targets="ReportCustomVars"/>
+        <CallTarget Targets="CheckCustomVars"/>
     </Target>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
