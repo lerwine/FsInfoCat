@@ -1,55 +1,46 @@
 <Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Resources/Build/NetCoreBuild.xsd">
-
-    <PropertyGroup>
-        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
 $(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
-            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
-              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
-                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
-          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net472</TargetFramework>
-        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    </PropertyGroup>
-
-    <Import Project="$(FsInfoCatSlnDir)FsInfoCat-Common.props" />
-
-    <PropertyGroup>
-        <OutputPath>$(T4BinFolder)</OutputPath>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
-        <PackageReference Include="Microsoft.VisualStudio.Telemetry" Version="16.3.59" />
-        <PackageReference Include="Microsoft.VisualStudio.TextTemplating.15.0" Version="16.8.30709.132" />
-        <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-        <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.11.0" Version="11.0.50728" />
-        <PackageReference Include="Microsoft.VisualStudio.Utilities.Internal" Version="16.3.23" />
-    </ItemGroup>
-
-    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
-        <CallTarget Targets="CheckCustomVars"/>
-    </Target>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <MakeDir Directories="$(UtilDistroFolder)" />
-        <Delete Files="$(T4DistroZip)" Condition=" $([System.IO.File]::Exists('$(T4DistroZip)')) " />
-        <ZipDirectory SourceDirectory="$(T4BinFolder)" DestinationFile="$(T4DistroZip)" />
-    </Target>
-
-    <PropertyGroup>
-        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <Import Project="$(FsInfoCatSlnDir)FsInfoCat-Common.props" />
+  <PropertyGroup>
+    <OutputPath>$(T4BinFolder)</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Telemetry" Version="16.3.59" />
+    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.15.0" Version="16.8.30709.132" />
+    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
+    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.11.0" Version="11.0.50728" />
+    <PackageReference Include="Microsoft.VisualStudio.Utilities.Internal" Version="16.3.23" />
+  </ItemGroup>
+  <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <CallTarget Targets="CheckCustomVars" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <MakeDir Directories="$(UtilDistroFolder)" />
+    <Delete Files="$(T4DistroZip)" Condition=" $([System.IO.File]::Exists('$(T4DistroZip)')) " />
+    <ZipDirectory SourceDirectory="$(T4BinFolder)" DestinationFile="$(T4DistroZip)" />
+  </Target>
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
 $(MSBuildThisFile) Bottom:
-    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
-            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
-              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
-                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
-          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
-    </PropertyGroup>
-
+MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+  </PropertyGroup>
 </Project>

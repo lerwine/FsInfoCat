@@ -66,10 +66,7 @@
             Text="Invalid PsModuleDistroFolder: $(PsModuleDistroFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\'; Actual: $(PsModuleDistroFolder)" />
         <Message Importance="High" Text="PsModuleDistroFolder: $(PsModuleDistroFolder)" />
 
-        <Error Condition=" '$(PsModuleDistroZip)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\FsInfoCat-Windows-netcoreapp31.zip' "
-            Text="Invalid PsModuleDistroZip: $(PsModuleDistroZip); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\FsInfoCat-Windows-netcoreapp31.zip'; Actual: $(PsModuleDistroZip)" />
         <Message Importance="High" Text="PsModuleDistroZip: $(PsModuleDistroZip)" />
-
         <Message Importance="High" Text="MSBuildToolsPath: $(MSBuildToolsPath)" />
     </Target>
 

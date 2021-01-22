@@ -1,42 +1,34 @@
 <Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Resources/Build/NetCoreBuild.xsd">
-
-    <PropertyGroup>
-        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
 $(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
-            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
-              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
-                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
-          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-    </PropertyGroup>
-
-    <Import Project="..\FsInfoCat-NetCore.props" />
-    <Import Project="FsInfoCat.props" />
-
-    <ItemGroup>
-        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-        <PackageReference Condition=" '$(OsPlatform)' == 'Windows' " Include="System.DirectoryServices" Version="5.0.0" />
-        <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
-    </ItemGroup>
-
-    <Import Project="FsInfoCat.targets" />
-
-    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
-        <CallTarget Targets="CheckCustomVars"/>
-    </Target>
-
-    <PropertyGroup>
-        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <Import Project="..\FsInfoCat-NetCore.props" />
+  <Import Project="FsInfoCat.props" />
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Condition=" '$(OsPlatform)' == 'Windows' " Include="System.DirectoryServices" Version="5.0.0" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+  </ItemGroup>
+  <Import Project="FsInfoCat.targets" />
+  <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <CallTarget Targets="CheckCustomVars" />
+  </Target>
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
 $(MSBuildThisFile) Bottom:
-    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
-            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
-              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
-                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
-          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
-    </PropertyGroup>
-
+MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+  </PropertyGroup>
 </Project>

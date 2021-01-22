@@ -1,23 +1,32 @@
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Resources/Build/NetCoreBuild.xsd">
-
-    <PropertyGroup>
-        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
 $(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
-            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
-              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
-                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
-          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
-        <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
-        <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
-        <Product>PowerShell Module FsInfoCat.PS</Product>
-        <OutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">$(PsModuleFolder)</OutputPath>
-        <AppendRuntimeIdentifierToOutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">false</AppendRuntimeIdentifierToOutputPath>
-        <AppendTargetFrameworkToOutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">false</AppendTargetFrameworkToOutputPath>
-    </PropertyGroup>
-
+    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
+    <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
+    <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
+    <Product>PowerShell Module FsInfoCat.PS</Product>
+    <OutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">$(PsModuleFolder)</OutputPath>
+    <AppendRuntimeIdentifierToOutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">false</AppendRuntimeIdentifierToOutputPath>
+    <AppendTargetFrameworkToOutputPath Condition=" '$(Configuration)' == 'NetFrameworkDebug' Or '$(Configuration)' == 'NetCoreDebug' ">false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PsModuleDistroZip>$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFramework.Replace(".", "")).zip</PsModuleDistroZip>
+  </PropertyGroup>
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
+$(MSBuildThisFile) Bottom:
+MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+        TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+          Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+             OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+      RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+  </PropertyGroup>
 </Project>

@@ -1,50 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Resources/Build/NetCoreBuild.xsd">
-
-    <PropertyGroup>
-        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
 $(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
-            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
-              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
-                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
-          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <TargetFramework>net461</TargetFramework>
-        <AssemblyName>FsInfoCat.PS</AssemblyName>
-    </PropertyGroup>
-
-    <Import Project="..\FsInfoCat-NetFramework.props" />
-    <Import Project="FsInfoCat.PS.props" />
-
-    <ItemGroup>
-        <Reference Include="System.ComponentModel.DataAnnotations" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-            <SpecificVersion>False</SpecificVersion>
-            <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\FsInfoCat\FsInfoCat.NetFramework.csproj" />
-    </ItemGroup>
-
-    <Import Project="FsInfoCat.PS.targets" />
-
-    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
-        <CallTarget Targets="CheckCustomVars"/>
-    </Target>
-
-    <PropertyGroup>
-        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <AssemblyName>FsInfoCat.PS</AssemblyName>
+  </PropertyGroup>
+  <Import Project="..\FsInfoCat-NetFramework.props" />
+  <Import Project="FsInfoCat.PS.props" />
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FsInfoCat\FsInfoCat.NetFramework.csproj" />
+  </ItemGroup>
+  <Import Project="FsInfoCat.PS.targets" />
+  <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <CallTarget Targets="CheckCustomVars" />
+  </Target>
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
 $(MSBuildThisFile) Bottom:
-    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
-            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
-              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
-                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
-          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
-    </PropertyGroup>
-
+MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+  </PropertyGroup>
 </Project>
