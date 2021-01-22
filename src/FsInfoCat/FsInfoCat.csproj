@@ -25,4 +25,18 @@ $(MSBuildThisFile) Top:
 
     <Import Project="FsInfoCat.targets" />
 
+    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+        <CallTarget Targets="CheckCustomVars"/>
+    </Target>
+
+    <PropertyGroup>
+        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+$(MSBuildThisFile) Bottom:
+    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
+            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
+              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
+                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
+          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
+    </PropertyGroup>
+
 </Project>

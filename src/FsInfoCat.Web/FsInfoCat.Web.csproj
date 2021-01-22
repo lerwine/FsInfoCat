@@ -44,4 +44,8 @@ $(MSBuildThisFile) Bottom:
           RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
     </PropertyGroup>
 
+    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+        <CallTarget Targets="CheckCustomVars"/>
+    </Target>
+
 </Project>

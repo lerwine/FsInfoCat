@@ -13,14 +13,10 @@ $(MSBuildThisFile) Top:
         <TargetFramework>netstandard2.0</TargetFramework>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <OutputPath>..\..\bin\TestHelper\</OutputPath>
+        <OutputPath>$(TestHelperModuleDir)</OutputPath>
     </PropertyGroup>
 
-    <Import Project="..\..\..\src\FsInfoCat-Common.props" />
-
-    <PropertyGroup>
-        <ModuleFolder>..\..\bin\TestHelper</ModuleFolder>
-    </PropertyGroup>
+    <Import Project="$(FsInfoCatSlnDir)\FsInfoCat-Common.props" />
 
     <ItemGroup>
         <PackageReference Include="PowerShellStandard.Library" Version="5.1.0" />
@@ -36,5 +32,20 @@ $(MSBuildThisFile) Top:
     </ItemGroup>
 
     <Import Project="$(T4BuildTargets)" />
+
+    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+        <CallTarget Targets="CheckCustomVars"/>
+        <CallTarget Targets="ProcessTemplates" />
+    </Target>
+
+    <PropertyGroup>
+        <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
+$(MSBuildThisFile) Bottom:
+    MSBuildProjectDirectory = '$(MSBuildProjectDirectory')
+            TargetFramework = '$(TargetFramework)'; AssemblyVersion = '$(AssemblyVersion)'
+              Configuration = '$($(Configuration)'; DefineConstants = '$(DefineConstants)'
+                 OutputPath = '$(OutputPath)'; OsPlatform = '$(OsPlatform)'
+          RepositoryRootDir = '$(RepositoryRootDir)';]]></FsInfoCatTrace>
+    </PropertyGroup>
 
 </Project>

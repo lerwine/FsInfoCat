@@ -22,6 +22,8 @@ $(MSBuildThisFile) Top:
 
     <PropertyGroup>
         <DevFolder>$(RepositoryRootDir)dev\</DevFolder>
+        <TestHelperModuleDir>$(DevFolder)bin\TestHelper\</TestHelperModuleDir>
+        <DevHelperModuleDir>$(DevFolder)bin\DevHelper\</DevHelperModuleDir>
         <DevSlnDir>$(DevFolder)src\</DevSlnDir>
         <FsInfoCatSlnDir>$(RepositoryRootDir)src\</FsInfoCatSlnDir>
     </PropertyGroup>

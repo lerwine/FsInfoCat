@@ -17,7 +17,7 @@ $(MSBuildThisFile) Top:
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
-    <Import Project="..\..\..\src\FsInfoCat-Common.props" />
+    <Import Project="$(FsInfoCatSlnDir)FsInfoCat-Common.props" />
 
     <PropertyGroup>
         <OutputPath>$(T4BinFolder)</OutputPath>
