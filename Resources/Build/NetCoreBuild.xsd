@@ -99,6 +99,16 @@
                     <xs:documentation>dev/</xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="TestHelperModuleDir" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>dev/bin/TestHelper</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DevHelperModuleDir" type="StringPropertyType">
+                <xs:annotation>
+                    <xs:documentation>dev/bin/DevHelper</xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="DevSlnDir" type="StringPropertyType">
                 <xs:annotation>
                     <xs:documentation>dev/src/</xs:documentation>
@@ -331,6 +341,7 @@
                 <xs:simpleType>
                     <xs:restriction base="xs:normalizedString">
                         <xs:enumeration value="Microsoft.NET.Sdk"></xs:enumeration>
+                        <xs:enumeration value="Microsoft.NET.Sdk.Web"></xs:enumeration>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

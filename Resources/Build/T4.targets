@@ -1,6 +1,6 @@
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="NetCoreBuild.xsd">
 
-    <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <Target Name="ProcessTemplates">
         <Message Condition=" !$([System.IO.File]::Exists('$(T4HostExe)')) " Importance="High" Text="$(MSBuildThisFile): Unzipping T4 Host to $(T4BinFolder)" />
         <Error Condition=" !$([System.IO.File]::Exists('$(T4HostExe)')) And !$([System.IO.File]::Exists('$(ProjectPath)')) " Text="Distribution file ZIP $(ProjectPath) was not found." />
         <Error Condition=" !$([System.IO.File]::Exists('$(T4HostExe)')) And !$([System.IO.File]::Exists('$(T4DistroZip)')) " Text="Distribution file ZIP $(T4DistroZip) was not found." />
