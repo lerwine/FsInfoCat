@@ -9,21 +9,67 @@
         <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
         <Message Importance="High" Text="OutputPath: $(OutputPath)" />
         <Message Importance="High" Text="OsPlatform: $(OsPlatform)" />
+
+        <Error Condition=" '$(RepositoryRootDir)' != 'C:\Users\lerwi\Git\FsInfoCat\' "
+            Text="Invalid RepositoryRootDir: $(RepositoryRootDir); Expected: 'C:\Users\lerwi\Git\FsInfoCat\'; Actual: $(RepositoryRootDir)" />
         <Message Importance="High" Text="RepositoryRootDir: $(RepositoryRootDir)" />
+
+        <Error Condition=" '$(DevFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\dev\' "
+            Text="Invalid DevFolder: $(DevFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\dev\'; Actual: $(DevFolder)" />
         <Message Importance="High" Text="DevFolder: $(DevFolder)" />
+
+        <Error Condition=" '$(DevSlnDir)' != 'C:\Users\lerwi\Git\FsInfoCat\dev\src\' "
+            Text="Invalid DevSlnDir: $(DevSlnDir); Expected: 'C:\Users\lerwi\Git\FsInfoCat\dev\src\'; Actual: $(DevSlnDir)" />
         <Message Importance="High" Text="DevSlnDir: $(DevSlnDir)" />
+
+        <Error Condition=" '$(FsInfoCatSlnDir)' != 'C:\Users\lerwi\Git\FsInfoCat\src\' "
+            Text="Invalid FsInfoCatSlnDir: $(FsInfoCatSlnDir); Expected: 'C:\Users\lerwi\Git\FsInfoCat\src\'; Actual: $(FsInfoCatSlnDir)" />
         <Message Importance="High" Text="FsInfoCatSlnDir: $(FsInfoCatSlnDir)" />
+
+        <Error Condition=" '$(SetupFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\' "
+            Text="Invalid SetupFolder: $(SetupFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\'; Actual: $(SetupFolder)" />
         <Message Importance="High" Text="SetupFolder: $(SetupFolder)" />
+
+        <Error Condition=" '$(SetupBinFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\' "
+            Text="Invalid SetupBinFolder: $(SetupBinFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\'; Actual: $(SetupBinFolder)" />
         <Message Importance="High" Text="SetupBinFolder: $(SetupBinFolder)" />
+
+        <Error Condition=" '$(T4BinFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\T4\' "
+            Text="Invalid T4BinFolder: $(T4BinFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\T4\'; Actual: $(T4BinFolder)" />
         <Message Importance="High" Text="T4BinFolder: $(T4BinFolder)" />
+
+        <Error Condition=" '$(T4HostExe)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\T4\StandaloneT4Host.exe' "
+            Text="Invalid T4HostExe: $(T4HostExe); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\T4\StandaloneT4Host.exe'; Actual: (T4HostExe)" />
         <Message Importance="High" Text="T4HostExe: $(T4HostExe)" />
+
+        <Error Condition=" '$(PsModuleFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat\' "
+            Text="Invalid PsModuleFolder: $(PsModuleFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat\'; Actual: $(PsModuleFolder)" />
         <Message Importance="High" Text="PsModuleFolder: $(PsModuleFolder)" />
+
+        <Error Condition=" '$(PsModuleManfest)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat\FsInfoCat.psd1' "
+            Text="Invalid PsModuleManfest: $(PsModuleManfest); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat\FsInfoCat.psd1'; Actual: $(PsModuleManfest)" />
         <Message Importance="High" Text="PsModuleManfest: $(PsModuleManfest)" />
+
+        <Error Condition=" '$(DistroFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\' "
+            Text="Invalid DistroFolder: $(DistroFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\'; Actual: $(DistroFolder)" />
         <Message Importance="High" Text="DistroFolder: $(DistroFolder)" />
+
+        <Error Condition=" '$(UtilDistroFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\Util\' "
+            Text="Invalid UtilDistroFolder: $(UtilDistroFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\Util\'; Actual: $(UtilDistroFolder)" />
         <Message Importance="High" Text="UtilDistroFolder: $(UtilDistroFolder)" />
+
+        <Error Condition=" '$(T4DistroZip)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\Util\T4.zip' "
+            Text="Invalid T4DistroZip: $(T4DistroZip); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\Util\T4.zip'; Actual: $(T4DistroZip)" />
         <Message Importance="High" Text="T4DistroZip: $(T4DistroZip)" />
+
+        <Error Condition=" '$(PsModuleDistroFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\' "
+            Text="Invalid PsModuleDistroFolder: $(PsModuleDistroFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\'; Actual: $(PsModuleDistroFolder)" />
         <Message Importance="High" Text="PsModuleDistroFolder: $(PsModuleDistroFolder)" />
+
+        <Error Condition=" '$(PsModuleDistroZip)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\FsInfoCat-Windows-netcoreapp31.zip' "
+            Text="Invalid PsModuleDistroZip: $(PsModuleDistroZip); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\FsInfoCat-Windows-netcoreapp31.zip'; Actual: $(PsModuleDistroZip)" />
         <Message Importance="High" Text="PsModuleDistroZip: $(PsModuleDistroZip)" />
+
         <Message Importance="High" Text="MSBuildToolsPath: $(MSBuildToolsPath)" />
     </Target>
 
