@@ -1,17 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Resources/Build/NetCoreBuild.xsd">
   <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
-  </PropertyGroup>
-  <PropertyGroup>
     <ProjectGuid>{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}</ProjectGuid>
     <IsPackable>false</IsPackable>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
   </PropertyGroup>
   <Import Project="$(CommonBuildProps)" />
   <ItemGroup>
@@ -28,13 +19,4 @@ $(MSBuildThisFile) Top:
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />
   </Target>
-  <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Bottom:
-MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
-  </PropertyGroup>
 </Project>

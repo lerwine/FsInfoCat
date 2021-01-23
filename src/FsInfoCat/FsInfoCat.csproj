@@ -1,14 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Resources/Build/NetCoreBuild.xsd">
   <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-          RepositoryRootDir = $(RepositoryRootDir); DistroFrameworkIdentifier = $(DistroFrameworkIdentifier)</FsInfoCatTrace>
-  </PropertyGroup>
-  <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
     <ProjectGuid>{F624D84F-6E2D-4656-BD1B-060586988EBC}</ProjectGuid>
     <AssemblyTitle>FS InfoCat Common Library</AssemblyTitle>
@@ -31,13 +22,4 @@ $(MSBuildThisFile) Top:
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />
   </Target>
-  <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Bottom:
-MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
-  </PropertyGroup>
 </Project>
