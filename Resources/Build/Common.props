@@ -1,0 +1,54 @@
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="NetCoreBuild.xsd">
+  <PropertyGroup>
+    <FsInfoCatTrace>$(FsInfoCatTrace)
+$(MSBuildThisFile) Top:
+    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+          RepositoryRootDir = $(RepositoryRootDir); TargetFrameworkIdentifier = $(TargetFrameworkIdentifier)</FsInfoCatTrace>
+  </PropertyGroup>
+  <Choose>
+    <When Condition=" $([MSBuild]::IsOsPlatform(`Windows`)) ">
+      <PropertyGroup>
+        <OsPlatform>Windows</OsPlatform>
+        <DefineConstants Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*WINDOWS(;.*)*$')) ">$(DefineConstants);WINDOWS</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <When Condition=" $([MSBuild]::IsOsPlatform(`OSX`)) ">
+      <PropertyGroup>
+        <OsPlatform>OSX</OsPlatform>
+        <DefineConstants Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*OSX(;.*)*$')) ">$(DefineConstants);OSX</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <OsPlatform>Linux</OsPlatform>
+        <DefineConstants Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*LINUX(;.*)*$')) ">$(DefineConstants);LINUX</DefineConstants>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <!-- <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>full</DebugType>
+    <DefineConstants Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*DEBUG(;.*)*$')) ">DEBUG;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DocumentationFile>bin\Release\FsInfoCat.PS.XML</DocumentationFile>
+</PropertyGroup> -->
+  <PropertyGroup>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <TargetFramework Condition=" '$(TargetFramework)' == '' ">netcoreapp3.1</TargetFramework>
+    <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
+</PropertyGroup>
+<PropertyGroup>
+  <FsInfoCatTrace>$(FsInfoCatTrace)
+$(MSBuildThisFile) Bottom:
+  MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+          TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+            Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+               OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+        RepositoryRootDir = $(RepositoryRootDir); TargetFrameworkIdentifier = $(TargetFrameworkIdentifier)</FsInfoCatTrace>
+</PropertyGroup>
+</Project>

@@ -9,22 +9,48 @@ $(MSBuildThisFile) Top:
           RepositoryRootDir = $(RepositoryRootDir);]]></FsInfoCatTrace>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+    <AssemblyName>FsInfoCat.PS</AssemblyName>
+    <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
+    <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
+    <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
+    <Product>PowerShell Module FsInfoCat.PS</Product>
+    <OutputPath Condition=" '$(Configuration)' == 'Debug' ">$(PsModuleFolder)</OutputPath>
+    <AppendRuntimeIdentifierToOutputPath Condition=" '$(Configuration)' == 'Debug' ">false</AppendRuntimeIdentifierToOutputPath>
+    <AppendTargetFrameworkToOutputPath Condition=" '$(Configuration)' == 'Debug' ">false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-  <Import Project="..\FsInfoCat-NetCore.props" />
-  <Import Project="FsInfoCat.PS.props" />
+  <Import Project="$(CommonBuildProps)" />
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' != '.NETFramework' ">
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-preview-06">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <!-- <PackageReference Include="Microsoft.Build" Version="15.9.20" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" /> -->
   </ItemGroup>
-  <Import Project="FsInfoCat.PS.targets" />
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(PsModuleBuildTargets)" />
+  <Import Project="$(T4BuildTargets)" />
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Publish">
+      <MakeDir Directories="$(PsModuleDistroFolder)" />
+      <Delete Files="$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFrameworkIdentifier.Replace('.', '')).zip" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFrameworkIdentifier.Replace('.', '')).zip')) " />
+      <Message Importance="High" Text="$(MSBuildThisFile): Published module deployed to $(PublishDir)" />
+      <Message Importance="High" Text="$(MSBuildThisFile): Creating distributable ZIP file $(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFrameworkIdentifier.Replace('.', '')).zip" />
+      <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFrameworkIdentifier.Replace('.', '')).zip" />
   </Target>
   <PropertyGroup>
     <FsInfoCatTrace>$(FsInfoCatTrace)

@@ -1,43 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Resources/Build/NetCoreBuild.xsd">
   <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
-  </PropertyGroup>
-  <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>$(TestHelperModuleDir)</OutputPath>
   </PropertyGroup>
-  <Import Project="$(FsInfoCatSlnDir)\FsInfoCat-Common.props" />
+  <Import Project="$(CommonBuildProps)" />
   <ItemGroup>
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="*.help.txt;*.psd1;*.psm1;*.ps1" Exclude="Test/**/*.*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="*.tt;Test/**/*.*">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+  <Import Project="$(PsModuleBuildTargets)" />
   <Import Project="$(T4BuildTargets)" />
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />
     <CallTarget Targets="ProcessTemplates" />
   </Target>
-  <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Bottom:
-MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
-  </PropertyGroup>
 </Project>

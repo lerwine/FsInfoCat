@@ -6,13 +6,13 @@ $(MSBuildThisFile) Top:
             TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
               Configuration = $(Configuration); DefineConstants = $(DefineConstants)
                  OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+          RepositoryRootDir = $(RepositoryRootDir); TargetFrameworkIdentifier = $(TargetFrameworkIdentifier)</FsInfoCatTrace>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>6e695feb-4201-4efd-9047-fbc8a286541c</UserSecretsId>
   </PropertyGroup>
-  <Import Project="..\FsInfoCat-NetCore.props" />
+  <Import Project="$(CommonBuildProps)" />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1">
@@ -35,7 +35,7 @@ MSBuildProjectDirectory = $(MSBuildProjectDirectory)
 TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
   Configuration = $(Configuration); DefineConstants = $(DefineConstants)
      OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+RepositoryRootDir = $(RepositoryRootDir); TargetFrameworkIdentifier = $(TargetFrameworkIdentifier)</FsInfoCatTrace>
   </PropertyGroup>
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />

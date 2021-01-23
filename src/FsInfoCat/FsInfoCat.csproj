@@ -9,16 +9,25 @@ $(MSBuildThisFile) Top:
           RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+    <ProjectGuid>{F624D84F-6E2D-4656-BD1B-060586988EBC}</ProjectGuid>
+    <AssemblyTitle>FS InfoCat Common Library</AssemblyTitle>
+    <Description>Supporting CLR Library for FS InfoCat</Description>
+    <Product>FS InfoCat Common Library</Product>
   </PropertyGroup>
-  <Import Project="..\FsInfoCat-NetCore.props" />
-  <Import Project="FsInfoCat.props" />
-  <ItemGroup>
+  <Import Project="$(CommonBuildProps)" />
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' != '.NETFramework' ">
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Condition=" '$(OsPlatform)' == 'Windows' " Include="System.DirectoryServices" Version="5.0.0" />
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
   </ItemGroup>
-  <Import Project="FsInfoCat.targets" />
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
+  </ItemGroup>
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />
   </Target>

@@ -1,4 +1,54 @@
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Resources/Build/NetCoreBuild.xsd">
+    <PropertyGroup>
+      <FsInfoCatTrace>$(FsInfoCatTrace)
+  $(MSBuildThisFile) Top:
+      MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+              TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+                Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+                   OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+            RepositoryRootDir = $(RepositoryRootDir); TargetFrameworkIdentifier = $(TargetFrameworkIdentifier)</FsInfoCatTrace>
+    </PropertyGroup>
+
+    <Choose>
+      <When Condition=" $(TargetFrameworks.Contains(';')) And '$(TargetFrameworkIdentifier)' != '.NETStandard' ">
+          <Choose>
+            <When Condition=" '$(OsPlatform)' == 'OSX' ">
+              <PropertyGroup>
+                <AssemblyVersion>$(AssemblyVersion).3</AssemblyVersion>
+              </PropertyGroup>
+            </When>
+            <When Condition=" '$(OsPlatform)' == 'Linux' ">
+              <PropertyGroup>
+                <AssemblyVersion>$(AssemblyVersion).2</AssemblyVersion>
+              </PropertyGroup>
+            </When>
+            <When Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+                <PropertyGroup>
+                  <AssemblyVersion>$(AssemblyVersion).1</AssemblyVersion>
+                </PropertyGroup>
+            </When>
+            <Otherwise>
+                <PropertyGroup>
+                  <AssemblyVersion>$(AssemblyVersion).0</AssemblyVersion>
+                </PropertyGroup>
+            </Otherwise>
+          </Choose>
+      </When>
+      <Otherwise>
+          <Choose>
+              <When Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+                  <PropertyGroup>
+                    <AssemblyVersion>$(AssemblyVersion).1</AssemblyVersion>
+                  </PropertyGroup>
+              </When>
+              <Otherwise>
+                  <PropertyGroup>
+                    <AssemblyVersion>$(AssemblyVersion).0</AssemblyVersion>
+                  </PropertyGroup>
+              </Otherwise>
+          </Choose>
+      </Otherwise>
+    </Choose>
 
     <Target Name="CheckCustomVars">
         <Message Importance="High" Text="FsInfoCatTrace:$(FsInfoCatTrace)" />
@@ -10,63 +60,48 @@
         <Message Importance="High" Text="OutputPath: $(OutputPath)" />
         <Message Importance="High" Text="OsPlatform: $(OsPlatform)" />
 
-        <Error Condition=" '$(RepositoryRootDir)' != 'C:\Users\lerwi\Git\FsInfoCat\' "
-            Text="Invalid RepositoryRootDir: $(RepositoryRootDir); Expected: 'C:\Users\lerwi\Git\FsInfoCat\'; Actual: $(RepositoryRootDir)" />
-        <Message Importance="High" Text="RepositoryRootDir: $(RepositoryRootDir)" />
-
-        <Error Condition=" '$(DevFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\dev\' "
-            Text="Invalid DevFolder: $(DevFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\dev\'; Actual: $(DevFolder)" />
-        <Message Importance="High" Text="DevFolder: $(DevFolder)" />
-
-        <Error Condition=" '$(DevSlnDir)' != 'C:\Users\lerwi\Git\FsInfoCat\dev\src\' "
-            Text="Invalid DevSlnDir: $(DevSlnDir); Expected: 'C:\Users\lerwi\Git\FsInfoCat\dev\src\'; Actual: $(DevSlnDir)" />
-        <Message Importance="High" Text="DevSlnDir: $(DevSlnDir)" />
-
-        <Error Condition=" '$(FsInfoCatSlnDir)' != 'C:\Users\lerwi\Git\FsInfoCat\src\' "
-            Text="Invalid FsInfoCatSlnDir: $(FsInfoCatSlnDir); Expected: 'C:\Users\lerwi\Git\FsInfoCat\src\'; Actual: $(FsInfoCatSlnDir)" />
-        <Message Importance="High" Text="FsInfoCatSlnDir: $(FsInfoCatSlnDir)" />
-
-        <Error Condition=" '$(SetupFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\' "
-            Text="Invalid SetupFolder: $(SetupFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\'; Actual: $(SetupFolder)" />
-        <Message Importance="High" Text="SetupFolder: $(SetupFolder)" />
-
-        <Error Condition=" '$(SetupBinFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\' "
-            Text="Invalid SetupBinFolder: $(SetupBinFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\'; Actual: $(SetupBinFolder)" />
-        <Message Importance="High" Text="SetupBinFolder: $(SetupBinFolder)" />
-
-        <Error Condition=" '$(T4BinFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\T4\' "
-            Text="Invalid T4BinFolder: $(T4BinFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\T4\'; Actual: $(T4BinFolder)" />
-        <Message Importance="High" Text="T4BinFolder: $(T4BinFolder)" />
-
-        <Error Condition=" '$(T4HostExe)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\T4\StandaloneT4Host.exe' "
-            Text="Invalid T4HostExe: $(T4HostExe); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\T4\StandaloneT4Host.exe'; Actual: (T4HostExe)" />
-        <Message Importance="High" Text="T4HostExe: $(T4HostExe)" />
-
-        <Error Condition=" '$(PsModuleFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat\' "
-            Text="Invalid PsModuleFolder: $(PsModuleFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat\'; Actual: $(PsModuleFolder)" />
-        <Message Importance="High" Text="PsModuleFolder: $(PsModuleFolder)" />
-
-        <Error Condition=" '$(PsModuleManfest)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat\FsInfoCat.psd1' "
-            Text="Invalid PsModuleManfest: $(PsModuleManfest); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat\FsInfoCat.psd1'; Actual: $(PsModuleManfest)" />
-        <Message Importance="High" Text="PsModuleManfest: $(PsModuleManfest)" />
-
-        <Error Condition=" '$(DistroFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\' "
-            Text="Invalid DistroFolder: $(DistroFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\'; Actual: $(DistroFolder)" />
-        <Message Importance="High" Text="DistroFolder: $(DistroFolder)" />
-
-        <Error Condition=" '$(UtilDistroFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\Util\' "
-            Text="Invalid UtilDistroFolder: $(UtilDistroFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\Util\'; Actual: $(UtilDistroFolder)" />
-        <Message Importance="High" Text="UtilDistroFolder: $(UtilDistroFolder)" />
-
-        <Error Condition=" '$(T4DistroZip)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\Util\T4.zip' "
-            Text="Invalid T4DistroZip: $(T4DistroZip); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\Util\T4.zip'; Actual: $(T4DistroZip)" />
-        <Message Importance="High" Text="T4DistroZip: $(T4DistroZip)" />
-
-        <Error Condition=" '$(PsModuleDistroFolder)' != 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\' "
-            Text="Invalid PsModuleDistroFolder: $(PsModuleDistroFolder); Expected: 'C:\Users\lerwi\Git\FsInfoCat\Setup\Distro\PS\'; Actual: $(PsModuleDistroFolder)" />
-        <Message Importance="High" Text="PsModuleDistroFolder: $(PsModuleDistroFolder)" />
-
-        <Message Importance="High" Text="PsModuleDistroZip: $(PsModuleDistroZip)" />
+        <Error Condition=" '$(Platform)' != 'AnyCPU' "
+            Text="Platform $(Platform) not supported. Use AnyCPU." />
+        <Error Condition=" !Exists($(RepositoryRootDir)) "
+            Text="Invalid RepositoryRootDir: $(RepositoryRootDir) does not exist." />
+        <Error Condition=" !Exists($(DevFolder)) "
+            Text="Invalid DevFolder: $(DevFolder) does not exist." />
+        <Error Condition=" '$(DevFolder)' != '$(RepositoryRootDir)dev\' "
+            Text="Invalid DevFolder: $(DevFolder) not contained within $(RepositoryRootDir)." />
+        <Error Condition=" !Exists($(DevSlnDir)) "
+            Text="Invalid DevSlnDir: $(DevSlnDir) does not exist." />
+        <Error Condition=" '$(DevSlnDir)' != '$(DevFolder)src\' "
+            Text="Invalid DevSlnDir: $(DevSlnDir) not contained within $(DevFolder)." />
+        <Error Condition=" !Exists($(FsInfoCatSlnDir)) "
+            Text="Invalid FsInfoCatSlnDir: $(FsInfoCatSlnDir) does not exist." />
+        <Error Condition=" '$(FsInfoCatSlnDir)' != '$(RepositoryRootDir)src\' "
+            Text="Invalid FsInfoCatSlnDir: $(FsInfoCatSlnDir) not contained within $(RepositoryRootDir)." />
+        <Error Condition=" !Exists($(SetupFolder)) "
+            Text="Invalid SetupFolder: $(SetupFolder) does not exist." />
+        <Error Condition=" '$(SetupFolder)' != '$(RepositoryRootDir)Setup\' "
+            Text="Invalid SetupFolder: $(SetupFolder) not contained within $(RepositoryRootDir)." />
+        <Error Condition=" '$(SetupBinFolder)' != '$(SetupFolder)bin\' "
+            Text="Invalid SetupBinFolder: $(SetupBinFolder) not contained within $(SetupFolder)." />
+        <Error Condition=" '$(T4BinFolder)' != '$(SetupBinFolder)T4\' "
+            Text="Invalid T4BinFolder: $(T4BinFolder) not contained within $(SetupBinFolder)." />
+        <Error Condition=" '$(T4HostExe)' != '$(T4BinFolder)StandaloneT4Host.exe' "
+            Text="Invalid T4HostExe: $(T4HostExe) not contained within $(T4BinFolder)." />
+        <Error Condition=" '$(PsModuleFolder)' != '$(SetupBinFolder)FsInfoCat\' "
+            Text="Invalid PsModuleFolder: $(PsModuleFolder) not contained within $(SetupBinFolder)." />
+        <Error Condition=" '$(DistroFolder)' != '$(SetupFolder)Distro\' "
+            Text="Invalid DistroFolder: $(DistroFolder) not contained within $(SetupFolder)." />
+        <Error Condition=" '$(UtilDistroFolder)' != '$(DistroFolder)Util\' "
+            Text="Invalid UtilDistroFolder: $(UtilDistroFolder) not contained within $(DistroFolder)." />
+        <Error Condition=" '$(T4DistroZip)' != '$(UtilDistroFolder)T4.zip' "
+            Text="Invalid T4DistroZip: $(T4DistroZip) not contained within $(UtilDistroFolder)." />
+        <Error Condition=" '$(PsModuleDistroFolder)' != '$(DistroFolder)PS\' "
+            Text="Invalid PsModuleDistroFolder: $(PsModuleDistroFolder) not contained within $(DistroFolder)." />
+        <Error Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '(^|;)(DEBUG|RELEASE)(;|$)')) "
+            Text="Neither DEBUG nor RELEASE constant defined."/>
+        <Error Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '(^|;)(WINDOWS|OSX|LINUX)(;|$)')) "
+            Text="Neither WINDOWS, OSX nor LINUX constant defined."/>
+        <Error Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '(^|;)(NETSTANDARD|NETCOREAPP|NETFRAMEWORK)(;|$)')) "
+            Text="Neither NETSTANDARD, NETCOREAPP nor NETFRAMEWORK constant defined."/>
         <Message Importance="High" Text="MSBuildToolsPath: $(MSBuildToolsPath)" />
     </Target>
 

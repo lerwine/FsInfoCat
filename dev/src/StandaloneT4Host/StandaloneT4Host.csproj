@@ -1,20 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Resources/Build/NetCoreBuild.xsd">
   <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
-  </PropertyGroup>
-  <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net472</TargetFramework>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-  <Import Project="$(FsInfoCatSlnDir)FsInfoCat-Common.props" />
+  <Import Project="$(CommonBuildProps)" />
   <PropertyGroup>
     <OutputPath>$(T4BinFolder)</OutputPath>
   </PropertyGroup>
@@ -34,13 +25,4 @@ $(MSBuildThisFile) Top:
     <Delete Files="$(T4DistroZip)" Condition=" $([System.IO.File]::Exists('$(T4DistroZip)')) " />
     <ZipDirectory SourceDirectory="$(T4BinFolder)" DestinationFile="$(T4DistroZip)" />
   </Target>
-  <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Bottom:
-MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
-  </PropertyGroup>
 </Project>

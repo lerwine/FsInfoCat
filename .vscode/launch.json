@@ -12,10 +12,10 @@
             "cwd": "${workspaceFolder}"
         },
         {
-            "name": "Debug Module (Windows PowerShell)",
+            "name": "Debug Module (PowerShell Desktop)",
             "type": "clr",
             "request": "launch",
-            "preLaunchTask": "Build Module (Windows PowerShell)",
+            "preLaunchTask": "Build Module (PS Desktop)",
             "program": "powershell_ise",
             "args": [
                 "Start-Debug.ps1"

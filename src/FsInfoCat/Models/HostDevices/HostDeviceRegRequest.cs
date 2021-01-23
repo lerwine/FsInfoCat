@@ -145,11 +145,7 @@ namespace FsInfoCat.Models.HostDevices
         {
             return new HostDeviceRegRequest
             {
-#if WINDOWS
-                IsWindows = true,
-#else
-                IsWindows = false,
-#endif
+                IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT,
                 MachineName = Environment.MachineName,
                 MachineIdentifer = GetLocalMachineIdentifier()
             };

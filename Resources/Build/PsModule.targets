@@ -13,12 +13,12 @@
         <CompiledBinaries Include="$(TargetDir)*.dll;$(TargetDir)*.pdb" /> -->
     </ItemGroup>
 
-    <Target Name="PostBuild" AfterTargets="Publish">
+    <!-- <Target Name="PostBuild" AfterTargets="Publish">
         <MakeDir Directories="$(PsModuleDistroFolder)" />
         <Delete Files="$(PsModuleDistroZip)" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroZip)')) " />
         <Message Importance="High" Text="$(MSBuildThisFile): Published module deployed to $(PublishDir)" />
         <Message Importance="High" Text="$(MSBuildThisFile): Creating distributable ZIP file $(PsModuleDistroZip)" />
         <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroZip)" />
-    </Target>
+    </Target> -->
 
 </Project>

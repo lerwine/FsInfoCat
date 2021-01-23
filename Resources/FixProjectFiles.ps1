@@ -263,6 +263,194 @@ Function Test-GitRepositoryStatus {
     return $false;
 }
 
+Function Resolve-FirstNamedElement {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlElement]$Parent,
+        [Parameter(Mandatory = $true)]
+        [string]$Name
+    )
+
+    $XmlElement = $Parent.SelectSingleNode('*[1]');
+    if ($XmlElement.LocalName -ceq $Name) {
+        return $XmlElement;
+    }
+    Add-XmlElementAsFirstChild -Parent $Parent, $Name;
+}
+
+Function Resolve-LastNamedElement {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlElement]$Parent,
+        [Parameter(Mandatory = $true)]
+        [string]$Name
+    )
+
+    $XmlElement = $Parent.SelectSingleNode('*[count(following-sibling)=0]');
+    if ($XmlElement.LocalName -ceq $Name) {
+        return $XmlElement;
+    }
+    $Parent.AppendChild($Parent.OwnerDocument.CreateElement($Name));
+}
+
+Function Add-XmlElementAsFirstChild {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlElement]$Parent,
+        [Parameter(Mandatory = $true)]
+        [string]$Name
+    )
+
+    $XmlElement = $Parent.SelectSingleNode('*[1]');
+    if ($null -eq $XmlElement) {
+        $Parent.AppendChild($Parent.OwnerDocument.CreateElement($Name));
+    } else {
+        $Parent.InsertBefore($XmlElement, $Parent.OwnerDocument.CreateElement($Name));
+    }
+}
+
+Function Set-FsInfoCatTrace {
+    [CmdletBinding(DefaultParameterSetName = 'Add')]
+    Param(
+        [Parameter(Mandatory = $true, ParameterSetName = 'Add')]
+        [switch]$Add,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Remove')]
+        [switch]$Remove
+    )
+
+    Write-Debug -Message "Calling: Get-AllProjectFiles";
+    $ChangedProjectFiles = @(Get-AllProjectFiles | ForEach-Object {
+        Write-Debug -Message "Loading project file: `"$_`"";
+        Write-Progress -Activity 'Fixing project files' -Status 'Loading project files' -CurrentOperation $_;
+        [xml]$Xml = [System.Xml.XmlDocument]::new();
+        $Xml.Load($_);
+        if ($null -eq $Xml.DocumentElement) {
+            Write-Error -Message "Failed to load project file $_" -Category OpenError -ErrorId 'LoadError' -TargetObject $_ -ErrorAction Stop;
+        }
+        [PSCustomObject]@{
+            Path = $_;
+            Document = $Xml
+        };
+    });
+
+    $DirectoryBuildTargets = $ChangedProjectFiles | Where-Object { ($_.Path | Split-Path -Leaf) -ieq 'Directory.Build.targets' } | Select-Object -First 1;
+
+    if ($null -eq $DirectoryBuildTargets) {
+        Write-Error -Message "Failed to find Directory.Build.targets file." -Category ObjectNotFound -ErrorId 'NoDirectoryBuildTargets' -ErrorAction Stop;
+    }
+
+    $TargetElement = $DirectoryBuildTargets.SelectSingleNode('/Project/Target[@Name="CheckCustomVars"]');
+    if ($null -eq $TargetElement) {
+        Write-Error -Message "Failed to find element /Project/Target[@Name='CheckCustomVars']in  Directory.Build.targets file." -Category ObjectNotFound -ErrorId 'NoCheckCustomVars' -TargetObject $DirectoryBuildTargets.Path -ErrorAction Stop;
+    }
+    $MessageElement = $TargetElement.SelectSingleNode('Message[@Text="FsInfoCatTrace:$(FsInfoCatTrace)"]');
+    if ($Remove.IsPresent) {
+        $ChangedProjectFiles = @($ChangedProjectFiles | ForEach-Object {
+            Write-Debug -Message "Searching $($_.Path) by XPath /Project/PropertyGroup[count(preceding-sibling::*)=0]/FsInfoCatTrace[count(preceding-sibling::*)=0]";
+            $TopElement = $_.Document.SelectSingleNode('/Project/PropertyGroup[count(preceding-sibling::*)=0]/FsInfoCatTrace[count(preceding-sibling::*)=0]');
+            Write-Debug -Message "Searching $($_.Path) by XPath /Project/PropertyGroup[count(following-sibling::*)=0]/FsInfoCatTrace[count(following-sibling::*)=0]";
+            $BottomElement = $_.Document.SelectSingleNode('/Project/PropertyGroup[count(following-sibling::*)=0]/FsInfoCatTrace[count(following-sibling::*)=0]');
+            if ($null -ne $TopElement) {
+                $TopElement.ParentNode.RemoveChild($TopElement) | Out-Null;
+                if ($null -ne $BottomElement) {
+                    $BottomElement.ParentNode.RemoveChild($BottomElement) | Out-Null;
+                }
+                $_ | Write-Output;
+            } else {
+                if ($null -ne $BottomElement) {
+                    $BottomElement.ParentNode.RemoveChild($BottomElement) | Out-Null;
+                }
+                $_ | Write-Output;
+            }
+        });
+
+        if ($null -eq $MessageElement) {
+            $MessageElement = $TargetElement.SelectSingleNode('Message[@Text="FsInfoCatTrace:$(FsInfoCatTrace)"]');
+            if ($null -eq $MessageElement) {
+                $MessageElement = $TargetElement.AppendChild($TargetElement.OwnerDocument.CreateElement('Message'));
+            } else {
+                $MessageElement = $TargetElement.InsertBefore($MessageElement, $TargetElement.OwnerDocument.CreateElement('Message'));
+            }
+            $MessageElement.Attributes.Append($MessageElement.OwnerDocument.CreateAttribute('Importance')).Value = 'High';
+            $MessageElement.Attributes.Append($MessageElement.OwnerDocument.CreateAttribute('Text')).Value = 'FsInfoCatTrace:$(FsInfoCatTrace)';
+            if ($null -eq (@($ChangedProjectFiles | Where-Object { $_.Path -ieq $DirectoryBuildTargets.Path } | Select-Object -First 1))) {
+                $ChangedProjectFiles += @($DirectoryBuildTargets);
+            }
+        }
+    } else {
+        if ($null -eq $Script:__Set_FsInfoCatTrace_TopText) {
+            $Script:__Set_FsInfoCatTrace_TopText = @'
+$(FsInfoCatTrace)
+$(MSBuildThisFile) Top:
+    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+          RepositoryRootDir = $(RepositoryRootDir);
+'@;
+            $Script:__Set_FsInfoCatTrace_BottomText = @'
+$(FsInfoCatTrace)
+$(MSBuildThisFile) Bottom:
+MSBuildProjectDirectory = $(MSBuildProjectDirectory)
+TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
+  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
+     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
+RepositoryRootDir = $(RepositoryRootDir);
+'@;
+        }
+        $ChangedProjectFiles = @($ChangedProjectFiles | ForEach-Object {
+            Write-Debug -Message "Searching $($_.Path) by XPath /Project/PropertyGroup[count(preceding-sibling::*)=0]/FsInfoCatTrace[count(preceding-sibling::*)=0]";
+            $PropertyGroupElement = Resolve-FirstNamedElement -Parent $_.Document.DocumentElement -Name 'PropertyGroup';
+            $TopElement = Resolve-FirstNamedElement -Parent $PropertyGroupElement -Name 'FsInfoCatTrace';
+            $HasChanges = ($TopElement.IsEmpty -or $TopElement.InnerText -cne $TopText);
+            if ($HasChanges) { $TopElement.InnerText = $TopText }
+            $PropertyGroupElement = Resolve-LastNamedElement -Parent $_.Document.DocumentElement -Name 'PropertyGroup';
+            $BottomElement = Resolve-LastNamedElement -Parent $PropertyGroupElement -Name 'FsInfoCatTrace';
+            if ($BottomElement.IsEmpty -or ($BottomElement.InnerText -cne $BottomText -and -not [object]::ReferenceEquals($TopElement, $BottomElement))) {
+                $BottomElement.InnerText = $BottomText;
+                $HasChanges = $true;
+            }
+            if ($HasChanges) { $_ | Write-Output }
+        });
+
+        if ($null -eq $MessageElement) {
+            $MessageElement = $TargetElement.SelectSingleNode('Message[@Text="FsInfoCatTrace:$(FsInfoCatTrace)"]');
+            if ($null -eq $MessageElement) {
+                $MessageElement = $TargetElement.AppendChild($TargetElement.OwnerDocument.CreateElement('Message'));
+            } else {
+                $MessageElement = $TargetElement.InsertBefore($MessageElement, $TargetElement.OwnerDocument.CreateElement('Message'));
+            }
+            $MessageElement.Attributes.Append($MessageElement.OwnerDocument.CreateAttribute('Importance')).Value = 'High';
+            $MessageElement.Attributes.Append($MessageElement.OwnerDocument.CreateAttribute('Text')).Value = 'FsInfoCatTrace:$(FsInfoCatTrace)';
+            if ($null -eq (@($ChangedProjectFiles | Where-Object { $_.Path -ieq $DirectoryBuildTargets.Path } | Select-Object -First 1))) {
+                $ChangedProjectFiles += @($DirectoryBuildTargets);
+            }
+        }
+    }
+    if ($ChangedProjectFiles.Count -eq 0) {
+        Write-Host -Object "No changes were made.";
+    } else {
+        $XmlWriterSettings = [System.Xml.XmlWriterSettings]::new();
+        $XmlWriterSettings.Indent = $true;
+        $XmlWriterSettings.OmitXmlDeclaration = $true;
+        $XmlWriterSettings.Encoding = [System.Text.UTF8Encoding]::new($false, $false);
+
+        $ChangedProjectFiles | ForEach-Object {
+            Write-Progress -Activity 'Fixing project files' -Status 'Saving project files' -CurrentOperation $_.Path;
+            $XmlWriter = [System.Xml.XmlWriter]::Create($_.Path, $XmlWriterSettings);
+            try {
+                $_.Document.WriteTo($XmlWriter);
+                $XmlWriter.Flush();
+            } finally { $XmlWriter.Close() }
+        }
+        if ($ChangedProjectFiles.Count -eq 1) {
+            Write-Host -Object "1 file changed.";
+        } else {
+            Write-Host -Object "$($ChangedProjectFiles.Count) files changed.";
+        }
+    }
+}
+
 $GitRepoOkay = $false;
 Write-Progress -Activity 'Fixing project files' -Status 'Verifying git repostory status';
 if ($PSBoundParameters.ContainsKey('GitExePath')) {
@@ -299,81 +487,4 @@ if (-not $GitRepoOkay) {
     return;
 }
 
-$TopText = @'
-$(FsInfoCatTrace)
-$(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-          RepositoryRootDir = $(RepositoryRootDir);
-'@;
-$BottomText = @'
-$(FsInfoCatTrace)
-$(MSBuildThisFile) Bottom:
-MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-RepositoryRootDir = $(RepositoryRootDir);
-'@;
-Write-Debug -Message "Calling: Get-AllProjectFiles";
-$ChangedProjectFiles = @(@(Get-AllProjectFiles | ForEach-Object {
-    Write-Debug -Message "Loading project file: `"$_`"";
-    Write-Progress -Activity 'Fixing project files' -Status 'Loading project files' -CurrentOperation $_;
-    [xml]$Xml = [System.Xml.XmlDocument]::new();
-    $Xml.Load($_);
-    if ($null -eq $Xml.DocumentElement) {
-        Write-Error -Message "Failed to load project file $_" -Category OpenError -ErrorId 'LoadError' -TargetObject $_ -ErrorAction Stop;
-    }
-    [PSCustomObject]@{
-        Path = $_;
-        Document = $Xml
-    };
-}) | ForEach-Object {
-    Write-Debug -Message "Searching $($_.Path) by XPath /Project/PropertyGroup/FsInfoCatTrace";
-    [System.Xml.XmlElement[]]$Elements = @($_.Document.SelectNodes('/Project/PropertyGroup/FsInfoCatTrace'));
-    Write-Debug -Message "$($_.Path) contained $($Elements.Length) matches";
-    $e = $Elements.Length - 1;
-    if ($e -lt 0) {
-        Write-Warning -Message "$($_.Path) did not contain any FsInfoCatTrace elements.";
-    } else {
-        $HasChanges = $false;
-        $HasChanges = ($Elements[0].InnerText -cne $TopText);
-        if ($HasChanges) {
-            $Elements[0].InnerText = $TopText;
-        }
-        if ($e -gt 0) {
-            if ($HasChanges -or $Elements[$e].InnerText -cne $BottomText) {
-                $Elements[$e].InnerText = $BottomText;
-                $HasChanges = $true;
-            }
-        } else {
-            Write-Warning -Message "$($_.Path) only contained one FsInfoCatTrace element.";
-        }
-        if ($HasChanges) { $_ | Write-Output }
-    }
-});
-
-if ($ChangedProjectFiles.Count -eq 0) {
-    Write-Host -Object "No changes were made.";
-} else {
-    $XmlWriterSettings = [System.Xml.XmlWriterSettings]::new();
-    $XmlWriterSettings.Indent = $true;
-    $XmlWriterSettings.OmitXmlDeclaration = $true;
-    $XmlWriterSettings.Encoding = [System.Text.UTF8Encoding]::new($false, $false);
-
-    $ChangedProjectFiles | ForEach-Object {
-        Write-Progress -Activity 'Fixing project files' -Status 'Saving project files' -CurrentOperation $_.Path;
-        $XmlWriter = [System.Xml.XmlWriter]::Create($_.Path, $XmlWriterSettings);
-        try {
-            $_.Document.WriteTo($XmlWriter);
-            $XmlWriter.Flush();
-        } finally { $XmlWriter.Close() }
-    }
-    if ($ChangedProjectFiles.Count -eq 1) {
-        Write-Host -Object "1 file changed.";
-    } else {
-        Write-Host -Object "$($ChangedProjectFiles.Count) files changed.";
-    }
-}
+Set-FsInfoCatTrace -Remove;

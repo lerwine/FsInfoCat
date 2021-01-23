@@ -31,19 +31,19 @@ git push origin main:main
 | Build All (.NET Core)                 | FsInfoCat.sln                      | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
 | Build All (.NET Framework)            | FsInfoCat-NetFramework.sln         | NetFrameworkDebug   | Windows    | net461          | n/a                                    |
 | Build Web App                         | FsInfoCat.Web.csproj               | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
-| Build Module (Windows PowerShell)     | FsInfoCat.PS.NetFramework.csproj   | NetFrameworkDebug   | Windows    | net461          | Debug/Windows/NetFramework/FsInfoCat   |
+| Build Module (PS Desktop)     | FsInfoCat.PS.NetFramework.csproj   | NetFrameworkDebug   | Windows    | net461          | Debug/Windows/NetFramework/FsInfoCat   |
 | Build Module (PS Core)                | FsInfoCat.PS.csproj                | NetCoreDebug        | (any)      | netcoreapp3.1   | (by config/OS)                         |
 | Build Test Project (.NET Framework)   | FsInfoCat.Test.NetFramework.csproj | NetFrameworkDebug   | Windows    | net461          | n/a                                    |
-| Build Test Project (.NET Core)        | FsInfoCat.Test.csproj              | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
+| Build Test Project        | FsInfoCat.Test.csproj              | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
 | Build Common Library (.NET Framework) | FsInfoCat.NetFramework.csproj      | NetFrameworkDebug   | Windows    | net461          | n/a                                    |
 | Build Common Library (.NET Core)      | FsInfoCat.csproj                   | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
 | Run Unit Tests                        | FsInfoCat.Test.csproj              | NetCoreDebug        | (any)      | netcoreapp3.1   | n/a                                    |
 | Publish Web App                       | FsInfoCat.Web.csproj               | NetCoreRelease      | OSX        | netcoreapp3.1   | ?                                      |
-| Publish All (.NET Core, Windows)      | FsInfoCat.sln                      | NetCoreRelease      | Windows    | netcoreapp3.1   | ?                                      |
-| Publish Module (Windows PowerShell)   | FsInfoCat.PS.NetFramework.csproj   | NetFrameworkRelease | Windows    | net461          | Release/Windows/NetFramework/FsInfoCat |
+| Publish All (.NET Core)      | FsInfoCat.sln                      | NetCoreRelease      | Windows    | netcoreapp3.1   | ?                                      |
+| Publish Module (PS Desktop)   | FsInfoCat.PS.NetFramework.csproj   | NetFrameworkRelease | Windows    | net461          | Release/Windows/NetFramework/FsInfoCat |
 | Publish Module (PS Core, Windows)     | FsInfoCat.PS.csproj                | NetCoreRelease      | Windows    | netcoreapp3.1   | Release/Windows/NetCore/FsInfoCat      |
-| Publish Module (PS Core, Linux)       | FsInfoCat.PS.csproj                | NetCoreRelease      | Linux      | netcoreapp3.1   | Release/Linux/FsInfoCat                |
-| Publish Module (PS Core, OSX)         | FsInfoCat.PS.csproj                | NetCoreRelease      | OSX        | netcoreapp3.1   | Release/OSX/FsInfoCat                  |
+| Publish Module (PS Core)       | FsInfoCat.PS.csproj                | NetCoreRelease      | Linux      | netcoreapp3.1   | Release/Linux/FsInfoCat                |
+| Publish Module (PS Core)         | FsInfoCat.PS.csproj                | NetCoreRelease      | OSX        | netcoreapp3.1   | Release/OSX/FsInfoCat                  |
 
 ## MVC Web App CRUD scaffolding
 

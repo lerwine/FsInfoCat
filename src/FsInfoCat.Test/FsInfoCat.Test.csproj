@@ -13,7 +13,7 @@ $(MSBuildThisFile) Top:
     <IsPackable>false</IsPackable>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-  <Import Project="..\FsInfoCat-NetCore.props" />
+  <Import Project="$(CommonBuildProps)" />
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="nunit" Version="3.12.0" />

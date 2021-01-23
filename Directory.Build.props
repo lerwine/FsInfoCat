@@ -1,15 +1,7 @@
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Resources/Build/NetCoreBuild.xsd">
   <PropertyGroup>
-    <FsInfoCatTrace><![CDATA[$(FsInfoCatTrace)
-$(MSBuildThisFile) Top:
-    MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-            TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-              Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-                 OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-          RepositoryRootDir = $(RepositoryRootDir);]]></FsInfoCatTrace>
-  </PropertyGroup>
-  <PropertyGroup>
     <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
+    <!-- <Configuration Condition=" '$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release' ">Debug</Configuration> -->
     <!-- Specify major, minor and build numbers only here. Revision number will be calculated according to OsPlatform and whether it is .net framework -->
     <AssemblyVersion>0.1.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
@@ -27,9 +19,9 @@ $(MSBuildThisFile) Top:
   <PropertyGroup>
     <ResourcesDir>$(RepositoryRootDir)Resources\</ResourcesDir>
     <BuildResourcesDir>$(ResourcesDir)Build\</BuildResourcesDir>
-    <PsModuleBuildProps>$(BuildResourcesDir)PsModule.Targets</PsModuleBuildProps>
-    <PsModuleBuildTargets>$(BuildResourcesDir)PsModule.Targets</PsModuleBuildTargets>
-    <T4BuildTargets>$(BuildResourcesDir)PsModule.Targets</T4BuildTargets>
+    <CommonBuildProps>$(BuildResourcesDir)Common.props</CommonBuildProps>
+    <PsModuleBuildTargets>$(BuildResourcesDir)PsModule.targets</PsModuleBuildTargets>
+    <T4BuildTargets>$(BuildResourcesDir)T4.targets</T4BuildTargets>
   </PropertyGroup>
   <PropertyGroup>
     <SetupFolder>$(RepositoryRootDir)Setup\</SetupFolder>
@@ -37,21 +29,11 @@ $(MSBuildThisFile) Top:
     <T4BinFolder>$(SetupBinFolder)T4\</T4BinFolder>
     <T4HostExe>$(T4BinFolder)StandaloneT4Host.exe</T4HostExe>
     <PsModuleFolder>$(SetupBinFolder)FsInfoCat\</PsModuleFolder>
-    <PsModuleManfest>$(PsModuleFolder)FsInfoCat.psd1</PsModuleManfest>
   </PropertyGroup>
   <PropertyGroup>
     <DistroFolder>$(SetupFolder)Distro\</DistroFolder>
     <UtilDistroFolder>$(DistroFolder)Util\</UtilDistroFolder>
     <T4DistroZip>$(UtilDistroFolder)T4.zip</T4DistroZip>
     <PsModuleDistroFolder>$(DistroFolder)PS\</PsModuleDistroFolder>
-  </PropertyGroup>
-  <PropertyGroup>
-    <FsInfoCatTrace>$(FsInfoCatTrace)
-$(MSBuildThisFile) Bottom:
-MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-  Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-     OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
   </PropertyGroup>
 </Project>
