@@ -6,7 +6,7 @@ $(MSBuildThisFile) Top:
             TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
               Configuration = $(Configuration); DefineConstants = $(DefineConstants)
                  OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-          RepositoryRootDir = $(RepositoryRootDir);</FsInfoCatTrace>
+          RepositoryRootDir = $(RepositoryRootDir); DistroFrameworkIdentifier = $(DistroFrameworkIdentifier)</FsInfoCatTrace>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
@@ -16,13 +16,13 @@ $(MSBuildThisFile) Top:
     <Product>FS InfoCat Common Library</Product>
   </PropertyGroup>
   <Import Project="$(CommonBuildProps)" />
-  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' != '.NETFramework' ">
+  <ItemGroup Condition=" '$(DistroFrameworkIdentifier)' != 'NETFramework' ">
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Condition=" '$(OsPlatform)' == 'Windows' " Include="System.DirectoryServices" Version="5.0.0" />
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+  <ItemGroup Condition=" '$(DistroFrameworkIdentifier)' == 'NETFramework' ">
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />

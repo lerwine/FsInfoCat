@@ -201,6 +201,7 @@
             <xs:element name="OutputPath" type="StringPropertyType" />
             <xs:element name="TargetFramework" type="TargetFrameworkType" />
             <xs:element name="TargetFrameworks" type="StringPropertyType" />
+            <xs:element name="DistroFrameworkIdentifier" type="StringPropertyType" />
             <xs:element name="AssemblyName" type="StringPropertyType" />
             <xs:element name="DefineDebug" type="TrueFalsePropertyType" />
             <xs:element name="DefineTrace" type="TrueFalsePropertyType" />

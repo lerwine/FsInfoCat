@@ -23,7 +23,7 @@ $(MSBuildThisFile) Top:
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' != '.NETFramework' ">
+  <ItemGroup Condition=" '$(DistroFrameworkIdentifier)' != 'NETFramework' ">
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-preview-06">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
@@ -32,7 +32,7 @@ $(MSBuildThisFile) Top:
     <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" /> -->
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+  <ItemGroup Condition=" '$(DistroFrameworkIdentifier)' == 'NETFramework' ">
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -47,10 +47,10 @@ $(MSBuildThisFile) Top:
   </Target>
   <Target Name="PostBuild" AfterTargets="Publish">
       <MakeDir Directories="$(PsModuleDistroFolder)" />
-      <Delete Files="$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFrameworkIdentifier.Replace('.', '')).zip" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFrameworkIdentifier.Replace('.', '')).zip')) " />
+      <Delete Files="$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(DistroFrameworkIdentifier).zip" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(DistroFrameworkIdentifier).zip')) " />
       <Message Importance="High" Text="$(MSBuildThisFile): Published module deployed to $(PublishDir)" />
-      <Message Importance="High" Text="$(MSBuildThisFile): Creating distributable ZIP file $(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFrameworkIdentifier.Replace('.', '')).zip" />
-      <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(TargetFrameworkIdentifier.Replace('.', '')).zip" />
+      <Message Importance="High" Text="$(MSBuildThisFile): Creating distributable ZIP file $(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(DistroFrameworkIdentifier).zip" />
+      <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroFolder)FsInfoCat-$(OsPlatform)-$(DistroFrameworkIdentifier).zip" />
   </Target>
   <PropertyGroup>
     <FsInfoCatTrace>$(FsInfoCatTrace)
