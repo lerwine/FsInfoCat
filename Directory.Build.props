@@ -36,4 +36,53 @@
     <T4DistroZip>$(UtilDistroFolder)T4.zip</T4DistroZip>
     <PsModuleDistroFolder>$(DistroFolder)PS\</PsModuleDistroFolder>
   </PropertyGroup>
+  <Choose>
+    <When Condition=" '$(RuntimeIdentifier)' == 'win10-x64'">
+        <PropertyGroup>
+          <OsPlatform>Windows</OsPlatform>
+        </PropertyGroup>
+    </When>
+    <When Condition=" '$(RuntimeIdentifier)' == 'linux-x64'">
+        <PropertyGroup>
+          <OsPlatform>Linux</OsPlatform>
+        </PropertyGroup>
+    </When>
+    <When Condition=" '$(RuntimeIdentifier)' == 'osx-x64'">
+        <PropertyGroup>
+          <OsPlatform>OSX</OsPlatform>
+        </PropertyGroup>
+    </When>
+    <When Condition=" $([MSBuild]::IsOsPlatform(`Linux`)) ">
+        <PropertyGroup>
+          <OsPlatform>Linux</OsPlatform>
+        </PropertyGroup>
+    </When>
+    <When Condition=" $([MSBuild]::IsOsPlatform(`OSX`)) ">
+        <PropertyGroup>
+          <OsPlatform>OSX</OsPlatform>
+        </PropertyGroup>
+    </When>
+    <Otherwise>
+        <PropertyGroup>
+          <OsPlatform>Windows</OsPlatform>
+        </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Choose>
+      <When Condition=" '$(OsPlatform)' == 'OSX' ">
+          <PropertyGroup>
+              <DistroPlatformIdentifier>OSX</DistroPlatformIdentifier>
+          </PropertyGroup>
+      </When>
+      <When Condition=" '$(OsPlatform)' == 'Linux' ">
+          <PropertyGroup>
+            <DistroPlatformIdentifier>Linux</DistroPlatformIdentifier>
+          </PropertyGroup>
+      </When>
+      <Otherwise>
+        <PropertyGroup>
+          <DistroPlatformIdentifier>Win32</DistroPlatformIdentifier>
+      </PropertyGroup>
+      </Otherwise>
+  </Choose>
 </Project>

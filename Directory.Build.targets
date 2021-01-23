@@ -1,16 +1,6 @@
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Resources/Build/NetCoreBuild.xsd">
-    <PropertyGroup>
-      <FsInfoCatTrace>$(FsInfoCatTrace)
-  $(MSBuildThisFile) Top:
-      MSBuildProjectDirectory = $(MSBuildProjectDirectory)
-              TargetFramework = $(TargetFramework); AssemblyVersion = $(AssemblyVersion)
-                Configuration = $(Configuration); DefineConstants = $(DefineConstants)
-                   OutputPath = $(OutputPath); OsPlatform = $(OsPlatform)
-            RepositoryRootDir = $(RepositoryRootDir); TargetFrameworkIdentifier = $(TargetFrameworkIdentifier)</FsInfoCatTrace>
-    </PropertyGroup>
 
     <Target Name="CheckCustomVars">
-        <Message Importance="High" Text="FsInfoCatTrace:$(FsInfoCatTrace)" />
         <Message Importance="High" Text="MSBuildProjectDirectory: $(MSBuildProjectDirectory)" />
         <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
         <Message Importance="High" Text="AssemblyVersion: $(AssemblyVersion)" />
@@ -21,7 +11,7 @@
 
         <Error Condition=" '$(Platform)' != 'AnyCPU' "
             Text="Platform $(Platform) not supported. Use AnyCPU." />
-        <Error Condition=" '$(DistroFrameworkIdentifier)' != 'NETFramework' And '$(DistroFrameworkIdentifier)' != 'NETCore' And '$(DistroFrameworkIdentifier)' != 'NETStandard' "
+        <Error Condition=" '$(DistroFrameworkIdentifier)' != 'Desktop' And '$(DistroFrameworkIdentifier)' != 'NETCore' And '$(DistroFrameworkIdentifier)' != 'NETStandard' "
             Text="Invalid distribution framework identifer: $(DistroFrameworkIdentifier)." />
         <Error Condition=" !Exists($(RepositoryRootDir)) "
             Text="Invalid RepositoryRootDir: $(RepositoryRootDir) does not exist." />

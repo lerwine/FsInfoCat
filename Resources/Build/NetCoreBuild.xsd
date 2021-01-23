@@ -86,8 +86,9 @@
     </xs:complexType>
     <xs:group name="CustomElements">
         <xs:choice>
-            <xs:element name="FsInfoCatTrace" type="StringPropertyType" />
             <xs:element name="OsPlatform" type="OsTypePropertyType" />
+            <xs:element name="DistroFrameworkIdentifier" type="StringPropertyType" />
+            <xs:element name="DistroPlatformIdentifier" type="StringPropertyType" />
             <xs:element name="RepositoryRootDir" type="StringPropertyType">
                 <xs:annotation>
                     <xs:documentation>/</xs:documentation>
@@ -188,11 +189,11 @@
                     <xs:documentation>Setup\Distro\PS</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <!-- <xs:element name="PsModuleDistroZip" type="StringPropertyType">
+            <xs:element name="PsModuleDistroZip" type="StringPropertyType">
                 <xs:annotation>
-                    <xs:documentation>Setup\Distro\PS\FsInfoCat-Windows-netcoreapp31.zip</xs:documentation>
+                    <xs:documentation>Setup\Distro\PS\FsInfoCat-Win64-NetCore.zip</xs:documentation>
                 </xs:annotation>
-            </xs:element> -->
+            </xs:element>
         </xs:choice>
     </xs:group>
     <xs:complexType name="PropertyGroupType">
@@ -201,7 +202,6 @@
             <xs:element name="OutputPath" type="StringPropertyType" />
             <xs:element name="TargetFramework" type="TargetFrameworkType" />
             <xs:element name="TargetFrameworks" type="StringPropertyType" />
-            <xs:element name="DistroFrameworkIdentifier" type="StringPropertyType" />
             <xs:element name="AssemblyName" type="StringPropertyType" />
             <xs:element name="DefineDebug" type="TrueFalsePropertyType" />
             <xs:element name="DefineTrace" type="TrueFalsePropertyType" />
