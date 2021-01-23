@@ -5,17 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch FixProjectFiles",
-            "type": "PowerShell",
-            "request": "launch",
-            "script": "./Resources/FixProjectFiles.ps1",
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "name": "Debug Module (PowerShell Desktop)",
+            "name": "Debug PS Module (Desktop)",
             "type": "clr",
             "request": "launch",
-            "preLaunchTask": "Build Module (PS Desktop)",
+            "preLaunchTask": "Build PS Module (Desktop)",
             "program": "powershell_ise",
             "args": [
                 "Start-Debug.ps1"
@@ -25,10 +18,10 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Debug Module (PS Core)",
+            "name": "Debug PS Module (Core Win64)",
             "type": "clr",
             "request": "launch",
-            "preLaunchTask": "Build Module (PS Core)",
+            "preLaunchTask": "Build PS Module (Core Win64)",
             "program": "pwsh",
             "args": [
                 "Start-Debug.ps1"
@@ -38,23 +31,23 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Test Module (Windows PowerShell)",
+            "name": "Test PS Module (Desktop)",
             "type": "clr",
             "request": "launch",
             "program": "powershell",
             "args": [
                 "Invoke-FsInfoCatTests.ps1"
             ],
-            "preLaunchTask": "Build PS Module (.NET Framework)",
+            "preLaunchTask": "Build PS Module (Desktop)",
             "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },
         {
-            "name": "Test Module (PS Core)",
+            "name": "Test PS Module (Core Win64)",
             "type": "clr",
             "request": "launch",
-            "preLaunchTask": "Build Module (PS Core)",
+            "preLaunchTask": "Build PS Module (Core Win64)",
             "program": "pwsh",
             "args": [
                 "Invoke-FsInfoCatTests.ps1"
@@ -96,6 +89,13 @@
             "cwd": "${workspaceFolder}/Setup/bin/T4",
             "stopAtEntry": false,
             "console": "internalConsole"
+        },
+        {
+            "name": "Launch FixProjectFiles",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "./Resources/FixProjectFiles.ps1",
+            "cwd": "${workspaceFolder}"
         },
         {
             "name": ".NET Core Attach",

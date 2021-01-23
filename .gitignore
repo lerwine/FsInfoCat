@@ -23,6 +23,7 @@ bin/
 npm-debug.log
 yarn-error.log
 testem.log
+/dev/log
 
 # System Files
 .DS_Store
