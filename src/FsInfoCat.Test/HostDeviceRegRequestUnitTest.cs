@@ -1,5 +1,4 @@
 using System;
-#warning Need to determine proper constant to use
 #if WINDOWS
 using System.Security.Principal;
 #endif
@@ -23,7 +22,6 @@ namespace FsInfoCat.Test
             Assert.NotNull(target);
             Assert.AreEqual(Environment.MachineName, target.MachineName);
             Assert.NotNull(target.MachineIdentifer);
-#warning Need to determine proper constant to use
 #if WINDOWS
             SecurityIdentifier securityIdentifier = new SecurityIdentifier(target.MachineIdentifer);
             Assert.NotNull(securityIdentifier);
