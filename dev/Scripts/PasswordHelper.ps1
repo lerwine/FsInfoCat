@@ -1,8 +1,8 @@
 ﻿if ($null -ne (Get-Module -Name 'DevHelper')) { Remove-Module -Name 'DevHelper' }
-Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath 'dev\DevHelper\Debug\DevHelper') -ErrorAction Stop;
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../DevHelper/Debug/DevHelper') -ErrorAction Stop;
 
 if ($null -ne (Get-Module -Name 'FsInfoCat')) { Remove-Module -Name 'FsInfoCat' }
-Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath 'src\FsInfoCat.PsDesktop\bin\Debug\FsInfoCat') -ErrorAction Stop;
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../src/FsInfoCat.PsDesktop/bin/Debug/FsInfoCat') -ErrorAction Stop;
 
 [DevHelper.CsTypeModel].FullName;
 

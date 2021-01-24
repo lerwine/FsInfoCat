@@ -4,7 +4,7 @@ Param(
     [string]$Name
 )
 
-$FilePath = $PSScriptRoot | Join-Path -ChildPath "src\FsInfoCat\Models\$Name.cs";
+$FilePath = $PSScriptRoot | Join-Path -ChildPath "../../src/FsInfoCat/Models/$Name.cs";
 if (-not [System.IO.File]::Exists($FilePath)) {
     @"
 using System;
@@ -83,7 +83,7 @@ namespace FsInfoCat.Models
 $FilePath = (Get-Command -Name 'dotnet').Path;
 Push-Location;
 try {
-    Set-Location -Path ($PSScriptRoot | Join-Path -ChildPath 'src\FsInfoCat.Web');
+    Set-Location -Path ($PSScriptRoot | Join-Path -ChildPath '../../src/FsInfoCat.Web');
     . dotnet build
     . dotnet aspnet-codegenerator controller -name "$($Name)Controller" -m $Name -dc FsInfoDataContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
 } finally {
