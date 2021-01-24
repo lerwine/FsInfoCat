@@ -64,6 +64,33 @@ namespace FsInfoCat.Models.Crawl
             set { _childNodes = value; }
         }
 
+        /// <summary>
+        /// Looks for the first nested partial crawl.
+        /// </summary>
+        /// <param name="message">The <seealso cref="PartialCrawlWarning" /> representing the partial crawl.</param>
+        /// <param name="segments">The <seealso cref="IFsDirectory" /> representing the path segments, relative to the root path, for the parent directory of the partial crawl.
+        /// The last segment will contain the items that were already crawled.</param>
+        /// <returns>True if a <seealso cref="PartialCrawlWarning" /> was found; otherwise, false.</returns>
+        public bool TryFindPartialCrawl(out PartialCrawlWarning message, out IEnumerable<IFsDirectory> segments)
+        {
+            message = Messages.OfType<PartialCrawlWarning>().Where(m => m.NotCrawled.Any(s => !string.IsNullOrWhiteSpace(s))).FirstOrDefault();
+            if (null != message)
+            {
+                segments = new IFsDirectory[0];
+                return true;
+            }
+            foreach (IFsDirectory root in ChildNodes.OfType<IFsDirectory>())
+            {
+                if (root.TryFindPartialCrawl(out message, out segments))
+                {
+                    segments = (new IFsDirectory[] { root }).Concat(segments);
+                    return true;
+                }
+            }
+            segments = new IFsDirectory[0];
+            return false;
+        }
+
         private Collection<ICrawlMessage> _messages = null;
         public Collection<ICrawlMessage> Messages
         {
@@ -76,6 +103,7 @@ namespace FsInfoCat.Models.Crawl
             }
             set { _messages = value; }
         }
+
 
         private IEqualityComparer<string> _nameComparer = null;
 
