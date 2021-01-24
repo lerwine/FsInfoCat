@@ -1,95 +1,86 @@
 BeforeDiscovery  {
-    Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../../dev/bin/TestHelper') -ErrorAction Stop;
-    [TestHelper.FsCrawlJobTestData]$FsCrawlJobTestData = Import-FsCrawlJobTestData -LiteralPath (
-        $PSScriptRoot | Join-Path -ChildPath 'Data/DirectoryContentTemplates/ContentInfo.xml'
-    );
-    $InputSetData = Expand-InputSetData -TestData $FsCrawlJobTestData;
+    $DataDirectory = $PSScriptRoot | Join-Path -ChildPath 'Data/DirectoryContentTemplates'
+    #Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../../dev/bin/TestHelper') -ErrorAction Stop;
+    [System.Xml.XmlDocument]$TestContentInfo = New-Object -TypeName 'System.Xml.XmlDocument';
+    $TestContentInfo.Load(($DataDirectory | Join-Path -ChildPath 'ContentInfo.xml'));
+    # [TestHelper.FsCrawlJobTestData]$FsCrawlJobTestData = Import-FsCrawlJobTestData -LiteralPath (
+    #     $PSScriptRoot | Join-Path -ChildPath 'Data/DirectoryContentTemplates/ContentInfo.xml'
+    # );
+    # $InputSetData = Expand-InputSetData -TestData $FsCrawlJobTestData;
 }
 
 BeforeAll {
-    Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../Setup/bin/FsInfoCat') -ErrorAction Stop;
+    #Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../Setup/bin/FsInfoCat') -ErrorAction Stop;
+    Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../bin/Debug/net461/win10-x64/FsInfoCat.psd1') -ErrorAction Stop;
 }
 
-Describe "<Description> | Start-FsCrawlJob" -ForEach $InputSetData {
+Describe "<Description>" -ForEach @(
+        @($TestContentInfo.SelectNodes('/Contents/InputSets/InputSet')) | ForEach-Object {
+            @{ Description = '' + $_.Description; InputSet = $_ }
+        }
+    ) {
     BeforeAll {
-        # [TestHelper.FsCrawlJobTestData]$FsCrawlJobTestData;
-        # [string]$Description;
-        # [PSCustomObject[]]$Roots = @{
-        #       [int]$ID;
-        #       [string[]]$TemplateNames;
-        #       [string]$TempPath;
-        # }
-        # [TestHelper.InputSet]$InputSet;
-        $Roots | ForEach-Object {
-            $p = $_.Path;
-            [System.IO.Directory]::CreateDirectory($p);
-            $_.TemplateNames | ForEach-Object {
-                Expand-Archive -Path ($PSScriptRoot | Join-Path -ChildPath "Data\DirectoryContentTemplates\$_") -DestinationPath $p -Force;
+        #[System.Xml.XmlElement]$InputSet = $_;
+        $Roots = @($InputSet.SelectNodes('Roots/Root') | ForEach-Object {
+            $TempDir = New-Item -Path ([System.IO.Path]::GetTempPath() | Join-Path -ChildPath "StartFsCrawlJobTest-$([Guid]::NewGuid().ToString('n'))") -ItemType Directory;
+            $_.SelectNodes('TemplateRef') | ForEach-Object {
+                $FileName = $TestContentInfo.SelectSingleNode("/Contents/Templates/Template[@ID='$($_.InnerText)']/@FileName").Value;
+                $ZipFile = $DataDirectory | Join-Path -ChildPath ($FileName);
+                Expand-Archive -LiteralPath $ZipFile -DestinationPath $TempDir -Force;
             }
-        };
-        $TestData = Expand-TestData -InputSet $InputSet;
+            [PSCustomObject]@{
+                RootDescription = '' + $_.Description;
+                RootID = '' + $_.ID;
+                Templates = ([System.Xml.XmlElement[]]@(
+                    $_.SelectNodes('TemplateRef') | ForEach-Object {
+                        $TestContentInfo.SelectSingleNode("/Contents/Templates/Template[@ID='$_']");
+                    }
+                ));
+                TempDir = $TempDir;
+            }
+        });
     }
-    It "<TestDescription> returns <Returns>" -ForEach $TestData  {
-        # [string]$TestDescription;
-        # [string]$Returns;
-        # [string]$JobName;
-        # [string[]]$RootPath;
-        # [int?]$MaxDepth;
-        # [int?]$MaxItems;
-        $Job = $null;
-        if ($null -ne $MaxDepth) {
-            if ($null -ne $MaxItems) {
-                $Job = Start-FsCrawlJob -Name $JobName -RootPath $RootPath -MaxDepth $MaxDepth -MaxItems $MaxItems;
+    It "<TestDescription> returns <Returns>" -ForEach @(
+            @($InputSet.SelectNodes('Tests/Test')) | ForEach-Object {
+                $s = "#$($_.ID): Start-FSCrawlJob";
+                if ($null -ne $_.MaxDepth) { $s = "$s -MaxDepth $($_.MaxDepth)" }
+                if ($null -ne $_.MaxItems) { $s = "$s -MaxItems $($_.MaxItems)" }
+                @{
+                    Test = $_;
+                    Description = $s;
+                    Returns = "#$($_.ID): " + ((@($_.SelectNodes('Expected')) | ForEach-Object { "{ Files: $($_.FileCount), Folders: $($_.FolderCount) }" }) -join '; ');
+                }
+            }
+        ) {
+        $FsCrawlJob = $null
+        if ($null -ne $Test.MaxDepth) {
+            $MaxDepth = [System.Xml.XmlConvert]::ToInt32($Test.MaxDepth);
+            if ($null -ne $Test.MaxItems) {
+                $MaxItems = [System.Xml.XmlConvert]::ToInt32($Test.MaxItems);
+                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MaxDepth $MaxDepth -MaxItems $MaxItems;
             } else {
-                $Job = Start-FsCrawlJob -Name $JobName -RootPath $RootPath -MaxDepth $MaxDepth;
+                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MaxDepth $MaxDepth;
             }
         } else {
-            if ($null -ne $MaxItems) {
-                $Job = Start-FsCrawlJob -Name $JobName -RootPath $RootPath -MaxItems $MaxItems;
+            if ($null -ne $Test.MaxItems) {
+                $MaxItems = [System.Xml.XmlConvert]::ToInt32($Test.MaxItems);
+                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MaxItems $MaxItems;
             } else {
-                $Job = Start-FsCrawlJob -Name $JobName -RootPath $RootPath;
+                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob;
             }
         }
-        ($null -eq $Job) | Should -BeFalse;
-        $Index = -1;
+        $FsCrawlJob | Should -Not -Be $null;
+        $Index = 0;
         do {
-            ++$Index;
-            $FsRoot = Receive-Job -Job $Job -Wait;
-            ($null -eq $r) | Should -BeFalse;
-            $FsRoot.MachineName | Should -BeNullOrEmpty -Not;
-            $FsRoot.MachineIdentifier | Should -BeNullOrEmpty -Not;
-            $Index | Should -BeLessThan $Expected.Count;
-            [TestHelper.ExpectedResult]$e = $Expected[$Index];
-            $Comparer = $FsRoot.GetNameComparer();
-            $ExpectedItemsWithPath = @($e.Items | ForEach-Object {
-                [PSCustomObject]@{
-                    Path = $Roots[$Index].Path | Join-Path -ChildPath $_.Path;
-                    Item = $_;
-                }
-            });
-            $FsChildNodesWithPath = [FsInfoCat.Models.Crawl.FsChildNodeWithPath]::Create($FsRoot);
-            $FsChildNodesWithPath.Count
-            $FullNames | ForEach-Object {
-                $FsChildNode = $r.FindByPath($_.Path);
-                ($null -eq $FsChildNode) | Should -BeFalse;
-                if ($_.Item -is [TestHelper.FileRef]) {
-                    ($FsChildNode -is [FsInfoCat.Models.Crawl.FsFile]) | Should -BeTrue;
-                    $f = [TestHelper.ContentFile]::FindFileByID($_.Item.FileID, $Roots[$Index].Templates);
-                    ($null -eq $f) | Should -BeFalse;
-                    $FsChildNode.Name | Should -Be $f.Name;
-                    $FsChildNode.Length | Should -Be $f.Length;
-                } else {
-                    ($FsChildNode -is [FsInfoCat.Models.Crawl.FsDirectory]) | Should -BeTrue;
-                    $f = [TestHelper.ContentFolder]::FindFolderByID($_.Item.FolderID, $Roots[$Index].Templates);
-                    ($null -eq $f) | Should -BeFalse;
-                    $f.Name | Should -Be $FsChildNode.Name;
-                }
-            }
-        } while ($Job.HasMoreData);
-        $Index | Should -Be $Expected.Count;
+            $FsHost = $FsCrawlJob | Receive-Job;
+            $FsHost | Should -Not -Be $null;
+            $FsHost | Should -BeOfType ([FsInfoCat.Models.Crawl.FSHost]);
+            $Index++;
+        } while ($FsCrawlJob.HasMoreData)
+        $Index | Should -Be $Roots.Count;
     }
     AfterAll {
-        $Roots | ForEach-Object { [System.IO.Directory]::Delete($_.Path, $true) }
+        $Roots | ForEach-Object { $_.TempDir | Remove-Item -Recurse -Force }
     }
 }
 
