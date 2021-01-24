@@ -121,6 +121,7 @@ Learn about using Windows Presentation Foundation, an open-source, graphical use
 
 ## PowerShell
 
+- [Pester](https://pester.dev/docs/quick-start)
 - [Basics of Writing a PowerShell Module with C#, Part 2: Debugging – PowerShell Magazine](https://www.powershellmagazine.com/2014/04/08/basics-of-writing-a-powershell-module-with-c-part-2-debugging/)
 - [CimCmdlets Module - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/cimcmdlets/?view=powershell-7.1)
 Contains cmdlets that interact with Common Information Model (CIM) Servers like the Windows Management Instrumentation (WMI) service.
