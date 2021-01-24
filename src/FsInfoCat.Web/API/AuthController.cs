@@ -68,19 +68,20 @@ namespace FsInfoCat.Web.API
             };
             foreach (UserRole role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.None && r <= user.Role))
                 claims.Add(new Claim(ClaimTypes.Role, role.ToString("F")));
-            HostDeviceRegRequest deviceReg = HostDeviceRegRequest.CreateForLocal();
-            HostDevice host = await ViewModelHelper.LookUp(dbContext.HostDevice, deviceReg.MachineName, deviceReg.MachineIdentifer);
-            if (null != host && host.AllowCrawl)
-            {
-                if (user.Role >= UserRole.Crawler)
-                    claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
-                else
-                {
-                    HostContributor c = await ViewModelHelper.Lookup(dbContext.HostContributor, user.AccountID, host.HostDeviceID);
-                    if (null != c)
-                        claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
-                }
-            }
+#warning Need to find some other way to retrieve device reg for local host
+            // HostDeviceRegRequest deviceReg = HostDeviceRegRequest.CreateForLocal();
+            // HostDevice host = await ViewModelHelper.LookUp(dbContext.HostDevice, deviceReg.MachineName, deviceReg.MachineIdentifer);
+            // if (null != host && host.AllowCrawl)
+            // {
+            //     if (user.Role >= UserRole.Crawler)
+            //         claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
+            //     else
+            //     {
+            //         HostContributor c = await ViewModelHelper.Lookup(dbContext.HostContributor, user.AccountID, host.HostDeviceID);
+            //         if (null != c)
+            //             claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
+            //     }
+            // }
             ClaimsPrincipal cp = new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", ClaimTypes.NameIdentifier, ClaimTypes.Role));
             await httpContext.SignInAsync(cp);
             return new RequestResponse<Account>(new Account(user));

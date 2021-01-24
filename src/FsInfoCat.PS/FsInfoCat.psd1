@@ -33,7 +33,7 @@ Copyright = '(c) 2021 Leonard T. Erwine. All rights reserved.'
 Description = 'Provides file system crawling for FsInfoCat.Web.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '5.0'
+# PowerShellVersion = '5.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -42,7 +42,7 @@ PowerShellVersion = '5.0'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-DotNetFrameworkVersion = '4.0'
+# DotNetFrameworkVersion = '4.0'
 
 # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
 CLRVersion = '4.0'
@@ -69,7 +69,7 @@ RequiredAssemblies = @('FsInfoCat.dll')
 NestedModules = @('FsInfoCat.PS.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('ConvertTo-PasswordHash', 'Get-SaltBytes', 'Test-PasswordHash', 'Get-InitializationQueries')
+FunctionsToExport = @('Get-LocalMachineIdentifier', 'ConvertTo-PasswordHash', 'Get-SaltBytes', 'Test-PasswordHash', 'Get-InitializationQueries')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = '*'

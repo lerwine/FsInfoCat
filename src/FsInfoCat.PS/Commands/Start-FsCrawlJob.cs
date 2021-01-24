@@ -22,6 +22,10 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string[] RootPath { get; set; }
 
+        [Parameter(HelpMessage = "Machine-specific unique identifier", Mandatory = true)]
+        [ValidateNotNullOrEmpty()]
+        public string MachineIdentifier { get; set; }
+
         [Parameter(HelpMessage = "Maximum crawl depth. Default is 512")]
         [ValidateRange(0L, int.MaxValue)]
         public int MaxDepth { get; set; } = DEFAULT_MAX_DEPTH;
@@ -60,9 +64,9 @@ namespace FsInfoCat.PS.Commands
             {
                 FsCrawlJob crawlJob;
                 if (ParameterSetName == PARAMETER_SET_NAME_EXPIRE_AT_DATE_TIME)
-                    crawlJob = new FsCrawlJob(Name, MaxDepth, MaxItems, StopAt, (Collection<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths));
+                    crawlJob = new FsCrawlJob(Name, MachineIdentifier, MaxDepth, MaxItems, StopAt, (Collection<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths));
                 else
-                    crawlJob = new FsCrawlJob(Name, MaxDepth, MaxItems, Ttl, (Collection<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths));
+                    crawlJob = new FsCrawlJob(Name, MachineIdentifier, MaxDepth, MaxItems, Ttl, (Collection<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths));
                 JobRepository.Add(crawlJob);
                 WriteObject(crawlJob);
                 ThreadPool.QueueUserWorkItem(crawlJob.StartJob);

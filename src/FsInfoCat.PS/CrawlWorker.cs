@@ -155,14 +155,11 @@ namespace FsInfoCat.PS
                 return false;
             }
             string currentPath = _rootPaths[_currentItemIndex];
-            result = new FsHost { MachineName = Environment.MachineName };
-            try { result.MachineIdentifier = HostDeviceRegRequest.GetLocalMachineIdentifier(); }
-            catch (Exception exc)
-            {
-                result.Messages.Add(AddTargetError(result.MachineName, exc, MessageId.ErrorGettingMachineIdentifier, ErrorCategory.ResourceUnavailable, "Getting machine identifier"));
-                result.Messages.Add(new CrawlWarning(MessageId.CrawlOperationStopped));
-                return !_isExpired();
-            }
+            result = new FsHost {
+                MachineName = Environment.MachineName,
+                MachineIdentifier = _parentJob.MachineIdentifier
+            };
+
             if (_isExpired())
             {
                 result.Messages.Add(new CrawlWarning(MessageId.CrawlOperationStopped));

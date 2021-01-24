@@ -1,12 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-#if WINDOWS
-using System.DirectoryServices;
-using System.Security.Principal;
-#else
-using System.IO;
-#endif
 using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models.HostDevices
@@ -105,50 +99,6 @@ namespace FsInfoCat.Models.HostDevices
             else
                 Validate(result, validationContext.DisplayName);
             return result;
-        }
-
-        public static string GetLocalMachineIdentifier()
-        {
-#if WINDOWS
-            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-                throw new NotSupportedException("Platform " + Environment.OSVersion.Platform.ToString("F") + " is not supported.");
-            try
-            {
-                using (DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + "/Administrator"))
-                    return new SecurityIdentifier((byte[])directoryEntry.InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
-            }
-            catch (Exception exc)
-            {
-                if (string.IsNullOrWhiteSpace(exc.Message))
-                    throw;
-                throw new Exception("Encountered an exception while trying to retrieve computer SID - " + exc.Message, exc);
-            }
-#elif LINUX
-            if (Environment.OSVersion.Platform != PlatformID.Unix)
-                throw new NotSupportedException("Platform " + Environment.OSVersion.Platform.ToString("F") + " is not supported.");
-            try
-            {
-                string s = File.ReadAllText("/etc/machine-id");
-                return (Guid.TryParse(s.Trim(), out Guid id)) ? id.ToString("d") : s;
-            }
-            catch (Exception exc)
-            {
-                if (string.IsNullOrWhiteSpace(exc.Message))
-                    throw;
-                throw new Exception("Encountered an exception while trying to retrieve computer GUID - " + exc.Message, exc);
-            }
-#else
-            throw new NotSupportedException("GetLocalMachineIdentifier is not supported.");
-#endif
-        }
-        public static HostDeviceRegRequest CreateForLocal()
-        {
-            return new HostDeviceRegRequest
-            {
-                IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT,
-                MachineName = Environment.MachineName,
-                MachineIdentifer = GetLocalMachineIdentifier()
-            };
         }
     }
 }

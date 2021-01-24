@@ -17,27 +17,27 @@
 
 | Name                                  | Project / Solution      | Config  | RID       | TargetFramework | Publish / Deploy Dir                        | Log File                           |
 | ------------------------------------- | ----------------------- | ------- | --------- | --------------- | ------------------------------------------- | ---------------------------------- |
-| Publish All (Core Win32)              | FsInfoCat.sln           | Release | win10-x64 | netcoreapp3.1   | ?                                           | Publish.Sln.Release.log            |
+| Publish All              | FsInfoCat.sln           | Release | win10-x64 | netcoreapp3.1   | ?                                           | Publish.Sln.Release.log            |
 | Publish PS Module (Desktop)           | FsInfoCat.PS.csproj     | Release | win10-x64 | net461          | Setup\Distro\PS\FsInfoCat-Win64-Desktop.zip | FsInfoCat.PS.Desktop.Release.log   |
 | Publish PS Module (Linux)             | FsInfoCat.PS.csproj     | Release | linux-x64 | netcoreapp3.1   | Setup\Distro\PS\FsInfoCat-Linux-NETCore.zip | FsInfoCat.PS.Linux.Release.log     |
 | Publish PS Module (OSX)               | FsInfoCat.PS.csproj     | Release | osx-x64   | netcoreapp3.1   | Setup\Distro\PS\FsInfoCat-OSX-NETCore.zip   | FsInfoCat.PS.OSX.Release.log       |
 | Run Unit Tests                        | FsInfoCat.Test.csproj   | Debug   | (current) | netcoreapp3.1   | n/a                                         | n/a                                |
-| Build All (Core Win64)                | FsInfoCat.sln           | Debug   | win10-x64 | netcoreapp3.1   | n/a                                         | All.Debug.log                      |
+| Build All                | FsInfoCat.sln           | Debug   | win10-x64 | netcoreapp3.1   | n/a                                         | All.Debug.log                      |
 | Build PS Module (Desktop)             | FsInfoCat.PS.csproj     | Debug   | win10-x64 | net461          | Setup\bin\FsInfoCat                         | FsInfoCat.PS.Desktop.Debug.log     |
 | Build PS Module (Linux)               | FsInfoCat.PS.csproj     | Debug   | linux-x64 | netcoreapp3.1   | Setup\bin\FsInfoCat                         | FsInfoCat.PS.Linux.Debug.log       |
 | Build PS Module (OSX)                 | FsInfoCat.PS.csproj     | Debug   | osx-x64   | netcoreapp3.1   | Setup\bin\FsInfoCat                         | FsInfoCat.PS.OSX.Debug.log         |
 | Build Web App                         | FsInfoCat.Web.csproj    | Debug   | win10-x64 | netcoreapp3.1   | n/a                                         | FsInfoCat.Web.Debug.log            |
-| Build PS Module (Core Win64)          | FsInfoCat.PS.csproj     | Debug   | win10-x64 | netcoreapp3.1   | Setup\bin\FsInfoCat                         | FsInfoCat.PS.Win64Core.Debug.log   |
+| Build PS Module          | FsInfoCat.PS.csproj     | Debug   | win10-x64 | netcoreapp3.1   | Setup\bin\FsInfoCat                         | FsInfoCat.PS.Win64Core.Debug.log   |
 | Build Test Project                    | FsInfoCat.Test.csproj   | Debug   | (current) | netcoreapp3.1   | n/a                                         | FsInfoCat.Test.log                 |
 | Build Common Library (.NET Framework) | FsInfoCat.csproj        | Debug   | (current) | net461          | n/a                                         | FsInfoCat.Desktop.Debug.log        |
-| Build Common Library (Core Win32)     | FsInfoCat.csproj        | Debug   | (current) | netcoreapp3.1   | n/a                                         | FsInfoCat.Win64Core.Debug.log      |
+| Build Common Library     | FsInfoCat.csproj        | Debug   | (current) | netcoreapp3.1   | n/a                                         | FsInfoCat.Win64Core.Debug.log      |
 | Build Common Library (Linux)          | FsInfoCat.csproj        | Debug   | (current) | netcoreapp3.1   | n/a                                         | FsInfoCat.Linux.Debug.log          |
 | Build Common Library (OSX)            | FsInfoCat.csproj        | Debug   | (current) | netcoreapp3.1   | n/a                                         | FsInfoCat.OSX.Debug.log            |
 | Build TestHelper Module               | TestHelper.csproj       | Debug   | (current) | netstandard2.0  | dev\bin\TestHelper                          | TestHelper.log                     |
 | Build DevHelper Module                | DevHelper.csproj        | Debug   | (current) | netstandard2.0  | dev\bin\DevHelper                           | DevHelper.log                      |
 | Build Text Template Host              | StandaloneT4Host.csproj | Debug   | (current) | net472          | Setup\Distro\Util\T4.zip                    | StandaloneT4Host.log               |
 | Publish Web App                       | FsInfoCat.Web.csproj    | Release | (current) | netcoreapp3.1   | ?                                           | FsInfoCat.Web.Release.log          |
-| Publish PS Module (Core Win32)        | FsInfoCat.PS.csproj     | Release | win10-x64 | netcoreapp3.1   | Setup\Distro\PS\FsInfoCat-Win64-NETCore.zip | FsInfoCat.PS.Win64Core.Release.log |
+| Publish PS Module        | FsInfoCat.PS.csproj     | Release | win10-x64 | netcoreapp3.1   | Setup\Distro\PS\FsInfoCat-Win64-NETCore.zip | FsInfoCat.PS.Win64Core.Release.log |
 
 ## Git Commands
 

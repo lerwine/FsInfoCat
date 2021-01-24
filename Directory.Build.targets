@@ -1,4 +1,11 @@
-<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Resources/Build/NetCoreBuild.xsd">
+<Project>
+    <!-- xmlns="http://schemas.microsoft.com/developer/msbuild/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.microsoft.com/developer/msbuild/2003 Resources/Build/Microsoft.Build.CommonTypes.xsd" -->
+
+    <Target Name="Clean">
+        <RemoveDir Directories="$(IntermediateOutputPath)" />
+        <RemoveDir Directories="$(OutputPath)" />
+      </Target>
 
     <Target Name="CheckCustomVars">
         <Message Importance="High" Text="MSBuildProjectDirectory: $(MSBuildProjectDirectory)" />
@@ -7,12 +14,9 @@
         <Message Importance="High" Text="Configuration: $(Configuration)" />
         <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
         <Message Importance="High" Text="OutputPath: $(OutputPath)" />
-        <Message Importance="High" Text="OsPlatform: $(OsPlatform)" />
 
         <Error Condition=" '$(Platform)' != 'AnyCPU' "
             Text="Platform $(Platform) not supported. Use AnyCPU." />
-        <Error Condition=" '$(DistroFrameworkIdentifier)' != 'Desktop' And '$(DistroFrameworkIdentifier)' != 'NETCore' And '$(DistroFrameworkIdentifier)' != 'NETStandard' "
-            Text="Invalid distribution framework identifer: $(DistroFrameworkIdentifier)." />
         <Error Condition=" !Exists($(RepositoryRootDir)) "
             Text="Invalid RepositoryRootDir: $(RepositoryRootDir) does not exist." />
         <Error Condition=" !Exists($(DevFolder)) "
@@ -45,14 +49,10 @@
             Text="Invalid UtilDistroFolder: $(UtilDistroFolder) not contained within $(DistroFolder)." />
         <Error Condition=" '$(T4DistroZip)' != '$(UtilDistroFolder)T4.zip' "
             Text="Invalid T4DistroZip: $(T4DistroZip) not contained within $(UtilDistroFolder)." />
-        <Error Condition=" '$(PsModuleDistroFolder)' != '$(DistroFolder)PS\' "
-            Text="Invalid PsModuleDistroFolder: $(PsModuleDistroFolder) not contained within $(DistroFolder)." />
+        <Error Condition=" '$(PsModuleDistroZip)' != '$(DistroFolder)FsInfoCat.zip' "
+            Text="Invalid PsModuleDistroZip: $(PsModuleDistroZip) not contained within $(DistroFolder)." />
         <Error Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '(^|;)(DEBUG|RELEASE)(;|$)')) "
             Text="Neither DEBUG nor RELEASE constant defined."/>
-        <Error Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '(^|;)(WINDOWS|OSX|LINUX)(;|$)')) "
-            Text="Neither WINDOWS, OSX nor LINUX constant defined."/>
-        <Error Condition=" !$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '(^|;)(NETSTANDARD|NETCOREAPP|NETFRAMEWORK)(;|$)')) "
-            Text="Neither NETSTANDARD, NETCOREAPP nor NETFRAMEWORK constant defined."/>
         <Message Importance="High" Text="MSBuildToolsPath: $(MSBuildToolsPath)" />
     </Target>
 

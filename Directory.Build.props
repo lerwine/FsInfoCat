@@ -1,9 +1,10 @@
-<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Resources/Build/NetCoreBuild.xsd">
+<Project>
+    <!-- xmlns="http://schemas.microsoft.com/developer/msbuild/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.microsoft.com/developer/msbuild/2003 Resources/Build/Microsoft.Build.CommonTypes.xsd" -->
   <PropertyGroup>
     <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
-    <!-- <Configuration Condition=" '$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release' ">Debug</Configuration> -->
-    <!-- Specify major, minor and build numbers only here. Revision number will be calculated according to OsPlatform and whether it is .net framework -->
-    <AssemblyVersion>0.1.0</AssemblyVersion>
+    <Configuration Condition=" '$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release' ">Debug</Configuration>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Company>Leonard T. Erwine</Company>
     <Copyright>Copyright © Leonard Thomas Erwine 2021</Copyright>
@@ -19,7 +20,6 @@
   <PropertyGroup>
     <ResourcesDir>$(RepositoryRootDir)Resources\</ResourcesDir>
     <BuildResourcesDir>$(ResourcesDir)Build\</BuildResourcesDir>
-    <CommonBuildProps>$(BuildResourcesDir)Common.props</CommonBuildProps>
     <PsModuleBuildTargets>$(BuildResourcesDir)PsModule.targets</PsModuleBuildTargets>
     <T4BuildTargets>$(BuildResourcesDir)T4.targets</T4BuildTargets>
   </PropertyGroup>
@@ -34,55 +34,6 @@
     <DistroFolder>$(SetupFolder)Distro\</DistroFolder>
     <UtilDistroFolder>$(DistroFolder)Util\</UtilDistroFolder>
     <T4DistroZip>$(UtilDistroFolder)T4.zip</T4DistroZip>
-    <PsModuleDistroFolder>$(DistroFolder)PS\</PsModuleDistroFolder>
+    <PsModuleDistroZip>$(DistroFolder)FsInfoCat.zip</PsModuleDistroZip>
   </PropertyGroup>
-  <Choose>
-    <When Condition=" '$(RuntimeIdentifier)' == 'win10-x64'">
-        <PropertyGroup>
-          <OsPlatform>Windows</OsPlatform>
-        </PropertyGroup>
-    </When>
-    <When Condition=" '$(RuntimeIdentifier)' == 'linux-x64'">
-        <PropertyGroup>
-          <OsPlatform>Linux</OsPlatform>
-        </PropertyGroup>
-    </When>
-    <When Condition=" '$(RuntimeIdentifier)' == 'osx-x64'">
-        <PropertyGroup>
-          <OsPlatform>OSX</OsPlatform>
-        </PropertyGroup>
-    </When>
-    <When Condition=" $([MSBuild]::IsOsPlatform(`Linux`)) ">
-        <PropertyGroup>
-          <OsPlatform>Linux</OsPlatform>
-        </PropertyGroup>
-    </When>
-    <When Condition=" $([MSBuild]::IsOsPlatform(`OSX`)) ">
-        <PropertyGroup>
-          <OsPlatform>OSX</OsPlatform>
-        </PropertyGroup>
-    </When>
-    <Otherwise>
-        <PropertyGroup>
-          <OsPlatform>Windows</OsPlatform>
-        </PropertyGroup>
-    </Otherwise>
-  </Choose>
-  <Choose>
-      <When Condition=" '$(OsPlatform)' == 'OSX' ">
-          <PropertyGroup>
-              <DistroPlatformIdentifier>OSX</DistroPlatformIdentifier>
-          </PropertyGroup>
-      </When>
-      <When Condition=" '$(OsPlatform)' == 'Linux' ">
-          <PropertyGroup>
-            <DistroPlatformIdentifier>Linux</DistroPlatformIdentifier>
-          </PropertyGroup>
-      </When>
-      <Otherwise>
-        <PropertyGroup>
-          <DistroPlatformIdentifier>Win32</DistroPlatformIdentifier>
-      </PropertyGroup>
-      </Otherwise>
-  </Choose>
 </Project>

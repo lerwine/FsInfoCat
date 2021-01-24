@@ -53,6 +53,7 @@
                 <xs:enumeration value="netcoreapp2.1"></xs:enumeration>
                 <xs:enumeration value="netcoreapp2.0"></xs:enumeration>
                 <xs:enumeration value="netstandard2.0"></xs:enumeration>
+                <xs:enumeration value="netstandard2.1"></xs:enumeration>
                 <xs:enumeration value="net461"></xs:enumeration>
                 <xs:enumeration value="net472"></xs:enumeration>
                 <xs:attributeGroup ref="ConditionalGroup" />
@@ -87,8 +88,6 @@
     <xs:group name="CustomElements">
         <xs:choice>
             <xs:element name="OsPlatform" type="OsTypePropertyType" />
-            <xs:element name="DistroFrameworkIdentifier" type="StringPropertyType" />
-            <xs:element name="DistroPlatformIdentifier" type="StringPropertyType" />
             <xs:element name="RepositoryRootDir" type="StringPropertyType">
                 <xs:annotation>
                     <xs:documentation>/</xs:documentation>
@@ -127,11 +126,6 @@
             <xs:element name="BuildResourcesDir" type="StringPropertyType">
                 <xs:annotation>
                     <xs:documentation>Resources/Build/</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="CommonBuildProps" type="StringPropertyType">
-                <xs:annotation>
-                    <xs:documentation>Resources\Build\Common.props</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="T4BuildTargets" type="StringPropertyType">
@@ -184,14 +178,9 @@
                     <xs:documentation>Setup\Distro\Util\T4.zip</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="PsModuleDistroFolder" type="StringPropertyType">
-                <xs:annotation>
-                    <xs:documentation>Setup\Distro\PS</xs:documentation>
-                </xs:annotation>
-            </xs:element>
             <xs:element name="PsModuleDistroZip" type="StringPropertyType">
                 <xs:annotation>
-                    <xs:documentation>Setup\Distro\PS\FsInfoCat-Win64-NetCore.zip</xs:documentation>
+                    <xs:documentation>Setup\Distro\FsInfoCat.zip</xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:choice>
@@ -225,8 +214,6 @@
             <xs:element name="Company" type="StringPropertyType" />
             <xs:element name="Copyright" type="StringPropertyType" />
             <xs:element name="Platform" type="PlatformType" />
-            <xs:element name="AppendRuntimeIdentifierToOutputPath" type="TrueFalsePropertyType" />
-            <xs:element name="AppendTargetFrameworkToOutputPath" type="TrueFalsePropertyType" />
         </xs:choice>
         <xs:attributeGroup ref="ConditionalGroup" />
     </xs:complexType>

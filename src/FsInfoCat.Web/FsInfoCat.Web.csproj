@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Resources/Build/NetCoreBuild.xsd">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <!-- xmlns="http://schemas.microsoft.com/developer/msbuild/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.microsoft.com/developer/msbuild/2003 ../../Resources/Build/Microsoft.Build.CommonTypes.xsd" -->
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>6e695feb-4201-4efd-9047-fbc8a286541c</UserSecretsId>
   </PropertyGroup>
-  <Import Project="$(CommonBuildProps)" />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1">

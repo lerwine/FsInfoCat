@@ -28,13 +28,17 @@ namespace FsInfoCat.PS
 
         public bool RanToCompletion => _worker.RanToCompletion;
 
-        internal FsCrawlJob(string friendlyName, int maxDepth, long maxItems, long ttl, Collection<string> rootPath) : base(null, friendlyName)
+        internal string MachineIdentifier { get; }
+
+        internal FsCrawlJob(string friendlyName, string machineIdentifier, int maxDepth, long maxItems, long ttl, Collection<string> rootPath) : base(null, friendlyName)
         {
+            MachineIdentifier = machineIdentifier;
             _worker = new CrawlWorker(_cancellationTokenSource.Token, maxDepth, maxItems, ttl, rootPath, this);
         }
 
-        internal FsCrawlJob(string friendlyName, int maxDepth, long maxItems, DateTime stopAt, Collection<string> rootPath) : base(null, friendlyName)
+        internal FsCrawlJob(string friendlyName, string machineIdentifier, int maxDepth, long maxItems, DateTime stopAt, Collection<string> rootPath) : base(null, friendlyName)
         {
+            MachineIdentifier = machineIdentifier;
             _worker = new CrawlWorker(_cancellationTokenSource.Token, maxDepth, maxItems, stopAt, rootPath, this);
         }
 

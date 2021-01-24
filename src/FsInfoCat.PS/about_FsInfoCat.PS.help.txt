@@ -11,7 +11,7 @@ EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
     Start-FsCrawlJob
-        Start-FsCrawlJob -RootPath <string[]> [-MaxDepth <int>]  [<CommonParameters>]
-        (<string> ...) | Start-FsCrawlJob [-MaxDepth <int>]  [<CommonParameters>]
+        Start-FsCrawlJob -RootPath <string[]> -MachineIdentifier <string> [-MaxDepth <int>]  [<CommonParameters>]
+        (<string> ...) | Start-FsCrawlJob -MachineIdentifier <string> [-MaxDepth <int>]  [<CommonParameters>]
 
 SEE ALSO

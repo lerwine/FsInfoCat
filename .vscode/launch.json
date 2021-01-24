@@ -8,7 +8,7 @@
             "name": "Debug PS Module (Desktop)",
             "type": "clr",
             "request": "launch",
-            "preLaunchTask": "Build PS Module (Desktop)",
+            "preLaunchTask": "Build PS Module",
             "program": "powershell_ise",
             "args": [
                 "Start-Debug.ps1"
@@ -21,7 +21,7 @@
             "name": "Debug PS Module (Core Win64)",
             "type": "clr",
             "request": "launch",
-            "preLaunchTask": "Build PS Module (Core Win64)",
+            "preLaunchTask": "Build PS Module",
             "program": "pwsh",
             "args": [
                 "Start-Debug.ps1"
@@ -38,7 +38,7 @@
             "args": [
                 "Invoke-FsInfoCatTests.ps1"
             ],
-            "preLaunchTask": "Build PS Module (Desktop)",
+            "preLaunchTask": "Build PS Module",
             "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
             "stopAtEntry": false,
             "console": "integratedTerminal"
@@ -47,7 +47,7 @@
             "name": "Test PS Module (Core Win64)",
             "type": "clr",
             "request": "launch",
-            "preLaunchTask": "Build PS Module (Core Win64)",
+            "preLaunchTask": "Build PS Module",
             "program": "pwsh",
             "args": [
                 "Invoke-FsInfoCatTests.ps1"

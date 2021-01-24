@@ -10,6 +10,9 @@ LONG DESCRIPTION
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
+    Get-LocalMachineIdentifier
+        Get-LocalMachineIdentifier
+
     ConvertTo-PasswordHash
         ConvertTo-PasswordHash -RawPwd <string> [-Salt <System.UInt64>]  [<CommonParameters>]
         (<string> ...) | ConvertTo-PasswordHash [-Salt <System.UInt64>]  [<CommonParameters>]

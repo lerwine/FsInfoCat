@@ -10,8 +10,7 @@ BeforeDiscovery  {
 }
 
 BeforeAll {
-    #Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../Setup/bin/FsInfoCat') -ErrorAction Stop;
-    Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../bin/Debug/net461/win10-x64/FsInfoCat.psd1') -ErrorAction Stop;
+    Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../Setup/bin/FsInfoCat') -ErrorAction Stop;
 }
 
 Describe "<Description>" -ForEach @(
@@ -52,21 +51,23 @@ Describe "<Description>" -ForEach @(
                 }
             }
         ) {
-        $FsCrawlJob = $null
+        $FsCrawlJob = $null;
+        $MachineIdentifier = Get-LocalMachineIdentifier;
+        $MachineIdentifier | Should -Not -BeNullOrEmpty;
         if ($null -ne $Test.MaxDepth) {
             $MaxDepth = [System.Xml.XmlConvert]::ToInt32($Test.MaxDepth);
             if ($null -ne $Test.MaxItems) {
                 $MaxItems = [System.Xml.XmlConvert]::ToInt32($Test.MaxItems);
-                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MaxDepth $MaxDepth -MaxItems $MaxItems;
+                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MachineIdentifier $MachineIdentifier -MaxDepth $MaxDepth -MaxItems $MaxItems;
             } else {
-                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MaxDepth $MaxDepth;
+                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MachineIdentifier $MachineIdentifier -MaxDepth $MaxDepth;
             }
         } else {
             if ($null -ne $Test.MaxItems) {
                 $MaxItems = [System.Xml.XmlConvert]::ToInt32($Test.MaxItems);
-                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MaxItems $MaxItems;
+                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MachineIdentifier $MachineIdentifier -MaxItems $MaxItems;
             } else {
-                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob;
+                $FsCrawlJob = @($Roots | Select-Object -ExpandProperty 'TempDir') | Start-FsCrawlJob -MachineIdentifier $MachineIdentifier;
             }
         }
         $FsCrawlJob | Should -Not -Be $null;

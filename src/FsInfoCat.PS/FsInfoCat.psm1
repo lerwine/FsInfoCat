@@ -1,3 +1,7 @@
+if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+    Add-Type -AssemblyName 'System.DirectoryServices' -ErrorAction Stop;
+}
+
 Function ConvertTo-PasswordHash {
     [CmdletBinding()]
     [OutputType([FsInfoCat.Util.PwHash])]
@@ -50,6 +54,28 @@ Function Test-PasswordHash {
     }
 }
 
+Function Get-LocalMachineIdentifier {
+    [CmdletBinding()]
+    Param()
+
+    if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+        $DirectoryEntry = New-Object -TypeName 'System.DirectoryServices.DirectoryEntry' -ArgumentList "WinNT://$(Environment.MachineName)/Administrator";
+        try {
+            $Sid = New-Object -TypeName 'System.Security.Principal.SecurityIdentifier' -ArgumentList ((,$DirectoryEntry.InvokeGet("objectSID")), 0);
+            $Sid.AccountDomainSid.ToString() | Write-Output;
+        } finally {
+            $DirectoryEntry.Dispose();
+        }
+    } else {
+        $id = '' + (Get-Content -LiteralPath 'etc/machine-id' -Force);
+        if ($id.Length -gt 0) {
+            $id | Write-Output;
+        } else {
+            Write-Error -Message 'Unable to get machine id' -Category ObjectNotFound -ErrorId 'EtcMachineIdReadError' -CategoryReason 'Unable to read from etc/machine-id';
+        }
+    }
+}
+
 Function Get-InitializationQueries {
     [CmdletBinding()]
     Param(
@@ -58,7 +84,7 @@ Function Get-InitializationQueries {
     )
     $PwHash = (ConvertTo-PasswordHash -RawPwd $RawAdminPwd).ToString();
     $HostDeviceID = [Guid]::NewGuid().ToString('d');
-    $MachineIdentifier = [FsInfoCat.PsDesktop.FsInfoCatUtil]::GetLocalMachineSID();
+    $MachineIdentifier = Get-LocalMachineSID;
     $MachineName = [System.Environment]::MachineName;
     @"
 -- Insert this query immediately before the 'CREATE TABLE dbo.Account' statement

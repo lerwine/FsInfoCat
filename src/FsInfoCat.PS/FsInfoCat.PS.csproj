@@ -1,46 +1,38 @@
-<Project Sdk="Microsoft.NET.Sdk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Resources/Build/NetCoreBuild.xsd">
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- xmlns="http://schemas.microsoft.com/developer/msbuild/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.microsoft.com/developer/msbuild/2003 ../../Resources/Build/Microsoft.Build.CommonTypes.xsd" -->
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>FsInfoCat.PS</AssemblyName>
     <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
     <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
     <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
     <Product>PowerShell Module FsInfoCat.PS</Product>
-    <OutputPath Condition=" '$(Configuration)' == 'Debug' ">$(PsModuleFolder)</OutputPath>
-    <AppendRuntimeIdentifierToOutputPath Condition=" '$(Configuration)' == 'Debug' ">false</AppendRuntimeIdentifierToOutputPath>
-    <AppendTargetFrameworkToOutputPath Condition=" '$(Configuration)' == 'Debug' ">false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-  <Import Project="$(CommonBuildProps)" />
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(DistroFrameworkIdentifier)' != 'Desktop' ">
-    <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-preview-06">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
+  <ItemGroup>
+    <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-preview-06" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <!-- <PackageReference Include="Microsoft.Build" Version="15.9.20" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" /> -->
   </ItemGroup>
-  <ItemGroup Condition=" '$(DistroFrameworkIdentifier)' == 'Desktop' ">
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
-    </Reference>
+  <ItemGroup>
+    <_OutputPathItems Include="$(OutputPath)\**\*.*" />
   </ItemGroup>
   <Import Project="$(PsModuleBuildTargets)" />
-  <Import Project="$(T4BuildTargets)" />
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />
   </Target>
-  <Target Name="PostBuild" AfterTargets="Publish">
-      <MakeDir Directories="$(PsModuleDistroFolder)" />
-      <Delete Files="$(PsModuleDistroZip)" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroZip)')) " />
-      <Message Importance="High" Text="$(MSBuildThisFile): Published module deployed to $(PublishDir)" />
-      <Message Importance="High" Text="$(MSBuildThisFile): Creating distributable ZIP file $(PsModuleDistroZip)" />
-      <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroZip)" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="$(PsModuleFolder)" />
+    <MakeDir Directories="$(PsModuleFolder)" />
+    <Copy SourceFiles="@(_OutputPathItems)" DestinationFolder="$(PsModuleFolder)" />
+  </Target>
+  <Target Name="PostPublish" AfterTargets="Publish">
+    <MakeDir Directories="$(DistroFolder)" />
+    <Delete Files="$(PsModuleDistroZip)" Condition=" $([System.IO.File]::Exists('$(PsModuleDistroZip)')) " />
+    <Message Importance="High" Text="$(MSBuildThisFile): Published module deployed to $(PublishDir)" />
+    <Message Importance="High" Text="$(MSBuildThisFile): Creating distributable ZIP file $(PsModuleDistroZip)" />
+    <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(PsModuleDistroZip)" />
   </Target>
 </Project>
