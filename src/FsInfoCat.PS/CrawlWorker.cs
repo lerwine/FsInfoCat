@@ -70,10 +70,9 @@ namespace FsInfoCat.PS
             if (!string.IsNullOrWhiteSpace(reason))
                 errorRecord.CategoryInfo.Reason = reason;
             _parentJob.Error.Add(errorRecord);
-            return new CrawlError(exception)
+            return new CrawlError(exception, errorId)
             {
                 Message = errorRecord.ToString(),
-                ID = errorId,
                 Activity = errorRecord.CategoryInfo.Activity,
                 Category = Enum.GetName(typeof(ErrorCategory), errorRecord.CategoryInfo.Category),
                 Reason = errorRecord.CategoryInfo.Reason,

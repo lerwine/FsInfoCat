@@ -59,22 +59,25 @@ namespace FsInfoCat.Models.Crawl
 
         CrawlError() { }
 
-        [Obsolete]
-        public CrawlError(Exception exception, string activity) : this(exception) { }
-
-        public CrawlError(Exception exception)
+        /// <summary>
+        /// Create new CrawlError.
+        /// </summary>
+        /// <param name="exception"><seealso cref="Exception" /> that is the cause of the error.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="exception" /> was null.</exception>
+        public CrawlError(Exception exception, MessageId id)
         {
             if (null == exception)
-                return;
+                throw new ArgumentNullException(nameof(exception));
+            ID = id;
             Message = exception.Message;
             List<CrawlError> innerErrors;
             if (exception is AggregateException)
-                innerErrors = ((AggregateException)exception).InnerExceptions.Select(e => new CrawlError(e)).ToList();
+                innerErrors = ((AggregateException)exception).InnerExceptions.Select(e => new CrawlError(e, id)).ToList();
             else
             {
                 innerErrors = new List<CrawlError>();
                 if (null != exception.InnerException)
-                    innerErrors.Add(new CrawlError(exception.InnerException));
+                    innerErrors.Add(new CrawlError(exception.InnerException, id));
             }
             InnerErrors = new Collection<CrawlError>(innerErrors);
         }
