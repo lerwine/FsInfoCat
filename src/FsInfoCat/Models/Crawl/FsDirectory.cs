@@ -41,46 +41,10 @@ namespace FsInfoCat.Models.Crawl
         public DateTime LastWriteTime { get; set; }
         public int Attributes { get; set; }
 
+        [Obsolete()]
         public static FsRoot GetRoot(FsHost host, DirectoryInfo directory, out IFsDirectory branch)
         {
-            FsRoot root;
-            if (null == directory.Parent)
-            {
-                VolumeInformation volumeInformation = new VolumeInformation(directory);
-                root = host.Roots.FirstOrDefault(h => h.SerialNumber == volumeInformation.SerialNumber && string.Equals(h.VolumeName, volumeInformation.VolumeName, StringComparison.InvariantCultureIgnoreCase));
-                if (null == root)
-                {
-                    root = new FsRoot
-                    {
-                        FileSystemName = volumeInformation.FileSystemName,
-                        MaxNameLength = volumeInformation.MaxNameLength,
-                        Flags = volumeInformation.Flags,
-                        RootPathName = volumeInformation.RootPathName,
-                        SerialNumber = volumeInformation.SerialNumber,
-                        VolumeName = volumeInformation.VolumeName,
-                    };
-                    host.Roots.Add(root);
-                }
-                branch = root;
-            }
-            else
-            {
-                root = GetRoot(host, directory.Parent, out IFsDirectory parent);
-                branch = root.FindByName<FsDirectory>(parent.ChildNodes, directory.Name);
-                if (null == branch)
-                {
-                    FsDirectory childDir = new FsDirectory
-                    {
-                        Name = directory.Name,
-                        CreationTime = directory.CreationTimeUtc,
-                        LastWriteTime = directory.LastAccessTimeUtc,
-                        Attributes = (int)directory.Attributes
-                    };
-                    branch = childDir;
-                    parent.ChildNodes.Add(childDir);
-                }
-            }
-            return root;
+            throw new NotImplementedException();
         }
 
         /// <summary>

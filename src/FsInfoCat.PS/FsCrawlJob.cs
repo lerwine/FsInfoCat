@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,37 +18,86 @@ namespace FsInfoCat.PS
 
         private object _syncRoot = new object();
         private bool _isRunning = false;
+        private Task<bool> _task;
         private string _statusMessage = "";
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private Task<Tuple<bool, FsHost>> _task;
-        private readonly CrawlWorker _worker;
+        private readonly Stopwatch _stopWatch;
+        private readonly CancellationToken _token;
+        private readonly Queue<string> _startingDirectories;
+        private long _totalItemCount = 0L;
+        private string _currentStartingDirectory;
+        private readonly long _maxItems;
+        private readonly string _machineIdentifier;
 
-        public override string StatusMessage => _statusMessage;
+        internal Collection<FsRoot> FsRoots { get; }
+        internal int MaxDepth { get; }
+        internal Func<bool> IsExpired { get; }
 
         public override bool HasMoreData => _isRunning || Output.Count > 0 || Error.Count > 0 || Warning.Count > 0 || Verbose.Count > 0 || Progress.Count > 0 || Debug.Count > 0 || Information.Count > 0;
 
         public override string Location => "";
 
-        public bool RanToCompletion => _worker.RanToCompletion;
+        public override string StatusMessage => _statusMessage;
 
-        internal string MachineIdentifier { get; }
-
-        internal FsCrawlJob(string friendlyName, string machineIdentifier, int maxDepth, long maxItems, long ttl, Collection<string> rootPath) : base(null, friendlyName)
+        /// <summary>
+        /// Create new CrawlJob
+        /// </summary>
+        /// <param name="startingDirectories">Paths to be crawled.</param>
+        /// <param name="maxDepth">Maximum recursion depth.</param>
+        /// <param name="maxItems">Maximum number of items to crawl.</param>
+        /// <param name="ttl">The number of milliseconds that the job can run or -1L for no limit.</param>
+        /// <param name="friendlyName">The name of the job.</param>
+        internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, long ttl, string machineIdentifier, string friendlyName) : base(null, friendlyName)
         {
-            MachineIdentifier = machineIdentifier;
-            _worker = new CrawlWorker(_cancellationTokenSource.Token, maxDepth, maxItems, ttl, rootPath, this);
+            MaxDepth = maxDepth;
+            _maxItems = maxItems;
+            _token = _cancellationTokenSource.Token;
+            _machineIdentifier = machineIdentifier;
+            _startingDirectories = new Queue<string>((null == startingDirectories) ? new string[0] : startingDirectories.Where(p => !string.IsNullOrEmpty(p)).ToArray());
+            if (ttl < 0L)
+            {
+                _stopWatch = null;
+                IsExpired = new Func<bool>(() => _token.IsCancellationRequested);
+            }
+            else
+            {
+                _stopWatch = new Stopwatch();
+                IsExpired = new Func<bool>(() =>
+                {
+                    if (_token.IsCancellationRequested || _stopWatch.ElapsedMilliseconds >= ttl)
+                    {
+                        if (_stopWatch.IsRunning)
+                            _stopWatch.Stop();
+                        return true;
+                    }
+                    return false;
+                });
+            }
         }
 
-        internal FsCrawlJob(string friendlyName, string machineIdentifier, int maxDepth, long maxItems, DateTime stopAt, Collection<string> rootPath) : base(null, friendlyName)
+        /// <summary>
+        /// Create new CrawlJob
+        /// </summary>
+        /// <param name="startingDirectories">Paths to be crawled.</param>
+        /// <param name="maxDepth">Maximum recursion depth.</param>
+        /// <param name="maxItems">Maximum number of items to crawl.</param>
+        /// <param name="stopAt">When to stop the job.</param>
+        /// <param name="friendlyName">The name of the job.</param>
+        internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, DateTime stopAt, string machineIdentifier, string friendlyName) : base(null, friendlyName)
         {
-            MachineIdentifier = machineIdentifier;
-            _worker = new CrawlWorker(_cancellationTokenSource.Token, maxDepth, maxItems, stopAt, rootPath, this);
+            MaxDepth = maxDepth;
+            _maxItems = maxItems;
+            _machineIdentifier = machineIdentifier;
+            _startingDirectories = new Queue<string>((null == startingDirectories) ? new string[0] : startingDirectories.Where(p => null != p).ToArray());
+            _token = _cancellationTokenSource.Token;
+            IsExpired = new Func<bool>(() => _token.IsCancellationRequested || DateTime.Now >= stopAt);
+            _stopWatch = null;
         }
 
         internal void StartJob(object state)
         {
             _isRunning = true;
-            _task = Task.Factory.StartNew<Tuple<bool, FsHost>>(() =>
+            _task = Task.Factory.StartNew<bool>(() =>
             {
                 SetJobState(JobState.Running);
                 return RunNext(state);
@@ -53,32 +105,54 @@ namespace FsInfoCat.PS
             _task.ContinueWith(CrawlCompleted, state, _cancellationTokenSource.Token);
         }
 
-        private void CrawlCompleted(Task<Tuple<bool, FsHost>> task, object state)
+        private void CrawlCompleted(Task<bool> task, object state)
         {
             JobState jobState;
             if (task.IsCanceled)
+            {
                 jobState = JobState.Stopped;
+                Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, "Aborted") { RecordType = ProgressRecordType.Completed });
+            }
             else
             {
-                Tuple<bool, FsHost> result = task.Result;
-                if (result.Item1)
+                if (task.Result)
                 {
-                    if (null != result.Item2)
-                        Output.Add(PSObject.AsPSObject(result.Item2));
-                    _task = Task.Factory.StartNew<Tuple<bool, FsHost>>(RunNext, state, _cancellationTokenSource.Token);
+                    // if (null != result.Item2)
+                    //     Output.Add(PSObject.AsPSObject(result.Item2));
+                    _task = Task.Factory.StartNew<bool>(RunNext, state, _cancellationTokenSource.Token);
                     _task.ContinueWith(CrawlCompleted, _cancellationTokenSource.Token, _cancellationTokenSource.Token);
                     return;
                 }
                 jobState = JobState.Completed;
+                Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, "Completed") { RecordType = ProgressRecordType.Completed });
             }
+            Output.Add(PSObject.AsPSObject(new FsHost()
+            {
+                MachineIdentifier = _machineIdentifier,
+                MachineName = Environment.MachineName,
+                Roots = FsRoots
+            }));
             _isRunning = false;
-            Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, (_worker.RanToCompletion) ? "Completed" : "Aborted") { RecordType = ProgressRecordType.Completed });
             SetJobState(jobState);
         }
 
-        private Tuple<bool, FsHost> RunNext(object state)
+        private bool RunNext(object state)
         {
-            return new Tuple<bool, FsHost>(_worker.ProcessNext(out FsHost result), result);
+            long itemsRemaining;
+            if (IsExpired() || (itemsRemaining = _maxItems - _totalItemCount) < 1L)
+            {
+                _currentStartingDirectory = null;
+                return false;
+            }
+            if (!_startingDirectories.TryDequeue(out string startingDirectory))
+            {
+                _currentStartingDirectory = null;
+                return true;
+            }
+            _currentStartingDirectory = startingDirectory;
+            bool result = CrawlWorker.Run(startingDirectory, itemsRemaining, this, out itemsRemaining);
+            _totalItemCount += itemsRemaining;
+            return result;
         }
 
         public override void StopJob()

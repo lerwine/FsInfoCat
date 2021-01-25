@@ -41,6 +41,9 @@ namespace FsInfoCat.Models.Crawl
         [Description("Maximum crawl depth has been reached.")]
         MaxDepthReached,
 
+        [Description("Maximum crawl item count has been reached.")]
+        MaxItemsReached,
+
         [Description("An unexpected error has occurred.")]
         UnexpectedError
     }
