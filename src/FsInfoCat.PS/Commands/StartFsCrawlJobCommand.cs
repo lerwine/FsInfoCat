@@ -6,6 +6,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using FsInfoCat.Models.Crawl;
+using FsInfoCat.Models.Volumes;
 using Microsoft.PowerShell.Commands;
 
 namespace FsInfoCat.PS.Commands
@@ -13,7 +14,7 @@ namespace FsInfoCat.PS.Commands
     // Start-FsCrawlJob
     [Cmdlet(VerbsLifecycle.Start, "FsCrawlJob", DefaultParameterSetName = PARAMETER_SET_NAME_NONE_TRUE)]
     [OutputType(typeof(FsCrawlJob))]
-    public class Start_FsCrawlJob : PSCmdlet
+    public class StartFsCrawlJobCommand : FsVolumeInfoCommand
     {
         private const string Property_Name_All_Paths = "AllPaths";
         private const string PARAMETER_SET_NAME_NONE_TRUE = "none:true";
@@ -33,7 +34,6 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string[] RootPath { get; set; }
 
-
         [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_NONE_FALSE)]
         [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_FALSE)]
         [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_FALSE)]
@@ -43,6 +43,10 @@ namespace FsInfoCat.PS.Commands
         [Parameter(HelpMessage = "Machine-specific unique identifier", Mandatory = true)]
         [ValidateNotNullOrEmpty()]
         public string MachineIdentifier { get; set; }
+
+        [Parameter(HelpMessage = "Supplier function to get volumes", Mandatory = true)]
+        [ValidateNotNull()]
+        public Func<IEnumerable<IVolumeInfo>> GetVolumes { get; set; }
 
         [Parameter(HelpMessage = "Maximum crawl depth. Default is 512")]
         [ValidateRange(0L, int.MaxValue)]
@@ -197,14 +201,14 @@ namespace FsInfoCat.PS.Commands
                 {
                     case PARAMETER_SET_NAME_BY_AGE_TRUE:
                     case PARAMETER_SET_NAME_BY_AGE_FALSE:
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, Ttl, MachineIdentifier, Name);
+                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumes, Name);
                         break;
                     case PARAMETER_SET_NAME_DATE_TIME_TRUE:
                     case PARAMETER_SET_NAME_DATE_TIME_FALSE:
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, StopAt, MachineIdentifier, Name);
+                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, StopAt, MachineIdentifier, GetVolumes, Name);
                         break;
                     default:
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, -1L, MachineIdentifier, Name);
+                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, -1L, MachineIdentifier, GetVolumes, Name);
                         break;
                 }
                 JobRepository.Add(crawlJob);

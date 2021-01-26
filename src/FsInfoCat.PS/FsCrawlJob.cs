@@ -7,6 +7,7 @@ using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
 using FsInfoCat.Models.Crawl;
+using FsInfoCat.Models.Volumes;
 
 namespace FsInfoCat.PS
 {
@@ -31,6 +32,7 @@ namespace FsInfoCat.PS
 
         internal Collection<FsRoot> FsRoots { get; }
         internal int MaxDepth { get; }
+        public Func<IEnumerable<IVolumeInfo>> GetVolumes { get; }
         internal Func<bool> IsExpired { get; }
 
         public override bool HasMoreData => _isRunning || Output.Count > 0 || Error.Count > 0 || Warning.Count > 0 || Verbose.Count > 0 || Progress.Count > 0 || Debug.Count > 0 || Information.Count > 0;
@@ -47,9 +49,10 @@ namespace FsInfoCat.PS
         /// <param name="maxItems">Maximum number of items to crawl.</param>
         /// <param name="ttl">The number of milliseconds that the job can run or -1L for no limit.</param>
         /// <param name="friendlyName">The name of the job.</param>
-        internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, long ttl, string machineIdentifier, string friendlyName) : base(null, friendlyName)
+        internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, long ttl, string machineIdentifier, Func<IEnumerable<IVolumeInfo>> getVolumes, string friendlyName) : base(null, friendlyName)
         {
             MaxDepth = maxDepth;
+            GetVolumes = getVolumes;
             _maxItems = maxItems;
             _token = _cancellationTokenSource.Token;
             _machineIdentifier = machineIdentifier;
@@ -83,9 +86,10 @@ namespace FsInfoCat.PS
         /// <param name="maxItems">Maximum number of items to crawl.</param>
         /// <param name="stopAt">When to stop the job.</param>
         /// <param name="friendlyName">The name of the job.</param>
-        internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, DateTime stopAt, string machineIdentifier, string friendlyName) : base(null, friendlyName)
+        internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, DateTime stopAt, string machineIdentifier, Func<IEnumerable<IVolumeInfo>> getVolumes, string friendlyName) : base(null, friendlyName)
         {
             MaxDepth = maxDepth;
+            GetVolumes = getVolumes;
             _maxItems = maxItems;
             _machineIdentifier = machineIdentifier;
             _startingDirectories = new Queue<string>((null == startingDirectories) ? new string[0] : startingDirectories.Where(p => null != p).ToArray());

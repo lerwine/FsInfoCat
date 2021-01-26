@@ -29,7 +29,7 @@ namespace FsInfoCat.PS
         /// <returns>True if ran to completion; otherwise, false.</returns>
         internal static bool Run(string startingDirectory, long maxItems, FsCrawlJob job, out long totalItems)
         {
-            IFsDirectory parent = FsRoot.ImportDirectory(job.FsRoots, startingDirectory, out string realPath);
+            IFsDirectory parent = FsRoot.ImportDirectory(job.FsRoots, startingDirectory, job.GetVolumes, out string realPath);
             if (null == parent)
             {
                 totalItems = 0L;

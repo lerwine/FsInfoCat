@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using FsInfoCat.Models.Volumes;
 
 namespace FsInfoCat.Models.Crawl
 {
-    public sealed class FsRoot : IFsDirectory, IEquatable<FsRoot>, IEqualityComparer<IFsChildNode>
+    public sealed class FsRoot : IVolumeInfo, IFsDirectory, IEquatable<FsRoot>, IEqualityComparer<IFsChildNode>
     {
         /// <summary>
         /// Gets the full path name of the volume root directory.
@@ -16,7 +17,7 @@ namespace FsInfoCat.Models.Crawl
         /// <summary>
         /// Gets the name of the file system.
         /// </summary>
-        public string FileSystemName { get; set; }
+        public string DriveFormat { get; set; }
 
         public DriveType DriveType { get; private set; }
 
@@ -25,68 +26,19 @@ namespace FsInfoCat.Models.Crawl
         /// </summary>
         public string VolumeName { get; set; }
 
-        private static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Dictionary<string, DriveInfo> drives, out string realPath)
-        {
-            string key = path;
-            FsRoot root;
-            if (drives.ContainsKey(key) || null != (key = drives.Keys.FirstOrDefault(d => StringComparer.InvariantCultureIgnoreCase.Equals(d, path))))
-            {
-                if (null == (root = fsRoots.FirstOrDefault(r => StringComparer.InvariantCulture.Equals(key))))
-                {
-                    root = new FsRoot(drives[key]);
-                    fsRoots.Add(root);
-                }
-                realPath = key;
-                return root;
-            }
-            string name = Path.GetFileName(path);
-            string directoryName = Path.GetDirectoryName(path);
-            if (string.IsNullOrEmpty(directoryName))
-                root = null;
-            else
-            {
-                IFsDirectory parent = ImportDirectory(fsRoots, directoryName, drives, out realPath);
-                if (null != parent)
-                {
-                    string[] names = Directory.GetDirectories(directoryName).Select(p => Path.GetFileName(p)).ToArray();
-                    if (names.Any(n => StringComparer.InvariantCulture.Equals(n, name)) || null != (name = names.FirstOrDefault(n => StringComparer.InvariantCultureIgnoreCase.Equals(n, name))))
-                    {
-                        FsDirectory result = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(d => StringComparer.InvariantCulture.Equals(d.Name, name));
-                        if (null == result)
-                        {
-                            result = new FsDirectory() { Name = name };
-                            parent.ChildNodes.Add(result);
-                        }
-                        realPath = Path.Combine(realPath, name);
-                        return result;
-                    }
-                }
-            }
-            realPath = null;
-            return null;
-        }
+        public uint SerialNumber { get; set; }
 
-        public static string NormalizePath(string path)
+        private Collection<ICrawlMessage> _messages = null;
+        public Collection<ICrawlMessage> Messages
         {
-            if (string.IsNullOrEmpty(path))
-                return "";
-            path = Path.GetFullPath(path);
-            while (string.IsNullOrEmpty(Path.GetFileName(path)))
+            get
             {
-                string d = Path.GetDirectoryName(path);
-                if (string.IsNullOrEmpty(d))
-                    break;
-                path = d;
+                Collection<ICrawlMessage> messages = _messages;
+                if (null == messages)
+                    _messages = messages = new Collection<ICrawlMessage>();
+                return messages;
             }
-            return path;
-        }
-
-        public static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, out string realPath)
-        {
-            if ((path = NormalizePath(path)).Length > 0 && Directory.Exists(path))
-                return ImportDirectory(fsRoots, path, DriveInfo.GetDrives().ToDictionary(k => k.RootDirectory.FullName, v => v), out realPath);
-            realPath = null;
-            return null;
+            set { _messages = value; }
         }
 
         private Collection<IFsChildNode> _childNodes = null;
@@ -102,13 +54,15 @@ namespace FsInfoCat.Models.Crawl
             set { _childNodes = value; }
         }
 
-        public FsRoot(DriveInfo driveInfo)
+        public bool CaseSensitive { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public FsRoot(IVolumeInfo driveInfo)
         {
             if (null == driveInfo)
                 throw new ArgumentNullException(nameof(driveInfo));
-            FileSystemName = driveInfo.DriveFormat;
-            DriveType = driveInfo.DriveType;
-            VolumeName = driveInfo.VolumeLabel;
+            DriveFormat = driveInfo.DriveFormat;
+            VolumeName = driveInfo.VolumeName;
+            SerialNumber = driveInfo.SerialNumber;
         }
 
         public FsRoot() { }
@@ -140,22 +94,9 @@ namespace FsInfoCat.Models.Crawl
             return false;
         }
 
-        private Collection<ICrawlMessage> _messages = null;
-        public Collection<ICrawlMessage> Messages
-        {
-            get
-            {
-                Collection<ICrawlMessage> messages = _messages;
-                if (null == messages)
-                    _messages = messages = new Collection<ICrawlMessage>();
-                return messages;
-            }
-            set { _messages = value; }
-        }
-
         public bool Equals(FsRoot other)
         {
-            return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType && String.Equals(FileSystemName, other.FileSystemName, StringComparison.InvariantCultureIgnoreCase) &&
+            return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType && String.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase) &&
                 String.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase) && RootPathName.Equals(other.RootPathName)));
         }
 
@@ -197,6 +138,70 @@ namespace FsInfoCat.Models.Crawl
             if (String.IsNullOrWhiteSpace(VolumeName))
                 return RootPathName.Trim();
             return RootPathName.Trim() + Path.PathSeparator + " " + VolumeName.Trim();
+        }
+        public static string NormalizePath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return "";
+            path = Path.GetFullPath(path);
+            while (string.IsNullOrEmpty(Path.GetFileName(path)))
+            {
+                string d = Path.GetDirectoryName(path);
+                if (string.IsNullOrEmpty(d))
+                    break;
+                path = d;
+            }
+            return path;
+        }
+
+        private static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Dictionary<string, IVolumeInfo> drives, out string realPath)
+        {
+            string key = path;
+            FsRoot root;
+            if (drives.ContainsKey(key) || null != (key = drives.Keys.FirstOrDefault(d => StringComparer.InvariantCultureIgnoreCase.Equals(d, path))))
+            {
+                if (null == (root = fsRoots.FirstOrDefault(r => StringComparer.InvariantCulture.Equals(key))))
+                {
+                    root = new FsRoot(drives[key]);
+                    fsRoots.Add(root);
+                }
+                realPath = key;
+                return root;
+            }
+            string name = Path.GetFileName(path);
+            string directoryName = Path.GetDirectoryName(path);
+            if (string.IsNullOrEmpty(directoryName))
+                root = null;
+            else
+            {
+                IFsDirectory parent = ImportDirectory(fsRoots, directoryName, drives, out realPath);
+                if (null != parent)
+                {
+                    string[] names = Directory.GetDirectories(directoryName).Select(p => Path.GetFileName(p)).ToArray();
+                    if (names.Any(n => StringComparer.InvariantCulture.Equals(n, name)) || null != (name = names.FirstOrDefault(n => StringComparer.InvariantCultureIgnoreCase.Equals(n, name))))
+                    {
+                        FsDirectory result = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(d => StringComparer.InvariantCulture.Equals(d.Name, name));
+                        if (null == result)
+                        {
+                            result = new FsDirectory() { Name = name };
+                            parent.ChildNodes.Add(result);
+                        }
+                        realPath = Path.Combine(realPath, name);
+                        return result;
+                    }
+                }
+            }
+            realPath = null;
+            return null;
+        }
+
+
+        public static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Func<IEnumerable<IVolumeInfo>> getVolumes, out string realPath)
+        {
+            if ((path = NormalizePath(path)).Length > 0 && Directory.Exists(path))
+                return ImportDirectory(fsRoots, path, getVolumes().ToDictionary(k => k.RootPathName, v => v), out realPath);
+            realPath = null;
+            return null;
         }
     }
 }
