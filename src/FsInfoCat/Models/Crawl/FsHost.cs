@@ -7,7 +7,7 @@ namespace FsInfoCat.Models.Crawl
     /// <summary>
     /// Represents a file system host machine.
     /// </summary>
-    public sealed class FsHost : IFsNode
+    public sealed partial class FsHost : IFsNode
     {
         private Collection<FsRoot> _roots = null;
 
@@ -70,6 +70,5 @@ namespace FsInfoCat.Models.Crawl
             segments = new IFsDirectory[0];
             return false;
         }
-
     }
 }
