@@ -49,6 +49,7 @@ git fetch upstream
 git merge upstream/main
 git push origin main:main
 ```
+
 ## MVC Web App CRUD scaffolding
 
 1. Create a new model class in the `src\FsInfoCat.Web\Controllers` folder.
