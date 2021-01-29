@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<helpItems xmlns="http://msh" schema="maml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://msh Msh.xsd http://schemas.microsoft.com/maml/2004/10 PSMaml/Maml.xsd http://schemas.microsoft.com/maml/dev/command/2004/10 PSMaml\developerCommand.xsd http://schemas.microsoft.com/maml/dev/2004/10 PSMaml\developer.xsd">
+<helpItems xmlns="http://msh" schema="maml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://msh ../../../Resources/Msh.xsd http://schemas.microsoft.com/maml/2004/10 ../../../Resources/PSMaml/Maml.xsd http://schemas.microsoft.com/maml/dev/command/2004/10 ../../../Resources/PSMaml/developerCommand.xsd http://schemas.microsoft.com/maml/dev/2004/10 ../../../Resources/PSMaml/developer.xsd">
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
     <command:details>
       <command:name>Export-Xml</command:name>
