@@ -1,48 +1,45 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {
     /// <summary>
     /// Represents a file system host machine.
     /// </summary>
-    public sealed partial class FsHost : IFsNode
+    public sealed partial class FsHost : ComponentBase, IFsNode
     {
-        private Collection<FsRoot> _roots = null;
+        private NestedCollectionComponentContainer<FsHost, FsRoot> _roots;
 
         /// <summary>
         /// File system roots containing roots crawled.
         /// </summary>
         public Collection<FsRoot> Roots
         {
-            get
-            {
-                Collection<FsRoot> roots = _roots;
-                if (null == roots)
-                    _roots = roots = new Collection<FsRoot>();
-                return roots;
-            }
-            set { _roots = value; }
+            get => _roots.Items;
+            set => _roots.Items = value;
         }
 
-        private Collection<ICrawlMessage> _messages = null;
-
-        public Collection<ICrawlMessage> Messages
+        private NestedCollectionComponentContainer<FsHost, CrawlMessage> _messagesContainer;
+        public Collection<CrawlMessage> Messages
         {
-            get
-            {
-                Collection<ICrawlMessage> messages = _messages;
-                if (null == messages)
-                    _messages = messages = new Collection<ICrawlMessage>();
-                return messages;
-            }
-            set { _messages = value; }
+            get => _messagesContainer.Items;
+            set => _messagesContainer.Items = value;
         }
 
         public string MachineName { get; set; }
 
         public string MachineIdentifier { get; set; }
+
+        string INamedComponent.Name => (string.IsNullOrWhiteSpace(MachineName)) ? MachineIdentifier ?? "" : MachineName;
+
+        public FsHost()
+        {
+            _messagesContainer = new NestedCollectionComponentContainer<FsHost, CrawlMessage>(this, false);
+            _roots = new NestedCollectionComponentContainer<FsHost, FsRoot>(this, false);
+        }
 
         /// <summary>
         /// Looks for the first nested partial crawl.

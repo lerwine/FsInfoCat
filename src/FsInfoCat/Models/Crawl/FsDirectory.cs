@@ -7,39 +7,33 @@ using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {
-    public sealed class FsDirectory : IFsDirectory, IFsChildNode
+    public sealed class FsDirectory : ComponentBase, IFsDirectory, IFsChildNode
     {
         public string Name { get; set; }
 
-        private Collection<IFsChildNode> _childNodes = null;
+        private NestedCollectionComponentContainer<FsDirectory, IFsChildNode> _childNodes;
         public Collection<IFsChildNode> ChildNodes
         {
-            get
-            {
-                Collection<IFsChildNode> childNodes = _childNodes;
-                if (null == childNodes)
-                    _childNodes = childNodes = new Collection<IFsChildNode>();
-                return childNodes;
-            }
-            set { _childNodes = value; }
+            get => _childNodes.Items;
+            set => _childNodes.Items = value;
         }
 
-        private Collection<ICrawlMessage> _messages = null;
-        public Collection<ICrawlMessage> Messages
+        private NestedCollectionComponentContainer<FsDirectory, CrawlMessage> _messagesContainer;
+        public Collection<CrawlMessage> Messages
         {
-            get
-            {
-                Collection<ICrawlMessage> messages = _messages;
-                if (null == messages)
-                    _messages = messages = new Collection<ICrawlMessage>();
-                return messages;
-            }
-            set { _messages = value; }
+            get => _messagesContainer.Items;
+            set => _messagesContainer.Items = value;
         }
 
         public DateTime CreationTime { get; set; }
         public DateTime LastWriteTime { get; set; }
         public int Attributes { get; set; }
+
+        public FsDirectory()
+        {
+            _messagesContainer = new NestedCollectionComponentContainer<FsDirectory, CrawlMessage>(this, false);
+            _childNodes = new NestedCollectionComponentContainer<FsDirectory, IFsChildNode>(this, false);
+        }
 
         [Obsolete()]
         public static FsRoot GetRoot(FsHost host, DirectoryInfo directory, out IFsDirectory branch)

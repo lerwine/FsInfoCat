@@ -4,10 +4,11 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {
-    public sealed class FsRoot : IVolumeInfo, IFsDirectory, IEquatable<FsRoot>, IEqualityComparer<IFsChildNode>
+    public sealed class FsRoot : ComponentBase, IVolumeInfo, IFsDirectory, IEquatable<FsRoot>, IEqualityComparer<IFsChildNode>
     {
         /// <summary>
         /// Gets the full path name of the volume root directory.
@@ -28,35 +29,25 @@ namespace FsInfoCat.Models.Crawl
 
         public uint SerialNumber { get; set; }
 
-        private Collection<ICrawlMessage> _messages = null;
-        public Collection<ICrawlMessage> Messages
+        string INamedComponent.Name => (string.IsNullOrWhiteSpace(RootPathName)) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? SerialNumber.ToString() : VolumeName) : RootPathName;
+
+        private NestedCollectionComponentContainer<FsRoot, CrawlMessage> _messagesContainer;
+        public Collection<CrawlMessage> Messages
         {
-            get
-            {
-                Collection<ICrawlMessage> messages = _messages;
-                if (null == messages)
-                    _messages = messages = new Collection<ICrawlMessage>();
-                return messages;
-            }
-            set { _messages = value; }
+            get => _messagesContainer.Items;
+            set => _messagesContainer.Items = value;
         }
 
-        private Collection<IFsChildNode> _childNodes = null;
+        private NestedCollectionComponentContainer<FsRoot, IFsChildNode> _childNodes;
         public Collection<IFsChildNode> ChildNodes
         {
-            get
-            {
-                Collection<IFsChildNode> childNodes = _childNodes;
-                if (null == childNodes)
-                    _childNodes = childNodes = new Collection<IFsChildNode>();
-                return childNodes;
-            }
-            set { _childNodes = value; }
+            get => _childNodes.Items;
+            set => _childNodes.Items = value;
         }
 
         public bool CaseSensitive { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public FsRoot(IVolumeInfo driveInfo)
+        public FsRoot(IVolumeInfo driveInfo) : this()
         {
             if (null == driveInfo)
                 throw new ArgumentNullException(nameof(driveInfo));
@@ -65,7 +56,11 @@ namespace FsInfoCat.Models.Crawl
             SerialNumber = driveInfo.SerialNumber;
         }
 
-        public FsRoot() { }
+        public FsRoot()
+        {
+            _messagesContainer = new NestedCollectionComponentContainer<FsRoot, CrawlMessage>(this, false);
+            _childNodes = new NestedCollectionComponentContainer<FsRoot, IFsChildNode>(this, false);
+        }
 
         /// <summary>
         /// Looks for the first nested partial crawl.

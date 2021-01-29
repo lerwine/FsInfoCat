@@ -5,23 +5,14 @@ using System.Linq;
 
 namespace FsInfoCat.Models.Crawl
 {
-    public class CrawlError : ICrawlMessage
+    public class CrawlError : CrawlMessage
     {
-        private string _message = "";
         private string _activity = "";
         private string _category = "";
         private string _reason = "";
         private string _targetName = "";
         private string _targetType = "";
         private string _recommendedAction = "";
-
-        public string Message
-        {
-            get => _message;
-            set => _message = ModelHelper.CoerceAsTrimmed(value);
-        }
-
-        public MessageId ID { get; set; }
 
         public string Activity
         {
@@ -65,11 +56,10 @@ namespace FsInfoCat.Models.Crawl
         /// <param name="exception"><seealso cref="Exception" /> that is the cause of the error.</param>
         /// <exception cref="ArgumentNullException"><paramref name="exception" /> was null.</exception>
         public CrawlError(Exception exception, MessageId id)
+            : base((null == exception) ? "" : (string.IsNullOrWhiteSpace(exception.Message)) ? exception.GetType().Name : exception.Message, id)
         {
             if (null == exception)
                 throw new ArgumentNullException(nameof(exception));
-            ID = id;
-            Message = exception.Message;
             List<CrawlError> innerErrors;
             if (exception is AggregateException)
                 innerErrors = ((AggregateException)exception).InnerExceptions.Select(e => new CrawlError(e, id)).ToList();

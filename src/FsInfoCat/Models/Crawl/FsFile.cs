@@ -1,29 +1,29 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {
-    public class FsFile : IFsChildNode
+    public class FsFile : ComponentBase, IFsChildNode
     {
         public string Name { get; set; }
 
-        private Collection<ICrawlMessage> _messages = null;
-        public Collection<ICrawlMessage> Messages
+        private NestedCollectionComponentContainer<FsFile, CrawlMessage> _messagesContainer;
+        public Collection<CrawlMessage> Messages
         {
-            get
-            {
-                Collection<ICrawlMessage> messages = _messages;
-                if (null == messages)
-                    _messages = messages = new Collection<ICrawlMessage>();
-                return messages;
-            }
-            set { _messages = value; }
+            get => _messagesContainer.Items;
+            set => _messagesContainer.Items = value;
         }
 
         public long Length { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime LastWriteTime { get; set; }
         public int Attributes { get; set; }
+
+        public FsFile()
+        {
+            _messagesContainer = new NestedCollectionComponentContainer<FsFile, CrawlMessage>(this, false);
+        }
     }
 }
