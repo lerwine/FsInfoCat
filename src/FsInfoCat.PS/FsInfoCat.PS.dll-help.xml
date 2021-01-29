@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<helpItems xmlns="http://msh" schema="maml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://msh ../../Resources/Msh.xsd http://schemas.microsoft.com/maml/2004/10 ../../Resources/PSMaml/Maml.xsd http://schemas.microsoft.com/maml/dev/command/2004/10 ../../Resources/PSMaml/developerCommand.xsd http://schemas.microsoft.com/maml/dev/2004/10 ../../Resources/PSMaml/developer.xsd">
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>Get-RegisteredFsVolumeInfo</command:name>
+      <maml:description>
+        <maml:para>Exports XML to a writer, stream, file or a string.</maml:para>
+      </maml:description>
+      <maml:copyright>
+        <maml:para>Copyright © Leonard Thomas Erwine 2021</maml:para>
+      </maml:copyright>
+      <command:verb>Get</command:verb>
+      <command:noun>RegisteredFsVolumeInfo</command:noun>
+    </command:details>
+    <maml:description>
+      <maml:para>The Get-RegisteredFsVolumeInfo gets the local volumes that have been registered.</maml:para>
+    </maml:description>
+    <command:syntax>
+        <command:syntaxItem>
+          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+          <command:parameter required="true" position="0" pipelineInput="True (ByValue, ByPropertyName)" variableLength="true" globbing="false">
+            <maml:name>RootPathName</maml:name>
+            <maml:description>
+              <maml:para>Find by full, case-sensitive path name of the volume root directory.</maml:para>
+            </maml:description>
+            <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+            <dev:type>
+              <maml:name>System.String</maml:name>
+              <maml:uri />
+            </dev:type>
+            <dev:defaultValue>None</dev:defaultValue>
+          </command:parameter>
+        </command:syntaxItem>
+        <command:syntaxItem>
+          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+          <command:parameter required="true" position="0" pipelineInput="False" variableLength="true" globbing="false">
+            <maml:name>VolumeName</maml:name>
+            <maml:description>
+              <maml:para>Find by name of the volume.</maml:para>
+            </maml:description>
+            <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+            <dev:type>
+              <maml:name>System.String</maml:name>
+              <maml:uri />
+            </dev:type>
+            <dev:defaultValue>None</dev:defaultValue>
+          </command:parameter>
+        </command:syntaxItem>
+        <command:syntaxItem>
+          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+          <command:parameter required="true" position="0" pipelineInput="False" variableLength="true" globbing="false">
+            <maml:name>DriveFormat</maml:name>
+            <maml:description>
+              <maml:para>Find by name of the drive format.</maml:para>
+            </maml:description>
+            <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+            <dev:type>
+              <maml:name>System.String</maml:name>
+              <maml:uri />
+            </dev:type>
+            <dev:defaultValue>None</dev:defaultValue>
+          </command:parameter>
+        </command:syntaxItem>
+        <command:syntaxItem>
+          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+          <command:parameter required="true" position="0" pipelineInput="True (ByPropertyName)" variableLength="true" globbing="false">
+            <maml:name>SerialNumber</maml:name>
+            <maml:description>
+              <maml:para>Find by volume serial number.</maml:para>
+            </maml:description>
+            <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+            <dev:type>
+              <maml:name>System.String</maml:name>
+              <maml:uri />
+            </dev:type>
+            <dev:defaultValue>None</dev:defaultValue>
+          </command:parameter>
+        </command:syntaxItem>
+        <command:syntaxItem>
+          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+          <command:parameter required="false" position="0" pipelineInput="False" variableLength="false" globbing="false">
+            <maml:name>All</maml:name>
+            <maml:description>
+              <maml:para>Get all registered volume information.</maml:para>
+            </maml:description>
+            <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+            <dev:type>
+              <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+              <maml:uri />
+            </dev:type>
+            <dev:defaultValue>None</dev:defaultValue>
+          </command:parameter>
+        </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="0">
+        <maml:name>Blob</maml:name>
+        <maml:description>
+          <maml:para>Specifies a name or name pattern, which can be used for a wildcard search. If no blob name is specified, the cmdlet lists all the blobs in the specified container. If a value is specified for this parameter, the cmdlet lists all blobs with names that match this parameter. This parameter supports wildcards anywhere in the string.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">System.String</command:parameterValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <!--Add parameter information here-->
+        </command:parameters>
+        <command:inputTypes>
+        <command:inputType>
+            <dev:type>
+            <maml:name>System.String</maml:name>
+            <maml:uri />
+            </dev:type>
+            <maml:description>
+            <maml:para></maml:para>
+            </maml:description>
+        </command:inputType>
+        <command:inputType>
+            <dev:type>
+            <maml:name>Microsoft.Azure.Commands.Common.Authentication.Abstractions.IStorageContext</maml:name>
+            <maml:uri />
+            </dev:type>
+            <maml:description>
+            <maml:para></maml:para>
+            </maml:description>
+        </command:inputType>
+        <!--Add input type information here-->
+        </command:inputTypes>
+        <command:returnValues>
+        <command:returnValue>
+            <dev:type>
+            <maml:name>Microsoft.WindowsAzure.Commands.Common.Storage.ResourceModel.AzureStorageBlob</maml:name>
+            <maml:uri />
+            </dev:type>
+            <maml:description>
+            <maml:para></maml:para>
+            </maml:description>
+        </command:returnValue>
+        <!--Add return value information here-->
+        </command:returnValues>
+        <command:terminatingErrors></command:terminatingErrors>
+        <command:nonTerminatingErrors></command:nonTerminatingErrors>
+        <maml:alertSet>
+        <maml:alert>
+            <maml:para></maml:para>
+        </maml:alert>
+        <!--Add Note information here-->
+        </maml:alertSet>
+        <command:examples>
+        <command:example>
+            <maml:title>-------------- Example 1: Get a blob by blob name --------------</maml:title>
+            <dev:code>PS C:\&gt;Get-AzStorageBlob -Container "ContainerName" -Blob blob*</dev:code>
+            <dev:remarks>
+            <maml:para>This command uses a blob name and wildcard to get a blob.</maml:para>
+            <maml:para></maml:para>
+            <maml:para></maml:para>
+            </dev:remarks>
+        </command:example>
+        <!--Add cmdlet examples here-->
+        </command:examples>
+        <maml:relatedLinks>
+        <maml:navigationLink>
+            <maml:linkText>Online Version:</maml:linkText>
+            <maml:uri>https://docs.microsoft.com/en-us/powershell/module/az.storage/get-azstorageblob</maml:uri>
+        </maml:navigationLink>
+        <!--Add links to related content here-->
+        </maml:relatedLinks>
+    </command:command>
+    </helpItems>
