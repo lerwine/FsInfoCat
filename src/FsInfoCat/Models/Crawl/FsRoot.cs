@@ -20,7 +20,7 @@ namespace FsInfoCat.Models.Crawl
         /// </summary>
         public string DriveFormat { get; set; }
 
-        public DriveType DriveType { get; private set; }
+        public DriveType DriveType { get; set; }
 
         /// <summary>
         /// Gets the name of the volume.
