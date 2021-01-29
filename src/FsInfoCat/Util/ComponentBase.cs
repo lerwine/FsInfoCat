@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace FsInfoCat.Util
 {
-    public abstract class ComponentBase : IComponent
+    public abstract class ComponentBase : MarshalByRefObject, IComponent
     {
         private object _syncRoot = new object();
         private bool _disposed;
