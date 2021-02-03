@@ -1,10 +1,10 @@
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {
     public interface IFsNode : INamedComponent
     {
-         Collection<CrawlMessage> Messages { get; set; }
+         IList<CrawlMessage> Messages { get; set; }
     }
 }

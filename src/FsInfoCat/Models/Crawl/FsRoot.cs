@@ -10,6 +10,10 @@ namespace FsInfoCat.Models.Crawl
 {
     public sealed class FsRoot : ComponentBase, IVolumeInfo, IFsDirectory, IEquatable<FsRoot>, IEqualityComparer<IFsChildNode>
     {
+        private readonly ComponentList.AttachableContainer _container;
+        private ComponentList<CrawlMessage> _messagesList;
+        private ComponentList<IFsChildNode> _childNodes;
+
         /// <summary>
         /// Gets the full path name of the volume root directory.
         /// </summary>
@@ -27,25 +31,50 @@ namespace FsInfoCat.Models.Crawl
         /// </summary>
         public string VolumeName { get; set; }
 
+#warning Data type does not support file shares or linux
+        [Obsolete("Use UniqueIdentifier instead")]
         public uint SerialNumber { get; set; }
+
+        /*
+            Get-WmiObject -Class 'Win32_LogicalDisk' can be used to get 32-bit serial number in windows
+            lsblk -a -b -f -J -o NAME,LABEL,MOUNTPOINT,SIZE,FSTYPE,UUID
+        */
+        public UniqueIdentifier UniqueIdentifier { get; set; }
 
         string INamedComponent.Name => (string.IsNullOrWhiteSpace(RootPathName)) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? SerialNumber.ToString() : VolumeName) : RootPathName;
 
-        private NestedCollectionComponentContainer<FsRoot, CrawlMessage> _messagesContainer;
-        public Collection<CrawlMessage> Messages
+        public ComponentList<CrawlMessage> Messages
         {
-            get => _messagesContainer.Items;
-            set => _messagesContainer.Items = value;
+            get => _messagesList;
+            set
+            {
+                ComponentList<CrawlMessage> list = (value is null) ? new ComponentList<CrawlMessage>() : value;
+                if (ReferenceEquals(list, _messagesList))
+                    return;
+                _container.Detach(_messagesList);
+                _container.Attach(list);
+                _messagesList = list;
+            }
         }
 
-        private NestedCollectionComponentContainer<FsRoot, IFsChildNode> _childNodes;
-        public Collection<IFsChildNode> ChildNodes
-        {
-            get => _childNodes.Items;
-            set => _childNodes.Items = value;
-        }
+        IList<CrawlMessage> IFsNode.Messages { get => Messages; set => Messages = (ComponentList<CrawlMessage>)value; }
 
-        public bool CaseSensitive { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ComponentList<IFsChildNode> ChildNodes
+        {
+            get => _childNodes;
+            set
+            {
+                ComponentList<IFsChildNode> list = (value is null) ? new ComponentList<IFsChildNode>() : value;
+                if (ReferenceEquals(list, _childNodes))
+                    return;
+                _container.Detach(_childNodes);
+                _container.Attach(list);
+                _childNodes = list;
+            }
+        }
+        IList<IFsChildNode> IFsDirectory.ChildNodes { get => _childNodes; set => ChildNodes = (ComponentList<IFsChildNode>)value; }
+
+        public bool CaseSensitive { get; set; }
 
         public FsRoot(IVolumeInfo driveInfo) : this()
         {
@@ -58,8 +87,9 @@ namespace FsInfoCat.Models.Crawl
 
         public FsRoot()
         {
-            _messagesContainer = new NestedCollectionComponentContainer<FsRoot, CrawlMessage>(this, false);
-            _childNodes = new NestedCollectionComponentContainer<FsRoot, IFsChildNode>(this, false);
+            _container = new ComponentList.AttachableContainer(this);
+            _messagesList = new ComponentList<CrawlMessage>(_container);
+            _childNodes = new ComponentList<IFsChildNode>(_container);
         }
 
         /// <summary>

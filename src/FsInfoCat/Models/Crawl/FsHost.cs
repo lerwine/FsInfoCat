@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using FsInfoCat.Util;
 
@@ -11,23 +9,43 @@ namespace FsInfoCat.Models.Crawl
     /// </summary>
     public sealed partial class FsHost : ComponentBase, IFsNode
     {
-        private NestedCollectionComponentContainer<FsHost, FsRoot> _roots;
+        private readonly ComponentList.AttachableContainer _container;
+        private ComponentList<CrawlMessage> _messagesList;
+        private ComponentList<FsRoot> _rootsList;
+
 
         /// <summary>
         /// File system roots containing roots crawled.
         /// </summary>
-        public Collection<FsRoot> Roots
+        public ComponentList<FsRoot> Roots
         {
-            get => _roots.Items;
-            set => _roots.Items = value;
+            get => _rootsList;
+            set
+            {
+                ComponentList<FsRoot> list = (value is null) ? new ComponentList<FsRoot>() : value;
+                if (ReferenceEquals(list, _rootsList))
+                    return;
+                _container.Detach(_rootsList);
+                _container.Attach(list);
+                _rootsList = list;
+            }
         }
 
-        private NestedCollectionComponentContainer<FsHost, CrawlMessage> _messagesContainer;
-        public Collection<CrawlMessage> Messages
+        public ComponentList<CrawlMessage> Messages
         {
-            get => _messagesContainer.Items;
-            set => _messagesContainer.Items = value;
+            get => _messagesList;
+            set
+            {
+                ComponentList<CrawlMessage> list = (value is null) ? new ComponentList<CrawlMessage>() : value;
+                if (ReferenceEquals(list, _messagesList))
+                    return;
+                _container.Detach(_messagesList);
+                _container.Attach(list);
+                _messagesList = list;
+            }
         }
+
+        IList<CrawlMessage> IFsNode.Messages { get => Messages; set => Messages = (ComponentList<CrawlMessage>)value; }
 
         public string MachineName { get; set; }
 
@@ -37,8 +55,9 @@ namespace FsInfoCat.Models.Crawl
 
         public FsHost()
         {
-            _messagesContainer = new NestedCollectionComponentContainer<FsHost, CrawlMessage>(this, false);
-            _roots = new NestedCollectionComponentContainer<FsHost, FsRoot>(this, false);
+            _container = new ComponentList.AttachableContainer(this);
+            _messagesList = new ComponentList<CrawlMessage>(_container);
+            _rootsList = new ComponentList<FsRoot>(_container);
         }
 
         /// <summary>

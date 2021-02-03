@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using FsInfoCat.Util;
@@ -9,21 +8,41 @@ namespace FsInfoCat.Models.Crawl
 {
     public sealed class FsDirectory : ComponentBase, IFsDirectory, IFsChildNode
     {
+        private readonly ComponentList.AttachableContainer _container;
+        private ComponentList<CrawlMessage> _messagesList;
+        private ComponentList<IFsChildNode> _childNodes;
         public string Name { get; set; }
 
-        private NestedCollectionComponentContainer<FsDirectory, IFsChildNode> _childNodes;
-        public Collection<IFsChildNode> ChildNodes
+        public ComponentList<IFsChildNode> ChildNodes
         {
-            get => _childNodes.Items;
-            set => _childNodes.Items = value;
+            get => _childNodes;
+            set
+            {
+                ComponentList<IFsChildNode> list = (value is null) ? new ComponentList<IFsChildNode>() : value;
+                if (ReferenceEquals(list, _childNodes))
+                    return;
+                _container.Detach(_childNodes);
+                _container.Attach(list);
+                _childNodes = list;
+            }
+        }
+        IList<IFsChildNode> IFsDirectory.ChildNodes { get => _childNodes; set => ChildNodes = (ComponentList<IFsChildNode>)value; }
+
+        public ComponentList<CrawlMessage> Messages
+        {
+            get => _messagesList;
+            set
+            {
+                ComponentList<CrawlMessage> list = (value is null) ? new ComponentList<CrawlMessage>() : value;
+                if (ReferenceEquals(list, _messagesList))
+                    return;
+                _container.Detach(_messagesList);
+                _container.Attach(list);
+                _messagesList = list;
+            }
         }
 
-        private NestedCollectionComponentContainer<FsDirectory, CrawlMessage> _messagesContainer;
-        public Collection<CrawlMessage> Messages
-        {
-            get => _messagesContainer.Items;
-            set => _messagesContainer.Items = value;
-        }
+        IList<CrawlMessage> IFsNode.Messages { get => Messages; set => Messages = (ComponentList<CrawlMessage>)value; }
 
         public DateTime CreationTime { get; set; }
         public DateTime LastWriteTime { get; set; }
@@ -31,14 +50,9 @@ namespace FsInfoCat.Models.Crawl
 
         public FsDirectory()
         {
-            _messagesContainer = new NestedCollectionComponentContainer<FsDirectory, CrawlMessage>(this, false);
-            _childNodes = new NestedCollectionComponentContainer<FsDirectory, IFsChildNode>(this, false);
-        }
-
-        [Obsolete()]
-        public static FsRoot GetRoot(FsHost host, DirectoryInfo directory, out IFsDirectory branch)
-        {
-            throw new NotImplementedException();
+            _container = new ComponentList.AttachableContainer(this);
+            _messagesList = new ComponentList<CrawlMessage>(_container);
+            _childNodes = new ComponentList<IFsChildNode>(_container);
         }
 
         /// <summary>

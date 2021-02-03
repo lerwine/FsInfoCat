@@ -134,7 +134,7 @@ namespace FsInfoCat.PS
             {
                 MachineIdentifier = _machineIdentifier,
                 MachineName = Environment.MachineName,
-                Roots = FsRoots
+                Roots = new Util.ComponentList<FsRoot>(FsRoots)
             }));
             _isRunning = false;
             SetJobState(jobState);

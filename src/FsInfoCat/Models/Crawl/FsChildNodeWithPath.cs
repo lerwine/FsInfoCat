@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace FsInfoCat.Models.Crawl
@@ -20,7 +20,7 @@ namespace FsInfoCat.Models.Crawl
             return result;
         }
 
-        private void Create(string rootPathName, Collection<IFsChildNode> childNodes, Collection<FsChildNodeWithPath> result)
+        private void Create(string rootPathName, IList<IFsChildNode> childNodes, Collection<FsChildNodeWithPath> result)
         {
             foreach (IFsChildNode c in childNodes)
             {
