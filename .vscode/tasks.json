@@ -109,7 +109,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Unit Tests",
+            "label": "Run All Unit Tests",
             "command": "dotnet",
             "type": "process",
             "group": {
@@ -119,6 +119,50 @@
             "args": [
                 "test",
                 "--configuration:Debug",
+                "--results-directory:${workspaceFolder}/dev/log",
+                "--logger:trx;LogFileName=AllTestResults.xml",
+                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Run P1 Unit Tests",
+            "command": "dotnet",
+            "type": "process",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "args": [
+                "test",
+                "--configuration:Debug",
+                "--results-directory:${workspaceFolder}/dev/log",
+                "--logger:trx;LogFileName=AllTestResults.xml",
+                "--filter:Priority=1",
+                "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Run P1 & P2 Unit Tests",
+            "command": "dotnet",
+            "type": "process",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "args": [
+                "test",
+                "--configuration:Debug",
+                "--results-directory:${workspaceFolder}/dev/log",
+                "--logger:trx;LogFileName=AllTestResults.xml",
+                "--filter:Priority=1|2",
                 "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj"
             ],
             "presentation": {

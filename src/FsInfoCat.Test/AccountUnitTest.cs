@@ -189,6 +189,7 @@ namespace Tests
         }
 
         [Test]
+        [Property("Priority", 1)]
         public void AttributesTest()
         {
             Type type = typeof(Account);
@@ -199,6 +200,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetNormalizeTestCases")]
+        [Property("Priority", 1)]
         public void NormalizeTest(Account target, Account expected)
         {
             target.Normalize();
@@ -216,6 +218,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetValidateAllTestCases")]
+        [Property("Priority", 2)]
         public void ValidateAllTest(Account target, IList<ValidationResult> expected)
         {
             IList<ValidationResult> actual = target.ValidateAll();

@@ -316,6 +316,7 @@ namespace Tests
         }
 
         [Test]
+        [Property("Priority", 1)]
         public void ByteLengthTest()
         {
             Assert.AreEqual(_salt1.Length, PwHash.SALT_BYTES_LENGTH, "Salt byte length test failed");
@@ -328,6 +329,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetConstructor8TestCases")]
+        [Property("Priority", 2)]
         public void Constructor8Test(ulong hashBits000_03f, ulong hashBits040_07f, ulong hashBits080_0bf, ulong hashBits0c0_0ff, ulong hashBits100_13f,
             ulong hashBits140_17f,ulong hashBits180_1bf, ulong hashBits1c0_1ff, ulong saltBits, HashResult expectedResult)
         {
@@ -357,6 +359,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetConstructor4TestCases")]
+        [Property("Priority", 2)]
         public void Constructor4Test(IEnumerable<byte> sha512HashBytes, int hashStartIndex, IEnumerable<byte> saltBytes, int saltStartIndex, HashResult expectedResult)
         {
             PwHash target = new PwHash(sha512HashBytes, hashStartIndex, saltBytes, saltStartIndex);
@@ -384,6 +387,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetConstructor2TestCases")]
+        [Property("Priority", 2)]
         public void Constructor2Test(IEnumerable<byte> hashAndSaltBytes, int startIndex, HashResult expectedResult)
         {
             PwHash target = new PwHash(hashAndSaltBytes, startIndex);
@@ -411,6 +415,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetImportTestCases")]
+        [Property("Priority", 3)]
         public void ImportTest(string base64EncodedHash, HashResult expectedResult)
         {
             PwHash? target = PwHash.Import(base64EncodedHash);
@@ -444,6 +449,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetCreate1TestCases")]
+        [Property("Priority", 3)]
         public void Create1Test(string rawPW, bool nullExpected)
         {
             PwHash? target = PwHash.Create(rawPW);
@@ -451,6 +457,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetCreate2TestCases")]
+        [Property("Priority", 3)]
         public void Create2Test(string rawPW, ulong saltBits, HashResult expectedResult)
         {
             PwHash? target = PwHash.Create(rawPW, saltBits);
@@ -484,6 +491,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetTest2TestCases")]
+        [Property("Priority", 3)]
         public void Test2Test(PwHash? hash, string rawPw, bool expectedResult)
         {
             bool actual = PwHash.Test(hash, rawPw);
@@ -491,6 +499,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetTest1TestCases")]
+        [Property("Priority", 3)]
         public void Test1Test(PwHash a, string rawPw, bool expectedResult)
         {
             bool actual = a.Test(rawPw);
@@ -498,6 +507,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetToStringTestCases")]
+        [Property("Priority", 3)]
         public void ToStringTest(PwHash hash, string expectedResult)
         {
             string actual = hash.ToString();
@@ -506,6 +516,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetEqualsPwHashTestCases")]
+        [Property("Priority", 3)]
         public void EqualsPwHashTest(PwHash target, PwHash other, bool expectedResult)
         {
             bool actual = target.Equals(other);
@@ -513,6 +524,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetEqualsStringTestCases")]
+        [Property("Priority", 3)]
         public void EqualsStringTest(PwHash target, string other, bool expectedResult)
         {
             bool actual = target.Equals(other);
@@ -520,6 +532,7 @@ namespace Tests
         }
 
         [TestCaseSource("GetEqualsObjectTestCases")]
+        [Property("Priority", 3)]
         public void EqualsObjectTest(PwHash target, object obj, bool expectedResult)
         {
             bool actual = target.Equals(obj);

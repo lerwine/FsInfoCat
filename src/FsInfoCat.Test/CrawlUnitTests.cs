@@ -1,96 +1,255 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using FsInfoCat.Models.Accounts;
 using FsInfoCat.Models.Crawl;
 using FsInfoCat.Models.DB;
+using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace FsInfoCat.Test
 {
     [TestFixture]
     public class CrawlUnitTests
     {
+        public static IEnumerable<TestCaseData> GetFsHostAddTestCases()
+        {
+            Collection<Tuple<FsRoot, bool>> fsRoots = new Collection<Tuple<FsRoot, bool>>();
+            fsRoots.Add(new Tuple<FsRoot, bool>(
+                new FsRoot()
+                {
+                    CaseSensitive = false,
+                    DriveFormat = "NTFS",
+                    DriveType = DriveType.Fixed,
+                    RootPathName = "C:\\",
+                    UniqueIdentifier = new UniqueIdentifier(0x9E497DE8),
+                    VolumeName = "OS"
+                },
+                true
+            ));
+            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
+                .SetName("Single item")
+                .Returns(1);
+            fsRoots.Add(new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
+            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
+                .SetName("Add same item twice")
+                .Returns(1);
+            fsRoots[1] = new Tuple<FsRoot, bool>(
+                new FsRoot()
+                {
+                    CaseSensitive = false,
+                    DriveFormat = "NTFS",
+                    DriveType = DriveType.Fixed,
+                    RootPathName = "C:\\",
+                    UniqueIdentifier = new UniqueIdentifier(0x9E497DE8),
+                    VolumeName = "OS"
+                },
+                true
+            );
+            fsRoots.Add(new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
+            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
+                .SetName("Add 2 different items, first one twice")
+                .Returns(2);
+        }
+
+        public static IEnumerable<TestCaseData> GetFsHostRemoveTestCases()
+        {
+            Func<List<FsRoot>> getAddList = () =>
+            {
+                List<FsRoot> list = new List<FsRoot>();
+                list.Add(new FsRoot()
+                {
+                    CaseSensitive = false,
+                    DriveFormat = "MAFS",
+                    DriveType = DriveType.Fixed,
+                    RootPathName = "Z:\\",
+                    UniqueIdentifier = new UniqueIdentifier(@"\\servicenowdiag479.file.core.windows.net\testazureshare"),
+                    VolumeName = ""
+                });
+                list.Add(new FsRoot()
+                {
+                    CaseSensitive = false,
+                    DriveFormat = "FAT32",
+                    DriveType = DriveType.Removable,
+                    RootPathName = "F:\\",
+                    UniqueIdentifier = new UniqueIdentifier("urn:volume:id: 3B51-8D4B"),
+                    VolumeName = "HP_TOOLS"
+                });
+                list.Add(new FsRoot()
+                {
+                    CaseSensitive = true,
+                    DriveFormat = "ext4",
+                    DriveType = DriveType.Fixed,
+                    RootPathName = "/",
+                    UniqueIdentifier = new UniqueIdentifier("urn:uuid:3756934c-31d3-413c-8df9-5b7c7b1a4451"),
+                    VolumeName = "cloudimg-rootfs"
+                });
+                return list;
+            };
+
+            List<FsRoot> addList = getAddList();
+            Collection<Tuple<FsRoot, int>> removeList = new Collection<Tuple<FsRoot, int>>();
+            removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
+            removeList.Add(new Tuple<FsRoot, int>(
+                new FsRoot()
+                {
+                    CaseSensitive = false,
+                    DriveFormat = "NTFS",
+                    DriveType = DriveType.Fixed,
+                    RootPathName = "C:\\",
+                    UniqueIdentifier = new UniqueIdentifier(0x9E497DE8),
+                    VolumeName = "OS"
+                },
+                -1
+            ));
+            yield return new TestCaseData(addList, removeList)
+                .SetName("Remove first and non-existent")
+                .Returns(2);
+            addList = getAddList();
+            removeList = new Collection<Tuple<FsRoot, int>>();
+            removeList.Add(new Tuple<FsRoot, int>(addList[1], 1));
+            yield return new TestCaseData(addList, removeList)
+                .SetName("Remove second")
+                .Returns(2);
+            addList = getAddList();
+            removeList = new Collection<Tuple<FsRoot, int>>();
+            removeList.Add(new Tuple<FsRoot, int>(addList[2], 2));
+            yield return new TestCaseData(addList, removeList)
+                .SetName("Remove last")
+                .Returns(2);
+            addList = getAddList();
+            removeList = new Collection<Tuple<FsRoot, int>>();
+            removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
+            removeList.Add(new Tuple<FsRoot, int>(addList[2], 1));
+            yield return new TestCaseData(addList, removeList)
+                .SetName("Remove first then last")
+                .Returns(1);
+            addList = getAddList();
+            removeList = new Collection<Tuple<FsRoot, int>>();
+            removeList.Add(new Tuple<FsRoot, int>(addList[2], 2));
+            removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
+            removeList.Add(new Tuple<FsRoot, int>(addList[2], -1));
+            yield return new TestCaseData(addList, removeList)
+                .SetName("Remove last then first, then last again")
+                .Returns(1);
+            addList = getAddList();
+            removeList = new Collection<Tuple<FsRoot, int>>();
+            removeList.Add(new Tuple<FsRoot, int>(addList[2], 2));
+            removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
+            removeList.Add(new Tuple<FsRoot, int>(addList[1], 0));
+            yield return new TestCaseData(addList, removeList)
+                .SetName("Remove last, first, then second")
+                .Returns(0);
+        }
+
         [SetUp]
         public void Setup()
         {
         }
 
         [Test]
-        public void FsHostTest()
+        [Property("Priority", 1)]
+        public void FsRootConstructorTest()
+        {
+            FsRoot target = new FsRoot();
+            Assert.That(target.CaseSensitive, Is.False);
+            Assert.That(target.DriveFormat, Is.Null);
+            Assert.That(target.DriveType, Is.EqualTo(DriveType.Unknown));
+            Assert.That(target.RootPathName, Is.Null);
+            Assert.That(target.UniqueIdentifier, Is.Null);
+            Assert.That(target.VolumeName, Is.Null);
+            Assert.That(target.ChildNodes, Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        [Property("Priority", 1)]
+        public void FsHostConstructorTest()
         {
             FsHost target = new FsHost();
-            string actualString = target.MachineIdentifier;
-            Assert.IsNull(actualString);
-            actualString = target.MachineName;
-            Assert.IsNull(actualString);
-            Assert.NotNull(target.Roots);
-            DriveInfo[] expectedDrives = DriveInfo.GetDrives();
-            FsRoot[] roots = expectedDrives.Select(d => new FsRoot()
+            Assert.That(target.MachineIdentifier, Is.Null);
+            Assert.That(target.MachineName, Is.Null);
+            Assert.That(target.Roots, Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        [Property("Priority", 2)]
+        [TestCaseSource("GetFsHostAddTestCases")]
+        public int FsHostAddTest(IList<Tuple<FsRoot, bool>> addList)
+        {
+            FsHost target = new FsHost();
+            Collection<FsRoot> rootsList = new Collection<FsRoot>();
+            foreach (Tuple<FsRoot, bool> testData in addList)
             {
-                DriveFormat = d.DriveFormat,
-                DriveType = d.DriveType,
-                RootPathName = d.RootDirectory.FullName,
-                VolumeName = d.VolumeLabel
-            }).ToArray();
-            for (int i = 0; i < roots.Length; i++)
-                target.Roots.Add(roots[i]);
-            Assert.AreEqual(roots.Length, target.Roots.Count);
-            ISite site;
-            NestedCollectionComponentContainer<FsHost, FsRoot> container = null;
-            for (int i = 0; i < roots.Length; i++)
-            {
-                FsRoot actualItem = target.Roots[i];
-                Assert.AreSame(actualItem, roots[i]);
-                site = ((IComponent)actualItem).Site;
-                Assert.IsNotNull(site);
-                Assert.AreSame(site.Component, roots[i]);
-                container = site.Container as NestedCollectionComponentContainer<FsHost, FsRoot>;
-                Assert.NotNull(container);
-                Assert.AreSame(target, container.Owner);
+                target.Roots.Add(testData.Item1);
+                if (testData.Item2)
+                    rootsList.Add(testData.Item1);
+                for (int i = 0; i < rootsList.Count; i++)
+                {
+                    FsRoot fsRoot = target.Roots[i];
+                    Assert.That(fsRoot, Is.SameAs(rootsList[i]));
+                    INestedSite site = ((IComponent)fsRoot).Site as INestedSite;
+                    Assert.That(site, Is.Not.Null);
+                    Assert.That(site.Component, Is.SameAs(fsRoot));
+                    INestedContainer container = site.Container as INestedContainer;
+                    Assert.That(container, Is.Not.Null);
+                    Assert.That(container.Owner, Is.SameAs(target));
+                    Assert.That(ComponentList.IsPlaceHolderContainer(container), Is.False);
+                }
             }
-            site = ((IComponent)roots[0]).Site;
-            Assert.IsNotNull(site);
-            container = site.Container as NestedCollectionComponentContainer<FsHost, FsRoot>;
-            Assert.NotNull(container);
-            Assert.AreSame(target, container.Owner);
-            container.Remove(roots[0]);
-            site = ((IComponent)roots[0]).Site;
-            Assert.IsNull(site);
-            for (int i = 1; i < roots.Length; i++)
+            return target.Roots.Count;
+        }
+
+        [Test]
+        [Property("Priority", 3)]
+        [TestCaseSource("GetFsHostRemoveTestCases")]
+        public void FsHostRemoveTest(IList<FsRoot> addList, IList<Tuple<FsRoot, int>> removeList)
+        {
+            FsHost target = new FsHost();
+            foreach (FsRoot fsRoot in addList)
+                target.Roots.Add(fsRoot);
+            int expectedCount = addList.Count;
+            foreach (Tuple<FsRoot, int> toRemove in removeList)
             {
-                FsRoot actualItem = target.Roots[i - 1];
-                Assert.AreSame(actualItem, roots[i]);
-                site = ((IComponent)actualItem).Site;
-                Assert.IsNotNull(site);
-                Assert.AreSame(site.Component, roots[i]);
-                container = site.Container as NestedCollectionComponentContainer<FsHost, FsRoot>;
-                Assert.NotNull(container);
-                Assert.AreSame(target, container.Owner);
-            }
-            site = ((IComponent)roots[roots.Length - 1]).Site;
-            Assert.IsNotNull(site);
-            container = site.Container as NestedCollectionComponentContainer<FsHost, FsRoot>;
-            Assert.NotNull(container);
-            Assert.AreSame(target, container.Owner);
-            container.Remove(roots[roots.Length - 1]);
-            site = ((IComponent)roots[roots.Length - 1]).Site;
-            Assert.IsNull(site);
-            for (int i = 2; i < roots.Length; i++)
-            {
-                FsRoot actualItem = target.Roots[i - 2];
-                Assert.AreSame(actualItem, roots[i - 1]);
-                site = ((IComponent)actualItem).Site;
-                Assert.IsNotNull(site);
-                Assert.AreSame(site.Component, roots[i - 1]);
-                container = site.Container as NestedCollectionComponentContainer<FsHost, FsRoot>;
-                Assert.NotNull(container);
-                Assert.AreSame(target, container.Owner);
+                if (toRemove.Item2 < 0)
+                    Assert.That(target.Roots.Remove(toRemove.Item1), Is.False);
+                else
+                {
+                    expectedCount--;
+                    FsRoot fsRoot = target.Roots[toRemove.Item2];
+                    Assert.That(target.Roots.Remove(toRemove.Item1), Is.True);
+                    Assert.That(fsRoot, Is.SameAs(addList[toRemove.Item2]));
+                    addList.RemoveAt(toRemove.Item2);
+                    INestedSite site = ((IComponent)fsRoot).Site as INestedSite;
+                    Assert.That(site, Is.Not.Null);
+                    Assert.That(site.Component, Is.SameAs(fsRoot));
+                    INestedContainer container = site.Container as INestedContainer;
+                    Assert.That(container, Is.Not.Null);
+                    Assert.That(container.Owner, Is.Not.SameAs(target));
+                    Assert.That(ComponentList.IsPlaceHolderContainer(container), Is.True);
+                }
+                Assert.That(target.Roots.Count, Is.EqualTo(expectedCount));
+                for (int i = 0; i < expectedCount; i++)
+                {
+                    FsRoot fsRoot = target.Roots[i];
+                    Assert.That(fsRoot, Is.SameAs(addList[i]));
+                    INestedSite site = ((IComponent)fsRoot).Site as INestedSite;
+                    Assert.That(site, Is.Not.Null);
+                    Assert.That(site.Component, Is.SameAs(fsRoot));
+                    INestedContainer container = site.Container as INestedContainer;
+                    Assert.That(container, Is.Not.Null);
+                    Assert.That(container.Owner, Is.SameAs(target));
+                    Assert.That(ComponentList.IsPlaceHolderContainer(container), Is.False);
+                }
             }
         }
+
     }
 }
