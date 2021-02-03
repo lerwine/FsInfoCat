@@ -140,7 +140,7 @@
                 "test",
                 "--configuration:Debug",
                 "--results-directory:${workspaceFolder}/dev/log",
-                "--logger:trx;LogFileName=AllTestResults.xml",
+                "--logger:trx;LogFileName=P1TestResults.xml",
                 "--filter:Priority=1",
                 "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj"
             ],
@@ -161,7 +161,7 @@
                 "test",
                 "--configuration:Debug",
                 "--results-directory:${workspaceFolder}/dev/log",
-                "--logger:trx;LogFileName=AllTestResults.xml",
+                "--logger:trx;LogFileName=P2TestResults.xml",
                 "--filter:Priority=1|2",
                 "${workspaceFolder}/src/FsInfoCat.Test/FsInfoCat.Test.csproj"
             ],
