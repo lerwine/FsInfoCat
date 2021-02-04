@@ -39,224 +39,266 @@ namespace FsInfoCat.Test
             _ipV6Address = addressList.Where(a => a.AddressFamily == AddressFamily.InterNetworkV6).Select(a => a.ToString()).DefaultIfEmpty("::1").First().Split('%')[0];
         }
 
-        private static IEnumerable<Tuple<uint, string, string>> GetSerialNumberTestValues()
+        class SerialNumberTestValues
         {
-            yield return new Tuple<uint, string, string>(0x3B518D4BU, "3B51-8D4B",
-                "Value of 995,200,331");
-            yield return new Tuple<uint, string, string>(0x9E497DE8U, "9E49-7DE8",
-                "Bit-wise equivalent to signed integer -1,639,350,808");
-            yield return new Tuple<uint, string, string>(0U, "0000-0000",
-                "Zero value");
-            yield return new Tuple<uint, string, string>(1U, "0000-0001",
-                "Value of 1");
-            yield return new Tuple<uint, string, string>(0x80000000U, "8000-0000",
-                "Bit-wise equivalent to Int32.MinValue");
-            yield return new Tuple<uint, string, string>(0x7FFFFFFFU, "7FFF-FFFF",
-                "Bit-wise equivalent to Int32.MaxValue");
-            yield return new Tuple<uint, string, string>(0xFFFFFFFFU, "FFFF-FFFF",
-                "Bit-wise equivalent to signed integer -1");
+            private readonly ReadOnlyCollection<SerialNumberTestValues> _caseVariants;
+            private readonly ReadOnlyCollection<SerialNumberTestValues> _dashCaseVariants;
+            private readonly SerialNumberTestValues _dashVariant;
+            internal uint SerialNumber { get; }
+            internal string StringParam { get; }
+            internal string StringValue { get; }
+            internal string Description { get; }
+            internal string UrnParam { get; }
+            internal Uri Url { get; }
+            protected SerialNumberTestValues(uint serialNumber, string description)
+            {
+                SerialNumber = serialNumber;
+                StringParam = $"{(serialNumber >> 16).ToString("x4")}-{(serialNumber & 0xFFFFU).ToString("x4")}";
+                StringValue = StringParam;
+                Description = description;
+                Url = new Uri($"urn:volume:id:{StringParam}", UriKind.Absolute);
+                UrnParam = Url.AbsoluteUri;
+                Collection<SerialNumberTestValues> caseVariants = new Collection<SerialNumberTestValues>();
+                Collection<SerialNumberTestValues> dashCaseVariants = new Collection<SerialNumberTestValues>();
+                _caseVariants = new ReadOnlyCollection<SerialNumberTestValues>(caseVariants);
+                _dashCaseVariants = new ReadOnlyCollection<SerialNumberTestValues>(dashCaseVariants);
+                _dashVariant = new SerialNumberTestValues(this, serialNumber.ToString("x8"), $"{description} w/o dash",
+                    $"urn:volume:id:{serialNumber.ToString("x8")}");
+                caseVariants.Add(this);
+                dashCaseVariants.Add(this);
+                dashCaseVariants.Add(_dashVariant);
+                if (StringParam.ToUpper() != StringParam)
+                {
+                    caseVariants.Add(new SerialNumberTestValues(this, StringParam.ToUpper(),
+                        $"Upper case {Description.Substring(0, 1).ToLower()}{Description.Substring(1)}",
+                        $"urn:VOLUME:ID:{StringParam.ToUpper()}"));
+                    caseVariants.Add(new SerialNumberTestValues(this, _dashVariant.StringParam.ToUpper(),
+                        $"Upper case {_dashVariant.Description.Substring(0, 1).ToLower()}{_dashVariant.Description.Substring(1)}",
+                        $"urn:VOLUME:ID:{_dashVariant.StringParam.ToUpper()}"));
+                }
+            }
+            protected SerialNumberTestValues(SerialNumberTestValues dashVariant, string stringParam, string description, string urn)
+            {
+                _dashVariant = dashVariant;
+                _caseVariants = dashVariant._caseVariants;
+                _dashCaseVariants = dashVariant._dashCaseVariants;
+                SerialNumber = dashVariant.SerialNumber;
+                StringParam = stringParam;
+                StringValue = dashVariant.StringValue;
+                Description = description;
+                Url = dashVariant.Url;
+                UrnParam = urn;
+            }
+
+            private static IEnumerable<SerialNumberTestValues> _GetTestValues()
+            {
+                yield return new SerialNumberTestValues(0x3B518D4BU, "Value of 995,200,331");
+                yield return new SerialNumberTestValues(0x9E497DE8U, "Bit-wise equivalent to signed integer -1,639,350,808");
+                yield return new SerialNumberTestValues(0U, "Zero value");
+                yield return new SerialNumberTestValues(1U, "Value of 1");
+                yield return new SerialNumberTestValues(0x80000000U, "Bit-wise equivalent to Int32.MinValue");
+                yield return new SerialNumberTestValues(0x7FFFFFFFU, "Bit-wise equivalent to Int32.MaxValue");
+                yield return new SerialNumberTestValues(0xFFFFFFFFU, "Bit-wise equivalent to signed integer -1");
+            }
+
+            public static IEnumerable<SerialNumberTestValues> GetTestValues(bool includeCaseVariants = false, bool includeDashVariants = false)
+            {
+                if (includeCaseVariants)
+                {
+                    if (includeDashVariants)
+                        return _GetTestValues().SelectMany(v => v._dashCaseVariants);
+                    return _GetTestValues().SelectMany(v => v._caseVariants);
+                }
+                if (includeDashVariants)
+                    return _GetTestValues().SelectMany(v => new SerialNumberTestValues[] { v, v._dashVariant} );
+                return _GetTestValues();
+            }
         }
 
-        private static IEnumerable<Tuple<byte, string, string>> GetOrdinalTestValues()
+        class SerialNumberOrdinalTestValues
         {
-            yield return new Tuple<byte, string, string>(0, "00",
-                "zero value");
-            yield return new Tuple<byte, string, string>(1, "1",
-                "Value of 1");
-            yield return new Tuple<byte, string, string>(10, "0a",
-                "Value of 10");
-            yield return new Tuple<byte, string, string>(Byte.MaxValue, "ff",
-                "Byte.MaxValue");
+            private readonly ReadOnlyCollection<SerialNumberOrdinalTestValues> _variants;
+            internal uint SerialNumber { get; }
+            internal byte Ordinal { get; }
+            internal string StringParam { get; }
+            internal string StringValue { get; }
+            internal string Description { get; }
+            internal string UrnParam { get; }
+            internal Uri Url { get; }
+            protected SerialNumberOrdinalTestValues(uint serialNumber, byte ordinal, string description)
+            {
+                SerialNumber = serialNumber;
+                Ordinal = ordinal;
+                StringParam = $"{serialNumber.ToString("x8")}-{ordinal.ToString("x2")}";
+                StringValue = StringParam;
+                Description = description;
+                Url = new Uri($"urn:volume:id:{StringParam}", UriKind.Absolute);
+                UrnParam = Url.AbsoluteUri;
+                Collection<SerialNumberOrdinalTestValues> variants = new Collection<SerialNumberOrdinalTestValues>();
+                _variants = new ReadOnlyCollection<SerialNumberOrdinalTestValues>(variants);
+                variants.Add(this);
+                if (StringParam.ToUpper() != StringParam)
+                {
+                    SerialNumberOrdinalTestValues caseVariant = new SerialNumberOrdinalTestValues(this, StringParam.ToUpper(),
+                        $"Upper case {Description.Substring(0, 1).ToLower()}{Description.Substring(1)}",
+                        $"urn:VOLUME:ID:{StringParam.ToUpper()}");
+                    variants.Add(caseVariant);
+                    if (ordinal < 16)
+                    {
+                        variants.Add(new SerialNumberOrdinalTestValues(this, $"{serialNumber.ToString("x8")}-{ordinal.ToString("x")}",
+                            $"{Description} without leading zero",
+                            $"urn:volume:id:{serialNumber.ToString("x8")}-{ordinal.ToString("x")}"));
+                        variants.Add(new SerialNumberOrdinalTestValues(this, $"{serialNumber.ToString("X8")}-{ordinal.ToString("X")}",
+                            $"{caseVariant.Description.Substring(1)} without leading zero",
+                            $"urn:VOLUME:ID:{serialNumber.ToString("X8")}-{ordinal.ToString("X")}"));
+                    }
+                }
+                else if (ordinal < 16)
+                    variants.Add(new SerialNumberOrdinalTestValues(this, $"{serialNumber.ToString("x8")}-{ordinal.ToString("x")}",
+                        $"{Description} without leading zero",
+                        $"urn:volume:id:{serialNumber.ToString("x8")}-{ordinal.ToString("x")}"));
+            }
+            protected SerialNumberOrdinalTestValues(SerialNumberOrdinalTestValues masterVariant, string stringParam, string description, string urn)
+            {
+                _variants = masterVariant._variants;
+                SerialNumber = masterVariant.SerialNumber;
+                Ordinal = masterVariant.Ordinal;
+                StringParam = stringParam;
+                StringValue = masterVariant.StringValue;
+                Description = description;
+                Url = masterVariant.Url;
+                UrnParam = urn;
+            }
+
+            private static IEnumerable<Tuple<byte, string>> _GetOrdinalValues()
+            {
+                yield return new Tuple<byte, string>(0,  "zero value");
+                yield return new Tuple<byte, string>(1,  "Value of 1");
+                yield return new Tuple<byte, string>(10,  "Value of 10");
+                yield return new Tuple<byte, string>(16,  "Value of 16");
+                yield return new Tuple<byte, string>(Byte.MaxValue,  "Byte.MaxValue");
+            }
+
+            public static IEnumerable<SerialNumberOrdinalTestValues> GetTestValues(bool includeVariants = false)
+            {
+                if (includeVariants)
+                    return GetTestValues(false).SelectMany(o => o._variants);
+                return SerialNumberTestValues.GetTestValues(false, false).SelectMany(sn => _GetOrdinalValues().Select(ord =>
+                    new SerialNumberOrdinalTestValues(sn.SerialNumber, ord.Item1, $"serialNumber = {sn.Description}; ordinal = {ord.Item2}")
+                ));
+            }
         }
 
-        public static IEnumerable<TestCaseData> GetGuidParameterTestCases()
+        class UUIDTestValues
         {
-            Guid guid = Guid.NewGuid();
-            string url = $"urn:uuid:{guid.ToString("d").ToLower()}";
-            yield return new TestCaseData(guid)
-                .SetName("Random new guid #1")
-                .Returns(new IdValues(url.Substring(4), url));
+            private readonly ReadOnlyCollection<UUIDTestValues> _variants;
+            internal Guid UUID { get; }
+            internal string StringParam { get; }
+            internal string StringValue { get; }
+            internal string Description { get; }
+            internal string UrnParam { get; }
+            internal Uri Url { get; }
+            protected UUIDTestValues(Guid uuid, string description)
+            {
+                UUID = uuid;
+                StringParam = uuid.ToString("d").ToLower();
+                StringValue = StringParam;
+                Description = description;
+                Url = new Uri($"urn:uuid:{StringParam}", UriKind.Absolute);
+                UrnParam = Url.AbsoluteUri;
+                Collection<UUIDTestValues> variants = new Collection<UUIDTestValues>();
+                _variants = new ReadOnlyCollection<UUIDTestValues>(variants);
+                variants.Add(this);
+                variants.Add(new UUIDTestValues(this, uuid.ToString("b").ToLower(),
+                    $"Brace format {Description.Substring(0, 1).ToLower()}{Description.Substring(1)}",
+                    $"urn:uuid:{uuid.ToString("b").ToLower()}"));
+                variants.Add(new UUIDTestValues(this, uuid.ToString("n").ToLower(),
+                    $"No-dash format {Description.Substring(0, 1).ToLower()}{Description.Substring(1)}",
+                    $"urn:uuid:{uuid.ToString("n").ToLower()}"));
+                variants.Add(new UUIDTestValues(this, uuid.ToString("p").ToLower(),
+                    $"Parenheses format {Description.Substring(0, 1).ToLower()}{Description.Substring(1)}",
+                    $"urn:uuid:{uuid.ToString("p").ToLower()}"));
+                variants.Add(new UUIDTestValues(this, uuid.ToString("x").ToLower(),
+                    $"Grouped hex format {Description.Substring(0, 1).ToLower()}{Description.Substring(1)}",
+                    $"urn:uuid:{uuid.ToString("x").ToLower()}"));
+                if (StringParam.ToUpper() != StringParam)
+                {
+                    foreach (UUIDTestValues t in variants.ToArray())
+                        variants.Add(new UUIDTestValues(this, t.StringParam.ToUpper(),
+                            $"Upper case {t.Description.Substring(0, 1).ToLower()}{t.Description.Substring(1)}",
+                            $"urn:UUID:{t.StringParam.ToUpper()}"));
+                }
+            }
+            protected UUIDTestValues(UUIDTestValues masterVariant, string stringParam, string description, string urn)
+            {
+                _variants = masterVariant._variants;
+                UUID = masterVariant.UUID;
+                StringParam = stringParam;
+                StringValue = masterVariant.StringValue;
+                Description = description;
+                Url = masterVariant.Url;
+                UrnParam = urn;
+            }
 
-            guid = Guid.NewGuid();
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}";
-            yield return new TestCaseData(guid)
-                .SetName("Random new guid #2")
-                .Returns(new IdValues(url.Substring(4), url));
-
-            guid = Guid.Empty;
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}";
-            yield return new TestCaseData(guid)
-                .SetName("Empty guid")
-                .Returns(new IdValues(url.Substring(4), url));
+            public static IEnumerable<UUIDTestValues> GetTestValues(bool includeVariants)
+            {
+                if (includeVariants)
+                {
+                    Guid guid = Guid.NewGuid();
+                    string s = guid.ToString("n").ToLower();
+                    while (s.ToUpper() == s)
+                        s = (guid = Guid.NewGuid()).ToString("n").ToLower();
+                    return (new UUIDTestValues[] {
+                        new UUIDTestValues(guid, "Random UUID"), new UUIDTestValues(Guid.Empty, "Empty UUID")
+                    }).SelectMany(u => u._variants);
+                }
+                return new UUIDTestValues[]
+                {
+                    new UUIDTestValues(Guid.NewGuid(), "Random UUID #1"),
+                    new UUIDTestValues(Guid.NewGuid(), "Random UUID #2"),
+                    new UUIDTestValues(Guid.Empty, "Empty UUID")
+                };
+            }
         }
 
-        public static IEnumerable<TestCaseData> GetValidUUIDUriParameterTestCases()
-        {
-            Guid guid = Guid.NewGuid();
-            string url = $"urn:uuid:{guid.ToString("B")}";
-            string value = $"uuid:{guid.ToString("d").ToLower()}";
-            string expected = $"urn:uuid:{guid.ToString("d").ToLower()}";
-            yield return new TestCaseData(url)
-                .SetName($"Random guid, brace format: {url}")
-                .Returns(new UuidValues(guid, value, expected));
+        public static IEnumerable<TestCaseData> GetGuidParameterTestCases() => UUIDTestValues.GetTestValues(false)
+            .Select(t =>
+                new TestCaseData(t.UUID)
+                    .SetName($"{t.Description} FromGuidValueConstructorTest({t.UUID})")
+                    .Returns(new IdValues(t.StringValue, t.Url.AbsoluteUri))
+            );
 
-            url = $"urn:uuid:{guid.ToString("N")}";
-            yield return new TestCaseData(url)
-                .SetName($"Random guid, no-dash format: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            url = $"urn:uuid:{guid.ToString("P")}";
-            yield return new TestCaseData(url)
-                .SetName($"Random guid, parentheses format: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            url = $"urn:uuid:{guid.ToString("X")}";
-            yield return new TestCaseData(url)
-                .SetName($"Random guid, grouped hex format: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            url = $"urn:uuid:{guid.ToString("d").ToUpper()}";
-            yield return new TestCaseData(url)
-                .SetName($"Random upper-case guid: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}";
-            yield return new TestCaseData(url)
-                .SetName($"Random new guid #1: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}/";
-            yield return new TestCaseData(url)
-                .SetName($"Random new guid #1 with extraneous path: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}#";
-            yield return new TestCaseData(url)
-                .SetName($"Random new guid #1 with empty fragment: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}?";
-            yield return new TestCaseData(url)
-                .SetName($"Random new guid #1 with empty query: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}/?#";
-            yield return new TestCaseData(url)
-                .SetName($"Random new guid #1 with extraneous path and empty query and fragment: {url}")
-                .Returns(new UuidValues(guid, value, expected));
-
-            guid = Guid.NewGuid();
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}";
-            yield return new TestCaseData(url)
-                .SetName($"Random new guid #2: {url}")
-                .Returns(new UuidValues(guid, url.Substring(4), url));
-
-            guid = Guid.Empty;
-            url = $"urn:uuid:{guid.ToString("d").ToLower()}";
-            yield return new TestCaseData(url)
-                .SetName($"Empty guid: {url}")
-                .Returns(new UuidValues(guid, url.Substring(4), url));
-        }
+        public static IEnumerable<TestCaseData> GetValidUUIDUriParameterTestCases() => UUIDTestValues.GetTestValues(true)
+            .Select(t =>
+                new TestCaseData(t.UrnParam)
+                    .SetName($"{t.Description} FromValidUUIDUriConstructorTest(\"{t.UrnParam}\")")
+                    .Returns(new UuidValues(t.UUID, t.StringValue, t.Url.AbsoluteUri))
+            );
 
         public static IEnumerable<TestCaseData> GetSerialNumberParameterTestCases() =>
-            GetSerialNumberTestValues().Select(v => new {
-                Arg = v.Item1,
-                Url = $"urn::volume:id:{v.Item2}",
-                Name = v.Item3
-            }).Select(a => new TestCaseData(a.Arg)
-                .SetName($"{a.Name}: {a.Arg}")
-                .Returns(new IdValues(a.Url.Substring(4), a.Url)));
+            SerialNumberTestValues.GetTestValues(false, false).Select(t =>
+                new TestCaseData(t.SerialNumber)
+                    .SetName($"{t.Description} FromSerialNumberValueConstructorTest({t.SerialNumber})")
+                    .Returns(new IdValues(t.StringValue, t.Url.AbsoluteUri))
+            );
 
-        public static IEnumerable<TestCaseData> GetSerialNumberAndOrdinalParametersTestCases() =>
-            GetSerialNumberTestValues().Select(sn => new
-            {
-                SerialNumber = sn.Item1,
-                ReturnsValue = sn.Item2.Replace("-", ""),
-                Description = sn.Item3
-            }).Select(a => new
-            {
-                SerialNumber = a.SerialNumber,
-                ReturnsValue = a.ReturnsValue,
-                ReturnsUri = $"urn:volume:id:{a.ReturnsValue}",
-                Description = a.Description
-            }).SelectMany(sn => GetOrdinalTestValues().Select(ord =>
-                new TestCaseData(sn.SerialNumber, ord.Item1)
-                    .SetName($"serialNumber = {sn.Description} ({sn.SerialNumber}), Ordinal = {ord.Item3} ({ord.Item1})")));
+        public static IEnumerable<TestCaseData> GetSerialNumberAndOrdinalParametersTestCases() => SerialNumberOrdinalTestValues.GetTestValues(false)
+            .Select(t =>
+                new TestCaseData(t.SerialNumber, t.Ordinal)
+                    .SetName($"{t.Description} FromSerialNumberAndOrdinalValuesConstructorTest({t.SerialNumber}, {t.Ordinal})")
+                    .Returns(new SnIdValues(t.SerialNumber, t.Ordinal, t.StringValue, t.Url.AbsoluteUri))
+            );
 
-        public static IEnumerable<TestCaseData> GetValidSerialNumberUriParameterTestCases()
-        {
-            var snTestValues = GetSerialNumberTestValues().Select(t => new
-            {
-                Arg = $"urn:volume:id:{t.Item2}",
-                Description = $"serialNumber: {t.Item3}",
-                Returns = new SnIdValues(t.Item1, null, t.Item2, $"urn:volume:id:{t.Item2}")
-            }).SelectMany(sn => (new[] { sn }).Concat(GetOrdinalTestValues().Select(t => new
-            {
-                Arg = $"{sn.Arg.Replace("-", "")}-{t.Item2}",
-                Description = $"{sn.Description}, ordinal: {t.Item3}",
-                Returns = new SnIdValues(sn.Returns.SerialNumber, t.Item1, $"{sn.Returns.Value.Replace("-", "")}-{t.Item2}",
-                    $"{sn.Returns.AbsoluteUri.Replace("-", "")}-{t.Item2}")
-            }))).Concat(GetSerialNumberTestValues().Where(t => t.Item2.ToUpper() != t.Item2.ToLower()).Take(2).Select(t => new
-            {
-                Arg = $"urn:VOLUME:ID:{t.Item2.ToUpper()}",
-                Description = $"(upper case) serialNumber: {t.Item3}",
-                Returns = new SnIdValues(t.Item1, null, t.Item2, $"urn:volume:id:{t.Item2}")
-            }).SelectMany(sn => (new[] { sn }).Concat(GetOrdinalTestValues().Where(t => t.Item2.ToUpper() != t.Item2.ToLower()).Take(2).Select(t => new
-            {
-                Arg = $"{sn.Arg.Replace("-", "")}-{t.Item2.ToUpper()}",
-                Description = $"{sn.Description}, ordinal: {t.Item3}",
-                Returns = new SnIdValues(sn.Returns.SerialNumber, t.Item1, $"{sn.Returns.Value.Replace("-", "")}-{t.Item2}",
-                    $"{sn.Returns.AbsoluteUri.Replace("-", "")}-{t.Item2}")
-            }))));
-
-            return snTestValues.Concat(snTestValues.GroupBy(t => t.Returns.SerialNumber).SelectMany(g =>
-                g.Where(s => !s.Returns.Ordinal.HasValue && !s.Description.StartsWith("(")).Take(1)
-                    .Concat(g.Where(s => s.Returns.Ordinal.HasValue && !s.Description.StartsWith("(")).Take(1))
-                    .Concat(g.Where(s => !s.Returns.Ordinal.HasValue && s.Description.StartsWith("(")).Take(1))
-                    .Concat(g.Where(s => s.Returns.Ordinal.HasValue && s.Description.StartsWith("(")).Take(1))
-            ).Select(a => (a.Description.StartsWith("(upper case)")) ?
-                new
-                {
-                    Arg = a.Arg,
-                    DescriptionStart = "(upper case; ",
-                    Description = a.Description.Substring(11),
-                    Returns = a.Returns
-                }
-                : new
-                {
-                    Arg = a.Arg,
-                    DescriptionStart = "(",
-                    Description = $") {a.Description}",
-                    Returns = a.Returns
-                }
-            ).SelectMany(a => new[]
-            {
-                new
-                {
-                    Arg = $"{a.Arg}/",
-                    Description = $"{a.DescriptionStart}trailing slash{a.Description}",
-                    Returns = new SnIdValues(a.Returns.SerialNumber, a.Returns.Ordinal, a.Returns.Value, a.Returns.AbsoluteUri)
-                },
-                new
-                {
-                    Arg = $"{a.Arg}?",
-                    Description = $"{a.DescriptionStart}empty query{a.Description}",
-                    Returns = new SnIdValues(a.Returns.SerialNumber, a.Returns.Ordinal, a.Returns.Value, a.Returns.AbsoluteUri)
-                },
-                new
-                {
-                    Arg = $"{a.Arg}?",
-                    Description = $"{a.DescriptionStart}empty fragment{a.Description}",
-                    Returns = new SnIdValues(a.Returns.SerialNumber, a.Returns.Ordinal, a.Returns.Value, a.Returns.AbsoluteUri)
-                },
-                new
-                {
-                    Arg = $"{a.Arg}/?#",
-                    Description = $"{a.DescriptionStart}trailing slash; empty query and fragment{a.Description}",
-                    Returns = new SnIdValues(a.Returns.SerialNumber, a.Returns.Ordinal, a.Returns.Value, a.Returns.AbsoluteUri)
-                },
-            })).Select(a => new TestCaseData(a.Arg).SetName(a.Description).Returns(a.Returns));
-        }
+        public static IEnumerable<TestCaseData> GetValidSerialNumberUriParameterTestCases() => SerialNumberTestValues.GetTestValues(true, true)
+            .Select(t =>
+                new TestCaseData(t.UrnParam)
+                    .SetName($"{t.Description} FromValidSerialNumberAndOrdinalUriConstructorTest(\"{t.UrnParam}\")")
+                    .Returns(new SnIdValues(t.SerialNumber, null, t.StringValue, t.Url.AbsoluteUri))
+            ).Concat(SerialNumberOrdinalTestValues.GetTestValues(true).Select(t =>
+                new TestCaseData(t.SerialNumber, t.Ordinal)
+                    .SetName(t.Description)
+                    .Returns(new SnIdValues(t.SerialNumber, t.Ordinal, t.StringValue, t.Url.AbsoluteUri))
+            ));
 
         public static IEnumerable<TestCaseData> GetValidFilePathParameterTestCases()
         {
@@ -386,61 +428,64 @@ namespace FsInfoCat.Test
                 .Returns(new IdValues(path, expected));
         }
 
+        public static IEnumerable<TestCaseData> GetToNormalizedUriTestCases()
+        {
+            string expected = $"file://[{_ipV6Address}]/100%25%20Done";
+            yield return new TestCaseData(new Uri(expected), false)
+                .SetName($"File URN with no trailing slash and noTrailingSlash = true: ToNormalizedUriTest({expected}, false)")
+                .Returns(new Uri($"{expected}/"));
+#warning Need to implmeent more test data
+        }
+
+        public static IEnumerable<TestCaseData> GetGuidToIdentifierStringTestCases() => UUIDTestValues.GetTestValues(false)
+            .Select(t => new TestCaseData(t.UUID)
+                    .SetName($"{t.Description} ToNormalizedUriTest({t.UUID})")
+                .Returns(t.StringValue));
+
+        public static IEnumerable<TestCaseData> GetGuidToUrnTestCases() => UUIDTestValues.GetTestValues(false)
+            .Select(t => new TestCaseData(t.UUID)
+                .SetName($"{t.Description} GuidToUrnTest({t.UUID})")
+                .Returns(t.Url.AbsoluteUri));
+
+        public static IEnumerable<TestCaseData> GetSerialNumberToIdentifierStringTestCases() => SerialNumberTestValues.GetTestValues(false)
+            .Select(t => new TestCaseData(t.SerialNumber, (byte?)null)
+                .SetName($"{t.Description} SerialNumberToIdentifierStringTest({t.SerialNumber}, null)")
+                .Returns(t.StringValue))
+            .Concat(SerialNumberOrdinalTestValues.GetTestValues()
+                .Select(t => new TestCaseData(t.SerialNumber, t.Ordinal)
+                    .SetName($"{t.Description} SerialNumberToIdentifierStringTest({t.SerialNumber}, {t.Ordinal})")
+                    .Returns(t.StringValue)));
+
+        public static IEnumerable<TestCaseData> GetSerialNumberToUrnTestCases() => SerialNumberTestValues.GetTestValues(false)
+            .Select(t => new TestCaseData(t.SerialNumber, (byte?)null)
+                .SetName($"{t.Description} SerialNumberToUrnTest({t.SerialNumber})")
+                .Returns(t.Url.AbsoluteUri))
+            .Concat(SerialNumberOrdinalTestValues.GetTestValues()
+                .Select(t => new TestCaseData(t.SerialNumber, t.Ordinal)
+                    .SetName($"{t.Description} SerialNumberToUrnTest({t.SerialNumber}, {t.Ordinal})")
+                    .Returns(t.Url.AbsoluteUri)));
+
+        public static IEnumerable<TestCaseData> GetParseUrnTestCases()
+        {
+            return UUIDTestValues.GetTestValues(true).Select(t =>
+                new TestCaseData(t.UrnParam.Substring(4))
+                    .SetName($"{t.Description} ParseUrnTest(\"{t.UrnParam.Substring(4)}\")")
+                    .Returns(new ParseResultValues(t.UUID, null, null))
+            ).Concat(SerialNumberTestValues.GetTestValues().Take(2).Select(t =>
+                new TestCaseData(t.UrnParam.Substring(4))
+                    .SetName($"{t.Description} ParseUrnTest(\"{t.UrnParam.Substring(4)}\")")
+                    .Returns(new ParseResultValues(null, t.SerialNumber, null))
+            )).Concat(SerialNumberOrdinalTestValues.GetTestValues(true).Select(t =>
+                new TestCaseData(t.UrnParam.Substring(4))
+                    .SetName($"{t.Description} ParseUrnTest(\"{t.UrnParam.Substring(4)}\")")
+                    .Returns(new ParseResultValues(null, t.SerialNumber, t.Ordinal))
+            ));
+        }
+
         [SetUp]
         public void Setup()
         {
         }
-
-        public static IEnumerable<TestCaseData> GetToNormalizedUriTestCases()
-        {
-            string expected = $"file://[{_ipV6Address}]/100%25%20Done";
-            yield return new TestCaseData(new Uri(expected))
-                .SetName($"File URN with no trailing slash and noTrailingSlash = true: {expected}")
-                .Returns(new Uri(expected));
-#warning Need to implmeent more test data
-        }
-
-        public static IEnumerable<TestCaseData> GetGuidToIdentifierStringTestCases()
-        {
-            Guid guid = Guid.NewGuid();
-            yield return new TestCaseData(guid)
-                .SetName($"Random Guid: {guid}")
-                .Returns(guid.ToString("d").ToLower());
-
-            guid = Guid.Empty;
-            yield return new TestCaseData(guid)
-                .SetName($"Empty Guid: {guid}")
-                .Returns(guid.ToString("d").ToLower());
-        }
-
-        public static IEnumerable<TestCaseData> GetGuidToUrnTestCases()
-        {
-            Guid guid = Guid.NewGuid();
-            yield return new TestCaseData(guid)
-                .SetName($"Random Guid: {guid}")
-                .Returns($"urn:uuid:{guid.ToString("d").ToLower()}");
-
-            guid = Guid.Empty;
-            yield return new TestCaseData(guid)
-                .SetName($"Empty Guid: {guid}")
-                .Returns($"urn:uuid:{guid.ToString("d").ToLower()}");
-        }
-
-        public static IEnumerable<TestCaseData> GetSerialNumberToIdentifierStringTestCases() => GetSerialNumberTestValues()
-            .Select(t => new TestCaseData(t.Item1, (byte?)null).SetName($"serialNumber: {t.Item3}")
-                .Returns(t.Item2)).Concat(GetSerialNumberTestValues().SelectMany(sn =>
-                GetOrdinalTestValues().Select(ord => new TestCaseData(sn.Item1, ord.Item1)
-                    .SetName($"serialNumber: {sn.Item3}, ordinal: {ord.Item3}")
-                    .Returns($"{sn.Item2.Replace("-", "")}-{ord.Item2}"))
-            ));
-
-        public static IEnumerable<TestCaseData> GetSerialNumberToUrnTestCases() => GetSerialNumberTestValues()
-            .Select(t => new TestCaseData(t.Item1, (byte?)null).SetName($"serialNumber: {t.Item3}")
-                .Returns($"urn:volume:id:{t.Item2}")).Concat(GetSerialNumberTestValues().SelectMany(sn =>
-                GetOrdinalTestValues().Select(ord => new TestCaseData(sn.Item1, ord.Item1)
-                    .SetName($"serialNumber: {sn.Item3}, ordinal: {ord.Item3}")
-                    .Returns($"urn:volume:id:{sn.Item2.Replace("-", "")}-{ord.Item2}"))
-            ));
 
         [Test]
         [Property("Priority", 1)]
@@ -488,11 +533,12 @@ namespace FsInfoCat.Test
 
         [Test]
         [Property("Priority", 1)]
+        [NUnit.Framework.Category("Working")]
         [TestCaseSource("GetParseUrnTestCases")]
-        public IdValues ParseUrnTest(Guid guid)
+        public ParseResultValues ParseUrnTest(string uriPath)
         {
-#warning Need to implement ParseUrnTest(Guid)
-            throw new NotImplementedException();
+            UniqueIdentifier.ParseUrnPath(uriPath, out Guid? uuid, out uint? serialNumber, out byte? ordinal);
+            return new ParseResultValues(uuid, serialNumber, ordinal);
         }
 
         [Test]
@@ -563,7 +609,7 @@ namespace FsInfoCat.Test
         [Test]
         [Property("Priority", 3)]
         [TestCaseSource("GetSerialNumberAndOrdinalParametersTestCases")]
-        public IdValues FromSerialNumberAndOrdinalValuesConstructorTest(uint serialNumber, byte ordinal)
+        public SnIdValues FromSerialNumberAndOrdinalValuesConstructorTest(uint serialNumber, byte ordinal)
         {
             UniqueIdentifier target = new UniqueIdentifier(serialNumber, ordinal);
             Assert.That(target.URL.IsAbsoluteUri, Is.True);
@@ -573,13 +619,13 @@ namespace FsInfoCat.Test
             Assert.That(target.SerialNumber.HasValue, Is.True);
             Assert.That(target.SerialNumber.Value, Is.EqualTo(serialNumber));
             Assert.That(target.UUID.HasValue, Is.False);
-            Assert.That(target.Ordinal.HasValue, Is.False);
+            Assert.That(target.Ordinal.HasValue, Is.True);
             // string expected = $"{serialNumber.ToString("x8")}-{ordinal}";
             // Assert.That(target.Value, Is.EqualTo(expected));
             // expected = $"volume:id:{expected}";
             // Assert.That(target.URL.AbsolutePath, Is.EqualTo(expected));
             // Assert.That(target.URL.PathAndQuery, Is.EqualTo(expected));
-            return new IdValues(target.Value, target.URL.AbsoluteUri);
+            return new SnIdValues(target.SerialNumber, target.Ordinal, target.Value, target.URL.AbsoluteUri);
         }
 
         [Test]
@@ -743,6 +789,51 @@ namespace FsInfoCat.Test
                     $"{{ Value = null, AbsoluteUri = \"{AbsoluteUri}\" }}"
                     : $"{{ Value = \"{Value}\", AbsoluteUri = \"{AbsoluteUri}\" }}"
                 );
+        }
+
+        public class ParseResultValues : IEquatable<ParseResultValues>
+        {
+            public Guid? UUID { get; }
+            public uint? SerialNumber { get; }
+            public byte? Ordinal { get; }
+
+            public ParseResultValues(Guid? uuid, uint? serialNumber, byte? ordinal)
+            {
+                UUID = uuid;
+                SerialNumber = serialNumber;
+                Ordinal = ordinal;
+            }
+
+            public bool Equals([AllowNull] ParseResultValues other) => null != other && (ReferenceEquals(this, other) ||
+                (UUID == other.UUID && SerialNumber == other.SerialNumber && Ordinal == other.Ordinal));
+
+            public override bool Equals(object obj) => Equals(obj as ParseResultValues);
+
+            public override int GetHashCode() => HashCode.Combine(UUID, SerialNumber, Ordinal);
+
+            public override string ToString()
+            {
+                return (UUID.HasValue) ?
+                    (SerialNumber.HasValue) ?
+                        ((Ordinal.HasValue) ?
+                            $"{{ UUID = {UUID.Value.ToString("d")}, SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = {Ordinal.Value.ToString("x2")} }}"
+                            : $"{{ UUID = {UUID.Value.ToString("d")}, SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = null }}"
+                        )
+                        : ((Ordinal.HasValue) ?
+                            $"{{ UUID = {UUID.Value.ToString("d")}, SerialNumber = null, Ordinal = {Ordinal.Value.ToString("x2")} }}"
+                            : $"{{ UUID = {UUID.Value.ToString("d")}, SerialNumber = null, Ordinal = null }}"
+                        )
+                    : (SerialNumber.HasValue) ?
+                        ((Ordinal.HasValue) ?
+                            $"{{ UUID = null, SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = {Ordinal.Value.ToString("x2")} }}"
+                            : $"{{ UUID = null, SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = null }}"
+                        )
+                        : ((Ordinal.HasValue) ?
+                            $"{{ UUID = null, SerialNumber = null, Ordinal = {Ordinal.Value.ToString("x2")} }}"
+                            : "{ UUID = null, SerialNumber = null, Ordinal = null }"
+                        );
+            }
+
         }
 
         public class SnIdValues : IdValues, IEquatable<SnIdValues>
