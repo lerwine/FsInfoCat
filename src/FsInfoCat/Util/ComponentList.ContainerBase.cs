@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 
 namespace FsInfoCat.Util
@@ -10,14 +11,23 @@ namespace FsInfoCat.Util
         public abstract partial class ContainerBase : INestedContainer, IServiceProvider
         {
             protected const string ERROR_MESSAGE_ITEM_WITH_NAME_EXISTS = "Another item with same name already exists.";
+            private ComponentCollection _components = null;
             private bool _isDisposed;
 
             protected abstract object SyncRoot { get; }
 
             public IComponent Owner { get; private set; }
 
-#warning Need to implement IContainer.Components
-            ComponentCollection IContainer.Components => throw new NotImplementedException();
+            ComponentCollection IContainer.Components
+            {
+                get
+                {
+                    ComponentCollection components = _components;
+                    if (components is null)
+                        _components = components = new ComponentCollection(GetComponents().ToArray());
+                    return components;
+                }
+            }
 
             public abstract IEqualityComparer<string> NameComparer { get; }
 
