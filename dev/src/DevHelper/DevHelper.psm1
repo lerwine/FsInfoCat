@@ -360,7 +360,7 @@ namespace FsInfoCat.Models
         public string DisplayName
         {
             get { return _displayName; }
-            set { _displayName = (null == value) ? "" : value; }
+            set { _displayName = (value is null) ? "" : value; }
         }
 
         [Required()]
@@ -369,7 +369,7 @@ namespace FsInfoCat.Models
         public string Notes
         {
             get { return _notes; }
-            set { _notes = (null == value) ? "" : value; }
+            set { _notes = (value is null) ? "" : value; }
         }
 
         [Required()]
@@ -527,7 +527,7 @@ Function New-DependencyProperty {
             $sb.AppendLine(' value)').AppendLine('        {') | Out-Null;
             if ($PropertyType.DefaultValue -eq 'null') {
                 if ($IsObservableCollection) {
-                    $sb.AppendLine('            if (null == value)').Append('                return new ').Append($PropertyType.ShortHand).AppendLine('();').AppendLine('            return value;') | Out-Null;
+                    $sb.AppendLine('            if (value is null)').Append('                return new ').Append($PropertyType.ShortHand).AppendLine('();').AppendLine('            return value;') | Out-Null;
                 } else {
                     $sb.Append('            // TODO: Implement On').Append($Name).AppendLine('PropertyChanged').AppendLine('            throw new NotImplementedException();') | Out-Null;
                 }
@@ -535,7 +535,7 @@ Function New-DependencyProperty {
                 if ($PropertyType.IsValueType) {
                     $sb.AppendLine('            if (value.HasValue)').AppendLine('                return value.Value;').Append('            return ').Append($PropertyType.DefaultValue).AppendLine(';') | Out-Null;
                 } else {
-                    $sb.AppendLine('            if (null == value)').Append('                return ').Append($PropertyType.DefaultValue).AppendLine(';').AppendLine('            return value;') | Out-Null;
+                    $sb.AppendLine('            if (value is null)').Append('                return ').Append($PropertyType.DefaultValue).AppendLine(';').AppendLine('            return value;') | Out-Null;
                 }
             }
             $sb.AppendLine('        }') | Out-Null;
@@ -715,4 +715,270 @@ Function New-XmlWriterSettings {
         }
         $XmlWriterSettings | Write-Output;
     }
+}
+
+class XmlDocumentFile : System.Xml.XmlDocument
+{
+    hidden [string]$Path;
+
+
+    XmlDocumentFile([string]$Path) {
+
+    }
+}
+
+enum PsHelpNsPrefix {
+    msh;
+    maml;
+    command;
+    dev;
+    MSHelp;
+};
+
+enum PsHelpNames {
+    helpItems;
+    command;
+    para;
+}
+
+$Script:PsHelpNamespaces = [System.Collections.ObjectModel.ReadOnlyDictionary[PsHelpNsPrefix, string]]::new((&{
+    $dict = [System.Collections.Generic.Dictionary[PsHelpNsPrefix, string]]::new();
+    @(@{
+        msh = "http://msh";
+        maml = "http://schemas.microsoft.com/maml/2004/10";
+        command = "http://schemas.microsoft.com/maml/dev/command/2004/10";
+        dev = "http://schemas.microsoft.com/maml/dev/2004/10";
+        MSHelp = "http://msdn.microsoft.com/mshelp";
+    }.GetEnumerator()) | ForEach-Object { $dict.Add($_.Key, $_.Value) }
+    return ,$dict;
+}));
+$Script:SchemaLocations = [System.Collections.ObjectModel.ReadOnlyDictionary[PsHelpNsPrefix, string]]::new((&{
+    $dict = [System.Collections.Generic.Dictionary[PsHelpNsPrefix, string]]::new();
+    @(@{
+        msh = 'Msh.xsd';
+        maml = 'PSMaml/Maml.xsd';
+        command = 'PSMaml/developerCommand.xsd';
+        dev = 'PSMaml/developer.xsd';
+    }.GetEnumerator()) | ForEach-Object { $dict.Add($_.Key, $_.Value) }
+    return ,$dict;
+}));
+
+Function Test-PsHelpXml {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [System.Xml.XmlNode]$Value,
+
+        [PsHelpNsPrefix[]]$Namespace
+    )
+
+}
+
+Function Test-NCName {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [object]$Value
+    )
+
+    Process {
+        if ($null -eq $Value) {
+            Write-Debug -Message 'Value was null';
+            $false | Write-Output;
+        } else {
+            $s = '';
+            if ($Value -is [string]) {
+                $s = $Value;
+            } else {
+                if ($null -ne $Value.Text) {
+                    $s = '' + $Value.Text;
+                } else {
+                    $s = '' + $Value;
+                }
+            }
+            if ($s.Trim().Length -eq 0) {
+                Write-Debug -Message 'Empty value';
+                $false | Write-Output;
+            } else {
+                $a = $s.ToCharArray();
+                $index = 0;
+                if ([System.Xml.XmlConvert]::IsStartNCNameChar($a[0])) {
+                    while (++$index -lt $a.Length) {
+                        if (-not [System.Xml.XmlConvert]::IsNCNameChar($a[$index])) { break }
+                    }
+                }
+                if ($index -lt $a.Length) {
+                    Write-Debug -Message "Invalid NCName char at index $index";
+                    $false | Write-Output;
+                } else {
+                    $true | Write-Output;
+                }
+            }
+        }
+    }
+}
+
+Function Add-TextElement {
+    [CmdletBinding(DefaultParameterSetName = 'NoEmpty')]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlElement]$ParentElement,
+
+        [Parameter(Mandatory = $true)]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [object]$Value,
+
+        [Parameter(Mandatory = $true)]
+        [PsHelpNsPrefix]$NS,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-NCName })]
+        [string]$Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'CommentIfEmpty')]
+        [string]$CommentIfEmpty,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'TextIfEmpty')]
+        [string]$TextIfEmpty,
+
+        [Parameter(ParameterSetName = 'NoEmpty')]
+        [switch]$NoEmpty,
+
+        [switch]$PassThru
+    )
+
+    if ($null -ne $Value) {
+        $s = $null;
+        if ($Value -is [string]) {
+            $s = $Value;
+        } else {
+            if ($null -eq $Value.Text) {
+                $s = '' + $Value;
+            } else {
+                $s = '' + $Value.Text;
+            }
+        }
+        if (-not [string]::IsNullOrWhiteSpace($s)) {
+            $XmlElement = $ParentElement.PSBase.AppendChild(
+                $ParentElement.PSBase.OwnerDocument.CreateElement($Name, $Script:PsHelpNamespaces[$NS])
+            );
+            $XmlElement.PSBase.InnerText = $s;
+            if ($PassThru) { return $XmlElement }
+            return;
+        }
+    }
+    if ($NoEmpty.IsPresent) { return }
+    $XmlElement = $ParentElement.PSBase.AppendChild(
+        $ParentElement.PSBase.OwnerDocument.CreateElement($Name, $Script:PsHelpNamespaces[$NS])
+    );
+    if ($PSBoundParameters.ContainsKey('TextIfEmpty')) {
+        $ParentElement.InnerText = $TextIfEmpty;
+    } else {
+        if ($PSBoundParameters.ContainsKey('CommentIfEmpty')) {
+            $ParentElement.AppendChild($ParentElement.PSBase.OwnerDocument.CreateComment($CommentIfEmpty)) | Out-Null;
+        }
+    }
+    if ($PassThru) { return $XmlElement }
+}
+
+Function Add-MamlParagraphs {
+    [CmdletBinding(DefaultParameterSetName = 'CommentIfEmpty')]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [object]$ParaObj,
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlElement]$ParentElement,
+
+        [Parameter(ParameterSetName = 'CommentIfEmpty')]
+        [string]$CommentIfEmpty,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'TextIfEmpty')]
+        [string[]]$TextIfEmpty
+    )
+
+    Begin { $NoContent = $true }
+    Process {
+        if ($null -ne (Add-TextElement -Value $ParaObj -ParentElement $ParentElement -NS maml -Name ([PsHelpNames]::para) -NoEmpty -PassThru)) { $NoContent = $false }
+    }
+    End {
+        if ($NoContent) {
+            if ($PSBoundParameters.ContainsKey('CommentIfEmpty')) {
+                $ParentElement.PSBase.AppendChild(
+                    $ParentElement.PSBase.OwnerDocument.CreateElement([PsHelpNames]::para, $Script:PsHelpNamespaces[[PsHelpNsPrefix]::maml])
+                ).AppendChild($ParentElement.OwnerDocument.CreateComment($CommentIfEmpty)) | Out-Null;
+            } else {
+                if ($PSBoundParameters.ContainsKey('TextIfEmpty')) {
+                    $TextIfEmpty | ForEach-Object {
+                        $ParentElement.PSBase.AppendChild(
+                            $ParentElement.PSBase.OwnerDocument.CreateElement([PsHelpNames]::para, $Script:PsHelpNamespaces[[PsHelpNsPrefix]::maml])
+                        ).InnerText = $_;
+                    }
+                }
+            }
+        }
+    }
+}
+
+Function New-PsHelpNamespaceManager {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlNode]$Target
+    )
+
+    $Nsmgr = [System.Xml.XmlNamespaceManager]::new($Xml.NameTable);
+    $Script:PsHelpNamespaces.Keys | ForEach-Object { $Nsmgr.AddNamespace($_, $Script:PsHelpNamespaces[$_]) }
+    Write-Output -InputObject $Nsmgr -NoEnumerate;
+}
+
+Function Set-PsHelpSchemaLocation {
+    [CmdletBinding()]
+    Param(
+        [System.Xml.XmlDocument]$PsHelp
+    )
+
+}
+
+Function New-PsHelpXml {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$HelpXmlPath
+    )
+
+    $XmlDocument = New-Object -TypeName 'DevHelper.XmlDocumentFile' -ArgumentList $HelpXmlPath;
+    $XmlElement = $XmlDocument.AppendChild($XmlDocument.CreateElement('', [PsHelpNames]::helpItems, $Script:PsHelpNamespaces[[PsHelpNsPrefix]::msh]));
+    if ($PSBoundParameters.ContainsKey('SchemaLocationBase')) {
+        $ResourcesPath = (Resolve-Path -LiteralPath ($PSScriptRoot | Join-Path -ChildPath '../../../Resources')).Path;
+        $Path = (Resolve-Path -LiteralPath ($PSScriptRoot | Join-Path -ChildPath $SchemaLocationBase)).Path;
+        $Path = [System.IO.Path]::GetRelativePath($Path, $ResourcesPath);
+        $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xsi', 'schemaLocation', 'http://www.w3.org/2001/XMLSchema-instance')).Value = `
+            @($Script:SchemaLocations.Keys | ForEach-Object { $Script:PsHelpNamespaces[$_]; $Script:SchemaLocations[$_] }) -join ' ';
+    }
+    $commandElement = $XmlDocument.DocumentElement.AppendChild($XmlDocument.CreateElement([PsHelpNsPrefix]::command, [PsHelpNames]::command, $Script:PsHelpNamespaces[[PsHelpNsPrefix]::command]));
+    @([PsHelpNsPrefix]::maml, [PsHelpNsPrefix]::dev) | ForEach-Object {
+        $commandElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', $_, 'http://www.w3.org/2000/xmlns/')).Value = $Script:PsHelpNamespaces[$_];
+    }
+    Write-Output -InputObject $XmlDocument -NoEnumerate;
+}
+
+Function New-PsCommandHelpXml {
+    [CmdletBinding()]
+    Param(
+    )
+
+    $XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+    $XmlElement =$XmlDocument.AppendChild($XmlDocument.CreateElement('', 'helpItems', $Script:PsHelpNamespaces['msh']));
+    $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xsi', 'schemaLocation', 'http://www.w3.org/2001/XMLSchema-instance')).Value = 'http://schemas.microsoft.com/maml/2004/10 file:///C:/Users/lerwi/Git/PowerShell/src/Schemas/PSMaml/Maml.xsd http://schemas.microsoft.com/maml/dev/command/2004/10 C:\Users\lerwi\Git\PowerShell\src\Schemas\PSMaml\developerCommand.xsd http://schemas.microsoft.com/maml/dev/2004/10 C:\Users\lerwi\Git\PowerShell\src\Schemas\PSMaml\developer.xsd';
+    $Nsmgr = [System.Xml.XmlNamespaceManager]::new($Xml.NameTable);
+    $Script:PsHelpNamespaces.Keys | ForEach-Object { $Nsmgr.AddNamespace($_, $Script:PsHelpNamespaces[$_]) }
+    $commandElement = $XmlDocument.DocumentElement.AppendChild($XmlDocument.CreateElement('command', 'command', $Script:PsHelpNamespaces['command']));
+    $commandElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'maml', 'http://www.w3.org/2000/xmlns/')).Value = $Script:PsHelpNamespaces['maml'];
+    $commandElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'dev', 'http://www.w3.org/2000/xmlns/')).Value = $Script:PsHelpNamespaces['dev'];
+    Write-Output -InputObject $XmlDocument -NoEnumerate;
 }
