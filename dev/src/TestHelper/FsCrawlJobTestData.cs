@@ -20,7 +20,7 @@ namespace TestHelper
             get
             {
                 Collection<ContentTemplate> items = _templates;
-                if (null == items)
+                if (items is null)
                     _templates = items = new Collection<ContentTemplate>();
                 return items;
             }
@@ -34,7 +34,7 @@ namespace TestHelper
             get
             {
                 Collection<InputSet> items = _inputSets;
-                if (null == items)
+                if (items is null)
                     _inputSets = items = new Collection<InputSet>();
                 return items;
             }

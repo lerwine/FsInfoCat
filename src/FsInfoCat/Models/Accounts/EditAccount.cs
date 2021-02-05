@@ -52,7 +52,7 @@ namespace FsInfoCat.Models.Accounts
         public string DisplayName
         {
             get { return _displayName; }
-            set { _displayName = (null == value) ? "" : value; }
+            set { _displayName = (value is null) ? "" : value; }
         }
 
         [Required(ErrorMessage = Account.Error_Message_Login_Empty)]
@@ -63,7 +63,7 @@ namespace FsInfoCat.Models.Accounts
         public string LoginName
         {
             get { return _loginName; }
-            set { _loginName = (null == value) ? "" : value; }
+            set { _loginName = (value is null) ? "" : value; }
         }
 
         [Display(Name = "Change Password")]
@@ -74,7 +74,7 @@ namespace FsInfoCat.Models.Accounts
         public string Password
         {
             get { return _password; }
-            set { _password = (null == value) ? "" : value; }
+            set { _password = (value is null) ? "" : value; }
         }
 
         [Display(Name = DisplayName_Confirm)]
@@ -82,7 +82,7 @@ namespace FsInfoCat.Models.Accounts
         public string Confirm
         {
             get { return _confirm; }
-            set { _confirm = (null == value) ? "" : value; }
+            set { _confirm = (value is null) ? "" : value; }
         }
 
         [Display(Name = "Role")]
@@ -91,7 +91,7 @@ namespace FsInfoCat.Models.Accounts
             get
             {
                 string n = _roleDisplay;
-                if (null == n)
+                if (n is null)
                 {
                     n = Enum.GetName(_role.GetType(), _role);
                     _roleDisplay = n = _role.GetType().GetField(n).GetCustomAttributes(typeof(DescriptionAttribute), false).OfType<DescriptionAttribute>()
@@ -234,7 +234,7 @@ namespace FsInfoCat.Models.Accounts
         public string Notes
         {
             get { return _notes; }
-            set { _notes = (null == value) ? "" : value; }
+            set { _notes = (value is null) ? "" : value; }
         }
 
         [Editable(false)]
@@ -253,7 +253,7 @@ namespace FsInfoCat.Models.Accounts
             get
             {
                 Account account = Creator;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 
@@ -274,13 +274,13 @@ namespace FsInfoCat.Models.Accounts
             get
             {
                 Account account = Modifier;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 
         public EditAccount(IAccount user)
         {
-            if (null == user)
+            if (user is null)
                 throw new ArgumentNullException("user");
             AccountID = user.AccountID;
             Creator = user.Creator;

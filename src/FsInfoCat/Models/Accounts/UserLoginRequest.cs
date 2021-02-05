@@ -21,7 +21,7 @@ namespace FsInfoCat.Models.Accounts
         public string LoginName
         {
             get { return _loginName; }
-            set { _loginName = (null == value) ? "" : value; }
+            set { _loginName = (value is null) ? "" : value; }
         }
 
         [Required()]
@@ -30,7 +30,7 @@ namespace FsInfoCat.Models.Accounts
         public string Password
         {
             get { return _password; }
-            set { _password = (null == value) ? "" : value; }
+            set { _password = (value is null) ? "" : value; }
         }
 
         public void Normalize()

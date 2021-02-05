@@ -16,7 +16,7 @@ namespace FsInfoCat.Models.HostDevices
         public string DisplayName
         {
             get { return _displayName; }
-            set { _displayName = (null == value) ? "" : value; }
+            set { _displayName = (value is null) ? "" : value; }
         }
 
         [MaxLength(DB.HostDevice.Max_Length_MachineIdentifer, ErrorMessage = DB.HostDevice.Error_Message_MachineIdentifer)]
@@ -24,7 +24,7 @@ namespace FsInfoCat.Models.HostDevices
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
-            set { _machineIdentifer = (null == value) ? "" : value; }
+            set { _machineIdentifer = (value is null) ? "" : value; }
         }
 
         [Required()]
@@ -35,7 +35,7 @@ namespace FsInfoCat.Models.HostDevices
         public string MachineName
         {
             get { return _machineName; }
-            set { _machineName = (null == value) ? "" : value; }
+            set { _machineName = (value is null) ? "" : value; }
         }
 
         [Display(Name = "Is Windows OS")]

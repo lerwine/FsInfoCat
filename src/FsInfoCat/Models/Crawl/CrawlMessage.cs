@@ -27,7 +27,7 @@ namespace FsInfoCat.Models.Crawl
 
         protected CrawlMessage(string message, MessageId id)
         {
-            if (null == message)
+            if (message is null)
                 throw new ArgumentNullException(nameof(message));
             if ((Message = message.Trim()).Length == 0)
                 throw new ArgumentException("Message cannot be empty", nameof(message));

@@ -40,7 +40,7 @@ namespace TestHelper
 
         public int CompareTo(ContentFile other)
         {
-            if (null == other)
+            if (other is null)
                 return 1;
             if (ReferenceEquals(this, other))
                 return 0;

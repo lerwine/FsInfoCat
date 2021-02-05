@@ -56,7 +56,7 @@ namespace FsInfoCat.PS
             _maxItems = maxItems;
             _token = _cancellationTokenSource.Token;
             _machineIdentifier = machineIdentifier;
-            _startingDirectories = new Queue<string>((null == startingDirectories) ? new string[0] : startingDirectories.Where(p => !string.IsNullOrEmpty(p)).ToArray());
+            _startingDirectories = new Queue<string>((startingDirectories is null) ? new string[0] : startingDirectories.Where(p => !string.IsNullOrEmpty(p)).ToArray());
             if (ttl < 0L)
             {
                 _stopWatch = null;
@@ -92,7 +92,7 @@ namespace FsInfoCat.PS
             GetVolumes = getVolumes;
             _maxItems = maxItems;
             _machineIdentifier = machineIdentifier;
-            _startingDirectories = new Queue<string>((null == startingDirectories) ? new string[0] : startingDirectories.Where(p => null != p).ToArray());
+            _startingDirectories = new Queue<string>((startingDirectories is null) ? new string[0] : startingDirectories.Where(p => null != p).ToArray());
             _token = _cancellationTokenSource.Token;
             IsExpired = new Func<bool>(() => _token.IsCancellationRequested || DateTime.Now >= stopAt);
             _stopWatch = null;

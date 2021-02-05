@@ -45,7 +45,7 @@ namespace FsInfoCat.Models.DB
         public string DisplayName
         {
             get { return _displayName; }
-            set { _displayName = (null == value) ? "" : value; }
+            set { _displayName = (value is null) ? "" : value; }
         }
 
         #endregion
@@ -63,7 +63,7 @@ namespace FsInfoCat.Models.DB
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
-            set { _machineIdentifer = (null == value) ? "" : value; }
+            set { _machineIdentifer = (value is null) ? "" : value; }
         }
 
         #endregion
@@ -86,7 +86,7 @@ namespace FsInfoCat.Models.DB
         public string MachineName
         {
             get { return _machineName; }
-            set { _machineName = (null == value) ? "" : value; }
+            set { _machineName = (value is null) ? "" : value; }
         }
 
         #endregion
@@ -110,7 +110,7 @@ namespace FsInfoCat.Models.DB
         public string Notes
         {
             get { return _notes; }
-            set { _notes = (null == value) ? "" : value; }
+            set { _notes = (value is null) ? "" : value; }
         }
 
         #endregion
@@ -133,7 +133,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 Account account = Creator;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 
@@ -153,7 +153,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 Account account = Modifier;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 
@@ -170,7 +170,7 @@ namespace FsInfoCat.Models.DB
 
         protected HostDevice(HostDevice host)
         {
-            if (null == host)
+            if (host is null)
                 throw new ArgumentNullException("host");
             HostDeviceID = host.HostDeviceID;
             DisplayName = host.DisplayName;
@@ -186,7 +186,7 @@ namespace FsInfoCat.Models.DB
 
         public HostDevice(HostDeviceRegRequest request, Guid createdBy) : this()
         {
-            if (null == request)
+            if (request is null)
                 throw new ArgumentNullException("request");
             HostDeviceID = Guid.NewGuid();
             MachineIdentifer = request.MachineIdentifer;
@@ -198,7 +198,7 @@ namespace FsInfoCat.Models.DB
 
         public HostDevice(HostDeviceRegRequest request, Account createdBy) : this()
         {
-            if (null == request)
+            if (request is null)
                 throw new ArgumentNullException("request");
             HostDeviceID = Guid.NewGuid();
             MachineIdentifer = request.MachineIdentifer;

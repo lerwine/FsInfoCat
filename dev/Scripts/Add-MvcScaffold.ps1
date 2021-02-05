@@ -29,7 +29,7 @@ namespace FsInfoCat.Models
         public string DisplayName
         {
             get { return _displayName; }
-            set { _displayName = (null == value) ? "" : value; }
+            set { _displayName = (value is null) ? "" : value; }
         }
 
         [Required()]
@@ -38,7 +38,7 @@ namespace FsInfoCat.Models
         public string Notes
         {
             get { return _notes; }
-            set { _notes = (null == value) ? "" : value; }
+            set { _notes = (value is null) ? "" : value; }
         }
 
         [Required()]

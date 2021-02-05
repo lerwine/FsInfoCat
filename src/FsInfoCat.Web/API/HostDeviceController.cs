@@ -36,14 +36,14 @@ namespace FsInfoCat.Web.API
 
         public static async Task<RequestResponse<HostDevice>> Register(Guid userId, FsInfoDataContext dbContext, HostDeviceRegRequest request)
         {
-            if (null == request)
+            if (request is null)
                 return await Task.FromResult(new RequestResponse<HostDevice>(null, "Invalid request."));
             IList<ValidationResult> validation = request.ValidateAll();
             if (validation.Count > 0)
                 return await Task.FromResult(new RequestResponse<HostDevice>(null, validation[0].ErrorMessage));
             HostDevice matching = await ViewModelHelper.LookUp(dbContext.HostDevice, request.MachineName, request.MachineIdentifer);
             RequestResponse<HostDevice> result;
-            if (null == matching)
+            if (matching is null)
             {
                 result = new RequestResponse<HostDevice>(new HostDevice(request, userId));
                 dbContext.HostDevice.Add(result.Result);
@@ -83,7 +83,7 @@ namespace FsInfoCat.Web.API
         public async Task<ActionResult<bool>> UnRegister(Guid id)
         {
             return await _context.HostDevice.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
-                if (null == task.Result)
+                if (task.Result is null)
                     return false;
                 _context.HostDevice.Remove(task.Result);
                 _context.SaveChanges();

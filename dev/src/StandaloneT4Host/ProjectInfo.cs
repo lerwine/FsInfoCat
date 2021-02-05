@@ -43,7 +43,7 @@ namespace StandaloneT4Host
 
         public ProjectInfo(FileInfo projectFile)
         {
-            if (null == projectFile)
+            if (projectFile is null)
                 throw new ArgumentNullException("projectFile");
             if (!projectFile.Exists)
                 throw new FileNotFoundException("Project file not found", projectFile.FullName);
@@ -57,7 +57,7 @@ namespace StandaloneT4Host
                     "projectFile", exc
                 );
             }
-            if (null == xmlDocument.DocumentElement)
+            if (xmlDocument.DocumentElement is null)
                 throw new ArgumentException("No XML data loaded");
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDocument.NameTable);
             nsmgr.AddNamespace("msb", xmlDocument.DocumentElement.NamespaceURI);

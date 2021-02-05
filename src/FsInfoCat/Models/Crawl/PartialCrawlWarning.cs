@@ -23,7 +23,7 @@ namespace FsInfoCat.Models.Crawl
             get
             {
                 Collection<string> roots = _notCrawled;
-                if (null == roots)
+                if (roots is null)
                     _notCrawled = roots = new Collection<string>();
                 return roots;
             }
@@ -41,7 +41,7 @@ namespace FsInfoCat.Models.Crawl
         /// of the <seealso cref="MessageId" /> (<paramref name="id" />) value.</remarks>
         public PartialCrawlWarning(MessageId id, IEnumerable<string> notCrawled) : base(id)
         {
-            if (null == notCrawled)
+            if (notCrawled is null)
                 throw new ArgumentNullException(nameof(notCrawled));
             _notCrawled = new Collection<string>(notCrawled.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray());
             if (_notCrawled.Count == 0)
@@ -60,7 +60,7 @@ namespace FsInfoCat.Models.Crawl
         /// <para><paramref name="notCrawled" /> was empty or or all items contained only white space.</para></exception>
         public PartialCrawlWarning(string message, MessageId id, IEnumerable<string> notCrawled) : base(id)
         {
-            if (null == notCrawled)
+            if (notCrawled is null)
                 throw new ArgumentNullException(nameof(notCrawled));
             _notCrawled = new Collection<string>(notCrawled.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray());
             if (_notCrawled.Count == 0)

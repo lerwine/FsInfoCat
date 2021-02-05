@@ -22,7 +22,7 @@ namespace TestHelper
         public string Description
         {
             get => _description;
-            set => _description = (null == value) ? "" : value;
+            set => _description = (value is null) ? "" : value;
         }
 
         [XmlElement("TemplateRef", typeof(int))]
@@ -31,7 +31,7 @@ namespace TestHelper
             get
             {
                 Collection<int> items = _templateRefs;
-                if (null == items)
+                if (items is null)
                     _templateRefs = items = new Collection<int>();
                 return items;
             }

@@ -419,7 +419,7 @@ namespace Tests
         public void ImportTest(string base64EncodedHash, HashResult expectedResult)
         {
             PwHash? target = PwHash.Import(base64EncodedHash);
-            if (null == expectedResult)
+            if (expectedResult is null)
                 Assert.IsFalse(target.HasValue);
             else
             {
@@ -461,7 +461,7 @@ namespace Tests
         public void Create2Test(string rawPW, ulong saltBits, HashResult expectedResult)
         {
             PwHash? target = PwHash.Create(rawPW, saltBits);
-            if (null == expectedResult)
+            if (expectedResult is null)
                 Assert.IsFalse(target.HasValue);
             else
             {

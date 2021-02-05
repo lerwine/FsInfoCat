@@ -18,7 +18,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 Account host = Account;
-                if (null == host)
+                if (host is null)
                     return "";
                 string n = host.DisplayName;
                 return (string.IsNullOrWhiteSpace(n)) ? host.LoginName : host.DisplayName;
@@ -36,7 +36,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 HostDevice host = Host;
-                return (null == host) ? "" : host.Name;
+                return (host is null) ? "" : host.Name;
             }
         }
 
@@ -57,7 +57,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 Account account = Creator;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 

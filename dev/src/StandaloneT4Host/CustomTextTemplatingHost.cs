@@ -143,7 +143,7 @@ namespace StandaloneT4Host
 
         public void SetOutputEncoding(Encoding encoding, bool fromOutputDirective)
         {
-            FileEncoding = (null == encoding) ? new UTF8Encoding(false, false) : encoding;
+            FileEncoding = (encoding is null) ? new UTF8Encoding(false, false) : encoding;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace FsInfoCat.Web.Models
             throw new NotImplementedException();
             // HostDeviceRegRequest regRequest = HostDeviceRegRequest.CreateForLocal();
             // HostDevice host = await ViewModelHelper.LookUp(dbSet, regRequest.MachineName, regRequest.MachineIdentifer);
-            // if (null == host)
+            // if (host is null)
             //     return new AppHostIndexViewModel(regRequest, new Guid(user.Identity.Name));
             // return new AppHostIndexViewModel(host);
         }

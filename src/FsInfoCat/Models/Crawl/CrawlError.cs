@@ -56,9 +56,9 @@ namespace FsInfoCat.Models.Crawl
         /// <param name="exception"><seealso cref="Exception" /> that is the cause of the error.</param>
         /// <exception cref="ArgumentNullException"><paramref name="exception" /> was null.</exception>
         public CrawlError(Exception exception, MessageId id)
-            : base((null == exception) ? "" : (string.IsNullOrWhiteSpace(exception.Message)) ? exception.GetType().Name : exception.Message, id)
+            : base((exception is null) ? "" : (string.IsNullOrWhiteSpace(exception.Message)) ? exception.GetType().Name : exception.Message, id)
         {
-            if (null == exception)
+            if (exception is null)
                 throw new ArgumentNullException(nameof(exception));
             List<CrawlError> innerErrors;
             if (exception is AggregateException)

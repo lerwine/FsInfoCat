@@ -35,7 +35,7 @@ namespace FsInfoCat.Util
                     NameComparer = nameComparer ?? oldContainer.NameComparer;
                 _target = target ?? throw new ArgumentNullException(nameof(target));
                 target._container = this;
-                if (null == oldContainer)
+                if (oldContainer is null)
                     return;
                 var items = target._sites.Select(s => new
                 {

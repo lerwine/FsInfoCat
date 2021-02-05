@@ -254,7 +254,7 @@ namespace FsInfoCat.Util
                 private int Add(ComponentList list, int index)
                 {
                     Add(true);
-                    if (null == list)
+                    if (list is null)
                     {
                         Component.Site = this;
                         return index;
@@ -434,7 +434,7 @@ namespace FsInfoCat.Util
                 /// <paramref name="container">.</exception>
                 internal static bool Remove(IComponent item, AttachableContainer container, ComponentList list = null)
                 {
-                    if (null == item)
+                    if (item is null)
                         return false;
                     object containerSyncRoot = ValidateList(container, list, false, out object listSyncRoot);
                     Monitor.Enter(containerSyncRoot);

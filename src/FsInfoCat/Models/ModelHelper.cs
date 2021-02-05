@@ -23,13 +23,13 @@ namespace FsInfoCat.Models
         public static readonly Regex PathOrUrlRegex = new Regex(PATTERN_PATH_OR_URL, RegexOptions.Compiled);
         public static readonly Regex NonNormalWsRegex = new Regex(@" \s+|(?! )\s+", RegexOptions.Compiled);
         public static readonly Regex Base64Regex = new Regex(PATTERN_BASE64, RegexOptions.Compiled);
-        public static string CoerceAsString(object baseValue) => (null == baseValue) ? "" : ((baseValue is string) ? (string)baseValue : baseValue.ToString());
-        public static string CoerceAsTrimmedString(object baseValue) => (null == baseValue) ? "" : ((baseValue is string) ? (string)baseValue : baseValue.ToString()).Trim();
-        public static string CoerceAsWsNormalizedString(object baseValue) => CoerceAsWsNormalized((null == baseValue || baseValue is string) ? baseValue as string : baseValue.ToString());
+        public static string CoerceAsString(object baseValue) => (baseValue is null) ? "" : ((baseValue is string) ? (string)baseValue : baseValue.ToString());
+        public static string CoerceAsTrimmedString(object baseValue) => (baseValue is null) ? "" : ((baseValue is string) ? (string)baseValue : baseValue.ToString()).Trim();
+        public static string CoerceAsWsNormalizedString(object baseValue) => CoerceAsWsNormalized((baseValue is null || baseValue is string) ? baseValue as string : baseValue.ToString());
         public static Guid CoerceAsGuid(object baseValue) => (null != baseValue && baseValue is Guid) ? (Guid)baseValue : Guid.Empty;
         public static bool CoerceAsBoolean(object baseValue) => (null != baseValue && baseValue is bool) ? (bool)baseValue : false;
-        public static string CoerceAsNonNull(string value) => (null == value) ? "" : value;
-        public static string CoerceAsTrimmed(string value) => (null == value) ? "" : value.Trim();
+        public static string CoerceAsNonNull(string value) => (value is null) ? "" : value;
+        public static string CoerceAsTrimmed(string value) => (value is null) ? "" : value.Trim();
         public static string CoerceAsWsNormalized(string value) => ((value = CoerceAsTrimmed(value)).Length > 0) ? NonNormalWsRegex.Replace(value, " ") : value;
         public static DateTime CoerceAsLocalTime(DateTime value)
         {
@@ -61,9 +61,9 @@ namespace FsInfoCat.Models
         public static DateTime CoerceAsUniversalTimeOrDefault(DateTime? value, DateTime defaultValue) => CoerceAsUniversalTime((value.HasValue) ?  value.Value : default);
         public static IList<ValidationResult> ValidateForSave(IModficationAuditable target, Account modifiedBy, bool isCreate)
         {
-            if (null == target)
+            if (target is null)
                 throw new ArgumentNullException("target");
-            if (null == modifiedBy)
+            if (modifiedBy is null)
                 throw new ArgumentNullException("modifiedBy");
             target.ModifiedOn = DateTime.Now;
             target.ModifiedBy = modifiedBy.AccountID;

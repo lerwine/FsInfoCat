@@ -19,7 +19,7 @@ namespace TestHelper
         public string Description
         {
             get => _description;
-            set => _description = (null == value) ? "" : value;
+            set => _description = (value is null) ? "" : value;
         }
 
         [XmlArray()]
@@ -29,7 +29,7 @@ namespace TestHelper
             get
             {
                 Collection<RootDefinition> items = _roots;
-                if (null == items)
+                if (items is null)
                     _roots = items = new Collection<RootDefinition>();
                 return items;
             }
@@ -43,7 +43,7 @@ namespace TestHelper
             get
             {
                 Collection<TestDefinition> items = _tests;
-                if (null == items)
+                if (items is null)
                     _tests = items = new Collection<TestDefinition>();
                 return items;
             }
@@ -60,14 +60,14 @@ namespace TestHelper
         //     Collection<ContentTemplate> templatesCollection = new Collection<ContentTemplate>();
         //     foreach (RootDefinition root in Roots)
         //     {
-        //         if (null == root)
+        //         if (root is null)
         //             continue;
         //         Hashtable h = new Hashtable();
 
         //         rootsHashtable.Add(root.ID, new Collection<string>(root.TemplateRefs.Select(t =>
         //         {
         //             ContentTemplate contentTemplate = templates.FirstOrDefault(c => c.ID == t);
-        //             if (null == contentTemplate)
+        //             if (contentTemplate is null)
         //                 throw new InvalidOperationException("Template ID not found (" + t + " in InputSet['" + Description + "'].Roots[" + r.ID + "])");
         //             if (!templatesCollection.Contains(contentTemplate))
         //                 templatesCollection.Add(contentTemplate);
@@ -81,7 +81,7 @@ namespace TestHelper
         //     // foreach (TestDefinition test in Tests)
         //     // {
         //     //     index++;
-        //     //     if (null == test)
+        //     //     if (test is null)
         //     //         continue;
         //     //     Hashtable item = new Hashtable();
         //     //     StringBuilder sb = new StringBuilder(description).Append(" | Import-FsCrawlJobTestData");

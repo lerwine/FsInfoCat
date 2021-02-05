@@ -127,7 +127,7 @@ namespace FsInfoCat.Web.Controllers
                     {
                         UserCredential userCredential = await ViewModelHelper.LookUp(_context.UserCredential, id);
                         Guid updatedBy = new Guid(User.Identity.Name);
-                        if (null == userCredential)
+                        if (userCredential is null)
                         {
                             userCredential = new UserCredential
                             {

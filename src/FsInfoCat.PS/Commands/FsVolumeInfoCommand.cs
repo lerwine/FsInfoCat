@@ -19,7 +19,7 @@ namespace FsInfoCat.PS.Commands
         {
             PSVariable psVariable = SessionState.PSVariable.Get(VAR_NAME_FS_VOLUME_INFO_REGISTRATION);
             VolumeRegistration volumeRegistration;
-            if (null == psVariable || !psVariable.Options.HasFlag(ScopedItemOptions.AllScope))
+            if (psVariable is null || !psVariable.Options.HasFlag(ScopedItemOptions.AllScope))
             {
                 volumeRegistration = new VolumeRegistration(new Collection<PSObject>());
                 SessionState.PSVariable.Set(new PSVariable(VAR_NAME_FS_VOLUME_INFO_REGISTRATION, volumeRegistration, ScopedItemOptions.Constant | ScopedItemOptions.AllScope));
@@ -33,7 +33,7 @@ namespace FsInfoCat.PS.Commands
             else
             {
                 object obj = psVariable.Value;
-                if (null == obj)
+                if (obj is null)
                     throw new PSInvalidOperationException(EXCEPTION_MESSAGE_REGISTRATION_VAR_ERROR + ": Existing variable is null.");
                 if (null == (volumeRegistration = ((obj is PSObject) ? ((PSObject)obj).BaseObject : obj) as VolumeRegistration))
                     throw new PSInvalidOperationException(EXCEPTION_MESSAGE_REGISTRATION_VAR_ERROR + ": Existing variable is incorrect type.");
@@ -75,12 +75,12 @@ namespace FsInfoCat.PS.Commands
 
             public bool Equals(DriveInfo other)
             {
-                return null == other && DriveFormat == other.DriveFormat && VolumeName == other.VolumeLabel && RootPathName == other.RootDirectory.FullName;
+                return other is null && DriveFormat == other.DriveFormat && VolumeName == other.VolumeLabel && RootPathName == other.RootDirectory.FullName;
             }
 
             public override bool Equals(object obj)
             {
-                if (null == obj)
+                if (obj is null)
                     return false;
                 if (obj is PSObject)
                     obj = ((PSObject)obj).BaseObject;

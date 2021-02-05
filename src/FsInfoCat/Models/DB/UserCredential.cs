@@ -40,7 +40,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 string h = _hashString;
-                if (null == h)
+                if (h is null)
                     _hashString = h = (_pwHash.HasValue) ? _pwHash.Value.ToString() : "";
                 return h;
             }
@@ -89,7 +89,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 Account account = Creator;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 
@@ -109,7 +109,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 Account account = Modifier;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 

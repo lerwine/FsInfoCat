@@ -25,7 +25,7 @@ namespace TestHelper
         public string FileName
         {
             get => _fileName;
-            set => _fileName = (null == value) ? "" : value;
+            set => _fileName = (value is null) ? "" : value;
         }
 
         [XmlAttribute()]
@@ -42,7 +42,7 @@ namespace TestHelper
             get
             {
                 Collection<ContentFile> items = _files;
-                if (null == items)
+                if (items is null)
                     _files = items = new Collection<ContentFile>();
                 return items;
             }
@@ -56,7 +56,7 @@ namespace TestHelper
             get
             {
                 Collection<ContentFolder> items = _folders;
-                if (null == items)
+                if (items is null)
                     _folders = items = new Collection<ContentFolder>();
                 return items;
             }

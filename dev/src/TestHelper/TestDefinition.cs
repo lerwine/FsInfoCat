@@ -43,7 +43,7 @@ namespace TestHelper
             get
             {
                 Collection<ExpectedResult> items = _expected;
-                if (null == items)
+                if (items is null)
                     _expected = items = new Collection<ExpectedResult>();
                 return items;
             }

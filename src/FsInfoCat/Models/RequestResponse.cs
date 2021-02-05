@@ -18,7 +18,7 @@ namespace FsInfoCat.Models
         public string Message
         {
             get { return _message; }
-            set { _message = (null == value) ? "" : value; }
+            set { _message = (value is null) ? "" : value; }
         }
     }
 }

@@ -30,7 +30,7 @@ namespace FsInfoCat.PS
         internal static bool Run(string startingDirectory, long maxItems, FsCrawlJob job, out long totalItems)
         {
             IFsDirectory parent = FsRoot.ImportDirectory(job.FsRoots, startingDirectory, job.GetVolumes, out string realPath);
-            if (null == parent)
+            if (parent is null)
             {
                 totalItems = 0L;
                 return true;
@@ -65,7 +65,7 @@ namespace FsInfoCat.PS
                 files = new FileInfo[0];
                 try { directories = parentDirectoryInfo.GetDirectories(); } catch { directories = new DirectoryInfo[0]; }
             }
-            if (null == directories)
+            if (directories is null)
             {
                 try { directories = parentDirectoryInfo.GetDirectories(); }
                 catch (Exception exc)
@@ -81,7 +81,7 @@ namespace FsInfoCat.PS
             {
                 FileInfo fileInfo = files[i];
                 FsFile fsFile = parent.ChildNodes.OfType<FsFile>().FirstOrDefault(f => f.Name.Equals(fileInfo.Name));
-                if (null == fsFile)
+                if (fsFile is null)
                 {
                     parent.ChildNodes.Add(new FsFile
                     {
@@ -122,7 +122,7 @@ namespace FsInfoCat.PS
             {
                 DirectoryInfo directoryInfo = directories[i];
                 FsDirectory fsDirectory = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(f => f.Name.Equals(directoryInfo.Name));
-                if (null == fsDirectory)
+                if (fsDirectory is null)
                 {
                     ++_totalItems;
                     fsDirectory = new FsDirectory

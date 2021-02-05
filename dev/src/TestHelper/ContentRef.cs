@@ -10,7 +10,7 @@ namespace TestHelper
         public string Path
         {
             get => _path;
-            set => _path = (null == value) ? "" : value;
+            set => _path = (value is null) ? "" : value;
         }
     }
 }

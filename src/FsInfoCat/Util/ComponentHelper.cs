@@ -20,7 +20,7 @@ namespace FsInfoCat.Util
 
         public static IComponent GetOwner(this ISite site)
         {
-            if (null == site)
+            if (site is null)
                 return null;
             INestedContainer container = site.Container as INestedContainer;
             return (container is null) ? null : container.Owner;
@@ -80,7 +80,7 @@ namespace FsInfoCat.Util
             Stack<ISite> segments = new Stack<ISite>();
             ISite site = component.Site;
 
-            if (null == site)
+            if (site is null)
             {
                 if (includeCurrent)
                     segments.Push(new Site(component, null, null));

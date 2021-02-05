@@ -103,7 +103,7 @@ namespace FsInfoCat.Util
 
         protected int IndexOf(IComponent component)
         {
-            if (null == component)
+            if (component is null)
                 return -1;
             Monitor.Enter(_syncRoot);
             try
@@ -121,7 +121,7 @@ namespace FsInfoCat.Util
 
         public int IndexOf(string name)
         {
-            if (null == name)
+            if (name is null)
                 return -1;
             IEqualityComparer<string> nameComparer = _container.NameComparer;
             Monitor.Enter(_syncRoot);

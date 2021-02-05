@@ -78,9 +78,9 @@ namespace FsInfoCat.Util
 
         public PwHash(IEnumerable<byte> sha512HashBytes, int hashStartIndex, IEnumerable<byte> saltBytes, int saltStartIndex)
         {
-            if (null == sha512HashBytes)
+            if (sha512HashBytes is null)
                 throw new ArgumentNullException("sha512HashBytes");
-            if (null == saltBytes)
+            if (saltBytes is null)
                 throw new ArgumentNullException("saltBytes");
             if (hashStartIndex < 0)
                 throw new ArgumentOutOfRangeException("hashStartIndex");
@@ -119,7 +119,7 @@ namespace FsInfoCat.Util
 
         public PwHash(IEnumerable<byte> hashAndSaltBytes, int startIndex)
         {
-            if (null == hashAndSaltBytes)
+            if (hashAndSaltBytes is null)
                 throw new ArgumentNullException("hashAndSaltBytes");
             if (startIndex < 0)
                 throw new ArgumentOutOfRangeException("startIndex");
@@ -295,7 +295,7 @@ namespace FsInfoCat.Util
 
         public override bool Equals(object obj)
         {
-            if (null == obj)
+            if (obj is null)
                 return false;
             if (obj is PwHash)
                 return Equals((PwHash)obj);

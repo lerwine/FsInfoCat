@@ -77,7 +77,7 @@ namespace TestHelper
                         {
                             System.IO.FileInfo fileInfo = new System.IO.FileInfo(pathInfo.ProviderPath);
                             if (fileInfo.Exists)
-                                return new FileToProcess(fileInfo, (null == pathInfo.Provider) ? "" : pathInfo.Provider.Name, pathInfo.Path);
+                                return new FileToProcess(fileInfo, (pathInfo.Provider is null) ? "" : pathInfo.Provider.Name, pathInfo.Path);
                         }
                         catch { /* Ignore */ }
                     return new FileToProcess(pathInfo);
@@ -88,7 +88,7 @@ namespace TestHelper
             {
                 Collection<string> providerPath = GetResolvedProviderPathFromPSPath(path, out ProviderInfo provider);
                 if (providerPath.Count == 1)
-                    return new FileToProcess(path, providerPath[0], (null == provider) ? "" : provider.Name);
+                    return new FileToProcess(path, providerPath[0], (provider is null) ? "" : provider.Name);
             }
             catch { /* Ignore */ }
 
@@ -217,7 +217,7 @@ namespace TestHelper
                 {
                     WriteProgress(new ProgressRecord(0, ACTIVITY_NAME, STATUS_DESCRIPTION_OPENING_ITEM) { CurrentOperation = _filesToProcess[index].ProviderPath, PercentComplete = (index * 100) / totalCount });
                     FileToProcess fileToProcess = _filesToProcess[index];
-                    if (null == fileToProcess.FileInfo)
+                    if (fileToProcess.FileInfo is null)
                         ProcessOtherProviderPath(_filesToProcess[index]);
                     else
                         ProcessFileItem(_filesToProcess[index].FileInfo);
@@ -361,7 +361,7 @@ namespace TestHelper
         private System.IO.TextReader ConvertToTextReader(IContentReader reader)
         {
             IList block = reader.Read(1L);
-            if (null == block || block.Count == 0 || null == block[0])
+            if (block is null || block.Count == 0 || block[0] is null)
                 return new System.IO.StringReader("");
             object o = block[0];
             if (o is PSObject)
@@ -388,7 +388,7 @@ namespace TestHelper
                     {
                         foreach (object obj in block)
                         {
-                            if (null == obj)
+                            if (obj is null)
                                 continue;
                             if (obj is PSObject)
                             {
@@ -430,7 +430,7 @@ namespace TestHelper
                     {
                         foreach (object obj in block)
                         {
-                            if (null == obj)
+                            if (obj is null)
                                 continue;
                             if (obj is PSObject)
                             {
@@ -503,7 +503,7 @@ namespace TestHelper
                         {
                             foreach (object obj in block)
                             {
-                                if (null == obj)
+                                if (obj is null)
                                     continue;
                                 if (obj is PSObject)
                                 {
@@ -571,7 +571,7 @@ namespace TestHelper
                 FileInfo = null;
                 ProviderPath = fileInfo.FullName;
                 MSHPath = mshPath;
-                ProviderName = (null == providerName) ? "" : providerName;
+                ProviderName = (providerName is null) ? "" : providerName;
             }
 
             internal FileToProcess(PathInfo pathInfo)
@@ -579,7 +579,7 @@ namespace TestHelper
                 FileInfo = null;
                 ProviderPath = pathInfo.ProviderPath;
                 MSHPath = pathInfo.Path;
-                ProviderName = (null == pathInfo.Provider || null == pathInfo.Provider.Name) ? "" : pathInfo.Provider.Name;
+                ProviderName = (pathInfo.Provider is null || pathInfo.Provider.Name is null) ? "" : pathInfo.Provider.Name;
             }
 
             internal FileToProcess(string path, string providerPath, string providerName)

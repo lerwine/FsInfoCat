@@ -40,7 +40,7 @@ namespace TestHelper
             get
             {
                 Collection<ContentRef> items = _items;
-                if (null == items)
+                if (items is null)
                     _items = items = new Collection<ContentRef>();
                 return items;
             }

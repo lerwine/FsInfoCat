@@ -47,10 +47,10 @@ namespace DevHelper
             _rank = 0;
             _elementType = _declaringType = null;
             _shortHand = _name = name;
-            _namespace = (null == ns) ? "" : ns;
+            _namespace = (ns is null) ? "" : ns;
             _isValueType = isValueType;
             _defaultValue = (isValueType) ? "default(" + _shortHand + ")" : "null";
-            _genericArguments = new ReadOnlyCollection<CsTypeModel>((null == genericArguments) ? new CsTypeModel[0] : genericArguments.Where(a => null != a).ToArray());
+            _genericArguments = new ReadOnlyCollection<CsTypeModel>((genericArguments is null) ? new CsTypeModel[0] : genericArguments.Where(a => null != a).ToArray());
         }
         private CsTypeModel(CsTypeModel elementType, int rank)
         {
@@ -89,11 +89,11 @@ namespace DevHelper
             _namespace = "";
             _isValueType = isValueType;
             _defaultValue = (isValueType) ? "default(" + _shortHand + ")" : "null";
-            _genericArguments = new ReadOnlyCollection<CsTypeModel>((null == genericArguments) ? new CsTypeModel[0] : genericArguments.Where(a => null != a).ToArray());
+            _genericArguments = new ReadOnlyCollection<CsTypeModel>((genericArguments is null) ? new CsTypeModel[0] : genericArguments.Where(a => null != a).ToArray());
         }
         public CsTypeModel(Type type)
         {
-            if (null == type)
+            if (type is null)
                 throw new ArgumentNullException("type");
             _isArray = type.IsArray;
             _isEnum = type.IsEnum;
@@ -168,15 +168,15 @@ namespace DevHelper
                     return;
                 }
                 _genericArguments = new ReadOnlyCollection<CsTypeModel>(type.GetGenericArguments().Select(a => new CsTypeModel(a)).ToArray());
-                _namespace = (null == type.Namespace) ? "" : type.Namespace;
+                _namespace = (type.Namespace is null) ? "" : type.Namespace;
                 _shortHand = _name = GenericNameRegex.Replace(type.Name, "") + "<" + string.Join(", ", _genericArguments.Select(a => a._shortHand).ToArray()) + ">";
                 _isNullableStruct = false;
                 _isValueType = type.IsValueType;
-                _namespace = (null == type.Namespace) ? "" : type.Namespace;
+                _namespace = (type.Namespace is null) ? "" : type.Namespace;
                 _defaultValue = (_isValueType) ? "default(" + _shortHand + ")" : "null";
                 return;
             }
-            _namespace = (null == type.Namespace) ? "" : type.Namespace;
+            _namespace = (type.Namespace is null) ? "" : type.Namespace;
             _genericArguments = new ReadOnlyCollection<CsTypeModel>(new CsTypeModel[0]);
             _name = type.Name;
             _isNullableStruct = false;

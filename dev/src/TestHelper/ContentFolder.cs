@@ -20,7 +20,7 @@ namespace TestHelper
             get
             {
                 Collection<ContentFile> items = _files;
-                if (null == items)
+                if (items is null)
                     _files = items = new Collection<ContentFile>();
                 return items;
             }
@@ -34,7 +34,7 @@ namespace TestHelper
             get
             {
                 Collection<ContentFolder> items = _folders;
-                if (null == items)
+                if (items is null)
                     _folders = items = new Collection<ContentFolder>();
                 return items;
             }
@@ -50,7 +50,7 @@ namespace TestHelper
             Collection<ContentFolder> result = new Collection<ContentFolder>();
             foreach (ContentFolder f in folders1.Concat(folders2).OrderBy(a => a))
             {
-                if (null == f)
+                if (f is null)
                     continue;
                 int index = result.IndexOf(f);
                 if (index < 0)
@@ -72,7 +72,7 @@ namespace TestHelper
 
         public int CompareTo(ContentFolder other)
         {
-            if (null == other)
+            if (other is null)
                 return 1;
             if (ReferenceEquals(this, other))
                 return 0;
@@ -116,14 +116,14 @@ namespace TestHelper
                     {
                         if (enumeratorB.MoveNext())
                         {
-                            if (null == enumeratorA.Current)
+                            if (enumeratorA.Current is null)
                             {
                                 if (null != enumeratorB.Current)
                                     return 1;
                             }
                             else
                             {
-                                if (null == enumeratorB.Current)
+                                if (enumeratorB.Current is null)
                                     return -1;
                                 if (!ReferenceEquals(enumeratorA.Current, enumeratorB.Current) &&
                                     (result = enumeratorA.Current.CompareTo(enumeratorB.Current, syncA, syncB)) != 0)
@@ -163,14 +163,14 @@ namespace TestHelper
                     {
                         if (enumeratorB.MoveNext())
                         {
-                            if (null == enumeratorA.Current)
+                            if (enumeratorA.Current is null)
                             {
                                 if (null != enumeratorB.Current)
                                     return false;
                             }
                             else
                             {
-                                if (null == enumeratorB.Current || !(ReferenceEquals(enumeratorA.Current, enumeratorB.Current) || enumeratorA.Current.Equals(enumeratorB.Current, syncA, syncB)))
+                                if (enumeratorB.Current is null || !(ReferenceEquals(enumeratorA.Current, enumeratorB.Current) || enumeratorA.Current.Equals(enumeratorB.Current, syncA, syncB)))
                                     return false;
                             }
                         }

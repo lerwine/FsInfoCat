@@ -23,7 +23,7 @@ namespace TestHelper
         public string Name
         {
             get => _name;
-            set => _name = (null == value) ? "" : value;
+            set => _name = (value is null) ? "" : value;
         }
 
         [XmlAttribute()]
@@ -48,7 +48,7 @@ namespace TestHelper
 
         public virtual int CompareTo(ContentItem other)
         {
-            if (null == other)
+            if (other is null)
                 return 1;
             if (ReferenceEquals(this, other))
                 return 0;
@@ -87,7 +87,7 @@ namespace TestHelper
             return templates.Select(t =>
             {
                 ContentFile f = t.Files.FirstOrDefault(i => i._id == id);
-                return (null == f) ? FindFileByID(id, t.Folders) : f;
+                return (f is null) ? FindFileByID(id, t.Folders) : f;
             }).FirstOrDefault(i => null != i);
         }
 
@@ -96,7 +96,7 @@ namespace TestHelper
             return templates.Select(t =>
             {
                 ContentFolder f = t.Folders.FirstOrDefault(i => i._id == id);
-                return (null == f) ? FindFolderByID(id, t.Folders) : f;
+                return (f is null) ? FindFolderByID(id, t.Folders) : f;
             }).FirstOrDefault(i => null != i);
         }
 
@@ -105,7 +105,7 @@ namespace TestHelper
             return folders.Select(t =>
             {
                 ContentFile f = t.Files.FirstOrDefault(i => i._id == id);
-                return (null == f) ? FindFileByID(id, t.Folders) : f;
+                return (f is null) ? FindFileByID(id, t.Folders) : f;
             }).FirstOrDefault(i => null != i);
         }
 
@@ -114,15 +114,15 @@ namespace TestHelper
             return folders.Select(t =>
             {
                 ContentFolder f = t.Folders.FirstOrDefault(i => i._id == id);
-                return (null == f) ? FindFolderByID(id, t.Folders) : f;
+                return (f is null) ? FindFolderByID(id, t.Folders) : f;
             }).FirstOrDefault(i => null != i);
         }
 
         public static int CompareNames(string x, string y)
         {
-            if (null == x)
-                return (null == y) ? 0 : 1;
-            if (null == y)
+            if (x is null)
+                return (y is null) ? 0 : 1;
+            if (y is null)
                 return -1;
             if (x.Length == 0)
                 return (y.Length == 0) ? 0 : -1;

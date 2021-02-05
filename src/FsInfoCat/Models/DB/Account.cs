@@ -58,7 +58,7 @@ namespace FsInfoCat.Models.DB
         public string DisplayName
         {
             get { return _displayName; }
-            set { _displayName = (null == value) ? "" : value; }
+            set { _displayName = (value is null) ? "" : value; }
         }
 
         [Required(ErrorMessage = Error_Message_Login_Empty)]
@@ -69,7 +69,7 @@ namespace FsInfoCat.Models.DB
         public string LoginName
         {
             get { return _loginName; }
-            set { _loginName = (null == value) ? "" : value; }
+            set { _loginName = (value is null) ? "" : value; }
         }
 
         [Display(Name = "Role")]
@@ -78,7 +78,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 string n = _roleDisplay;
-                if (null == n)
+                if (n is null)
                 {
                     n = Enum.GetName(_role.GetType(), _role);
                     _roleDisplay = n = _role.GetType().GetField(n).GetCustomAttributes(typeof(DescriptionAttribute), false).OfType<DescriptionAttribute>()
@@ -112,7 +112,7 @@ namespace FsInfoCat.Models.DB
         public string Notes
         {
             get { return _notes; }
-            set { _notes = (null == value) ? "" : value; }
+            set { _notes = (value is null) ? "" : value; }
         }
 
         [Editable(false)]
@@ -131,7 +131,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 Account account = Creator;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 
@@ -151,7 +151,7 @@ namespace FsInfoCat.Models.DB
             get
             {
                 Account account = Modifier;
-                return (null == account) ? "" : account.Name;
+                return (account is null) ? "" : account.Name;
             }
         }
 
@@ -204,7 +204,7 @@ namespace FsInfoCat.Models.DB
 
         public Account(string loginName, string pwHash, UserRole role, Account creator)
         {
-            if (null == creator)
+            if (creator is null)
                 throw new ArgumentNullException("creator");
             LoginName = loginName;
             Role = role;
@@ -221,7 +221,7 @@ namespace FsInfoCat.Models.DB
 
         public Account(string loginName, UserRole role, Account creator)
         {
-            if (null == creator)
+            if (creator is null)
                 throw new ArgumentNullException("creator");
             LoginName = loginName;
             Role = role;
@@ -232,7 +232,7 @@ namespace FsInfoCat.Models.DB
 
         public Account(IAccount user)
         {
-            if (null == user)
+            if (user is null)
                 throw new ArgumentNullException("user");
             AccountID = user.AccountID;
             Creator = user.Creator;

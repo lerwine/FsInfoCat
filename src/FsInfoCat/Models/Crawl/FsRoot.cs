@@ -78,7 +78,7 @@ namespace FsInfoCat.Models.Crawl
 
         public FsRoot(IVolumeInfo driveInfo) : this()
         {
-            if (null == driveInfo)
+            if (driveInfo is null)
                 throw new ArgumentNullException(nameof(driveInfo));
             DriveFormat = driveInfo.DriveFormat;
             VolumeName = driveInfo.VolumeName;
@@ -138,28 +138,28 @@ namespace FsInfoCat.Models.Crawl
         public int GetHashCode(IFsChildNode obj)
         {
             string n;
-            return StringComparer.InvariantCultureIgnoreCase.GetHashCode((null == obj || null == (n = obj.Name)) ? "" : n);
+            return StringComparer.InvariantCultureIgnoreCase.GetHashCode((obj is null || null == (n = obj.Name)) ? "" : n);
         }
 
         public bool Equals(IFsChildNode x, IFsChildNode y)
         {
-            if (null == x)
-                return null == y;
-            if (null == y)
+            if (x is null)
+                return y is null;
+            if (y is null)
                 return false;
             if (ReferenceEquals(x, y))
                 return true;
             string a = x.Name;
             string b = y.Name;
-            if (null == a)
-                return null == b;
+            if (a is null)
+                return b is null;
             return null != b && StringComparer.InvariantCultureIgnoreCase.Equals(a, b);
         }
 
         public override string ToString()
         {
             if (string.IsNullOrWhiteSpace(RootPathName))
-                return (null == VolumeName) ? "" : " " + VolumeName.Trim();
+                return (VolumeName is null) ? "" : " " + VolumeName.Trim();
             if (String.IsNullOrWhiteSpace(VolumeName))
                 return RootPathName.Trim();
             return RootPathName.Trim() + Path.PathSeparator + " " + VolumeName.Trim();
@@ -206,7 +206,7 @@ namespace FsInfoCat.Models.Crawl
                     if (names.Any(n => StringComparer.InvariantCulture.Equals(n, name)) || null != (name = names.FirstOrDefault(n => StringComparer.InvariantCultureIgnoreCase.Equals(n, name))))
                     {
                         FsDirectory result = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(d => StringComparer.InvariantCulture.Equals(d.Name, name));
-                        if (null == result)
+                        if (result is null)
                         {
                             result = new FsDirectory() { Name = name };
                             parent.ChildNodes.Add(result);
