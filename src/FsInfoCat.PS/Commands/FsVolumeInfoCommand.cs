@@ -7,6 +7,7 @@ using System.Management.Automation;
 using System.Linq;
 using FsInfoCat.Models.DB;
 using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 
 namespace FsInfoCat.PS.Commands
 {
@@ -60,16 +61,16 @@ namespace FsInfoCat.PS.Commands
 
             string IVolumeInfo.DriveFormat { get => DriveFormat; set => throw new NotSupportedException(); }
 
-            public uint SerialNumber { get; internal set; }
+            public UniqueIdentifier UniqueIdentifier { get; internal set; }
 
-            uint IVolumeInfo.SerialNumber { get => SerialNumber; set => throw new NotSupportedException(); }
+            UniqueIdentifier IVolumeInfo.UniqueIdentifier { get => UniqueIdentifier; set => throw new NotSupportedException(); }
 
             public bool CaseSensitive { get; internal set; }
             bool IVolumeInfo.CaseSensitive { get => CaseSensitive; set => throw new NotSupportedException(); }
 
             public bool Equals(IVolumeInfo other)
             {
-                return null != other && (ReferenceEquals(this, other) || (SerialNumber == other.SerialNumber &&
+                return null != other && (ReferenceEquals(this, other) || (UniqueIdentifier == other.UniqueIdentifier &&
                     DriveFormat == other.DriveFormat && VolumeName == other.VolumeName && RootPathName == other.RootPathName));
             }
 
@@ -91,12 +92,12 @@ namespace FsInfoCat.PS.Commands
 
             public override int GetHashCode()
             {
-                return SerialNumber.GetHashCode();
+                return (UniqueIdentifier is null) ? 0 : UniqueIdentifier.GetHashCode();
             }
 
             public override string ToString()
             {
-                return "{ RootPathName=\"" + RootPathName + "\"; VolumeName=\"" + VolumeName + "\"; DriveFormat=\"" + DriveFormat + "\"; SerialNumber=" + SerialNumber + " }";
+                return "{ RootPathName=\"" + RootPathName + "\"; VolumeName=\"" + VolumeName + "\"; DriveFormat=\"" + DriveFormat + "\"; SerialNumber=" + ((UniqueIdentifier is null) ? "null" : UniqueIdentifier.ToString()) + " }";
             }
         }
 

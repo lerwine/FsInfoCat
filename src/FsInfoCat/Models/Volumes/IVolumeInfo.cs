@@ -1,3 +1,5 @@
+using FsInfoCat.Util;
+
 namespace FsInfoCat.Models.Volumes
 {
     public interface IVolumeInfo
@@ -17,10 +19,11 @@ namespace FsInfoCat.Models.Volumes
         /// </summary>
         string DriveFormat { get; set; }
 
-        /// <summary>
-        /// Gets the volume serial number.
-        /// </summary>
-        uint SerialNumber { get; set; }
+        /*
+            Get-WmiObject -Class 'Win32_LogicalDisk' can be used to get 32-bit serial number in windows
+            lsblk -a -b -f -J -o NAME,LABEL,MOUNTPOINT,SIZE,FSTYPE,UUID
+        */
+        UniqueIdentifier UniqueIdentifier { get; set; }
 
         bool CaseSensitive { get; set; }
     }

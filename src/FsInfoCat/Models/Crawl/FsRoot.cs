@@ -41,7 +41,7 @@ namespace FsInfoCat.Models.Crawl
         */
         public UniqueIdentifier UniqueIdentifier { get; set; }
 
-        string INamedComponent.Name => (string.IsNullOrWhiteSpace(RootPathName)) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? SerialNumber.ToString() : VolumeName) : RootPathName;
+        string INamedComponent.Name => (string.IsNullOrWhiteSpace(RootPathName)) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? ((UniqueIdentifier is null) ? "" : UniqueIdentifier.Value) : VolumeName) : RootPathName;
 
         public ComponentList<CrawlMessage> Messages
         {
@@ -82,7 +82,7 @@ namespace FsInfoCat.Models.Crawl
                 throw new ArgumentNullException(nameof(driveInfo));
             DriveFormat = driveInfo.DriveFormat;
             VolumeName = driveInfo.VolumeName;
-            SerialNumber = driveInfo.SerialNumber;
+            UniqueIdentifier = driveInfo.UniqueIdentifier;
         }
 
         public FsRoot()

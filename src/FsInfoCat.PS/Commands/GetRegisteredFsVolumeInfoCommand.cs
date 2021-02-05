@@ -64,7 +64,9 @@ namespace FsInfoCat.PS.Commands
                     matching = _volumeInfos.Where(v => DriveFormat.Any(f => f.Equals(v.DriveFormat, StringComparison.InvariantCultureIgnoreCase)));
                     break;
                 case PARAMETER_SET_NAME_BY_SERIAL_NUMBER:
-                    matching = _volumeInfos.Where(v => SerialNumber.Any(n => n == v.SerialNumber));
+#warning Linq query is not perfect
+                    matching = _volumeInfos.Where(v => null != v.UniqueIdentifier && v.UniqueIdentifier.SerialNumber.HasValue &&
+                        !v.UniqueIdentifier.Ordinal.HasValue && SerialNumber.Any(n => n == v.UniqueIdentifier.SerialNumber.Value));
                     break;
                 default:
                     foreach (IVolumeInfo v in GetVolumeInfos())
