@@ -254,7 +254,7 @@ namespace FsInfoCat.Test
 
             private static IEnumerable<UrlTestValues> _GetUrlTestValues()
             {
-                yield return new UrlTestValues(new Uri(@"\\servicenowdiag479.file.core.windows.net\testWshare\", UriKind.Absolute), "File UNC with fqdn");
+                yield return new UrlTestValues(new Uri(@"\\servicenowdiag479.file.core.windows.net\testazureshare\", UriKind.Absolute), "File UNC with fqdn");
                 yield return new UrlTestValues(new Uri($@"\\{_hostName}\$Admin\", UriKind.Absolute), "File UNC");
                 yield return new UrlTestValues(new Uri($@"\\{_ipV2Address}\Us&Them\", UriKind.Absolute), "File with IPV2");
                 yield return new UrlTestValues(new Uri($@"\\[{_ipV6Address}]\100% Done", UriKind.Absolute), "File with IPV6");
@@ -382,7 +382,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetValidFilePathParameterTestCases()
         {
-            string path = @"\\servicenowdiag479.file.core.windows.net\testWshare";
+            string path = @"\\servicenowdiag479.file.core.windows.net\testazureshare";
             string expected = $@"{path}\";
             string url = "file://servicenowdiag479.file.core.windows.net/testazureshare/";
             yield return new TestCaseData(path)
@@ -434,7 +434,7 @@ namespace FsInfoCat.Test
         {
             string url = "file://servicenowdiag479.file.core.windows.net/testazureshare";
             string expected = $"{url}/";
-            string path = @"\\\servicenowdiag479.file.core.windows.net\testazureshare\";
+            string path = @"\\servicenowdiag479.file.core.windows.net\testazureshare\";
             yield return new TestCaseData(url)
                 .SetName($"URN with fully qualified machine name: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
@@ -834,23 +834,21 @@ namespace FsInfoCat.Test
         public void FromInvalidUriConstructorTest()
         {
             Assert.That(() => { new UniqueIdentifier(null); }, Throws.ArgumentNullException
-                .With.Property("ParamName").EqualTo("uri"));
+                .With.Property("ParamName").EqualTo("url"));
             Assert.That(() => { new UniqueIdentifier(_systemDrivePath); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uri")
-                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uri')"));
+                .With.Property("ParamName").EqualTo("url"));
             Assert.That(() => { new UniqueIdentifier(_systemDriveUrl); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uri")
-                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uri')"));
+                .With.Property("ParamName").EqualTo("url"));
             Assert.That(() => { new UniqueIdentifier("file:///"); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uri")
-                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uri')"));
+                .With.Property("ParamName").EqualTo("url"));
         }
 
         [Test]
         [Property("Priority", 3)]
         public void FromInvalidUriFormatConstructorTest([Values("", " ", ".", "urn")] string uri)
         {
-            Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<UriFormatException>());
+            Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Property("ParamName").EqualTo("url"));
         }
 
         [Test]
@@ -858,8 +856,7 @@ namespace FsInfoCat.Test
         public void FromInvalidUrnNamespaceConstructorTest([Values("urn:", "urn:id")] string uri)
         {
             Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uri")
-                .With.Property("Message").EqualTo("Unsupported URN namespace (Parameter 'uri')"));
+                .With.Property("ParamName").EqualTo("uri"));
         }
 
         [Test]
@@ -869,8 +866,7 @@ namespace FsInfoCat.Test
         )] string uri)
         {
             Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uri")
-                .With.Property("Message").EqualTo("Invalid UUID URI format (Parameter 'uri')"));
+                .With.Property("ParamName").EqualTo("uri"));
         }
 
         [Test]
@@ -880,8 +876,7 @@ namespace FsInfoCat.Test
         )] string uri)
         {
             Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uri")
-                .With.Property("Message").EqualTo("Invalid volume identifier URI format (Parameter 'uri')"));
+                .With.Property("ParamName").EqualTo("uri"));
         }
 
         [Test]
@@ -891,8 +886,7 @@ namespace FsInfoCat.Test
         )] string uri)
         {
             Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uri")
-                .With.Property("Message").EqualTo("Unsupported URI scheme (Parameter 'uri')"));
+                .With.Property("ParamName").EqualTo("url"));
         }
 
         public class IdValues : IEquatable<IdValues>

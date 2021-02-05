@@ -62,19 +62,31 @@ namespace FsInfoCat.Util
 
         public UniqueIdentifier(string url)
         {
+            if (url is null)
+                throw new ArgumentNullException(nameof(url));
             Uri uri;
             try { uri = new Uri(url, UriKind.Absolute); }
             catch (Exception exc)
             {
                 if (Uri.TryCreate(url, UriKind.Relative, out uri))
                     throw new ArgumentOutOfRangeException(nameof(url), url, "URI must be absolute");
-                throw new ArgumentOutOfRangeException(nameof(url), url,
-                    (string.IsNullOrWhiteSpace(exc.Message)) ? "Invalid URI string" : exc.Message);
-            }
+                int index = (exc.Message is null) ? -1 : exc.Message.IndexOf("(Parameter '");
+                throw new ArgumentOutOfRangeException(nameof(uri), (index < 1) ? exc.Message : exc.Message.Substring(0, index).Trim());
+           }
             switch (uri.Scheme)
             {
                 case URI_SCHEME_URN:
-                    uri = NormalizeUri(uri, false, false, NormalizePathOption.NoTrailingSeparator);
+                    try { uri = NormalizeUri(uri, false, false, NormalizePathOption.NoTrailingSeparator); }
+                    catch (ArgumentOutOfRangeException exc)
+                    {
+                        int index = (exc.Message is null) ? -1 : exc.Message.IndexOf("(Parameter '");
+                        throw new ArgumentOutOfRangeException(nameof(uri), (index < 1) ? exc.Message : exc.Message.Substring(0, index).Trim());
+                    }
+                    catch (ArgumentException exc)
+                    {
+                        int index = (exc.Message is null) ? -1 : exc.Message.IndexOf("(Parameter '");
+                        throw new ArgumentException(nameof(uri), (index < 1) ? exc.Message : exc.Message.Substring(0, index).Trim());
+                    }
                     Guid? uuid;
                     uint? serialNumber;
                     byte? ordinal;
@@ -362,43 +374,6 @@ namespace FsInfoCat.Util
                 uriBuilder.Path = uriBuilder.Path.Substring(0, uriBuilder.Path.Length - 1);
             return uriBuilder.Uri;
         }
-
-        // public static Uri ToNormalizedUri(Uri url, bool noTrailingSlash)
-        // {
-        //     UriBuilder uriBuilder;
-        //     if (url.Fragment == "#")
-        //     {
-        //         uriBuilder = new UriBuilder(url);
-        //         uriBuilder.Fragment = "";
-        //         if (uriBuilder.Query == "?")
-        //             uriBuilder.Query = "";
-        //         if (noTrailingSlash != (uriBuilder.Path.EndsWith("/") && uriBuilder.Path.Length > 1))
-        //             return uriBuilder.Uri;
-        //     }
-        //     else if (url.PathAndQuery.EndsWith("?"))
-        //     {
-        //         uriBuilder = new UriBuilder(url);
-        //         uriBuilder.Query = "";
-        //         if (noTrailingSlash != (uriBuilder.Path.EndsWith("/") && uriBuilder.Path.Length > 1))
-        //             return uriBuilder.Uri;
-        //     }
-        //     else
-        //     {
-        //         if (noTrailingSlash != (url.AbsolutePath.EndsWith("/") && url.AbsolutePath.Length > 1))
-        //             return url;
-        //         uriBuilder = new UriBuilder(url);
-        //     }
-        //     if (noTrailingSlash)
-        //     {
-        //         int i = uriBuilder.Path.Length - 1;
-        //         while (i > 1 && uriBuilder.Path[i - 1] == '/')
-        //             i--;
-        //         uriBuilder.Path = uriBuilder.Path.Substring(0, i);
-        //     }
-        //     else
-        //         uriBuilder.Path += "/";
-        //     return uriBuilder.Uri;
-        // }
 
         public static string ToIdentifierString(Guid guid) => guid.ToString("d").ToLower();
 

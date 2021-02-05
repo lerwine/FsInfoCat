@@ -80,7 +80,7 @@ namespace FsInfoCat.Test
                     DriveFormat = "FAT32",
                     DriveType = DriveType.Removable,
                     RootPathName = "F:\\",
-                    UniqueIdentifier = new UniqueIdentifier("urn:volume:id: 3B51-8D4B"),
+                    UniqueIdentifier = new UniqueIdentifier("urn:volume:id:3B51-8D4B"),
                     VolumeName = "HP_TOOLS"
                 });
                 list.Add(new FsRoot()
@@ -210,7 +210,7 @@ namespace FsInfoCat.Test
         [Test]
         [Property("Priority", 3)]
         [TestCaseSource("GetFsHostRemoveTestCases")]
-        public void FsHostRemoveTest(IList<FsRoot> addList, IList<Tuple<FsRoot, int>> removeList)
+        public int FsHostRemoveTest(IList<FsRoot> addList, IList<Tuple<FsRoot, int>> removeList)
         {
             FsHost target = new FsHost();
             foreach (FsRoot fsRoot in addList)
@@ -249,7 +249,8 @@ namespace FsInfoCat.Test
                     Assert.That(ComponentList.IsPlaceHolderContainer(container), Is.False);
                 }
             }
-        }
 
+            return target.Roots.Count;
+        }
     }
 }
