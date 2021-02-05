@@ -1,8 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.Globalization;
-using System.Numerics;
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Util
@@ -71,28 +68,51 @@ namespace FsInfoCat.Util
             {
                 if (Uri.TryCreate(url, UriKind.Relative, out uri))
                     throw new ArgumentOutOfRangeException(nameof(url), url, "URI must be absolute");
-                throw new ArgumentOutOfRangeException(nameof(url), url, (string.IsNullOrWhiteSpace(exc.Message)) ? "Invalid URI string" : exc.Message);
+                throw new ArgumentOutOfRangeException(nameof(url), url,
+                    (string.IsNullOrWhiteSpace(exc.Message)) ? "Invalid URI string" : exc.Message);
             }
             switch (uri.Scheme)
             {
                 case URI_SCHEME_URN:
-                    Debug.WriteLine($"Parsing URN {uri.AbsolutePath}");
-                    uri = ToNormalizedUri(uri, true);
-                    ParseUrn(uri.AbsolutePath, out Guid? uuid, out uint? serialNumber, out byte? ordinal);
+                    uri = NormalizeUri(uri, false, false, NormalizePathOption.NoTrailingSeparator);
+                    Guid? uuid;
+                    uint? serialNumber;
+                    byte? ordinal;
+                    try { ParseUrnPath(uri.AbsolutePath, out uuid, out serialNumber, out ordinal); }
+                    catch (ArgumentOutOfRangeException exc)
+                    {
+                        int index = (exc.Message is null) ? -1 : exc.Message.IndexOf("(Parameter '");
+                        throw new ArgumentOutOfRangeException(nameof(uri), (index < 1) ? exc.Message : exc.Message.Substring(0, index).Trim());
+                    }
+                    catch (ArgumentException exc)
+                    {
+                        int index = (exc.Message is null) ? -1 : exc.Message.IndexOf("(Parameter '");
+                        throw new ArgumentException(nameof(uri), (index < 1) ? exc.Message : exc.Message.Substring(0, index).Trim());
+                    }
+                    if (uuid.HasValue)
+                        Value = uuid.Value.ToString("d").ToLower();
+                    else if (ordinal.HasValue)
+                        Value = $"{serialNumber.Value.ToString("x8")}-{ordinal.Value.ToString("x2")}";
+                    else
+                        Value = $"{(serialNumber.Value >> 16).ToString("x4")}-{(serialNumber.Value & 0xffff).ToString("x4")}";
+                    UUID = uuid;
+                    SerialNumber = serialNumber;
+                    Ordinal = ordinal;
                     break;
                 case URI_SCHEME_FILE:
-                    Debug.WriteLine($"Parsing file {uri.AbsolutePath}");
+                    uri = NormalizeUri(uri, false, false, NormalizePathOption.TrailingSlash);
+                    if (uri.Query.Length > 0 || uri.Fragment.Length > 0)
+                        throw new ArgumentOutOfRangeException(nameof(url), ERROR_MESSAGE_INVALID_HOST_NAME);
                     switch (uri.HostNameType)
                     {
                         case UriHostNameType.Basic:
                         case UriHostNameType.Unknown:
                             throw new ArgumentOutOfRangeException(nameof(url), ERROR_MESSAGE_INVALID_HOST_NAME);
                     }
-                    uri = ToNormalizedUri(uri, false);
                     UUID = null;
                     SerialNumber = null;
                     Ordinal = null;
-                    Value = uri.AbsolutePath;
+                    Value = uri.LocalPath;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(url), ERROR_MESSAGE_INVALID_URI_SCHEME);
@@ -100,118 +120,285 @@ namespace FsInfoCat.Util
             URL = uri;
         }
 
-        public bool Equals(UniqueIdentifier other) => null != other && (ReferenceEquals(this, other) || URL.AbsoluteUri.Equals(other.URL.AbsoluteUri, StringComparison.InvariantCultureIgnoreCase));
+        public bool Equals(UniqueIdentifier other) => null != other &&
+            (ReferenceEquals(this, other) || URL.AbsoluteUri.Equals(other.URL.AbsoluteUri, StringComparison.InvariantCultureIgnoreCase));
 
         public override bool Equals(object obj) => Equals(obj as UniqueIdentifier);
 
         public override int GetHashCode() => URL.AbsoluteUri.GetHashCode();
 
-        public static void ParseUrn(string uriString, out Guid? uuid, out uint? serialNumber, out byte? ordinal)
+        public static void ParseUrnPath(string uriPath, out Guid? uuid, out uint? serialNumber, out byte? ordinal)
         {
-            Match match = NsPathRegex.Match(uriString);
+            Match match = NsPathRegex.Match(uriPath);
             if (match.Groups[GROUP_NAME_VALUE].Success)
             {
-                Debug.WriteLine("Value match");
                 if (match.Groups[GROUP_NAME_UUID_NS].Success)
                 {
-                    Debug.WriteLine("UUID NS match");
-                    if (Guid.TryParse(match.Groups[GROUP_NAME_VALUE].Value, out Guid id))
+                    if (Guid.TryParse(Uri.UnescapeDataString(match.Groups[GROUP_NAME_VALUE].Value), out Guid id))
                     {
-                        Debug.WriteLine("GUID parsed");
                         uuid = id;
                         serialNumber = null;
                         ordinal = null;
                         return;
                     }
-                    throw new ArgumentOutOfRangeException(nameof(uriString), ERROR_MESSAGE_INVALID_UUID_URI);
+                    throw new ArgumentOutOfRangeException(nameof(uriPath), ERROR_MESSAGE_INVALID_UUID_URI);
                 }
                 uuid = null;
                 if (match.Groups[GROUP_NAME_ID_NS].Success)
                 {
-                    Debug.WriteLine("ID matched");
-                    if ((match = SerialNumberPathRegex.Match(match.Groups[GROUP_NAME_VALUE].Value)).Success)
+                    if ((match = SerialNumberPathRegex.Match(Uri.UnescapeDataString(match.Groups[GROUP_NAME_VALUE].Value))).Success)
                     {
-                        Debug.WriteLine("Serial number pattern matched");
                         if (match.Groups[3].Success)
                         {
-                            Debug.WriteLine("Group 3 matched");
-                            if (uint.TryParse(match.Groups[3].Value, NumberStyles.HexNumber, null, out uint sn))
+                            if (uint.TryParse(Uri.UnescapeDataString(match.Groups[3].Value), NumberStyles.HexNumber, null, out uint sn))
                             {
                                 serialNumber = sn;
                                 if (match.Groups[4].Success)
                                 {
-                                    Debug.WriteLine("Group 4 matched");
-                                    if (byte.TryParse(match.Groups[4].Value, NumberStyles.HexNumber, null, out byte ov))
+                                    if (byte.TryParse(Uri.UnescapeDataString(match.Groups[4].Value), NumberStyles.HexNumber, null, out byte ov))
                                     {
-                                        Debug.WriteLine("Group 4 parsed");
                                         ordinal = ov;
                                         return;
                                     }
                                 }
                                 else
                                 {
-                                    Debug.WriteLine("Group 4 not matched");
                                     ordinal = null;
                                     return;
                                 }
                             }
-                            throw new ArgumentOutOfRangeException(nameof(uriString), ERROR_MESSAGE_INVALID_VOLUME_ID_URI);
+                            throw new ArgumentOutOfRangeException(nameof(uriPath), ERROR_MESSAGE_INVALID_VOLUME_ID_URI);
                         }
                         ordinal = null;
-                        if (uint.TryParse(match.Groups[1].Value, out uint h) && uint.TryParse(match.Groups[2].Value, out uint l))
+                        if (uint.TryParse(Uri.UnescapeDataString(match.Groups[1].Value), NumberStyles.HexNumber, null, out uint h) &&
+                            uint.TryParse(Uri.UnescapeDataString(match.Groups[2].Value), NumberStyles.HexNumber, null, out uint l))
                         {
-                            Debug.WriteLine("Group matched and parsed");
                             serialNumber = (h << 16) | l;
                             return;
                         }
                     }
-                    throw new ArgumentOutOfRangeException(nameof(uriString), ERROR_MESSAGE_INVALID_VOLUME_ID_URI);
+                    throw new ArgumentOutOfRangeException(nameof(uriPath), ERROR_MESSAGE_INVALID_VOLUME_ID_URI);
                 }
             }
 
             if (match.Groups[GROUP_NAME_UUID_NS].Success)
-                throw new ArgumentOutOfRangeException(nameof(uriString), ERROR_MESSAGE_INVALID_UUID_URI);
+                throw new ArgumentOutOfRangeException(nameof(uriPath), ERROR_MESSAGE_INVALID_UUID_URI);
 
-            throw new ArgumentOutOfRangeException(nameof(uriString), (match.Groups[GROUP_NAME_VOLUME_NS].Success) ?
-                ERROR_MESSAGE_INVALID_VOLUME_ID_URI : ERROR_MESSAGE_INVALID_URN_NAMESPACE);
+            throw new ArgumentOutOfRangeException(nameof(uriPath), ((match.Groups[GROUP_NAME_VOLUME_NS].Success) ?
+                ERROR_MESSAGE_INVALID_VOLUME_ID_URI : ERROR_MESSAGE_INVALID_URN_NAMESPACE));
         }
 
-        public static Uri ToNormalizedUri(Uri url, bool noTrailingSlash)
+        public enum NormalizePathOption
         {
-            UriBuilder uriBuilder;
-            if (url.Fragment == "#")
+            None,
+            TrailingSlash,
+            NoTrailingSeparator,
+            NoTrailingSlash,
+            Remove
+        }
+
+        public static Uri NormalizeUri(Uri uri, bool stripQuery = false, bool stripFragment = false, NormalizePathOption pathOption = NormalizePathOption.None)
+        {
+            if (uri is null)
+                throw new ArgumentNullException(nameof(uri));
+
+            System.Diagnostics.Debug.WriteLine($"Normalizing {uri.OriginalString}");
+            bool isRelative;
+
+            #region Convert uri to normalized absolute
+
+            Uri returnUri = uri;
+            if (uri.IsAbsoluteUri)
             {
-                uriBuilder = new UriBuilder(url);
-                uriBuilder.Fragment = "";
-                if (uriBuilder.Query == "?")
-                    uriBuilder.Query = "";
-                if (noTrailingSlash != (uriBuilder.Path.EndsWith("/") && uriBuilder.Path.Length > 1))
-                    return uriBuilder.Uri;
-            }
-            else if (url.PathAndQuery.EndsWith("?"))
-            {
-                uriBuilder = new UriBuilder(url);
-                uriBuilder.Query = "";
-                if (noTrailingSlash != (uriBuilder.Path.EndsWith("/") && uriBuilder.Path.Length > 1))
-                    return uriBuilder.Uri;
-            }
-            else
-            {
-                if (noTrailingSlash != (url.AbsolutePath.EndsWith("/") && url.AbsolutePath.Length > 1))
-                    return url;
-                uriBuilder = new UriBuilder(url);
-            }
-            if (noTrailingSlash)
-            {
-                int i = uriBuilder.Path.Length - 1;
-                while (i > 1 && uriBuilder.Path[i - 1] == '/')
-                    i--;
-                uriBuilder.Path = uriBuilder.Path.Substring(0, i);
+                isRelative = false;
+                if (!uri.AbsoluteUri.Equals(uri.OriginalString))
+                    returnUri = uri = new Uri(uri.AbsoluteUri, UriKind.Absolute);
             }
             else
+            {
+                isRelative = true;
+                string uriString = uri.OriginalString;
+                if (uriString.Length == 0)
+                    return (pathOption == NormalizePathOption.TrailingSlash) ? new Uri("/", UriKind.Relative) : uri;
+                if (uriString.Length == 1)
+                    switch (uriString[0])
+                    {
+                        case '/':
+                            switch (pathOption)
+                            {
+                                case NormalizePathOption.NoTrailingSeparator:
+                                case NormalizePathOption.NoTrailingSlash:
+                                case NormalizePathOption.Remove:
+                                    return new Uri("", UriKind.Relative);
+                            }
+                            return uri;
+                        case ':':
+                            switch (pathOption)
+                            {
+                                case NormalizePathOption.None:
+                                case NormalizePathOption.TrailingSlash:
+                                    return new Uri("/", UriKind.Relative);
+                            }
+                            return new Uri("", UriKind.Relative);
+                        case '?':
+                        case '#':
+                            return new Uri((pathOption == NormalizePathOption.TrailingSlash) ? "/" : "", UriKind.Relative);
+                        case '\\':
+                            switch (pathOption)
+                            {
+                                case NormalizePathOption.NoTrailingSlash:
+                                case NormalizePathOption.Remove:
+                                    return new Uri("", UriKind.Relative);
+                            }
+                            return new Uri("/", UriKind.Relative);
+                        default:
+                            if (!Uri.IsWellFormedUriString(uriString, UriKind.Relative))
+                                return new Uri(Uri.EscapeUriString(uriString), UriKind.Relative);
+                            return uri;
+                    }
+                int index = uriString.IndexOfAny(new char[] { '?', '#' });
+                if (index > 0)
+                {
+                    string p = uriString.Substring(0, index);
+                    if (p.Contains("\\"))
+                        uriString = p.Replace('\\', '/') + uriString.Substring(index);
+                    if (Uri.IsWellFormedUriString(uriString, UriKind.Relative))
+                        returnUri = new Uri(uriString, UriKind.Relative);
+                    else
+                    {
+                        uriString = Uri.EscapeUriString(uriString);
+                        if (uriString[0] == ':' && !Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
+                            uriString = $"/{uriString.Substring(1)}";
+                        returnUri = new Uri(uriString, UriKind.Relative);
+                    }
+                }
+                else if (!Uri.IsWellFormedUriString(uriString, UriKind.Relative))
+                {
+                    uriString = Uri.EscapeUriString(uriString);
+                    if (uriString[0] == ':' && !Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
+                        uriString = $"/{uriString.Substring(1)}";
+                    returnUri = new Uri(uriString, UriKind.Relative);
+                }
+                else
+                    returnUri = uri;
+                uri = new Uri($"urn:{returnUri.OriginalString}", UriKind.Absolute);
+            }
+
+            #endregion
+
+            string fragment = uri.Fragment;
+            string query = uri.Query;
+            string path = uri.AbsolutePath;
+            switch (pathOption)
+            {
+                case NormalizePathOption.NoTrailingSlash:
+                    if (path == "/")
+                        path = "";
+                    else if (path.Length > 0 && path[path.Length - 1] == '/')
+                        path = path.Substring(0, path.Length - 1);
+                    break;
+                case NormalizePathOption.NoTrailingSeparator:
+                    if (path.Length > 0)
+                    {
+                        switch (path[path.Length - 1])
+                        {
+                            case '/':
+                            case ':':
+                                path = (path.Length == 1) ? "" : path.Substring(0, path.Length - 1);
+                                break;
+                        }
+                    }
+                    break;
+                case NormalizePathOption.TrailingSlash:
+                    if (path.Length == 0)
+                        path = "/";
+                    else
+                        switch (path[path.Length - 1])
+                        {
+                            case '/':
+                                break;
+                            case ':':
+                                path = (path.Length == 1) ? "/" : $"{path.Substring(0, path.Length - 1)}/";
+                                break;
+                            default:
+                                path += "/";
+                                break;
+                        }
+                    break;
+                case NormalizePathOption.Remove:
+                    path = "";
+                    break;
+            }
+            if (fragment == "#" || stripFragment)
+                fragment = "";
+            if (query == "?" || stripQuery)
+                query = "";
+            if (fragment == uri.Fragment && query == uri.Query && path == uri.AbsolutePath)
+                return returnUri;
+            if (isRelative)
+                return new Uri(path + query + fragment, UriKind.Relative);
+            UriComponents components = UriComponents.Scheme;
+            if (uri.Host.Length > 0)
+            {
+                if (uri.UserInfo.Length > 0)
+                    components |= UriComponents.UserInfo;
+                components |= UriComponents.Host;
+                if (!uri.IsDefaultPort)
+                    components |= UriComponents.Port;
+            }
+            if (path.Length > 0)
+                components |= UriComponents.Path;
+            if (query.Length > 0)
+                components |= UriComponents.Query;
+            if (fragment.Length > 0)
+                components |= UriComponents.Fragment;
+            Uri result = new Uri(returnUri.GetComponents(components, UriFormat.UriEscaped), UriKind.Absolute);
+            if (result.AbsolutePath.EndsWith("/") == path.EndsWith("/"))
+                return result;
+            UriBuilder uriBuilder = new UriBuilder(result);
+            if (path.EndsWith("/"))
                 uriBuilder.Path += "/";
+            else
+                uriBuilder.Path = uriBuilder.Path.Substring(0, uriBuilder.Path.Length - 1);
             return uriBuilder.Uri;
         }
+
+        // public static Uri ToNormalizedUri(Uri url, bool noTrailingSlash)
+        // {
+        //     UriBuilder uriBuilder;
+        //     if (url.Fragment == "#")
+        //     {
+        //         uriBuilder = new UriBuilder(url);
+        //         uriBuilder.Fragment = "";
+        //         if (uriBuilder.Query == "?")
+        //             uriBuilder.Query = "";
+        //         if (noTrailingSlash != (uriBuilder.Path.EndsWith("/") && uriBuilder.Path.Length > 1))
+        //             return uriBuilder.Uri;
+        //     }
+        //     else if (url.PathAndQuery.EndsWith("?"))
+        //     {
+        //         uriBuilder = new UriBuilder(url);
+        //         uriBuilder.Query = "";
+        //         if (noTrailingSlash != (uriBuilder.Path.EndsWith("/") && uriBuilder.Path.Length > 1))
+        //             return uriBuilder.Uri;
+        //     }
+        //     else
+        //     {
+        //         if (noTrailingSlash != (url.AbsolutePath.EndsWith("/") && url.AbsolutePath.Length > 1))
+        //             return url;
+        //         uriBuilder = new UriBuilder(url);
+        //     }
+        //     if (noTrailingSlash)
+        //     {
+        //         int i = uriBuilder.Path.Length - 1;
+        //         while (i > 1 && uriBuilder.Path[i - 1] == '/')
+        //             i--;
+        //         uriBuilder.Path = uriBuilder.Path.Substring(0, i);
+        //     }
+        //     else
+        //         uriBuilder.Path += "/";
+        //     return uriBuilder.Uri;
+        // }
 
         public static string ToIdentifierString(Guid guid) => guid.ToString("d").ToLower();
 
@@ -221,7 +408,7 @@ namespace FsInfoCat.Util
 
         public static string ToUrn(Guid guid) => $"urn:uuid:{ToIdentifierString(guid)}";
 
-        public static string ToUrn(uint serialNumber, byte ordinal) => $"rn:volume:id:{ToIdentifierString(serialNumber, ordinal)}";
+        public static string ToUrn(uint serialNumber, byte ordinal) => $"urn:volume:id:{ToIdentifierString(serialNumber, ordinal)}";
 
         public static string ToUrn(uint serialNumber) => $"urn:volume:id:{ToIdentifierString(serialNumber)}";
     }

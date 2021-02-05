@@ -31,7 +31,7 @@ namespace FsInfoCat.Test
 
         static UniqueIdentifierUnitTest()
         {
-            _hostName = Environment.MachineName;
+            _hostName = Environment.MachineName.ToLower();
             _systemDrivePath = Path.GetPathRoot(Environment.SystemDirectory);
             _systemDriveUrl = new Uri(_systemDrivePath).AbsoluteUri;
             IPAddress[] addressList = Dns.GetHostEntry(_hostName).AddressList;
@@ -110,7 +110,7 @@ namespace FsInfoCat.Test
                     return _GetTestValues().SelectMany(v => v._caseVariants);
                 }
                 if (includeDashVariants)
-                    return _GetTestValues().SelectMany(v => new SerialNumberTestValues[] { v, v._dashVariant} );
+                    return _GetTestValues().SelectMany(v => new SerialNumberTestValues[] { v, v._dashVariant });
                 return _GetTestValues();
             }
         }
@@ -172,11 +172,11 @@ namespace FsInfoCat.Test
 
             private static IEnumerable<Tuple<byte, string>> _GetOrdinalValues()
             {
-                yield return new Tuple<byte, string>(0,  "zero value");
-                yield return new Tuple<byte, string>(1,  "Value of 1");
-                yield return new Tuple<byte, string>(10,  "Value of 10");
-                yield return new Tuple<byte, string>(16,  "Value of 16");
-                yield return new Tuple<byte, string>(Byte.MaxValue,  "Byte.MaxValue");
+                yield return new Tuple<byte, string>(0, "zero value");
+                yield return new Tuple<byte, string>(1, "Value of 1");
+                yield return new Tuple<byte, string>(10, "Value of 10");
+                yield return new Tuple<byte, string>(16, "Value of 16");
+                yield return new Tuple<byte, string>(Byte.MaxValue, "Byte.MaxValue");
             }
 
             public static IEnumerable<SerialNumberOrdinalTestValues> GetTestValues(bool includeVariants = false)
@@ -186,6 +186,86 @@ namespace FsInfoCat.Test
                 return SerialNumberTestValues.GetTestValues(false, false).SelectMany(sn => _GetOrdinalValues().Select(ord =>
                     new SerialNumberOrdinalTestValues(sn.SerialNumber, ord.Item1, $"serialNumber = {sn.Description}; ordinal = {ord.Item2}")
                 ));
+            }
+        }
+
+        class UrlTestValues
+        {
+            private readonly ReadOnlyCollection<UrlTestValues> _variants;
+            internal Uri NormalizedUrl { get; }
+            internal string UrlParam { get; }
+            internal string Description { get; }
+            internal bool HasTrailingSlash { get; }
+            public UrlTestValues(Uri url, string description)
+            {
+                string originalString = url.OriginalString;
+                NormalizedUrl = UniqueIdentifier.NormalizeUri(url);
+                Assert.That(NormalizedUrl.IsAbsoluteUri, Is.True, $"Invalid test data: {url.OriginalString}");
+                Assert.That(NormalizedUrl.Query, Is.Empty, $"Invalid test data: {url.OriginalString}");
+                Assert.That(NormalizedUrl.Fragment, Is.Empty, $"Invalid test data: {url.OriginalString}");
+                if (originalString.EndsWith("#"))
+                    originalString = originalString.Substring(0, originalString.Length - 1);
+                if (originalString.EndsWith("?"))
+                    originalString = originalString.Substring(0, originalString.Length - 1);
+                UrlParam = originalString;
+                Collection<UrlTestValues> variants = new Collection<UrlTestValues>();
+                _variants = new ReadOnlyCollection<UrlTestValues>(variants);
+                UrlTestValues pathVariant;
+                HasTrailingSlash = NormalizedUrl.AbsolutePath.EndsWith('/');
+                string noSlashUrl = (HasTrailingSlash) ? originalString.Substring(0, originalString.Length - 1) : $"{originalString}/";
+                if (originalString != NormalizedUrl.AbsoluteUri)
+                {
+                    Description = $"Improper URL {description}";
+                    variants.Add(this);
+                    variants.Add(new UrlTestValues(this, $"{noSlashUrl}?", $"{Description} with empty query", false));
+                    variants.Add(new UrlTestValues(this, $"{noSlashUrl}#", $"{Description} with empty fragment", false));
+                    if (HasTrailingSlash)
+                        pathVariant = new UrlTestValues(this, noSlashUrl, $"{Description} without trailing slash", false);
+                    else
+                        pathVariant = new UrlTestValues(this, $"{UrlParam}/", $"{Description} with trailing slash", true);
+                    variants.Add(pathVariant);
+                    variants.Add(new UrlTestValues(this, $"{pathVariant.UrlParam}?#", $"{pathVariant.Description} and empty query and fragment", true));
+                    variants.Add(new UrlTestValues(this, NormalizedUrl.AbsoluteUri, description, HasTrailingSlash));
+                }
+                else
+                {
+                    Description = description;
+                    variants.Add(this);
+                }
+                noSlashUrl = (HasTrailingSlash) ? NormalizedUrl.AbsolutePath.Substring(0, NormalizedUrl.AbsolutePath.Length - 1) : $"{NormalizedUrl.AbsolutePath}/";
+                variants.Add(new UrlTestValues(this, $"{noSlashUrl}?", $"{description} with empty query", false));
+                variants.Add(new UrlTestValues(this, $"{noSlashUrl}#", $"{description} with empty fragment", false));
+                if (HasTrailingSlash)
+                    pathVariant = new UrlTestValues(this, noSlashUrl, $"{description} without trailing slash", false);
+                else
+                    pathVariant = new UrlTestValues(this, $"{NormalizedUrl.AbsolutePath}/", $"{description} with trailing slash", true);
+                variants.Add(pathVariant);
+                variants.Add(new UrlTestValues(this, $"{pathVariant.UrlParam}?#", $"{pathVariant.Description} and empty query and fragment", true));
+            }
+
+            private UrlTestValues(UrlTestValues source, string urlParam, string description, bool hasTrailingSlash)
+            {
+                NormalizedUrl = source.NormalizedUrl;
+                _variants = source._variants;
+                UrlParam = urlParam;
+                Description = description;
+                HasTrailingSlash = hasTrailingSlash;
+            }
+
+            private static IEnumerable<UrlTestValues> _GetUrlTestValues()
+            {
+                yield return new UrlTestValues(new Uri(@"\\servicenowdiag479.file.core.windows.net\testWshare\", UriKind.Absolute), "File UNC with fqdn");
+                yield return new UrlTestValues(new Uri($@"\\{_hostName}\$Admin\", UriKind.Absolute), "File UNC");
+                yield return new UrlTestValues(new Uri($@"\\{_ipV2Address}\Us&Them\", UriKind.Absolute), "File with IPV2");
+                yield return new UrlTestValues(new Uri($@"\\[{_ipV6Address}]\100% Done", UriKind.Absolute), "File with IPV6");
+                yield return new UrlTestValues(new Uri($"urn:uuid:{Guid.NewGuid().ToString("b").ToLower()}", UriKind.Absolute), "UUID urn");
+            }
+
+            public static IEnumerable<UrlTestValues> GetUrlTestValues(bool includeVariants = false)
+            {
+                if (includeVariants)
+                    return _GetUrlTestValues().SelectMany(u => u._variants);
+                return _GetUrlTestValues();
             }
         }
 
@@ -295,8 +375,8 @@ namespace FsInfoCat.Test
                     .SetName($"{t.Description} FromValidSerialNumberAndOrdinalUriConstructorTest(\"{t.UrnParam}\")")
                     .Returns(new SnIdValues(t.SerialNumber, null, t.StringValue, t.Url.AbsoluteUri))
             ).Concat(SerialNumberOrdinalTestValues.GetTestValues(true).Select(t =>
-                new TestCaseData(t.SerialNumber, t.Ordinal)
-                    .SetName(t.Description)
+                new TestCaseData(t.UrnParam)
+                    .SetName($"{t.Description} FromValidSerialNumberAndOrdinalUriConstructorTest(\"{t.UrnParam}\")")
                     .Returns(new SnIdValues(t.SerialNumber, t.Ordinal, t.StringValue, t.Url.AbsoluteUri))
             ));
 
@@ -306,47 +386,47 @@ namespace FsInfoCat.Test
             string expected = $@"{path}\";
             string url = "file://servicenowdiag479.file.core.windows.net/testazureshare/";
             yield return new TestCaseData(path)
-                .SetName($"URN with fully qualified machine name: {path}")
+                .SetName($"URN with fully qualified machine name: FromValidFilePathConstructorTest(\"{path}\")")
                 .Returns(new IdValues(expected, url));
 
             yield return new TestCaseData(expected)
-                .SetName($"URN with fully qualified machine name and trailing backslash: {expected}")
+                .SetName($"URN with fully qualified machine name and trailing backslash: FromValidFilePathConstructorTest(\"{expected}\")")
                 .Returns(new IdValues(expected, url));
 
             path = $@"\\{_hostName}\$Admin";
             expected = $@"{path}\";
             url = $"file://{_hostName}/$Admin/";
             yield return new TestCaseData(path)
-                .SetName($"URN with machine name only: {path}")
+                .SetName($"URN with machine name only: FromValidFilePathConstructorTest(\"{path}\")")
                 .Returns(new IdValues(expected, url));
 
             path = $@"\\{_hostName}\Admin$\";
             yield return new TestCaseData(expected)
-                .SetName($"URN with machine name only and trailing backslash: {expected}")
+                .SetName($"URN with machine name only and trailing backslash: FromValidFilePathConstructorTest(\"{expected}\")")
                 .Returns(new IdValues(expected, url));
 
             path = $@"\\{_ipV2Address}\Us&Them";
             expected = $@"{path}\";
             url = $"file://{_ipV2Address}/Us&Them/";
             yield return new TestCaseData(path)
-                .SetName($"URN with IPV2 address: {path}")
+                .SetName($"URN with IPV2 address: FromValidFilePathConstructorTest(\"{path}\")")
                 .Returns(new IdValues(expected, url));
 
             path = $@"\\{_ipV2Address}\Us&Them\";
             yield return new TestCaseData(expected)
-                .SetName($"URN with IPV2 address and trailing backslash: {expected}")
+                .SetName($"URN with IPV2 address and trailing backslash: FromValidFilePathConstructorTest(\"{expected}\")")
                 .Returns(new IdValues(expected, url));
 
             path = $@"\\[{_ipV6Address}]\100% Done";
             expected = $@"{path}\";
             url = $"file://[{_ipV6Address}]/100%25%20Done/";
             yield return new TestCaseData(path)
-                .SetName($"URN with IPV6 address: {path}")
+                .SetName($"URN with IPV6 address: FromValidFilePathConstructorTest(\"{path}\")")
                 .Returns(new IdValues(expected, url));
 
             path = $@"\\[{_ipV6Address}]\100% Done\";
             yield return new TestCaseData(expected)
-                .SetName($"URN with IPV6 address and trailing backslash: {expected}")
+                .SetName($"URN with IPV6 address and trailing backslash: FromValidFilePathConstructorTest(\"{expected}\")")
                 .Returns(new IdValues(expected, url));
         }
 
@@ -356,85 +436,171 @@ namespace FsInfoCat.Test
             string expected = $"{url}/";
             string path = @"\\\servicenowdiag479.file.core.windows.net\testazureshare\";
             yield return new TestCaseData(url)
-                .SetName($"URN with fully qualified machine name: {url}")
+                .SetName($"URN with fully qualified machine name: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             yield return new TestCaseData(expected)
-                .SetName($"URN with fully qualified machine name and trailing slash: {expected}")
+                .SetName($"URN with fully qualified machine name and trailing slash: FromValidFileUrlConstructorTest(\"{expected}\")")
                 .Returns(new IdValues(path, expected));
 
             string noTrailingSlash = url;
             url = $"{noTrailingSlash}?";
             yield return new TestCaseData(url)
-                .SetName($"URN with fully qualified machine name and empty query: {url}")
+                .SetName($"URN with fully qualified machine name and empty query: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             url = $"{expected}?";
             yield return new TestCaseData(url)
-                .SetName($"URN with fully qualified machine name, trailing slash and empty query: {url}")
+                .SetName($"URN with fully qualified machine name, trailing slash and empty query: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             url = $"{noTrailingSlash}#";
             yield return new TestCaseData(url)
-                .SetName($"URN with fully qualified machine name and empty fragment: {url}")
+                .SetName($"URN with fully qualified machine name and empty fragment: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             url = $"{expected}#";
             yield return new TestCaseData(url)
-                .SetName($"URN with fully qualified machine name, trailing slash and empty fragment: {url}")
+                .SetName($"URN with fully qualified machine name, trailing slash and empty fragment: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             url = $"{noTrailingSlash}?#";
             yield return new TestCaseData(url)
-                .SetName($"URN with fully qualified machine name, empty query and empty fragment: {url}")
+                .SetName($"URN with fully qualified machine name, empty query and empty fragment:0 FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             url = $"{expected}?#";
             yield return new TestCaseData(url)
-                .SetName($"URN with fully qualified machine name, trailing slash, empty query and empty fragment: {url}")
+                .SetName($"URN with fully qualified machine name, trailing slash, empty query and empty fragment: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             url = $"file://{_hostName}/$Admin";
             expected = $"{url}/";
             path = $@"\\{_hostName}\$Admin\";
             yield return new TestCaseData(url)
-                .SetName($"URN with machine name only: {url}")
+                .SetName($"URN with machine name only: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             yield return new TestCaseData(expected)
-                .SetName($"URN with machine name only and trailing slash: {expected}")
+                .SetName($"URN with machine name only and trailing slash: FromValidFileUrlConstructorTest(\"{expected}\")")
                 .Returns(new IdValues(path, expected));
 
             url = $"file://{_ipV2Address}/Us&Them";
             expected = $"{url}/";
             path = $@"\\{_ipV2Address}\Us&Them\";
             yield return new TestCaseData(url)
-                .SetName($"URN with IPV2 address: {url}")
+                .SetName($"URN with IPV2 address: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             yield return new TestCaseData(expected)
-                .SetName($"URN with IPV2 address and trailing slash: {expected}")
+                .SetName($"URN with IPV2 address and trailing slash: FromValidFileUrlConstructorTest(\"{expected}\")")
                 .Returns(new IdValues(path, expected));
 
             url = $"file://[{_ipV6Address}]/100%25%20Done";
             expected = $"{url}/";
-            path = $@"\\{_hostName}\100% Done\";
+            path = $@"\\[{_ipV6Address}]\100% Done\";
             yield return new TestCaseData(url)
-                .SetName($"URN with IPV6 address: {url}")
+                .SetName($"URN with IPV6 address: FromValidFileUrlConstructorTest(\"{url}\")")
                 .Returns(new IdValues(path, expected));
 
             yield return new TestCaseData(expected)
-                .SetName($"URN with IPV6 address and trailing slash: {expected}")
+                .SetName($"URN with IPV6 address and trailing slash: FromValidFileUrlConstructorTest(\"{expected}\")")
                 .Returns(new IdValues(path, expected));
         }
 
-        public static IEnumerable<TestCaseData> GetToNormalizedUriTestCases()
+        public static IEnumerable<TestCaseData> GetNormalizeUriTestCases()
         {
-            string expected = $"file://[{_ipV6Address}]/100%25%20Done";
-            yield return new TestCaseData(new Uri(expected), false)
-                .SetName($"File URN with no trailing slash and noTrailingSlash = true: ToNormalizedUriTest({expected}, false)")
-                .Returns(new Uri($"{expected}/"));
-#warning Need to implmeent more test data
+            string rawUri = $"file://[{_ipV6Address}]/100% Done";
+            Uri expected = new Uri(new Uri(rawUri).AbsoluteUri, UriKind.Absolute);
+            string wellFormed = expected.AbsoluteUri;
+            yield return new TestCaseData(new Uri(rawUri), (bool?)null, (bool?)null, (UniqueIdentifier.NormalizePathOption?)null)
+                .SetName($"NormalizeUri(\"{rawUri}\")")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{rawUri}?"), (bool?)null, (bool?)null, (UniqueIdentifier.NormalizePathOption?)null)
+                .SetName($"NormalizeUri(\"{rawUri}?\")")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{rawUri}#"), (bool?)null, (bool?)null, (UniqueIdentifier.NormalizePathOption?)null)
+                .SetName($"NormalizeUri(\"{rawUri}#\")")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri(wellFormed), (bool?)null, (bool?)null, (UniqueIdentifier.NormalizePathOption?)null)
+                .SetName($"NormalizeUri(\"{wellFormed}\")")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{wellFormed}?"), (bool?)null, (bool?)null, (UniqueIdentifier.NormalizePathOption?)null)
+                .SetName($"NormalizeUri(\"{wellFormed}?\")")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{wellFormed}#"), (bool?)null, (bool?)null, (UniqueIdentifier.NormalizePathOption?)null)
+                .SetName($"NormalizeUri(\"{wellFormed}#\")")
+                .Returns(expected);
+            string trailingSlashRawUri = rawUri + "/";
+            string trailingSlashWellFormed = wellFormed + "/";
+            yield return new TestCaseData(new Uri(trailingSlashRawUri), false, false, UniqueIdentifier.NormalizePathOption.NoTrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashRawUri}\", false, false, NoTrailingSlash)")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{trailingSlashRawUri}?"), false, false, UniqueIdentifier.NormalizePathOption.NoTrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashRawUri}?\", false, false, NoTrailingSlash)")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{trailingSlashRawUri}#"), false, false, UniqueIdentifier.NormalizePathOption.NoTrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashRawUri}#\", false, false, NoTrailingSlash)")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{trailingSlashRawUri}#"), false, false, UniqueIdentifier.NormalizePathOption.NoTrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashRawUri}?#\", false, false, NoTrailingSlash)")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri(trailingSlashWellFormed), false, false, UniqueIdentifier.NormalizePathOption.NoTrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashWellFormed}\", false, false, NoTrailingSlash)")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{trailingSlashWellFormed}?"), false, false, UniqueIdentifier.NormalizePathOption.NoTrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashWellFormed}?\", false, false, NoTrailingSlash)")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{trailingSlashWellFormed}#"), false, false, UniqueIdentifier.NormalizePathOption.NoTrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashWellFormed}#\", false, false, NoTrailingSlash)")
+                .Returns(expected);
+            yield return new TestCaseData(new Uri($"{trailingSlashWellFormed}#"), false, false, UniqueIdentifier.NormalizePathOption.NoTrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashWellFormed}?#\", false, false, NoTrailingSlash)")
+                .Returns(expected);
+
+            Uri slashExpected = new Uri(trailingSlashWellFormed, UriKind.Absolute);
+            yield return new TestCaseData(new Uri(rawUri), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{rawUri}\")")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{rawUri}?"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{rawUri}?\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{rawUri}#"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{rawUri}#\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri(trailingSlashRawUri), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashRawUri}\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{trailingSlashRawUri}?"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashRawUri}?\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{trailingSlashRawUri}#"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashRawUri}#\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{trailingSlashRawUri}#"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashRawUri}?#\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri(wellFormed), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{wellFormed}\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{wellFormed}?"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{wellFormed}?\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{wellFormed}#"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{wellFormed}#\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri(trailingSlashWellFormed), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashWellFormed}\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{trailingSlashWellFormed}?"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashWellFormed}?\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{trailingSlashWellFormed}#"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashWellFormed}#\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
+            yield return new TestCaseData(new Uri($"{trailingSlashWellFormed}#"), false, false, UniqueIdentifier.NormalizePathOption.TrailingSlash)
+                .SetName($"NormalizeUri(\"{trailingSlashWellFormed}?#\", false, false, TrailingSlash)")
+                .Returns(slashExpected);
         }
 
         public static IEnumerable<TestCaseData> GetGuidToIdentifierStringTestCases() => UUIDTestValues.GetTestValues(false)
@@ -489,10 +655,20 @@ namespace FsInfoCat.Test
 
         [Test]
         [Property("Priority", 1)]
-        [TestCaseSource("GetToNormalizedUriTestCases")]
-        public Uri ToNormalizedUriTest(Uri url, bool noTrailingSlash)
+        [TestCaseSource("GetNormalizeUriTestCases")]
+        public Uri NormalizeUriTest(Uri url, bool? stripQuery, bool? stripFragment, UniqueIdentifier.NormalizePathOption? pathOption)
         {
-            return UniqueIdentifier.ToNormalizedUri(url, noTrailingSlash);
+            if (stripQuery.HasValue)
+            {
+                if (stripFragment.HasValue)
+                {
+                    if (pathOption.HasValue)
+                        return UniqueIdentifier.NormalizeUri(url, stripQuery.Value, stripFragment.Value, pathOption.Value);
+                    return UniqueIdentifier.NormalizeUri(url, stripQuery.Value, stripFragment.Value);
+                }
+                return UniqueIdentifier.NormalizeUri(url, stripQuery.Value);
+            }
+            return UniqueIdentifier.NormalizeUri(url);
         }
 
         [Test]
@@ -555,8 +731,6 @@ namespace FsInfoCat.Test
             Assert.That(target.UUID.Value, Is.EqualTo(guid));
             Assert.That(target.SerialNumber.HasValue, Is.False);
             Assert.That(target.Ordinal.HasValue, Is.False);
-            // Assert.That(target.URL.AbsolutePath, Is.EqualTo(expected));
-            // Assert.That(target.URL.PathAndQuery, Is.EqualTo(expected));
             return new IdValues(target.Value, target.URL.AbsoluteUri);
         }
 
@@ -570,16 +744,6 @@ namespace FsInfoCat.Test
             Assert.That(target.URL.IsFile, Is.False);
             Assert.That(target.URL.Scheme, Is.EqualTo("urn"));
             Assert.That(target.URL.Fragment, Is.Empty);
-            // string expected = uri.Split('/', '?', '#')[0].ToLower();
-            // Assert.That(target.URL.AbsoluteUri, Is.EqualTo(expected));
-            Assert.That(target.SerialNumber.HasValue, Is.False);
-            Assert.That(target.Ordinal.HasValue, Is.False);
-            // expected = expected.Substring(4);
-            // Assert.That(Guid.TryParse(expected.Substring(5), out Guid guid), Is.True, $"Failed to parse '{expected}'");
-            // expected = $"uuid:{guid.ToString("d")}";
-            // Assert.That(target.URL.AbsolutePath, Is.EqualTo(expected));
-            // Assert.That(target.URL.PathAndQuery, Is.EqualTo(expected));
-            // Assert.That(target.Value, Is.EqualTo(expected.Substring(5)));
             return new UuidValues(target.UUID, target.Value, target.URL.AbsoluteUri);
         }
 
@@ -597,12 +761,6 @@ namespace FsInfoCat.Test
             Assert.That(target.SerialNumber.Value, Is.EqualTo(serialNumber));
             Assert.That(target.UUID.HasValue, Is.False);
             Assert.That(target.Ordinal.HasValue, Is.False);
-            // string expected = serialNumber.ToString("x8");
-            // expected = $"{expected.Substring(0, 4)}-{expected.Substring(4)}";
-            // Assert.That(target.Value, Is.EqualTo(expected));
-            // expected = $"volume:id:{expected}";
-            // Assert.That(target.URL.AbsolutePath, Is.EqualTo(expected));
-            // Assert.That(target.URL.PathAndQuery, Is.EqualTo(expected));
             return new IdValues(target.Value, target.URL.AbsoluteUri);
         }
 
@@ -620,11 +778,6 @@ namespace FsInfoCat.Test
             Assert.That(target.SerialNumber.Value, Is.EqualTo(serialNumber));
             Assert.That(target.UUID.HasValue, Is.False);
             Assert.That(target.Ordinal.HasValue, Is.True);
-            // string expected = $"{serialNumber.ToString("x8")}-{ordinal}";
-            // Assert.That(target.Value, Is.EqualTo(expected));
-            // expected = $"volume:id:{expected}";
-            // Assert.That(target.URL.AbsolutePath, Is.EqualTo(expected));
-            // Assert.That(target.URL.PathAndQuery, Is.EqualTo(expected));
             return new SnIdValues(target.SerialNumber, target.Ordinal, target.Value, target.URL.AbsoluteUri);
         }
 
@@ -638,14 +791,8 @@ namespace FsInfoCat.Test
             Assert.That(target.URL.IsFile, Is.False);
             Assert.That(target.URL.Scheme, Is.EqualTo("urn"));
             Assert.That(target.URL.Fragment, Is.Empty);
-            // string expected = uri.Split('/', '?', '#')[0];
-            // Assert.That(target.URL.AbsoluteUri, Is.EqualTo(expected));
             Assert.That(target.SerialNumber.HasValue, Is.True);
             Assert.That(target.UUID.HasValue, Is.False);
-            // expected = expected.Substring(4);
-            // Assert.That(target.URL.AbsolutePath, Is.EqualTo(expected));
-            // Assert.That(target.URL.PathAndQuery, Is.EqualTo(expected));
-            // Assert.That(target.Value, Is.EqualTo(expected.Substring(10)));
             return new SnIdValues(target.SerialNumber, target.Ordinal, target.Value, target.URL.AbsoluteUri);
         }
 
@@ -662,11 +809,6 @@ namespace FsInfoCat.Test
             Assert.That(target.SerialNumber.HasValue, Is.False);
             Assert.That(target.UUID.HasValue, Is.False);
             Assert.That(target.Ordinal.HasValue, Is.False);
-            // string expected = (path.EndsWith("\\")) ? path : path + "\\";
-            // Assert.That(target.Value, Is.EqualTo(expected));
-            // expected = new Uri(expected).AbsolutePath;
-            // Assert.That(target.URL.AbsolutePath, Is.EqualTo(expected));
-            // Assert.That(target.URL.PathAndQuery, Is.EqualTo(expected));
             return new IdValues(target.Value, target.URL.AbsoluteUri);
         }
 
@@ -679,20 +821,12 @@ namespace FsInfoCat.Test
             Assert.That(target.URL.IsAbsoluteUri, Is.True);
             Assert.That(target.URL.IsFile, Is.True);
             Assert.That(target.URL.Scheme, Is.EqualTo("file"));
-            // string expected = uri.Split('?', '#')[0];
-            // if (!uri.EndsWith("/"))
-            //     uri += "/";
-            // Assert.That(target.URL.AbsoluteUri, Is.EqualTo(expected));
             Assert.That(target.URL.Fragment, Is.Empty);
             Assert.That(target.SerialNumber.HasValue, Is.False);
             Assert.That(target.UUID.HasValue, Is.False);
             Assert.That(target.Ordinal.HasValue, Is.False);
-            // Uri url = new Uri(uri);
-            // expected = url.AbsolutePath;
-            // Assert.That(target.URL.AbsolutePath, Is.EqualTo(expected));
-            // Assert.That(target.URL.PathAndQuery, Is.EqualTo(expected));
             Assert.That(target.Value, Is.EqualTo(target.URL.LocalPath));
-            return new IdValues(target.Value, target.URL.AbsolutePath);
+            return new IdValues(target.Value, target.URL.AbsoluteUri);
         }
 
         [Test]
@@ -700,16 +834,16 @@ namespace FsInfoCat.Test
         public void FromInvalidUriConstructorTest()
         {
             Assert.That(() => { new UniqueIdentifier(null); }, Throws.ArgumentNullException
-                .With.Property("ParamName").EqualTo("uriString"));
+                .With.Property("ParamName").EqualTo("uri"));
             Assert.That(() => { new UniqueIdentifier(_systemDrivePath); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uriString")
-                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uriString')"));
+                .With.Property("ParamName").EqualTo("uri")
+                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uri')"));
             Assert.That(() => { new UniqueIdentifier(_systemDriveUrl); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uriString")
-                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uriString')"));
+                .With.Property("ParamName").EqualTo("uri")
+                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uri')"));
             Assert.That(() => { new UniqueIdentifier("file:///"); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uriString")
-                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uriString')"));
+                .With.Property("ParamName").EqualTo("uri")
+                .With.Property("Message").EqualTo("Invalid host name or path type (Parameter 'uri')"));
         }
 
         [Test]
@@ -724,8 +858,8 @@ namespace FsInfoCat.Test
         public void FromInvalidUrnNamespaceConstructorTest([Values("urn:", "urn:id")] string uri)
         {
             Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uriString")
-                .With.Property("Message").EqualTo("Unsupported URN namespace (Parameter 'uriString')"));
+                .With.Property("ParamName").EqualTo("uri")
+                .With.Property("Message").EqualTo("Unsupported URN namespace (Parameter 'uri')"));
         }
 
         [Test]
@@ -735,8 +869,8 @@ namespace FsInfoCat.Test
         )] string uri)
         {
             Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uriString")
-                .With.Property("Message").EqualTo("Invalid UUID URI format (Parameter 'uriString')"));
+                .With.Property("ParamName").EqualTo("uri")
+                .With.Property("Message").EqualTo("Invalid UUID URI format (Parameter 'uri')"));
         }
 
         [Test]
@@ -746,8 +880,8 @@ namespace FsInfoCat.Test
         )] string uri)
         {
             Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uriString")
-                .With.Property("Message").EqualTo("Invalid volume identifier URI format (Parameter 'uriString')"));
+                .With.Property("ParamName").EqualTo("uri")
+                .With.Property("Message").EqualTo("Invalid volume identifier URI format (Parameter 'uri')"));
         }
 
         [Test]
@@ -757,12 +891,13 @@ namespace FsInfoCat.Test
         )] string uri)
         {
             Assert.That(() => { new UniqueIdentifier(uri); }, Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property("ParamName").EqualTo("uriString")
-                .With.Property("Message").EqualTo("Unsupported URI scheme (Parameter 'uriString')"));
+                .With.Property("ParamName").EqualTo("uri")
+                .With.Property("Message").EqualTo("Unsupported URI scheme (Parameter 'uri')"));
         }
 
         public class IdValues : IEquatable<IdValues>
         {
+            private Uri _absoluteUri;
             public string Value { get; }
 
             public string AbsoluteUri { get; }
@@ -771,10 +906,30 @@ namespace FsInfoCat.Test
             {
                 Value = value;
                 AbsoluteUri = absoluteUri;
+                if (null != absoluteUri && Uri.TryCreate(absoluteUri, UriKind.RelativeOrAbsolute, out Uri uri))
+                    _absoluteUri = uri;
+                else
+                    _absoluteUri = null;
             }
 
-            public bool Equals([AllowNull] IdValues other) => null != other && (ReferenceEquals(this, other) ||
-                (AbsoluteUri == other.AbsoluteUri && Value == other.Value));
+            public bool Equals([AllowNull] IdValues other)
+            {
+                if (other is null)
+                    return false;
+                if (ReferenceEquals(this, other))
+                    return true;
+                if (null == _absoluteUri)
+                {
+                    if (null != other._absoluteUri)
+                        return false;
+                }
+                else
+                {
+                    if (null == other._absoluteUri || !_absoluteUri.AuthorityCaseInsensitiveEquals(other._absoluteUri))
+                        return false;
+                }
+                return Value == other.Value;
+            }
 
             public override bool Equals(object obj) => Equals(obj as IdValues);
 
