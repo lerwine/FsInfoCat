@@ -315,8 +315,7 @@ namespace Tests
         {
         }
 
-        [Test]
-        [Property("Priority", 1)]
+        [Test, Property("Priority", 1)]
         public void ByteLengthTest()
         {
             Assert.AreEqual(_salt1.Length, PwHash.SALT_BYTES_LENGTH, "Salt byte length test failed");

@@ -155,8 +155,7 @@ namespace FsInfoCat.Test
         {
         }
 
-        [Test]
-        [Property("Priority", 1)]
+        [Test, Property("Priority", 1)]
         public void FsRootConstructorTest()
         {
             FsRoot target = new FsRoot();
@@ -169,8 +168,7 @@ namespace FsInfoCat.Test
             Assert.That(target.ChildNodes, Is.Not.Null.Or.Empty);
         }
 
-        [Test]
-        [Property("Priority", 1)]
+        [Test, Property("Priority", 1)]
         public void FsHostConstructorTest()
         {
             FsHost target = new FsHost();
@@ -179,8 +177,7 @@ namespace FsInfoCat.Test
             Assert.That(target.Roots, Is.Not.Null.Or.Empty);
         }
 
-        [Test]
-        [Property("Priority", 2)]
+        [Test, Property("Priority", 2)]
         [TestCaseSource("GetFsHostAddTestCases")]
         public int FsHostAddTest(IList<Tuple<FsRoot, bool>> addList)
         {
@@ -207,8 +204,7 @@ namespace FsInfoCat.Test
             return target.Roots.Count;
         }
 
-        [Test]
-        [Property("Priority", 3)]
+        [Test, Property("Priority", 3)]
         [TestCaseSource("GetFsHostRemoveTestCases")]
         public int FsHostRemoveTest(IList<FsRoot> addList, IList<Tuple<FsRoot, int>> removeList)
         {

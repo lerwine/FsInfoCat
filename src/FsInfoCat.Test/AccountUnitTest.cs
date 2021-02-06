@@ -188,8 +188,7 @@ namespace Tests
         {
         }
 
-        [Test]
-        [Property("Priority", 1)]
+        [Test, Property("Priority", 1)]
         public void AttributesTest()
         {
             Type type = typeof(Account);

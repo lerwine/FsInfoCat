@@ -52,7 +52,7 @@
 ### Obsolete references
 
 ```regex
-\[Obsolete(\(("[^"]*")?\))?]
+\[Obsolete(\(("[^"]*")?\))?\]
 ```
 
 ## Build Tasks
