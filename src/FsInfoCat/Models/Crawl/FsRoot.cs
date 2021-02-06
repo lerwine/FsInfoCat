@@ -31,17 +31,9 @@ namespace FsInfoCat.Models.Crawl
         /// </summary>
         public string VolumeName { get; set; }
 
-#warning Data type does not support file shares or linux
-        [Obsolete("Use UniqueIdentifier instead")]
-        public uint SerialNumber { get; set; }
+        public VolumeIdentifier Identifier { get; set; }
 
-        /*
-            Get-WmiObject -Class 'Win32_LogicalDisk' can be used to get 32-bit serial number in windows
-            lsblk -a -b -f -J -o NAME,LABEL,MOUNTPOINT,SIZE,FSTYPE,UUID
-        */
-        public UniqueIdentifier UniqueIdentifier { get; set; }
-
-        string INamedComponent.Name => (string.IsNullOrWhiteSpace(RootPathName)) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? ((UniqueIdentifier is null) ? "" : UniqueIdentifier.Value) : VolumeName) : RootPathName;
+        string INamedComponent.Name => (string.IsNullOrWhiteSpace(RootPathName)) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? Identifier.ToString() : VolumeName) : RootPathName;
 
         public ComponentList<CrawlMessage> Messages
         {
@@ -82,7 +74,7 @@ namespace FsInfoCat.Models.Crawl
                 throw new ArgumentNullException(nameof(driveInfo));
             DriveFormat = driveInfo.DriveFormat;
             VolumeName = driveInfo.VolumeName;
-            UniqueIdentifier = driveInfo.UniqueIdentifier;
+            Identifier = driveInfo.Identifier;
         }
 
         public FsRoot()

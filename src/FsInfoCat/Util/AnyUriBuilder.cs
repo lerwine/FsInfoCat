@@ -431,12 +431,12 @@ namespace FsInfoCat.Util
                 if (null == _fragment)
                     Uri = new Uri(_path, UriKind.Relative);
                 else
-                    Uri = new Uri($"{_path}#{_fragment}");
+                    Uri = new Uri($"{_path}#{_fragment}", UriKind.Relative);
             }
             else if (null == _fragment)
-                Uri = new Uri($"{_path}?{_query}");
+                Uri = new Uri($"{_path}?{_query}", UriKind.Relative);
             else
-                Uri = new Uri($"{_path}?{_query}#{_fragment}");
+                Uri = new Uri($"{_path}?{_query}#{_fragment}", UriKind.Relative);
         }
 
         private bool TryChangeToAbsolute(string scheme, string host, int? port)

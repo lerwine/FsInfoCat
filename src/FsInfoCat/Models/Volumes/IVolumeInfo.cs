@@ -1,3 +1,4 @@
+using System;
 using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Volumes
@@ -23,7 +24,7 @@ namespace FsInfoCat.Models.Volumes
             Get-WmiObject -Class 'Win32_LogicalDisk' can be used to get 32-bit serial number in windows
             lsblk -a -b -f -J -o NAME,LABEL,MOUNTPOINT,SIZE,FSTYPE,UUID
         */
-        UniqueIdentifier UniqueIdentifier { get; set; }
+        VolumeIdentifier Identifier { get; set; }
 
         bool CaseSensitive { get; set; }
     }

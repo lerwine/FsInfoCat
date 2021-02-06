@@ -13,7 +13,7 @@
             "args": [
                 "Start-Debug.ps1"
             ],
-            "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
+            "cwd": "${workspaceFolder}/dev/Scripts",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },
@@ -26,8 +26,8 @@
             "args": [
                 "Start-Debug.ps1"
             ],
-            "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
-            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/dev/Scripts",
+            "stopAtEntry": true,
             "console": "integratedTerminal"
         },
         {

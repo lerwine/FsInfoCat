@@ -30,7 +30,7 @@ namespace FsInfoCat.Test
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
                     RootPathName = "C:\\",
-                    UniqueIdentifier = new UniqueIdentifier(0x9E497DE8),
+                    Identifier = new VolumeIdentifier(0x9E497DE8),
                     VolumeName = "OS"
                 },
                 true
@@ -49,7 +49,7 @@ namespace FsInfoCat.Test
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
                     RootPathName = "C:\\",
-                    UniqueIdentifier = new UniqueIdentifier(0x9E497DE8),
+                    Identifier = new VolumeIdentifier(0x9E497DE8),
                     VolumeName = "OS"
                 },
                 true
@@ -71,7 +71,7 @@ namespace FsInfoCat.Test
                     DriveFormat = "MAFS",
                     DriveType = DriveType.Fixed,
                     RootPathName = "Z:\\",
-                    UniqueIdentifier = new UniqueIdentifier(@"\\servicenowdiag479.file.core.windows.net\testazureshare"),
+                    Identifier = new VolumeIdentifier(@"\\servicenowdiag479.file.core.windows.net\testazureshare"),
                     VolumeName = ""
                 });
                 list.Add(new FsRoot()
@@ -80,7 +80,7 @@ namespace FsInfoCat.Test
                     DriveFormat = "FAT32",
                     DriveType = DriveType.Removable,
                     RootPathName = "F:\\",
-                    UniqueIdentifier = new UniqueIdentifier("urn:volume:id:3B51-8D4B"),
+                    Identifier = new VolumeIdentifier("urn:volume:id:3B51-8D4B"),
                     VolumeName = "HP_TOOLS"
                 });
                 list.Add(new FsRoot()
@@ -89,7 +89,7 @@ namespace FsInfoCat.Test
                     DriveFormat = "ext4",
                     DriveType = DriveType.Fixed,
                     RootPathName = "/",
-                    UniqueIdentifier = new UniqueIdentifier("urn:uuid:3756934c-31d3-413c-8df9-5b7c7b1a4451"),
+                    Identifier = new VolumeIdentifier("urn:uuid:3756934c-31d3-413c-8df9-5b7c7b1a4451"),
                     VolumeName = "cloudimg-rootfs"
                 });
                 return list;
@@ -105,7 +105,7 @@ namespace FsInfoCat.Test
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
                     RootPathName = "C:\\",
-                    UniqueIdentifier = new UniqueIdentifier(0x9E497DE8),
+                    Identifier = new VolumeIdentifier(0x9E497DE8),
                     VolumeName = "OS"
                 },
                 -1
@@ -164,7 +164,7 @@ namespace FsInfoCat.Test
             Assert.That(target.DriveFormat, Is.Null);
             Assert.That(target.DriveType, Is.EqualTo(DriveType.Unknown));
             Assert.That(target.RootPathName, Is.Null);
-            Assert.That(target.UniqueIdentifier, Is.Null);
+            Assert.That(target.Identifier, Is.EqualTo(VolumeIdentifier.Empty));
             Assert.That(target.VolumeName, Is.Null);
             Assert.That(target.ChildNodes, Is.Not.Null.Or.Empty);
         }

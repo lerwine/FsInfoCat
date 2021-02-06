@@ -38,6 +38,56 @@ namespace FsInfoCat.Util
 
         private static readonly char[] QueryOrFragmentChar = new char[] { '?', '#' };
 
+        public static Uri AsNormalized(this Uri uri)
+        {
+            if (null == uri)
+                return uri;
+            string originalString;
+            if (uri.IsAbsoluteUri)
+            {
+                if (!(uri.Scheme.ToLower().Equals(uri.Scheme) && uri.Host.ToLower().Equals(uri.Host)))
+                {
+                    UriBuilder uriBuilder = new UriBuilder(uri);
+                    uriBuilder.Scheme = uri.Scheme.ToLower();
+                    uriBuilder.Host = uri.Host.ToLower();
+                    if (uri.Query == "?")
+                        uriBuilder.Query = "";
+                    if (uri.Fragment == "#")
+                        uriBuilder.Fragment = "";
+                    uri = uriBuilder.Uri;
+                }
+                else if (!uri.Host.ToLower().Equals(uri.Host))
+                {
+                    if (uri.IsDefaultPort)
+                        uri.TrySetHostComponent(uri.Host.ToLower(),  null, out uri);
+                    uri.TrySetHostComponent(uri.Host.ToLower(),  uri.Port, out uri);
+                }
+                if (uri.Query == "?")
+                    uri.TrySetQueryComponent(null, out uri);
+                if (uri.Fragment == "#")
+                    uri.TrySetFragmentComponent(null, out uri);
+                originalString = uri.OriginalString;
+                if (Uri.IsWellFormedUriString(originalString, UriKind.Absolute))
+                    return uri;
+                if (Uri.IsWellFormedUriString(uri.AbsoluteUri, UriKind.Absolute))
+                    return new Uri(uri.AbsoluteUri, UriKind.Absolute);
+                return new Uri(Uri.EscapeUriString(uri.OriginalString), UriKind.Absolute);
+            }
+
+            string s = uri.GetFragmentComponent();
+            if (null != s && s.Length == 0)
+                uri.TrySetFragmentComponent(null, out uri);
+            s = uri.GetQueryComponent();
+            if (null != s && s.Length == 0)
+                uri.TrySetQueryComponent(null, out uri);
+            if ((originalString = uri.OriginalString).Length == 0 || Uri.IsWellFormedUriString(originalString, UriKind.Relative))
+                return uri;
+            originalString = Uri.EscapeUriString(originalString);
+            if (Uri.IsWellFormedUriString(originalString, UriKind.Relative))
+                return new Uri(originalString, UriKind.Relative);
+            return new Uri(Uri.EscapeDataString(uri.OriginalString), UriKind.Relative);
+        }
+
         public static Uri SplitQueryAndFragment(this Uri uri, out string query, out string fragment)
         {
             if (uri is null)
@@ -85,121 +135,6 @@ namespace FsInfoCat.Util
             return new Uri(originalString, UriKind.Relative);
         }
 
-        public static Uri WithScheme(this Uri uri, string scheme)
-        {
-            if (uri is null)
-                throw new ArgumentNullException(nameof(uri));
-            if (scheme is null)
-                throw new ArgumentNullException(nameof(scheme));
-            if (scheme.Length == 0 || !Uri.CheckSchemeName(scheme))
-                throw new ArgumentOutOfRangeException(nameof(scheme));
-            try
-            {
-                if (uri.IsAbsoluteUri)
-                {
-                    if (uri.Scheme == scheme)
-                        return uri;
-                    UriBuilder uriBuilder = new UriBuilder(uri);
-                    uriBuilder.Scheme = scheme;
-                    return uriBuilder.Uri;
-                }
-                else
-                    return new Uri($"{scheme}:{uri.OriginalString}");
-            }
-            catch (Exception exc)
-            {
-                throw new ArgumentOutOfRangeException(nameof(uri), (string.IsNullOrWhiteSpace(exc.Message) ? "Invalid URI" : exc.Message));
-            }
-        }
-
-        public static Uri WithoutQueryAndFragment(this Uri uri)
-        {
-            if (uri is null)
-                throw new ArgumentNullException(nameof(uri));
-            if (uri.IsAbsoluteUri)
-            {
-                UriBuilder uriBuilder;
-                if (uri.Fragment.Length == 0)
-                {
-                    if (uri.Query.Length == 0)
-                        return uri;
-                    uriBuilder = new UriBuilder(uri);
-                    uriBuilder.Query = "";
-                }
-                else
-                {
-                    uriBuilder = new UriBuilder(uri);
-                    uriBuilder.Fragment = "";
-                    if (uri.Query.Length > 0)
-                        uriBuilder.Query = "";
-                }
-                return uriBuilder.Uri;
-            }
-
-            string uriString = uri.OriginalString;
-            int index = uriString.IndexOfAny(QueryOrFragmentChar);
-            if (index < 0)
-                return uri;
-            return new Uri(uriString.Substring(0, index), UriKind.Relative);
-        }
-
-        public static Uri WithTrailingSlash(this Uri uri)
-        {
-            if (uri is null)
-                throw new ArgumentNullException(nameof(uri));
-
-            if (uri.IsAbsoluteUri)
-            {
-                if (uri.AbsolutePath.EndsWith("/"))
-                    return uri;
-                UriBuilder ub = new UriBuilder(uri);
-                ub.Path += "/";
-                return ub.Uri;
-            }
-            int index = uri.OriginalString.IndexOfAny(new char[] { '?', '#' });
-            string p = uri.OriginalString;
-            string qf;
-            if (index < 0)
-                qf = "";
-            else
-            {
-                qf = p.Substring(index);
-                p = p.Substring(0, index);
-            }
-            if (p.EndsWith("/"))
-                return uri;
-            return new Uri($"{p}/{qf}", UriKind.Relative);
-        }
-
-        public static Uri WithoutTrailingSlash(this Uri uri)
-        {
-            if (uri.IsAbsoluteUri)
-            {
-                if (!uri.AbsolutePath.EndsWith("/"))
-                    return uri;
-                UriBuilder ub = new UriBuilder(uri);
-                ub.Path = (ub.Path.Length < 2) ? "" : ub.Path.Substring(0, ub.Path.Length - 1);
-                return ub.Uri;
-            }
-            int index = uri.OriginalString.IndexOfAny(new char[] { '?', '#' });
-            string p = uri.OriginalString;
-            string qf;
-            if (index < 0)
-                qf = "";
-            else
-            {
-                qf = p.Substring(index);
-                p = p.Substring(0, index);
-            }
-            if (!p.EndsWith("/"))
-                return uri;
-            if (p.Length < 2)
-                p = "";
-            else
-                p = p.Substring(0, p.Length - 1);
-            return new Uri($"{p}/{qf}", UriKind.Relative);
-        }
-
         public static bool AuthorityCaseInsensitiveEquals(this Uri uri, Uri other)
         {
             if (null == uri)
@@ -212,7 +147,9 @@ namespace FsInfoCat.Util
             {
                 if (!other.IsAbsoluteUri)
                     return false;
-                return uri.Authority.Equals(other.Authority, StringComparison.InvariantCultureIgnoreCase) &&
+                UriComponents c = UriComponents.Scheme | UriComponents.UserInfo | UriComponents.HostAndPort | UriComponents.KeepDelimiter;
+                return uri.GetComponents(c, UriFormat.UriEscaped).Equals(other.GetComponents(c, UriFormat.UriEscaped),
+                    StringComparison.InvariantCultureIgnoreCase) &&
                     uri.PathAndQuery.Equals(other.PathAndQuery) && uri.Fragment.Equals(other.Fragment);
             }
             return !other.IsAbsoluteUri && uri.OriginalString.Equals(other.OriginalString);
@@ -220,9 +157,13 @@ namespace FsInfoCat.Util
 
         public static string AsRelativeUriString(this string value)
         {
-            if (string.IsNullOrEmpty(value) || Uri.IsWellFormedUriString(value, UriKind.Relative))
+            if (string.IsNullOrEmpty(value))
                 return value;
-            return Uri.EscapeUriString(value);
+            if (!Uri.IsWellFormedUriString(value, UriKind.RelativeOrAbsolute))
+                value = Uri.EscapeUriString(value);
+            if (Uri.IsWellFormedUriString(value, UriKind.Absolute))
+                return (new Uri(value, UriKind.Absolute).GetComponents(UriComponents.PathAndQuery | UriComponents.Fragment | UriComponents.KeepDelimiter, UriFormat.UriEscaped));
+            return (Uri.IsWellFormedUriString(value, UriKind.Relative)) ? value : Uri.EscapeUriString(value);
         }
 
         public static string AsUserNameComponentEncoded(this string value)
@@ -231,7 +172,7 @@ namespace FsInfoCat.Util
                 return value;
 
             return (Uri.IsWellFormedUriString(value, UriKind.Relative) ? value : Uri.EscapeUriString(value))
-                .Replace("/", "%2F").Replace(":", "%3A").Replace("?", "%3F").Replace("#", "%23");
+                .Replace("/", "%2F").Replace(":", "%3A").Replace("?", "%3F").Replace("#", "%23").Replace("@", "%40");
         }
 
         public static string AsPasswordComponentEncoded(this string value)
@@ -240,7 +181,7 @@ namespace FsInfoCat.Util
                 return value;
 
             return (Uri.IsWellFormedUriString(value, UriKind.Relative) ? value : Uri.EscapeUriString(value))
-                .Replace("/", "%2F").Replace("?", "%3F").Replace("#", "%23");
+                .Replace("/", "%2F").Replace("?", "%3F").Replace("#", "%23").Replace("@", "%40");
         }
 
         public static string GetUserNameAndPassword(this Uri uri, out string password)
@@ -280,7 +221,7 @@ namespace FsInfoCat.Util
                         {
                             string preceding = uri.GetComponents(BEFORE_USERINFO_COMPONENTS, UriFormat.UriEscaped);
                             string following = uri.GetComponents(AFTER_USERINFO_COMPONENTS, UriFormat.UriEscaped);
-                            result = new Uri($"{preceding}{newUserInfo}@{following}");
+                            result = new Uri($"{preceding}{newUserInfo}@{following}", UriKind.Absolute);
                             if (preceding != uri.GetComponents(BEFORE_USERINFO_COMPONENTS, UriFormat.UriEscaped) ||
                                 following != uri.GetComponents(AFTER_USERINFO_COMPONENTS, UriFormat.UriEscaped))
                             {
@@ -347,7 +288,7 @@ namespace FsInfoCat.Util
                     {
                         string preceding = uri.GetComponents(BEFORE_HOST_COMPONENTS, UriFormat.UriEscaped);
                         string following = uri.GetComponents(AFTER_PORT_COMPONENTS, UriFormat.UriEscaped);
-                        result = new Uri($"{preceding}{hostAndPort}@{following}");
+                        result = new Uri($"{preceding}{hostAndPort}{following}", UriKind.Absolute);
                         if (preceding != uri.GetComponents(BEFORE_HOST_COMPONENTS, UriFormat.UriEscaped) ||
                             following != uri.GetComponents(AFTER_PORT_COMPONENTS, UriFormat.UriEscaped))
                         {
@@ -450,7 +391,7 @@ namespace FsInfoCat.Util
                             else
                                 path = $"//{path}";
                         }
-                        result = new Uri($"{preceding}{path}{following}");
+                        result = new Uri($"{preceding}{path}{following}", UriKind.Relative);
                         if (preceding != uri.GetComponents(BEFORE_PATH_COMPONENTS, UriFormat.UriEscaped) ||
                             following != uri.GetComponents(AFTER_PATH_COMPONENTS, UriFormat.UriEscaped))
                         {
@@ -626,7 +567,7 @@ namespace FsInfoCat.Util
                     {
                         string preceding = uri.GetComponents(BEFORE_QUERY_COMPONENTS, UriFormat.UriEscaped);
                         string following = uri.GetComponents(AFTER_QUERY_COMPONENTS, UriFormat.UriEscaped);
-                        result = new Uri($"{preceding}{query}{following}");
+                        result = new Uri($"{preceding}{query}{following}", UriKind.Relative);
                         if (preceding != uri.GetComponents(BEFORE_QUERY_COMPONENTS, UriFormat.UriEscaped) ||
                             following != uri.GetComponents(AFTER_QUERY_COMPONENTS, UriFormat.UriEscaped))
                         {
@@ -788,7 +729,7 @@ namespace FsInfoCat.Util
                     try
                     {
                         string preceding = uri.GetComponents(BEFORE_FRAGMENT_COMPONENTS, UriFormat.UriEscaped);
-                        result = new Uri($"{preceding}{fragment}");
+                        result = new Uri($"{preceding}{fragment}", UriKind.Relative);
                         if (preceding != uri.GetComponents(BEFORE_QUERY_COMPONENTS, UriFormat.UriEscaped))
                         {
                             result = uri;
@@ -815,7 +756,7 @@ namespace FsInfoCat.Util
                 else
                     try
                     {
-                        result = new Uri(originalString.Substring(index + 1), UriKind.Absolute);
+                        result = new Uri(originalString.Substring(index + 1), UriKind.Relative);
                     }
                     catch
                     {
@@ -827,7 +768,7 @@ namespace FsInfoCat.Util
             if (index < 0)
                 try
                 {
-                    result = new Uri($"{originalString}#{fragment}", UriKind.Absolute);
+                    result = new Uri($"{originalString}#{fragment}", UriKind.Relative);
                 }
                 catch
                 {
@@ -841,7 +782,7 @@ namespace FsInfoCat.Util
                 else
                     try
                     {
-                        result = new Uri($"#{fragment}", UriKind.Absolute);
+                        result = new Uri($"#{fragment}", UriKind.Relative);
                     }
                     catch
                     {
@@ -856,7 +797,7 @@ namespace FsInfoCat.Util
                 else
                     try
                     {
-                        result = new Uri($"{originalString.Substring(0, index)}#{fragment}", UriKind.Absolute);
+                        result = new Uri($"{originalString.Substring(0, index)}#{fragment}", UriKind.Relative);
                     }
                     catch
                     {

@@ -61,16 +61,16 @@ namespace FsInfoCat.PS.Commands
 
             string IVolumeInfo.DriveFormat { get => DriveFormat; set => throw new NotSupportedException(); }
 
-            public UniqueIdentifier UniqueIdentifier { get; internal set; }
+            public VolumeIdentifier Identifier { get; internal set; }
 
-            UniqueIdentifier IVolumeInfo.UniqueIdentifier { get => UniqueIdentifier; set => throw new NotSupportedException(); }
+            VolumeIdentifier IVolumeInfo.Identifier { get => Identifier; set => throw new NotSupportedException(); }
 
             public bool CaseSensitive { get; internal set; }
             bool IVolumeInfo.CaseSensitive { get => CaseSensitive; set => throw new NotSupportedException(); }
 
             public bool Equals(IVolumeInfo other)
             {
-                return null != other && (ReferenceEquals(this, other) || (UniqueIdentifier == other.UniqueIdentifier &&
+                return null != other && (ReferenceEquals(this, other) || (Identifier.Equals(other.Identifier) &&
                     DriveFormat == other.DriveFormat && VolumeName == other.VolumeName && RootPathName == other.RootPathName));
             }
 
@@ -92,12 +92,12 @@ namespace FsInfoCat.PS.Commands
 
             public override int GetHashCode()
             {
-                return (UniqueIdentifier is null) ? 0 : UniqueIdentifier.GetHashCode();
+                return Identifier.GetHashCode();
             }
 
             public override string ToString()
             {
-                return "{ RootPathName=\"" + RootPathName + "\"; VolumeName=\"" + VolumeName + "\"; DriveFormat=\"" + DriveFormat + "\"; SerialNumber=" + ((UniqueIdentifier is null) ? "null" : UniqueIdentifier.ToString()) + " }";
+                return "{ RootPathName=\"" + RootPathName + "\"; VolumeName=\"" + VolumeName + "\"; DriveFormat=\"" + DriveFormat + "\"; Identifer=" + Identifier.ToString() + " }";
             }
         }
 

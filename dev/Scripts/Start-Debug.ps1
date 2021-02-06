@@ -7,6 +7,7 @@ $PSModuleAutoLoadingPreference = [System.Management.Automation.ActionPreference]
 $ProgressPreference = [System.Management.Automation.ActionPreference]::Continue;
 
 Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../Setup/bin/FsInfoCat') -ErrorAction Stop;
+<#
 $FsCrawlJob = Start-FsCrawlJob -RootPath '..' -ErrorAction Stop;
 while ($FsCrawlJob.HasMoreData) {
     Receive-Job -Job $FsCrawlJob -Wait -ErrorAction Stop;

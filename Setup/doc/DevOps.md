@@ -1,6 +1,12 @@
 # Development Notes
 
 - [Development Notes](#development-notes)
+  - [Search/replace patterns](#searchreplace-patterns)
+    - [Add Working category](#add-working-category)
+    - [Remove Working category](#remove-working-category)
+    - [Add Ignore](#add-ignore)
+    - [Remove Ignore](#remove-ignore)
+    - [Obsolete references](#obsolete-references)
   - [Build Tasks](#build-tasks)
   - [Git Commands](#git-commands)
     - [Update forked repository from upstream](#update-forked-repository-from-upstream)
@@ -12,6 +18,42 @@
 > [Home](../../README.md) | [Setup and Configuration](../README.md)
 
 -------------------------------------------------------------------
+
+## Search/replace patterns
+
+### Add Working category
+
+```regex
+\[Test,\s+Property\("Priority",\s+(\d+)\)(,\s+Ignore(\(("[^"]*")?\))?,)?\]
+[Test, Property("Priority", $1)$2, NUnit.Framework.Category("Working")]
+```
+
+### Remove Working category
+
+```regex
+\[Test, Property\("Priority",\s+(\d+)\)(,\s+Ignore(\(("[^"]*")?\))?,)?\s+NUnit.Framework.Category\("Working"\)\]
+[Test, Property("Priority", $1)$2]
+```
+
+### Add Ignore
+
+```regex
+\[Test,\s+Property\("Priority",\s+(\d+)\)(,\s+NUnit.Framework.Category\("Working"\))?\]
+[Test, Property("Priority", $1), Ignore$2]
+```
+
+### Remove Ignore
+
+```regex
+\[Test, Property\("Priority",\s+(\d+)\),\s+Ignore(,\s+NUnit.Framework.Category\("Working"\))?\]
+[Test, Property("Priority", $1)$2]
+```
+
+### Obsolete references
+
+```regex
+\[Obsolete(\(("[^"]*")?\))?]
+```
 
 ## Build Tasks
 

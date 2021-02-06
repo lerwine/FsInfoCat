@@ -15,7 +15,7 @@ namespace FsInfoCat.PS.Commands
         private const string PARAMETER_SET_NAME_BY_ROOT_DIRECTORY = "ByRootDirectory";
         private const string PARAMETER_SET_NAME_BY_VOLUME_NAME = "ByVolumeName";
         private const string PARAMETER_SET_NAME_BY_DRIVE_FORMAT = "ByDriveFormat";
-        private const string PARAMETER_SET_NAME_BY_SERIAL_NUMBER = "BySerialNumber";
+        private const string PARAMETER_SET_NAME_BY_IDENTIFIER = "BySerialNumber";
         private const string PARAMETER_SET_NAME_GET_ALL = "GetAll";
 
         [Parameter(HelpMessage = "Find by full, case-sensitive path name of the volume root directory.", Mandatory = true,
@@ -33,7 +33,7 @@ namespace FsInfoCat.PS.Commands
         public string[] DriveFormat { get; set; }
 
         [Parameter(HelpMessage = "Find by volume serial number.", Mandatory = true, ValueFromPipelineByPropertyName = true,
-            ParameterSetName = PARAMETER_SET_NAME_BY_SERIAL_NUMBER)]
+            ParameterSetName = PARAMETER_SET_NAME_BY_IDENTIFIER)]
         public uint[] SerialNumber { get; set; }
 
         [Parameter(HelpMessage = "Get all registered volumes", ParameterSetName = PARAMETER_SET_NAME_GET_ALL)]
@@ -63,10 +63,10 @@ namespace FsInfoCat.PS.Commands
                 case PARAMETER_SET_NAME_BY_DRIVE_FORMAT:
                     matching = _volumeInfos.Where(v => DriveFormat.Any(f => f.Equals(v.DriveFormat, StringComparison.InvariantCultureIgnoreCase)));
                     break;
-                case PARAMETER_SET_NAME_BY_SERIAL_NUMBER:
+                case PARAMETER_SET_NAME_BY_IDENTIFIER:
 #warning Linq query is not perfect
-                    matching = _volumeInfos.Where(v => null != v.UniqueIdentifier && v.UniqueIdentifier.SerialNumber.HasValue &&
-                        !v.UniqueIdentifier.Ordinal.HasValue && SerialNumber.Any(n => n == v.UniqueIdentifier.SerialNumber.Value));
+                    matching = _volumeInfos.Where(v => v.Identifier.SerialNumber.HasValue &&
+                        !v.Identifier.Ordinal.HasValue && SerialNumber.Any(n => n == v.Identifier.SerialNumber.Value));
                     break;
                 default:
                     foreach (IVolumeInfo v in GetVolumeInfos())
