@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "PowerShell Launch Current File",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${file}",
+            "cwd": "${file}"
+        },
+        {
             "name": "Debug PS Module (Desktop)",
             "type": "clr",
             "request": "launch",
@@ -85,7 +92,9 @@
             "preLaunchTask": "Build Text Template Host",
             "request": "launch",
             "program": "${workspaceFolder}/Setup/bin/T4/StandaloneT4Host.exe",
-            "args": ["${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj"],
+            "args": [
+                "${workspaceFolder}/src/FsInfoCat.PS/FsInfoCat.PS.csproj"
+            ],
             "cwd": "${workspaceFolder}/Setup/bin/T4",
             "stopAtEntry": false,
             "console": "internalConsole"
