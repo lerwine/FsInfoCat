@@ -14,8 +14,43 @@ namespace FsInfoCat.Util
             {
                 private string _name;
 
-#warning Need to implement FullName
-                public string FullName => throw new NotImplementedException();
+                string INestedSite.FullName
+                {
+                    get
+                    {
+                        Monitor.Enter(Container.SyncRoot);
+                        try
+                        {
+                            if (!(IsOrphaned() || Container._isDisposed))
+                            {
+                                ISite site = Container.Owner.Site;
+                                if (null != site)
+                                {
+                                    if (site is INestedSite nestedSite)
+                                    {
+                                        string f = nestedSite.FullName;
+                                        if (!string.IsNullOrEmpty(f))
+                                        {
+                                            if (string.IsNullOrEmpty(_name))
+                                                return f;
+                                            return $"{f}/{Uri.EscapeDataString(_name)}";
+                                        }
+                                    }
+                                    string n = site.Name;
+                                    if (!string.IsNullOrEmpty(n))
+                                    {
+                                        if (string.IsNullOrEmpty(_name))
+                                            return n;
+                                        return $"{n}/{Uri.EscapeDataString(_name)}";
+                                    }
+                                }
+                            }
+                        }
+                        finally { Monitor.Exit(Container.SyncRoot); }
+
+                        return _name ?? "";
+                    }
+                }
 
                 public IComponent Component { get; }
 
@@ -30,8 +65,24 @@ namespace FsInfoCat.Util
                     get => _name;
                     set
                     {
-#warning Need to implement Name { set; }
-                        throw new NotImplementedException();
+                        if (value is null || IsOrphaned() || (null != _name && Container.NameComparer.Equals(value, _name)))
+                            _name = value;
+                        else if (_name != value)
+                        {
+                            Monitor.Enter(Container.SyncRoot);
+                            try
+                            {
+                                if (!Container._isDisposed)
+                                {
+                                    IEqualityComparer<string> nameComparer = Container.NameComparer;
+                                    if (Container.GetComponents().Where(c => !ReferenceEquals(c, Component))
+                                            .Select(c => c.GetComponentName()).Any(n => null != n && nameComparer.Equals(n, value)))
+                                        throw new ArgumentOutOfRangeException(nameof(value), ERROR_MESSAGE_ITEM_WITH_NAME_EXISTS);
+                                }
+                                _name = value;
+                            }
+                            finally { Monitor.Exit(Container.SyncRoot); }
+                        }
                     }
                 }
 
