@@ -110,7 +110,7 @@ section.outputs h3, section.outputs h4 {
     margin-bottom:0px;
 }
 
-section.outputs p {
+section.outputs pre {
     margin-top:0px;
 }
 ]]></xsl:text>
@@ -343,25 +343,25 @@ section.outputs p {
     </xsl:template>
     <xsl:template match="r:*" mode="Outputs">
         <xsl:element name="h3">Other output</xsl:element>
-        <xsl:element name="p">
+        <xsl:element name="pre">
             <xsl:value-of select="." />
         </xsl:element>
     </xsl:template>
     <xsl:template match="r:Message" mode="ErrorInfo">
         <xsl:element name="h3">Message</xsl:element>
-        <xsl:element name="p">
+        <xsl:element name="pre">
             <xsl:value-of select="." />
         </xsl:element>
     </xsl:template>
     <xsl:template match="r:StackTrace" mode="ErrorInfo">
         <xsl:element name="h4">Stack Trace</xsl:element>
-        <xsl:element name="p">
+        <xsl:element name="pre">
             <xsl:value-of select="." />
         </xsl:element>
     </xsl:template>
     <xsl:template match="r:*" mode="ErrorInfo">
         <xsl:element name="h3">Other error info</xsl:element>
-        <xsl:element name="p">
+        <xsl:element name="pre">
             <xsl:value-of select="." />
         </xsl:element>
     </xsl:template>
