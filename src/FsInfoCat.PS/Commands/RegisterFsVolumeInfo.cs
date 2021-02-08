@@ -1,11 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Management.Automation;
-using System.Linq;
-using FsInfoCat.Models.DB;
 using FsInfoCat.Models.Volumes;
 
 namespace FsInfoCat.PS.Commands
