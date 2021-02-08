@@ -86,14 +86,19 @@ namespace FsInfoCat.Util
 
         public void Clear() => _container.ClearList(this);
 
-#warning Need to implement Contains(IComponent)
-        protected bool Contains(IComponent component) => throw new NotImplementedException();
+        protected bool Contains(IComponent component)
+        {
+            if (null == component)
+                return false;
+            ContainerBase.SiteBase site = component.Site as ContainerBase.SiteBase;
+            return null != site && !site.IsOrphaned() && ReferenceEquals(site.Container, _container);
+        }
+
         bool IList.Contains(object value) => Contains(value as IComponent);
 
         public bool Contains(string name) => IndexOf(name) > -1;
 
-#warning Need to implement ICollection.CopyTo(Array, int)
-        void ICollection.CopyTo(Array array, int index) => throw new NotImplementedException();
+        void ICollection.CopyTo(Array array, int index) => GetComponents().ToArray().CopyTo(array, index);
 
         protected IEnumerable<IComponent> GetComponents() => _sites.Select(s => s.Component);
 
