@@ -36,11 +36,11 @@ namespace FsInfoCat.Test
                 true
             ));
             yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
-                .SetName("Single item")
+                .SetName("FsHostAddTest:Single item")
                 .Returns(1);
             fsRoots.Add(new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
             yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
-                .SetName("Add same item twice")
+                .SetName("FsHostAddTest:Add same item twice")
                 .Returns(1);
             fsRoots[1] = new Tuple<FsRoot, bool>(
                 new FsRoot()
@@ -48,15 +48,15 @@ namespace FsInfoCat.Test
                     CaseSensitive = false,
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
-                    RootPathName = "C:\\",
-                    Identifier = new VolumeIdentifier(0x9E497DE8),
+                    RootPathName = "D:\\",
+                    Identifier = new VolumeIdentifier(0xB744F201),
                     VolumeName = "OS"
                 },
                 true
             );
-            fsRoots.Add(new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
+            fsRoots.Insert(1, new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
             yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
-                .SetName("Add 2 different items, first one twice")
+                .SetName("FsHostAddTest:Add 2 different items, first one twice")
                 .Returns(2);
         }
 
@@ -111,26 +111,26 @@ namespace FsInfoCat.Test
                 -1
             ));
             yield return new TestCaseData(addList, removeList)
-                .SetName("Remove first and non-existent")
+                .SetName("FsHostRemoveTest:Remove first and non-existent")
                 .Returns(2);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
             removeList.Add(new Tuple<FsRoot, int>(addList[1], 1));
             yield return new TestCaseData(addList, removeList)
-                .SetName("Remove second")
+                .SetName("FsHostRemoveTest:Remove second")
                 .Returns(2);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
             removeList.Add(new Tuple<FsRoot, int>(addList[2], 2));
             yield return new TestCaseData(addList, removeList)
-                .SetName("Remove last")
+                .SetName("FsHostRemoveTest:Remove last")
                 .Returns(2);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
             removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
             removeList.Add(new Tuple<FsRoot, int>(addList[2], 1));
             yield return new TestCaseData(addList, removeList)
-                .SetName("Remove first then last")
+                .SetName("FsHostRemoveTest:Remove first then last")
                 .Returns(1);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
@@ -138,7 +138,7 @@ namespace FsInfoCat.Test
             removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
             removeList.Add(new Tuple<FsRoot, int>(addList[2], -1));
             yield return new TestCaseData(addList, removeList)
-                .SetName("Remove last then first, then last again")
+                .SetName("FsHostRemoveTest:Remove last then first, then last again")
                 .Returns(1);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
@@ -146,7 +146,7 @@ namespace FsInfoCat.Test
             removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
             removeList.Add(new Tuple<FsRoot, int>(addList[1], 0));
             yield return new TestCaseData(addList, removeList)
-                .SetName("Remove last, first, then second")
+                .SetName("FsHostRemoveTest:Remove last, first, then second")
                 .Returns(0);
         }
 
@@ -168,7 +168,7 @@ namespace FsInfoCat.Test
             Assert.That(target.ChildNodes, Is.Not.Null.Or.Empty);
         }
 
-        [Test, Property("Priority", 1)]
+        [Property("Priority", 1)]
         public void FsHostConstructorTest()
         {
             FsHost target = new FsHost();
