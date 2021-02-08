@@ -499,6 +499,7 @@ namespace FsInfoCat.Util
                                 list._sites.RemoveAt(index);
                             if (site is null)
                                 return false;
+                            item.Site = null;
                             site.Unlink();
                         }
                         finally

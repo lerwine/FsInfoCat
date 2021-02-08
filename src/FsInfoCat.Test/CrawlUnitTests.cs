@@ -1,19 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using FsInfoCat.Models.Accounts;
 using FsInfoCat.Models.Crawl;
-using FsInfoCat.Models.DB;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 namespace FsInfoCat.Test
 {
@@ -35,11 +29,11 @@ namespace FsInfoCat.Test
                 },
                 true
             ));
-            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
+            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots.ToArray()))
                 .SetName("FsHostAddTest:Single item")
                 .Returns(1);
             fsRoots.Add(new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
-            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
+            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots.ToArray()))
                 .SetName("FsHostAddTest:Add same item twice")
                 .Returns(1);
             fsRoots[1] = new Tuple<FsRoot, bool>(
@@ -55,7 +49,7 @@ namespace FsInfoCat.Test
                 true
             );
             fsRoots.Insert(1, new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
-            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots))
+            yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots.ToArray()))
                 .SetName("FsHostAddTest:Add 2 different items, first one twice")
                 .Returns(2);
         }
@@ -224,12 +218,7 @@ namespace FsInfoCat.Test
                     Assert.That(fsRoot, Is.SameAs(addList[toRemove.Item2]));
                     addList.RemoveAt(toRemove.Item2);
                     INestedSite site = ((IComponent)fsRoot).Site as INestedSite;
-                    Assert.That(site, Is.Not.Null);
-                    Assert.That(site.Component, Is.SameAs(fsRoot));
-                    INestedContainer container = site.Container as INestedContainer;
-                    Assert.That(container, Is.Not.Null);
-                    Assert.That(container.Owner, Is.Not.SameAs(target));
-                    Assert.That(ComponentList.IsPlaceHolderContainer(container), Is.True);
+                    Assert.That(site, Is.Null);
                 }
                 Assert.That(target.Roots.Count, Is.EqualTo(expectedCount));
                 for (int i = 0; i < expectedCount; i++)
@@ -241,6 +230,7 @@ namespace FsInfoCat.Test
                     Assert.That(site.Component, Is.SameAs(fsRoot));
                     INestedContainer container = site.Container as INestedContainer;
                     Assert.That(container, Is.Not.Null);
+                    // Assert.That(ReferenceEquals(container.Owner, target), Is.True);
                     Assert.That(container.Owner, Is.SameAs(target));
                     Assert.That(ComponentList.IsPlaceHolderContainer(container), Is.False);
                 }
