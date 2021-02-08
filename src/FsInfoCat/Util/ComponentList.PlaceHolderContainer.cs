@@ -180,8 +180,7 @@ namespace FsInfoCat.Util
                 finally { SetSitesNull(enumerator); }
             }
 
-#warning Need to implement GetComponents()
-            protected override IEnumerable<IComponent> GetComponents() => throw new NotImplementedException();
+            protected override IEnumerable<IComponent> GetComponents() => (null == _target) ? new IComponent[0] : _target.GetComponents();
 
             protected override void Insert(int index, IComponent item, string name, ComponentList componentList)
             {
