@@ -15,7 +15,7 @@ namespace FsInfoCat.PS.Commands
         private const string PARAMETER_SET_NAME_BY_ROOT_DIRECTORY = "ByRootDirectory";
         private const string PARAMETER_SET_NAME_BY_VOLUME_NAME = "ByVolumeName";
         private const string PARAMETER_SET_NAME_BY_DRIVE_FORMAT = "ByDriveFormat";
-        private const string PARAMETER_SET_NAME_BY_IDENTIFIER = "BySerialNumber";
+        private const string PARAMETER_SET_NAME_BY_IDENTIFIER = "ByIdentifier";
         private const string PARAMETER_SET_NAME_GET_ALL = "GetAll";
 
         [Parameter(HelpMessage = "Find by full, case-sensitive path name of the volume root directory.", Mandatory = true,
@@ -32,9 +32,10 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string[] DriveFormat { get; set; }
 
-        [Parameter(HelpMessage = "Find by volume serial number.", Mandatory = true, ValueFromPipelineByPropertyName = true,
+        [Parameter(HelpMessage = "Find by volume identifier.", Mandatory = true, ValueFromPipelineByPropertyName = true,
             ParameterSetName = PARAMETER_SET_NAME_BY_IDENTIFIER)]
-        public uint[] SerialNumber { get; set; }
+        [Alias("SerialNumber")]
+        public object[] Identifier { get; set; }
 
         [Parameter(HelpMessage = "Get all registered volumes", ParameterSetName = PARAMETER_SET_NAME_GET_ALL)]
         public SwitchParameter All { get; set; }
@@ -64,9 +65,10 @@ namespace FsInfoCat.PS.Commands
                     matching = _volumeInfos.Where(v => DriveFormat.Any(f => f.Equals(v.DriveFormat, StringComparison.InvariantCultureIgnoreCase)));
                     break;
                 case PARAMETER_SET_NAME_BY_IDENTIFIER:
-#warning Linq query is not perfect
-                    matching = _volumeInfos.Where(v => v.Identifier.SerialNumber.HasValue &&
-                        !v.Identifier.Ordinal.HasValue && SerialNumber.Any(n => n == v.Identifier.SerialNumber.Value));
+                    VolumeIdentifier[] identifiers = Identifier.Select(o => (o is PSObject) ? ((PSObject)o).BaseObject : o).Select(o =>
+                        (VolumeIdentifier.TryCreate(o, out VolumeIdentifier volumeIdentifer)) ? (object)volumeIdentifer : null
+                    ).OfType<VolumeIdentifier>().ToArray();
+                    matching = (identifiers.Length == 0) ? new IVolumeInfo[0] : _volumeInfos.Where(v => identifiers.Any(i => v.Identifier.Equals(i)));
                     break;
                 default:
                     foreach (IVolumeInfo v in GetVolumeInfos())
