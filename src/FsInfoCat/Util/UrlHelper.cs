@@ -391,7 +391,7 @@ namespace FsInfoCat.Util
                             else
                                 path = $"//{path}";
                         }
-                        result = new Uri($"{preceding}{path}{following}", UriKind.Relative);
+                        result = new Uri($"{preceding}{path}{following}", UriKind.Absolute);
                         if (preceding != uri.GetComponents(BEFORE_PATH_COMPONENTS, UriFormat.UriEscaped) ||
                             following != uri.GetComponents(AFTER_PATH_COMPONENTS, UriFormat.UriEscaped))
                         {
