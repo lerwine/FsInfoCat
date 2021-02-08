@@ -229,6 +229,103 @@ namespace FsInfoCat.Models.Volumes
             _uuid = null;
         }
 
+        public static bool TryCreate(object obj, out VolumeIdentifier volumeIdentifer)
+        {
+            if (null == obj)
+            {
+                volumeIdentifer = VolumeIdentifier.Empty;
+                return false;
+            }
+            if (obj is VolumeIdentifier)
+                volumeIdentifer = (VolumeIdentifier)obj;
+            else if (obj is string s)
+            {
+                if (string.IsNullOrWhiteSpace(s) || !(volumeIdentifer = new VolumeIdentifier(s)).IsValid())
+                {
+                    volumeIdentifer = VolumeIdentifier.Empty;
+                    return false;
+                }
+            }
+            else if (obj is uint)
+                volumeIdentifer = new VolumeIdentifier((uint)obj);
+            else if (obj is Guid)
+                volumeIdentifer = new VolumeIdentifier((Guid)obj);
+            else if (obj is int i)
+            {
+                if (i < 0)
+                {
+                    volumeIdentifer = VolumeIdentifier.Empty;
+                    return false;
+                }
+                volumeIdentifer = new VolumeIdentifier((uint)i);
+            }
+            else if (obj is double d)
+            {
+                if (d < 0.0 || Math.Floor(d) != d)
+                {
+                    volumeIdentifer = VolumeIdentifier.Empty;
+                    return false;
+                }
+                volumeIdentifer = new VolumeIdentifier((uint)d);
+            }
+            else if (obj is long l)
+            {
+                if (l < 0 || l > (long)(uint.MaxValue))
+                {
+                    volumeIdentifer = VolumeIdentifier.Empty;
+                    return false;
+                }
+                volumeIdentifer = new VolumeIdentifier((uint)l);
+            }
+            else if (obj is ulong ul)
+            {
+                if (ul > (ulong)(uint.MaxValue))
+                {
+                    volumeIdentifer = VolumeIdentifier.Empty;
+                    return false;
+                }
+                volumeIdentifer = new VolumeIdentifier((uint)ul);
+            }
+            else if (obj is float f)
+            {
+                if (f < 0.0f || Math.Floor(f) != f)
+                {
+                    volumeIdentifer = VolumeIdentifier.Empty;
+                    return false;
+                }
+                volumeIdentifer = new VolumeIdentifier((uint)f);
+            }
+            else if (obj is byte b)
+                volumeIdentifer = new VolumeIdentifier((uint)b);
+            else if (obj is sbyte sb)
+            {
+                if (sb < 0)
+                {
+                    volumeIdentifer = VolumeIdentifier.Empty;
+                    return false;
+                }
+                volumeIdentifer = new VolumeIdentifier((uint)sb);
+            }
+            else if (obj is short ss)
+            {
+                if (ss < 0)
+                {
+                    volumeIdentifer = VolumeIdentifier.Empty;
+                    return false;
+                }
+                volumeIdentifer = new VolumeIdentifier((uint)ss);
+            }
+            else if (obj is ushort us)
+                volumeIdentifer = new VolumeIdentifier((uint)us);
+            else if (!(obj is Uri uri && uri.IsAbsoluteUri && (uri.Scheme == Uri.UriSchemeFile || uri.Scheme == UrlHelper.URI_SCHEME_URN) &&
+                (volumeIdentifer = new VolumeIdentifier(uri.AbsoluteUri)).IsValid()))
+            {
+                volumeIdentifer = VolumeIdentifier.Empty;
+                return false;
+            }
+            return true;
+        }
+
         public bool Equals(VolumeIdentifier other)
         {
             if (_validation == ValidationCode.ValidationSucceeded)
@@ -262,9 +359,9 @@ namespace FsInfoCat.Models.Volumes
                 if (_location is null)
                     return other._location is null || other._location.OriginalString.Length == 0;
                 if (other._location is null)
-                    return _location.OriginalString.Length == 0;;
+                    return _location.OriginalString.Length == 0; ;
             }
-            return  ((_location.IsAbsoluteUri) ? _location.AbsolutePath : _location.OriginalString).Equals(((other._location.IsAbsoluteUri) ? other._location.AbsolutePath : other._location.OriginalString));
+            return ((_location.IsAbsoluteUri) ? _location.AbsolutePath : _location.OriginalString).Equals(((other._location.IsAbsoluteUri) ? other._location.AbsolutePath : other._location.OriginalString));
         }
 
         public static string ToIdentifierString(Guid guid) => guid.ToString("d").ToLower();
