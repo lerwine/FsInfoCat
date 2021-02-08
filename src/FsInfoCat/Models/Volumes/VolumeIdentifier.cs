@@ -44,10 +44,14 @@ namespace FsInfoCat.Models.Volumes
 
         public Uri Location => _location ?? Empty._location;
 
+        public ValidationCode GetValidationCode() => _validation;
+
+        public bool IsValid() => _validation == ValidationCode.ValidationSucceeded;
+
         public VolumeIdentifier(uint serialNumber)
         {
             _serialNumber = serialNumber;
-            _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{(serialNumber << 16).ToString("x4").ToLower()}-{(serialNumber & 0xffff).ToString("x4").ToLower()}", UriKind.Absolute);
+            _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{(serialNumber >> 16).ToString("x4").ToLower()}-{(serialNumber & 0xffff).ToString("x4").ToLower()}", UriKind.Absolute);
             _ordinal = null;
             _uuid = null;
             _validation = ValidationCode.ValidationSucceeded;
@@ -110,7 +114,7 @@ namespace FsInfoCat.Models.Volumes
 
             if (uri.Scheme.Equals(UrlHelper.URI_SCHEME_URN))
             {
-                string[] segments = uri.AbsolutePath.Split(':', 3);
+                string[] segments = Uri.UnescapeDataString(uri.AbsolutePath).Split(':', 3);
                 switch (segments[0].ToLower())
                 {
                     case UrlHelper.URN_NAMESPACE_UUID:
@@ -126,61 +130,67 @@ namespace FsInfoCat.Models.Volumes
                         _validation = ValidationCode.InvalidUUID;
                         break;
                     case UrlHelper.URN_NAMESPACE_VOLUME:
-                        if (segments.Length > 2 && segments[1] == UrlHelper.URN_NAMESPACE_ID &&
-                                uint.TryParse(segments[2], NumberStyles.HexNumber, null, out uint vsn))
+                        if (segments.Length == 3 && string.Equals(segments[1], UrlHelper.URN_NAMESPACE_ID, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if (segments.Length == 3)
+                            segments = segments[2].Split('-');
+                            if (uint.TryParse(segments[0], NumberStyles.HexNumber, null, out uint vsn))
                             {
-                                _serialNumber = vsn;
-                                _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{(vsn << 16).ToString("x4").ToLower()}-{(vsn & 0xffff).ToString("x4").ToLower()}", UriKind.Absolute);
-                                _ordinal = null;
-                                _uuid = null;
-                                _validation = ValidationCode.ValidationSucceeded;
-                            }
-                            else if (segments.Length == 4 && uint.TryParse(segments[3], NumberStyles.HexNumber, null, out uint ord))
-                            {
-                                if (segments[3].Length > 2)
+                                switch (segments.Length)
                                 {
-                                    if (vsn < 0x10000 && ord < 0x10000)
-                                    {
-                                        _serialNumber = ord | (vsn << 16);
-                                        _ordinal = null;
-                                        _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x4").ToLower()}-{ord.ToString("x4").ToLower()}", UriKind.Absolute);
-                                        _uuid = null;
-                                        _validation = ValidationCode.ValidationSucceeded;
-                                        return;
-                                    }
-                                    if (ord < 0x100)
-                                    {
+                                    case 1:
                                         _serialNumber = vsn;
-                                        _ordinal = (byte)ord;
-                                        _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x8").ToLower()}-{ord.ToString("x2").ToLower()}", UriKind.Absolute);
-                                        _uuid = null;
-                                        _validation = ValidationCode.ValidationSucceeded;
-                                        return;
-                                    }
-                                }
-                                else
-                                {
-                                    if (ord < 0x100 && vsn < 0x1000000)
-                                    {
-                                        _serialNumber = vsn;
-                                        _ordinal = (byte)ord;
-                                        _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x8").ToLower()}-{ord.ToString("x2").ToLower()}", UriKind.Absolute);
-                                        _uuid = null;
-                                        _location = null;
-                                        _validation = ValidationCode.ValidationSucceeded;
-                                        return;
-                                    }
-                                    if (vsn < 0x10000)
-                                    {
-                                        _serialNumber = ord | (vsn << 16);
+                                        _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{(vsn << 16).ToString("x4").ToLower()}-{(vsn & 0xffff).ToString("x4").ToLower()}", UriKind.Absolute);
                                         _ordinal = null;
-                                        _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x4").ToLower()}-{ord.ToString("x4").ToLower()}", UriKind.Absolute);
                                         _uuid = null;
                                         _validation = ValidationCode.ValidationSucceeded;
                                         return;
-                                    }
+                                    case 2:
+                                        if (uint.TryParse(segments[1], NumberStyles.HexNumber, null, out uint ord))
+                                        {
+                                            if (segments[0].Length < 5 && segments[1].Length > 2)
+                                            {
+                                                if (vsn < 0x10000 && ord < 0x10000)
+                                                {
+                                                    _serialNumber = ord | (vsn << 16);
+                                                    _ordinal = null;
+                                                    _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x4").ToLower()}-{ord.ToString("x4").ToLower()}", UriKind.Absolute);
+                                                    _uuid = null;
+                                                    _validation = ValidationCode.ValidationSucceeded;
+                                                    return;
+                                                }
+                                                if (ord < 0x100)
+                                                {
+                                                    _serialNumber = vsn;
+                                                    _ordinal = (byte)ord;
+                                                    _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x8").ToLower()}-{ord.ToString("x2").ToLower()}", UriKind.Absolute);
+                                                    _uuid = null;
+                                                    _validation = ValidationCode.ValidationSucceeded;
+                                                    return;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (ord < 0x100)
+                                                {
+                                                    _serialNumber = vsn;
+                                                    _ordinal = (byte)ord;
+                                                    _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x8").ToLower()}-{ord.ToString("x2").ToLower()}", UriKind.Absolute);
+                                                    _uuid = null;
+                                                    _validation = ValidationCode.ValidationSucceeded;
+                                                    return;
+                                                }
+                                                if (vsn < 0x10000 && ord < 0x10000)
+                                                {
+                                                    _serialNumber = ord | (vsn << 16);
+                                                    _ordinal = null;
+                                                    _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x4").ToLower()}-{ord.ToString("x4").ToLower()}", UriKind.Absolute);
+                                                    _uuid = null;
+                                                    _validation = ValidationCode.ValidationSucceeded;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        break;
                                 }
                             }
                         }
@@ -206,7 +216,9 @@ namespace FsInfoCat.Models.Volumes
                     _ordinal = null;
                     _uuid = null;
                     _validation = ValidationCode.ValidationSucceeded;
+                    return;
                 }
+                _validation = ValidationCode.InvalidUriScheme;
             }
             else
                 _validation = ValidationCode.InvalidUriScheme;
