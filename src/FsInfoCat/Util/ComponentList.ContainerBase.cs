@@ -78,7 +78,6 @@ namespace FsInfoCat.Util
             /// <exception cref="InvalidOperationException"><paramref name="componentList"/> was not attached to the
             /// current <see cref="ContainerBase" />.</exception>
             /// <exception cref="ArgumentOutOfRangeException">Name assigned to <paramref name="item"/> was already used by another item.</exception>
-#warning Throws error when trying to re-add already-existing item
             protected abstract int Add(IComponent item, ComponentList componentList);
 
             /// <summary>
