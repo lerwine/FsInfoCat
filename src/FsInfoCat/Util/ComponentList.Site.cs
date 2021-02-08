@@ -212,7 +212,6 @@ namespace FsInfoCat.Util
                     if (!(list._container is AttachableContainer container))
                         return;
                     PlaceHolderContainer newContainer = new PlaceHolderContainer(list, container.NameComparer);
-                    PlaceHolderContainer.Attach(list);
                     if (list._container is AttachableContainer)
                         return;
                     if (list._previous is null)

@@ -127,31 +127,6 @@ namespace FsInfoCat.Util
                 finally { Monitor.Exit(_target._syncRoot); }
             }
 
-            [Obsolete]
-            internal static void Attach(ComponentList list)
-            {
-                ContainerBase oldContainer = list._container;
-                if (oldContainer is PlaceHolderContainer)
-                    return;
-                var items = list._sites.Select(s => new
-                {
-                    Component = s.Component,
-                    Name = s.Name
-                }).ToArray();
-                list._sites.Clear();
-                foreach (var a in items)
-                    oldContainer.Remove(a.Component);
-                list._container = null;
-                PlaceHolderContainer placeHolderContainer = new PlaceHolderContainer(list, oldContainer.NameComparer);
-                list._container = placeHolderContainer;
-                foreach (var item in items)
-                {
-                    Site site = new Site(item.Component, placeHolderContainer, item.Name);
-                    list._sites.Add(site);
-                    item.Component.Site = site;
-                }
-            }
-
             protected override void Clear(ComponentList componentList)
             {
                 ValidateList(componentList);
