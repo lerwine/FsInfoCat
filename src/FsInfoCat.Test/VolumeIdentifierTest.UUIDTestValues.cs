@@ -20,9 +20,9 @@ namespace FsInfoCat.Test
             {
                 UUID = uuid;
                 StringParam = uuid.ToString("d").ToLower();
-                StringValue = StringParam;
+                StringValue = $"uuid:{StringParam}";
                 Description = description;
-                Url = new Uri($"urn:uuid:{StringValue}", UriKind.Absolute);
+                Url = new Uri($"urn:{StringValue}", UriKind.Absolute);
                 UrnParam = Url.AbsoluteUri;
                 Collection<UUIDTestValues> variants = new Collection<UUIDTestValues>();
                 _variants = new ReadOnlyCollection<UUIDTestValues>(variants);

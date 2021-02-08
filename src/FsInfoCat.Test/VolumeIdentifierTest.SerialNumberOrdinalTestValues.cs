@@ -22,9 +22,9 @@ namespace FsInfoCat.Test
                 SerialNumber = serialNumber;
                 Ordinal = ordinal;
                 StringParam = $"{serialNumber.ToString("x8")}-{ordinal.ToString("x2")}";
-                StringValue = StringParam;
+                StringValue = $"volume:id:{StringParam}";
                 Description = description;
-                Url = new Uri($"urn:volume:id:{StringParam}", UriKind.Absolute);
+                Url = new Uri($"urn:{StringValue}", UriKind.Absolute);
                 UrnParam = Url.AbsoluteUri;
                 Collection<SerialNumberOrdinalTestValues> variants = new Collection<SerialNumberOrdinalTestValues>();
                 _variants = new ReadOnlyCollection<SerialNumberOrdinalTestValues>(variants);

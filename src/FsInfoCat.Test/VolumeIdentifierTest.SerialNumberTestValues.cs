@@ -22,9 +22,9 @@ namespace FsInfoCat.Test
             {
                 SerialNumber = serialNumber;
                 StringParam = $"{(serialNumber >> 16).ToString("x4")}-{(serialNumber & 0xFFFFU).ToString("x4")}";
-                StringValue = StringParam;
+                StringValue = $"volume:id:{StringParam}";
                 Description = description;
-                Url = new Uri($"urn:volume:id:{StringParam}", UriKind.Absolute);
+                Url = new Uri($"urn:{StringValue}", UriKind.Absolute);
                 UrnParam = Url.AbsoluteUri;
                 Collection<SerialNumberTestValues> caseVariants = new Collection<SerialNumberTestValues>();
                 Collection<SerialNumberTestValues> dashCaseVariants = new Collection<SerialNumberTestValues>();
