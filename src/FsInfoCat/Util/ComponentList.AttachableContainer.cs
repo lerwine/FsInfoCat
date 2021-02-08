@@ -229,11 +229,7 @@ namespace FsInfoCat.Util
             /// <exception cref="ArgumentNullException"><paramref name="item"/> or <paramref name="componentList"/> was <c>null</c>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="componentList"/> was not attached to the
             /// current <see cref="AttachableContainer" />.</exception>
-            protected override void SetAt(int index, IComponent item, ComponentList componentList)
-            {
-#warning Need to implement SetAt(int, IComponent, ComponentList)
-                throw new System.NotImplementedException();
-            }
+            protected override void SetAt(int index, IComponent item, ComponentList componentList) => Site.SetAt(index, item, item.GetComponentName(), this, componentList);
 
             /// <summary>
             /// Replaces the <seealso cref="IComponent" /> at the the specified <paramref name="index" /> in the
@@ -261,8 +257,9 @@ namespace FsInfoCat.Util
             /// </summary>
             protected override void OnDisposing()
             {
-#warning Need to implement OnDisposing()
-                throw new System.NotImplementedException();
+                ComponentList[] toDetach = GetAttachedLists().ToArray();
+                foreach (ComponentList list in toDetach)
+                    Detach(list);
             }
 
             private void ValidateName(IEnumerable<string> enumerable, string name)
