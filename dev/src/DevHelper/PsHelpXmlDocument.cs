@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
+using System.Threading;
 using System.Xml;
 using System.Xml.Schema;
 
@@ -22,7 +23,8 @@ namespace DevHelper
         private const string XML_ATTRIBUTE_VALUE_MAML = "maml";
         private FileInfo _savedLocation;
         private bool _hasChanges;
-        private XmlDocument _original = new XmlDocument();
+        public XmlNamespaceManager NamespaceManager { get;  }
+        private readonly XmlDocument _original = new XmlDocument();
 
         public bool IsPsHelpXmlDocument(XmlDocument source)
         {
@@ -52,11 +54,43 @@ namespace DevHelper
                     foreach (XmlNode node in _original.ChildNodes)
                         AppendChild(ImportNode(node, true));
             }
+            NamespaceManager = new XmlNamespaceManager(NameTable);
+            foreach (NamespaceAttribute attr in (new XmlDocumentNamespace[] { XmlDocumentNamespace.msh })
+                    .Concat(Enum.GetValues(typeof(XmlDocumentNamespace)).Cast<XmlDocumentNamespace>()).Select(ns => NamespaceAttribute.Map[ns])
+                    .Where(a => a.IsCommandNS))
+                NamespaceManager.AddNamespace(attr.Prefix, attr.URI);
+
         }
 
         public PsHelpXmlDocument()
         {
             AppendChild(CreateElement(PsHelpNodeName.helpItems)).Attributes.Append(CreateAttribute("schema")).Value = "maml";
+            NamespaceManager = new XmlNamespaceManager(NameTable);
+            foreach (NamespaceAttribute attr in (new XmlDocumentNamespace[] { XmlDocumentNamespace.msh })
+                    .Concat(Enum.GetValues(typeof(XmlDocumentNamespace)).Cast<XmlDocumentNamespace>()).Select(ns => NamespaceAttribute.Map[ns])
+                    .Where(a => a.IsCommandNS))
+                NamespaceManager.AddNamespace(attr.Prefix, attr.URI);
+        }
+
+        private Dictionary<PsHelpNodeName, string> _xPathNameCache = new Dictionary<PsHelpNodeName, string>();
+
+        public string ToXPathName(PsHelpNodeName name)
+        {
+            Monitor.Enter(_xPathNameCache);
+            try
+            {
+                if (_xPathNameCache.ContainsKey(name))
+                    return _xPathNameCache[name];
+                XmlQNameAttribute qNameAttribute = XmlQNameAttribute.Map[name];
+                NamespaceAttribute namespaceAttribute = NamespaceAttribute.Map[(qNameAttribute.Prefix == XmlDocumentNamespace.None) ? XmlDocumentNamespace.msh : qNameAttribute.Prefix];
+                string p = GetPrefixOfNamespace(namespaceAttribute.URI);
+                if (string.IsNullOrEmpty(p))
+                    p = namespaceAttribute.Prefix;
+                p = $"{p}:{qNameAttribute.LocalName}";
+                _xPathNameCache.Add(name, p);
+                return p;
+            }
+            finally { Monitor.Exit(_xPathNameCache);  }
         }
 
         public XmlElement CreateElement(PsHelpNodeName name)
@@ -74,39 +108,201 @@ namespace DevHelper
             return CreateElement(localName, namespaceAttribute.URI);
         }
 
-        public XmlElement AddCommand(string verb, string noun)
+        public bool FindCommand(string verb, string noun, out CommandElement result)
         {
-            XmlElement commandElement = (XmlElement)DocumentElement.AppendChild(CreateElement(PsHelpNodeName.command));
+            if (verb is null)
+                throw new ArgumentNullException(nameof(verb));
+            if (noun is null)
+                throw new ArgumentNullException(nameof(noun));
+            if (verb is null)
+                throw new ArgumentNullException(nameof(verb));
+            if (noun is null)
+                throw new ArgumentNullException(nameof(noun));
+            if (verb.Trim().Length == 0)
+                throw new ArgumentNullException(nameof(verb));
+            if (noun.Trim().Length == 0)
+                throw new ArgumentNullException(nameof(noun));
+            XmlConvert.VerifyNCName(verb);
+            XmlConvert.VerifyNCName(noun);
+
+            XmlElement commandElement = SelectSingleNode($"{ToXPathName(PsHelpNodeName.helpItems)}/{ToXPathName(PsHelpNodeName.command)}[{ToXPathName(PsHelpNodeName.verb)}='{verb}' and {ToXPathName(PsHelpNodeName.noun)}='{noun}']", NamespaceManager) as XmlElement;
+            if (commandElement is null)
+            {
+                result = null;
+                return false;
+            }
+            result = new CommandElement(commandElement);
+            return true;
+        }
+
+        /// <summary>
+        /// Creates new command if it doesn't already exist.
+        /// </summary>
+        /// <param name="verb">Name of verb</param>
+        /// <param name="noun">Nane of noun</param>
+        /// <param name="commandElement">The new or existing command element</param>
+        /// <returns><c>true</c> if a new command was added; otherwise<c>false</c> to indicate that the command already exists.</returns>
+        public bool TryCreateCommand(string verb, string noun, out CommandElement commandElement)
+        {
+            if (FindCommand(verb, noun, out commandElement))
+                return false;
+            XmlElement element = (XmlElement)DocumentElement.AppendChild(CreateElement(PsHelpNodeName.command));
             NamespaceAttribute xmlnsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.xmlns];
             NamespaceAttribute nsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.maml];
-            commandElement.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
+            element.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
             nsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.command];
-            commandElement.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
+            element.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
             nsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.dev];
-            commandElement.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
-            XmlElement detailsElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.details));
+            element.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
+            commandElement = new CommandElement(element);
+            element = commandElement.DetailsElement;
+            element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = $"{verb}-{noun}";
+            commandElement.Copyright = $"Copyright © Leonard Thomas Erwine {DateTime.Now.ToString("yyyy")}";
+            element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = verb;
+            element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = noun;
+            commandElement.DescriptionElement.AppendChild(CreateComment("Description goes here"));
+            return true;
+        }
+    }
 
-            XmlElement descriptionElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.description));
+    public abstract class BaseElement
+    {
+        public PsHelpXmlDocument OwnerDocument { get; }
+        protected XmlElement Xml { get; }
 
-            XmlElement syntaxElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.syntax));
+        protected ReadOnlyCollection<string> GetParaStrings(XmlElement element)
+        {
+            if (null == element || element.IsEmpty)
+                return new ReadOnlyCollection<string>(new string[0]);
+            return new ReadOnlyCollection<string>(element.SelectNodes(OwnerDocument.ToXPathName(PsHelpNodeName.para)).Cast<XmlElement>().Select(e => (e.IsEmpty) ? "" : e.InnerText)
+                .Where(e => e.Trim().Length > 0).ToArray());
+        }
 
-            XmlElement parametersElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.parameters));
+        protected void SetParaStrings(XmlElement element, IEnumerable<string> paragraphs)
+        {
+            if (element is null)
+                throw new ArgumentNullException(nameof(element));
+            element.RemoveAll();
+            if (paragraphs is null)
+                return;
+            foreach (string s in paragraphs)
+            {
+                if (!string.IsNullOrWhiteSpace(s))
+                    element.AppendChild(OwnerDocument.CreateElement(PsHelpNodeName.para)).InnerText = s;
+            }
+        }
 
-            XmlElement inputTypesElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.inputTypes));
+        protected XmlElement EnsureElement(PsHelpNodeName name)
+        {
+            Monitor.Enter(Xml);
+            try
+            {
+                XmlElement element = Xml.SelectSingleNode(OwnerDocument.ToXPathName(name)) as XmlElement;
+                if (element is null)
+                    element = Xml.AppendChild(OwnerDocument.CreateElement(name)) as XmlElement;
+                return element;
+            }
+            finally { Monitor.Exit(Xml); }
+        }
 
-            XmlElement returnValuesElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.returnValues));
+        public BaseElement(XmlElement xmlElement)
+        {
+            if (xmlElement is null)
+                throw new ArgumentNullException(nameof(xmlElement));
+            OwnerDocument = (PsHelpXmlDocument)xmlElement.OwnerDocument;
+            Xml = xmlElement;
+        }
+    }
 
-            XmlElement terminatingErrorsElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.terminatingErrors));
 
-            XmlElement nonTerminatingErrorsElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.nonTerminatingErrors));
+    public class CommandElement : BaseElement
+    {
+        private XmlElement EnsureDetailsElement(PsHelpNodeName name)
+        {
+            Monitor.Enter(Xml);
+            try
+            {
+                XmlElement element = Xml.SelectSingleNode($"{OwnerDocument.ToXPathName(PsHelpNodeName.details)}/{OwnerDocument.ToXPathName(name)}") as XmlElement;
+                if (element is null)
+                    element = DetailsElement.AppendChild(OwnerDocument.CreateElement(name)) as XmlElement;
+                return element;
+            }
+            finally { Monitor.Exit(Xml); }
+        }
 
-            XmlElement alertSetElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.alertSet));
+        private string GetDetailsString(PsHelpNodeName name)
+        {
+            XmlElement element = EnsureDetailsElement(name);
+            return (element.IsEmpty) ? "" : element.InnerText;
+        }
 
-            XmlElement examplesElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.examples));
+        public string Name => GetDetailsString(PsHelpNodeName.commandName);
 
-            XmlElement relatedLinksElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.relatedLinks));
+        public IEnumerable<string> Synopsis
+        {
+            get => GetParaStrings(EnsureDetailsElement(PsHelpNodeName.description));
+            set => SetParaStrings(EnsureDetailsElement(PsHelpNodeName.description), value);
+        }
 
-            return commandElement;
+        public string Verb => GetDetailsString(PsHelpNodeName.verb);
+
+        public string Noun => GetDetailsString(PsHelpNodeName.noun);
+
+        public string Copyright
+        {
+            get => GetDetailsString(PsHelpNodeName.copyright);
+            set => EnsureDetailsElement(PsHelpNodeName.copyright).InnerText = value;
+        }
+
+        public Version Version
+        {
+            get
+            {
+                string s = GetDetailsString(PsHelpNodeName.version);
+                if (s.Length > 0 && Version.TryParse(s, out Version result))
+                    return result;
+                return null;
+            }
+            set => EnsureDetailsElement(PsHelpNodeName.copyright).InnerText = (value is null) ? "" : value.ToString();
+        }
+
+        public IEnumerable<string> Description
+        {
+            get => GetParaStrings(DescriptionElement);
+            set => SetParaStrings(DescriptionElement, value);
+        }
+
+        public XmlElement DetailsElement => EnsureElement(PsHelpNodeName.details);
+
+        public XmlElement DescriptionElement => EnsureElement(PsHelpNodeName.description);
+
+        public XmlElement SyntaxElement => EnsureElement(PsHelpNodeName.syntax);
+
+        public XmlElement ParametersElement => EnsureElement(PsHelpNodeName.parameters);
+
+        public XmlElement InputTypesElement => EnsureElement(PsHelpNodeName.inputTypes);
+
+        public XmlElement ReturnValuesElement => EnsureElement(PsHelpNodeName.returnValues);
+
+        public XmlElement TerminatingErrorsElement => EnsureElement(PsHelpNodeName.terminatingErrors);
+
+        public XmlElement NonTerminatingErrorsElement => EnsureElement(PsHelpNodeName.nonTerminatingErrors);
+
+        public XmlElement AlertSetElement => EnsureElement(PsHelpNodeName.alertSet);
+
+        public XmlElement ExamplesElement => EnsureElement(PsHelpNodeName.examples);
+
+        public XmlElement RelatedLinksElement => EnsureElement(PsHelpNodeName.relatedLinks);
+
+        public CommandElement(XmlElement commandElement) : base(commandElement)
+        {
+            foreach (PsHelpNodeName name in new PsHelpNodeName[] { PsHelpNodeName.details, PsHelpNodeName.description, PsHelpNodeName.syntax, PsHelpNodeName.parameters,
+                    PsHelpNodeName.inputTypes, PsHelpNodeName.returnValues, PsHelpNodeName.terminatingErrors, PsHelpNodeName.nonTerminatingErrors,
+                    PsHelpNodeName.alertSet, PsHelpNodeName.examples, PsHelpNodeName.relatedLinks })
+                EnsureElement(name);
+            foreach (PsHelpNodeName name in new PsHelpNodeName[] { PsHelpNodeName.name, PsHelpNodeName.description, PsHelpNodeName.copyright, PsHelpNodeName.verb,
+                    PsHelpNodeName.noun, PsHelpNodeName.version })
+                EnsureDetailsElement(name);
         }
     }
 
@@ -132,6 +328,9 @@ namespace DevHelper
 
         [XmlQName(XmlDocumentNamespace.command)]
         noun,
+
+        [XmlQName(XmlDocumentNamespace.dev)]
+        version,
 
         [XmlQName(XmlDocumentNamespace.command)]
         details,
@@ -296,7 +495,6 @@ namespace DevHelper
         private string _schemaLocation = null;
         private string _prefix = null;
 
-        // This is a positional argument
         public NamespaceAttribute(string absoluteUri)
         {
             _uri = (Uri.TryCreate(absoluteUri, UriKind.Absolute, out Uri uri)) ? uri.AbsolutePath : "";
@@ -331,12 +529,6 @@ namespace DevHelper
             }
         }
 
-        public NamespaceAttribute(bool isCommandNS, bool elementFormQualified)
-        {
-            this.IsCommandNS = isCommandNS;
-                this.ElementFormQualified = elementFormQualified;
-
-        }
         public bool IsCommandNS { get; set; }
 
         public bool ElementFormQualified { get; set; }
