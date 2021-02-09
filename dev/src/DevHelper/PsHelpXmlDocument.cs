@@ -74,7 +74,7 @@ namespace DevHelper
             return CreateElement(localName, namespaceAttribute.URI);
         }
 
-        public XmlElement AddCommand(VerbsCommon verbs, string noun)
+        public XmlElement AddCommand(string verb, string noun)
         {
             XmlElement commandElement = (XmlElement)DocumentElement.AppendChild(CreateElement(PsHelpNodeName.command));
             NamespaceAttribute xmlnsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.xmlns];
@@ -105,6 +105,8 @@ namespace DevHelper
             XmlElement examplesElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.examples));
 
             XmlElement relatedLinksElement = (XmlElement)commandElement.AppendChild(CreateElement(PsHelpNodeName.relatedLinks));
+
+            return commandElement;
         }
     }
 
@@ -329,13 +331,13 @@ namespace DevHelper
             }
         }
 
-        public PsHelpXmlDocument(bool isCommandNS, bool elementFormQualified)
+        public NamespaceAttribute(bool isCommandNS, bool elementFormQualified)
         {
             this.IsCommandNS = isCommandNS;
                 this.ElementFormQualified = elementFormQualified;
 
         }
-                public bool IsCommandNS { get; set; }
+        public bool IsCommandNS { get; set; }
 
         public bool ElementFormQualified { get; set; }
     }

@@ -717,16 +717,6 @@ Function New-XmlWriterSettings {
     }
 }
 
-class XmlDocumentFile : System.Xml.XmlDocument
-{
-    hidden [string]$Path;
-
-
-    XmlDocumentFile([string]$Path) {
-
-    }
-}
-
 enum PsHelpNsPrefix {
     msh;
     maml;
@@ -764,15 +754,62 @@ $Script:SchemaLocations = [System.Collections.ObjectModel.ReadOnlyDictionary[PsH
 }));
 
 Function Test-PsHelpXml {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'ByName')]
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [AllowNull()]
         [System.Xml.XmlNode]$Value,
 
-        [PsHelpNsPrefix[]]$Namespace
+        [Parameter(ParameterSetName = 'ByName')]
+        [PsHelpNsPrefix[]]$NS,
+
+        [Parameter(ParameterSetName = 'ByName')]
+        [PsHelpNames[]]$Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Document')]
+        [switch]$Document,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Command')]
+        [switch]$Command
     )
 
+    Begin {
+        $LocalNames = @();
+        $Namespaces = @();
+        if ($Document.IsPresent) {
+            $LocalNames = @([PsHelpNames]::helpItems.ToString('F'));
+            $Namespaces = @($Script:PsHelpNamespaces[[PsHelpNsPrefix]::msh]);
+        } else {
+            if ($Document.IsPresent) {
+                $LocalNames = @([PsHelpNames]::command.ToString('F'));
+                $Namespaces = @($Script:PsHelpNamespaces[[PsHelpNsPrefix]::msh]);
+            } else {
+                if ($PSBoundParameters.ContainsKey('Name')) {
+                    $LocalNames = @($Name | ForEach-Object { $_.ToString('F') });
+                }
+                if ($PSBoundParameters.ContainsKey('NS')) {
+                    $LocalNames = @($NS | ForEach-Object { $Script:PsHelpNamespaces[$_] });
+                } else {
+                    $LocalNames = @($Script:PsHelpNamespaces.Values);
+                }
+            }
+        }
+        $Success = $true;
+    }
+    Process {
+        if ($Success) {
+            $Node = $null;
+            if ($null -ne $Value -and $Value -is [Sytem.Xml.XmlDocument]) {
+                $Node = $Value.DocumentElement;
+            } else {
+                $Node = $Value;
+            }
+            $Success = ($null -ne $Node -and $Node -is [System.Xml.XmlElement] -and ($LocalNames.Count -eq 0 -or $LocalNames -ccontains $_.LocalName) -and `
+                $Namespaces -ccontains $_.NamespaceURI);
+        }
+    }
+
+    End { $success | Write-Output }
 }
 
 Function Test-NCName {
@@ -821,13 +858,149 @@ Function Test-NCName {
     }
 }
 
-Function Add-TextElement {
-    [CmdletBinding(DefaultParameterSetName = 'NoEmpty')]
+Function Test-PsTypeName {
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [string]$Value
+    )
+
+    Begin {
+        $NameTokenRegex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(?<n>[a-z_][a-z_\d]*(\.[a-z_][a-z\d]*)*)|(?<o>\[ *(?<a>(,[ ,]*)?\](\[[, ]*\])*)?)|(?<s> *, *)|(?<c> *\])', ([System.Text.RegularExpressions.RegexOptions]([System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor [System.Text.RegularExpressions.RegexOptions]::Compiled));
+    }
+
+    Process {
+        if ($null -eq $Value -or ($Value = $Value.Trim()).Length -eq 0) {
+            $false | Write-Output;
+        } else {
+            $OriginalValue = $Value;
+            $mode = 0; # match expected: 0=n; 1=a|o|s|c; 2=s|c; 3=a|s|c
+            $m = $NameTokenRegex.Match($Value);
+            $Passed = $m.Success -and $m.Index -eq 0;
+            $Level = 0;
+            $Position = 0;
+            $Iteration = 0;
+            while ($Passed) {
+                Write-Information -Message "Matched $($m.Length) characters";
+                $Iteration++;
+                Write-Information -Message "Checking mode $mode";
+                switch ($mode) {
+                    0 {
+                        $Passed = $m.Groups['n'].Success;
+                        break;
+                    }
+                    1 {
+                        $Passed = -not $m.Groups['n'].Success;
+                        break;
+                    }
+                    2 {
+                        $Passed = $m.Groups['s'].Success -or $m.Groups['c'].Success;
+                        break;
+                    }
+                    default {
+                        $Passed = -not ($m.Groups['n'].Success -or $m.Groups['o'].Success);
+                        break;
+                    }
+                }
+                if (-not $Passed) { break; }
+                Write-Information -Message "Mode $mode passed";
+                if ($m.Groups['n'].Success) {
+                    Write-Information -Message "Name matched change to mode 1";
+                    $Mode = 1;
+                } else {
+                    if ($m.Groups['a'].Success) {
+                        Write-Information -Message "Array matched change to mode 2";
+                        $Mode = 2;
+                    } else {
+                        if ($m.Groups['c'].Success) {
+                            Write-Information -Message "Close matched checking level";
+                            $Passed = $Level -gt 0;
+                            if (-not $Passed) { break }
+                            Write-Information -Message "Close Level $Level passed; decrementing";
+                            $Level--;
+                            Write-Information -Message "Change to mode 3";
+                            $Mode = 3;
+                        } else {
+                            if ($m.Groups['o'].Success) {  Write-Information -Message "Incrementing from level $Level"; $Level++ }
+                            Write-Information -Message "Change to mode 0";
+                            $Mode = 0;
+                        }
+                    }
+                }
+                $Position += $m.Length;
+                Write-Information -Message "Moved to position $Position";
+                if ($m.Length -eq $Value.Length) { break }
+                $Value = $Value.Substring($m.Length);
+                $m = $NameTokenRegex.Match($Value);
+                $Passed = $m.Success -and $m.Index -eq 0;
+            }
+
+            if ($Passed -and $Level -eq 0) {
+                $true | Write-Output;
+            } else {
+                Write-Warning -Message "Failed at Iteration $Iteration; Position $Position; Level $Level; Mode $Mode (`"$($OriginalValue.Substring($Position))`" of `"$OriginalValue`"";
+                $false | Write-Output;
+            }
+        }
+    }
+}
+
+Function ConvertTo-XmlValue {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [object]$Value
+    )
+
+    if ($Value -is [string]) { return $Value }
+    if ($Value -is [bool] -or $Value -is [int] -or $Value -is [byte] -or $Value -is [char] -or $Value -is [decimal] -or $Value -is [double] -or `
+            $Value -is [Guid] -or $Value -is [long] -or $Value -is [sbyte] -or $Value -is [Int16] -or $Value -is [single] -or $Value -is [TimeSpan] -or `
+            $Value -is [UInt16] -or $Value -is [UInt32] -or $Value -is [UInt64]) {
+        return [System.Xml.XmlConvert]::ToString($Value);
+    }
+    return '' + $Value;
+}
+
+Function Add-Attribute {
+    [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
         [System.Xml.XmlElement]$ParentElement,
 
         [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-NCName})]
+        [string]$Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'String')]
+        [AllowEmptyString()]
+        [object]$Value
+    )
+
+    $a = $ParentElement.PSBase.SelectSingleNode("@$Name");
+    if ($null -ne $a) {
+        $a = $ParentElement.Attributes.Append($ParentElement.OwnerDocument.CreateAttribute($Name));
+    }
+    if ($Value -is [string]) {
+        $a.Value = $Value;
+    } else {
+        if ($null -eq $Value.Text) {
+            $a.Value = ConvertTo-XmlValue -Value $Value;
+        } else {
+            $a.Value = '' + $Value.Text;
+        }
+    }
+}
+
+Function Add-TextElement {
+    [CmdletBinding(DefaultParameterSetName = 'NoEmpty')]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-PsHelpXml })]
+        [System.Xml.XmlElement]$ParentElement,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'String')]
         [AllowNull()]
         [AllowEmptyString()]
         [object]$Value,
@@ -857,7 +1030,7 @@ Function Add-TextElement {
             $s = $Value;
         } else {
             if ($null -eq $Value.Text) {
-                $s = '' + $Value;
+                $s = ConvertTo-XmlValue -Value $Value;
             } else {
                 $s = '' + $Value.Text;
             }
@@ -885,6 +1058,25 @@ Function Add-TextElement {
     if ($PassThru) { return $XmlElement }
 }
 
+Function Add-XmlElement {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlElement]$ParentElement,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-NCName })]
+        [string]$Name,
+
+        [Parameter(Mandatory = $true)]
+        [PsHelpNsPrefix]$NS
+    )
+
+    Write-Output -InputObject ($ParentElement.PSBase.AppendChild(
+        $ParentElement.PSBase.OwnerDocument.CreateElement($Name, $Script:PsHelpNamespaces[$NS])
+    )) -NoEnumerate;
+}
+
 Function Add-MamlParagraphs {
     [CmdletBinding(DefaultParameterSetName = 'CommentIfEmpty')]
     Param(
@@ -892,7 +1084,9 @@ Function Add-MamlParagraphs {
         [AllowNull()]
         [AllowEmptyString()]
         [object]$ParaObj,
+
         [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-PsHelpXml })]
         [System.Xml.XmlElement]$ParentElement,
 
         [Parameter(ParameterSetName = 'CommentIfEmpty')]
@@ -903,21 +1097,21 @@ Function Add-MamlParagraphs {
     )
 
     Begin { $NoContent = $true }
+
     Process {
-        if ($null -ne (Add-TextElement -Value $ParaObj -ParentElement $ParentElement -NS maml -Name ([PsHelpNames]::para) -NoEmpty -PassThru)) { $NoContent = $false }
+        if ($null -ne (Add-TextElement -Value $ParaObj -ParentElement $ParentElement -NS maml -Name ([PsHelpNames]::para) -NoEmpty -PassThru)) {
+            $NoContent = $false;
+        }
     }
+
     End {
         if ($NoContent) {
             if ($PSBoundParameters.ContainsKey('CommentIfEmpty')) {
-                $ParentElement.PSBase.AppendChild(
-                    $ParentElement.PSBase.OwnerDocument.CreateElement([PsHelpNames]::para, $Script:PsHelpNamespaces[[PsHelpNsPrefix]::maml])
-                ).AppendChild($ParentElement.OwnerDocument.CreateComment($CommentIfEmpty)) | Out-Null;
+                (Add-XmlElement -ParentElement $ParentElement -Name para -NS maml).AppendChild($ParentElement.OwnerDocument.CreateComment($CommentIfEmpty)) | Out-Null;
             } else {
                 if ($PSBoundParameters.ContainsKey('TextIfEmpty')) {
                     $TextIfEmpty | ForEach-Object {
-                        $ParentElement.PSBase.AppendChild(
-                            $ParentElement.PSBase.OwnerDocument.CreateElement([PsHelpNames]::para, $Script:PsHelpNamespaces[[PsHelpNsPrefix]::maml])
-                        ).InnerText = $_;
+                        (Add-XmlElement -ParentElement $ParentElement -Name para -NS maml).InnerText = $_;
                     }
                 }
             }
@@ -936,49 +1130,231 @@ Function New-PsHelpNamespaceManager {
     Write-Output -InputObject $Nsmgr -NoEnumerate;
 }
 
-Function Set-PsHelpSchemaLocation {
-    [CmdletBinding()]
-    Param(
-        [System.Xml.XmlDocument]$PsHelp
-    )
-
-}
-
 Function New-PsHelpXml {
     [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$HelpXmlPath
-    )
+    Param([switch]$IncludeSchemaLocation)
 
-    $XmlDocument = New-Object -TypeName 'DevHelper.XmlDocumentFile' -ArgumentList $HelpXmlPath;
-    $XmlElement = $XmlDocument.AppendChild($XmlDocument.CreateElement('', [PsHelpNames]::helpItems, $Script:PsHelpNamespaces[[PsHelpNsPrefix]::msh]));
-    if ($PSBoundParameters.ContainsKey('SchemaLocationBase')) {
-        $ResourcesPath = (Resolve-Path -LiteralPath ($PSScriptRoot | Join-Path -ChildPath '../../../Resources')).Path;
-        $Path = (Resolve-Path -LiteralPath ($PSScriptRoot | Join-Path -ChildPath $SchemaLocationBase)).Path;
-        $Path = [System.IO.Path]::GetRelativePath($Path, $ResourcesPath);
+    $XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+    $XmlElement = $XmlDocument.AppendChild($XmlDocument.CreateElement('', 'helpItems', $Script:PsHelpNamespaces['msh']));
+    if ($IncludeSchemaLocation) {
         $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xsi', 'schemaLocation', 'http://www.w3.org/2001/XMLSchema-instance')).Value = `
             @($Script:SchemaLocations.Keys | ForEach-Object { $Script:PsHelpNamespaces[$_]; $Script:SchemaLocations[$_] }) -join ' ';
     }
-    $commandElement = $XmlDocument.DocumentElement.AppendChild($XmlDocument.CreateElement([PsHelpNsPrefix]::command, [PsHelpNames]::command, $Script:PsHelpNamespaces[[PsHelpNsPrefix]::command]));
-    @([PsHelpNsPrefix]::maml, [PsHelpNsPrefix]::dev) | ForEach-Object {
-        $commandElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', $_, 'http://www.w3.org/2000/xmlns/')).Value = $Script:PsHelpNamespaces[$_];
-    }
     Write-Output -InputObject $XmlDocument -NoEnumerate;
 }
 
-Function New-PsCommandHelpXml {
-    [CmdletBinding()]
+Function Add-PsCommandHelp {
+    [CmdletBinding(DefaultParameterSetName = 'Common')]
     Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-PsHelpXml -Document })]
+        [System.Xml.XmlDocument]$PsHelpXml,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Common')]
+        [System.Management.Automation.VerbsCommon]$CommonVerb,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Communications')]
+        [System.Management.Automation.VerbsCommunications]$CommunicationsVerb,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Data')]
+        [System.Management.Automation.VerbsData]$DataVerb,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Diagnostic')]
+        [System.Management.Automation.VerbsDiagnostic]$DiagnosticVerb,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Lifecycle')]
+        [System.Management.Automation.VerbsLifecycle]$LifecycleVerb,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Security')]
+        [System.Management.Automation.VerbsSecurity]$SecurityVerb,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Other')]
+        [System.Management.Automation.VerbsOther]$OtherVerb,
+
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Z][a-z\d]*$')]
+        [string]$Noun,
+
+        [string]$Synopsis = '',
+
+        [Version]$Version = [version]::new(0, 1),
+
+        [string[]]$Description
     )
 
-    $XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
-    $XmlElement =$XmlDocument.AppendChild($XmlDocument.CreateElement('', 'helpItems', $Script:PsHelpNamespaces['msh']));
-    $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xsi', 'schemaLocation', 'http://www.w3.org/2001/XMLSchema-instance')).Value = 'http://schemas.microsoft.com/maml/2004/10 file:///C:/Users/lerwi/Git/PowerShell/src/Schemas/PSMaml/Maml.xsd http://schemas.microsoft.com/maml/dev/command/2004/10 C:\Users\lerwi\Git\PowerShell\src\Schemas\PSMaml\developerCommand.xsd http://schemas.microsoft.com/maml/dev/2004/10 C:\Users\lerwi\Git\PowerShell\src\Schemas\PSMaml\developer.xsd';
-    $Nsmgr = [System.Xml.XmlNamespaceManager]::new($Xml.NameTable);
-    $Script:PsHelpNamespaces.Keys | ForEach-Object { $Nsmgr.AddNamespace($_, $Script:PsHelpNamespaces[$_]) }
-    $commandElement = $XmlDocument.DocumentElement.AppendChild($XmlDocument.CreateElement('command', 'command', $Script:PsHelpNamespaces['command']));
-    $commandElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'maml', 'http://www.w3.org/2000/xmlns/')).Value = $Script:PsHelpNamespaces['maml'];
-    $commandElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'dev', 'http://www.w3.org/2000/xmlns/')).Value = $Script:PsHelpNamespaces['dev'];
-    Write-Output -InputObject $XmlDocument -NoEnumerate;
+    $commandElement = Add-XmlElement -ParentElement $ParentElement -Name 'command' -NS command;
+    $PsHelpXml.DocumentElement.AppendChild($PsHelpXml.CreateElement('command', 'command', $Script:PsHelpNamespaces['command']));
+    $commandElement.Attributes.Append($PsHelpXml.CreateAttribute('xmlns', 'maml', 'http://www.w3.org/2000/xmlns/')).Value = $Script:PsHelpNamespaces['maml'];
+    $commandElement.Attributes.Append($PsHelpXml.CreateAttribute('xmlns', 'dev', 'http://www.w3.org/2000/xmlns/')).Value = $Script:PsHelpNamespaces['dev'];
+
+    $detailsElement = Add-XmlElement -ParentElement $commandElement -Name 'details' -NS command;
+    $Verb = '';
+    switch ($PSCmdlet.ParameterSetName) {
+        'Common' { $Verb = $CommonVerb.ToString('F'); break; }
+        'Communications' { $Verb = $CommunicationsVerb.ToString('F'); break; }
+        'Data' { $Verb = $DataVerb.ToString('F'); break; }
+        'Diagnostic' { $Verb = $DiagnosticVerb.ToString('F'); break; }
+        'Lifecycle' { $Verb = $LifecycleVerb.ToString('F'); break; }
+        'Security' { $Verb = $SecurityVerb.ToString('F'); break; }
+        default { $Verb = $OtherVerb.ToString('F'); break; }
+    }
+    Add-TextElement -ParentElement $detailsElement -NS 'command' -Name 'name' -Value "$Verb-$Noun";
+    $descriptionElement = Add-XmlElement -ParentElement $detailsElement -Name 'description' -NS maml;
+    Add-MamlParagraphs -ParentElement $descriptionElement -ParaObj $Summary -CommentIfEmpty 'Summary goes here';
+    $copyrightElement = Add-XmlElement -ParentElement $detailsElement -Name 'copyright' -NS maml;
+    Add-MamlParagraphs -ParentElement $copyrightElement -ParaObj "Copyright © Leonard Thomas Erwine $([DateTime]::Now.ToString('yyyy'))";
+    Add-TextElement -ParentElement $detailsElement -NS 'command' -Name 'verb' -Value $Verb;
+    Add-TextElement -ParentElement $detailsElement -NS 'command' -Name 'noun' -Value $Noun;
+    Add-TextElement -ParentElement $detailsElement -NS 'dev' -Name 'version' -Value $Version;
+    $descriptionElement = Add-XmlElement -ParentElement $commandElement -Name 'description' -NS maml;
+    Add-MamlParagraphs -ParentElement $descriptionElement -ParaObj $Description -CommentIfEmpty 'Detailed description goes here';
+    Write-Output -InputObject $commandElement -NoEnumerate;
+}
+
+Function Get-CommandParameter {
+    [CmdletBinding(DefaultParameterSetName = 'All')]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-PsHelpXml -Command })]
+        [System.Xml.XmlElement]$CommandElement,
+
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ByName')]
+        [string[]]$Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'ListNames')]
+        [switch]$ListNames,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'All')]
+        [switch]$All
+    )
+
+    Begin {
+        $parametersElement = $CommandElement.SelectSingleNode('command:parameters', $Nsmgr);
+        $NamesChecked = @();
+    }
+
+    Process {
+        if ($null -ne $parametersElement) {
+            if ($ListNames.IsPresent) {
+                @($parametersElement.SelectNodes("command:parameter[@name='$Name']/maml:name", $Nsmgr)) | Select-Object {
+                    if (-not $_.IsEmpty) {
+                        $text = $_.InnerText.Trim();
+                        if ($text.Length -gt 0) { $text | Write-Output }
+                    }
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('Name')) {
+                    $Name | ForEach-Object {
+                        if ($NamesChecked -inotcontains $_) {
+                            $NamesChecked += $_;
+                            $element = $parametersElement.SelectSingleNode("command:parameter[@name='$Name']", $Nsmgr);
+                            if ($null -ne $element) {
+                                Write-Output -InputObject $element -NoEnumerate;
+                            }
+                        }
+                    }
+                } else {
+                    @($parametersElement.SelectNodes("command:parameter[@name='$Name']", $Nsmgr)) | Write-Output;
+                }
+            }
+        }
+    }
+}
+
+Function Add-SyntaxItem {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-PsHelpXml -Command })]
+        [System.Xml.XmlElement]$CommandElement,
+
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlNamespaceManager]$Nsmgr
+    )
+
+    $syntaxElement = $CommandElement.SelectSingleNode('command:syntax', $Nsmgr);
+    if ($null -eq $parametesyntaxElementrsElement) {
+        $syntaxElement = Add-XmlElement -ParentElement $CommandElement -Name 'syntax' -NS command;
+    }
+    Write-Output -InputObject (Add-XmlElement -ParentElement $syntaxElement -Name 'syntaxItem' -NS command) -NoEnumerate;
+}
+
+Function Add-SyntaxParameter {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-PsHelpXml -Name 'syntaxItem' -NS command })]
+        [System.Xml.XmlElement]$SyntaxItemElement,
+
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Z][a-z\d]*$')]
+        [string]$Name,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ | Test-PsTypeName })]
+        [string]$Type,
+
+        [Parameter(Mandatory = $true)]
+        [System.Xml.XmlNamespaceManager]$Nsmgr,
+
+        [string[]]$Description,
+
+        [ValidateRange(1, [int]::MaxValue)]
+        [int]$Position,
+
+        [string]$DefaultValue = 'None',
+
+        [switch]$PipelineByValue,
+
+        [switch]$PipelineByPropertyName,
+
+        # Array, collection, etc
+        [switch]$VariableLength,
+
+        [switch]$Required,
+
+        # Can include wildcard characters.
+        [switch]$Globbing,
+
+        [switch]$PassThru
+    )
+
+    if ($null -ne (Get-CommandParameter -CommandElement $CommandElement -Name $Name)) {
+        Write-Warning -Message 'A parameter with that name already exists';
+        break;
+    }
+    $parameterElement = Add-XmlElement -ParentElement $parametersElement -Name 'parameter' -NS command;
+    Add-Attribute -ParentElement $parameterElement -Name 'required' -Value $Required.IsPresent;
+    Add-Attribute -ParentElement $parameterElement -Name 'variableLength' -Value $VariableLength.IsPresent;
+    Add-Attribute -ParentElement $parameterElement -Name 'globbing' -Value $Globbing.IsPresent;
+
+    if ($PipelineByValue.IsPresent) {
+        if ($PipelineByPropertyName.IsPresent) {
+            Add-Attribute -ParentElement $parameterElement -Name 'pipelineInput' -Value 'True (ByValue, ByPropertyName)';
+        } else {
+            Add-Attribute -ParentElement $parameterElement -Name 'pipelineInput' -Value 'True (ByValue)';
+        }
+    } else {
+        if ($PipelineByPropertyName.IsPresent) {
+            Add-Attribute -ParentElement $parameterElement -Name 'pipelineInput' -Value 'True (ByPropertyName)';
+        } else {
+            Add-Attribute -ParentElement $parameterElement -Name 'pipelineInput' -Value 'False';
+        }
+    }
+    if ($PSBoundParameters.ContainsKey('Position')) {
+        Add-Attribute -ParentElement $parameterElement -Name 'position' -Value $Position;
+    } else {
+        Add-Attribute -ParentElement $parameterElement -Name 'position' -Value 'named';
+    }
+    Add-TextElement -ParentElement $parameterElement -NS 'maml' -Name 'name' -Value $Name;
+    $descriptionElement = Add-XmlElement -ParentElement $parameterElement -Name 'description' -NS maml;
+    Add-MamlParagraphs -ParentElement $descriptionElement -ParaObj $Description -CommentIfEmpty 'Detailed description goes here';
+    $parameterValueElement = Add-TextElement -ParentElement $parameterElement -NS 'command' -Name 'parameterValue' -Value $Type -PassThru;
+    $parameterValueElement.Attributes.Append($PsHelpXml.CreateAttribute('required')).Value = $Required.IsPresent.ToString().ToLower();
+    $parameterValueElement.Attributes.Append($PsHelpXml.CreateAttribute('variableLength')).Value = $VariableLength.IsPresent.ToString().ToLower();
+    $typeElement = Add-XmlElement -ParentElement $parameterElement -Name 'type' -NS dev;
+    Add-TextElement -ParentElement $typeElement -NS 'maml' -Name 'name' -Value $Type;
+    (Add-XmlElement -ParentElement $parameterElement -Name 'uri' -NS maml).IsEmpty = $true;
+    Add-TextElement -ParentElement $parameterElement -NS 'dev' -Name 'defaultValue' -Value $DefaultValue;
+    if ($PassThru.IsPresent) { Write-Output -InputObject $parameterElement -NoEnumerate }
 }
