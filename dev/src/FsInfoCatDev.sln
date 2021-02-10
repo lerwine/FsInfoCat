@@ -1,18 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandaloneT4Host", "StandaloneT4Host\StandaloneT4Host.csproj", "{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandaloneT4Host", "StandaloneT4Host\StandaloneT4Host.csproj", "{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevHelper", "DevHelper\DevHelper.csproj", "{909B33DC-2382-4D82-840D-9892A27274D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevHelper", "DevHelper\DevHelper.csproj", "{909B33DC-2382-4D82-840D-9892A27274D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelper", "TestHelper\TestHelper.csproj", "{8D912F24-FD89-4B0B-AC1D-37225673522E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelper", "TestHelper\TestHelper.csproj", "{8D912F24-FD89-4B0B-AC1D-37225673522E}"
 EndProject
 Global
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU
 		Debug|x64 = Debug|x64
@@ -22,8 +19,8 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
-		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Debug|AnyCPU.Build.0 = Debug|Any CPU
 		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Debug|x64.ActiveCfg = Debug|AnyCPU
 		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Debug|x64.Build.0 = Debug|AnyCPU
 		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Debug|x86.ActiveCfg = Debug|AnyCPU
@@ -34,8 +31,8 @@ Global
 		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Release|x64.Build.0 = Release|AnyCPU
 		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Release|x86.ActiveCfg = Release|AnyCPU
 		{A3ABD670-D74E-4390-B785-AC49EA0AD2FA}.Release|x86.Build.0 = Release|AnyCPU
-		{909B33DC-2382-4D82-840D-9892A27274D9}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
-		{909B33DC-2382-4D82-840D-9892A27274D9}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{909B33DC-2382-4D82-840D-9892A27274D9}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{909B33DC-2382-4D82-840D-9892A27274D9}.Debug|AnyCPU.Build.0 = Debug|Any CPU
 		{909B33DC-2382-4D82-840D-9892A27274D9}.Debug|x64.ActiveCfg = Debug|AnyCPU
 		{909B33DC-2382-4D82-840D-9892A27274D9}.Debug|x64.Build.0 = Debug|AnyCPU
 		{909B33DC-2382-4D82-840D-9892A27274D9}.Debug|x86.ActiveCfg = Debug|AnyCPU
@@ -58,5 +55,11 @@ Global
 		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|x64.Build.0 = Release|Any CPU
 		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|x86.ActiveCfg = Release|Any CPU
 		{8D912F24-FD89-4B0B-AC1D-37225673522E}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8DB8EA9-C06D-4103-97D1-290E775D3143}
 	EndGlobalSection
 EndGlobal
