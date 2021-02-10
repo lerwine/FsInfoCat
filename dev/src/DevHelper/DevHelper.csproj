@@ -11,6 +11,9 @@
   <ItemGroup>
     <_TargetDirItems Include="$(TargetDir)\**\*.*" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\FsInfoCat\FsInfoCat.csproj" />
+  </ItemGroup>
   <Import Project="$(PsModuleBuildTargets)" />
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />
