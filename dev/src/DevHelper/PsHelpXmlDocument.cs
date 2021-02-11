@@ -138,12 +138,13 @@ namespace DevHelper
                 XmlDocumentNamespace.dev.Prefix(),
                 XmlDocumentNamespace.xmlns.URI())).Value = XmlDocumentNamespace.dev.URI();
             commandElement = new CommandElement(element);
-            element = commandElement.DetailsElement;
-            element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = $"{verb}-{noun}";
-            commandElement.Copyright = $"Copyright © Leonard Thomas Erwine {DateTime.Now.ToString("yyyy")}";
-            element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = verb;
-            element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = noun;
-            commandElement.DescriptionElement.AppendChild(CreateComment("Description goes here"));
+#warning Need to move functionality to CommandElement class or perhaps to a builder?
+            // element = commandElement.DetailsElement;
+            // element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = $"{verb}-{noun}";
+            // commandElement.Copyright = $"Copyright © Leonard Thomas Erwine {DateTime.Now.ToString("yyyy")}";
+            // element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = verb;
+            // element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = noun;
+            // commandElement.DescriptionElement.AppendChild(CreateComment("Description goes here"));
             return true;
         }
     }

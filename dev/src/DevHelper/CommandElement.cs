@@ -73,18 +73,13 @@ namespace DevHelper
             set => SetParaStrings(DescriptionElement, value);
         }
 
-        public IEnumerable<CommandParameterElement> GetParameterElements()
-        {
-            throw new NotImplementedException();
-        }
+        private XmlElement DetailsElement => EnsureElement(PsHelpNodeName.details, _allCommandElements);
 
-        internal XmlElement DetailsElement => EnsureElement(PsHelpNodeName.details, _allCommandElements);
+        private XmlElement DescriptionElement => EnsureElement(PsHelpNodeName.description, _allCommandElements);
 
-        internal XmlElement DescriptionElement => EnsureElement(PsHelpNodeName.description, _allCommandElements);
+        public ItemElementFactory<SyntaxItemElement> Syntax { get; }
 
-        internal XmlElement SyntaxElement => EnsureElement(PsHelpNodeName.syntax, _allCommandElements);
-
-        internal XmlElement ParametersElement => EnsureElement(PsHelpNodeName.parameters, _allCommandElements);
+        public ItemElementFactory<CommandParameterElement> Parameters { get; }
 
         internal XmlElement InputTypesElement => EnsureElement(PsHelpNodeName.inputTypes, _allCommandElements);
 
@@ -108,6 +103,33 @@ namespace DevHelper
                 EnsureElement(name, _allCommandElements);
             foreach (PsHelpNodeName name in _allDetailsElements)
                 EnsureDetailsElement(name);
+            Syntax = new SyntaxElements(this);
+        }
+
+        private class SyntaxElements : ItemElementFactory<SyntaxItemElement>
+        {
+            private readonly CommandElement _owner;
+
+            protected override PsHelpNodeName ItemName => PsHelpNodeName.syntaxItem;
+
+            protected override SyntaxItemElement CreateItem(XmlElement e) => new SyntaxItemElement(e);
+
+            protected override XmlElement EnsureParentElement() => _owner.EnsureElement(PsHelpNodeName.syntax, _allCommandElements);
+
+            internal SyntaxElements(CommandElement owner) { _owner = owner; }
+        }
+
+        private class ParameterElements : ItemElementFactory<CommandParameterElement>
+        {
+            private readonly CommandElement _owner;
+
+            protected override PsHelpNodeName ItemName => PsHelpNodeName.parameter;
+
+            protected override CommandParameterElement CreateItem(XmlElement e) => new CommandParameterElement(e);
+
+            protected override XmlElement EnsureParentElement() => _owner.EnsureElement(PsHelpNodeName.parameters, _allCommandElements);
+
+            internal ParameterElements(CommandElement owner) { _owner = owner; }
         }
     }
 }

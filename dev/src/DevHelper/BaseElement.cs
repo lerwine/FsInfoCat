@@ -10,6 +10,7 @@ namespace DevHelper
     public abstract class BaseElement
     {
         public PsHelpXmlDocument OwnerDocument { get; }
+
         protected XmlElement Xml { get; }
 
         protected ReadOnlyCollection<string> GetParaStrings(XmlElement element)
@@ -46,12 +47,34 @@ namespace DevHelper
             finally { Monitor.Exit(Xml); }
         }
 
-        public BaseElement(XmlElement xmlElement)
+        protected BaseElement(XmlElement xmlElement)
         {
             if (xmlElement is null)
                 throw new ArgumentNullException(nameof(xmlElement));
             OwnerDocument = (PsHelpXmlDocument)xmlElement.OwnerDocument;
             Xml = xmlElement;
+        }
+
+        internal static void AddTo(BaseElement item, XmlElement parentElement)
+        {
+            if (!ReferenceEquals(item.Xml.OwnerDocument, parentElement.OwnerDocument))
+                throw new InvalidOperationException();
+            if (item.Xml.ParentNode is null)
+                parentElement.AppendChild(item.Xml);
+            else if (!ReferenceEquals(item.Xml.ParentNode, parentElement))
+                throw new InvalidOperationException();
+        }
+
+        internal static bool IsContainedBy(BaseElement item, XmlElement parentElement) => null != item && null != parentElement && ReferenceEquals(item.Xml.ParentNode, parentElement);
+
+        internal static bool RemoveFrom(BaseElement item, XmlElement parentElement)
+        {
+            if (null != item && null != parentElement && ReferenceEquals(item.Xml.ParentNode, parentElement))
+            {
+                parentElement.RemoveChild(item.Xml);
+                return true;
+            }
+            return false;
         }
     }
 }
