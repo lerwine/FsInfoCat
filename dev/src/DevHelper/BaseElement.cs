@@ -16,7 +16,8 @@ namespace DevHelper
         {
             if (null == element || element.IsEmpty)
                 return new ReadOnlyCollection<string>(new string[0]);
-            return new ReadOnlyCollection<string>(element.SelectNodes(OwnerDocument.ToXPathName(PsHelpNodeName.para)).Cast<XmlElement>().Select(e => (e.IsEmpty) ? "" : e.InnerText)
+            return new ReadOnlyCollection<string>(element.SelectNodes(OwnerDocument.ToXPathName(PsHelpNodeName.para))
+                .Cast<XmlElement>().Select(e => (e.IsEmpty) ? "" : e.InnerText)
                 .Where(e => e.Trim().Length > 0).ToArray());
         }
 
@@ -30,19 +31,17 @@ namespace DevHelper
             foreach (string s in paragraphs)
             {
                 if (!string.IsNullOrWhiteSpace(s))
-                    element.AppendChild(OwnerDocument.CreateElement(PsHelpNodeName.para)).InnerText = s;
+                    element.AppendChild(PsHelpNodeName.para.CreateElement(OwnerDocument)).InnerText = s;
             }
         }
 
-        protected XmlElement EnsureElement(PsHelpNodeName name)
+        protected XmlElement EnsureElement(PsHelpNodeName name, IEnumerable<PsHelpNodeName> sequence)
         {
             Monitor.Enter(Xml);
             try
             {
-                XmlElement element = Xml.SelectSingleNode(OwnerDocument.ToXPathName(name)) as XmlElement;
-                if (element is null)
-                    element = Xml.AppendChild(OwnerDocument.CreateElement(name)) as XmlElement;
-                return element;
+                return Xml.EnsureChildElementInSequence(name.LocalName(out string ns), ns,
+                    sequence.Select(s => s.QualifiedName()));
             }
             finally { Monitor.Exit(Xml); }
         }

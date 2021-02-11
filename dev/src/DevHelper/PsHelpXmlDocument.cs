@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Management.Automation;
 using System.Threading;
 using System.Xml;
-using System.Xml.Schema;
 
 namespace DevHelper
 {
@@ -20,6 +17,7 @@ namespace DevHelper
         public const string NAMESPACE_URI_XMLNS = "http://www.w3.org/2000/xmlns/";
         private const string XML_ATTRIBUTE_NAME_SCHEMA = "schema";
         private const string XML_ATTRIBUTE_VALUE_MAML = "maml";
+        private Dictionary<PsHelpNodeName, string> _xPathNameCache = new Dictionary<PsHelpNodeName, string>();
         private FileInfo _savedLocation;
         private bool _hasChanges;
         public XmlNamespaceManager NamespaceManager { get;  }
@@ -28,14 +26,13 @@ namespace DevHelper
         public bool IsPsHelpXmlDocument(XmlDocument source)
         {
             XmlElement documentElement;
-            if (source is null || (documentElement = source.DocumentElement) is null)
-                return false;
-            XmlQNameAttribute qNameAttribute = XmlQNameAttribute.Map[PsHelpNodeName.helpItems];
-            NamespaceAttribute namespaceAttribute;
-            if (qNameAttribute.LocalName != documentElement.LocalName || documentElement.NamespaceURI != (namespaceAttribute = NamespaceAttribute.Map[qNameAttribute.Prefix]).URI)
-                return false;
-            XmlAttribute xmlAttribute = documentElement.SelectSingleNode("@" + XML_ATTRIBUTE_NAME_SCHEMA) as XmlAttribute;
-            return (null != xmlAttribute && xmlAttribute.Value == XML_ATTRIBUTE_VALUE_MAML);
+            if (!(source is null || (documentElement = source.DocumentElement) is null) &&
+                PsHelpNodeName.helpItems.IsMatch(documentElement))
+            {
+                XmlAttribute xmlAttribute = documentElement.SelectSingleNode("@" + XML_ATTRIBUTE_NAME_SCHEMA) as XmlAttribute;
+                return (null != xmlAttribute && xmlAttribute.Value == XML_ATTRIBUTE_VALUE_MAML);
+            }
+            return false;
         }
 
         public PsHelpXmlDocument(string path)
@@ -43,7 +40,7 @@ namespace DevHelper
             _savedLocation = (string.IsNullOrEmpty(path)) ? null : new FileInfo(path);
             _hasChanges = _savedLocation is null || !_savedLocation.Exists;
             if (_hasChanges)
-                AppendChild(CreateElement(PsHelpNodeName.helpItems)).Attributes.Append(CreateAttribute(XML_ATTRIBUTE_NAME_SCHEMA)).Value = XML_ATTRIBUTE_VALUE_MAML;
+                AppendChild(PsHelpNodeName.helpItems.CreateElement(this)).Attributes.Append(CreateAttribute(XML_ATTRIBUTE_NAME_SCHEMA)).Value = XML_ATTRIBUTE_VALUE_MAML;
             else
             {
                 _original.Load(_savedLocation.FullName);
@@ -54,24 +51,20 @@ namespace DevHelper
                         AppendChild(ImportNode(node, true));
             }
             NamespaceManager = new XmlNamespaceManager(NameTable);
-            foreach (NamespaceAttribute attr in (new XmlDocumentNamespace[] { XmlDocumentNamespace.msh })
-                    .Concat(Enum.GetValues(typeof(XmlDocumentNamespace)).Cast<XmlDocumentNamespace>()).Select(ns => NamespaceAttribute.Map[ns])
-                    .Where(a => a.IsCommandNS))
-                NamespaceManager.AddNamespace(attr.Prefix, attr.URI);
-
+            NamespaceManager.AddNamespace(XmlDocumentNamespace.msh.Prefix(), XmlDocumentNamespace.msh.URI());
+            foreach (XmlDocumentNamespace ns in XmlNameHelper.CommandNsNamespaces)
+                NamespaceManager.AddNamespace(ns.Prefix(), ns.URI());
         }
 
         public PsHelpXmlDocument()
         {
-            AppendChild(CreateElement(PsHelpNodeName.helpItems)).Attributes.Append(CreateAttribute("schema")).Value = "maml";
+            AppendChild(PsHelpNodeName.helpItems.CreateElement(this)).Attributes.Append(CreateAttribute("schema")).Value = "maml";
             NamespaceManager = new XmlNamespaceManager(NameTable);
-            foreach (NamespaceAttribute attr in (new XmlDocumentNamespace[] { XmlDocumentNamespace.msh })
-                    .Concat(Enum.GetValues(typeof(XmlDocumentNamespace)).Cast<XmlDocumentNamespace>()).Select(ns => NamespaceAttribute.Map[ns])
-                    .Where(a => a.IsCommandNS))
-                NamespaceManager.AddNamespace(attr.Prefix, attr.URI);
+            NamespaceManager.AddNamespace(XmlDocumentNamespace.msh.Prefix(), XmlDocumentNamespace.msh.URI());
+            foreach (XmlDocumentNamespace ns in XmlNameHelper.CommandNsNamespaces)
+                NamespaceManager.AddNamespace(ns.Prefix(), ns.URI());
         }
 
-        private Dictionary<PsHelpNodeName, string> _xPathNameCache = new Dictionary<PsHelpNodeName, string>();
 
         public string ToXPathName(PsHelpNodeName name)
         {
@@ -80,31 +73,17 @@ namespace DevHelper
             {
                 if (_xPathNameCache.ContainsKey(name))
                     return _xPathNameCache[name];
-                XmlQNameAttribute qNameAttribute = XmlQNameAttribute.Map[name];
-                NamespaceAttribute namespaceAttribute = NamespaceAttribute.Map[(qNameAttribute.Prefix == XmlDocumentNamespace.None) ? XmlDocumentNamespace.msh : qNameAttribute.Prefix];
-                string p = GetPrefixOfNamespace(namespaceAttribute.URI);
+                string localName = name.LocalName(out string namespaceURI);
+                // XmlQNameAttribute qNameAttribute = XmlQNameAttribute.Map[name];
+                // NamespaceAttribute namespaceAttribute = NamespaceAttribute.Map[(qNameAttribute.Prefix == XmlDocumentNamespace.None) ? XmlDocumentNamespace.msh : qNameAttribute.Prefix];
+                string p = GetPrefixOfNamespace(namespaceURI);
                 if (string.IsNullOrEmpty(p))
-                    p = namespaceAttribute.Prefix;
-                p = $"{p}:{qNameAttribute.LocalName}";
+                    p = name.Prefix();
+                p = $"{p}:{localName}";
                 _xPathNameCache.Add(name, p);
                 return p;
             }
             finally { Monitor.Exit(_xPathNameCache);  }
-        }
-
-        public XmlElement CreateElement(PsHelpNodeName name)
-        {
-            XmlQNameAttribute qNameAttribute = XmlQNameAttribute.Map[name];
-            string localName = qNameAttribute.LocalName;
-            NamespaceAttribute namespaceAttribute = NamespaceAttribute.Map[qNameAttribute.Prefix];
-            string prefix = namespaceAttribute.Prefix;
-            if (namespaceAttribute.ElementFormQualified)
-            {
-                string p = GetPrefixOfNamespace(namespaceAttribute.URI);
-                return CreateElement((string.IsNullOrEmpty(p)) ? namespaceAttribute.Prefix : p, localName,
-                    namespaceAttribute.URI);
-            }
-            return CreateElement(localName, namespaceAttribute.URI);
         }
 
         public bool FindCommand(string verb, string noun, out CommandElement result)
@@ -145,14 +124,19 @@ namespace DevHelper
         {
             if (FindCommand(verb, noun, out commandElement))
                 return false;
-            XmlElement element = (XmlElement)DocumentElement.AppendChild(CreateElement(PsHelpNodeName.command));
-            NamespaceAttribute xmlnsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.xmlns];
-            NamespaceAttribute nsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.maml];
-            element.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
-            nsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.command];
-            element.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
-            nsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.dev];
-            element.Attributes.Append(CreateAttribute(xmlnsAttribute.Prefix, nsAttribute.Prefix, xmlnsAttribute.URI)).Value = nsAttribute.URI;
+            XmlElement element = (XmlElement)DocumentElement.AppendChild(PsHelpNodeName.command.CreateElement(this));
+            // NamespaceAttribute xmlnsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.xmlns];
+            // NamespaceAttribute nsAttribute = NamespaceAttribute.Map[XmlDocumentNamespace.maml];
+
+            element.Attributes.Append(CreateAttribute(XmlDocumentNamespace.xmlns.Prefix(),
+                XmlDocumentNamespace.maml.Prefix(),
+                XmlDocumentNamespace.xmlns.URI())).Value = XmlDocumentNamespace.maml.URI();
+            element.Attributes.Append(CreateAttribute(XmlDocumentNamespace.xmlns.Prefix(),
+                XmlDocumentNamespace.command.Prefix(),
+                XmlDocumentNamespace.xmlns.URI())).Value = XmlDocumentNamespace.command.URI();
+            element.Attributes.Append(CreateAttribute(XmlDocumentNamespace.xmlns.Prefix(),
+                XmlDocumentNamespace.dev.Prefix(),
+                XmlDocumentNamespace.xmlns.URI())).Value = XmlDocumentNamespace.dev.URI();
             commandElement = new CommandElement(element);
             element = commandElement.DetailsElement;
             element.SelectSingleNode(ToXPathName(PsHelpNodeName.commandName)).InnerText = $"{verb}-{noun}";

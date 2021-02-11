@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Xml;
 
@@ -7,15 +9,24 @@ namespace DevHelper
 {
     public class CommandElement : BaseElement
     {
+        private static readonly ReadOnlyCollection<PsHelpNodeName> _allCommandElements = new ReadOnlyCollection<PsHelpNodeName>(
+            new PsHelpNodeName[] { PsHelpNodeName.details, PsHelpNodeName.description, PsHelpNodeName.syntax, PsHelpNodeName.parameters,
+                PsHelpNodeName.inputTypes, PsHelpNodeName.returnValues, PsHelpNodeName.terminatingErrors, PsHelpNodeName.nonTerminatingErrors,
+                PsHelpNodeName.alertSet, PsHelpNodeName.examples, PsHelpNodeName.relatedLinks }
+            );
+
+        private static readonly ReadOnlyCollection<PsHelpNodeName> _allDetailsElements = new ReadOnlyCollection<PsHelpNodeName>(
+            new PsHelpNodeName[] { PsHelpNodeName.name, PsHelpNodeName.description, PsHelpNodeName.copyright, PsHelpNodeName.verb,
+                PsHelpNodeName.noun, PsHelpNodeName.version }
+            );
+
         private XmlElement EnsureDetailsElement(PsHelpNodeName name)
         {
             Monitor.Enter(Xml);
             try
             {
-                XmlElement element = Xml.SelectSingleNode($"{OwnerDocument.ToXPathName(PsHelpNodeName.details)}/{OwnerDocument.ToXPathName(name)}") as XmlElement;
-                if (element is null)
-                    element = DetailsElement.AppendChild(OwnerDocument.CreateElement(name)) as XmlElement;
-                return element;
+                return Xml.EnsureChildElementInSequence(name.LocalName(out string ns), ns,
+                    _allDetailsElements.Select(s => s.QualifiedName()));
             }
             finally { Monitor.Exit(Xml); }
         }
@@ -62,36 +73,33 @@ namespace DevHelper
             set => SetParaStrings(DescriptionElement, value);
         }
 
-        public XmlElement DetailsElement => EnsureElement(PsHelpNodeName.details);
+        public XmlElement DetailsElement => EnsureElement(PsHelpNodeName.details, _allCommandElements);
 
-        public XmlElement DescriptionElement => EnsureElement(PsHelpNodeName.description);
+        public XmlElement DescriptionElement => EnsureElement(PsHelpNodeName.description, _allCommandElements);
 
-        public XmlElement SyntaxElement => EnsureElement(PsHelpNodeName.syntax);
+        public XmlElement SyntaxElement => EnsureElement(PsHelpNodeName.syntax, _allCommandElements);
 
-        public XmlElement ParametersElement => EnsureElement(PsHelpNodeName.parameters);
+        public XmlElement ParametersElement => EnsureElement(PsHelpNodeName.parameters, _allCommandElements);
 
-        public XmlElement InputTypesElement => EnsureElement(PsHelpNodeName.inputTypes);
+        public XmlElement InputTypesElement => EnsureElement(PsHelpNodeName.inputTypes, _allCommandElements);
 
-        public XmlElement ReturnValuesElement => EnsureElement(PsHelpNodeName.returnValues);
+        public XmlElement ReturnValuesElement => EnsureElement(PsHelpNodeName.returnValues, _allCommandElements);
 
-        public XmlElement TerminatingErrorsElement => EnsureElement(PsHelpNodeName.terminatingErrors);
+        public XmlElement TerminatingErrorsElement => EnsureElement(PsHelpNodeName.terminatingErrors, _allCommandElements);
 
-        public XmlElement NonTerminatingErrorsElement => EnsureElement(PsHelpNodeName.nonTerminatingErrors);
+        public XmlElement NonTerminatingErrorsElement => EnsureElement(PsHelpNodeName.nonTerminatingErrors, _allCommandElements);
 
-        public XmlElement AlertSetElement => EnsureElement(PsHelpNodeName.alertSet);
+        public XmlElement AlertSetElement => EnsureElement(PsHelpNodeName.alertSet, _allCommandElements);
 
-        public XmlElement ExamplesElement => EnsureElement(PsHelpNodeName.examples);
+        public XmlElement ExamplesElement => EnsureElement(PsHelpNodeName.examples, _allCommandElements);
 
-        public XmlElement RelatedLinksElement => EnsureElement(PsHelpNodeName.relatedLinks);
+        public XmlElement RelatedLinksElement => EnsureElement(PsHelpNodeName.relatedLinks, _allCommandElements);
 
         public CommandElement(XmlElement commandElement) : base(commandElement)
         {
-            foreach (PsHelpNodeName name in new PsHelpNodeName[] { PsHelpNodeName.details, PsHelpNodeName.description, PsHelpNodeName.syntax, PsHelpNodeName.parameters,
-                    PsHelpNodeName.inputTypes, PsHelpNodeName.returnValues, PsHelpNodeName.terminatingErrors, PsHelpNodeName.nonTerminatingErrors,
-                    PsHelpNodeName.alertSet, PsHelpNodeName.examples, PsHelpNodeName.relatedLinks })
-                EnsureElement(name);
-            foreach (PsHelpNodeName name in new PsHelpNodeName[] { PsHelpNodeName.name, PsHelpNodeName.description, PsHelpNodeName.copyright, PsHelpNodeName.verb,
-                    PsHelpNodeName.noun, PsHelpNodeName.version })
+            foreach (PsHelpNodeName name in _allCommandElements)
+                EnsureElement(name, _allCommandElements);
+            foreach (PsHelpNodeName name in _allDetailsElements)
                 EnsureDetailsElement(name);
         }
     }
