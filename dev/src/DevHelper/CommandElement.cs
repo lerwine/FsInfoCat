@@ -25,7 +25,7 @@ namespace DevHelper
             Monitor.Enter(Xml);
             try
             {
-                return Xml.EnsureChildElementInSequence(name.LocalName(out string ns), ns,
+                return DetailsElement.EnsureChildElementInSequence(name.LocalName(out string ns), ns,
                     _allDetailsElements.Select(s => s.QualifiedName()));
             }
             finally { Monitor.Exit(Xml); }
@@ -73,30 +73,37 @@ namespace DevHelper
             set => SetParaStrings(DescriptionElement, value);
         }
 
-        public XmlElement DetailsElement => EnsureElement(PsHelpNodeName.details, _allCommandElements);
+        public IEnumerable<CommandParameterElement> GetParameterElements()
+        {
+            throw new NotImplementedException();
+        }
 
-        public XmlElement DescriptionElement => EnsureElement(PsHelpNodeName.description, _allCommandElements);
+        internal XmlElement DetailsElement => EnsureElement(PsHelpNodeName.details, _allCommandElements);
 
-        public XmlElement SyntaxElement => EnsureElement(PsHelpNodeName.syntax, _allCommandElements);
+        internal XmlElement DescriptionElement => EnsureElement(PsHelpNodeName.description, _allCommandElements);
 
-        public XmlElement ParametersElement => EnsureElement(PsHelpNodeName.parameters, _allCommandElements);
+        internal XmlElement SyntaxElement => EnsureElement(PsHelpNodeName.syntax, _allCommandElements);
 
-        public XmlElement InputTypesElement => EnsureElement(PsHelpNodeName.inputTypes, _allCommandElements);
+        internal XmlElement ParametersElement => EnsureElement(PsHelpNodeName.parameters, _allCommandElements);
 
-        public XmlElement ReturnValuesElement => EnsureElement(PsHelpNodeName.returnValues, _allCommandElements);
+        internal XmlElement InputTypesElement => EnsureElement(PsHelpNodeName.inputTypes, _allCommandElements);
 
-        public XmlElement TerminatingErrorsElement => EnsureElement(PsHelpNodeName.terminatingErrors, _allCommandElements);
+        internal XmlElement ReturnValuesElement => EnsureElement(PsHelpNodeName.returnValues, _allCommandElements);
 
-        public XmlElement NonTerminatingErrorsElement => EnsureElement(PsHelpNodeName.nonTerminatingErrors, _allCommandElements);
+        internal XmlElement TerminatingErrorsElement => EnsureElement(PsHelpNodeName.terminatingErrors, _allCommandElements);
 
-        public XmlElement AlertSetElement => EnsureElement(PsHelpNodeName.alertSet, _allCommandElements);
+        internal XmlElement NonTerminatingErrorsElement => EnsureElement(PsHelpNodeName.nonTerminatingErrors, _allCommandElements);
 
-        public XmlElement ExamplesElement => EnsureElement(PsHelpNodeName.examples, _allCommandElements);
+        internal XmlElement AlertSetElement => EnsureElement(PsHelpNodeName.alertSet, _allCommandElements);
 
-        public XmlElement RelatedLinksElement => EnsureElement(PsHelpNodeName.relatedLinks, _allCommandElements);
+        internal XmlElement ExamplesElement => EnsureElement(PsHelpNodeName.examples, _allCommandElements);
+
+        internal XmlElement RelatedLinksElement => EnsureElement(PsHelpNodeName.relatedLinks, _allCommandElements);
 
         public CommandElement(XmlElement commandElement) : base(commandElement)
         {
+            if (!PsHelpNodeName.command.IsMatch(commandElement))
+                throw new ArgumentOutOfRangeException(nameof(commandElement));
             foreach (PsHelpNodeName name in _allCommandElements)
                 EnsureElement(name, _allCommandElements);
             foreach (PsHelpNodeName name in _allDetailsElements)

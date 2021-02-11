@@ -81,6 +81,9 @@ namespace DevHelper
         examples,
 
         [XmlQName(XmlDocumentNamespace.maml)]
-        relatedLinks
+        relatedLinks,
+
+        [XmlQName(XmlDocumentNamespace.command)]
+        parameterValue
     }
 }
