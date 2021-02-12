@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Xml;
+using DevHelper.PsHelp.Command;
 using DevHelper.PsHelp.Serialization;
 
 namespace DevHelper.PsHelp
@@ -190,5 +191,33 @@ namespace DevHelper.PsHelp
             return (value.IsXmlNCName()) ? value : XmlConvert.EncodeLocalName(value);
         }
 
+        public static string ToXmlText(this PiplineInput value)
+        {
+            switch (value)
+            {
+                case PiplineInput.False:
+                    return "False";
+                case PiplineInput.ByValue:
+                    return "True (ByValue)";
+                case PiplineInput.ByPropertyName:
+                    return "True (ByPropertyName)";
+            }
+            return "True (ByValue, ByPropertyName)";
+        }
+
+        public static PiplineInput ToPiplineInput(this string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                string lc = value.ToLower();
+                if (lc.Contains("true"))
+                {
+                    if (lc.Contains("bypropertyname"))
+                        return (lc.Contains("byvalue")) ? PiplineInput.ByPropertyName | PiplineInput.ByValue : PiplineInput.ByPropertyName;
+                    return PiplineInput.ByValue;
+                }
+            }
+            return PiplineInput.False;
+        }
     }
 }

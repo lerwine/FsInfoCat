@@ -1,6 +1,8 @@
+using System.ComponentModel;
+
 namespace DevHelper.PsHelp.Maml
 {
-    public interface ITextBlockElement
+    public interface ITextBlockElement : INotifyPropertyChanging, INotifyPropertyChanged
     {
 
     }

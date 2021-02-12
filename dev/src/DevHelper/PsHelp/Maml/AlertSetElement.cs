@@ -4,7 +4,7 @@ using DevHelper.PsHelp.Serialization;
 namespace DevHelper.PsHelp.Maml
 {
     [PsHelpXmlRoot(ElementName.alertSet)]
-    public class AlertSetElement : ITextBlockElement
+    public class AlertSetElement : PropertyChangeSupport, ITextBlockElement
     {
         private string _title = "";
 
@@ -12,7 +12,7 @@ namespace DevHelper.PsHelp.Maml
         public string Title
         {
             get => _title;
-            set => _title = value ?? "";
+            set => CheckPropertyChange(nameof(Title), _title, value ?? "", n => _title = n);
         }
     }
 }

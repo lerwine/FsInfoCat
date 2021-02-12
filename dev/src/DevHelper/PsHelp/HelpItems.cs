@@ -1,7 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
@@ -158,6 +160,112 @@ namespace DevHelper.PsHelp
             public override int GetHashCode() => ToString().GetHashCode();
 
             public override string ToString() => $"{_schemaUrl.AbsoluteUri} {_location}";
+
+            public static HelpItems Load(XmlReader reader, XmlDeserializationEvents events)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(HelpItems));
+                return (HelpItems)serializer.Deserialize(reader, events);
+            }
+
+            public static HelpItems Load(TextReader reader, XmlDeserializationEvents events)
+            {
+                using (XmlReader xmlReader = XmlReader.Create(reader))
+                    return Load(xmlReader, events);
+            }
+
+            public static HelpItems Load(Stream stream, XmlDeserializationEvents events)
+            {
+                using (XmlReader reader = XmlReader.Create(stream))
+                    return Load(reader, events);
+            }
+
+            public static HelpItems Load(string inputUri, XmlDeserializationEvents events)
+            {
+                using (XmlReader reader = XmlReader.Create(inputUri))
+                    return Load(reader, events);
+            }
+
+            public static HelpItems Load(XmlReader reader)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(HelpItems));
+                return (HelpItems)serializer.Deserialize(reader);
+            }
+
+            public static HelpItems Load(TextReader reader)
+            {
+                using (XmlReader xmlReader = XmlReader.Create(reader))
+                    return Load(xmlReader);
+            }
+
+            public static HelpItems Load(Stream stream)
+            {
+                using (XmlReader reader = XmlReader.Create(stream))
+                    return Load(reader);
+            }
+
+            public static HelpItems Load(string inputUri)
+            {
+                using (XmlReader reader = XmlReader.Create(inputUri))
+                    return Load(reader);
+            }
+
+            public void Save(XmlWriter writer)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(HelpItems));
+                serializer.Serialize(writer, this);
+
+            }
+
+            public void Save(TextWriter writer, XmlWriterSettings settings)
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
+                    Save(xmlWriter);
+            }
+
+            public void Save(Stream stream, XmlWriterSettings settings)
+            {
+                using (XmlWriter writer = XmlWriter.Create(stream, settings))
+                    Save(writer);
+            }
+
+            public void Save(string outputFileName, XmlWriterSettings settings)
+            {
+                using (XmlWriter writer = XmlWriter.Create(outputFileName, settings))
+                    Save(writer);
+            }
+
+            public void Save(TextWriter writer)
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings
+                {
+                    Indent = true,
+                    OmitXmlDeclaration = true,
+                    Encoding = writer.Encoding ?? new UTF8Encoding(false, true)
+                }))
+                    Save(xmlWriter);
+            }
+
+            public void Save(Stream stream, Encoding encoding = null)
+            {
+                using (XmlWriter writer = XmlWriter.Create(stream, new XmlWriterSettings
+                {
+                    Indent = true,
+                    OmitXmlDeclaration = true,
+                    Encoding = encoding ?? new UTF8Encoding(false, true)
+                }))
+                    Save(writer);
+            }
+
+            public void Save(string outputFileName, Encoding encoding = null)
+            {
+                using (XmlWriter writer = XmlWriter.Create(outputFileName, new XmlWriterSettings
+                {
+                    Indent = true,
+                    OmitXmlDeclaration = true,
+                    Encoding = encoding ?? new UTF8Encoding(false, true)
+                }))
+                    Save(writer);
+            }
         }
     }
 }

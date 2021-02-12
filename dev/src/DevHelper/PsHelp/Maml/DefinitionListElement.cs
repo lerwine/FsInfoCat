@@ -4,22 +4,19 @@ using DevHelper.PsHelp.Serialization;
 namespace DevHelper.PsHelp.Maml
 {
     [PsHelpXmlRoot(ElementName.definitionList)]
-    public class DefinitionListElement : ITextBlockElement
+    public class DefinitionListElement : PropertyChangeSupport, ITextBlockElement
     {
-        private Collection<DefinitionListItem> _contents;
+        private ObservableCollection<DefinitionListItem> _contents;
 
         [PsHelpXmlElement(ElementName.definitionList)]
-        public Collection<DefinitionListItem> Contents
+        public ObservableCollection<DefinitionListItem> Contents
         {
-            get
+            get => _contents;
+            set => CheckPropertyChange(nameof(Contents), _contents, value ?? new ObservableCollection<DefinitionListItem>(), n =>
             {
-                Collection<DefinitionListItem> contents = _contents;
-                if (contents is null)
-                    _contents = contents = new Collection<DefinitionListItem>();
-                return contents;
-            }
-            set => _contents = value;
+#warning Need to attach change handlers
+                _contents = n;
+            });
         }
-
     }
 }
