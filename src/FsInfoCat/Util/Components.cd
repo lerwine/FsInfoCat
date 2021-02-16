@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="FsInfoCat.Util.ComponentBase" Collapsed="true">
+    <Position X="6.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAKAEAAAAAAAAAAAAAAAIAAAAAAAIAAACAAA=</HashCode>
+      <FileName>Util\ComponentBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Util.ComponentList" Collapsed="true">
+    <Position X="8.75" Y="6.25" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="FsInfoCat.Util.ComponentList.AttachableContainer">
+        <Members>
+          <Field Name="_firstAttached" Hidden="true" />
+          <Field Name="_firstSite" Hidden="true" />
+          <Field Name="_lastAttached" Hidden="true" />
+          <Field Name="_lastSite" Hidden="true" />
+          <Property Name="SyncRoot" Hidden="true" />
+        </Members>
+        <Compartments>
+          <Compartment Name="Methods" Collapsed="true" />
+          <Compartment Name="Nested Types" Collapsed="false" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="FsInfoCat.Util.ComponentList.AttachableContainer.Site">
+            <TypeIdentifier>
+              <NewMemberFileName>Util\ComponentList.Site.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Util\ComponentList.AttachableContainer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="FsInfoCat.Util.ComponentList.ContainerBase">
+        <Compartments>
+          <Compartment Name="Fields" Collapsed="true" />
+          <Compartment Name="Methods" Collapsed="true" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="FsInfoCat.Util.ComponentList.ContainerBase.SiteBase" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Util\ComponentList.Site.cs</NewMemberFileName>
+            </TypeIdentifier>
+            <Lollipop Position="0.2" />
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Util\ComponentList.ContainerBase.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="FsInfoCat.Util.ComponentList.PlaceHolderContainer">
+        <Compartments>
+          <Compartment Name="Fields" Collapsed="true" />
+          <Compartment Name="Methods" Collapsed="true" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="FsInfoCat.Util.ComponentList.PlaceHolderContainer.Site" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Util\ComponentList.Site.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Util\ComponentList.PlaceHolderContainer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>JkIAAEAACIAEAAABiAAABCQwQA0IAIAkCAEIAABQAAI=</HashCode>
+      <FileName>Util\ComponentList.AttachableContainer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Util.ComponentList&lt;TComponent&gt;" Collapsed="true">
+    <Position X="12.75" Y="6.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IEIAAEAAwAAAABAACAAABAAAAAAAAAAAAAAAAAAQIAA=</HashCode>
+      <FileName>Util\ComponentList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Models.Crawl.CrawlMessage" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <InheritanceLine Type="FsInfoCat.Util.ComponentBase" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.563" />
+        <Point X="3.75" Y="6.563" />
+        <Point X="3.75" Y="5.441" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAEAAAIAAAAAA=</HashCode>
+      <FileName>Models\Crawl\CrawlMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.Models.Crawl.FsDirectory" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAEAAIEAAAAIAAABAACQQAAAAAAAAAACAgQAAAAA=</HashCode>
+      <FileName>Models\Crawl\FsDirectory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Models.Crawl.FsFile" Collapsed="true">
+    <Position X="8.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAIEAAAAAAAAAAACRQAAAAAAAAAAAAgQAAAAA=</HashCode>
+      <FileName>Models\Crawl\FsFile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Models.Crawl.FsHost" Collapsed="true">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAIAAEQACAIAAAAAACAAAAABAABAAAAAAQAAAAA=</HashCode>
+      <FileName>Models\Crawl\FsHost.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Models.Crawl.FsRoot" Collapsed="true">
+    <Position X="13" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAkgBAGAACAIEgABAACAAAAAAAIIAAAiAQQAAAAA=</HashCode>
+      <FileName>Models\Crawl\FsRoot.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ChildNodes" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Models.Crawl.CrawlError" Collapsed="true">
+    <Position X="2" Y="3.25" Width="1.5" />
+    <InheritanceLine Type="FsInfoCat.Models.Crawl.CrawlMessage" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="5.062" />
+        <Point X="2.688" Y="5.062" />
+        <Point X="2.688" Y="3.941" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>IAAAAACAAAAABAIQAAAAAAAAABAAAACgAACAwEAACAA=</HashCode>
+      <FileName>Models\Crawl\CrawlError.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.Models.Crawl.CrawlWarning" Collapsed="true">
+    <Position X="4" Y="3.25" Width="1.5" />
+    <InheritanceLine Type="FsInfoCat.Models.Crawl.CrawlMessage" FixedFromPoint="true">
+      <Path>
+        <Point X="4.5" Y="5.062" />
+        <Point X="5" Y="5.062" />
+        <Point X="5" Y="3.941" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Crawl\CrawlWarning.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="FsInfoCat.Models.Crawl.IFsChildNode" Collapsed="true">
+    <Position X="15.5" Y="3.25" Width="1.5" />
+    <InheritanceLine Type="FsInfoCat.Models.Crawl.IFsNode" FixedToPoint="true">
+      <Path>
+        <Point X="18.75" Y="4" />
+        <Point X="18.75" Y="3.562" />
+        <Point X="17" Y="3.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAQQAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\Crawl\IFsChildNode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Models.Crawl.IFsNode" Collapsed="true">
+    <Position X="18" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Models\Crawl\IFsNode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Models.Crawl.IFsDirectory" Collapsed="true">
+    <Position X="15.5" Y="4.75" Width="1.5" />
+    <InheritanceLine Type="FsInfoCat.Models.Crawl.IFsNode" FixedToPoint="true">
+      <Path>
+        <Point X="18.75" Y="4.691" />
+        <Point X="18.75" Y="5.125" />
+        <Point X="17" Y="5.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Models\Crawl\IFsDirectory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

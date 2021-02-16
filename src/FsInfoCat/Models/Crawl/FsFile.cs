@@ -4,7 +4,7 @@ using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {
-    public class FsFile : ComponentBase, IFsChildNode
+    public sealed class FsFile : ComponentBase, IFsChildNode
     {
         private readonly ComponentList.AttachableContainer _container;
         private ComponentList<CrawlMessage> _messagesList;
