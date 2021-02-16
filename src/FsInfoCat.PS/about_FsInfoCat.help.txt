@@ -21,8 +21,9 @@ EXPORTED COMMANDS
         Test-PasswordHash -RawPwd <string> [-EncodedPwHash <string>]  [<CommonParameters>]
         (<string> ...) | Test-PasswordHash [-EncodedPwHash <string>]  [<CommonParameters>]
         Test-PasswordHash -PwHash <Nullable<FsInfoCat.Util.PwHash>>  [<CommonParameters>]
-]
-    Get-InitializationQueries
-        Get-InitializationQueries -RawAdminPwd <string>  [<CommonParameters>]
 
 SEE ALSO
+    Register-FsVolumeInfo
+    Unregister-FsVolumeInfo
+    Start-FsCrawlJob
+    Get-RegisteredFsVolumeInfo

@@ -3,6 +3,23 @@ if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
 }
 
 Function ConvertTo-PasswordHash {
+    <#
+    .SYNOPSIS
+        Creates a password hash code.
+
+    .DESCRIPTION
+        Creates an object that contains a SHA512 password hash.
+
+    .EXAMPLE
+        PS C:\> $PwHash = ConvertTo-PasswordHash -RawPwd 'myPassword';
+        Generates a cryptographically random salt and hashes the raw password.
+
+    .INPUTS
+        Raw password to be converted to a SHA512 hash.
+
+    .OUTPUTS
+        A FsInfoCat.Util.PwHash object representing the password hash.
+    #>
     [CmdletBinding()]
     [OutputType([FsInfoCat.Util.PwHash])]
     Param(
@@ -22,6 +39,22 @@ Function ConvertTo-PasswordHash {
 }
 
 Function Test-PasswordHash {
+    <#
+    .SYNOPSIS
+        Checks to see if a raw password matches a password hash.
+
+    .DESCRIPTION
+        Tests whether the provided raw password is a match of the same password that was used to create the SHA512 password hash.
+
+    .EXAMPLE
+        PS C:\> $Success = $myPw | Test-PasswordHash -PwHash $PwHash;
+
+    .INPUTS
+        The raw password to test.
+
+    .OUTPUTS
+        true if the raw password is a match; otherwise, false.
+    #>
     [CmdletBinding(DefaultParameterSetName = "String")]
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = "String")]
@@ -88,28 +121,4 @@ Function Get-LocalMachineIdentifier {
             Write-Error -Message 'Unable to get machine id' -Category ObjectNotFound -ErrorId 'EtcMachineIdReadError' -CategoryReason 'Unable to read from etc/machine-id';
         }
     }
-}
-
-Function Get-InitializationQueries {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$RawAdminPwd
-    )
-    $PwHash = (ConvertTo-PasswordHash -RawPwd $RawAdminPwd).ToString();
-    $HostDeviceID = [Guid]::NewGuid().ToString('d');
-    $MachineIdentifier = Get-LocalMachineSID;
-    $MachineName = [System.Environment]::MachineName;
-    @"
--- Insert this query immediately before the 'CREATE TABLE dbo.Account' statement
-INSERT INTO dbo.UserCredential (AccountID, PwHash, CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
-    Values ('00000000-0000-0000-0000-000000000000', '$PwHash',
-        @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
-
--- The next query should be executed at the end of the setup script.
-INSERT INTO dbo.HostDevice (HostDeviceID, DisplayName, MachineIdentifer, MachineName, IsWindows, AllowCrawl, IsInactive, Notes,
-        CreatedOn, CreatedBy, ModifiedOn, ModifiedBy)
-    VALUES('$HostDeviceID'', '', '$MachineIdentifier', '$MachineName', 1, 1, 0, '',
-        @CreatedOn, '00000000-0000-0000-0000-000000000000', @CreatedOn, '00000000-0000-0000-0000-000000000000');
-"@ | Write-Host;
 }
