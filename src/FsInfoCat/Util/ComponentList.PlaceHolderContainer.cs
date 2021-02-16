@@ -18,11 +18,11 @@ namespace FsInfoCat.Util
 
             protected override object SyncRoot => _target._syncRoot;
 
-            public override IEqualityComparer<string> NameComparer { get; }
+            public override StringComparer NameComparer { get; }
 
             internal PlaceHolderContainer(ComponentList target) : this(target, null) { }
 
-            internal PlaceHolderContainer(ComponentList target, IEqualityComparer<string> nameComparer) : base(PlaceHolderOwner)
+            internal PlaceHolderContainer(ComponentList target, StringComparer nameComparer) : base(PlaceHolderOwner)
             {
                 AttachableContainer oldContainer = target._container as AttachableContainer;
                 if (oldContainer is null)

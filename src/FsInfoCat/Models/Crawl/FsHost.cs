@@ -9,6 +9,8 @@ namespace FsInfoCat.Models.Crawl
     /// </summary>
     public sealed partial class FsHost : ComponentBase, IFsNode
     {
+        private string _machineName = "";
+        private string _machineIdentifier = "";
         private readonly ComponentList.AttachableContainer _container;
         private ComponentList<CrawlMessage> _messagesList;
         private ComponentList<FsRoot> _rootsList;
@@ -47,9 +49,17 @@ namespace FsInfoCat.Models.Crawl
 
         IList<CrawlMessage> IFsNode.Messages { get => Messages; set => Messages = (ComponentList<CrawlMessage>)value; }
 
-        public string MachineName { get; set; }
+        public string MachineName
+        {
+            get => _machineName;
+            set => _machineName = value ?? "";
+        }
 
-        public string MachineIdentifier { get; set; }
+        public string MachineIdentifier
+        {
+            get => _machineIdentifier;
+            set => _machineIdentifier = value ?? "";
+        }
 
         string INamedComponent.Name => (string.IsNullOrWhiteSpace(MachineName)) ? MachineIdentifier ?? "" : MachineName;
 

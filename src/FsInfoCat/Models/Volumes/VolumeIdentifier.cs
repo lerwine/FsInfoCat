@@ -364,6 +364,28 @@ namespace FsInfoCat.Models.Volumes
             return ((_location.IsAbsoluteUri) ? _location.AbsolutePath : _location.OriginalString).Equals(((other._location.IsAbsoluteUri) ? other._location.AbsolutePath : other._location.OriginalString));
         }
 
+        public override bool Equals(object obj)
+        {
+            VolumeIdentifier? v = obj as VolumeIdentifier?;
+            return v.HasValue && Equals(v.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            if (_uuid.HasValue)
+                return _uuid.Value.GetHashCode();
+            if (_serialNumber.HasValue)
+                return _serialNumber.Value.GetHashCode();
+            Uri uri = Location;
+            return ((uri.IsAbsoluteUri) ? uri.AbsoluteUri : uri.OriginalString).GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            Uri uri = Location;
+            return (uri.IsAbsoluteUri) ? uri.AbsoluteUri : ((string.IsNullOrWhiteSpace(uri.OriginalString)) ? "(empty)" : uri.OriginalString);
+        }
+
         public static string ToIdentifierString(Guid guid) => guid.ToString("d").ToLower();
 
         public static string ToIdentifierString(uint serialNumber) => $"{(serialNumber >> 16).ToString("x4")}-{(serialNumber & 0xffff).ToString("x4")}";

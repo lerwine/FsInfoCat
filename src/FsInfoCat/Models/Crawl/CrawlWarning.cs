@@ -24,5 +24,8 @@ namespace FsInfoCat.Models.Crawl
         public CrawlWarning(string message, MessageId id) : base(message, id) { }
 
         public CrawlWarning() { }
+
+        public override string ToString() =>
+            $"Warning {ID.ToString("F")} {{ Message=\"{Message}\" }}";
     }
 }

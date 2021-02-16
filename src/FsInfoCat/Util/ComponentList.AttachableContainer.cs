@@ -12,7 +12,7 @@ namespace FsInfoCat.Util
         {
             protected override object SyncRoot { get; } = new object();
 
-            public override IEqualityComparer<string> NameComparer { get; }
+            public override StringComparer NameComparer { get; }
 
             /// <summary>
             /// Creates a new <c>AttachableContainer</c>.
@@ -23,7 +23,7 @@ namespace FsInfoCat.Util
 
             public AttachableContainer(IComponent owner, bool caseSensitive) : this(owner, (caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase) { }
 
-            public AttachableContainer(IComponent owner, IEqualityComparer<string> nameComparer) : base(owner)
+            public AttachableContainer(IComponent owner, StringComparer nameComparer) : base(owner)
             {
                 NameComparer = nameComparer ?? throw new ArgumentNullException(nameof(nameComparer));
             }

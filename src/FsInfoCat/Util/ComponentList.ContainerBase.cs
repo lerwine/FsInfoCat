@@ -29,7 +29,7 @@ namespace FsInfoCat.Util
                 }
             }
 
-            public abstract IEqualityComparer<string> NameComparer { get; }
+            public abstract StringComparer NameComparer { get; }
 
             /// <summary>
             /// Creates a new <c>ContainerBase</c>.

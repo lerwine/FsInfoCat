@@ -8,10 +8,16 @@ namespace FsInfoCat.Models.Crawl
 {
     public sealed class FsDirectory : ComponentBase, IFsDirectory, IFsChildNode
     {
+        private string _name = "";
         private readonly ComponentList.AttachableContainer _container;
         private ComponentList<CrawlMessage> _messagesList;
         private ComponentList<IFsChildNode> _childNodes;
-        public string Name { get; set; }
+
+        public string Name
+        {
+            get => _name;
+            set => _name = value ?? "";
+        }
 
         public ComponentList<IFsChildNode> ChildNodes
         {
@@ -81,5 +87,33 @@ namespace FsInfoCat.Models.Crawl
             segments = new IFsDirectory[0];
             return false;
         }
+
+        public bool Equals(IFsChildNode other)
+        {
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other is FsDirectory)
+                return ((this.GetContainer() is ComponentList.AttachableContainer container) ? container.NameComparer : StringComparer.InvariantCultureIgnoreCase).Equals(Name, other.Name);
+            return false;
+        }
+
+        public int CompareTo(IFsChildNode other)
+        {
+            if (other is null)
+                return 1;
+            if (ReferenceEquals(this, other))
+                return 0;
+            if (other is FsDirectory)
+                return ((this.GetContainer() is ComponentList.AttachableContainer container) ? container.NameComparer : StringComparer.InvariantCultureIgnoreCase).Compare(Name, other.Name);
+            return -1;
+        }
+
+        public override bool Equals(object obj) => Equals(obj as IFsChildNode);
+
+        public override int GetHashCode() => Name.GetHashCode();
+
+        public override string ToString() => Name;
     }
 }

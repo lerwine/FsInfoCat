@@ -50,6 +50,12 @@ namespace FsInfoCat.Models.Crawl
 
         CrawlError() { }
 
+        public CrawlError(string message, MessageId id)
+            : base(message, id)
+        {
+            InnerErrors = new Collection<CrawlError>();
+        }
+
         /// <summary>
         /// Create new CrawlError.
         /// </summary>
@@ -71,5 +77,8 @@ namespace FsInfoCat.Models.Crawl
             }
             InnerErrors = new Collection<CrawlError>(innerErrors);
         }
+
+        public override string ToString() =>
+            $"Error {ID.ToString("F")} {{ Message=\"{Message}\", \"Category={_category}\", Activity=\"{_activity}\", TargetName=\"{_targetName}\", TargetType=\"{_targetType}\", Reason=\"{_reason}\", RecommendedAction=\"{_recommendedAction}\" }}";
     }
 }

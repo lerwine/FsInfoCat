@@ -10,6 +10,10 @@ namespace FsInfoCat.Models.Crawl
 {
     public sealed class FsRoot : ComponentBase, IVolumeInfo, IFsDirectory, IEquatable<FsRoot>, IEqualityComparer<IFsChildNode>
     {
+        private string _rootPathName = "";
+        private string _driveFormat = "";
+        private string _volumeName = "";
+
         private readonly ComponentList.AttachableContainer _container;
         private ComponentList<CrawlMessage> _messagesList;
         private ComponentList<IFsChildNode> _childNodes;
@@ -17,19 +21,31 @@ namespace FsInfoCat.Models.Crawl
         /// <summary>
         /// Gets the full path name of the volume root directory.
         /// </summary>
-        public string RootPathName { get; set; }
+        public string RootPathName
+        {
+            get => _rootPathName;
+            set => _rootPathName = value ?? "";
+        }
 
         /// <summary>
         /// Gets the name of the file system.
         /// </summary>
-        public string DriveFormat { get; set; }
+        public string DriveFormat
+        {
+            get => _driveFormat;
+            set => _driveFormat = value ?? "";
+        }
 
         public DriveType DriveType { get; set; }
 
         /// <summary>
         /// Gets the name of the volume.
         /// </summary>
-        public string VolumeName { get; set; }
+        public string VolumeName
+        {
+            get => _volumeName;
+            set => _volumeName = value ?? "";
+        }
 
         public VolumeIdentifier Identifier { get; set; }
 

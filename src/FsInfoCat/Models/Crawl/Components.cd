@@ -8,7 +8,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="FsInfoCat.Util.ComponentList" Collapsed="true">
+  <Class Name="FsInfoCat.Util.ComponentList">
     <Position X="8.75" Y="6.25" Width="2.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -16,29 +16,6 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Class Name="FsInfoCat.Util.ComponentList.AttachableContainer">
-        <Members>
-          <Field Name="_firstAttached" Hidden="true" />
-          <Field Name="_firstSite" Hidden="true" />
-          <Field Name="_lastAttached" Hidden="true" />
-          <Field Name="_lastSite" Hidden="true" />
-          <Property Name="SyncRoot" Hidden="true" />
-        </Members>
-        <Compartments>
-          <Compartment Name="Methods" Collapsed="true" />
-          <Compartment Name="Nested Types" Collapsed="false" />
-        </Compartments>
-        <NestedTypes>
-          <Class Name="FsInfoCat.Util.ComponentList.AttachableContainer.Site">
-            <TypeIdentifier>
-              <NewMemberFileName>Util\ComponentList.Site.cs</NewMemberFileName>
-            </TypeIdentifier>
-          </Class>
-        </NestedTypes>
-        <TypeIdentifier>
-          <NewMemberFileName>Util\ComponentList.AttachableContainer.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
       <Class Name="FsInfoCat.Util.ComponentList.ContainerBase">
         <Compartments>
           <Compartment Name="Fields" Collapsed="true" />
@@ -49,7 +26,7 @@
             <TypeIdentifier>
               <NewMemberFileName>Util\ComponentList.Site.cs</NewMemberFileName>
             </TypeIdentifier>
-            <Lollipop Position="0.2" />
+            <Lollipop Orientation="Left" Position="0.1" />
           </Class>
         </NestedTypes>
         <TypeIdentifier>
@@ -73,10 +50,32 @@
           <NewMemberFileName>Util\ComponentList.PlaceHolderContainer.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
+      <Class Name="FsInfoCat.Util.ComponentList.AttachableContainer">
+        <Members>
+          <Field Name="_firstAttached" Hidden="true" />
+          <Field Name="_firstSite" Hidden="true" />
+          <Field Name="_lastAttached" Hidden="true" />
+          <Field Name="_lastSite" Hidden="true" />
+        </Members>
+        <Compartments>
+          <Compartment Name="Methods" Collapsed="true" />
+          <Compartment Name="Nested Types" Collapsed="false" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="FsInfoCat.Util.ComponentList.AttachableContainer.Site">
+            <TypeIdentifier>
+              <NewMemberFileName>Util\ComponentList.Site.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Util\ComponentList.AttachableContainer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
     </NestedTypes>
     <TypeIdentifier>
       <HashCode>JkIAAEAACIAEAAABiAAABCQwQA0IAIAkCAEIAABQAAI=</HashCode>
-      <FileName>Util\ComponentList.AttachableContainer.cs</FileName>
+      <FileName>Util\ComponentList.ContainerBase.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -101,14 +100,6 @@
       <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAEAAAIAAAAAA=</HashCode>
       <FileName>Models\Crawl\CrawlMessage.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="FsInfoCat.Models.Crawl.FsDirectory" Collapsed="true">
-    <Position X="6.25" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAIAAEAAIEAAAAIAAABAACQQAAAAAAAAAACAgQAAAAA=</HashCode>
-      <FileName>Models\Crawl\FsDirectory.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Models.Crawl.FsFile" Collapsed="true">
     <Position X="8.5" Y="3.25" Width="1.5" />
@@ -147,7 +138,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>IAAAAACAAAAABAIQAAAAAAAAABAAAACgAACAwEAACAA=</HashCode>
+      <HashCode>IAAAAACAAAAABAIUAAAAAAAAABAAAACgAACAwEAACAA=</HashCode>
       <FileName>Models\Crawl\CrawlError.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -161,9 +152,17 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Crawl\CrawlWarning.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.Models.Crawl.FsDirectory" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAEAAIEAAAAYEgABAACQQAAAAAIAAAACAgQAAAAA=</HashCode>
+      <FileName>Models\Crawl\FsDirectory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Interface Name="FsInfoCat.Models.Crawl.IFsChildNode" Collapsed="true">
     <Position X="15.5" Y="3.25" Width="1.5" />
