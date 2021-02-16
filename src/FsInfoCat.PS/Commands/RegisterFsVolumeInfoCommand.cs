@@ -21,9 +21,13 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string DriveFormat { get; set; }
 
-        // TODO: Replace with Volume Identifier
+#warning Use Identifier instead of SerialNumber
         [Parameter(HelpMessage = "The volume serial number.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
         public uint SerialNumber { get; set; }
+
+        [Parameter(HelpMessage = "The volume serial number or UUID.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
+        [Alias("SerialNumber")]
+        public object Identifier { get; set; }
 
         [Parameter(HelpMessage = "Return registered volume", Mandatory = true)]
         public SwitchParameter PassThru { get; set; }

@@ -8,7 +8,7 @@ namespace FsInfoCat.PS.Commands
     [Cmdlet(VerbsLifecycle.Unregister, "FsVolumeInfo", DefaultParameterSetName = PARAMETER_SET_NAME_VOLUME_INFO)]
     public class UnregisterFsVolumeInfoCommand : FsVolumeInfoCommand
     {
-        private const string PARAMETER_SET_NAME_SERIAL_NUMBER = "SerialNumber";
+        private const string PARAMETER_SET_NAME_VOLUME_IDENTIFIER = "VolumeIdentifier";
         private const string PARAMETER_SET_NAME_ROOT_PATH = "RootPath";
         private const string PARAMETER_SET_NAME_VOLUME_INFO = "VolumeInfo";
 
@@ -17,9 +17,15 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string[] RootPathName { get; set; }
 
+#warning Use Identifier instead of SerialNumber
         [Parameter(HelpMessage = "The volume serial number.", Mandatory = true, ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_SERIAL_NUMBER)]
+            ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_VOLUME_IDENTIFIER)]
         public uint[] SerialNumber { get; set; }
+
+        [Parameter(HelpMessage = "The volume serial number or UUID.", Mandatory = true, ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_VOLUME_IDENTIFIER)]
+        [Alias("SerialNumber")]
+        public object[] Identifier { get; set; }
 
         [Parameter(HelpMessage = "The volume information object.", Mandatory = true, ValueFromPipeline = true,
             ParameterSetName = PARAMETER_SET_NAME_VOLUME_INFO)]
@@ -28,6 +34,7 @@ namespace FsInfoCat.PS.Commands
         protected override void ProcessRecord()
         {
             IEnumerable<IVolumeInfo> volumeInfos = GetVolumeInfos();
+#warning Implement Unregister-FsVolumeInfo
         }
     }
 }
