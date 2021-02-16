@@ -233,7 +233,7 @@
                 <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named">
                     <maml:name>Identifier</maml:name>
                     <maml:description>
-                        <maml:para>The volume guid or serial number that will be used as the identifier.</maml:para>
+                        <maml:para>The volume <maml:acronym>UUID</maml:acronym> or <maml:acronym>VSN</maml:acronym> that will be used as the unique identifier for the file system volume.</maml:para>
                     </maml:description>
                     <dev:type>
                         <maml:name>System.Object</maml:name>
