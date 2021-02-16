@@ -2,7 +2,7 @@
     <!-- xmlns="http://schemas.microsoft.com/developer/msbuild/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://schemas.microsoft.com/developer/msbuild/2003 ../../Resources/Build/Microsoft.Build.CommonTypes.xsd" -->
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <ProjectGuid>{F624D84F-6E2D-4656-BD1B-060586988EBC}</ProjectGuid>
     <AssemblyTitle>FS InfoCat Common Library</AssemblyTitle>
     <Description>Supporting CLR Library for FS InfoCat</Description>

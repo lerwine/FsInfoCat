@@ -2,12 +2,13 @@
     <!-- xmlns="http://schemas.microsoft.com/developer/msbuild/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://schemas.microsoft.com/developer/msbuild/2003 ../../Resources/Build/Microsoft.Build.CommonTypes.xsd" -->
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>FsInfoCat.PS</AssemblyName>
     <ProjectGuid>{D6A47138-19EF-4860-9C80-64C78EAFDEEE}</ProjectGuid>
     <AssemblyTitle>FS InfoCat PowerShell Library</AssemblyTitle>
     <Description>Supporting CLR Library for PowerShell Module FsInfoCat</Description>
     <Product>PowerShell Module FsInfoCat.PS</Product>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
