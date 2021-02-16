@@ -1,5 +1,6 @@
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
     Add-Type -AssemblyName 'System.DirectoryServices' -ErrorAction Stop;
+    Import-Module -Name 'Microsoft.PowerShell.Management' -ErrorAction Stop;
 }
 
 Function ConvertTo-PasswordHash {
@@ -121,4 +122,29 @@ Function Get-LocalMachineIdentifier {
             Write-Error -Message 'Unable to get machine id' -Category ObjectNotFound -ErrorId 'EtcMachineIdReadError' -CategoryReason 'Unable to read from etc/machine-id';
         }
     }
+}
+
+Function Get-FsVolumeInformation {
+    <#
+    .SYNOPSIS
+        Get unique identifier for local machine.
+
+    .DESCRIPTION
+        Gets the SID or UUID that will be used as the unique identifier of the current host machine.
+
+    .EXAMPLE
+        PS C:\> $id = Get-LocalMachineIdentifier
+
+    .OUTPUTS
+        The string value of the SID or UUID that uniquely identifies the current host machine.
+    #>
+    [CmdletBinding()]
+    Param(
+        # Specifies one or more paths to file system volumes. Wildcards are permitted.
+        [string[]]$Path,
+        
+        # Specifies one or more literal paths to file system volumes (no wildcards).
+        [string[]]Literal$Path
+    )
+
 }
