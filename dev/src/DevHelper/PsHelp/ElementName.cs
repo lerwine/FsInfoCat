@@ -102,6 +102,29 @@ namespace DevHelper.PsHelp
 
         [XmlQualifiedName(NamespaceURI.maml)]
         table,
-        definitionListItem
+
+        [XmlQualifiedName(NamespaceURI.maml)]
+        definitionListItem,
+
+        [XmlQualifiedName(NamespaceURI.maml)]
+        name,
+
+        [XmlQualifiedName(NamespaceURI.dev)]
+        possibleValues,
+
+        [XmlQualifiedName(NamespaceURI.dev)]
+        possibleValue,
+
+        [XmlQualifiedName(NamespaceURI.command)]
+        parameterValue,
+
+        [XmlQualifiedName(NamespaceURI.dev)]
+        type,
+
+        [XmlQualifiedName(NamespaceURI.dev)]
+        defaultValue,
+
+        [XmlQualifiedName(NamespaceURI.command)]
+        validation
     }
 }

@@ -6,21 +6,19 @@ using DevHelper.PsHelp.Serialization;
 namespace DevHelper.PsHelp.Maml
 {
     [PsHelpXmlRoot(ElementName.para)]
-    public class ParagraphElement : ITextBlockElement
+    public class ParagraphElement : PropertyChangeSupport, ITextBlockElement
     {
-        private Collection<XmlNode> _contents;
+        private ObservableCollection<XmlNode> _contents;
 
         [XmlAnyElement]
-        public Collection<XmlNode> Contents
+        public ObservableCollection<XmlNode> Contents
         {
-            get
+            get => _contents;
+            set => CheckPropertyChange(nameof(Contents), _contents, value ?? new ObservableCollection<XmlNode>(), n =>
             {
-                Collection<XmlNode> contents = _contents;
-                if (contents is null)
-                    _contents = contents = new Collection<XmlNode>();
-                return contents;
-            }
-            set => _contents = value;
+#warning Need to attach change handlers
+                _contents = n;
+            });
         }
     }
 }
