@@ -1,171 +1,944 @@
 <?xml version="1.0" encoding="utf-8"?>
-<helpItems xmlns="http://msh" schema="maml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://msh ../../Resources/Msh.xsd http://schemas.microsoft.com/maml/2004/10 ../../Resources/PSMaml/Maml.xsd http://schemas.microsoft.com/maml/dev/command/2004/10 ../../Resources/PSMaml/developerCommand.xsd http://schemas.microsoft.com/maml/dev/2004/10 ../../Resources/PSMaml/developer.xsd">
-  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
-    <command:details>
-      <command:name>Get-RegisteredFsVolumeInfo</command:name>
-      <maml:description>
-        <maml:para>Exports XML to a writer, stream, file or a string.</maml:para>
-      </maml:description>
-      <maml:copyright>
-        <maml:para>Copyright © Leonard Thomas Erwine 2021</maml:para>
-      </maml:copyright>
-      <command:verb>Get</command:verb>
-      <command:noun>RegisteredFsVolumeInfo</command:noun>
-    </command:details>
-    <maml:description>
-      <maml:para>The Get-RegisteredFsVolumeInfo gets the local volumes that have been registered.</maml:para>
-    </maml:description>
-    <command:syntax>
-        <command:syntaxItem>
-          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
-          <command:parameter required="true" position="0" pipelineInput="True (ByValue, ByPropertyName)" variableLength="true" globbing="false">
-            <maml:name>RootPathName</maml:name>
+<helpItems xmlns="http://msh" schema="maml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://msh ../../Resources/Msh.xsd http://schemas.microsoft.com/maml/2004/10 ../../Resources/PSMaml/Maml.xsd http://schemas.microsoft.com/maml/dev/command/2004/10 ../../Resources/PSMaml/developerCommand.xsd http://schemas.microsoft.com/maml/dev/2004/10 ../../Resources/PSMaml/developer.xsd">
+    <command:command xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
+        xmlns:maml="http://schemas.microsoft.com/maml/2004/10"
+        xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+        <command:details>
+            <command:name>Get-RegisteredFsVolumeInfo</command:name>
             <maml:description>
-              <maml:para>Find by full, case-sensitive path name of the volume root directory.</maml:para>
+                <maml:para>Gets registered volume information</maml:para>
             </maml:description>
-            <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
-            <dev:type>
-              <maml:name>System.String</maml:name>
-              <maml:uri />
-            </dev:type>
-            <dev:defaultValue>None</dev:defaultValue>
-          </command:parameter>
-        </command:syntaxItem>
-        <command:syntaxItem>
-          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
-          <command:parameter required="true" position="0" pipelineInput="False" variableLength="true" globbing="false">
-            <maml:name>VolumeName</maml:name>
-            <maml:description>
-              <maml:para>Find by name of the volume.</maml:para>
-            </maml:description>
-            <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
-            <dev:type>
-              <maml:name>System.String</maml:name>
-              <maml:uri />
-            </dev:type>
-            <dev:defaultValue>None</dev:defaultValue>
-          </command:parameter>
-        </command:syntaxItem>
-        <command:syntaxItem>
-          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
-          <command:parameter required="true" position="0" pipelineInput="False" variableLength="true" globbing="false">
-            <maml:name>DriveFormat</maml:name>
-            <maml:description>
-              <maml:para>Find by name of the drive format.</maml:para>
-            </maml:description>
-            <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
-            <dev:type>
-              <maml:name>System.String</maml:name>
-              <maml:uri />
-            </dev:type>
-            <dev:defaultValue>None</dev:defaultValue>
-          </command:parameter>
-        </command:syntaxItem>
-        <command:syntaxItem>
-          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
-          <command:parameter required="true" position="0" pipelineInput="True (ByPropertyName)" variableLength="true" globbing="false">
-            <maml:name>SerialNumber</maml:name>
-            <maml:description>
-              <maml:para>Find by volume serial number.</maml:para>
-            </maml:description>
-            <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
-            <dev:type>
-              <maml:name>System.String</maml:name>
-              <maml:uri />
-            </dev:type>
-            <dev:defaultValue>None</dev:defaultValue>
-          </command:parameter>
-        </command:syntaxItem>
-        <command:syntaxItem>
-          <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
-          <command:parameter required="false" position="0" pipelineInput="False" variableLength="false" globbing="false">
-            <maml:name>All</maml:name>
-            <maml:description>
-              <maml:para>Get all registered volume information.</maml:para>
-            </maml:description>
-            <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
-            <dev:type>
-              <maml:name>System.Management.Automation.SwitchParameter</maml:name>
-              <maml:uri />
-            </dev:type>
-            <dev:defaultValue>None</dev:defaultValue>
-          </command:parameter>
-        </command:syntaxItem>
-    </command:syntax>
-    <command:parameters>
-      <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="0">
-        <maml:name>Blob</maml:name>
+            <maml:copyright>
+                <maml:para>Copyright © Leonard Thomas Erwine 2021</maml:para>
+            </maml:copyright>
+            <command:verb>Get</command:verb>
+            <command:noun>RegisteredFsVolumeInfo</command:noun>
+            <dev:version>0.1</dev:version>
+        </command:details>
         <maml:description>
-          <maml:para>Specifies a name or name pattern, which can be used for a wildcard search. If no blob name is specified, the cmdlet lists all the blobs in the specified container. If a value is specified for this parameter, the cmdlet lists all blobs with names that match this parameter. This parameter supports wildcards anywhere in the string.</maml:para>
+            <maml:para>Gets volumes that are registered using the <maml:commandInline>Register-FsVolumeInfo</maml:commandInline> command and are available to the <maml:commandInline>Start-FsCrawlJob</maml:commandInline> command.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">System.String</command:parameterValue>
-        <dev:type>
-          <maml:name>System.String</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <!--Add parameter information here-->
+        <command:syntax>
+            <command:syntaxItem address="ParameterSetName_x003D_BYROOTDIRECTORY">
+                <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue, ByPropertyName)" position="named">
+                    <maml:name>RootPathName</maml:name>
+                    <maml:description>
+                        <maml:para>Find registered volume information by full, case-sensitive path name of the volume root directory.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_BYVOLUMENAME">
+                <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>VolumeName</maml:name>
+                    <maml:description>
+                        <maml:para>Find registered volume information by name of the volume.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_BYDRIVEFORMAT">
+                <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>DriveFormat</maml:name>
+                    <maml:description>
+                        <maml:para>Find registered volume information by the name of the drive format.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_BYIDENTIFIER">
+                <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named">
+                    <maml:name>Identifier</maml:name>
+                    <maml:description>
+                        <maml:para>Find registered volume information by volume guid / serial number</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_GETALL">
+                <maml:name>Get-RegisteredFsVolumeInfo</maml:name>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>All</maml:name>
+                    <maml:description>
+                        <maml:para>Get all registered volumes.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+        </command:syntax>
+        <command:parameters>
+            <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true" position="named">
+                <maml:name>RootPathName</maml:name>
+                <maml:description>
+                    <maml:para>Find registered volume information by full, case-sensitive path name of the volume root directory.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named">
+                <maml:name>VolumeName</maml:name>
+                <maml:description>
+                    <maml:para>Find registered volume information by name of the volume.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named">
+                <maml:name>DriveFormat</maml:name>
+                <maml:description>
+                    <maml:para>Find registered volume information by the name of the drive format.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true" position="named">
+                <maml:name>Identifier</maml:name>
+                <maml:description>
+                    <maml:para>Find registered volume information by volume guid / serial number.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Object</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>All</maml:name>
+                <maml:description>
+                    <maml:para>Get all registered volumes.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                </dev:type>
+            </command:parameter>
         </command:parameters>
         <command:inputTypes>
-        <command:inputType>
-            <dev:type>
-            <maml:name>System.String</maml:name>
-            <maml:uri />
-            </dev:type>
-            <maml:description>
-            <maml:para></maml:para>
-            </maml:description>
-        </command:inputType>
-        <command:inputType>
-            <dev:type>
-            <maml:name>Microsoft.Azure.Commands.Common.Authentication.Abstractions.IStorageContext</maml:name>
-            <maml:uri />
-            </dev:type>
-            <maml:description>
-            <maml:para></maml:para>
-            </maml:description>
-        </command:inputType>
-        <!--Add input type information here-->
+            <command:inputType>
+                <dev:type>
+                    <maml:name>System.string</maml:name>
+                </dev:type>
+                <maml:description>
+                    <maml:para>Case-sensitive path name of the volume root directory to search for.</maml:para>
+                </maml:description>
+            </command:inputType>
         </command:inputTypes>
         <command:returnValues>
-        <command:returnValue>
-            <dev:type>
-            <maml:name>Microsoft.WindowsAzure.Commands.Common.Storage.ResourceModel.AzureStorageBlob</maml:name>
-            <maml:uri />
-            </dev:type>
-            <maml:description>
-            <maml:para></maml:para>
-            </maml:description>
-        </command:returnValue>
-        <!--Add return value information here-->
+            <command:returnValue>
+                <dev:type>
+                    <maml:name>FsInfoCat.Models.Volumes.IVolumeInfo</maml:name>
+                </dev:type>
+                <maml:description>
+                    <maml:para>Describes the registered volume information</maml:para>
+                </maml:description>
+            </command:returnValue>
         </command:returnValues>
-        <command:terminatingErrors></command:terminatingErrors>
-        <command:nonTerminatingErrors></command:nonTerminatingErrors>
-        <maml:alertSet>
-        <maml:alert>
-            <maml:para></maml:para>
-        </maml:alert>
-        <!--Add Note information here-->
-        </maml:alertSet>
         <command:examples>
-        <command:example>
-            <maml:title>-------------- Example 1: Get a blob by blob name --------------</maml:title>
-            <dev:code>PS C:\&gt;Get-AzStorageBlob -Container "ContainerName" -Blob blob*</dev:code>
-            <dev:remarks>
-            <maml:para>This command uses a blob name and wildcard to get a blob.</maml:para>
-            <maml:para></maml:para>
-            <maml:para></maml:para>
-            </dev:remarks>
-        </command:example>
-        <!--Add cmdlet examples here-->
+            <command:example>
+                <maml:title>Get all registered volumes.</maml:title>
+                <maml:code>Get-RegisteredFsVolumeInfo</maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Get registered volume that match any of the specified root path names.</maml:title>
+                <maml:code>Get-RegisteredFsVolumeInfo -RootPathName 'C:\', 'D:\', 'F:\'</maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Get registered volumes that match any of the specified volume names.</maml:title>
+                <maml:code>Get-RegisteredFsVolumeInfo -VolumeName 'DATA', 'OS'</maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Get registered volume that matches the specified file system names.</maml:title>
+                <maml:code>Get-RegisteredFsVolumeInfo -DriveFormat 'FAT32', 'CDFS'</maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Get registered volume that matches the specified volume serial numbers.</maml:title>
+                <maml:code>Get-RegisteredFsVolumeInfo -Identifier 'FA2D-A65B', '9E49-7DE8'</maml:code>
+            </command:example>
         </command:examples>
         <maml:relatedLinks>
-        <maml:navigationLink>
-            <maml:linkText>Online Version:</maml:linkText>
-            <maml:uri>https://docs.microsoft.com/en-us/powershell/module/az.storage/get-azstorageblob</maml:uri>
-        </maml:navigationLink>
-        <!--Add links to related content here-->
+            <maml:navigationLink>
+                <maml:linkText>Register-FsVolumeInfo</maml:linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <maml:linkText>Unregister-FsVolumeInfo</maml:linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <maml:linkText>Start-FsCrawlJob</maml:linkText>
+            </maml:navigationLink>
         </maml:relatedLinks>
     </command:command>
-    </helpItems>
+    <command:command xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
+        xmlns:maml="http://schemas.microsoft.com/maml/2004/10"
+        xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+        <command:details>
+            <command:name>Register-FsVolumeInfo</command:name>
+            <maml:description>
+                <maml:para>Registers file system volume information</maml:para>
+            </maml:description>
+            <maml:copyright>
+                <maml:para>Copyright © Leonard Thomas Erwine 2021</maml:para>
+            </maml:copyright>
+            <command:verb>Register</command:verb>
+            <command:noun>FsVolumeInfo</command:noun>
+            <dev:version>0.1</dev:version>
+        </command:details>
+        <maml:description>
+            <maml:para>Register file system volume information to be used by the <maml:commandInline>Start-FsCrawlJob</maml:commandInline> command.</maml:para>
+        </maml:description>
+        <command:syntax>
+            <command:syntaxItem>
+                <maml:name>Register-FsVolumeInfo</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named">
+                    <maml:name>RootPathName</maml:name>
+                    <maml:description>
+                        <maml:para>The full, case-sensitive path name of the volume root directory.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named">
+                    <maml:name>VolumeName</maml:name>
+                    <maml:description>
+                        <maml:para>The name of the file system volume.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named">
+                    <maml:name>DriveFormat</maml:name>
+                    <maml:description>
+                        <maml:para>The name of the drive format.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named">
+                    <maml:name>Identifier</maml:name>
+                    <maml:description>
+                        <maml:para>The volume guid or serial number that will be used as the identifier.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>PassThru</maml:name>
+                    <maml:description>
+                        <maml:para>GReturn registered volume information object.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+        </command:syntax>
+        <command:parameters>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true" position="named">
+                <maml:name>RootPathName</maml:name>
+                <maml:description>
+                    <maml:para>The full, case-sensitive path name of the volume root directory.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true" position="named">
+                <maml:name>VolumeName</maml:name>
+                <maml:description>
+                    <maml:para>The name of the file system volume.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true" position="named">
+                <maml:name>DriveFormat</maml:name>
+                <maml:description>
+                    <maml:para>The name of the drive format.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true" position="named">
+                <maml:name>Identifier</maml:name>
+                <maml:description>
+                    <maml:para>The volume guid or serial number that will be used as the identifier.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Object</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>PassThru</maml:name>
+                <maml:description>
+                    <maml:para>GReturn registered volume information object.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                </dev:type>
+            </command:parameter>
+        </command:parameters>
+        <command:returnValues>
+            <command:returnValue>
+                <dev:type>
+                    <maml:name>FsInfoCat.Models.Volumes.IVolumeInfo</maml:name>
+                </dev:type>
+                <maml:description>
+                    <maml:para>Describes the registered volume information</maml:para>
+                </maml:description>
+            </command:returnValue>
+        </command:returnValues>
+        <command:examples>
+            <command:example>
+                <maml:title>Register volume info using volume.</maml:title>
+                <maml:code>Register-FsVolumeInfo -RootPathName 'C:\' -VolumeName 'OS' -DriveFormat 'NTFS' -Identifier 'FA2D-A65B'</maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Register volume info using volume and return volume information object.</maml:title>
+                <maml:code>$VolumeInfo = Register-FsVolumeInfo -RootPathName 'C:\' -VolumeName 'OS' -DriveFormat 'NTFS' -Identifier 'FA2D-A65B' -PassThru</maml:code>
+            </command:example>
+        </command:examples>
+        <maml:relatedLinks>
+            <maml:navigationLink>
+                <linkText>Get-RegisteredFsVolumeInfo</linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <linkText>Unregister-FsVolumeInfo</linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <linkText>Start-FsCrawlJob</linkText>
+            </maml:navigationLink>
+        </maml:relatedLinks>
+    </command:command>
+    <command:command xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
+        xmlns:maml="http://schemas.microsoft.com/maml/2004/10"
+        xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+        <command:details>
+            <command:name>Unregister-FsVolumeInfo</command:name>
+            <maml:description>
+                <maml:para>Un-registers file system volume information</maml:para>
+            </maml:description>
+            <maml:copyright>
+                <maml:para>Copyright © Leonard Thomas Erwine 2021</maml:para>
+            </maml:copyright>
+            <command:verb>Unregister</command:verb>
+            <command:noun>FsVolumeInfo</command:noun>
+            <dev:version>0.1</dev:version>
+        </command:details>
+        <maml:description>
+            <maml:para>Un-registers file system volume information so it is no longer available to the <maml:commandInline>Start-FsCrawlJob</maml:commandInline> command.</maml:para>
+        </maml:description>
+        <command:syntax>
+            <command:syntaxItem address="ParameterSetName_x003D_ROOTPATH">
+                <maml:name>Unregister-FsVolumeInfo</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>RootPathName</maml:name>
+                    <maml:description>
+                        <maml:para>The full, case-sensitive path name of the volume root directory for the volume to be unregistered.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_IDENTIFIER">
+                <maml:name>Unregister-FsVolumeInfo</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Identifier</maml:name>
+                    <maml:description>
+                        <maml:para>The volume guid or serial number that will be used to identify the volume to be unregistered.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_VOLUMEINFO">
+                <maml:name>Unregister-FsVolumeInfo</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named">
+                    <maml:name>VolumeInfo</maml:name>
+                    <maml:description>
+                        <maml:para>The volume information object to be unregistered.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+        </command:syntax>
+        <command:parameters>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>RootPathName</maml:name>
+                <maml:description>
+                    <maml:para>The full, case-sensitive path name of the volume root directory for the volume to be unregistered.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named">
+                <maml:name>Identifier</maml:name>
+                <maml:description>
+                    <maml:para>The volume guid or serial number that will be used to identify the volume to be unregistered.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Object</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true" position="named">
+                <maml:name>VolumeInfo</maml:name>
+                <maml:description>
+                    <maml:para>The volume information object to be unregistered.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+        </command:parameters>
+        <command:examples>
+            <command:example>
+                <maml:title>Un-register volume info using the volume's root path.</maml:title>
+                <maml:code>Unregister-FsVolumeInfo -RootPathName 'C:\users\me\documents'</maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Un-register volume info using the volume serial number.</maml:title>
+                <maml:code>Unregister-FsVolumeInfo -Identifier 'FA2D-A65B'</maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Un-register volume info using a volume information object.</maml:title>
+                <maml:code>$VolumeInfo = Register-FsVolumeInfo -RootPathName 'C:\' -VolumeName 'OS' -DriveFormat 'NTFS' -Identifier 'FA2D-A65B' -PassThru
+...
+Unregister-FsVolumeInfo -VolumeInfo $VolumeInfo</maml:code>
+            </command:example>
+        </command:examples>
+        <maml:relatedLinks>
+            <maml:navigationLink>
+                <linkText>Get-RegisteredFsVolumeInfo</linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <linkText>Register-FsVolumeInfo</linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <linkText>Start-FsCrawlJob</linkText>
+            </maml:navigationLink>
+        </maml:relatedLinks>
+    </command:command>
+    <command:command xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
+        xmlns:maml="http://schemas.microsoft.com/maml/2004/10"
+        xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+        <command:details>
+            <command:name>Start-FsCrawlJob</command:name>
+            <maml:description>
+                <maml:para>Starts file system crawl job.</maml:para>
+            </maml:description>
+            <maml:copyright>
+                <maml:para>Copyright © Leonard Thomas Erwine 2021</maml:para>
+            </maml:copyright>
+            <command:verb>Start</command:verb>
+            <command:noun>FsCrawlJob</command:noun>
+            <dev:version>0.1</dev:version>
+        </command:details>
+        <maml:description>
+            <maml:para>Starts a background job that gathers file system content information.</maml:para>
+        </maml:description>
+        <command:syntax>
+            <command:syntaxItem address="ParameterSetName_x003D_NONE:TRUE">
+                <maml:name>Start-FsCrawlJob</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named">
+                    <maml:name>RootPath</maml:name>
+                    <maml:description>
+                        <maml:para>Root directory of the path to be crawled (supports wildcars).</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MachineIdentifier</maml:name>
+                    <maml:description>
+                        <maml:para>The machine-specific unique identifier which identifies the current host system.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxDepth</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum crawl depth. Default is 512.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int32</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>512</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxItems</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum items to crawl. Default is 4,294,967,295.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int64</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>4294967295</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>NoExpire</maml:name>
+                    <maml:description>
+                        <maml:para>Job does not expire automatically.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Name</maml:name>
+                    <maml:description>
+                        <maml:para>Optional job name.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_AGE:TRUE">
+                <maml:name>Start-FsCrawlJob</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named">
+                    <maml:name>RootPath</maml:name>
+                    <maml:description>
+                        <maml:para>Root directory of the path to be crawled (supports wildcars).</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MachineIdentifier</maml:name>
+                    <maml:description>
+                        <maml:para>The machine-specific unique identifier which identifies the current host system.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxDepth</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum crawl depth. Default is 512.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int32</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>512</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxItems</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum items to crawl. Default is 4,294,967,295.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int64</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>4294967295</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Ttl</maml:name>
+                    <maml:description>
+                        <maml:para>The number of minutes to allow crawl to run.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int64</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Name</maml:name>
+                    <maml:description>
+                        <maml:para>Optional job name.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_DATETIME:TRUE">
+                <maml:name>Start-FsCrawlJob</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="true" pipelineInput="True (ByValue)" position="named">
+                    <maml:name>RootPath</maml:name>
+                    <maml:description>
+                        <maml:para>Root directory of the path to be crawled (supports wildcars).</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MachineIdentifier</maml:name>
+                    <maml:description>
+                        <maml:para>The machine-specific unique identifier which identifies the current host system.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxDepth</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum crawl depth. Default is 512.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int32</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>512</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxItems</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum items to crawl. Default is 4,294,967,295.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int64</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>4294967295</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>StopAt</maml:name>
+                    <maml:description>
+                        <maml:para>The date/Time when crawl will be stopped if it has not already completed.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.DateTime</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Name</maml:name>
+                    <maml:description>
+                        <maml:para>Optional job name.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_NONE:FALSE">
+                <maml:name>Start-FsCrawlJob</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>RootPath</maml:name>
+                    <maml:description>
+                        <maml:para>Literal root directory of the path to be crawled.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MachineIdentifier</maml:name>
+                    <maml:description>
+                        <maml:para>The machine-specific unique identifier which identifies the current host system.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxDepth</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum crawl depth. Default is 512.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int32</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>512</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxItems</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum items to crawl. Default is 4,294,967,295.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int64</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>4294967295</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>NoExpire</maml:name>
+                    <maml:description>
+                        <maml:para>Job does not expire automatically.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Name</maml:name>
+                    <maml:description>
+                        <maml:para>Optional job name.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_AGE:FALSE">
+                <maml:name>Start-FsCrawlJob</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>RootPath</maml:name>
+                    <maml:description>
+                        <maml:para>Literal root directory of the path to be crawled.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MachineIdentifier</maml:name>
+                    <maml:description>
+                        <maml:para>The machine-specific unique identifier which identifies the current host system.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxDepth</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum crawl depth. Default is 512.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int32</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>512</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxItems</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum items to crawl. Default is 4,294,967,295.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int64</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>4294967295</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Ttl</maml:name>
+                    <maml:description>
+                        <maml:para>The number of minutes to allow crawl to run.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int64</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Name</maml:name>
+                    <maml:description>
+                        <maml:para>Optional job name.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+            <command:syntaxItem address="ParameterSetName_x003D_DATETIME:FALSE">
+                <maml:name>Start-FsCrawlJob</maml:name>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>RootPath</maml:name>
+                    <maml:description>
+                        <maml:para>Literal root directory of the path to be crawled.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.String</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MachineIdentifier</maml:name>
+                    <maml:description>
+                        <maml:para>The machine-specific unique identifier which identifies the current host system.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Object</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxDepth</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum crawl depth. Default is 512.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int32</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>512</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>MaxItems</maml:name>
+                    <maml:description>
+                        <maml:para>Maximum items to crawl. Default is 4,294,967,295.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Int64</maml:name>
+                    </dev:type>
+                    <dev:defaultValue>4294967295</dev:defaultValue>
+                </command:parameter>
+                <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>StopAt</maml:name>
+                    <maml:description>
+                        <maml:para>The date/Time when crawl will be stopped if it has not already completed.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.DateTime</maml:name>
+                    </dev:type>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named">
+                    <maml:name>Name</maml:name>
+                    <maml:description>
+                        <maml:para>Optional job name.</maml:para>
+                    </maml:description>
+                    <dev:type>
+                        <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                    </dev:type>
+                </command:parameter>
+            </command:syntaxItem>
+        </command:syntax>
+        <command:parameters>
+            <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="true" position="named">
+                <maml:name>RootPath</maml:name>
+                <maml:description>
+                    <maml:para>Root directory of the path to be crawled (supports wildcars).</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named">
+                <maml:name>RootPath</maml:name>
+                <maml:description>
+                    <maml:para>Literal root directory of the path to be crawled.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.String</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>MachineIdentifier</maml:name>
+                <maml:description>
+                    <maml:para>The machine-specific unique identifier which identifies the current host system.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Object</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>MaxDepth</maml:name>
+                <maml:description>
+                    <maml:para>Maximum crawl depth. Default is 512.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Int32</maml:name>
+                </dev:type>
+                <dev:defaultValue>512</dev:defaultValue>
+            </command:parameter>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>MaxItems</maml:name>
+                <maml:description>
+                    <maml:para>Maximum items to crawl. Default is 4,294,967,295.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Int64</maml:name>
+                </dev:type>
+                <dev:defaultValue>4294967295</dev:defaultValue>
+            </command:parameter>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>Ttl</maml:name>
+                <maml:description>
+                    <maml:para>The number of minutes to allow crawl to run.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Int64</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>StopAt</maml:name>
+                <maml:description>
+                    <maml:para>The date/Time when crawl will be stopped if it has not already completed.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.DateTime</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>NoExpire</maml:name>
+                <maml:description>
+                    <maml:para>Job does not expire automatically.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+                <maml:name>Name</maml:name>
+                <maml:description>
+                    <maml:para>Optional job name.</maml:para>
+                </maml:description>
+                <dev:type>
+                    <maml:name>System.Management.Automation.SwitchParameter</maml:name>
+                </dev:type>
+            </command:parameter>
+        </command:parameters>
+        <command:examples>
+            <command:example>
+                <maml:title>Register volume info and start crawl job to run no more than 3 hours.</maml:title>
+                <maml:code>Register-FsVolumeInfo -RootPathName 'C:\' -VolumeName 'OS' -DriveFormat 'NTFS' -Identifier 'FA2D-A65B';
+$sid = Get-LocalMachineIdentifier;
+$Job = Start-FsCrawlJob -LiteralPath 'C:\users\myself\Documents' -MachineIdentifier $sid -Ttl 180;
+                </maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Register volume info and start crawl job to run until 5AM, if necessary.</maml:title>
+                <maml:code>Register-FsVolumeInfo -RootPathName 'C:\' -VolumeName 'OS' -DriveFormat 'NTFS' -Identifier 'FA2D-A65B';
+$sid = Get-LocalMachineIdentifier;
+$StopAt = [DateTime]::Now.Date.AddDays(1).AddHours(5);
+$Job = Start-FsCrawlJob -LiteralPath 'C:\users\myself\Documents' -MachineIdentifier $sid -StopAt $StopAt;
+                </maml:code>
+            </command:example>
+            <command:example>
+                <maml:title>Register volume info and start job to crawl 2 different paths.</maml:title>
+                <maml:code>Register-FsVolumeInfo -RootPathName 'C:\' -VolumeName 'OS' -DriveFormat 'NTFS' -Identifier 'FA2D-A65B';
+Register-FsVolumeInfo -RootPathName 'D:\' -VolumeName 'DATA' -DriveFormat 'FAT32' -Identifier '2C50-118A';
+$sid = Get-LocalMachineIdentifier;
+$Job = Start-FsCrawlJob -LiteralPath 'C:\users\myself\Documents', 'D:\SharedItems' -MachineIdentifier $sid;
+                </maml:code>
+            </command:example>
+        </command:examples>
+        <maml:relatedLinks>
+            <maml:navigationLink>
+                <linkText>Get-RegisteredFsVolumeInfo</linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <linkText>Register-FsVolumeInfo</linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <linkText>Unregister-FsVolumeInfo</linkText>
+            </maml:navigationLink>
+            <maml:navigationLink>
+                <linkText>Get-LocalMachineIdentifier</linkText>
+            </maml:navigationLink>
+        </maml:relatedLinks>
+    </command:command>
+</helpItems>

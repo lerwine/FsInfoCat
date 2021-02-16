@@ -5,7 +5,7 @@ using FsInfoCat.Models.Volumes;
 namespace FsInfoCat.PS.Commands
 {
     // Unregister-FsVolumeInfo
-    [Cmdlet(VerbsLifecycle.Unregister, "FsVolumeInfo", DefaultParameterSetName = PARAMETER_SET_NAME_SERIAL_NUMBER)]
+    [Cmdlet(VerbsLifecycle.Unregister, "FsVolumeInfo", DefaultParameterSetName = PARAMETER_SET_NAME_VOLUME_INFO)]
     public class UnregisterFsVolumeInfoCommand : FsVolumeInfoCommand
     {
         private const string PARAMETER_SET_NAME_SERIAL_NUMBER = "SerialNumber";
@@ -21,7 +21,7 @@ namespace FsInfoCat.PS.Commands
             ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_SERIAL_NUMBER)]
         public uint[] SerialNumber { get; set; }
 
-        [Parameter(HelpMessage = "The volume serial number.", Mandatory = true, ValueFromPipelineByPropertyName = true,
+        [Parameter(HelpMessage = "The volume information object.", Mandatory = true, ValueFromPipeline = true,
             ParameterSetName = PARAMETER_SET_NAME_VOLUME_INFO)]
         public IVolumeInfo[] VolumeInfo { get; set; }
 

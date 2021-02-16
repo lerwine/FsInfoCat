@@ -46,10 +46,11 @@ namespace FsInfoCat.PS.Commands
 
         [Parameter(HelpMessage = "Supplier function to get volumes", Mandatory = true)]
         [ValidateNotNull()]
+        [Obsolete("Register-Volume is now used")]
         public Func<IEnumerable<IVolumeInfo>> GetVolumes { get; set; }
 
         [Parameter(HelpMessage = "Maximum crawl depth. Default is 512")]
-        [ValidateRange(0L, int.MaxValue)]
+        [ValidateRange(0, int.MaxValue)]
         public int MaxDepth { get; set; } = DEFAULT_MAX_DEPTH;
 
         [Parameter(HelpMessage = "Maximum items. Default is 4294967295")]

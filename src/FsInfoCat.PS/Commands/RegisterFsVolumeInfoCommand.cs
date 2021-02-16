@@ -21,6 +21,7 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string DriveFormat { get; set; }
 
+        // TODO: Replace with Volume Identifier
         [Parameter(HelpMessage = "The volume serial number.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
         public uint SerialNumber { get; set; }
 
