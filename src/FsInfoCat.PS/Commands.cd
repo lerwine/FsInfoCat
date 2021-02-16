@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.PS.Commands.FsVolumeInfoCommand">
+    <Position X="7.25" Y="6.25" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="FsInfoCat.PS.Commands.FsVolumeInfoCommand.RegisteredVolumeInfo">
+        <Members>
+          <Method Name="Equals" Hidden="true" />
+          <Method Name="GetHashCode" Hidden="true" />
+          <Property Name="IVolumeInfo.CaseSensitive" Hidden="true" />
+          <Property Name="IVolumeInfo.DriveFormat" Hidden="true" />
+          <Property Name="IVolumeInfo.Identifier" Hidden="true" />
+          <Property Name="IVolumeInfo.RootPathName" Hidden="true" />
+          <Property Name="IVolumeInfo.VolumeName" Hidden="true" />
+          <Method Name="ToString" Hidden="true" />
+        </Members>
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\FsVolumeInfoCommand.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="FsInfoCat.PS.Commands.FsVolumeInfoCommand.VolumeRegistration">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\FsVolumeInfoCommand.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAABAAIAQAAAA=</HashCode>
+      <FileName>Commands\FsVolumeInfoCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.PS.Commands.GetRegisteredFsVolumeInfoCommand">
+    <Position X="4" Y="0.5" Width="3.25" />
+    <Members>
+      <Field Name="_volumeInfos" Hidden="true" />
+      <Method Name="BeginProcessing" Hidden="true" />
+      <Method Name="ProcessRecord" Hidden="true" />
+    </Members>
+    <InheritanceLine Type="FsInfoCat.PS.Commands.FsVolumeInfoCommand" FixedFromPoint="true">
+      <Path>
+        <Point X="7.25" Y="7.5" />
+        <Point X="5.625" Y="7.5" />
+        <Point X="5.625" Y="3.723" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAACABEAACEAAAAAAAAAAAAAAAAAAAIAAIgIQAAAYAA=</HashCode>
+      <FileName>Commands\GetRegisteredFsVolumeInfoCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.PS.Commands.RegisterFsVolumeInfoCommand">
+    <Position X="11" Y="0.5" Width="2.75" />
+    <Members>
+      <Method Name="ProcessRecord" Hidden="true" />
+    </Members>
+    <InheritanceLine Type="FsInfoCat.PS.Commands.FsVolumeInfoCommand" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11" Y="7.75" />
+        <Point X="12.438" Y="7.75" />
+        <Point X="12.438" Y="2.694" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAEAIAIAAAgIQAAAAAA=</HashCode>
+      <FileName>Commands\RegisterFsVolumeInfoCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.PS.Commands.StartFsCrawlJobCommand">
+    <Position X="0.5" Y="0.5" Width="3.25" />
+    <Members>
+      <Field Name="_fileSystemProviders" Hidden="true" />
+      <Method Name="BeginProcessing" Hidden="true" />
+      <Method Name="EndProcessing" Hidden="true" />
+      <Method Name="ProcessRecord" Hidden="true" />
+    </Members>
+    <InheritanceLine Type="FsInfoCat.PS.Commands.FsVolumeInfoCommand" FixedFromPoint="true">
+      <Path>
+        <Point X="7.25" Y="8.626" />
+        <Point X="2.125" Y="8.626" />
+        <Point X="2.125" Y="5.646" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EAAACBBAQQBAIAAAiAAAECQAAAQBRABAAIAIAAAAAgE=</HashCode>
+      <FileName>Commands\StartFsCrawlJobCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.PS.Commands.UnregisterFsVolumeInfoCommand">
+    <Position X="7.5" Y="0.5" Width="3.25" />
+    <Members>
+      <Method Name="ProcessRecord" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAABAAAAAAAAEgAAIAAAAIQAgAAAA=</HashCode>
+      <FileName>Commands\UnregisterFsVolumeInfoCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

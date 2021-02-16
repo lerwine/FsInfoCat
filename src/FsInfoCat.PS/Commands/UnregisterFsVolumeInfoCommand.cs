@@ -8,9 +8,9 @@ namespace FsInfoCat.PS.Commands
     [Cmdlet(VerbsLifecycle.Unregister, "FsVolumeInfo", DefaultParameterSetName = PARAMETER_SET_NAME_VOLUME_INFO)]
     public class UnregisterFsVolumeInfoCommand : FsVolumeInfoCommand
     {
-        private const string PARAMETER_SET_NAME_VOLUME_IDENTIFIER = "VolumeIdentifier";
-        private const string PARAMETER_SET_NAME_ROOT_PATH = "RootPath";
-        private const string PARAMETER_SET_NAME_VOLUME_INFO = "VolumeInfo";
+        public const string PARAMETER_SET_NAME_VOLUME_IDENTIFIER = "VolumeIdentifier";
+        public const string PARAMETER_SET_NAME_ROOT_PATH = "RootPath";
+        public const string PARAMETER_SET_NAME_VOLUME_INFO = "VolumeInfo";
 
         [Parameter(HelpMessage = "The full, case-sensitive path name of the volume root directory.", Mandatory = true,
             ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_ROOT_PATH)]

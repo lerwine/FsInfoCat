@@ -16,13 +16,13 @@ namespace FsInfoCat.PS.Commands
     [OutputType(typeof(FsCrawlJob))]
     public class StartFsCrawlJobCommand : FsVolumeInfoCommand
     {
-        private const string Property_Name_All_Paths = "AllPaths";
-        private const string PARAMETER_SET_NAME_NONE_TRUE = "none:true";
-        private const string PARAMETER_SET_NAME_BY_AGE_TRUE = "age:true";
-        private const string PARAMETER_SET_NAME_DATE_TIME_TRUE = "datetime:true";
-        private const string PARAMETER_SET_NAME_NONE_FALSE = "none:false";
-        private const string PARAMETER_SET_NAME_BY_AGE_FALSE = "age:false";
-        private const string PARAMETER_SET_NAME_DATE_TIME_FALSE = "datetime:false";
+        public const string PS_PROPERTY_NAME_ALL_PATHS = "AllPaths";
+        public const string PARAMETER_SET_NAME_NONE_TRUE = "none:true";
+        public const string PARAMETER_SET_NAME_BY_AGE_TRUE = "age:true";
+        public const string PARAMETER_SET_NAME_DATE_TIME_TRUE = "datetime:true";
+        public const string PARAMETER_SET_NAME_NONE_FALSE = "none:false";
+        public const string PARAMETER_SET_NAME_BY_AGE_FALSE = "age:false";
+        public const string PARAMETER_SET_NAME_DATE_TIME_FALSE = "datetime:false";
         public const int DEFAULT_MAX_DEPTH = 512;
         public const long DEFAULT_MAX_ITEMS = 4294967295L;
         public const long MAX_VALUE_TTL = 9223372036854775L;
@@ -80,12 +80,12 @@ namespace FsInfoCat.PS.Commands
         {
             Type t = typeof(FileSystemProvider);
             _fileSystemProviders = SessionState.Provider.GetAll().Where(p => t.IsAssignableFrom(p.ImplementingType)).Select(p => p.Name).ToArray();
-            this.SessionState.PSVariable.Set(Property_Name_All_Paths, new Collection<string>());
+            this.SessionState.PSVariable.Set(PS_PROPERTY_NAME_ALL_PATHS, new Collection<string>());
         }
 
         protected override void ProcessRecord()
         {
-            Collection<string> allPaths = (Collection<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths);
+            Collection<string> allPaths = (Collection<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS);
             switch (ParameterSetName)
             {
                 case PARAMETER_SET_NAME_NONE_TRUE:
@@ -204,14 +204,14 @@ namespace FsInfoCat.PS.Commands
                     case PARAMETER_SET_NAME_BY_AGE_TRUE:
                     case PARAMETER_SET_NAME_BY_AGE_FALSE:
         // TODO: Use Identifier instead of SerialNumber
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumes, Name);
+                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS), MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumes, Name);
                         break;
                     case PARAMETER_SET_NAME_DATE_TIME_TRUE:
                     case PARAMETER_SET_NAME_DATE_TIME_FALSE:
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, StopAt, MachineIdentifier, GetVolumes, Name);
+                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS), MaxDepth, MaxItems, StopAt, MachineIdentifier, GetVolumes, Name);
                         break;
                     default:
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, -1L, MachineIdentifier, GetVolumes, Name);
+                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS), MaxDepth, MaxItems, -1L, MachineIdentifier, GetVolumes, Name);
                         break;
                 }
                 JobRepository.Add(crawlJob);

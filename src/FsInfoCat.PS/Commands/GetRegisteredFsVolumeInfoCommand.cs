@@ -12,11 +12,11 @@ namespace FsInfoCat.PS.Commands
     [OutputType(typeof(IVolumeInfo))]
     public class GetRegisteredFsVolumeInfoCommand : FsVolumeInfoCommand
     {
-        private const string PARAMETER_SET_NAME_BY_ROOT_DIRECTORY = "ByRootDirectory";
-        private const string PARAMETER_SET_NAME_BY_VOLUME_NAME = "ByVolumeName";
-        private const string PARAMETER_SET_NAME_BY_DRIVE_FORMAT = "ByDriveFormat";
-        private const string PARAMETER_SET_NAME_BY_IDENTIFIER = "ByIdentifier";
-        private const string PARAMETER_SET_NAME_GET_ALL = "GetAll";
+        public const string PARAMETER_SET_NAME_BY_ROOT_DIRECTORY = "ByRootDirectory";
+        public const string PARAMETER_SET_NAME_BY_VOLUME_NAME = "ByVolumeName";
+        public const string PARAMETER_SET_NAME_BY_DRIVE_FORMAT = "ByDriveFormat";
+        public const string PARAMETER_SET_NAME_BY_IDENTIFIER = "ByIdentifier";
+        public const string PARAMETER_SET_NAME_GET_ALL = "GetAll";
 
         [Parameter(HelpMessage = "Find by full, case-sensitive path name of the volume root directory.", Mandatory = true,
             ValueFromPipelineByPropertyName = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_BY_ROOT_DIRECTORY)]
