@@ -17,6 +17,7 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string[] RootPathName { get; set; }
 
+        // TODO: Use Identifier instead of SerialNumber
 #warning Use Identifier instead of SerialNumber
         [Parameter(HelpMessage = "The volume serial number.", Mandatory = true, ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_VOLUME_IDENTIFIER)]
@@ -34,6 +35,7 @@ namespace FsInfoCat.PS.Commands
         protected override void ProcessRecord()
         {
             IEnumerable<IVolumeInfo> volumeInfos = GetVolumeInfos();
+            // TODO: Implement Unregister-FsVolumeInfo
 #warning Implement Unregister-FsVolumeInfo
         }
     }

@@ -44,9 +44,10 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string MachineIdentifier { get; set; }
 
+        // TODO: Use FsInfoCat.PS.Commands.FsVolumeInfoCommand.GetVolumeInfos, instead
         [Parameter(HelpMessage = "Supplier function to get volumes", Mandatory = true)]
         [ValidateNotNull()]
-        [Obsolete("Register-Volume is now used")]
+        [Obsolete("Use FsInfoCat.PS.Commands.FsVolumeInfoCommand.GetVolumeInfos, instead")]
         public Func<IEnumerable<IVolumeInfo>> GetVolumes { get; set; }
 
         [Parameter(HelpMessage = "Maximum crawl depth. Default is 512")]
@@ -202,6 +203,7 @@ namespace FsInfoCat.PS.Commands
                 {
                     case PARAMETER_SET_NAME_BY_AGE_TRUE:
                     case PARAMETER_SET_NAME_BY_AGE_FALSE:
+        // TODO: Use Identifier instead of SerialNumber
                         crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(Property_Name_All_Paths), MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumes, Name);
                         break;
                     case PARAMETER_SET_NAME_DATE_TIME_TRUE:

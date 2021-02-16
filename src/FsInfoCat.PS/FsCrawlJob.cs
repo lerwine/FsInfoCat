@@ -31,8 +31,13 @@ namespace FsInfoCat.PS
         private readonly string _machineIdentifier;
 
         internal Collection<FsRoot> FsRoots { get; }
+
         internal int MaxDepth { get; }
+
+        // TODO: Use FsInfoCat.PS.Commands.FsVolumeInfoCommand.GetVolumeInfos, instead
+        [Obsolete("Use FsInfoCat.PS.Commands.FsVolumeInfoCommand.GetVolumeInfos, instead")]
         public Func<IEnumerable<IVolumeInfo>> GetVolumes { get; }
+
         internal Func<bool> IsExpired { get; }
 
         public override bool HasMoreData => _isRunning || Output.Count > 0 || Error.Count > 0 || Warning.Count > 0 || Verbose.Count > 0 || Progress.Count > 0 || Debug.Count > 0 || Information.Count > 0;

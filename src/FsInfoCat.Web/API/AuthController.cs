@@ -68,6 +68,7 @@ namespace FsInfoCat.Web.API
             };
             foreach (UserRole role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.None && r <= user.Role))
                 claims.Add(new Claim(ClaimTypes.Role, role.ToString("F")));
+            // TODO: Need to find some other way to retrieve device reg for local host
 #warning Need to find some other way to retrieve device reg for local host
             // HostDeviceRegRequest deviceReg = HostDeviceRegRequest.CreateForLocal();
             // HostDevice host = await ViewModelHelper.LookUp(dbContext.HostDevice, deviceReg.MachineName, deviceReg.MachineIdentifer);

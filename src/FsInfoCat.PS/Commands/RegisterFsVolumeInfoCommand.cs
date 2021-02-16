@@ -21,6 +21,7 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string DriveFormat { get; set; }
 
+        // TODO: Use Identifier instead of SerialNumber
 #warning Use Identifier instead of SerialNumber
         [Parameter(HelpMessage = "The volume serial number.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
         public uint SerialNumber { get; set; }

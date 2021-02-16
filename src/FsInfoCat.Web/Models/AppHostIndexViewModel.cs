@@ -26,6 +26,7 @@ namespace FsInfoCat.Web.Models
 
         public static async Task<AppHostIndexViewModel> Create(DbSet<HostDevice> dbSet, ClaimsPrincipal user)
         {
+            // TODO: Need to find some other way to retrieve device reg for local host
 #warning Need to find some other way to retrieve device reg for local host
             throw new NotImplementedException();
             // HostDeviceRegRequest regRequest = HostDeviceRegRequest.CreateForLocal();
