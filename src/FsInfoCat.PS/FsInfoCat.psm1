@@ -1,5 +1,5 @@
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
-    Add-Type -AssemblyName 'System.DirectoryServices' -ErrorAction Stop;
+    #Add-Type -AssemblyName 'System.DirectoryServices' -ErrorAction Stop;
     Import-Module -Name 'Microsoft.PowerShell.Management' -ErrorAction Stop;
 }
 
@@ -106,6 +106,21 @@ Function Get-LocalMachineIdentifier {
     Param()
 
     if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+        $CimInstance = Get-CimInstance -Query 'SELECT * from Win32_UserAccount WHERE Name="Administrator"';
+        if ($null -eq $CimInstance) {
+            Write-Warning -Message 'Unable to get principal object';
+        } else {
+            if ([string]::IsNullOrWhiteSpace($CimInstance.SID)) {
+                Write-Warning -Message 'Principal object does not have a security identifier';
+            } else {
+                try {
+                    [System.Security.Principal.SecurityIdentifier]::new($CimInstance.SID).AccountDomainSid.ToString() | Write-Output;
+                } catch {
+                    Write-Warning -Message "Failed to parse machine SID: $_";
+                }
+            }
+        }
+        <#
         $DirectoryEntry = New-Object -TypeName 'System.DirectoryServices.DirectoryEntry' -ArgumentList "WinNT://$([Environment]::MachineName)/Administrator";
         try {
             [byte[]]$Bytes = $DirectoryEntry.InvokeGet("objectSID");
@@ -114,6 +129,7 @@ Function Get-LocalMachineIdentifier {
         } finally {
             $DirectoryEntry.Dispose();
         }
+        #>
     } else {
         $id = '' + (Get-Content -LiteralPath 'etc/machine-id' -Force);
         if ($id.Length -gt 0) {
@@ -122,29 +138,4 @@ Function Get-LocalMachineIdentifier {
             Write-Error -Message 'Unable to get machine id' -Category ObjectNotFound -ErrorId 'EtcMachineIdReadError' -CategoryReason 'Unable to read from etc/machine-id';
         }
     }
-}
-
-Function Get-FsVolumeInformation {
-    <#
-    .SYNOPSIS
-        Get unique identifier for local machine.
-
-    .DESCRIPTION
-        Gets the SID or UUID that will be used as the unique identifier of the current host machine.
-
-    .EXAMPLE
-        PS C:\> $id = Get-LocalMachineIdentifier
-
-    .OUTPUTS
-        The string value of the SID or UUID that uniquely identifies the current host machine.
-    #>
-    [CmdletBinding()]
-    Param(
-        # Specifies one or more paths to file system volumes. Wildcards are permitted.
-        [string[]]$Path,
-        
-        # Specifies one or more literal paths to file system volumes (no wildcards).
-        [string[]]Literal$Path
-    )
-
 }
