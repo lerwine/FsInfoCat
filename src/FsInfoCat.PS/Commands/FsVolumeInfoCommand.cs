@@ -13,20 +13,20 @@ namespace FsInfoCat.PS.Commands
         private const string VAR_NAME_FS_VOLUME_INFO_REGISTRATION = "__FsVolumeInfoRegistration";
         private const string EXCEPTION_MESSAGE_REGISTRATION_VAR_ERROR = "Unable to create module-dependent __FsVolumeInfoRegistration variable";
 
-        protected Collection<PSObject> GetVolumeRegistration()
+        protected static Collection<PSObject> GetVolumeRegistration(SessionState sessionState)
         {
-            PSVariable psVariable = SessionState.PSVariable.Get(VAR_NAME_FS_VOLUME_INFO_REGISTRATION);
+            PSVariable psVariable = sessionState.PSVariable.Get(VAR_NAME_FS_VOLUME_INFO_REGISTRATION);
             VolumeRegistration volumeRegistration;
             if (psVariable is null || !psVariable.Options.HasFlag(ScopedItemOptions.AllScope))
             {
                 volumeRegistration = new VolumeRegistration(new Collection<PSObject>());
-                SessionState.PSVariable.Set(new PSVariable(VAR_NAME_FS_VOLUME_INFO_REGISTRATION, volumeRegistration, ScopedItemOptions.Constant | ScopedItemOptions.AllScope));
+                sessionState.PSVariable.Set(new PSVariable(VAR_NAME_FS_VOLUME_INFO_REGISTRATION, volumeRegistration, ScopedItemOptions.Constant | ScopedItemOptions.AllScope));
             }
             else if (!psVariable.Options.HasFlag(ScopedItemOptions.Constant))
             {
-                SessionState.PSVariable.Remove(psVariable);
+                sessionState.PSVariable.Remove(psVariable);
                 volumeRegistration = new VolumeRegistration(new Collection<PSObject>());
-                SessionState.PSVariable.Set(new PSVariable(VAR_NAME_FS_VOLUME_INFO_REGISTRATION, volumeRegistration, ScopedItemOptions.Constant | ScopedItemOptions.AllScope));
+                sessionState.PSVariable.Set(new PSVariable(VAR_NAME_FS_VOLUME_INFO_REGISTRATION, volumeRegistration, ScopedItemOptions.Constant | ScopedItemOptions.AllScope));
             }
             else
             {
@@ -39,9 +39,19 @@ namespace FsInfoCat.PS.Commands
             return volumeRegistration.BackingCollection;
         }
 
+        internal Collection<PSObject> GetVolumeRegistration()
+        {
+            return GetVolumeRegistration(SessionState);
+        }
+
+        internal static IEnumerable<IVolumeInfo> GetVolumeInfos(SessionState sessionState)
+        {
+            return GetVolumeRegistration(sessionState).Select(o => (IVolumeInfo)o.BaseObject);
+        }
+
         protected IEnumerable<IVolumeInfo> GetVolumeInfos()
         {
-            return GetVolumeRegistration().Select(o => (IVolumeInfo)o.BaseObject);
+            return GetVolumeInfos(SessionState);
         }
 
         protected class RegisteredVolumeInfo : IVolumeInfo, IEquatable<IVolumeInfo>, IEquatable<DriveInfo>
