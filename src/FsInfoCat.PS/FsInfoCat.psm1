@@ -55,13 +55,27 @@ Function Test-PasswordHash {
 }
 
 Function Get-LocalMachineIdentifier {
+    <#
+    .SYNOPSIS
+        Get unique identifier for local machine.
+
+    .DESCRIPTION
+        Gets the SID or UUID that will be used as the unique identifier of the current host machine.
+
+    .EXAMPLE
+        PS C:\> $id = Get-LocalMachineIdentifier
+
+    .OUTPUTS
+        The string value of the SID or UUID that uniquely identifies the current host machine.
+    #>
     [CmdletBinding()]
     Param()
 
     if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
-        $DirectoryEntry = New-Object -TypeName 'System.DirectoryServices.DirectoryEntry' -ArgumentList "WinNT://$(Environment.MachineName)/Administrator";
+        $DirectoryEntry = New-Object -TypeName 'System.DirectoryServices.DirectoryEntry' -ArgumentList "WinNT://$([Environment]::MachineName)/Administrator";
         try {
-            $Sid = New-Object -TypeName 'System.Security.Principal.SecurityIdentifier' -ArgumentList ((,$DirectoryEntry.InvokeGet("objectSID")), 0);
+            [byte[]]$Bytes = $DirectoryEntry.InvokeGet("objectSID");
+            $Sid = [System.Security.Principal.SecurityIdentifier]::new($Bytes, 0);
             $Sid.AccountDomainSid.ToString() | Write-Output;
         } finally {
             $DirectoryEntry.Dispose();
