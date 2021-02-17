@@ -44,6 +44,8 @@ $LogicalDisks | ForEach-Object { ($_.GetRelationships() | Select-Object -Propert
 ($LogicalDisks.Properties  | Select-Object -First 1) | Get-Member
 #>
 
+@((Get-CimInstance -Query 'SELECT * FROM CIM_Directory WHERE Name="c:\\"').CimInstanceProperties) | Out-GridView -Title "CIM_Directory";
+
 $LogicalDisks | ForEach-Object {
     $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
     $FsRoot.DriveFormat = $_.FileSystem;
