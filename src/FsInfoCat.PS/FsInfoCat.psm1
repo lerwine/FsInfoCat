@@ -176,9 +176,8 @@ if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
         [OutputType([FsLogicalVolume])]
         Param()
 
-        [System.IO.DriveType]::Fixed
-        $BlockDevices = @((
-            (lsblk -a -b -f -I 8 -J -l -o NAME,LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,RO,RM) | Out-String | ConvertFrom-Json
+        @((
+            (lsblk -a -b -f -I 8 -J -l -o NAME,LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,RO,RM,HOTPLUG) | Out-String | ConvertFrom-Json
         ).blockDevices | Where-Object { $_.type -eq 'part' -and -not ([string]::IsNullOrEmpty($_.mountpoint)-or [string]::IsNullOrEmpty($_.uuid)) });
     }
 }
