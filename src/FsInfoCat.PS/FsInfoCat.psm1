@@ -256,10 +256,11 @@ Function Get-FsVolumeInfo {
         $LogicalDiskAndRoot = @($LogicalDiskCollection | ForEach-Object {
             $Directory = $_ | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory';
             if ($null -ne $Directory -and -not [string]::IsNullOrWhiteSpace($Directory.Name)) {
-            [PsCustomObject]@{
-                RootPath = $Directory.Name;
-                LogicalDisk = $_;
-            };
+                [PsCustomObject]@{
+                    RootPath = $Directory.Name;
+                    LogicalDisk = $_;
+                };
+            }
         });
         if ($PSBoundParameters.ContainsKey('Path')) {
             if ($Force.IsPresent) {
@@ -334,13 +335,82 @@ Function Get-FsVolumeInfo {
             }
         }
     } else {
-        [System.IO.DriveInfo[]]$Drives = [System.IO.DriveInfo]::GetDrives();
-        $BlockDevices = (
-            (lsblk -a -b -f -J -l -o NAME,LABEL,MOUNTPOINT,SIZE,FSTYPE,UUID,SERIAL,TYPE) | Out-String | ConvertFrom-Json
-        ).BlockDevices | Where-Object { $_.type -eq 'part' }
+        $BlockDevices = @((
+            (lsblk -a -b -f -I 8 -J -l -o NAME,LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,RO,RM) | Out-String | ConvertFrom-Json
+        ).blockDevices | Where-Object { $_.type -eq 'part' -and -not ([string]::IsNullOrEmpty($_.mountpoint)-or [string]::IsNullOrEmpty($_.uuid)) });
 
-        ((lsblk -a -b -f -J -l -o NAME,LABEL,MOUNTPOINT,SIZE,FSTYPE,UUID,SERIAL,TYPE) | Out-String | ConvertFrom-Json).BlockDevices | Where-Object { $_.type -eq 'part' }
+        if ($PSBoundParameters.ContainsKey('Path')) {
+            if ($Force.IsPresent) {
+                $Path | ForEach-Object {
+                    $dr = $PathRoot = $null;
+                    $p = $_;
+                    try {
+                        # TODO: Create Get-FsPathRoot function
+                        $PathRoot = [System.IO.Path]::GetFullPath($p) | Get-FsPathRoot;
+                        $dr = $BlockDevices | Where-Object { $PathRoot -ceq $_.mountpoint } | Select-Object -First 1;
+                    } catch {
+                        $dr = $PathRoot = $null;
+                        $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
+                        $FsRoot.RootPathName = $p;
+                        if ($_ -is [System.Exception]) {
+                            $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new($_, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
+                        } else {
+                            if ($_.Exception -is [System.Exception]) {
+                                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new($_.Exception, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
+                            } else {
+                                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new('' + $_, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
+                            }
+                        }
+                        $FsRoot | Write-Output;
+                    }
+                    if ($null -ne $dr) {
+                        # TODO: Modify ConvertTo-FsVolumeInfo for linux to accept JSON ojbect. Maybe create a custom Select-Object?
+                        ($dr | ConvertTo-FsVolumeInfo -Force) | Write-Output;
+                    } else {
+                        if ($null -ne $PathRoot) {
+                            $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
+                            $FsRoot.RootPathName = $PathRoot;
+                            $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("No matching volume found",
+                                [FsInfoCat.Models.Crawl.MessageId]::PathNotFound));
+                            $FsRoot | Write-Output;
+                        }
+                    }
+                }
+            } else {
+                $Path | ForEach-Object {
+                    $dr = $null;
+                    $p = $_;
+                    try {
+                        $PathRoot = [System.IO.Path]::GetFullPath($p) | Get-FsPathRoot;
+                        $dr = $BlockDevices | Where-Object { $PathRoot -ceq $_.mountpoint } | Select-Object -First 1;
+                    } catch {
+                        if ($_ -is [System.Exception]) {
+                            Write-Error -Exception $_ -Message "Unable to determine root path" -Category InvalidArgument -ErrorId 'InvalidRootPath' -TargetObject $p;
+                        } else {
+                            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                                Write-Error -ErrorRecord $_ -CategoryReason "Invalid Root Path";
+                            } else {
+                                Write-Error -Message "Unable to discern drive type: $_" -Category InvalidArgument -ErrorId 'InvalidRootPath' -TargetObject $p;
+                            }
+                        }
+                        $dr = $null;
+                    }
+                    if ($null -ne $dr) {
+                        ($dr | ConvertTo-FsVolumeInfo) | Write-Output;
+                    }
+                }
+            }
+        } else {
+            if ($Force.IsPresent) {
+                ($BlockDevices | ConvertTo-FsVolumeInfo -Force) | Write-Output;
+            } else {
+                ($BlockDevices | ConvertTo-FsVolumeInfo) | Write-Output;
+            }
+        }
         <#
+        ((Get-PSDrive -PSProvider FileSystem) | Select-Object -Property 'Name', 'Root', 'VolumeSeparatedByColon', 'Description') | Out-GridView;
+        ([System.IO.DriveInfo]::GetDrives() | Where-Object { $_.DriveType -ne [System.IO.DriveType]::Ram } | Select-Object -Property 'DriveFormat', 'DriveType', 'Name', 'RootDirectory', 'VolumeLabel') | Out-GridView -Title 'DriveInfo'
+        ((lsblk -a -b -f -I 8 -J -l -o NAME,LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,PARTLABEL) | Out-String | ConvertFrom-Json).blockDevices | Out-GridView -Title 'lsblk'
 {
    "blockdevices": [
       {"name": "loop0", "label": null, "mountpoint": "/snap/code/55", "size": "157016064", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
