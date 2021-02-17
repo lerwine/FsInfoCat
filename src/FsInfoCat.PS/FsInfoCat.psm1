@@ -140,12 +140,74 @@ Function Get-LocalMachineIdentifier {
     }
 }
 
+class FsLogicalVolume {
+    [string]$RootPath;
+    [string]$VolumeName;
+    [string]$VolumeId;
+    [string]$FsName;
+    [System.IO.DriveType]$DriveType;
+}
+
+if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+    Function Get-FsLogicalVolume {
+ [CmdletBinding()]
+        [OutputType([FsLogicalVolume])]
+        Param()
+        $LogicalDiskAndRoot = @($LogicalDiskCollection | ForEach-Object {
+            $Directory = $_ | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory';
+            if ($null -ne $Directory -and -not [string]::IsNullOrWhiteSpace($Directory.Name)) {
+                $DriveType = [System.IO.DriveType]::Unknown;
+                try {
+                    $DriveType = ([System.IO.DriveType]($_.DriveType));
+                } catch { }
+                [FsLogicalVolume]@{
+                    RootPath = $Directory.Name;
+                    VolumeName = $_.VolumeName;
+                    VolumeId = $_.VolumeSerialNumber;
+                    FsName = $_.FileSystem;
+                    DriveType = $DriveType;
+                } | Write-Output;
+            }
+        });
+    }
+} else {
+    Function Get-FsLogicalVolume {
+        [CmdletBinding()]
+        [OutputType([FsLogicalVolume])]
+        Param()
+
+        [System.IO.DriveType]::Fixed
+        $BlockDevices = @((
+            (lsblk -a -b -f -I 8 -J -l -o NAME,LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,RO,RM) | Out-String | ConvertFrom-Json
+        ).blockDevices | Where-Object { $_.type -eq 'part' -and -not ([string]::IsNullOrEmpty($_.mountpoint)-or [string]::IsNullOrEmpty($_.uuid)) });
+    }
+}
+<#
+{
+   "blockdevices": [
+      {"name": "loop0", "label": null, "mountpoint": "/snap/code/55", "size": "157016064", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
+      {"name": "loop1", "label": null, "mountpoint": "/snap/core/10583", "size": "102637568", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
+      {"name": "loop2", "label": null, "mountpoint": "/snap/code/52", "size": "150798336", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
+      {"name": "loop3", "label": null, "mountpoint": "/snap/core/10823", "size": "103129088", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
+      {"name": "loop4", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
+      {"name": "loop5", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
+      {"name": "loop6", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
+      {"name": "loop7", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
+      {"name": "sda", "label": null, "mountpoint": null, "size": "32213303296", "fstype": null, "uuid": null, "serial": "60022480723f03e4f52d65852314f69b", "type": "disk"},
+      {"name": "sda1", "label": "cloudimg-rootfs", "mountpoint": "/", "size": "32096894464", "fstype": "ext4", "uuid": "3756934c-31d3-413c-8df9-5b7c7b1a4451", "serial": null, "type": "part"},
+      {"name": "sda14", "label": null, "mountpoint": null, "size": "4194304", "fstype": null, "uuid": null, "serial": null, "type": "part"},
+      {"name": "sda15", "label": "UEFI", "mountpoint": "/boot/efi", "size": "111149056", "fstype": "vfat", "uuid": "B38E-A2BF", "serial": null, "type": "part"},
+      {"name": "sdb", "label": null, "mountpoint": null, "size": "8589934592", "fstype": null, "uuid": null, "serial": "60022480bf8b95f23da9e9c454906355", "type": "disk"},
+      {"name": "sdb1", "label": null, "mountpoint": "/mnt", "size": "8587837440", "fstype": "ext4", "uuid": "3028dce3-2601-4cde-9774-f955c8bd0fc7", "serial": null, "type": "part"}
+   ]
+}
+#>
 Function ConvertTo-FsVolumeInfo {
     [CmdletBinding()]
     [OutputType([FsInfoCat.Models.Crawl.FsRoot])]
     Param(
         [Parameter(ValueFromPipeline = $true)]
-        [Microsoft.Management.Infrastructure.CimInstance]$CimInstance,
+        [FsLogicalVolume]$LogicalVolume,
 
         [switch]$Force
     )
@@ -153,32 +215,31 @@ Function ConvertTo-FsVolumeInfo {
     Process {
         $IsValid = $true;
         $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
-        $FsRoot.DriveFormat = $CimInstance.FileSystem;
+        $FsRoot.DriveFormat = $LogicalVolume.FsName;
         if ([string]::IsNullOrWhiteSpace($FsRoot.DriveFormat)) {
             if ($Force.IsPresent) {
                 $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlWarning]::new("Drive format was not specified",
                     [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
             } else {
                 $IsValid = $false;
-                Write-Error -Message "Drive format was not specified" -Category InvalidResult -ErrorId 'NoDriveFormat' -TargetObject $CimInstance;
+                Write-Error -Message "Drive format was not specified" -Category InvalidResult -ErrorId 'NoDriveFormat' -TargetObject $LogicalVolume;
             }
         }
-        $FsRoot.VolumeName = $CimInstance.VolumeName;
+        $FsRoot.VolumeName = $LogicalVolume.VolumeName;
         if ([string]::IsNullOrWhiteSpace($FsRoot.VolumeName)) { $FsRoot.VolumeName = ''; }
-        [System.UInt32]$vsn = 0;
-        if ([System.UInt32]::TryParse($CimInstance.VolumeSerialNumber, [ref]$vsn)) {
-            $FsRootIdentifier = [FsInfoCat.Models.Volumes.VolumeIdentifier]::new($vsn);
-        } else {
+        $VolumeIdentifier = [FsInfoCat.Models.Volumes.VolumeIdentifier]::new([Guid]::Empty);
+        if (-not [FsInfoCat.Models.Volumes.VolumeIdentifier]::TryCreate($LogicalVolume.VolumeId, [ref]$VolumeIdentifier)) {
             if ($Force.IsPresent) {
                 $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("Unable to parse volume serial number",
                     [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
             } else {
                 $IsValid = $false;
-                Write-Error -Message "Unable to parse volume serial number" -Category InvalidResult -ErrorId 'InvalidSerialNumber' -TargetObject $CimInstance;
+                Write-Error -Message "Unable to parse volume serial number" -Category InvalidResult -ErrorId 'InvalidSerialNumber' -TargetObject $LogicalVolume;
             }
         }
+        $FsRoot.Identifier = $VolumeIdentifier;
         try {
-            [System.IO.DriveType]$FsRoot.DriveType = $CimInstance.DriveType
+            [System.IO.DriveType]$FsRoot.DriveType = $LogicalVolume.DriveType;
         } catch {
             if ($Force.IsPresent) {
                 if ($_ -is [System.Exception]) {
@@ -193,12 +254,12 @@ Function ConvertTo-FsVolumeInfo {
             } else {
                 $IsValid = $false;
                 if ($_ -is [System.Exception]) {
-                    Write-Error -Exception $_ -Message "Unable to discern drive type" -Category InvalidResult -ErrorId 'InvalidDriveType' -TargetObject $CimInstance;
+                    Write-Error -Exception $_ -Message "Unable to discern drive type" -Category InvalidResult -ErrorId 'InvalidDriveType' -TargetObject $LogicalVolume;
                 } else {
                     if ($_ -is [System.Management.Automation.ErrorRecord]) {
                         Write-Error -ErrorRecord $_ -CategoryReason "Invalid Drive Type";
                     } else {
-                        Write-Error -Message "Unable to discern drive type: $_" -Category InvalidResult -ErrorId 'InvalidDriveType' -TargetObject $CimInstance;
+                        Write-Error -Message "Unable to discern drive type: $_" -Category InvalidResult -ErrorId 'InvalidDriveType' -TargetObject $LogicalVolume;
                     }
                 }
             }
@@ -209,20 +270,19 @@ Function ConvertTo-FsVolumeInfo {
                     [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
             } else {
                 $IsValid = $false;
-                Write-Error -Message "Incompatible drive type (no root directory)" -Category InvalidResult -ErrorId 'NoRootDirectory' -TargetObject $CimInstance;
+                Write-Error -Message "Incompatible drive type (no root directory)" -Category InvalidResult -ErrorId 'NoRootDirectory' -TargetObject $LogicalVolume;
             }
         } else {
-            $CIM_Directory = $CimInstance | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory';
-            if ($null -eq $CIM_Directory -or [string]::IsNullOrWhiteSpace($CIM_Directory.Name)) {
+            if ([string]::IsNullOrWhiteSpace($LogicalVolume.RootPath)) {
                 if ($Force.IsPresent) {
                     $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("Could not determine root directory",
                         [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
                 } else {
                     $IsValid = $false;
-                    Write-Error -Message "Could not determine root directory" -Category InvalidResult -ErrorId 'NoRootDirectory' -TargetObject $CimInstance;
+                    Write-Error -Message "Could not determine root directory" -Category InvalidResult -ErrorId 'NoRootDirectory' -TargetObject $LogicalVolume;
                 }
             } else {
-                $FsRoot.RootPathName = $CIM_Directory.Name;
+                $FsRoot.RootPathName = $LogicalVolume.RootPath;
             }
         }
         if ($IsValid) { $FsRoot | Write-Output }
@@ -335,10 +395,6 @@ Function Get-FsVolumeInfo {
             }
         }
     } else {
-        $BlockDevices = @((
-            (lsblk -a -b -f -I 8 -J -l -o NAME,LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,RO,RM) | Out-String | ConvertFrom-Json
-        ).blockDevices | Where-Object { $_.type -eq 'part' -and -not ([string]::IsNullOrEmpty($_.mountpoint)-or [string]::IsNullOrEmpty($_.uuid)) });
-
         if ($PSBoundParameters.ContainsKey('Path')) {
             if ($Force.IsPresent) {
                 $Path | ForEach-Object {
