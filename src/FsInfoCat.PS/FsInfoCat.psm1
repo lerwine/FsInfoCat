@@ -1,6 +1,281 @@
-if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
-    #Add-Type -AssemblyName 'System.DirectoryServices' -ErrorAction Stop;
-    Import-Module -Name 'Microsoft.PowerShell.Management' -ErrorAction Stop;
+Function Get-ExceptionObject {
+    [CmdletBinding()]
+    [OutputType([System.Exception])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowEmptycollection]
+        [AllowEmptyString]
+        [AllowNull]
+        [object]$InputObject,
+
+        [switch]$Immediate
+    )
+
+    Process {
+        $Exception = $null;
+        if ($InputObject -is [System.Exception]) {
+            $Exception = $InputObject;
+        } else {
+            $ErrorRecord = $null;
+            if ($InputObject -is [System.Management.Automation.ErrorRecord]) {
+                $ErrorRecord = $InputObject;
+            } else {
+                if ($InputObject -is [System.Management.Automation.IContainsErrorRecord]) {
+                    $ErrorRecord = ([System.Management.Automation.IContainsErrorRecord]$InputObject).ErrorRecord;
+                }
+            }
+            if ($null -ne $ErrorRecord) { $Exception = $ErrorRecord.Exception }
+        }
+        if ($null -ne $Exception) {
+            if (-not $Immediate.IsPresent) {
+                while ($Exception -is [System.Management.Automation.RuntimeException] -and $null -ne $Exception.InnerException) {
+                    $Exception = $Exception.InnerException;
+                }
+            }
+            $Exeption | Write-Output;
+        }
+    }
+}
+
+Function Get-ErrorRecord {
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.ErrorRecord])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowEmptycollection]
+        [AllowEmptyString]
+        [AllowNull]
+        [object]$InputObject,
+        
+        [string]$Message,
+
+        [string]$ErrorId = 'UnexpectedException',
+
+        [System.Management.Automation.ErrorCategory]$Category = [System.Management.Automation.ErrorCategory]::NotSpecified,
+        
+        [AllowEmptycollection]
+        [AllowEmptyString]
+        [AllowNull]
+        [object]$TargetObject
+    )
+
+    Process {
+        [System.Management.Automation.ErrorRecord]$ErrorRecord = $null;
+        $Exception = $null;
+        if ($InputObject -is [System.Management.Automation.ErrorRecord]) {
+            $ErrorRecord = $InputObject;
+            $Exception = $ErrorRecord.Exception;
+        } else {
+            if ($InputObject -is [System.Management.Automation.IContainsErrorRecord]) {
+                $ErrorRecord = $InputObject.ErrorRecord;
+            }
+            if ($null -eq $ErrorRecord) {
+                if ($InputObject -is [System.Exception]) {
+                    $Exception = $InputObject;
+                } else {
+                    $m = '' + $InputObject;
+                    if ([string]::IsNullOrWhiteSpace($m)) { $m = 'Unexpected error' }
+                    $Exception = [System.Exception]::new($m);
+                }
+            } else {
+                $Exception = $ErrorRecord.Exception;
+            }
+        }
+        
+        $CreateNewErrorRecord = $null -eq $ErrorRecord;
+        $m = '';
+        $i = $ErrorId;
+        $c = $Category;
+        $t = $null;
+        if ($CreateNewErrorRecord) {
+            if ($PSBoundParameters.ContainsKey('TargetObject')) { $t = $TargetObject }
+            if ($PSBoundParameters.ContainsKey('Message')) { $m = $Message }
+        } else {
+            if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                $t = $TargetObject;
+                $CreateNewErrorRecord = $t -ne $ErrorRecord.TargetObject;
+            } else {
+                $t = $ErrorRecord.TargetObject;
+            }
+            if ($PSBoundParameters.ContainsKey('ErrorId')) {
+                $CreateNewErrorRecord = $CreateNewErrorRecord -or $i -ne $ErrorRecord.FullyQualifiedErrorId;
+            } else {
+                $i = $ErrorRecord.FullyQualifiedErrorId;
+            }
+            if ($PSBoundParameters.ContainsKey('Category')) {
+                $CreateNewErrorRecord = $CreateNewErrorRecord -or $c -ne $ErrorRecord.CategoryInfo.Category;
+            } else {
+                $Category = $ErrorRecord.CategoryInfo.Category;
+            }
+            if ($PSBoundParameters.ContainsKey('Message')) {
+                $m = $Message
+                $CreateNewErrorRecord = $CreateNewErrorRecord -or $m -ne $ErrorRecord.ToString();
+            } else {
+                $m = $ErrorRecord.ToString();
+            }
+        }
+
+        if ($CreateNewErrorRecord) {
+            if ([string]::IsNullOrWhiteSpace($m)) {
+                if ([string]::IsNullOrWhiteSpace($Exception.Message)) {
+                    $m = '' + $InputObject;
+                    if ([string]::IsNullOrWhiteSpace($m)) { $m = 'Unexpected error' }
+                } else {
+                    $m = $Exception.Message;
+                }
+            }
+            if ($null -ne $t -or $null -eq $InputObject) {
+                [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $t) | Write-Output;
+            } else {
+                if ($null -ne $InputObject.ItemName) {
+                    [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $InputObject.ItemName) | Write-Output;
+                } else {
+                    if ($null -ne $InputObject.FileName) {
+                        [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $InputObject.FileName) | Write-Output;
+                    } else {
+                        if ($null -ne $InputObject.CommandName) {
+                            [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $InputObject.CommandName) | Write-Output;
+                        } else {
+                            if ($null -ne $InputObject.ParamName) {
+                                [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $InputObject.ParamName) | Write-Output;
+                            } else {
+                                [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $null) | Write-Output;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            $ErrorRecord | Write-Output;
+        }
+    }
+}
+
+Write-Verbose -Message "Performing $(if ($PSVersionTable.PSEdition -eq 'Desktop') { 'Desktop edition' } else { "$($PSVersionTable.Platform) platform" })-specific initialization";
+&{
+    $Identifier = '';
+    $OldErrorAction = $ErrorActionPreference;
+    $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop;
+    try {
+        if ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT') {
+            Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ResourceUnavailable) -Scope 0;
+            Set-Variable -Name 'TargetObject' -Value 'Microsoft.PowerShell.Management' -Scope 0;
+            Set-Variable -Name 'ErrorId' -Value 'RequiredModuleLoadError' -Scope 0;
+            Set-Variable -Name 'Reason' -Value "Failed to load module '$TargetObject'" -Scope 0;
+            if ($null -eq (Get-Module -Name $TargetObject)) {
+                Write-Verbose -Message "Loading '$TargetObject' module";
+                Import-Module -Name $TargetObject -ErrorAction Stop;
+            }
+            Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ReadError) -Scope 0;
+            Set-Variable -Name 'TargetObject' -Value 'SELECT * from Win32_UserAccount WHERE Name="Administrator"' -Scope 0;
+            Set-Variable -Name 'ErrorId' -Value 'CimQueryException' -Scope 0;
+            Set-Variable -Name 'Reason' -Value 'Cim query throw an exception' -Scope 0;
+            $CimInstance = $null;
+            Write-Verbose -Message "'Microsoft.PowerShell.Management' module is loaded. Looking up machine SID";
+            Write-Debug -Message "Invoking CIM query '$TargetObject'";
+            $CimInstance = Get-CimInstance -Query $TargetObject -ErrorAction Stop;
+            if ($null -eq $CimInstance) {
+                Set-Variable -Name 'Reason' -Value 'CIM query returned null' -Scope 0;
+                Write-Debug -Message $Reason;
+                Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ObjectNotFound) -Scope 0;
+                Set-Variable -Name 'ErrorId' -Value 'CimQueryNullResult' -Scope 0;
+            } else {
+                Write-Debug -Message "CIM query returned $CimInstance";
+                Remove-Variable -Name 'TargetObject' -Scope 0;
+                Set-Variable -Name 'TargetObject' -Value $CimInstance -Scope 0;
+                Set-Variable -Name 'Reason' -Value 'Failed to read SID of Administrator principle' -Scope 0;
+                Set-Variable -Name 'ErrorId' -Value 'AccountSIDAccessError' -Scope 0;
+                Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ResourceUnavailable) -Scope 0;
+                if ([string]::IsNullOrWhiteSpace($CimInstance.SID)) {
+                    Set-Variable -Name 'Reason' -Value 'SID of Administrator principle is null or empty' -Scope 0;
+                    Write-Debug -Message $Reason;
+                    Set-Variable -Name 'ErrorId' -Value 'NoAccountSID' -Scope 0;
+                    Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::InvalidResult) -Scope 0;
+                } else {
+                    Set-Variable -Name 'Reason' -Value 'Failed to parse SID of Administrator principle' -Scope 0;
+                    Set-Variable -Name 'ErrorId' -Value 'AccountSIDParseError' -Scope 0;
+                    Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ParserError) -Scope 0;
+                    Remove-Variable -Name 'TargetObject' -Scope 0;
+                    Set-Variable -Name 'TargetObject' -Value $CimInstance.SID -Scope 0;
+                    $sid = $null;
+                    Write-Debug -Message "Parsing '$TargetObject' as SID string";
+                    $sid = [System.Security.Principal.SecurityIdentifier]::new($TargetObject);
+                    if ($null -ne $sid) {
+                        Set-Variable -Name 'Reason' -Value 'Cannot convert SID of Administrator principle to machine SID' -Scope 0;
+                        Set-Variable -Name 'ErrorId' -Value 'AccountDomainSidAccessError' -Scope 0;
+                        Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::InvalidType) -Scope 0;
+                        Remove-Variable -Name 'TargetObject' -Scope 0;
+                        Set-Variable -Name 'TargetObject' -Value $sid -Scope 0;
+                        Write-Debug -Message "Getting AccountDomainSid from '$TargetObject'";
+                        $sid = $sid.AccountDomainSid;
+                        if ($null -eq $sid) {
+                            Set-Variable -Name 'Reason' -Value 'AccountDomainSid of Administrator principle is null' -Scope 0;
+                            Write-Debug -Message $Reason;
+                            Set-Variable -Name 'ErrorId' -Value 'NoMachineSID' -Scope 0;
+                            Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::InvalidResult) -Scope 0;
+                        } else {
+                            Set-Variable -Name 'Identifier' -Value $sid.ToString() -Scope 0;
+                            Remove-Variable -Name 'Reason' -Scope 0;
+                        }
+                    } else {
+                        Write-Debug -Message $Reason;
+                    }
+                }
+            }
+        } else {
+            Set-Variable -Name 'Reason' -Value 'Failed to read content of system file contents' -Scope 0;
+            Set-Variable -Name 'ErrorId' -Value 'MachineIdFileAccessError' -Scope 0;
+            Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ReadError) -Scope 0;
+            Set-Variable -Name 'TargetObject' -Value '/etc/machine-id' -Scope 0;
+            Write-Debug -Message "Checking path '$TargetObject'";
+            if ($TargetObject | Test-Path -PathType Leaf) {
+                Write-Debug -Message "Getting content of '$TargetObject'";
+                Set-Variable -Name 'Identifier' -Value ('' + (Get-Content -LiteralPath $TargetObject -Force)).Trim() -Scope 0;
+                Write-Debug -Message "Loaded contents '$TargetObject': `"$Identifier`"";
+                if ($Identifier.Length -eq 0) {
+                    Set-Variable -Name 'Reason' -Value 'Content of machine-id is empty or could not be loaded' -Scope 0;
+                    Write-Debug -Message $Reason;
+                    Set-Variable -Name 'ErrorId' -Value 'NoMachineIdContent' -Scope 0;
+                    Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::InvalidResult) -Scope 0;
+                } else {
+                    Remove-Variable -Name 'TargetObject' -Scope 0;
+                    Set-Variable -Name 'TargetObject' -Value $Identifier -Scope 0;
+                    $Guid = [Guid]::Empty;
+                    Write-Debug -Message "Parsing '$TargetObject' as Guid";
+                    if ([Guid]::TryParse($Identifier, [ref]$Guid)) {
+                        Set-Variable -Name 'Identifier' -Value $Guid.Tostring('d').ToLower() -Scope 0;
+                        Remove-Variable -Name 'Reason' -Scope 0;
+                    } else {
+                        Set-Variable -Name 'Reason' -Value 'Failed to validate/parse content of /etc/machine-id' -Scope 0;
+                        Write-Debug -Message $Reason;
+                        Set-Variable -Name 'ErrorId' -Value 'MachineIdParseError' -Scope 0;
+                        Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ParserError) -Scope 0;
+                        Set-Variable -Name 'Identifier' -Value '' -Scope 0;
+                    }
+                }
+            } else {
+                Set-Variable -Name 'Reason' -Value 'File /etc/machine-id not found' -Scope 0;
+                Write-Debug -Message $Reason;
+                Set-Variable -Name 'ErrorId' -Value 'MachineIdFileNotFound' -Scope 0;
+                Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ObjectNotFound) -Scope 0;
+            }
+        }
+    } catch {
+        $ErrorActionPreference = $OldErrorAction;
+        $ErrorRecord = Get-ErrorRecord -InputObject $_ -ErrorId $ErrorId -Category $Category -TargetObject $TargetObject -Reason $Reason;
+        Write-Error -ErrorRecord $ErrorRecord -CategoryReason $Reason;
+    } finally {
+        Write-Debug -Message "Setting '$Identifier' as LocalMachineIdentifier";
+        Set-Variable -Name 'LocalMachineIdentifier' -Value $Identifier -Description 'Current host machine identifier' -Option Constant -Scope 'Script';
+        if ([string]::IsNullOrEmpty($Identifier) -and -not [string]::IsNullOrWhiteSpace($Reason)) {
+            Write-Error -Message "Failed to detect current machine identifier: $Reason" -Category $Category -ErrorId $ErrorId -CategoryReason $Reason -TargetObject $TargetObject;
+        }
+    }
+}
+if ([string]::IsNullOrWhiteSpace($Script:LocalMachineIdentifier)) {
+    Write-Warning -Message 'Intialization failed.';
+} else {
+    Write-Information -MessageData "Initialization successful";
 }
 
 Function ConvertTo-PasswordHash {
@@ -10,6 +285,12 @@ Function ConvertTo-PasswordHash {
 
     .DESCRIPTION
         Creates an object that contains a SHA512 password hash.
+        
+    .PARAMETER RawPwd
+        Raw password to be converted to a SHA512 has.
+
+    .PARAMETER Salt
+        Optional value whose bits reprsent the encryption salt to use. If this is not specified, a cryptographically random salt value will be generated.
 
     .EXAMPLE
         PS C:\> $PwHash = ConvertTo-PasswordHash -RawPwd 'myPassword';
@@ -31,11 +312,16 @@ Function ConvertTo-PasswordHash {
         [System.UInt64]$Salt
     )
     Process {
+        $Result = $null;
         if ($PSBoundParameters.ContainsKey('Salt')) {
-            [FsInfoCat.Util.PwHash]::Create($RawPwd, $Salt);
+            Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Invoking FsInfoCat.Util.PwHash.Create(rawPw: `"$RawPwd`", saltBits: 0x$($Salt.ToString('x8')))";
+            $Result = [FsInfoCat.Util.PwHash]::Create($RawPwd, $Salt);
         } else {
-            [FsInfoCat.Util.PwHash]::Create($RawPwd);
+            Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Invoking FsInfoCat.Util.PwHash.Create(rawPw: `"$RawPwd`")";
+            $Result = [FsInfoCat.Util.PwHash]::Create($RawPwd);
         }
+        Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Returning $Result";
+        $Result | Write-Output;
     }
 }
 
@@ -46,6 +332,15 @@ Function Test-PasswordHash {
 
     .DESCRIPTION
         Tests whether the provided raw password is a match of the same password that was used to create the SHA512 password hash.
+        
+    .PARAMETER RawPwd
+        The raw password to test.
+        
+    .PARAMETER PwHash
+        FsInfoCat.Util.PwHash value to test the password against.
+
+    .PARAMETER EncodedPwHash
+        A base-64 string containing the password hash to test the password against.
 
     .EXAMPLE
         PS C:\> $Success = $myPw | Test-PasswordHash -PwHash $PwHash;
@@ -74,16 +369,230 @@ Function Test-PasswordHash {
     Begin {
         $PwHashObj = $null;
         if ($PSBoundParameters.ContainsKey('String')) {
+            Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Invoking FsInfoCat.Util.PwHash.Import(base64EncodedHash: `"$RawPwd`")";
             $PwHashObj = [FsInfoCat.Util.PwHash]::Import($EncodedPwHash);
         } else {
             $PwHashObj = $PwHash;
         }
+        Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Using $PwHashObj as the comparison SHA512 hash";
     }
     Process {
+        $result = $null;
         if ([string]::IsNullOrEmpty($RawPwd)) {
-            ($null -eq $PwHashObj) | Write-Output;
+            Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Testing $(if ($null -eq $RawPwd) { 'null value' } else { 'empty string' })";
+            $result = ($null -eq $PwHashObj);
         } else {
-            ($null -ne $PwHashObj -and $PwHashObj.Test($RawPwd)) | Write-Output;
+            Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Testing string: `"$RawPwd`"";
+            $result = ($null -ne $PwHashObj -and $PwHashObj.Test($RawPwd));
+        }
+        if ($null -ne $result) {
+            Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Returning $result";
+            $result | Write-Output;
+        }
+    }
+}
+
+class FsLogicalVolume {
+   [string]$RootPath;
+    [string]$VolumeName;
+    [string]$VolumeId;
+    [string]$FsName;
+    [string]$RemotePath;
+    [bool]$IsReadOnly;
+    [bool]$IsFixed;
+    [bool]$IsNetwork;
+}
+
+Function Get-FsLogicalVolume {
+    [CmdletBinding()]
+    [OutputType([FsLogicalVolume])]
+    Param()
+    
+    $OldErrorAction = $ErrorActionPreference;
+    $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop;
+    try {
+        if ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT') {
+            Set-Variable -Name 'TargetObject' -Value 'CIM_LogicalDisk' -Scope 0;
+            Set-Variable -Name 'ErrorId' -Value 'NewCimInstanceFail' -Scope 0;
+            Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ReadError) -Scope 0;
+            Set-Variable -Name 'Reason' -Value "Failed to invoke Get-CimInstance -ClassName '$TargetObject'" -Scope 0;
+            Write-Verbose -Message "$($PSCmdlet.MyInvocation.InvocationName): Getting logical volume listing";
+            (((Get-CimInstance -ClassName $TargetObject) | ForEach-Object {
+                Remove-Variable -Name 'TargetObject' -Scope 0;
+                Set-Variable -Name 'TargetObject' -Value $_ -Scope 0;
+                Set-Variable -Name 'ErrorId' -Value 'CimAssociatedInstanceFail' -Scope 0;
+                Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ObjectNotFound) -Scope 0;
+                Set-Variable -Name 'Reason' -Value "Failed to invoke Get-CimAssociatedInstance -ResultClassName 'CIM_Directory'" -Scope 0;
+                Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Invoking `"Get-CimAssociatedInstance -ResultClassName 'CIM_Directory'`" on $TargetObject";
+                [PsCustomObject]@{ ID = $_.DeviceID; Disk = $_; Directory = $_ | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory' }
+            } | Group-Object -Property 'ID') | ForEach-Object { $_.Group | Where-Object { $null -ne $_.Directory } | Select-Object -First 1 }) | ForEach-Object {
+                Remove-Variable -Name 'TargetObject' -Scope 0;
+                Set-Variable -Name 'TargetObject' -Value $_.Disk -Scope 0;
+                Set-Variable -Name 'ErrorId' -Value 'CimAssociatedInstanceFail' -Scope 0;
+                Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ObjectNotFound) -Scope 0;
+                Set-Variable -Name 'Reason' -Value "Failed to invoke Get-CimAssociatedInstance -ResultClassName 'CIM_Directory'" -Scope 0;
+                Write-Verbose -Message $($PSCmdlet.MyInvocation.InvocationName): "Creating new FsLogicalVolume from LogicalDisk $TargetObject and Directory $($_.Directory)";
+                $LogicalDisk = $TargetObject;
+                $FsLogicalVolume = [FsLogicalVolume]@{
+                    RootPath = $_.Directory.Name;
+                    VolumeName = $LogicalDisk.VolumeName;
+                    VolumeId = $LogicalDisk.VolumeSerialNumber;
+                    FsName = $LogicalDisk.FileSystem;
+                    IsReadOnly = ($LogicalDisk.Access -ne 0 -and ($LogicalDisk.Access -band 2) -eq 0);
+                };
+                switch ($LogicalDisk.DriveType) {
+                    1 { # No Root
+                        Write-Verbose -Message "$($PSCmdlet.MyInvocation.InvocationName): Ignoring device with no root ($($LogicalDisk.ToString()))";
+                        break;
+                    }
+                    2 { # Removable
+                        $FsLogicalVolume.IsFixed = $false;
+                        $FsLogicalVolume.IsNetwork = $false;
+                        Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Created $FsLogicalVolume";
+                        $FsLogicalVolume | Write-Output;
+                        break;
+                    }
+                    3 { # Local Disk
+                        $FsLogicalVolume.IsFixed = $true;
+                        $FsLogicalVolume.IsNetwork = $false;
+                        Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Created $FsLogicalVolume";
+                        $FsLogicalVolume | Write-Output;
+                        break;
+                    }
+                    4 { # Network Drive
+                        $FsLogicalVolume.IsFixed = $false;
+                        $FsLogicalVolume.IsNetwork = $true;
+                        $FsLogicalVolume.RemotePath = $LogicalDisk.ProviderName;
+                        Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Created $FsLogicalVolume";
+                        $FsLogicalVolume | Write-Output;
+                        break;
+                    }
+                    5 { # Compact Disc
+                        $FsLogicalVolume.IsFixed = $false;
+                        $FsLogicalVolume.IsNetwork = $false;
+                        if ($LogicalDisk.Access -eq 0) { $FsLogicalVolume.IsReadOnly = $true }
+                        Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Created $FsLogicalVolume";
+                        $FsLogicalVolume | Write-Output;
+                        break;
+                    }
+                    6 { # Ram DisK
+                        $FsLogicalVolume.IsFixed = $false;
+                        $FsLogicalVolume.IsNetwork = $false;
+                        Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Created $FsLogicalVolume";
+                        $FsLogicalVolume | Write-Output;
+                        break;
+                    }
+                    default { # Unknown
+                        Write-Warning -Message "$($PSCmdlet.MyInvocation.InvocationName): Unable to determine drive type for $($_.ToString())";
+                        break;
+                    }
+                }
+                Remove-Variable -Name 'Reason' -Scope 0;
+            }
+        } else {
+            if ($null -eq $Script:OptionsParseRegex) {
+                $Script:OptionsParseRegex = [System.Text.RegularExpressions.Regex]::new('(^|\G,)(?<k>"[^"]*"|[^",]*)(?<v>=("[^"]*"|[^",]*))?(?=,|$)', ([System.Text.RegularExpressions.RegexOptions]::Compiled));
+            }
+            if ($null -eq $Script:FsTypes) {
+                Set-Variable -Name 'TargetObject' -Value ($PSScriptRoot | Join-Path -ChildPath 'fstypes.json') -Scope 0;
+                Set-Variable -Name 'ErrorId' -Value 'FsTypesLoadFail' -Scope 0;
+                Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ReadError) -Scope 0;
+                Set-Variable -Name 'Reason' -Value "Failed to read data from '$TargetObject'" -Scope 0;
+                Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Loading file system type information from $TargetObject";
+                $JsonText = [System.IO.File]::ReadAllText($TargetObject);
+                if ([string]::IsNullOrWhiteSpace($JsonText)) {
+                    Set-Variable -Name 'ErrorId' -Value 'NoFsTypesData' -Scope 0;
+                    Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::InvalidData) -Scope 0;
+                    Set-Variable -Name 'Reason' -Value "Failed to read data from '$TargetObject'" -Scope 0;
+                } else {
+                    Set-Variable -Name 'ErrorId' -Value 'FsTypesParseFail' -Scope 0;
+                    Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ParserError) -Scope 0;
+                    Set-Variable -Name 'Reason' -Value "Failed to parse data from '$TargetObject'" -Scope 0;
+                    Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Parsing data loaded from $TargetObject`: '$JsonText'";
+                    Set-Variable -Name 'TargetObject' -Value $JsonText -Scope 0;
+                    $Script:FsTypes = $JsonText | ConvertFrom-Json;
+                    #$Script:FsTypes = [System.IO.File]::ReadAllText("C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.PS\fstypes.json") | ConvertFrom-Json;
+                }
+            }
+
+            if ($null -ne $Script:FsTypes) {
+                Set-Variable -Name 'TargetObject' -Value 'findmnt -A -b -J -l -R -o SOURCE,TARGET,FSTYPE,OPTIONS,LABEL,UUID,HOTPLUG' -Scope 0;
+                Set-Variable -Name 'ErrorId' -Value 'FindMntInvocationFail' -Scope 0;
+                Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::OpenError) -Scope 0;
+                Set-Variable -Name 'Reason' -Value "Invocation failed: '$TargetObject'" -Scope 0;
+                Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Invoking '$TargetObject'";
+                #$JsonText = [System.IO.File]::ReadAllText('C:\Users\lerwi\Git\FsInfoCat\findmnt.json');
+                $JsonText = (findmnt -A -b -J -l -R -o SOURCE,TARGET,FSTYPE,OPTIONS,LABEL,UUID,HOTPLUG) | Out-String;
+                if ([string]::IsNullOrWhiteSpace($JsonText)) {
+                    Set-Variable -Name 'ErrorId' -Value 'NoFindMntOutput' -Scope 0;
+                    Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ObjectNotFound) -Scope 0;
+                    Set-Variable -Name 'Reason' -Value "Failed to read results of '$TargetObject'" -Scope 0;
+                } else {
+                    Set-Variable -Name 'ErrorId' -Value 'FindMntResultParseFail' -Scope 0;
+                    Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ParserError) -Scope 0;
+                    Set-Variable -Name 'Reason' -Value "Failed to parse results from '$TargetObject'" -Scope 0;
+                    Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Parsing data returned from '$TargetObject': '$JsonText'";
+                    Remove-Variable -Name 'TargetObject' -Scope 0;
+                    Set-Variable -Name 'TargetObject' -Value $JsonText -Scope 0;
+                    $FindMnt = $JsonText | ConvertFrom-Json;
+                    if ($null -eq $FindMnt -or $null -eq $FindMnt.filesystems -or @($FindMnt.filesystems).Count -eq 0) {
+                        Set-Variable -Name 'ErrorId' -Value 'NoMountPoints' -Scope 0;
+                        Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ObjectNotFound) -Scope 0;
+                        Set-Variable -Name 'Reason' -Value "No mount points found in invocation output" -Scope 0;
+                    } else {
+                        $FindMnt.filesystems | Where-Object { $null -ne $_.fstype } | ForEach-Object {
+                            Remove-Variable -Name 'TargetObject' -Scope 0;
+                            Set-Variable -Name 'TargetObject' -Value $_ -Scope 0;
+                            Set-Variable -Name 'ErrorId' -Value 'FindMntItemParseFail' -Scope 0;
+                            Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::InvalidResult) -Scope 0;
+                            Set-Variable -Name 'Reason' -Value "Failed to read item results from '$TargetObject'" -Scope 0;
+                            Write-Verbose -Message $($PSCmdlet.MyInvocation.InvocationName): "Creating new FsLogicalVolume from findmnt output $TargetObject";
+                            $fstype = $_.fstype;
+                            $i = $fstype.IndexOf('.');
+                            if ($i -gt 0) { $fstype = $fstype.Substring(0, $i) }
+                            $characteristics = $Script:FsTypes.($fstype);
+                            if ($null -eq $characteristics) {
+                                Write-Warning -Message "Skipping unknown file system type `"$($_.fstype)`" ($($_.target))";
+                            } else {
+                                if ($characteristics.isSpecial) {
+                                    Write-Verbose -Message "Skipping special file system $($_.target)";
+                                } else {
+                                    $mc = $Script:OptionsParseRegex.Matches($_.options);
+                                    $ExplicitRO = @($mc | Where-Object { $_.Groups['k'].Value -eq 'ro' -and -not $_.Groups['v'].Success}).Count -gt 0;
+                                    $ExplicitRW = @($mc | Where-Object { $_.Groups['k'].Value -eq 'rw' -and -not $_.Groups['v'].Success}).Count -gt 0;
+                                    if (-not ($ExplicitRO -or $ExplicitRW)) { $ExplicitRO = $characteristics.isRemovable }
+                                    $FsLogicalVolume = [FsLogicalVolume]@{
+                                        RootPath = $_.target;
+                                        VolumeName = $_.label;
+                                        FsName = $_.fstype;
+                                        IsReadOnly = $ExplicitRO -and -not $ExplicitRW;
+                                        IsFixed = -not ($_.hotplug -ne '0' -or $characteristics.isRemovable);
+                                    };
+                                    if ($characteristics.isNetwork) {
+                                        $FsLogicalVolume.RemotePath = $_.source;
+                                    } else {
+                                        if (-not $characteristics.isRemovable) {
+                                            $FsLogicalVolume.VolumeId = $_.uuid;
+                                        }
+                                    }
+                                    Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Created $FsLogicalVolume";
+                                    $FsLogicalVolume | Write-Output;
+                                }
+                            }
+                            Remove-Variable -Name 'Reason' -Scope 0;
+                        }
+                    }
+                }
+            }
+        }
+    } catch {
+        $ErrorActionPreference = $OldErrorAction;
+        $ErrorRecord = Get-ErrorRecord -InputObject $_ -ErrorId $ErrorId -Category $Category -TargetObject $TargetObject -Reason $Reason;
+        Write-Error -ErrorRecord $ErrorRecord -CategoryReason $Reason;
+    } finally {
+        Write-Debug -Message "Setting '$Identifier' as LocalMachineIdentifier";
+        if (-not [string]::IsNullOrWhiteSpace($Reason)) {
+            Write-Error -Message "Failed to detect current machine identifier: $Reason" -Category $Category -ErrorId $ErrorId -CategoryReason $Reason -TargetObject $TargetObject;
         }
     }
 }
@@ -104,303 +613,14 @@ Function Get-LocalMachineIdentifier {
     #>
     [CmdletBinding()]
     Param()
-
-    if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
-        $CimInstance = Get-CimInstance -Query 'SELECT * from Win32_UserAccount WHERE Name="Administrator"';
-        if ($null -eq $CimInstance) {
-            Write-Warning -Message 'Unable to get principal object';
-        } else {
-            if ([string]::IsNullOrWhiteSpace($CimInstance.SID)) {
-                Write-Warning -Message 'Principal object does not have a security identifier';
-            } else {
-                try {
-                    [System.Security.Principal.SecurityIdentifier]::new($CimInstance.SID).AccountDomainSid.ToString() | Write-Output;
-                } catch {
-                    Write-Warning -Message "Failed to parse machine SID: $_";
-                }
-            }
-        }
-        <#
-        $DirectoryEntry = New-Object -TypeName 'System.DirectoryServices.DirectoryEntry' -ArgumentList "WinNT://$([Environment]::MachineName)/Administrator";
-        try {
-            [byte[]]$Bytes = $DirectoryEntry.InvokeGet("objectSID");
-            $Sid = [System.Security.Principal.SecurityIdentifier]::new($Bytes, 0);
-            $Sid.AccountDomainSid.ToString() | Write-Output;
-        } finally {
-            $DirectoryEntry.Dispose();
-        }
-        #>
+    
+    if ([string]::IsNullOrWhiteSpace($Script:LocalMachineIdentifier)) {
+        Write-Warning -Message 'Module initialization failed - no machine identifier to return';
     } else {
-        $id = '' + (Get-Content -LiteralPath 'etc/machine-id' -Force);
-        if ($id.Length -gt 0) {
-            $id | Write-Output;
-        } else {
-            Write-Error -Message 'Unable to get machine id' -Category ObjectNotFound -ErrorId 'EtcMachineIdReadError' -CategoryReason 'Unable to read from etc/machine-id';
-        }
+        $Script:LocalMachineIdentifier | Write-Output;
     }
 }
 
-class FsLogicalVolume {
-    [string]$RootPath;
-    [string]$VolumeName;
-    [string]$VolumeId;
-    [string]$FsName;
-    [System.IO.DriveType]$DriveType;
-}
-
-class Mounts {
-    [string]$Device;
-    [string]$MountPoint;
-    [string]$FsType;
-    [bool]$ReadOnly = $false;
-    [bool]$ReadWrite = $false;
-    [bool]$RelATime = $false;
-    [bool]$NoExec = $false;
-    [bool]$NoSuid = $false;
-    [bool]$NoDev = $false;
-    [bool]$Discard = $false;
-    [bool]$AllowOther = $false;
-    [bool]$NoForceUid = $false;
-    [bool]$NoForceGid = $false;
-    [bool]$NoUnix = $false;
-    [bool]$ServerIno = $false;
-    [bool]$MapPosix = $false;
-    [System.Collections.Generic.Dictionary[string,string]]$Options = [System.Collections.Generic.Dictionary[string,string]]::new();
-}
-
-[string[]]$FileLines = [System.IO.File]::ReadAllLines('/proc/mounts');
-$Mounts = @($FileLines | ForEach-Object {
-    if (-not [string]::IsNullOrWhiteSpace($_)) {
-        [string[]]$Cells = $_ -split '\s';
-        $m = [Mounts]::new();
-        $m.Device = $Cells[0];
-        $m.MountPoint = $Cells[1];
-        $m.FsType = $Cells[2];
-        if (-not [string]::IsNullOrWhiteSpace($Cells[3])) {
-            [string[]]$Cells = $Cells[3].Split(',');
-            foreach ($c in $Cells) {
-                switch ($c) {
-                    'ro' { $m.ReadOnly = $true; break; }
-                    'rw' { $m.ReadOnly = $true; break; }
-                    'relatime' { $m.ReadOnly = $true; break; }
-                    'nosuid' { $m.ReadOnly = $true; break; }
-                    'noexec' { $m.NoExec = $true; break; }
-                    'nodev' { $m.NoDev = $true; break; }
-                    'discard' { $m.Discard = $true; break; }
-                    'allow_other' { $m.AllowOther = $true; break; }
-                    'noforceuid' { $m.NoForceUid = $true; break; }
-                    'noforcegid' { $m.NoForceGid = $true; break; }
-                    'nounix' { $m.NoUnix = $true; break; }
-                    'serverino' { $m.ServerIno = $true; break; }
-                    'mapposix' { $m.MapPosix = $true; break; }
-                    default {
-                        $i = $c.IndexOf('=');
-                        if ($i -lt 0) {
-                            if (-not $m.Options.ContainsKey($c)) {
-                                $m.Options.Add($c, $null);
-                            }
-                        } else {
-                            $k = $c.Substring(0, $i);
-                            if (-not $m.Options.ContainsKey($k)) {
-                                $m.Options.Add($k, $c.Substring($i + 1));
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        $m | Write-Output;
-    }
-});
-$Mounts
-
-
-class MountInfo {
-    [string]$MountId;
-    [string]$DeviceId;
-    [string]$Major;
-    [string]$Minor;
-    [string]$FsRoot;
-    [string]$MountPoint;
-    [string]$Unknown;
-    [string]$FsType;
-    [string]$Device;
-}
-
-[string[]]$FileLines = [System.IO.File]::ReadAllLines('/proc/mountinfo');
-$MountInfo = @($FileLines | ForEach-Object {
-    if (-not [string]::IsNullOrWhiteSpace($_)) {
-        $m = [MountInfo]::new();
-        if ($_ -match '^([^\s-]\S*(?:\s[^\s-]\S*)+)\s-\s(\S.+)$') {
-            [string[]]$Cells = $Matches[1] -split '\s';
-            $m.MountId = $Cells[0];
-            $m.DeviceId = $Cells[1];
-            ($major, $minor) = $Cells[2].Split(':', 2);
-            $m.Major = $major;
-            $m.Minor = $minor;
-            $m.FsRoot = $Cells[3];
-            $m.MountPoint = $Cells[4];
-            $m.Unknown = $Cells[6];
-            [string[]]$Cells = $Matches[2] -split '\s';
-            $m.FsType = $Cells[0];
-            $m.Device = $Cells[1];
-        }
-        $m | Write-Output;
-    }
-});
-$MountInfo
-
-Get-Command -Name 'lsblk';
-
-if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
-    Function Get-FsLogicalVolume {
-        [CmdletBinding()]
-        [OutputType([FsLogicalVolume])]
-        Param()
-        
-        ((Get-CimInstance -ClassName 'CIM_LogicalDisk') | ForEach-Object {
-            $Directory = $_ | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory';
-            if ($null -ne $Directory -and -not [string]::IsNullOrWhiteSpace($Directory.Name)) {
-                $DriveType = [System.IO.DriveType]::Unknown;
-                try {
-                    $DriveType = ([System.IO.DriveType]($_.DriveType));
-                } catch { }
-                [FsLogicalVolume]@{
-                    RootPath = $Directory.Name;
-                    VolumeName = $_.VolumeName;
-                    VolumeId = $_.VolumeSerialNumber;
-                    FsName = $_.FileSystem;
-                    DriveType = $DriveType;
-                } | Write-Output;
-            }
-        });
-    }
-} else {
-    $Script:IgnoreFsType = @('sysfs', 'proc', 'devtmpfs', 'devpts', 'tmpfs', 'cgroup', 'cgroup2', 'pstore', 'autofs', 'mqueue',
-        'debugfs', 'hugetlbfs', 'fusectl', 'configfs', 'squashfs', 'fuse', 'binfmt_misc');
-
-    Function Get-FsLogicalVolume {
-        [CmdletBinding()]
-        [OutputType([FsLogicalVolume])]
-        Param()
-        
-        $MountInfo = [MountInfo]::Load('/proc/mount');
-        [System.IO.File]::ReadAllLines('/proc/mounts') | ForEach-Object { $Values = $_ -split '\s'; $Values[2] }
-        @((
-            #(lsblk -a -b -f -J -l -o LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,RO,RM,HOTPLUG) | Out-String | ConvertFrom-Json
-
-            # TODO: Can add RO or RM?
-            (findmnt -A -b -J -l -R -o SOURCE,TARGET,FSTYPE,OPTIONS,LABEL,UUID) | Out-String | ConvertFrom-Json
-        ).blockDevices | Where-Object {
-            $t = '' + $_.fstype;
-            $i = $t.IndexOf('.');
-            if ($i -lt 0) {
-                $Script:IgnoreFsType -notcontains $t
-            } else {
-                $Script:IgnoreFsType -notcontains $t.Substring(0, $i);
-            }
-        }) | ForEach-Object {
-            $DriveType = [System.IO.DriveType]::Unknown;
-            switch ($_.fstype) {
-                'cifs' {
-                    $DriveType = [System.IO.DriveType]::Network;
-                    break;
-                }
-                'smbfs' {
-                    $DriveType = [System.IO.DriveType]::Network;
-                    break;
-                }
-                'nfs' {
-                    $DriveType = [System.IO.DriveType]::Network;
-                    break;
-                }
-                'ntfs' {
-                    $DriveType = [System.IO.DriveType]::Network;
-                    break;
-                }
-                default {
-                    if ($_.hotplug -ne '0') {
-                        $DriveType = [System.IO.DriveType]::Removable;
-                    } else {
-                        if ($_.rm -ne '0') {
-                            if ($_.ro -ne '0' -or $_.fstype -eq 'iso9660') {
-                                $DriveType = [System.IO.DriveType]::CDRom;
-                            } else {
-                                $DriveType = [System.IO.DriveType]::Removable;
-                            }
-                        } else {
-                            #if ($_.type -eq 'part') {
-                            #}
-                            $DriveType = [System.IO.DriveType]::Fixed;
-                        }
-                    }
-                    break;
-                }
-            }
-            [FsLogicalVolume]@{
-                RootPath = $_.mountpoint;
-                VolumeName = $_.label;
-                VolumeId = $_.uuid;
-                FsName = $_.fstype;
-                DriveType = $DriveType;
-            } | Write-Output;
-        }
-    }
-}
-
-enum FsType {
-adfs; affs; autofs; coda; coherent; cramfs; devpts; efs; ext2; ext3; hfs; hpfs; iso9660; jfs; minix; msdos; ncpfs; nfs; ntfs; proc; qnx4; reiserfs;
-romfs; smbfs; sysv; tmpfs; udf; ufs; umsdos; vfat; xenix; xfs
-}
-<#
-name       : sdb1
-label      : 
-mountpoint : /mnt
-fstype     : ext4
-uuid       : 3028dce3-2601-4cde-9774-f955c8bd0fc7
-type       : part
-ro         : 0
-rm         : 0
-hotplug    : 0
-
-
-findmnt -A -b -J -l -R -o SOURCE,TARGET,FSTYPE,OPTIONS,LABEL,UUID,MAJ:MIN
-
-
-
-sudo mkdir /mnt/testazureshare
-if [ ! -d "/etc/smbcredentials" ]; then
-sudo mkdir /etc/smbcredentials
-fi
-if [ ! -f "/etc/smbcredentials/servicenowdiag479.cred" ]; then
-    sudo bash -c 'echo "username=servicenowdiag479" >> /etc/smbcredentials/servicenowdiag479.cred'
-    sudo bash -c 'echo "password=jFpbf9ilT+uDN1sQYY6ClGXzrX7xjFwSd8nmg1AIMCA7AzDadASW51CBKVfcpivqf0cvFP7Yjq0ER/fyxZ25KQ==" >> /etc/smbcredentials/servicenowdiag479.cred'
-fi
-sudo chmod 600 /etc/smbcredentials/servicenowdiag479.cred
-
-sudo bash -c 'echo "//servicenowdiag479.file.core.windows.net/testazureshare /mnt/testazureshare cifs nofail,vers=3.0,credentials=/etc/smbcredentials/servicenowdiag479.cred,dir_mode=0777,file_mode=0777,serverino" >> /etc/fstab'
-sudo mount -t cifs //servicenowdiag479.file.core.windows.net/testazureshare /mnt/testazureshare -o vers=3.0,credentials=/etc/smbcredentials/servicenowdiag479.cred,dir_mode=0777,file_mode=0777,serverino
-
-{
-   "blockdevices": [
-      {"name": "loop0", "label": null, "mountpoint": "/snap/code/55", "size": "157016064", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop1", "label": null, "mountpoint": "/snap/core/10583", "size": "102637568", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop2", "label": null, "mountpoint": "/snap/code/52", "size": "150798336", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop3", "label": null, "mountpoint": "/snap/core/10823", "size": "103129088", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop4", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop5", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop6", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop7", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
-      {"name": "sda", "label": null, "mountpoint": null, "size": "32213303296", "fstype": null, "uuid": null, "serial": "60022480723f03e4f52d65852314f69b", "type": "disk"},
-      {"name": "sda1", "label": "cloudimg-rootfs", "mountpoint": "/", "size": "32096894464", "fstype": "ext4", "uuid": "3756934c-31d3-413c-8df9-5b7c7b1a4451", "serial": null, "type": "part"},
-      {"name": "sda14", "label": null, "mountpoint": null, "size": "4194304", "fstype": null, "uuid": null, "serial": null, "type": "part"},
-      {"name": "sda15", "label": "UEFI", "mountpoint": "/boot/efi", "size": "111149056", "fstype": "vfat", "uuid": "B38E-A2BF", "serial": null, "type": "part"},
-      {"name": "sdb", "label": null, "mountpoint": null, "size": "8589934592", "fstype": null, "uuid": null, "serial": "60022480bf8b95f23da9e9c454906355", "type": "disk"},
-      {"name": "sdb1", "label": null, "mountpoint": "/mnt", "size": "8587837440", "fstype": "ext4", "uuid": "3028dce3-2601-4cde-9774-f955c8bd0fc7", "serial": null, "type": "part"}
-   ]
-}
-#>
 Function ConvertTo-FsVolumeInfo {
     [CmdletBinding()]
     [OutputType([FsInfoCat.Models.Crawl.FsRoot])]
@@ -427,7 +647,9 @@ Function ConvertTo-FsVolumeInfo {
         $FsRoot.VolumeName = $LogicalVolume.VolumeName;
         if ([string]::IsNullOrWhiteSpace($FsRoot.VolumeName)) { $FsRoot.VolumeName = ''; }
         $VolumeIdentifier = [FsInfoCat.Models.Volumes.VolumeIdentifier]::new([Guid]::Empty);
-        if (-not [FsInfoCat.Models.Volumes.VolumeIdentifier]::TryCreate($LogicalVolume.VolumeId, [ref]$VolumeIdentifier)) {
+        $idObj = $LogicalVolume.VolumeId;
+        if ([string]::IsNullOrWhiteSpace($idObj)) { $idObj = $LogicalVolume.RemotePath }
+        if (-not [FsInfoCat.Models.Volumes.VolumeIdentifier]::TryCreate($idObj, [ref]$VolumeIdentifier)) {
             if ($Force.IsPresent) {
                 $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("Unable to parse volume serial number",
                     [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
@@ -495,6 +717,15 @@ Function Get-FsVolumeInfo {
 
     .DESCRIPTION
         Gets information about system volumes.
+        
+    .PARAMETER Path
+        The root path name(s) of the volumes to search for.
+        
+    .PARAMETER Force
+        Returns a FsInfoCat.Models.Crawl.FsRoot for each path, even if a match is not found. The messages property will contain information about any errors encountered.
+
+    .PARAMETER All
+        Returns information for all volumes. This is the default behavior if the Path parameter is not used.
 
     .EXAMPLE
         PS C:\> $VolumeInfo = Get-FsVolumeInfo -Path 'D:\';
@@ -502,16 +733,28 @@ Function Get-FsVolumeInfo {
     .OUTPUTS
         VolumeInfo object(s) that contain information about file system volumes
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'All')]
     [OutputType([FsInfoCat.Models.Crawl.FsRoot])]
     Param(
-        [Parameter(ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true, ParameterSetName = 'Explicit')]
         [string[]]$Path,
 
-        [switch]$Force
+        [Parameter(ParameterSetName = 'Explicit')]
+        [switch]$Force,
+
+        [Parameter(ParameterSetName = 'All')]
+        [switch]$All
     )
 
-    if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+    if ($PSBoundParameters.ContainsKey('Path')) {
+        [FsLogicalVolume[]]$AllVolumes = Get-FsLogicalVolume;
+        if ($Force.IsPresent) {
+        } else {
+        }
+    } else {
+        Get-FsLogicalVolume | ConvertTo-FsVolumeInfo;
+    }
+    if ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT') {
         $LogicalDiskAndRoot = @($LogicalDiskCollection | ForEach-Object {
             $Directory = $_ | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory';
             if ($null -ne $Directory -and -not [string]::IsNullOrWhiteSpace($Directory.Name)) {

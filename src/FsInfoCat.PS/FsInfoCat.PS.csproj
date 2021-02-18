@@ -20,6 +20,14 @@
   <ItemGroup>
     <_OutputPathItems Include="$(OutputPath)\**\*.*" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="fstypes.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fstypes.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(PsModuleBuildTargets)" />
   <Target Name="PreBuild" AfterTargets="PreBuildEvent">
     <CallTarget Targets="CheckCustomVars" />
