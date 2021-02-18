@@ -148,12 +148,118 @@ class FsLogicalVolume {
     [System.IO.DriveType]$DriveType;
 }
 
+class Mounts {
+    [string]$Device;
+    [string]$MountPoint;
+    [string]$FsType;
+    [bool]$ReadOnly = $false;
+    [bool]$ReadWrite = $false;
+    [bool]$RelATime = $false;
+    [bool]$NoExec = $false;
+    [bool]$NoSuid = $false;
+    [bool]$NoDev = $false;
+    [bool]$Discard = $false;
+    [bool]$AllowOther = $false;
+    [bool]$NoForceUid = $false;
+    [bool]$NoForceGid = $false;
+    [bool]$NoUnix = $false;
+    [bool]$ServerIno = $false;
+    [bool]$MapPosix = $false;
+    [System.Collections.Generic.Dictionary[string,string]]$Options = [System.Collections.Generic.Dictionary[string,string]]::new();
+}
+
+[string[]]$FileLines = [System.IO.File]::ReadAllLines('/proc/mounts');
+$Mounts = @($FileLines | ForEach-Object {
+    if (-not [string]::IsNullOrWhiteSpace($_)) {
+        [string[]]$Cells = $_ -split '\s';
+        $m = [Mounts]::new();
+        $m.Device = $Cells[0];
+        $m.MountPoint = $Cells[1];
+        $m.FsType = $Cells[2];
+        if (-not [string]::IsNullOrWhiteSpace($Cells[3])) {
+            [string[]]$Cells = $Cells[3].Split(',');
+            foreach ($c in $Cells) {
+                switch ($c) {
+                    'ro' { $m.ReadOnly = $true; break; }
+                    'rw' { $m.ReadOnly = $true; break; }
+                    'relatime' { $m.ReadOnly = $true; break; }
+                    'nosuid' { $m.ReadOnly = $true; break; }
+                    'noexec' { $m.NoExec = $true; break; }
+                    'nodev' { $m.NoDev = $true; break; }
+                    'discard' { $m.Discard = $true; break; }
+                    'allow_other' { $m.AllowOther = $true; break; }
+                    'noforceuid' { $m.NoForceUid = $true; break; }
+                    'noforcegid' { $m.NoForceGid = $true; break; }
+                    'nounix' { $m.NoUnix = $true; break; }
+                    'serverino' { $m.ServerIno = $true; break; }
+                    'mapposix' { $m.MapPosix = $true; break; }
+                    default {
+                        $i = $c.IndexOf('=');
+                        if ($i -lt 0) {
+                            if (-not $m.Options.ContainsKey($c)) {
+                                $m.Options.Add($c, $null);
+                            }
+                        } else {
+                            $k = $c.Substring(0, $i);
+                            if (-not $m.Options.ContainsKey($k)) {
+                                $m.Options.Add($k, $c.Substring($i + 1));
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        $m | Write-Output;
+    }
+});
+$Mounts
+
+
+class MountInfo {
+    [string]$MountId;
+    [string]$DeviceId;
+    [string]$Major;
+    [string]$Minor;
+    [string]$FsRoot;
+    [string]$MountPoint;
+    [string]$Unknown;
+    [string]$FsType;
+    [string]$Device;
+}
+
+[string[]]$FileLines = [System.IO.File]::ReadAllLines('/proc/mountinfo');
+$MountInfo = @($FileLines | ForEach-Object {
+    if (-not [string]::IsNullOrWhiteSpace($_)) {
+        $m = [MountInfo]::new();
+        if ($_ -match '^([^\s-]\S*(?:\s[^\s-]\S*)+)\s-\s(\S.+)$') {
+            [string[]]$Cells = $Matches[1] -split '\s';
+            $m.MountId = $Cells[0];
+            $m.DeviceId = $Cells[1];
+            ($major, $minor) = $Cells[2].Split(':', 2);
+            $m.Major = $major;
+            $m.Minor = $minor;
+            $m.FsRoot = $Cells[3];
+            $m.MountPoint = $Cells[4];
+            $m.Unknown = $Cells[6];
+            [string[]]$Cells = $Matches[2] -split '\s';
+            $m.FsType = $Cells[0];
+            $m.Device = $Cells[1];
+        }
+        $m | Write-Output;
+    }
+});
+$MountInfo
+
+Get-Command -Name 'lsblk';
+
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
     Function Get-FsLogicalVolume {
- [CmdletBinding()]
+        [CmdletBinding()]
         [OutputType([FsLogicalVolume])]
         Param()
-        $LogicalDiskAndRoot = @($LogicalDiskCollection | ForEach-Object {
+        
+        ((Get-CimInstance -ClassName 'CIM_LogicalDisk') | ForEach-Object {
             $Directory = $_ | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory';
             if ($null -ne $Directory -and -not [string]::IsNullOrWhiteSpace($Directory.Name)) {
                 $DriveType = [System.IO.DriveType]::Unknown;
@@ -171,17 +277,111 @@ if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
         });
     }
 } else {
+    $Script:IgnoreFsType = @('sysfs', 'proc', 'devtmpfs', 'devpts', 'tmpfs', 'cgroup', 'cgroup2', 'pstore', 'autofs', 'mqueue',
+        'debugfs', 'hugetlbfs', 'fusectl', 'configfs', 'squashfs', 'fuse', 'binfmt_misc');
+
     Function Get-FsLogicalVolume {
         [CmdletBinding()]
         [OutputType([FsLogicalVolume])]
         Param()
-
+        
+        $MountInfo = [MountInfo]::Load('/proc/mount');
+        [System.IO.File]::ReadAllLines('/proc/mounts') | ForEach-Object { $Values = $_ -split '\s'; $Values[2] }
         @((
-            (lsblk -a -b -f -I 8 -J -l -o NAME,LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,RO,RM,HOTPLUG) | Out-String | ConvertFrom-Json
-        ).blockDevices | Where-Object { $_.type -eq 'part' -and -not ([string]::IsNullOrEmpty($_.mountpoint)-or [string]::IsNullOrEmpty($_.uuid)) });
+            #(lsblk -a -b -f -J -l -o LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,RO,RM,HOTPLUG) | Out-String | ConvertFrom-Json
+
+            # TODO: Can add RO or RM?
+            (findmnt -A -b -J -l -R -o SOURCE,TARGET,FSTYPE,OPTIONS,LABEL,UUID) | Out-String | ConvertFrom-Json
+        ).blockDevices | Where-Object {
+            $t = '' + $_.fstype;
+            $i = $t.IndexOf('.');
+            if ($i -lt 0) {
+                $Script:IgnoreFsType -notcontains $t
+            } else {
+                $Script:IgnoreFsType -notcontains $t.Substring(0, $i);
+            }
+        }) | ForEach-Object {
+            $DriveType = [System.IO.DriveType]::Unknown;
+            switch ($_.fstype) {
+                'cifs' {
+                    $DriveType = [System.IO.DriveType]::Network;
+                    break;
+                }
+                'smbfs' {
+                    $DriveType = [System.IO.DriveType]::Network;
+                    break;
+                }
+                'nfs' {
+                    $DriveType = [System.IO.DriveType]::Network;
+                    break;
+                }
+                'ntfs' {
+                    $DriveType = [System.IO.DriveType]::Network;
+                    break;
+                }
+                default {
+                    if ($_.hotplug -ne '0') {
+                        $DriveType = [System.IO.DriveType]::Removable;
+                    } else {
+                        if ($_.rm -ne '0') {
+                            if ($_.ro -ne '0' -or $_.fstype -eq 'iso9660') {
+                                $DriveType = [System.IO.DriveType]::CDRom;
+                            } else {
+                                $DriveType = [System.IO.DriveType]::Removable;
+                            }
+                        } else {
+                            #if ($_.type -eq 'part') {
+                            #}
+                            $DriveType = [System.IO.DriveType]::Fixed;
+                        }
+                    }
+                    break;
+                }
+            }
+            [FsLogicalVolume]@{
+                RootPath = $_.mountpoint;
+                VolumeName = $_.label;
+                VolumeId = $_.uuid;
+                FsName = $_.fstype;
+                DriveType = $DriveType;
+            } | Write-Output;
+        }
     }
 }
+
+enum FsType {
+adfs; affs; autofs; coda; coherent; cramfs; devpts; efs; ext2; ext3; hfs; hpfs; iso9660; jfs; minix; msdos; ncpfs; nfs; ntfs; proc; qnx4; reiserfs;
+romfs; smbfs; sysv; tmpfs; udf; ufs; umsdos; vfat; xenix; xfs
+}
 <#
+name       : sdb1
+label      : 
+mountpoint : /mnt
+fstype     : ext4
+uuid       : 3028dce3-2601-4cde-9774-f955c8bd0fc7
+type       : part
+ro         : 0
+rm         : 0
+hotplug    : 0
+
+
+findmnt -A -b -J -l -R -o SOURCE,TARGET,FSTYPE,OPTIONS,LABEL,UUID,MAJ:MIN
+
+
+
+sudo mkdir /mnt/testazureshare
+if [ ! -d "/etc/smbcredentials" ]; then
+sudo mkdir /etc/smbcredentials
+fi
+if [ ! -f "/etc/smbcredentials/servicenowdiag479.cred" ]; then
+    sudo bash -c 'echo "username=servicenowdiag479" >> /etc/smbcredentials/servicenowdiag479.cred'
+    sudo bash -c 'echo "password=jFpbf9ilT+uDN1sQYY6ClGXzrX7xjFwSd8nmg1AIMCA7AzDadASW51CBKVfcpivqf0cvFP7Yjq0ER/fyxZ25KQ==" >> /etc/smbcredentials/servicenowdiag479.cred'
+fi
+sudo chmod 600 /etc/smbcredentials/servicenowdiag479.cred
+
+sudo bash -c 'echo "//servicenowdiag479.file.core.windows.net/testazureshare /mnt/testazureshare cifs nofail,vers=3.0,credentials=/etc/smbcredentials/servicenowdiag479.cred,dir_mode=0777,file_mode=0777,serverino" >> /etc/fstab'
+sudo mount -t cifs //servicenowdiag479.file.core.windows.net/testazureshare /mnt/testazureshare -o vers=3.0,credentials=/etc/smbcredentials/servicenowdiag479.cred,dir_mode=0777,file_mode=0777,serverino
+
 {
    "blockdevices": [
       {"name": "loop0", "label": null, "mountpoint": "/snap/code/55", "size": "157016064", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
