@@ -36,6 +36,7 @@ namespace FsInfoCat.Models.Crawl
             set => _driveFormat = value ?? "";
         }
 
+        // TODO: Cannot use DriveType - cannot always accurately determine drivetype from info in Linux
         public DriveType DriveType { get; set; }
 
         /// <summary>
