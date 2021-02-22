@@ -5,9 +5,8 @@ using System.Text;
 namespace FsInfoCat.Test.Helpers
 {
     /// <summary>
-    /// Defines test data to represent results from a <seealso cref="Func{TResult}"/> invocation.
+    /// Defines test data to represent results from a <seealso cref="Func{object}"/> invocation.
     /// </summary>
-    /// <typeparam name="TResult">The type of return value.</typeparam>
     public interface IFuncInvocation : IInvocationInput
     {
         object ReturnValue { get; }
