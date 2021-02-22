@@ -1,0 +1,997 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationInput" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationInput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationInput&lt;T&gt;" Collapsed="true">
+    <Position X="0.5" Y="6.25" Width="3.25" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.25" Y="4.312" />
+        <Point X="2.25" Y="6.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationInput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2&gt;" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="3.25" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="2.125" Y="6.941" />
+        <Point X="2.125" Y="8.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationInput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3&gt;" Collapsed="true">
+    <Position X="0.5" Y="11.25" Width="3.25" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="2.125" Y="9.441" />
+        <Point X="2.125" Y="11.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationInput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4&gt;" Collapsed="true">
+    <Position X="0.5" Y="14" Width="3.25" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2" Y="11.941" />
+        <Point X="2" Y="14" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationInput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4, T5&gt;" Collapsed="true">
+    <Position X="0.5" Y="16.25" Width="3.25" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="2.125" Y="14.691" />
+        <Point X="2.125" Y="16.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationInput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4, T5, T6&gt;" Collapsed="true">
+    <Position X="0.5" Y="18.75" Width="3.25" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4, T5&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="2.125" Y="16.941" />
+        <Point X="2.125" Y="18.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationInput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4, T5, T6, T7&gt;" Collapsed="true">
+    <Position X="0.5" Y="21" Width="3.25" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4, T5, T6&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="2.125" Y="19.441" />
+        <Point X="2.125" Y="21" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationInput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationOutput" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R&gt;" Collapsed="true">
+    <Position X="9.25" Y="1.5" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="0.75" />
+        <Point X="11.125" Y="0.75" />
+        <Point X="11.125" Y="1.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2&gt;" Collapsed="true">
+    <Position X="14.25" Y="1.5" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="13" Y="1.875" />
+        <Point X="14.25" Y="1.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3&gt;" Collapsed="true">
+    <Position X="19.5" Y="1.5" Width="4" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="18" Y="1.812" />
+        <Point X="19.5" Y="1.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4&gt;" Collapsed="true">
+    <Position X="25" Y="1.5" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="23.5" Y="1.875" />
+        <Point X="25" Y="1.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4, R5&gt;" Collapsed="true">
+    <Position X="30" Y="1.5" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="28.75" Y="1.812" />
+        <Point X="30" Y="1.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4, R5, R6&gt;" Collapsed="true">
+    <Position X="35.5" Y="1.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4, R5, R6, R7&gt;" Collapsed="true">
+    <Position X="40.25" Y="1.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IInvocationOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation" Collapsed="true">
+    <Position X="4.75" Y="1.5" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput" FixedToPoint="true">
+      <Path>
+        <Point X="2.125" Y="3.75" />
+        <Point X="2.125" Y="1.875" />
+        <Point X="4.75" Y="1.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation&lt;TResult&gt;" Collapsed="true">
+    <Position X="4.75" Y="3.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T, TResult&gt;" Collapsed="true">
+    <Position X="4.75" Y="6.25" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="6.625" />
+        <Point X="4.75" Y="6.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T1, T2, TResult&gt;" Collapsed="true">
+    <Position X="4.75" Y="8.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="9.125" />
+        <Point X="4.75" Y="9.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T1, T2, T3, TResult&gt;" Collapsed="true">
+    <Position X="4.75" Y="11.25" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="11.688" />
+        <Point X="4.75" Y="11.688" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T1, T2, T3, T4, TResult&gt;" Collapsed="true">
+    <Position X="4.75" Y="13.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="14.25" />
+        <Point X="4.75" Y="14.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T1, T2, T3, T4, T5, TResult&gt;" Collapsed="true">
+    <Position X="4.75" Y="16.25" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4, T5&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="16.625" />
+        <Point X="4.75" Y="16.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T1, T2, T3, T4, T5, T6, TResult&gt;" Collapsed="true">
+    <Position X="4.75" Y="18.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4, T5, T6&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="19.188" />
+        <Point X="4.75" Y="19.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T1, T2, T3, T4, T5, T6, T7, TResult&gt;" Collapsed="true">
+    <Position X="4.75" Y="21" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationInput&lt;T1, T2, T3, T4, T5, T6, T7&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.75" Y="21.375" />
+        <Point X="4.75" Y="21.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;R, TResult&gt;" Collapsed="true">
+    <Position X="9.25" Y="3.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.062" Y="2.191" />
+        <Point X="11.062" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;T, R, TResult&gt;" Collapsed="true">
+    <Position X="9.25" Y="6.25" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T, TResult&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="6.625" />
+        <Point X="9.25" Y="6.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;T1, T2, R, TResult&gt;" Collapsed="true">
+    <Position X="9.25" Y="8.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;T1, T2, T3, R, TResult&gt;" Collapsed="true">
+    <Position X="9.25" Y="11.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;T1, T2, T3, T4, R, TResult&gt;" Collapsed="true">
+    <Position X="9.25" Y="13.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;T1, T2, T3, R, TResult&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="11.125" Y="12.07" />
+        <Point X="11.125" Y="13.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;T1, T2, T3, T4, T5, R, TResult&gt;" Collapsed="true">
+    <Position X="9.25" Y="16.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;T1, T2, T3, T4, T5, T6, R, TResult&gt;" Collapsed="true">
+    <Position X="9.25" Y="18.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation&lt;T1, T2, T3, T4, T5, T6, TResult&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="19.062" />
+        <Point X="9.25" Y="19.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation2&lt;R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="14.25" Y="3.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;R, TResult&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13" Y="4.188" />
+        <Point X="14.25" Y="4.188" />
+      </Path>
+    </InheritanceLine>
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="16.125" Y="2.191" />
+        <Point X="16.125" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation2&lt;T, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="14.25" Y="6.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation2&lt;T1, T2, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="14.25" Y="8.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation2&lt;T1, T2, T3, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="14.25" Y="11.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation2&lt;T1, T2, T3, T4, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="14.25" Y="13.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation1&lt;T1, T2, T3, T4, R, TResult&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="13" Y="14.188" />
+        <Point X="14.25" Y="14.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation2&lt;T1, T2, T3, T4, T5, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="14.25" Y="16.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation3&lt;R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="19.75" Y="3.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation2&lt;R1, R2, TResult&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18" Y="4.25" />
+        <Point X="19.75" Y="4.25" />
+      </Path>
+    </InheritanceLine>
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="21.5" Y="2.191" />
+        <Point X="21.5" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation3&lt;T, R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="19.75" Y="6.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation3&lt;T1, T2, R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="19.75" Y="8.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation3&lt;T1, T2, T3, R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="19.75" Y="11.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation3&lt;T1, T2, T3, T4, R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="19.75" Y="13.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation4&lt;R1, R2, R3, R4, TResult&gt;" Collapsed="true">
+    <Position X="25" Y="3.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation3&lt;R1, R2, R3, TResult&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="23.5" Y="4.188" />
+        <Point X="25" Y="4.188" />
+      </Path>
+    </InheritanceLine>
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="26.875" Y="2.191" />
+        <Point X="26.875" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation4&lt;T, R1, R2, R3, R4, TResult&gt;" Collapsed="true">
+    <Position X="25" Y="6" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation4&lt;T1, T2, R1, R2, R3, R4, TResult&gt;" Collapsed="true">
+    <Position X="25" Y="8.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation4&lt;T1, T2, T3, R1, R2, R3, R4, TResult&gt;" Collapsed="true">
+    <Position X="25" Y="11.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation5&lt;R1, R2, R3, R4, R5, TResult&gt;" Collapsed="true">
+    <Position X="30" Y="3.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation4&lt;R1, R2, R3, R4, TResult&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="28.75" Y="4.188" />
+        <Point X="30" Y="4.188" />
+      </Path>
+    </InheritanceLine>
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4, R5&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="31.812" Y="2.191" />
+        <Point X="31.812" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation5&lt;T, R1, R2, R3, R4, R5, TResult&gt;" Collapsed="true">
+    <Position X="30" Y="6" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation5&lt;T1, T2, R1, R2, R3, R4, R5, TResult&gt;" Collapsed="true">
+    <Position X="30" Y="8.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation6&lt;R1, R2, R3, R4, R5, R6, TResult&gt;" Collapsed="true">
+    <Position X="35.25" Y="3.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation5&lt;R1, R2, R3, R4, R5, TResult&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="33.75" Y="4.188" />
+        <Point X="35.25" Y="4.188" />
+      </Path>
+    </InheritanceLine>
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4, R5, R6&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="37.188" Y="2.191" />
+        <Point X="37.188" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation6&lt;T, R1, R2, R3, R4, R5, R6, TResult&gt;" Collapsed="true">
+    <Position X="35.25" Y="6" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation6&lt;R1, R2, R3, R4, R5, R6, TResult&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="37.25" Y="4.57" />
+        <Point X="37.25" Y="6" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Test.Helpers.IFuncInvocation7&lt;R1, R2, R3, R4, R5, R6, R7, TResult&gt;" Collapsed="true">
+    <Position X="40" Y="3.75" Width="3.75" />
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IFuncInvocation6&lt;R1, R2, R3, R4, R5, R6, TResult&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="39" Y="4.188" />
+        <Point X="40" Y="4.188" />
+      </Path>
+    </InheritanceLine>
+    <InheritanceLine Type="FsInfoCat.Test.Helpers.IInvocationOutput&lt;R1, R2, R3, R4, R5, R6, R7&gt;" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="42" Y="2.191" />
+        <Point X="42" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\IFuncInvocation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput&lt;R, TResult&gt;" Collapsed="true">
+    <Position X="28.75" Y="20" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput&lt;T, R, TResult&gt;" Collapsed="true">
+    <Position X="31.25" Y="20" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput&lt;T1, T2, R, TResult&gt;" Collapsed="true">
+    <Position X="34" Y="20" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAEAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput&lt;T1, T2, T3, R, TResult&gt;" Collapsed="true">
+    <Position X="37" Y="20" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput&lt;T1, T2, T3, T4, R, TResult&gt;" Collapsed="true">
+    <Position X="40.25" Y="20" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput&lt;T1, T2, T3, T4, T5, R, TResult&gt;" Collapsed="true">
+    <Position X="43.75" Y="20" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAEBA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput&lt;T1, T2, T3, T4, T5, T6, R, TResult&gt;" Collapsed="true">
+    <Position X="47.5" Y="20" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAEBA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput2&lt;R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="32.75" Y="17.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput2&lt;T, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="35.75" Y="17.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAACAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput2&lt;T1, T2, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="38.75" Y="17.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAEAAEAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput2&lt;T1, T2, T3, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="42.25" Y="17.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAIAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput2&lt;T1, T2, T3, T4, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="45.75" Y="17.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAQAABAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput2&lt;T1, T2, T3, T4, T5, R1, R2, TResult&gt;" Collapsed="true">
+    <Position X="49.5" Y="17.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAgAABAAAAIAAAAAAAAEAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput3&lt;R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="36" Y="15" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput3&lt;T, R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="39.25" Y="15" Width="3" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAACAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput3&lt;T1, T2, R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="42.5" Y="15" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAABAAAAAAAEAAEAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput3&lt;T1, T2, T3, R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="46" Y="15" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAABAEAAAAAEAAIAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput3&lt;T1, T2, T3, T4, R1, R2, R3, TResult&gt;" Collapsed="true">
+    <Position X="49.75" Y="15" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAABAEAAAAAEAAQAABAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput4&lt;R1, R2, R3, R4, TResult&gt;" Collapsed="true">
+    <Position X="38.25" Y="12.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAABAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput4&lt;T, R1, R2, R3, R4, TResult&gt;" Collapsed="true">
+    <Position X="41.75" Y="12.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAACAAAAAIAAAAAAAAACAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput4&lt;T1, T2, R1, R2, R3, R4, TResult&gt;" Collapsed="true">
+    <Position X="45.25" Y="12.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAABAAAAAAAEAAEAAAAAAABAAAAAAAEAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput4&lt;T1, T2, T3, R1, R2, R3, R4, TResult&gt;" Collapsed="true">
+    <Position X="49" Y="12.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAABAEAAAAAEAAIAAAAAAACAAAAAAAIAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput5&lt;R1, R2, R3, R4, R5, TResult&gt;" Collapsed="true">
+    <Position X="40.25" Y="10" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAABAAAAAEQAAAAAAAABAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput5&lt;T, R1, R2, R3, R4, R5, TResult&gt;" Collapsed="true">
+    <Position X="43.75" Y="10" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAACAAAAAIIAAAAAAAACAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput5&lt;T1, T2, R1, R2, R3, R4, R5, TResult&gt;" Collapsed="true">
+    <Position X="47.5" Y="10" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAABAAAAAAAEAAEAAAAAAEBAAAAAAAEAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput6&lt;R1, R2, R3, R4, R5, R6, TResult&gt;" Collapsed="true">
+    <Position X="42.25" Y="7.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAABAAAAAEQAAAAAAAEBAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput6&lt;T, R1, R2, R3, R4, R5, R6, TResult&gt;" Collapsed="true">
+    <Position X="46" Y="7.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAACAAAAAIIAAAAAgAACAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.FuncWithOutput7&lt;R1, R2, R3, R4, R5, R6, R7, TResult&gt;" Collapsed="true">
+    <Position X="43.75" Y="5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAEABAAAAAEQAAAAAAAEBAAA=</HashCode>
+      <FileName>Helpers\FuncWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput&lt;R&gt;" Collapsed="true">
+    <Position X="9.25" Y="20" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput&lt;T, R&gt;" Collapsed="true">
+    <Position X="11.5" Y="20" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput&lt;T1, T2, R&gt;" Collapsed="true">
+    <Position X="13.75" Y="20" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAEAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput&lt;T1, T2, T3, R&gt;" Collapsed="true">
+    <Position X="16.25" Y="20" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput&lt;T1, T2, T3, T4, R&gt;" Collapsed="true">
+    <Position X="19" Y="20" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput&lt;T1, T2, T3, T4, T5, R&gt;" Collapsed="true">
+    <Position X="22" Y="20" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAEBA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput&lt;T1, T2, T3, T4, T5, T6, R&gt;" Collapsed="true">
+    <Position X="25.25" Y="20" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAEBA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput2&lt;R1, R2&gt;" Collapsed="true">
+    <Position X="14.25" Y="17.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput2&lt;T, R1, R2&gt;" Collapsed="true">
+    <Position X="16.75" Y="17.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAACAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput2&lt;T1, T2, R1, R2&gt;" Collapsed="true">
+    <Position X="19.5" Y="17.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAEAAEAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput2&lt;T1, T2, T3, R1, R2&gt;" Collapsed="true">
+    <Position X="22.5" Y="17.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAIAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput2&lt;T1, T2, T3, T4, R1, R2&gt;" Collapsed="true">
+    <Position X="25.75" Y="17.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAQAABAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput2&lt;T1, T2, T3, T4, T5, R1, R2&gt;" Collapsed="true">
+    <Position X="29.25" Y="17.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAgAABAAAAIAAAAAAAAEAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput3&lt;R1, R2, R3&gt;" Collapsed="true">
+    <Position X="19.75" Y="15" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput3&lt;T, R1, R2, R3&gt;" Collapsed="true">
+    <Position X="22.5" Y="15" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAACAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput3&lt;T1, T2, R1, R2, R3&gt;" Collapsed="true">
+    <Position X="25.5" Y="15" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAABAAAAAAAEAAEAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput3&lt;T1, T2, T3, R1, R2, R3&gt;" Collapsed="true">
+    <Position X="28.75" Y="15" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAABAEAAAAAEAAIAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput3&lt;T1, T2, T3, T4, R1, R2, R3&gt;" Collapsed="true">
+    <Position X="32.25" Y="15" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAABAEAAAAAEAAQAABAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput4&lt;R1, R2, R3, R4&gt;" Collapsed="true">
+    <Position X="25" Y="12.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAABAAAAAAAEAAEAAAAAAABAAAAAAAEAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput4&lt;T, R1, R2, R3, R4&gt;" Collapsed="true">
+    <Position X="28" Y="12.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAACAAAAAIAAAAAAAAACAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput4&lt;T1, T2, R1, R2, R3, R4&gt;" Collapsed="true">
+    <Position X="31" Y="12.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAABAEAAAAAEAAIAAAAAAACAAAAAAAIAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput4&lt;T1, T2, T3, R1, R2, R3, R4&gt;" Collapsed="true">
+    <Position X="34.5" Y="12.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAABAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput5&lt;R1, R2, R3, R4, R5&gt;" Collapsed="true">
+    <Position X="30" Y="10" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAABAAAAAEQAAAAAAAABAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput5&lt;T, R1, R2, R3, R4, R5&gt;" Collapsed="true">
+    <Position X="33.25" Y="10" Width="3" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAACAAAAAIIAAAAAAAACAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput5&lt;T1, T2, R1, R2, R3, R4, R5&gt;" Collapsed="true">
+    <Position X="36.5" Y="10" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAABAAAAAAAEAAEAAAAAAEBAAAAAAAEAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput6&lt;R1, R2, R3, R4, R5, R6&gt;" Collapsed="true">
+    <Position X="35.25" Y="7.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAABAAAAAEQAAAAAAAEBAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput6&lt;T, R1, R2, R3, R4, R5, R6&gt;" Collapsed="true">
+    <Position X="38.75" Y="7.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAACAAAAAIIAAAAAgAACAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FsInfoCat.Test.Helpers.ActionWithOutput7&lt;R1, R2, R3, R4, R5, R6, R7&gt;" Collapsed="true">
+    <Position X="40" Y="5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAEABAAAAAEQAAAAAAAEBAAA=</HashCode>
+      <FileName>Helpers\ActionWithOutput.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
