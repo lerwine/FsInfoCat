@@ -1,3 +1,5 @@
+Set-Variable -Name 'IsWindows' -Option Constant -Scope 'Script' -Value ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT');
+
 Function Get-ExceptionObject {
     [CmdletBinding()]
     [OutputType([System.Exception])]
@@ -157,7 +159,7 @@ Write-Verbose -Message "Performing $(if ($PSVersionTable.PSEdition -eq 'Desktop'
     $OldErrorAction = $ErrorActionPreference;
     $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop;
     try {
-        if ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT') {
+        if ($Script:IsWindows) {
             Set-Variable -Name 'Category' -Value ([System.Management.Automation.ErrorCategory]::ResourceUnavailable) -Scope 0;
             Set-Variable -Name 'TargetObject' -Value 'Microsoft.PowerShell.Management' -Scope 0;
             Set-Variable -Name 'ErrorId' -Value 'RequiredModuleLoadError' -Scope 0;
@@ -411,7 +413,7 @@ Function Get-FsLogicalVolume {
     $OldErrorAction = $ErrorActionPreference;
     $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop;
     try {
-        if ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT') {
+        if ($Script:IsWindows) {
             Set-Variable -Name 'TargetObject' -Value 'CIM_LogicalDisk' -Scope 0;
             Set-Variable -Name 'ErrorId' -Value 'NewCimInstanceFail' -Scope 0;
             Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ReadError) -Scope 0;
@@ -754,7 +756,7 @@ Function Get-FsVolumeInfo {
     } else {
         Get-FsLogicalVolume | ConvertTo-FsVolumeInfo;
     }
-    if ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT') {
+    if ($Script:IsWindows) {
         $LogicalDiskAndRoot = @($LogicalDiskCollection | ForEach-Object {
             $Directory = $_ | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory';
             if ($null -ne $Directory -and -not [string]::IsNullOrWhiteSpace($Directory.Name)) {
@@ -905,31 +907,5 @@ Function Get-FsVolumeInfo {
                 ($BlockDevices | ConvertTo-FsVolumeInfo) | Write-Output;
             }
         }
-        <#
-        ((Get-PSDrive -PSProvider FileSystem) | Select-Object -Property 'Name', 'Root', 'VolumeSeparatedByColon', 'Description') | Out-GridView;
-        ([System.IO.DriveInfo]::GetDrives() | Where-Object { $_.DriveType -ne [System.IO.DriveType]::Ram } | Select-Object -Property 'DriveFormat', 'DriveType', 'Name', 'RootDirectory', 'VolumeLabel') | Out-GridView -Title 'DriveInfo'
-        ((lsblk -a -b -f -I 8 -J -l -o NAME,LABEL,MOUNTPOINT,FSTYPE,UUID,TYPE,PARTLABEL) | Out-String | ConvertFrom-Json).blockDevices | Out-GridView -Title 'lsblk'
-{
-   "blockdevices": [
-      {"name": "loop0", "label": null, "mountpoint": "/snap/code/55", "size": "157016064", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop1", "label": null, "mountpoint": "/snap/core/10583", "size": "102637568", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop2", "label": null, "mountpoint": "/snap/code/52", "size": "150798336", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop3", "label": null, "mountpoint": "/snap/core/10823", "size": "103129088", "fstype": "squashfs", "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop4", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop5", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop6", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
-      {"name": "loop7", "label": null, "mountpoint": null, "size": null, "fstype": null, "uuid": null, "serial": null, "type": "loop"},
-      {"name": "sda", "label": null, "mountpoint": null, "size": "32213303296", "fstype": null, "uuid": null, "serial": "60022480723f03e4f52d65852314f69b", "type": "disk"},
-      {"name": "sda1", "label": "cloudimg-rootfs", "mountpoint": "/", "size": "32096894464", "fstype": "ext4", "uuid": "3756934c-31d3-413c-8df9-5b7c7b1a4451", "serial": null, "type": "part"},
-      {"name": "sda14", "label": null, "mountpoint": null, "size": "4194304", "fstype": null, "uuid": null, "serial": null, "type": "part"},
-      {"name": "sda15", "label": "UEFI", "mountpoint": "/boot/efi", "size": "111149056", "fstype": "vfat", "uuid": "B38E-A2BF", "serial": null, "type": "part"},
-      {"name": "sdb", "label": null, "mountpoint": null, "size": "8589934592", "fstype": null, "uuid": null, "serial": "60022480bf8b95f23da9e9c454906355", "type": "disk"},
-      {"name": "sdb1", "label": null, "mountpoint": "/mnt", "size": "8587837440", "fstype": "ext4", "uuid": "3028dce3-2601-4cde-9774-f955c8bd0fc7", "serial": null, "type": "part"}
-   ]
-}
-   ]
-}
-
-        #>
     }
 }

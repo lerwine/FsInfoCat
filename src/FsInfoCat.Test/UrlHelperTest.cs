@@ -15,7 +15,6 @@ namespace FsInfoCat.Test
         {
         }
 
-
         public static IEnumerable<TestCaseData> GetAuthorityCaseInsensitiveEqualsTestCases()
         {
             yield return new TestCaseData(new Uri("", UriKind.Relative), new Uri("", UriKind.Relative))
@@ -58,7 +57,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 1)]
-        [TestCaseSource("GetAuthorityCaseInsensitiveEqualsTestCases")]
+        [TestCaseSource(nameof(GetAuthorityCaseInsensitiveEqualsTestCases))]
         public bool AuthorityCaseInsensitiveEqualsTest(Uri x, Uri y) => x.AuthorityCaseInsensitiveEquals(y);
 
         public static IEnumerable<TestCaseData> GetAsRelativeUriStringTestCases()
@@ -75,7 +74,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 1)]
-        [TestCaseSource("GetAsRelativeUriStringTestCases")]
+        [TestCaseSource(nameof(GetAsRelativeUriStringTestCases))]
         public string AsRelativeUriStringTest(string text) => text.AsRelativeUriString();
 
         public static IEnumerable<TestCaseData> GetAsUserNameComponentEncodedTestCases()
@@ -176,7 +175,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 1)]
-        [TestCaseSource("GetAsUserNameComponentEncodedTestCases")]
+        [TestCaseSource(nameof(GetAsUserNameComponentEncodedTestCases))]
         public string AsUserNameComponentEncodedTest(string text) => text.AsUserNameComponentEncoded();
 
         public static IEnumerable<TestCaseData> GetAsPasswordComponentEncodedTestCases()
@@ -274,7 +273,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 1)]
-        [TestCaseSource("GetAsPasswordComponentEncodedTestCases")]
+        [TestCaseSource(nameof(GetAsPasswordComponentEncodedTestCases))]
         public string AsPasswordComponentEncodedTest(string text) => text.AsPasswordComponentEncoded();
 
         public static IEnumerable<TestCaseData> GetGetUserNameAndPasswordTestTestCases()
@@ -300,7 +299,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 2)]
-        [TestCaseSource("GetGetUserNameAndPasswordTestTestCases")]
+        [TestCaseSource(nameof(GetGetUserNameAndPasswordTestTestCases))]
         public Tuple<string, string> GetUserNameAndPasswordTest(Uri uri)
         {
             string userName = uri.GetUserNameAndPassword(out string password);
@@ -342,7 +341,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 2)]
-        [TestCaseSource("GetTrySetUserInfoComponentTestTestCases")]
+        [TestCaseSource(nameof(GetTrySetUserInfoComponentTestTestCases))]
         public Tuple<bool, Uri> TrySetUserInfoComponentTest(Uri uri, string userName, string password)
         {
             bool result = uri.TrySetUserInfoComponent(userName, password, out uri);
@@ -375,7 +374,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 2)]
-        [TestCaseSource("GetTrySetHostComponentTestTestCases")]
+        [TestCaseSource(nameof(GetTrySetHostComponentTestTestCases))]
         public Tuple<bool, Uri> TrySetHostComponentTest(Uri uri, string hostName, int? port)
         {
             bool result = uri.TrySetHostComponent(hostName, port, out uri);
@@ -409,7 +408,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetAsNormalizedTestCases")]
+        [TestCaseSource(nameof(GetAsNormalizedTestCases))]
         public Uri AsNormalizedTest(Uri uri) => uri.AsNormalized();
 
         public class ValueAndDescription<T>

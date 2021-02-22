@@ -13,14 +13,14 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 1), NUnit.Framework.Category("Working")]
-        [TestCaseSource("GetGuidToIdentifierStringTestCases")]
+        [TestCaseSource(nameof(GetGuidToIdentifierStringTestCases))]
         public string GuidToIdentifierStringTest(Guid guid)
         {
             return VolumeIdentifier.ToIdentifierString(guid);
         }
 
         [Test, Property("Priority", 1), NUnit.Framework.Category("Working")]
-        [TestCaseSource("GetSerialNumberToIdentifierStringTestCases")]
+        [TestCaseSource(nameof(GetSerialNumberToIdentifierStringTestCases))]
         public string SerialNumberToIdentifierStringTest(uint serialNumber, byte? ordinal)
         {
             if (ordinal.HasValue)
@@ -29,14 +29,14 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 2)]
-        [TestCaseSource("GetGuidToUrnTestCases")]
+        [TestCaseSource(nameof(GetGuidToUrnTestCases))]
         public string GuidToUrnTest(Guid guid)
         {
             return VolumeIdentifier.ToUrn(guid);
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetSerialNumberToUrnTestCases")]
+        [TestCaseSource(nameof(GetSerialNumberToUrnTestCases))]
         public string SerialNumberToUrnTest(uint serialNumber, byte? ordinal)
         {
             if (ordinal.HasValue)
@@ -45,7 +45,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetGuidParameterTestCases")]
+        [TestCaseSource(nameof(GetGuidParameterTestCases))]
         public IdValues FromGuidValueConstructorTest(Guid guid)
         {
             VolumeIdentifier target = new VolumeIdentifier(guid);
@@ -63,7 +63,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetValidUUIDUriParameterTestCases")]
+        [TestCaseSource(nameof(GetValidUUIDUriParameterTestCases))]
         public UuidValues FromValidUUIDUriConstructorTest(string uri)
         {
             VolumeIdentifier target = new VolumeIdentifier(uri);
@@ -77,7 +77,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetSerialNumberParameterTestCases")]
+        [TestCaseSource(nameof(GetSerialNumberParameterTestCases))]
         public IdValues FromSerialNumberValueConstructorTest(uint serialNumber)
         {
             VolumeIdentifier target = new VolumeIdentifier(serialNumber);
@@ -95,7 +95,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetSerialNumberAndOrdinalParametersTestCases")]
+        [TestCaseSource(nameof(GetSerialNumberAndOrdinalParametersTestCases))]
         public SnIdValues FromSerialNumberAndOrdinalValuesConstructorTest(uint serialNumber, byte ordinal)
         {
             VolumeIdentifier target = new VolumeIdentifier(serialNumber, ordinal);
@@ -110,7 +110,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetValidSerialNumberUriParameterTestCases")]
+        [TestCaseSource(nameof(GetValidSerialNumberUriParameterTestCases))]
         public SnIdValues FromValidSerialNumberAndOrdinalUriConstructorTest(string uri)
         {
             VolumeIdentifier target = new VolumeIdentifier(uri);
@@ -125,7 +125,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetValidFilePathParameterTestCases")]
+        [TestCaseSource(nameof(GetValidFilePathParameterTestCases))]
         public IdValues FromValidFilePathConstructorTest(string path)
         {
             VolumeIdentifier target = new VolumeIdentifier(path);
@@ -142,7 +142,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetValidFileUrlParameterTestCases")]
+        [TestCaseSource(nameof(GetValidFileUrlParameterTestCases))]
         public IdValues FromValidFileUrlConstructorTest(string uri)
         {
             VolumeIdentifier target = new VolumeIdentifier(uri);

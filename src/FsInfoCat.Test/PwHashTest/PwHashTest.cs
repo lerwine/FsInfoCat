@@ -327,7 +327,7 @@ namespace Tests
             Assert.AreEqual(PwHash.HASH_BYTES_LENGTH + PwHash.SALT_BYTES_LENGTH, PwHash.TOTAL_BYTES_LENGTH, "Total byte length test failed");
         }
 
-        [TestCaseSource("GetConstructor8TestCases")]
+        [TestCaseSource(nameof(GetConstructor8TestCases))]
         [Property("Priority", 2)]
         public void Constructor8Test(ulong hashBits000_03f, ulong hashBits040_07f, ulong hashBits080_0bf, ulong hashBits0c0_0ff, ulong hashBits100_13f,
             ulong hashBits140_17f,ulong hashBits180_1bf, ulong hashBits1c0_1ff, ulong saltBits, HashResult expectedResult)
@@ -357,7 +357,7 @@ namespace Tests
             Assert.AreEqual(expectedResult.ExpectedToString, target.ToString());
         }
 
-        [TestCaseSource("GetConstructor4TestCases")]
+        [TestCaseSource(nameof(GetConstructor4TestCases))]
         [Property("Priority", 2)]
         public void Constructor4Test(IEnumerable<byte> sha512HashBytes, int hashStartIndex, IEnumerable<byte> saltBytes, int saltStartIndex, HashResult expectedResult)
         {
@@ -385,7 +385,7 @@ namespace Tests
             Assert.AreEqual(expectedResult.ExpectedToString, target.ToString());
         }
 
-        [TestCaseSource("GetConstructor2TestCases")]
+        [TestCaseSource(nameof(GetConstructor2TestCases))]
         [Property("Priority", 2)]
         public void Constructor2Test(IEnumerable<byte> hashAndSaltBytes, int startIndex, HashResult expectedResult)
         {
@@ -413,7 +413,7 @@ namespace Tests
             Assert.AreEqual(expectedResult.ExpectedToString, target.ToString());
         }
 
-        [TestCaseSource("GetImportTestCases")]
+        [TestCaseSource(nameof(GetImportTestCases))]
         [Property("Priority", 3)]
         public void ImportTest(string base64EncodedHash, HashResult expectedResult)
         {
@@ -447,7 +447,7 @@ namespace Tests
             }
         }
 
-        [TestCaseSource("GetCreate1TestCases")]
+        [TestCaseSource(nameof(GetCreate1TestCases))]
         [Property("Priority", 3)]
         public void Create1Test(string rawPW, bool nullExpected)
         {
@@ -455,7 +455,7 @@ namespace Tests
             Assert.AreNotEqual(nullExpected, target.HasValue);
         }
 
-        [TestCaseSource("GetCreate2TestCases")]
+        [TestCaseSource(nameof(GetCreate2TestCases))]
         [Property("Priority", 3)]
         public void Create2Test(string rawPW, ulong saltBits, HashResult expectedResult)
         {
@@ -489,7 +489,7 @@ namespace Tests
             }
         }
 
-        [TestCaseSource("GetTest2TestCases")]
+        [TestCaseSource(nameof(GetTest2TestCases))]
         [Property("Priority", 3)]
         public void Test2Test(PwHash? hash, string rawPw, bool expectedResult)
         {
@@ -497,7 +497,7 @@ namespace Tests
             Assert.AreEqual(expectedResult, actual);
         }
 
-        [TestCaseSource("GetTest1TestCases")]
+        [TestCaseSource(nameof(GetTest1TestCases))]
         [Property("Priority", 3)]
         public void Test1Test(PwHash a, string rawPw, bool expectedResult)
         {
@@ -505,7 +505,7 @@ namespace Tests
             Assert.AreEqual(expectedResult, actual);
         }
 
-        [TestCaseSource("GetToStringTestCases")]
+        [TestCaseSource(nameof(GetToStringTestCases))]
         [Property("Priority", 3)]
         public void ToStringTest(PwHash hash, string expectedResult)
         {
@@ -514,7 +514,7 @@ namespace Tests
             Assert.AreEqual(expectedResult, actual);
         }
 
-        [TestCaseSource("GetEqualsPwHashTestCases")]
+        [TestCaseSource(nameof(GetEqualsPwHashTestCases))]
         [Property("Priority", 3)]
         public void EqualsPwHashTest(PwHash target, PwHash other, bool expectedResult)
         {
@@ -522,7 +522,7 @@ namespace Tests
             Assert.AreEqual(expectedResult, actual);
         }
 
-        [TestCaseSource("GetEqualsStringTestCases")]
+        [TestCaseSource(nameof(GetEqualsStringTestCases))]
         [Property("Priority", 3)]
         public void EqualsStringTest(PwHash target, string other, bool expectedResult)
         {
@@ -530,7 +530,7 @@ namespace Tests
             Assert.AreEqual(expectedResult, actual);
         }
 
-        [TestCaseSource("GetEqualsObjectTestCases")]
+        [TestCaseSource(nameof(GetEqualsObjectTestCases))]
         [Property("Priority", 3)]
         public void EqualsObjectTest(PwHash target, object obj, bool expectedResult)
         {

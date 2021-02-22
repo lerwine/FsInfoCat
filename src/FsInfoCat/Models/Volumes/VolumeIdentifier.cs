@@ -51,7 +51,7 @@ namespace FsInfoCat.Models.Volumes
         public VolumeIdentifier(uint serialNumber)
         {
             _serialNumber = serialNumber;
-            _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{(serialNumber >> 16).ToString("x4").ToLower()}-{(serialNumber & 0xffff).ToString("x4").ToLower()}", UriKind.Absolute);
+            _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{(serialNumber >> 16).ToString("x4").ToLower()}-{(serialNumber & 0xffff).ToString("x4").ToLower()}", UriKind.Absolute);
             _ordinal = null;
             _uuid = null;
             _validation = ValidationCode.ValidationSucceeded;
@@ -62,7 +62,7 @@ namespace FsInfoCat.Models.Volumes
         {
             _serialNumber = serialNumber;
             _ordinal = ordinal;
-            _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{serialNumber.ToString("x8").ToLower()}-{ordinal.ToString("x2").ToLower()}", UriKind.Absolute);
+            _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{serialNumber.ToString("x8").ToLower()}-{ordinal.ToString("x2").ToLower()}", UriKind.Absolute);
             _uuid = null;
             _validation = ValidationCode.ValidationSucceeded;
             _query = _fragment = null;
@@ -71,7 +71,7 @@ namespace FsInfoCat.Models.Volumes
         public VolumeIdentifier(Guid uuid)
         {
             _uuid = uuid;
-            _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_UUID}:{uuid.ToString("d").ToLower()}", UriKind.Absolute);
+            _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_UUID}:{uuid.ToString("d").ToLower()}", UriKind.Absolute);
             _serialNumber = null;
             _ordinal = null;
             _validation = ValidationCode.ValidationSucceeded;
@@ -112,16 +112,16 @@ namespace FsInfoCat.Models.Volumes
             if (null != _query)
                 uri.TrySetQueryComponent(null, out uri);
 
-            if (uri.Scheme.Equals(UrlHelper.URI_SCHEME_URN))
+            if (uri.Scheme.Equals(UriHelper.URI_SCHEME_URN))
             {
                 string[] segments = Uri.UnescapeDataString(uri.AbsolutePath).Split(':', 3);
                 switch (segments[0].ToLower())
                 {
-                    case UrlHelper.URN_NAMESPACE_UUID:
+                    case UriHelper.URN_NAMESPACE_UUID:
                         if (segments.Length == 2 && Guid.TryParse(segments[1], out Guid uuid))
                         {
                             _uuid = uuid;
-                            _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_UUID}:{uuid.ToString("d").ToLower()}", UriKind.Absolute);
+                            _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_UUID}:{uuid.ToString("d").ToLower()}", UriKind.Absolute);
                             _serialNumber = null;
                             _ordinal = null;
                             _validation = ValidationCode.ValidationSucceeded;
@@ -129,8 +129,8 @@ namespace FsInfoCat.Models.Volumes
                         }
                         _validation = ValidationCode.InvalidUUID;
                         break;
-                    case UrlHelper.URN_NAMESPACE_VOLUME:
-                        if (segments.Length == 3 && string.Equals(segments[1], UrlHelper.URN_NAMESPACE_ID, StringComparison.InvariantCultureIgnoreCase))
+                    case UriHelper.URN_NAMESPACE_VOLUME:
+                        if (segments.Length == 3 && string.Equals(segments[1], UriHelper.URN_NAMESPACE_ID, StringComparison.InvariantCultureIgnoreCase))
                         {
                             segments = segments[2].Split('-');
                             if (uint.TryParse(segments[0], NumberStyles.HexNumber, null, out uint vsn))
@@ -139,7 +139,7 @@ namespace FsInfoCat.Models.Volumes
                                 {
                                     case 1:
                                         _serialNumber = vsn;
-                                        _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{(vsn << 16).ToString("x4").ToLower()}-{(vsn & 0xffff).ToString("x4").ToLower()}", UriKind.Absolute);
+                                        _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{(vsn << 16).ToString("x4").ToLower()}-{(vsn & 0xffff).ToString("x4").ToLower()}", UriKind.Absolute);
                                         _ordinal = null;
                                         _uuid = null;
                                         _validation = ValidationCode.ValidationSucceeded;
@@ -153,7 +153,7 @@ namespace FsInfoCat.Models.Volumes
                                                 {
                                                     _serialNumber = ord | (vsn << 16);
                                                     _ordinal = null;
-                                                    _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x4").ToLower()}-{ord.ToString("x4").ToLower()}", UriKind.Absolute);
+                                                    _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{vsn.ToString("x4").ToLower()}-{ord.ToString("x4").ToLower()}", UriKind.Absolute);
                                                     _uuid = null;
                                                     _validation = ValidationCode.ValidationSucceeded;
                                                     return;
@@ -162,7 +162,7 @@ namespace FsInfoCat.Models.Volumes
                                                 {
                                                     _serialNumber = vsn;
                                                     _ordinal = (byte)ord;
-                                                    _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x8").ToLower()}-{ord.ToString("x2").ToLower()}", UriKind.Absolute);
+                                                    _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{vsn.ToString("x8").ToLower()}-{ord.ToString("x2").ToLower()}", UriKind.Absolute);
                                                     _uuid = null;
                                                     _validation = ValidationCode.ValidationSucceeded;
                                                     return;
@@ -174,7 +174,7 @@ namespace FsInfoCat.Models.Volumes
                                                 {
                                                     _serialNumber = vsn;
                                                     _ordinal = (byte)ord;
-                                                    _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x8").ToLower()}-{ord.ToString("x2").ToLower()}", UriKind.Absolute);
+                                                    _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{vsn.ToString("x8").ToLower()}-{ord.ToString("x2").ToLower()}", UriKind.Absolute);
                                                     _uuid = null;
                                                     _validation = ValidationCode.ValidationSucceeded;
                                                     return;
@@ -183,7 +183,7 @@ namespace FsInfoCat.Models.Volumes
                                                 {
                                                     _serialNumber = ord | (vsn << 16);
                                                     _ordinal = null;
-                                                    _location = new Uri($"{UrlHelper.URI_SCHEME_URN}:{UrlHelper.URN_NAMESPACE_VOLUME}:{UrlHelper.URN_NAMESPACE_ID}:{vsn.ToString("x4").ToLower()}-{ord.ToString("x4").ToLower()}", UriKind.Absolute);
+                                                    _location = new Uri($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{vsn.ToString("x4").ToLower()}-{ord.ToString("x4").ToLower()}", UriKind.Absolute);
                                                     _uuid = null;
                                                     _validation = ValidationCode.ValidationSucceeded;
                                                     return;
@@ -317,7 +317,7 @@ namespace FsInfoCat.Models.Volumes
             }
             else if (obj is ushort us)
                 volumeIdentifer = new VolumeIdentifier((uint)us);
-            else if (!(obj is Uri uri && uri.IsAbsoluteUri && (uri.Scheme == Uri.UriSchemeFile || uri.Scheme == UrlHelper.URI_SCHEME_URN) &&
+            else if (!(obj is Uri uri && uri.IsAbsoluteUri && (uri.Scheme == Uri.UriSchemeFile || uri.Scheme == UriHelper.URI_SCHEME_URN) &&
                 (volumeIdentifer = new VolumeIdentifier(uri.AbsoluteUri)).IsValid()))
             {
                 volumeIdentifer = VolumeIdentifier.Empty;

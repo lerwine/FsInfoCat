@@ -1,50 +1,54 @@
 using System;
 using System.ComponentModel;
+using static FsInfoCat.Util.ExtensionMethods;
 
 namespace FsInfoCat.Models.Crawl
 {
     public enum MessageId
     {
-        [Description("No path was provied")]
+        [Description(MESSAGE_NO_PATH_PROVIDED)]
         NoPathProvided,
 
-        [Description("Error getting machine identifier.")]
+        [Description(MESSAGE_ERROR_GETTING_MACHINE_IDENTIFIER)]
         ErrorGettingMachineIdentifier,
 
-        [Description("Path is invalid.")]
+        [Description(MESSAGE_INVALID_PATH)]
         InvalidPath,
 
-        [Description("Path not found.")]
+        [Description(MESSAGE_INVALID_ABSOLUTE_FILE_URI)]
+        InvalidAbsoluteFileUri,
+
+        [Description(MESSAGE_PATH_NOT_FOUND)]
         PathNotFound,
 
-        [Description("Unable to obtain name or length.")]
+        [Description(MESSAGE_FILESYSTEM_INFO_PROPERTY_ACCESS_ERROR)]
         FileSystemInfoPropertyAccessError,
 
-        [Description("Unable to obtain creation time.")]
+        [Description(MESSAGE_CREATION_TIME_ACCESS_ERROR)]
         CreationTimeAccessError,
 
-        [Description("Unable to obtain last write time.")]
+        [Description(MESSAGE_LAST_WRITE_TIME_ACCESS_ERROR)]
         LastWriteTimeAccessError,
 
-        [Description("Unable to obtain file system attributes.")]
+        [Description(MESSAGE_ATTRIBUTES_ACCESS_ERROR)]
         AttributesAccessError,
 
-        [Description("Unable to enmerate files.")]
+        [Description(MESSAGE_DIRECTORY_FILES_ACCESS_ERROR)]
         DirectoryFilesAccessError,
 
-        [Description("Unable to enmerate subdirectories.")]
+        [Description(MESSAGE_SUBDIRECTORIES_ACCESS_ERROR)]
         SubdirectoriesAccessError,
 
-        [Description("Crawl operation stopped.")]
+        [Description(MESSAGE_CRAWL_OPERATION_STOPPED)]
         CrawlOperationStopped,
 
-        [Description("Maximum crawl depth has been reached.")]
+        [Description(MESSAGE_MAX_DEPTH_REACHED)]
         MaxDepthReached,
 
-        [Description("Maximum crawl item count has been reached.")]
+        [Description(MESSAGE_MAX_ITEMS_REACHED)]
         MaxItemsReached,
 
-        [Description("An unexpected error has occurred.")]
+        [Description(MESSAGE_UNEXPECTED_ERROR)]
         UnexpectedError
     }
 }

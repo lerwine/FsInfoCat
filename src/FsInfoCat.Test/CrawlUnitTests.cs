@@ -172,7 +172,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 2)]
-        [TestCaseSource("GetFsHostAddTestCases")]
+        [TestCaseSource(nameof(GetFsHostAddTestCases))]
         public int FsHostAddTest(IList<Tuple<FsRoot, bool>> addList)
         {
             FsHost target = new FsHost();
@@ -199,7 +199,7 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 3)]
-        [TestCaseSource("GetFsHostRemoveTestCases")]
+        [TestCaseSource(nameof(GetFsHostRemoveTestCases))]
         public int FsHostRemoveTest(IList<FsRoot> addList, IList<Tuple<FsRoot, int>> removeList)
         {
             FsHost target = new FsHost();

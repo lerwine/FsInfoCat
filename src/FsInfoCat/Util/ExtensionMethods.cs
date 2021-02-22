@@ -1,0 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+
+namespace FsInfoCat.Util
+{
+    public static class ExtensionMethods
+    {
+        public const string MESSAGE_NO_PATH_PROVIDED = "No path was provied";
+        public const string MESSAGE_ERROR_GETTING_MACHINE_IDENTIFIER = "Error getting machine identifier.";
+        public const string MESSAGE_INVALID_PATH = "Path is invalid.";
+        public const string MESSAGE_INVALID_ABSOLUTE_FILE_URI = "Invalid URI or not an absolute file URI.";
+        public const string MESSAGE_PATH_NOT_FOUND = "Path not found.";
+        public const string MESSAGE_FILESYSTEM_INFO_PROPERTY_ACCESS_ERROR = "Unable to obtain name or length.";
+        public const string MESSAGE_CREATION_TIME_ACCESS_ERROR = "Unable to obtain creation time.";
+        public const string MESSAGE_LAST_WRITE_TIME_ACCESS_ERROR = "Unable to obtain last write time.";
+        public const string MESSAGE_ATTRIBUTES_ACCESS_ERROR = "Unable to obtain file system attributes.";
+        public const string MESSAGE_DIRECTORY_FILES_ACCESS_ERROR = "Unable to enmerate files.";
+        public const string MESSAGE_SUBDIRECTORIES_ACCESS_ERROR = "Unable to enmerate subdirectories.";
+        public const string MESSAGE_CRAWL_OPERATION_STOPPED = "Crawl operation stopped.";
+        public const string MESSAGE_MAX_DEPTH_REACHED = "Maximum crawl depth has been reached.";
+        public const string MESSAGE_MAX_ITEMS_REACHED = "Maximum crawl item count has been reached.";
+        public const string MESSAGE_UNEXPECTED_ERROR = "An unexpected error has occurred.";
+
+        public static bool IsEqualTo(this string s, char c) => null != s && s.Length == 1 && s[0] == c;
+
+        public static bool EndsWith(this string s, char c) => !string.IsNullOrEmpty(s) && s[s.Length - 1] == c;
+
+        public static string[] Split(this string s, char c) => (s is null) ? new string[0] : s.Split(new char[] { c });
+
+        public static string[] Split(this string s, char c, int count) => (s is null) ? new string[0] : s.Split(new char[] { c }, count);
+
+        public static bool TryDequeue<T>(this Queue<T> source, out T result)
+        {
+            if (source is null || source.Count == 0)
+            {
+                result = default(T);
+                return false;
+            }
+            try
+            {
+                result = source.Dequeue();
+            }
+            catch (InvalidOperationException)
+            {
+                result = default(T);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryGetDescription(this MemberInfo memberInfo, out string description)
+        {
+            description = null;
+
+            foreach (string d in memberInfo.GetCustomAttributes<DescriptionAttribute>().Select(a => a.Description).Where(a => null != a))
+            {
+                if ((description = d).Any(c => !Char.IsWhiteSpace(c)))
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool TryGetDescription<T>(this T value, out string description, out string name)
+            where T : struct, Enum
+        {
+            Type t = value.GetType();
+            name = value.ToString("F");
+            return t.GetField(name).TryGetDescription(out description);
+        }
+
+        public static bool TryGetDescription<T>(this T value, out string description) where T : struct, Enum => value.GetType().GetField(value.ToString("F")).TryGetDescription(out description);
+
+        public static string GetDescription(this MemberInfo memberInfo) => (memberInfo is null) ? null : memberInfo.GetCustomAttributes<DescriptionAttribute>()
+            .Select(a => a.Description).Where(d => !String.IsNullOrWhiteSpace(d)).FirstOrDefault();
+
+        public static string GetDescription<T>(this T value, Func<string, string> getDefaultDescription = null)
+            where T : struct, Enum
+        {
+            if (value.TryGetDescription(out string description, out string name))
+                return description;
+            return (getDefaultDescription is null) ? $"ID: {name}" : getDefaultDescription(name);
+        }
+
+        public static string GetDescription<T>(this T value, out string name) where T : struct, Enum => (value.TryGetDescription(out string description, out name)) ? description : $"ID: {name}";
+
+        public static string GetDescription<T>(this T value, Func<string, string> getDefaultDescription, out string name)
+            where T : struct, Enum
+        {
+            if (value.TryGetDescription(out string description, out name))
+                return description;
+            return (getDefaultDescription is null) ? $"ID: {name}" : getDefaultDescription(name);
+        }
+
+        public static string GetDescription<T>(this T value, Func<T, string> getDefaultDescription)
+            where T : struct, Enum
+        {
+            if (value.TryGetDescription(out string description, out string name))
+                return description;
+            return (getDefaultDescription is null) ? $"ID: {name}" : getDefaultDescription(value);
+        }
+
+        public static string GetDescription<T>(this T value, Func<T, string> getDefaultDescription, out string name)
+            where T : struct, Enum
+        {
+            if (value.TryGetDescription(out string description, out name))
+                return description;
+            return (getDefaultDescription is null) ? $"ID: {name}" : getDefaultDescription(value);
+        }
+    }
+}

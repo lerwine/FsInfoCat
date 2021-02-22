@@ -198,7 +198,7 @@ namespace Tests
             Assert.AreNotEqual(0, attributes.Length);
         }
 
-        [TestCaseSource("GetNormalizeTestCases")]
+        [TestCaseSource(nameof(GetNormalizeTestCases))]
         [Property("Priority", 1)]
         public void NormalizeTest(Account target, Account expected)
         {
@@ -216,7 +216,7 @@ namespace Tests
             Assert.AreEqual(expected.ModifiedBy, target.ModifiedBy);
         }
 
-        [TestCaseSource("GetValidateAllTestCases")]
+        [TestCaseSource(nameof(GetValidateAllTestCases))]
         [Property("Priority", 2)]
         public void ValidateAllTest(Account target, IList<ValidationResult> expected)
         {
