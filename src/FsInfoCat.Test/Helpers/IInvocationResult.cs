@@ -4,78 +4,93 @@ using System.Text;
 
 namespace FsInfoCat.Test.Helpers
 {
-    public interface IInvocationResult : IInvocationInput
+    /// <summary>
+    /// Represents the results of an <seealso cref="Action"/> invocation.
+    /// </summary>
+    public interface IInvocationResult : IDelegateTestData
     {
+        /// <summary>
+        /// This gets set to true if the associated delegate was invoked.
+        /// </summary>
         bool WasInvoked { get; }
     }
 
-    public interface IInvocationResult<T> : IInvocationResult, IInvocationInput<T> { }
+    /// <summary>
+    /// Data object containaing at least 1 output value.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the output value or output parameter result.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="ActionWithOutput{TOut}"/> delegate.</remarks>
+    public interface IInvocationResult<TOut> : IInvocationResult, IDelegateTestDataOut1<TOut> { }
 
-    public interface IInvocationResult<T1, T2> : IInvocationResult<T1>, IInvocationInput<T1, T2> { }
+    /// <summary>
+    /// Data object containaing at least 2 output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut2">The type of the second output value or output parameter result.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="ActionWithOutput{TOut1, TOut2}"/>
+    /// delegate.</remarks>
+    public interface IInvocationResult<TOut1, TOut2> : IInvocationResult<TOut1>, IDelegateTestDataOut2<TOut1, TOut2> { }
 
-    public interface IInvocationResult<T1, T2, T3> : IInvocationResult<T1, T2>, IInvocationInput<T1, T2, T3> { }
+    /// <summary>
+    /// Data object containaing at least 3 output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut2">The type of the second output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut3">The type of the third output value or output parameter result.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3}"/>
+    /// delegate.</remarks>
+    public interface IInvocationResult<TOut1, TOut2, TOut3> : IInvocationResult<TOut1, TOut2>, IDelegateTestDataOut3<TOut1, TOut2, TOut3> { }
 
-    public interface IInvocationResult<T1, T2, T3, T4> : IInvocationResult<T1, T2, T3>, IInvocationInput<T1, T2, T3, T4> { }
+    /// <summary>
+    /// Data object containaing at least 4 output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut2">The type of the second output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut3">The type of the third output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut4">The type of the fourth output value or output parameter result.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3, TOut4}"/>
+    /// delegate.</remarks>
+    public interface IInvocationResult<TOut1, TOut2, TOut3, TOut4> : IInvocationResult<TOut1, TOut2, TOut3>, IDelegateTestDataOut4<TOut1, TOut2, TOut3, TOut4> { }
 
-    public interface IInvocationResult<T1, T2, T3, T4, T5> : IInvocationResult<T1, T2, T3, T4>, IInvocationInput<T1, T2, T3, T4, T5> { }
+    /// <summary>
+    /// Data object containaing at least 5 output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut2">The type of the second output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut3">The type of the third output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut4">The type of the fourth output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut5">The type of the fifth output value or output parameter result.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
+    /// <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3, TOut4, TOut5}"/> delegate.</remarks>
+    public interface IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5> : IInvocationResult<TOut1, TOut2, TOut3, TOut4>,
+        IDelegateTestDataOut5<TOut1, TOut2, TOut3, TOut4, TOut5> { }
 
-    public interface IInvocationResult<T1, T2, T3, T4, T5, T6> : IInvocationResult<T1, T2, T3, T4, T5>, IInvocationInput<T1, T2, T3, T4, T5, T6> { }
+    /// <summary>
+    /// Data object containaing at least 6 output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut2">The type of the second output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut3">The type of the third output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut4">The type of the fourth output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut5">The type of the fifth output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut6">The type of the sixth output value or output parameter result.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
+    /// <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3, TOut4, TOut5, TOut6}"/> delegate.</remarks>
+    public interface IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> : IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5>,
+        IDelegateTestDataOut6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> { }
 
-    public interface IInvocationResult<T1, T2, T3, T4, T5, T6, T7> : IInvocationResult<T1, T2, T3, T4, T5, T6>, IInvocationInput<T1, T2, T3, T4, T5, T6, T7> { }
-
-    public interface IInvocationResult1<R> : IInvocationResult, IInvocationOutput<R> { }
-
-    public interface IInvocationResult1<T, R> : IInvocationResult1<R>, IInvocationResult<T> { }
-
-    public interface IInvocationResult1<T1, T2, R> : IInvocationResult1<T1, R>, IInvocationResult<T1, T2> { }
-
-    public interface IInvocationResult1<T1, T2, T3, R> : IInvocationResult1<T1, T2, R>, IInvocationResult<T1, T2, T3> { }
-
-    public interface IInvocationResult1<T1, T2, T3, T4, R> : IInvocationResult1<T1, T2, T3, R>, IInvocationResult<T1, T2, T3, T4> { }
-
-    public interface IInvocationResult1<T1, T2, T3, T4, T5, R> : IInvocationResult1<T1, T2, T3, T4, R>, IInvocationResult<T1, T2, T3, T4, T5> { }
-
-    public interface IInvocationResult1<T1, T2, T3, T4, T5, T6, R> : IInvocationResult1<T1, T2, T3, T4, T5, R>, IInvocationInput<T1, T2, T3, T4, T5, T6> { }
-
-    public interface IInvocationResult2<R1, R2> : IInvocationResult1<R1>, IInvocationOutput<R1, R2> { }
-
-    public interface IInvocationResult2<T, R1, R2> : IInvocationResult2<R1, R2>, IInvocationResult1<T, R1> { }
-
-    public interface IInvocationResult2<T1, T2, R1, R2> : IInvocationResult2<T1, R1, R2>, IInvocationResult1<T1, T2, R1> { }
-
-    public interface IInvocationResult2<T1, T2, T3, R1, R2> : IInvocationResult2<T1, T2, R1, R2>, IInvocationResult1<T1, T2, T3, R1> { }
-
-    public interface IInvocationResult2<T1, T2, T3, T4, R1, R2> : IInvocationResult2<T1, T2, T3, R1, R2>, IInvocationResult1<T1, T2, T3, T4, R1> { }
-
-    public interface IInvocationResult2<T1, T2, T3, T4, T5, R1, R2> : IInvocationResult2<T1, T2, T3, T4, R1, R2>, IInvocationResult1<T1, T2, T3, T4, T5, R1> { }
-
-    public interface IInvocationResult3<R1, R2, R3> : IInvocationResult2<R1, R2>, IInvocationOutput<R1, R2, R3> { }
-
-    public interface IInvocationResult3<T, R1, R2, R3> : IInvocationResult3<R1, R2, R3>, IInvocationResult2<T, R1, R2> { }
-
-    public interface IInvocationResult3<T1, T2, R1, R2, R3> : IInvocationResult3<T1, R1, R2, R3>, IInvocationResult2<T1, T2, R1, R2> { }
-
-    public interface IInvocationResult3<T1, T2, T3, R1, R2, R3> : IInvocationResult3<T1, T2, R1, R2, R3>, IInvocationResult2<T1, T2, T3, R1, R2> { }
-
-    public interface IInvocationResult3<T1, T2, T3, T4, R1, R2, R3> : IInvocationResult3<T1, T2, T3, R1, R2, R3>, IInvocationResult2<T1, T2, T3, T4, R1, R2> { }
-
-    public interface IInvocationResult4<R1, R2, R3, R4> : IInvocationResult3<R1, R2, R3>, IInvocationOutput<R1, R2, R3, R4> { }
-
-    public interface IInvocationResult4<T, R1, R2, R3, R4> : IInvocationResult4<R1, R2, R3, R4>, IInvocationResult3<T, R1, R2, R3> { }
-
-    public interface IInvocationResult4<T1, T2, R1, R2, R3, R4> : IInvocationResult4<T1, R1, R2, R3, R4>, IInvocationResult3<T1, T2, R1, R2, R3> { }
-
-    public interface IInvocationResult4<T1, T2, T3, R1, R2, R3, R4> : IInvocationResult4<T1, T2, R1, R2, R3, R4>, IInvocationResult3<T1, T2, T3, R1, R2, R3> { }
-
-    public interface IInvocationResult5<R1, R2, R3, R4, R5> : IInvocationResult4<R1, R2, R3, R4>, IInvocationOutput<R1, R2, R3, R4, R5> { }
-
-    public interface IInvocationResult5<T, R1, R2, R3, R4, R5> : IInvocationResult5<R1, R2, R3, R4, R5>, IInvocationResult4<T, R1, R2, R3, R4> { }
-
-    public interface IInvocationResult5<T1, T2, R1, R2, R3, R4, R5> : IInvocationResult5<T1, R1, R2, R3, R4, R5>, IInvocationResult4<T1, T2, R1, R2, R3, R4> { }
-
-    public interface IInvocationResult6<R1, R2, R3, R4, R5, R6> : IInvocationResult5<R1, R2, R3, R4, R5>, IInvocationOutput<R1, R2, R3, R4, R5, R6> { }
-
-    public interface IInvocationResult6<T, R1, R2, R3, R4, R5, R6> : IInvocationResult6<R1, R2, R3, R4, R5, R6>, IInvocationResult5<T, R1, R2, R3, R4, R5> { }
-
-    public interface IInvocationResult7<R1, R2, R3, R4, R5, R6, R7> : IInvocationResult6<R1, R2, R3, R4, R5, R6>, IInvocationOutput<R1, R2, R3, R4, R5, R6, R7> { }
+    /// <summary>
+    /// Data object containaing at least 7 output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut2">The type of the second output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut3">The type of the third output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut4">The type of the fourth output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut5">The type of the fifth output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut6">The type of the sixth output value or output parameter result.</typeparam>
+    /// <typeparam name="TOut7">The type of the seventh output value or output parameter result.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
+    /// <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7}"/> delegate.</remarks>
+    public interface IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7> : IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>,
+        IDelegateTestDataOut7<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7> { }
 }

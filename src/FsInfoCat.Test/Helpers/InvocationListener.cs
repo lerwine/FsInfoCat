@@ -21,9 +21,9 @@ namespace FsInfoCat.Test.Helpers
             }
         }
 
-        IInvocationInput IInvocationIO.Inputs => _io.Inputs;
+        ITestInputData IInvocationIO.Inputs => _io.Inputs;
 
-        IInvocationOutput IInvocationIO.Outputs => _io.Outputs;
+        ITestOutputData IInvocationIO.Outputs => _io.Outputs;
 
         protected InvocationListener(IO io)
         {
@@ -40,8 +40,8 @@ namespace FsInfoCat.Test.Helpers
     }
 
     public class InvocationListener<I, O, IO> : InvocationListener<IO>, IInvocationResult<I, O>
-        where I : IInvocationInput
-        where O : IInvocationOutput
+        where I : ITestInputData
+        where O : ITestOutputData
         where IO : IInvocationIO<I, O>
     {
         public I Inputs => Results.Inputs;
@@ -52,8 +52,8 @@ namespace FsInfoCat.Test.Helpers
     }
 
     public class InvocationListener<I, O, R, IO> : InvocationListener<I, O, IO>, IInvocationResult<I, O, R>
-        where I : IInvocationInput
-        where O : IInvocationOutput
+        where I : ITestInputData
+        where O : ITestOutputData
         where IO : IInvocationIO<I, O, R>
     {
         public R ReturnValue => Results.ReturnValue;

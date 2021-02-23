@@ -1,84 +1,98 @@
+using System;
+
 namespace FsInfoCat.Test.Helpers
 {
-    public interface IFuncInvocationResult<TResult> : IInvocationResult, IFuncInvocation<TResult> { }
+    /// <summary>
+    /// Data object containing the return value.
+    /// </summary>
+    /// <typeparam name="TResult">The type of return value.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="Func{TResult}"/> delegate.</remarks>
+    public interface IFuncInvocationResult<TResult> : IInvocationResult, IFuncTestData<TResult> { }
 
-    public interface IFuncInvocationResult<T, TResult> : IFuncInvocationResult<TResult>, IInvocationResult<T>, IFuncInvocation<T, TResult> { }
+    /// <summary>
+    /// Data object containaing the return value and at least 1 additional output value.
+    /// </summary>
+    /// <typeparam name="TOut">The type of the output parameter or additional output value.</typeparam>
+    /// <typeparam name="TResult">The type of return value.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="FuncWithOutput{TOut, TResult}"/>
+    /// delegate.</remarks>
+    public interface IFuncInvocationResult<TOut, TResult> : IInvocationResult<TOut>, IFuncTestData1<TOut, TResult> { }
 
-    public interface IFuncInvocationResult<T1, T2, TResult> : IFuncInvocationResult<T1, TResult>, IInvocationResult<T1, T2>, IFuncInvocation<T1, T2, TResult> { }
+    /// <summary>
+    /// Data object containaing the return value and at least 2 additional output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut2">The type of the second additional value or output parameter.</typeparam>
+    /// <typeparam name="TResult">The type of return value.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="FuncWithOutput2{TOut1, TOut2, TResult}"/>
+    /// delegate.</remarks>
+    public interface IFuncInvocationResult<TOut1, TOut2, TResult> : IInvocationResult<TOut1, TOut2>, IFuncTestData2<TOut1, TOut2, TResult> { }
 
-    public interface IFuncInvocationResult<T1, T2, T3, TResult> : IFuncInvocationResult<T1, T2, TResult>, IInvocationResult<T1, T2, T3>, IFuncInvocation<T1, T2, T3, TResult> { }
+    /// <summary>
+    /// Data object containaing the return value and at least 3 additional output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut2">The type of the second additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut3">The type of the third additional value or output parameter.</typeparam>
+    /// <typeparam name="TResult">The type of return value.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="FuncWithOutput3{TOut1, TOut2, TOut3, TResult}"/>
+    /// delegate.</remarks>
+    public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TResult> : IInvocationResult<TOut1, TOut2, TOut3>, IFuncTestData3<TOut1, TOut2, TOut3, TResult> { }
 
-    public interface IFuncInvocationResult<T1, T2, T3, T4, TResult> : IFuncInvocationResult<T1, T2, T3, TResult>, IInvocationResult<T1, T2, T3, T4>, IFuncInvocation<T1, T2, T3, T4, TResult> { }
+    /// <summary>
+    /// Data object containaing the return value and at least 4 additional output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut2">The type of the second additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut3">The type of the third additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut4">The type of the fourth additional value or output parameter.</typeparam>
+    /// <typeparam name="TResult">The type of return value.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
+    /// <seealso cref="FuncWithOutput4{TOut1, TOut2, TOut3, TOut4, TResult}"/> delegate.</remarks>
+    public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TResult> : IInvocationResult<TOut1, TOut2, TOut3, TOut4>,
+        IFuncTestData4<TOut1, TOut2, TOut3, TOut4, TResult> { }
 
-    public interface IFuncInvocationResult<T1, T2, T3, T4, T5, TResult> : IFuncInvocationResult<T1, T2, T3, T4, TResult>, IInvocationResult<T1, T2, T3, T4, T5>, IFuncInvocation<T1, T2, T3, T4, T5, TResult> { }
+    /// <summary>
+    /// Data object containaing the return value and at least 5 additional output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut2">The type of the second additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut3">The type of the third additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut4">The type of the fourth additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut5">The type of the fifth additional value or output parameter.</typeparam>
+    /// <typeparam name="TResult">The type of return value.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
+    /// <seealso cref="FuncWithOutput5{TOut1, TOut2, TOut3, TOut4, TOut5, TResult}"/> delegate.</remarks>
+    public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TResult> : IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5>,
+        IFuncTestData5<TOut1, TOut2, TOut3, TOut4, TOut5, TResult> { }
 
-    public interface IFuncInvocationResult<T1, T2, T3, T4, T5, T6, TResult> : IFuncInvocationResult<T1, T2, T3, T4, T5, TResult>, IInvocationResult<T1, T2, T3, T4, T5, T6>, IFuncInvocation<T1, T2, T3, T4, T5, T6, TResult> { }
+    /// <summary>
+    /// Data object containaing the return value and at least 6 additional output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut2">The type of the second additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut3">The type of the third additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut4">The type of the fourth additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut5">The type of the fifth additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut6">The type of the sixth additional value or output parameter.</typeparam>
+    /// <typeparam name="TResult">The type of return value.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
+    /// <seealso cref="FuncWithOutput6{TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TResult}"/> delegate.</remarks>
+    public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TResult> : IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>,
+        IFuncTestData6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TResult> { }
 
-    public interface IFuncInvocationResult<T1, T2, T3, T4, T5, T6, T7, TResult> : IFuncInvocationResult<T1, T2, T3, T4, T5, T6, TResult>, IInvocationResult<T1, T2, T3, T4, T5, T6, T7>,
-        IFuncInvocation<T1, T2, T3, T4, T5, T6, T7, TResult> { }
-
-    public interface IFuncInvocationResult1<R, TResult> : IFuncInvocationResult<TResult>, IFuncInvocation1<R, TResult> { }
-
-    public interface IFuncInvocationResult1<T, R, TResult> : IFuncInvocationResult1<R, TResult>, IFuncInvocationResult<T, TResult>, IFuncInvocation1<T, R, TResult> { }
-
-    public interface IFuncInvocationResult1<T1, T2, R, TResult> : IFuncInvocationResult1<T1, R, TResult>, IFuncInvocationResult<T1, T2, TResult>, IFuncInvocation1<T1, T2, R, TResult> { }
-
-    public interface IFuncInvocationResult1<T1, T2, T3, R, TResult> : IFuncInvocationResult1<T1, T2, R, TResult>, IFuncInvocationResult<T1, T2, T3, TResult>, IFuncInvocation1<T1, T2, T3, R, TResult> { }
-
-    public interface IFuncInvocationResult1<T1, T2, T3, T4, R, TResult> : IFuncInvocationResult1<T1, T2, T3, R, TResult>, IFuncInvocationResult<T1, T2, T3, T4, TResult>, IFuncInvocation1<T1, T2, T3, T4, R, TResult> { }
-
-    public interface IFuncInvocationResult1<T1, T2, T3, T4, T5, R, TResult> : IFuncInvocationResult1<T1, T2, T3, T4, R, TResult>, IFuncInvocationResult<T1, T2, T3, T4, T5, TResult>, IFuncInvocation1<T1, T2, T3, T4, T5, R, TResult> { }
-
-    public interface IFuncInvocationResult1<T1, T2, T3, T4, T5, T6, R, TResult> : IFuncInvocationResult1<T1, T2, T3, T4, T5, R, TResult>, IFuncInvocationResult<T1, T2, T3, T4, T5, T6, TResult>,
-        IFuncInvocation1<T1, T2, T3, T4, T5, T6, R, TResult> { }
-
-    public interface IFuncInvocationResult2<R1, R2, TResult> : IFuncInvocationResult1<R1, TResult>, IFuncInvocation2<R1, R2, TResult> { }
-
-    public interface IFuncInvocationResult2<T, R1, R2, TResult> : IFuncInvocationResult2<R1, R2, TResult>, IFuncInvocationResult1<T, R1, TResult>,IFuncInvocation2<T, R1, R2, TResult> { }
-
-    public interface IFuncInvocationResult2<T1, T2, R1, R2, TResult> : IFuncInvocationResult2<T1, R1, R2, TResult>, IFuncInvocationResult1<T1, T2, R1, TResult>, IFuncInvocation2<T1, T2, R1, R2, TResult> { }
-
-    public interface IFuncInvocationResult2<T1, T2, T3, R1, R2, TResult> : IFuncInvocationResult2<T1, T2, R1, R2, TResult>, IFuncInvocationResult1<T1, T2, T3, R1, TResult>, IFuncInvocation2<T1, T2, T3, R1, R2, TResult> { }
-
-    public interface IFuncInvocationResult2<T1, T2, T3, T4, R1, R2, TResult> : IFuncInvocationResult2<T1, T2, T3, R1, R2, TResult>, IFuncInvocationResult1<T1, T2, T3, T4, R1, TResult>,
-        IFuncInvocation2<T1, T2, T3, T4, R1, R2, TResult> { }
-
-    public interface IFuncInvocationResult2<T1, T2, T3, T4, T5, R1, R2, TResult> : IFuncInvocationResult2<T1, T2, T3, T4, R1, R2, TResult>, IFuncInvocationResult1<T1, T2, T3, T4, T5, R1, TResult>,
-        IFuncInvocation2<T1, T2, T3, T4, T5, R1, R2, TResult> { }
-
-    public interface IFuncInvocationResult3<R1, R2, R3, TResult> : IFuncInvocationResult2<R1, R2, TResult>, IFuncInvocation3<R1, R2, R3, TResult> { }
-
-    public interface IFuncInvocationResult3<T, R1, R2, R3, TResult> : IFuncInvocationResult3<R1, R2, R3, TResult>, IFuncInvocationResult2<T, R1, R2, TResult>, IFuncInvocation3<T, R1, R2, R3, TResult> { }
-
-    public interface IFuncInvocationResult3<T1, T2, R1, R2, R3, TResult> : IFuncInvocationResult3<T1, R1, R2, R3, TResult>, IFuncInvocationResult2<T1, T2, R1, R2, TResult>, IFuncInvocation3<T1, T2, R1, R2, R3, TResult> { }
-
-    public interface IFuncInvocationResult3<T1, T2, T3, R1, R2, R3, TResult> : IFuncInvocationResult3<T1, T2, R1, R2, R3, TResult>, IFuncInvocationResult2<T1, T2, T3, R1, R2, TResult>,
-        IFuncInvocation3<T1, T2, T3, R1, R2, R3, TResult> { }
-
-    public interface IFuncInvocationResult3<T1, T2, T3, T4, R1, R2, R3, TResult> : IFuncInvocationResult3<T1, T2, T3, R1, R2, R3, TResult>, IFuncInvocationResult2<T1, T2, T3, T4, R1, R2, TResult>,
-        IFuncInvocation3<T1, T2, T3, T4, R1, R2, R3, TResult> { }
-
-    public interface IFuncInvocationResult4<R1, R2, R3, R4, TResult> : IFuncInvocationResult3<R1, R2, R3, TResult>, IFuncInvocation4<R1, R2, R3, R4, TResult> { }
-
-    public interface IFuncInvocationResult4<T, R1, R2, R3, R4, TResult> : IFuncInvocationResult4<R1, R2, R3, R4, TResult>, IFuncInvocationResult3<T, R1, R2, R3, TResult>, IFuncInvocation4<T, R1, R2, R3, R4, TResult> { }
-
-    public interface IFuncInvocationResult4<T1, T2, R1, R2, R3, R4, TResult> : IFuncInvocationResult4<T1, R1, R2, R3, R4, TResult>, IFuncInvocationResult3<T1, T2, R1, R2, R3, TResult>,
-        IFuncInvocation4<T1, T2, R1, R2, R3, R4, TResult> { }
-
-    public interface IFuncInvocationResult4<T1, T2, T3, R1, R2, R3, R4, TResult> : IFuncInvocationResult4<T1, T2, R1, R2, R3, R4, TResult>, IFuncInvocationResult3<T1, T2, T3, R1, R2, R3, TResult>,
-        IFuncInvocation4<T1, T2, T3, R1, R2, R3, R4, TResult> { }
-
-    public interface IFuncInvocationResult5<R1, R2, R3, R4, R5, TResult> : IFuncInvocationResult4<R1, R2, R3, R4, TResult>, IFuncInvocation5<R1, R2, R3, R4, R5, TResult> { }
-
-    public interface IFuncInvocationResult5<T, R1, R2, R3, R4, R5, TResult> : IFuncInvocationResult5<R1, R2, R3, R4, R5, TResult>, IFuncInvocationResult4<T, R1, R2, R3, R4, TResult>, IFuncInvocation5<T, R1, R2, R3, R4, R5, TResult> { }
-
-    public interface IFuncInvocationResult5<T1, T2, R1, R2, R3, R4, R5, TResult> : IFuncInvocationResult5<T1, R1, R2, R3, R4, R5, TResult>, IFuncInvocationResult4<T1, T2, R1, R2, R3, R4, TResult>,
-        IFuncInvocation5<T1, T2, R1, R2, R3, R4, R5, TResult> { }
-
-    public interface IFuncInvocationResult6<R1, R2, R3, R4, R5, R6, TResult> : IFuncInvocationResult5<R1, R2, R3, R4, R5, TResult>, IFuncInvocation6<R1, R2, R3, R4, R5, R6, TResult> { }
-
-    public interface IFuncInvocationResult6<T, R1, R2, R3, R4, R5, R6, TResult> : IFuncInvocationResult6<R1, R2, R3, R4, R5, R6, TResult>, IFuncInvocationResult5<T, R1, R2, R3, R4, R5, TResult>,
-        IFuncInvocation6<T, R1, R2, R3, R4, R5, R6, TResult> { }
-
-    public interface IFuncInvocationResult7<R1, R2, R3, R4, R5, R6, R7, TResult> : IFuncInvocationResult6<R1, R2, R3, R4, R5, R6, TResult>, IFuncInvocation7<R1, R2, R3, R4, R5, R6, R7, TResult> { }
+    /// <summary>
+    /// Data object containaing the return value and at least 7 additional output values.
+    /// </summary>
+    /// <typeparam name="TOut1">The type of the first additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut2">The type of the second additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut3">The type of the third additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut4">The type of the fourth additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut5">The type of the fifth additional value or output parameter.</typeparam>
+    /// <typeparam name="TOut6">The type of the sixth additional value or output parameter.</typeparam>
+    /// <typeparam name="TResult">The type of return value.</typeparam>
+    /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
+    /// <seealso cref="FuncWithOutput7{TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7, TResult}"/> delegate.</remarks>
+    public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7, TResult> : IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7>,
+        IFuncTestData7<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7, TResult> { }
 }
