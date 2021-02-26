@@ -9,7 +9,7 @@ namespace FsInfoCat.Test.Helpers
         where T : class, IEnumerable
         where E : IEnumerator
     {
-        internal EnumerableEqualityHelper()
+        protected internal EnumerableEqualityHelper()
         {
             ReferenceComparer = ReferenceEqualityHelper<T>.Default;
             ValueComparer = EqualityHelper<V>.DefaultNoEnumerate;
