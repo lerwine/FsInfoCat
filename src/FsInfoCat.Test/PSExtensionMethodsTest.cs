@@ -20,15 +20,15 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetInvokeIfNotNull1TestCases()
         {
             string methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.InvokeIfNotNull)}<{typeof(Uri).Name}>";
-            yield return new TestCaseData(null).SetName($"{methodName}(null)").Returns(new InvocationResult<Uri>());
+            yield return new TestCaseData(null).SetDescription($"{methodName}(null)").Returns(new InvocationResult<Uri>());
             UriKind kind = UriKind.Relative;
             Uri target = new Uri("", kind);
-            yield return new TestCaseData(target).SetName($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
+            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
             target = new Uri("/dir/myfile.txt", kind);
-            yield return new TestCaseData(target).SetName($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
+            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
             kind = UriKind.Absolute;
             target = new Uri("file://myserver/dir/myfile.txt", kind);
-            yield return new TestCaseData(target).SetName($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
+            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
         }
 
         [Test, Property("Priority", 1)]
@@ -43,13 +43,13 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetInvokeIfNotNull2TestCases()
         {
             string methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.InvokeIfNotNull)}<{typeof(int).Name}?>";
-            yield return new TestCaseData(null).SetName($"{methodName}(null)").Returns(new InvocationResult<int>());
+            yield return new TestCaseData(null).SetDescription($"{methodName}(null)").Returns(new InvocationResult<int>());
             int target = 0;
-            yield return new TestCaseData(target).SetName($"{methodName}({target})").Returns(new InvocationResult<int>(target));
+            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
             target = int.MaxValue;
-            yield return new TestCaseData(target).SetName($"{methodName}({target})").Returns(new InvocationResult<int>(target));
+            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
             target = int.MinValue;
-            yield return new TestCaseData(target).SetName($"{methodName}({target})").Returns(new InvocationResult<int>(target));
+            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
         }
 
         [Test, Property("Priority", 1)]
@@ -73,26 +73,26 @@ namespace FsInfoCat.Test
             FuncInvocationResult<Uri> ifNotNullResult = new FuncInvocationResult<Uri>();
             FuncInvocationResult<Uri> ifNullResult = new FuncInvocationResult<Uri>(resultUri);
             yield return new TestCaseData(null, ifNotNullFunc, ifNullFunc)
-                .SetName($"{methodName}(null, {args})")
+                .SetDescription($"{methodName}(null, {args})")
                 .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(false, ifNotNullResult, ifNullResult, resultUri));
             string inputObj = "";
             resultUri = new Uri(inputObj, UriKind.Relative);
             ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
             ifNullResult = new FuncInvocationResult<Uri>();
             yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
             inputObj = "/dir/myfile.txt";
             resultUri = new Uri(inputObj, UriKind.Relative);
             ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
             yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
             inputObj = "file://myserver/dir/myfile.txt";
             resultUri = new Uri(inputObj, UriKind.Absolute);
             ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
             yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
         }
 
@@ -121,25 +121,25 @@ namespace FsInfoCat.Test
             Func<string, Uri> ifNotNullFunc = s => (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out Uri u)) ? u : null;
             FuncInvocationResult<Uri> ifNotNullResult = new FuncInvocationResult<Uri>();
             yield return new TestCaseData(null, ifNotNullFunc)
-                .SetName($"{methodName}(null, {args})")
+                .SetDescription($"{methodName}(null, {args})")
                 .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(false, ifNotNullResult, null));
             string inputObj = "";
             Uri resultUri = new Uri(inputObj, UriKind.Relative);
             ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
             yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
             inputObj = "/dir/myfile.txt";
             resultUri = new Uri(inputObj, UriKind.Relative);
             ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
             yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
             inputObj = "file://myserver/dir/myfile.txt";
             resultUri = new Uri(inputObj, UriKind.Absolute);
             ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
             yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
         }
 
@@ -168,26 +168,26 @@ namespace FsInfoCat.Test
             FuncInvocationResult<string> ifNotNullResult = new FuncInvocationResult<string>();
             FuncInvocationResult<string> ifNullResult = new FuncInvocationResult<string>(resultString);
             yield return new TestCaseData(null, ifNotNullFunc, ifNullFunc)
-                .SetName($"{methodName}(null, {args})")
+                .SetDescription($"{methodName}(null, {args})")
                 .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(false, ifNotNullResult, ifNullResult, resultString));
             int inputObj = 0;
             resultString = "0000";
             ifNotNullResult = new FuncInvocationResult<string>(resultString);
             ifNullResult = new FuncInvocationResult<string>();
             yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
             inputObj = int.MinValue;
             resultString = inputObj.ToString("X4");
             ifNotNullResult = new FuncInvocationResult<string>(resultString);
             yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
             inputObj = int.MaxValue;
             resultString = inputObj.ToString("X4");
             ifNotNullResult = new FuncInvocationResult<string>(resultString);
             yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
         }
 
@@ -216,25 +216,25 @@ namespace FsInfoCat.Test
             Func<int, string> ifNotNullFunc = i => i.ToString("X4");
             FuncInvocationResult<string> ifNotNullResult = new FuncInvocationResult<string>();
             yield return new TestCaseData(null, ifNotNullFunc)
-                .SetName($"{methodName}(null, {args})")
+                .SetDescription($"{methodName}(null, {args})")
                 .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(false, ifNotNullResult, null));
             int inputObj = 0;
             string resultString = "0000";
             ifNotNullResult = new FuncInvocationResult<string>(resultString);
             yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
             inputObj = int.MinValue;
             resultString = inputObj.ToString("X4");
             ifNotNullResult = new FuncInvocationResult<string>(resultString);
             yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
             inputObj = int.MaxValue;
             resultString = inputObj.ToString("X4");
             ifNotNullResult = new FuncInvocationResult<string>(resultString);
             yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetName($"{methodName}(\"{inputObj})\", {args}")
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
                 .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
         }
 
