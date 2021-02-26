@@ -1,11 +1,11 @@
 using System;
 using NUnit.Framework;
-using FsInfoCat.PS;
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Collections;
 using FsInfoCat.Test.Helpers;
-using static FsInfoCat.PS.ExtensionMethods;
+using FsInfoCat.PS;
+//using static FsInfoCat.PS.ExtensionMethods;
 
 namespace FsInfoCat.Test
 {
@@ -17,7 +17,19 @@ namespace FsInfoCat.Test
         {
         }
 
-        public static IEnumerable<TestCaseData> GetInvokeIfNotNull1TestCases() => throw new InconclusiveException("Test data not implemented");
+        public static IEnumerable<TestCaseData> GetInvokeIfNotNull1TestCases()
+        {
+            string methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.InvokeIfNotNull)}<{typeof(Uri).Name}>";
+            yield return new TestCaseData(null).SetDescription($"{methodName}(null)").Returns(new InvocationResult<Uri>());
+            UriKind kind = UriKind.Relative;
+            Uri target = new Uri("", kind);
+            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
+            target = new Uri("/dir/myfile.txt", kind);
+            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
+            kind = UriKind.Absolute;
+            target = new Uri("file://myserver/dir/myfile.txt", kind);
+            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
+        }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetInvokeIfNotNull1TestCases))]
@@ -28,7 +40,17 @@ namespace FsInfoCat.Test
             return invocationMonitor.ToResult();
         }
 
-        public static IEnumerable<TestCaseData> GetInvokeIfNotNull2TestCases() => throw new InconclusiveException("Test data not implemented");
+        public static IEnumerable<TestCaseData> GetInvokeIfNotNull2TestCases()
+        {
+            string methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.InvokeIfNotNull)}<{typeof(int).Name}?>";
+            yield return new TestCaseData(null).SetDescription($"{methodName}(null)").Returns(new InvocationResult<int>());
+            int target = 0;
+            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
+            target = int.MaxValue;
+            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
+            target = int.MinValue;
+            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
+        }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetInvokeIfNotNull2TestCases))]
@@ -39,11 +61,44 @@ namespace FsInfoCat.Test
             return invocationMonitor.ToResult();
         }
 
-        public static IEnumerable<TestCaseData> GetTryCoerceValue3TestCases() => throw new InconclusiveException("Test data not implemented");
+        public static IEnumerable<TestCaseData> GetTryCoerceValue3TestCases()
+        {
+            string args = typeof(Uri).Name;
+            string methodName = $"<{typeof(string).Name}, {args}>";
+            args = $"Func<{methodName}> ifNotNull, Func<{args}> ifNull, out {args} result";
+            methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.TryCoerceValue)}<{methodName}>";
+            Func<string, Uri> ifNotNullFunc = s => (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out Uri u)) ? u : null;
+            Uri resultUri = new Uri(".", UriKind.Relative);
+            Func<Uri> ifNullFunc = () => resultUri;
+            FuncInvocationResult<Uri> ifNotNullResult = new FuncInvocationResult<Uri>();
+            FuncInvocationResult<Uri> ifNullResult = new FuncInvocationResult<Uri>(resultUri);
+            yield return new TestCaseData(null, ifNotNullFunc, ifNullFunc)
+                .SetDescription($"{methodName}(null, {args})")
+                .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(false, ifNotNullResult, ifNullResult, resultUri));
+            string inputObj = "";
+            resultUri = new Uri(inputObj, UriKind.Relative);
+            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
+            ifNullResult = new FuncInvocationResult<Uri>();
+            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
+            inputObj = "/dir/myfile.txt";
+            resultUri = new Uri(inputObj, UriKind.Relative);
+            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
+            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
+            inputObj = "file://myserver/dir/myfile.txt";
+            resultUri = new Uri(inputObj, UriKind.Absolute);
+            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
+            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
+        }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCoerceValue3TestCases))]
-        public FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool> TryCoerceValue3Test(string inputObj, Func<string, Uri> ifNotNull, Func<Uri> ifNull)
+        public IFuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool> TryCoerceValue3Test(string inputObj, Func<string, Uri> ifNotNull, Func<Uri> ifNull)
         {
             FunctionInvocationMonitor<Uri> notNullMonitor = new FunctionInvocationMonitor<Uri>();
             FunctionInvocationMonitor<Uri> ifNullMonitor = new FunctionInvocationMonitor<Uri>();
@@ -57,7 +112,36 @@ namespace FsInfoCat.Test
             });
         }
 
-        public static IEnumerable<TestCaseData> GetTryCoerceValue4TestCases() => throw new InconclusiveException("Test data not implemented");
+        public static IEnumerable<TestCaseData> GetTryCoerceValue4TestCases()
+        {
+            string args = typeof(Uri).Name;
+            string methodName = $"<{typeof(string).Name}, {args}>";
+            args = $"Func<{methodName}> ifNotNull, Func<{args}> ifNull, out {args} result";
+            methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.TryCoerceValue)}<{methodName}>";
+            Func<string, Uri> ifNotNullFunc = s => (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out Uri u)) ? u : null;
+            FuncInvocationResult<Uri> ifNotNullResult = new FuncInvocationResult<Uri>();
+            yield return new TestCaseData(null, ifNotNullFunc)
+                .SetDescription($"{methodName}(null, {args})")
+                .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(false, ifNotNullResult, null));
+            string inputObj = "";
+            Uri resultUri = new Uri(inputObj, UriKind.Relative);
+            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
+            yield return new TestCaseData(inputObj, ifNotNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
+            inputObj = "/dir/myfile.txt";
+            resultUri = new Uri(inputObj, UriKind.Relative);
+            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
+            yield return new TestCaseData(inputObj, ifNotNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
+            inputObj = "file://myserver/dir/myfile.txt";
+            resultUri = new Uri(inputObj, UriKind.Absolute);
+            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
+            yield return new TestCaseData(inputObj, ifNotNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
+        }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCoerceValue4TestCases))]
@@ -72,7 +156,40 @@ namespace FsInfoCat.Test
             });
         }
 
-        public static IEnumerable<TestCaseData> GetTryCoerceValue5TestCases() => throw new InconclusiveException("Test data not implemented");
+        public static IEnumerable<TestCaseData> GetTryCoerceValue5TestCases()
+        {
+            string args = typeof(Uri).Name;
+            string methodName = $"<{typeof(string).Name}, {args}>";
+            args = $"Func<{methodName}> ifNotNull, Func<{args}> ifNull, out {args} result";
+            methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.TryCoerceValue)}<{methodName}>";
+            Func<int, string> ifNotNullFunc = i => i.ToString("X4");
+            string resultString = "(None)";
+            Func<string> ifNullFunc = () => resultString;
+            FuncInvocationResult<string> ifNotNullResult = new FuncInvocationResult<string>();
+            FuncInvocationResult<string> ifNullResult = new FuncInvocationResult<string>(resultString);
+            yield return new TestCaseData(null, ifNotNullFunc, ifNullFunc)
+                .SetDescription($"{methodName}(null, {args})")
+                .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(false, ifNotNullResult, ifNullResult, resultString));
+            int inputObj = 0;
+            resultString = "0000";
+            ifNotNullResult = new FuncInvocationResult<string>(resultString);
+            ifNullResult = new FuncInvocationResult<string>();
+            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
+            inputObj = int.MinValue;
+            resultString = inputObj.ToString("X4");
+            ifNotNullResult = new FuncInvocationResult<string>(resultString);
+            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
+            inputObj = int.MaxValue;
+            resultString = inputObj.ToString("X4");
+            ifNotNullResult = new FuncInvocationResult<string>(resultString);
+            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
+        }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCoerceValue5TestCases))]
@@ -90,7 +207,36 @@ namespace FsInfoCat.Test
             });
         }
 
-        public static IEnumerable<TestCaseData> GetTryCoerceValue6TestCases() => throw new InconclusiveException("Test data not implemented");
+        public static IEnumerable<TestCaseData> GetTryCoerceValue6TestCases()
+        {
+            string args = typeof(Uri).Name;
+            string methodName = $"<{typeof(string).Name}, {args}>";
+            args = $"Func<{methodName}> ifNotNull, Func<{args}> ifNull, out {args} result";
+            methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.TryCoerceValue)}<{methodName}>";
+            Func<int, string> ifNotNullFunc = i => i.ToString("X4");
+            FuncInvocationResult<string> ifNotNullResult = new FuncInvocationResult<string>();
+            yield return new TestCaseData(null, ifNotNullFunc)
+                .SetDescription($"{methodName}(null, {args})")
+                .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(false, ifNotNullResult, null));
+            int inputObj = 0;
+            string resultString = "0000";
+            ifNotNullResult = new FuncInvocationResult<string>(resultString);
+            yield return new TestCaseData(inputObj, ifNotNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
+            inputObj = int.MinValue;
+            resultString = inputObj.ToString("X4");
+            ifNotNullResult = new FuncInvocationResult<string>(resultString);
+            yield return new TestCaseData(inputObj, ifNotNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
+            inputObj = int.MaxValue;
+            resultString = inputObj.ToString("X4");
+            ifNotNullResult = new FuncInvocationResult<string>(resultString);
+            yield return new TestCaseData(inputObj, ifNotNullFunc)
+                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
+                .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
+        }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCoerceValue6TestCases))]
@@ -105,6 +251,7 @@ namespace FsInfoCat.Test
             });
         }
 
+        /*
         public static IEnumerable<TestCaseData> GetTryCast1TestCases() => throw new InconclusiveException("Test data not implemented");
 
         [Test, Property("Priority", 1)]
@@ -631,5 +778,6 @@ namespace FsInfoCat.Test
             Assert.Inconclusive();
             throw new NotImplementedException();
         }
+        */
     }
 }

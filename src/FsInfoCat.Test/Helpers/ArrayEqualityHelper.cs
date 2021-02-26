@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Test.Helpers
 {
-    public class ArrayEqualityHelper<T> : EnumerableEqualityHelper<T, IEnumerator>
+    public class ArrayEqualityHelper<T> : EnumerableEqualityHelper<T>
         where T : class, IList
     {
         public static ArrayEqualityHelper<T> Default { get; }
@@ -18,6 +18,7 @@ namespace FsInfoCat.Test.Helpers
 
         private ArrayEqualityHelper()
         {
+#warning This is never actually used
             ItemComparer = (IEqualityComparer)typeof(EqualityHelper<>).MakeGenericType(typeof(T).GetElementType())
                 .GetMethod("GetComparer").Invoke(null, new object[] { true });
         }
@@ -25,7 +26,5 @@ namespace FsInfoCat.Test.Helpers
         public override int GetCount(T collection) => collection.Count;
 
         public override bool WithEnumerator(T collection, Func<IEnumerator, bool> getResultFunc) => getResultFunc(collection.GetEnumerator());
-
-        protected override bool AreCurrentValuesEqual(IEnumerator x, IEnumerator y) => ItemComparer.Equals(x.Current, y.Current);
     }
 }

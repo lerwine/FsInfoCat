@@ -18,41 +18,41 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetAuthorityCaseInsensitiveEqualsTestCases()
         {
             yield return new TestCaseData(new Uri("", UriKind.Relative), new Uri("", UriKind.Relative))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: 2 Empty Uri values")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: 2 Empty Uri values")
                 .Returns(true);
             yield return new TestCaseData(new Uri(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\testazureshare", UriKind.Absolute),
                     new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: 2 different original strings and case, same absolute URI")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: 2 different original strings and case, same absolute URI")
                 .Returns(true);
             yield return new TestCaseData(new Uri("http://tempuri.org/TEST", UriKind.Absolute), new Uri("http://tempuri.org/test", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Same host, different path case")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Same host, different path case")
                 .Returns(false);
             yield return new TestCaseData(new Uri("http://tempuri.org/TEST", UriKind.Absolute), new Uri("HTTP://TEMPURI.ORG/test", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Alternating cases")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating cases")
                 .Returns(false);
             yield return new TestCaseData(new Uri("http://tempuri.org:80", UriKind.Absolute), new Uri("http://tempuri.org:75", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Same host, different port")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Same host, different port")
                 .Returns(false);
             yield return new TestCaseData(new Uri("http://tempuri.org/", UriKind.Absolute), new Uri("http://tempuri.org", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Same host, one  omitting root slash")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Same host, one  omitting root slash")
                 .Returns(true);
             yield return new TestCaseData(new Uri("HTTP://tempuri.org/", UriKind.Absolute), new Uri("http://tempuri.org", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Different case scheme")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Different case scheme")
                 .Returns(true);
             yield return new TestCaseData(new Uri("http://tempuri.org/", UriKind.Absolute), new Uri("https://tempuri.org", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Alternating scheme")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating scheme")
                 .Returns(false);
             yield return new TestCaseData(new Uri("http://user@tempuri.org/", UriKind.Absolute), new Uri("http://used@tempuri.org", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Alternating username")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating username")
                 .Returns(false);
             yield return new TestCaseData(new Uri("http://tempuri.org/?test=one", UriKind.Absolute), new Uri("http://tempuri.org?test=two", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Alternating query")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating query")
                 .Returns(false);
             yield return new TestCaseData(new Uri("http://tempuri.org/?test=one", UriKind.Absolute), new Uri("http://tempuri.org?test=ONE", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Alternating query case")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating query case")
                 .Returns(false);
             yield return new TestCaseData(new Uri("http://tempuri.org/?test=one#six", UriKind.Absolute), new Uri("http://tempuri.org?test=one#two", UriKind.Absolute))
-                .SetName("AuthorityCaseInsensitiveEqualsTest: Alternating fragment")
+                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating fragment")
                 .Returns(false);
         }
 
@@ -63,13 +63,13 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetAsRelativeUriStringTestCases()
         {
             yield return new TestCaseData("")
-                .SetName("AsRelativeUriStringTest: 2 Empty Uri values")
+                .SetDescription("AsRelativeUriStringTest: 2 Empty Uri values")
                 .Returns("");
             yield return new TestCaseData(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\testazureshare")
-                .SetName("AsRelativeUriStringTest: UNC path")
+                .SetDescription("AsRelativeUriStringTest: UNC path")
                 .Returns("%5C%5CSERVICENOWDIAG479.FILE.CORE.WINDOWS.NET%5Ctestazureshare");
             yield return new TestCaseData("http://tempuri.org/TEST Path")
-                .SetName("AsRelativeUriStringTest: Absolute URI")
+                .SetDescription("AsRelativeUriStringTest: Absolute URI")
                 .Returns("/TEST%20Path");
         }
 
@@ -80,97 +80,97 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetAsUserNameComponentEncodedTestCases()
         {
             yield return new TestCaseData("")
-                .SetName("AsUserNameComponentEncodedTest: 2 Empty Uri values")
+                .SetDescription("AsUserNameComponentEncodedTest: 2 Empty Uri values")
                 .Returns("");
             yield return new TestCaseData("!")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("!");
             yield return new TestCaseData("@")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%40");
             yield return new TestCaseData("#")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%23");
             yield return new TestCaseData("$")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("$");
             yield return new TestCaseData("%")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%25");
             yield return new TestCaseData("^")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%5E");
             yield return new TestCaseData("&")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("&");
             yield return new TestCaseData("*")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("*");
             yield return new TestCaseData("(")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("(");
             yield return new TestCaseData(")")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns(")");
             yield return new TestCaseData("_")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("_");
             yield return new TestCaseData("+")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("+");
             yield return new TestCaseData("-")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("-");
             yield return new TestCaseData("=")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("=");
             yield return new TestCaseData("[")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("[");
             yield return new TestCaseData("]")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("]");
             yield return new TestCaseData("\\")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%5C");
             yield return new TestCaseData(";")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns(";");
             yield return new TestCaseData("'")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("'");
             yield return new TestCaseData(".")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns(".");
             yield return new TestCaseData("/")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%2F");
             yield return new TestCaseData(">")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%3E");
             yield return new TestCaseData("?")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%3F");
             yield return new TestCaseData(":")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%3A");
             yield return new TestCaseData("\"")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%22");
             yield return new TestCaseData("{")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%7B");
             yield return new TestCaseData("}")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%7D");
             yield return new TestCaseData("|")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("%7C");
             yield return new TestCaseData(@"!@#$%^&*()_+-=[]\;'./>?:""{}|")
-                .SetName("AsUserNameComponentEncodedTest: UNC path")
+                .SetDescription("AsUserNameComponentEncodedTest: UNC path")
                 .Returns("!%40%23$%25%5E&*()_+-=[]%5C;'.%2F%3E%3F%3A%22%7B%7D%7C");
             yield return new TestCaseData("http://tempuri.org/TEST Path")
-                .SetName("AsUserNameComponentEncodedTest: Absolute URI")
+                .SetDescription("AsUserNameComponentEncodedTest: Absolute URI")
                 .Returns("http%3A%2F%2Ftempuri.org%2FTEST%20Path");
         }
 
@@ -181,94 +181,94 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetAsPasswordComponentEncodedTestCases()
         {
             yield return new TestCaseData("")
-                .SetName("AsPasswordComponentEncodedTest: 2 Empty Uri values")
+                .SetDescription("AsPasswordComponentEncodedTest: 2 Empty Uri values")
                 .Returns("");
             yield return new TestCaseData("!")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("!");
             yield return new TestCaseData("@")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%40");
             yield return new TestCaseData("#")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%23");
             yield return new TestCaseData("$")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("$");
             yield return new TestCaseData("%")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%25");
             yield return new TestCaseData("^")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%5E");
             yield return new TestCaseData("&")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("&");
             yield return new TestCaseData("*")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("*");
             yield return new TestCaseData("(")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("(");
             yield return new TestCaseData(")")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns(")");
             yield return new TestCaseData("_")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("_");
             yield return new TestCaseData("+")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("+");
             yield return new TestCaseData("-")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("-");
             yield return new TestCaseData("=")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("=");
             yield return new TestCaseData("[")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("[");
             yield return new TestCaseData("]")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("]");
             yield return new TestCaseData("\\")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%5C");
             yield return new TestCaseData(";")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns(";");
             yield return new TestCaseData("'")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("'");
             yield return new TestCaseData(".")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns(".");
             yield return new TestCaseData("/")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%2F");
             yield return new TestCaseData(">")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%3E");
             yield return new TestCaseData("?")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%3F");
             yield return new TestCaseData(":")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns(":");
             yield return new TestCaseData("\"")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%22");
             yield return new TestCaseData("{")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%7B");
             yield return new TestCaseData("}")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%7D");
             yield return new TestCaseData("|")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("%7C");
             yield return new TestCaseData(@"!@#$%^&*()_+-=[]\;'./>?:""{}|")
-                .SetName("AsPasswordComponentEncodedTest: UNC path")
+                .SetDescription("AsPasswordComponentEncodedTest: UNC path")
                 .Returns("!%40%23$%25%5E&*()_+-=[]%5C;'.%2F%3E%3F:%22%7B%7D%7C");
         }
 
@@ -279,22 +279,22 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetGetUserNameAndPasswordTestTestCases()
         {
             yield return new TestCaseData(new Uri("", UriKind.Relative))
-                .SetName("GetUserNameAndPasswordTest: Empty Uri")
+                .SetDescription("GetUserNameAndPasswordTest: Empty Uri")
                 .Returns(new Tuple<string, string>(null, null));
             yield return new TestCaseData(new Uri("http://me:thepw@host.com", UriKind.Absolute))
-                .SetName("GetUserNameAndPasswordTest: User and password")
+                .SetDescription("GetUserNameAndPasswordTest: User and password")
                 .Returns(new Tuple<string, string>("me", "thepw"));
             yield return new TestCaseData(new Uri("http://justuser@host.com", UriKind.Absolute))
-                .SetName("GetUserNameAndPasswordTest: Only user")
+                .SetDescription("GetUserNameAndPasswordTest: Only user")
                 .Returns(new Tuple<string, string>("justuser", null));
             yield return new TestCaseData(new Uri("http://:justpw@host.com", UriKind.Absolute))
-                .SetName("GetUserNameAndPasswordTest: Password with empty user")
+                .SetDescription("GetUserNameAndPasswordTest: Password with empty user")
                 .Returns(new Tuple<string, string>("", "justpw"));
             yield return new TestCaseData(new Uri("http://host.com", UriKind.Absolute))
-                .SetName("GetUserNameAndPasswordTest: No user or pw")
+                .SetDescription("GetUserNameAndPasswordTest: No user or pw")
                 .Returns(new Tuple<string, string>(null, null));
             yield return new TestCaseData(null)
-                .SetName("GetUserNameAndPasswordTest: null value")
+                .SetDescription("GetUserNameAndPasswordTest: null value")
                 .Returns(new Tuple<string, string>(null, null));
         }
 
@@ -309,34 +309,34 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetTrySetUserInfoComponentTestTestCases()
         {
             yield return new TestCaseData(new Uri("http://me:thepw@host.com", UriKind.Absolute), "new", "pw")
-                .SetName("TrySetUserInfoComponentTest: Replace username password")
+                .SetDescription("TrySetUserInfoComponentTest: Replace username password")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://new:pw@host.com", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://justuser@host.com", UriKind.Absolute), "xyz", "pdq")
-                .SetName("TrySetUserInfoComponentTest: Add username and password")
+                .SetDescription("TrySetUserInfoComponentTest: Add username and password")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://xyz:pdq@host.com", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://:justpw@host.com", UriKind.Absolute), "xyz", "justpw")
-                .SetName("TrySetUserInfoComponentTest: Set username")
+                .SetDescription("TrySetUserInfoComponentTest: Set username")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://xyz:justpw@host.com", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://me:thepw@host.com", UriKind.Absolute), "me", "thepw")
-                .SetName("TrySetUserInfoComponentTest: Setting same password")
+                .SetDescription("TrySetUserInfoComponentTest: Setting same password")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://new:pw@host.com", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://me:thepw@host.com", UriKind.Absolute), null, null)
-                .SetName("TrySetUserInfoComponentTest: Remove")
+                .SetDescription("TrySetUserInfoComponentTest: Remove")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://host.com", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://me:thepw@host.com", UriKind.Absolute), null, "thepw")
-                .SetName("TrySetUserInfoComponentTest: Remove by setting user to null")
+                .SetDescription("TrySetUserInfoComponentTest: Remove by setting user to null")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://host.com", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://me:thepw@host.com", UriKind.Absolute), "me", null)
-                .SetName("TrySetUserInfoComponentTest: Remove just pw")
+                .SetDescription("TrySetUserInfoComponentTest: Remove just pw")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://me@host.com", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://host.com", UriKind.Absolute), null, null)
-                .SetName("TrySetUserInfoComponentTest: Remove nothing")
+                .SetDescription("TrySetUserInfoComponentTest: Remove nothing")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://host.com", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("thepw@host.com", UriKind.Relative), "new", "pw")
-                .SetName("TrySetUserInfoComponentTest: Replace username password")
+                .SetDescription("TrySetUserInfoComponentTest: Replace username password")
                 .Returns(new Tuple<bool, Uri>(false, new Uri("thepw@host.com", UriKind.Relative)));
             yield return new TestCaseData(new Uri("file:///NoHost", UriKind.Absolute), "new", "pw")
-                .SetName("TrySetUserInfoComponentTest: Replace username password")
+                .SetDescription("TrySetUserInfoComponentTest: Replace username password")
                 .Returns(new Tuple<bool, Uri>(false, new Uri("file:///NoHost", UriKind.Absolute)));
         }
 
@@ -351,25 +351,25 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetTrySetHostComponentTestTestCases()
         {
             yield return new TestCaseData(new Uri("http://me:thepw@host.com:8080/test?qry=true#mark", UriKind.Absolute), "new", (int?)null)
-                .SetName("TrySetHostComponentTest: Replace between user info and path")
+                .SetDescription("TrySetHostComponentTest: Replace between user info and path")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://me:thepw@new/test?qry=true#mark", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("file://mysite/mypath", UriKind.Absolute), null, (int?)null)
-                .SetName("TrySetHostComponentTest: Remove")
+                .SetDescription("TrySetHostComponentTest: Remove")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("file:///mypath", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("file:///mypath", UriKind.Absolute), "mysite", (int?)null)
-                .SetName("TrySetHostComponentTest: Insert")
+                .SetDescription("TrySetHostComponentTest: Insert")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("file://mysite/mypath", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://me:thepw@host.com:8080", UriKind.Absolute), "new", 9090)
-                .SetName("TrySetHostComponentTest: Replace after user info and no path, with port")
+                .SetDescription("TrySetHostComponentTest: Replace after user info and no path, with port")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://me:thepw@new:9090", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://me:thepw@host.com:8080", UriKind.Absolute), "new", (int?)null)
-                .SetName("TrySetHostComponentTest: Replace after user info and no path")
+                .SetDescription("TrySetHostComponentTest: Replace after user info and no path")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://me:thepw@new", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://host.com:8080/test?qry=true#mark", UriKind.Absolute), "new", 9000)
-                .SetName("TrySetHostComponentTest: Replace between scheme and path, with port")
+                .SetDescription("TrySetHostComponentTest: Replace between scheme and path, with port")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://new:9000/test?qry=true#mark", UriKind.Absolute)));
             yield return new TestCaseData(new Uri("http://host.com:8080/test?qry=true#mark", UriKind.Absolute), "new", (int?)null)
-                .SetName("TrySetHostComponentTest: Replace between scheme and path")
+                .SetDescription("TrySetHostComponentTest: Replace between scheme and path")
                 .Returns(new Tuple<bool, Uri>(true, new Uri("http://new/test?qry=true#mark", UriKind.Absolute)));
         }
 
@@ -384,26 +384,26 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetAsNormalizedTestCases()
         {
             yield return new TestCaseData(new Uri("", UriKind.Relative))
-                .SetName("AsNormalizedTest: Empty Uri")
+                .SetDescription("AsNormalizedTest: Empty Uri")
                 .Returns(new Uri("", UriKind.Relative));
             yield return new TestCaseData(new Uri("?", UriKind.Relative))
-                .SetName("AsNormalizedTest: Relative with empty query")
+                .SetDescription("AsNormalizedTest: Relative with empty query")
                 .Returns(new Uri("", UriKind.Relative));
             yield return new TestCaseData(new Uri("#", UriKind.Relative))
-                .SetName("AsNormalizedTest: Relative with empty fragment")
+                .SetDescription("AsNormalizedTest: Relative with empty fragment")
                 .Returns(new Uri("", UriKind.Relative));
             yield return new TestCaseData(new Uri("?#", UriKind.Relative))
-                .SetName("AsNormalizedTest: Relative with empty query and fragment")
+                .SetDescription("AsNormalizedTest: Relative with empty query and fragment")
                 .Returns(new Uri("", UriKind.Relative));
             yield return new TestCaseData(new Uri(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\testazureshare", UriKind.Absolute))
-                .SetName("AsNormalizedTest: Upper case UNC host file URI")
+                .SetDescription("AsNormalizedTest: Upper case UNC host file URI")
                 .Returns(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
             yield return new TestCaseData(new Uri("FILE://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?#", UriKind.Absolute))
-                .SetName("AsNormalizedTest: URL totally upper case")
+                .SetDescription("AsNormalizedTest: URL totally upper case")
                 .Returns(new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
             foreach (ValueAndExpectedResult<Uri, Uri> testData in GetFileUriValues())
                 yield return new TestCaseData(testData.Value)
-                    .SetName(testData.Description)
+                    .SetDescription(testData.Description)
                     .Returns(testData.ExpectedResult);
         }
 

@@ -30,11 +30,11 @@ namespace FsInfoCat.Test
                 true
             ));
             yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots.ToArray()))
-                .SetName("FsHostAddTest:Single item")
+                .SetDescription("FsHostAddTest:Single item")
                 .Returns(1);
             fsRoots.Add(new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
             yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots.ToArray()))
-                .SetName("FsHostAddTest:Add same item twice")
+                .SetDescription("FsHostAddTest:Add same item twice")
                 .Returns(1);
             fsRoots[1] = new Tuple<FsRoot, bool>(
                 new FsRoot()
@@ -50,7 +50,7 @@ namespace FsInfoCat.Test
             );
             fsRoots.Insert(1, new Tuple<FsRoot, bool>(fsRoots[0].Item1, false));
             yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots.ToArray()))
-                .SetName("FsHostAddTest:Add 2 different items, first one twice")
+                .SetDescription("FsHostAddTest:Add 2 different items, first one twice")
                 .Returns(2);
         }
 
@@ -105,26 +105,26 @@ namespace FsInfoCat.Test
                 -1
             ));
             yield return new TestCaseData(addList, removeList)
-                .SetName("FsHostRemoveTest:Remove first and non-existent")
+                .SetDescription("FsHostRemoveTest:Remove first and non-existent")
                 .Returns(2);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
             removeList.Add(new Tuple<FsRoot, int>(addList[1], 1));
             yield return new TestCaseData(addList, removeList)
-                .SetName("FsHostRemoveTest:Remove second")
+                .SetDescription("FsHostRemoveTest:Remove second")
                 .Returns(2);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
             removeList.Add(new Tuple<FsRoot, int>(addList[2], 2));
             yield return new TestCaseData(addList, removeList)
-                .SetName("FsHostRemoveTest:Remove last")
+                .SetDescription("FsHostRemoveTest:Remove last")
                 .Returns(2);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
             removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
             removeList.Add(new Tuple<FsRoot, int>(addList[2], 1));
             yield return new TestCaseData(addList, removeList)
-                .SetName("FsHostRemoveTest:Remove first then last")
+                .SetDescription("FsHostRemoveTest:Remove first then last")
                 .Returns(1);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
@@ -132,7 +132,7 @@ namespace FsInfoCat.Test
             removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
             removeList.Add(new Tuple<FsRoot, int>(addList[2], -1));
             yield return new TestCaseData(addList, removeList)
-                .SetName("FsHostRemoveTest:Remove last then first, then last again")
+                .SetDescription("FsHostRemoveTest:Remove last then first, then last again")
                 .Returns(1);
             addList = getAddList();
             removeList = new Collection<Tuple<FsRoot, int>>();
@@ -140,7 +140,7 @@ namespace FsInfoCat.Test
             removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
             removeList.Add(new Tuple<FsRoot, int>(addList[1], 0));
             yield return new TestCaseData(addList, removeList)
-                .SetName("FsHostRemoveTest:Remove last, first, then second")
+                .SetDescription("FsHostRemoveTest:Remove last, first, then second")
                 .Returns(0);
         }
 
