@@ -7,7 +7,7 @@ namespace FsInfoCat.Test.Helpers
     /// </summary>
     /// <typeparam name="TResult">The type of return value.</typeparam>
     /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="Func{TResult}"/> delegate.</remarks>
-    public interface IFuncInvocationResult<TResult> : IInvocationResult, IFuncTestData<TResult> { }
+    public interface IFuncInvocationResult<TResult> : IInvocationResult, IFuncTestData<TResult>, IEquatable<IFuncInvocationResult<TResult>> { }
 
     /// <summary>
     /// Data object containaing the return value and at least 1 additional output value.
@@ -16,7 +16,7 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TResult">The type of return value.</typeparam>
     /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="FuncWithOutput{TOut, TResult}"/>
     /// delegate.</remarks>
-    public interface IFuncInvocationResult<TOut, TResult> : IInvocationResult<TOut>, IFuncTestData1<TOut, TResult> { }
+    public interface IFuncInvocationResult<TOut, TResult> : IInvocationResult<TOut>, IFuncTestData1<TOut, TResult>, IEquatable<IFuncInvocationResult<TOut, TResult>> { }
 
     /// <summary>
     /// Data object containaing the return value and at least 2 additional output values.
@@ -26,7 +26,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TResult">The type of return value.</typeparam>
     /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="FuncWithOutput2{TOut1, TOut2, TResult}"/>
     /// delegate.</remarks>
-    public interface IFuncInvocationResult<TOut1, TOut2, TResult> : IInvocationResult<TOut1, TOut2>, IFuncTestData2<TOut1, TOut2, TResult> { }
+    public interface IFuncInvocationResult<TOut1, TOut2, TResult> : IInvocationResult<TOut1, TOut2>, IFuncTestData2<TOut1, TOut2, TResult>,
+        IEquatable<IFuncInvocationResult<TOut1, TOut2, TResult>> { }
 
     /// <summary>
     /// Data object containaing the return value and at least 3 additional output values.
@@ -37,7 +38,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TResult">The type of return value.</typeparam>
     /// <remarks>This can be used to represent the results of an invocation that matches the signature of the <seealso cref="FuncWithOutput3{TOut1, TOut2, TOut3, TResult}"/>
     /// delegate.</remarks>
-    public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TResult> : IInvocationResult<TOut1, TOut2, TOut3>, IFuncTestData3<TOut1, TOut2, TOut3, TResult> { }
+    public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TResult> : IInvocationResult<TOut1, TOut2, TOut3>, IFuncTestData3<TOut1, TOut2, TOut3, TResult>,
+        IEquatable<IFuncInvocationResult<TOut1, TOut2, TOut3, TResult>> { }
 
     /// <summary>
     /// Data object containaing the return value and at least 4 additional output values.
@@ -50,7 +52,7 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
     /// <seealso cref="FuncWithOutput4{TOut1, TOut2, TOut3, TOut4, TResult}"/> delegate.</remarks>
     public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TResult> : IInvocationResult<TOut1, TOut2, TOut3, TOut4>,
-        IFuncTestData4<TOut1, TOut2, TOut3, TOut4, TResult> { }
+        IFuncTestData4<TOut1, TOut2, TOut3, TOut4, TResult>, IEquatable<IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TResult>> { }
 
     /// <summary>
     /// Data object containaing the return value and at least 5 additional output values.
@@ -64,7 +66,7 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
     /// <seealso cref="FuncWithOutput5{TOut1, TOut2, TOut3, TOut4, TOut5, TResult}"/> delegate.</remarks>
     public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TResult> : IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5>,
-        IFuncTestData5<TOut1, TOut2, TOut3, TOut4, TOut5, TResult> { }
+        IFuncTestData5<TOut1, TOut2, TOut3, TOut4, TOut5, TResult>, IEquatable<IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TResult>> { }
 
     /// <summary>
     /// Data object containaing the return value and at least 6 additional output values.
@@ -79,7 +81,7 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
     /// <seealso cref="FuncWithOutput6{TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TResult}"/> delegate.</remarks>
     public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TResult> : IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>,
-        IFuncTestData6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TResult> { }
+        IFuncTestData6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TResult>, IEquatable<IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TResult>> { }
 
     /// <summary>
     /// Data object containaing the return value and at least 7 additional output values.
@@ -94,5 +96,5 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>This can be used to represent the results of an invocation that matches the signature of the
     /// <seealso cref="FuncWithOutput7{TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7, TResult}"/> delegate.</remarks>
     public interface IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7, TResult> : IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7>,
-        IFuncTestData7<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7, TResult> { }
+        IFuncTestData7<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7, TResult>, IEquatable<IFuncInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7, TResult>> { }
 }

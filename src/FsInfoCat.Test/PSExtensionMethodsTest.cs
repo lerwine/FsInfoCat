@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using System.Collections;
 using FsInfoCat.Test.Helpers;
+using static FsInfoCat.PS.ExtensionMethods;
 
 namespace FsInfoCat.Test
 {
@@ -16,164 +17,111 @@ namespace FsInfoCat.Test
         {
         }
 
-        public class ActionInvokeTestHelper<T1, T2>
-        {
-            public bool WasActionInvoked { get; protected set; }
-            public T2 ActionInvokedValue { get; protected set; }
-            public bool ExpectActionInvoke { get; }
-            public T1 InputObj { get; }
-            public ActionInvokeTestHelper(T1 inputObj, bool expectActionInvoke)
-            {
-                InputObj = inputObj;
-                ExpectActionInvoke = expectActionInvoke;
-            }
-            public void ActionHandler(T2 value)
-            {
-                WasActionInvoked = true;
-                ActionInvokedValue = value;
-            }
-
-            public Tuple<T2, R> GetReturnValue<R>(R result)
-            {
-                Assert.That(ExpectActionInvoke, Is.EqualTo(WasActionInvoked), (WasActionInvoked) ? "Callback invocation not expected" : "Callback invocation not expected");
-                return new Tuple<T2, R>(ActionInvokedValue, result);
-            }
-        }
-
-        public class CoerceTestHelper<T1, T2, C> : ActionInvokeTestHelper<T1, T2>
-        {
-            private readonly Func<T2, C> _coersionFunc;
-            public bool ExpectCoersionInvoke { get; }
-            public bool WasCoersionInvoked { get; private set; }
-            public T2 CoersionInvokedValue { get; private set; }
-            public bool WasSuccessActionInvoked { get; protected set; }
-            public C SuccessActionInvokedValue { get; protected set; }
-            public bool ExpectSuccessActionInvoke { get; }
-
-            public CoerceTestHelper(T1 inputObj, Func<T2, C> coersionFunc, bool expectCoersionInvoke, bool expectActionInvoke) : base(inputObj, expectActionInvoke)
-            {
-                _coersionFunc = coersionFunc;
-                ExpectCoersionInvoke = expectCoersionInvoke;
-            }
-            public C CoersionHandler(T2 value)
-            {
-                WasCoersionInvoked = true;
-                CoersionInvokedValue = value;
-                return _coersionFunc(value);
-            }
-            public void SuccessActionHandler(C value)
-            {
-                WasSuccessActionInvoked = true;
-                SuccessActionInvokedValue = value;
-            }
-            public Tuple<T2, C, R> GetReturnValue<R>(R result, C coercedValue)
-            {
-                Assert.That(ExpectActionInvoke, Is.EqualTo(WasActionInvoked), (WasActionInvoked) ? "Action callback invocation not expected" : "Action callback invocation not expected");
-                Assert.That(ExpectCoersionInvoke, Is.EqualTo(WasCoersionInvoked), (WasCoersionInvoked) ? "Coersiosn callback invocation not expected" : "Coersiosn callback invocation not expected");
-                return new Tuple<T2, C, R>(ActionInvokedValue, coercedValue, result);
-            }
-        }
-
-        public class TryCoerceTestHelper<T1, T2, C> : ActionInvokeTestHelper<T1, T2>
-        {
-            private readonly ExtensionMethods.TryCoerceHandler<T2, C> _coersionFunc;
-            public bool ExpectCoersionInvoke { get; }
-            public bool WasCoersionInvoked { get; private set; }
-            public T2 CoersionInvokedValue { get; private set; }
-            public bool WasSuccessActionInvoked { get; protected set; }
-            public C SuccessActionInvokedValue { get; protected set; }
-            public bool ExpectSuccessActionInvoke { get; }
-
-            public TryCoerceTestHelper(T1 inputObj, ExtensionMethods.TryCoerceHandler<T2, C> coersionFunc, bool expectCoersionInvoke, bool expectActionInvoke) : base(inputObj, expectActionInvoke)
-            {
-                _coersionFunc = coersionFunc;
-                ExpectCoersionInvoke = expectCoersionInvoke;
-            }
-            public bool CoersionHandler(T2 value, out C result)
-            {
-                WasCoersionInvoked = true;
-                CoersionInvokedValue = value;
-                return _coersionFunc(value, out result);
-            }
-            public void SuccessActionHandler(C value)
-            {
-                WasSuccessActionInvoked = true;
-                SuccessActionInvokedValue = value;
-            }
-            public Tuple<T2, C, R> GetReturnValue<R>(R result, C coercedValue)
-            {
-                Assert.That(ExpectActionInvoke, Is.EqualTo(WasActionInvoked), (WasActionInvoked) ? "Action callback invocation not expected" : "Action callback invocation not expected");
-                Assert.That(ExpectCoersionInvoke, Is.EqualTo(WasCoersionInvoked), (WasCoersionInvoked) ? "Coersiosn callback invocation not expected" : "Coersiosn callback invocation not expected");
-                return new Tuple<T2, C, R>(ActionInvokedValue, coercedValue, result);
-            }
-        }
-
         public static IEnumerable<TestCaseData> GetInvokeIfNotNull1TestCases() => throw new InconclusiveException("Test data not implemented");
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetInvokeIfNotNull1TestCases))]
-        public IFunctionInvocationResult<Uri, bool> InvokeIfNotNull1Test(Uri target)
+        public IInvocationResult<Uri> InvokeIfNotNull1Test(Uri target)
         {
-            return InvocationListener<Uri>.Apply(a => target.InvokeIfNotNull(a));
+            InvocationMonitor<Uri> invocationMonitor = new InvocationMonitor<Uri>();
+            target.InvokeIfNotNull(invocationMonitor.Apply);
+            return invocationMonitor.ToResult();
         }
 
         public static IEnumerable<TestCaseData> GetInvokeIfNotNull2TestCases() => throw new InconclusiveException("Test data not implemented");
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetInvokeIfNotNull2TestCases))]
-        public IFunctionInvocationResult<int, bool> InvokeIfNotNull2Test(int? target)
+        public IInvocationResult<int> InvokeIfNotNull2Test(int? target)
         {
-            return InvocationListener<int>.Apply(a => target.InvokeIfNotNull(a));
+            InvocationMonitor<int> invocationMonitor = new InvocationMonitor<int>();
+            target.InvokeIfNotNull(invocationMonitor.Apply);
+            return invocationMonitor.ToResult();
         }
 
         public static IEnumerable<TestCaseData> GetTryCoerceValue3TestCases() => throw new InconclusiveException("Test data not implemented");
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCoerceValue3TestCases))]
-        public FunctionInvocationResult<Uri, bool> TryCoerceValue3Test(string inputObj, Func<string, Uri> ifNotNull, Func<Uri> ifNull)
+        public FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool> TryCoerceValue3Test(string inputObj, Func<string, Uri> ifNotNull, Func<Uri> ifNull)
         {
-            IFunctionResult<IFunctionInvocationResult<string, Uri>, IFunctionInvocationResult<Uri>, Uri, bool>
-            //
-            // Func<string, Uri> ifNotNull => IFunctionInvocationResult<string, Uri>
-            // Func<Uri> ifNull => IFunctionInvocationResult<Uri>
-            // IFunctionInvocationResult<IFunctionInvocationResult<string, Uri>, IFunctionInvocationResult<Uri>, bool>
-            // bool TryCoerceValue<V, T>(this V inputObj, Func<V, T> ifNotNull, Func<T> ifNull, out R result)
+            FunctionInvocationMonitor<Uri> notNullMonitor = new FunctionInvocationMonitor<Uri>();
+            FunctionInvocationMonitor<Uri> ifNullMonitor = new FunctionInvocationMonitor<Uri>();
+            return FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>.FromInvocation((out IFuncInvocationResult<Uri> notNullResult,
+                out IFuncInvocationResult<Uri> ifNullResult, out Uri uri) =>
+            {
+                bool result = inputObj.TryCoerceValue(notNullMonitor.CreateProxy(ifNotNull), ifNullMonitor.CreateProxy(ifNull), out uri);
+                notNullResult = notNullMonitor.ToResult();
+                ifNullResult = ifNullMonitor.ToResult();
+                return result;
+            });
         }
 
         public static IEnumerable<TestCaseData> GetTryCoerceValue4TestCases() => throw new InconclusiveException("Test data not implemented");
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCoerceValue4TestCases))]
-        public Tuple<string, Uri, bool> TryCoerceValue4Test(CoerceTestHelper<string, string, Uri> helper)
+        public FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool> TryCoerceValue4Test(string inputObj, Func<string, Uri> ifNotNull)
         {
-            return helper.GetReturnValue(helper.InputObj.TryCoerceValue(helper.CoersionHandler, out Uri result), result);
+            FunctionInvocationMonitor<Uri> notNullMonitor = new FunctionInvocationMonitor<Uri>();
+            return FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>.FromInvocation((out IFuncInvocationResult<Uri> notNullResult, out Uri uri) =>
+            {
+                bool result = inputObj.TryCoerceValue(notNullMonitor.CreateProxy(ifNotNull), out uri);
+                notNullResult = notNullMonitor.ToResult();
+                return result;
+            });
         }
 
         public static IEnumerable<TestCaseData> GetTryCoerceValue5TestCases() => throw new InconclusiveException("Test data not implemented");
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCoerceValue5TestCases))]
-        public Tuple<int, string, bool> TryCoerceValue5Test(CoerceTestHelper<int?, int, string> helper, Func<string> ifNull)
+        public FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool> TryCoerceValue5Test(int? inputObj, Func<int, string> ifNotNull, Func<string> ifNull)
         {
-            return helper.GetReturnValue(helper.InputObj.TryCoerceValue(helper.CoersionHandler, ifNull, out string result), result);
+            FunctionInvocationMonitor<string> notNullMonitor = new FunctionInvocationMonitor<string>();
+            FunctionInvocationMonitor<string> ifNullMonitor = new FunctionInvocationMonitor<string>();
+            return FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>.FromInvocation((out IFuncInvocationResult<string> notNullResult,
+                out IFuncInvocationResult<string> ifNullResult, out string value) =>
+            {
+                bool result = inputObj.TryCoerceValue(notNullMonitor.CreateProxy(ifNotNull), ifNullMonitor.CreateProxy(ifNull), out value);
+                notNullResult = notNullMonitor.ToResult();
+                ifNullResult = ifNullMonitor.ToResult();
+                return result;
+            });
         }
 
         public static IEnumerable<TestCaseData> GetTryCoerceValue6TestCases() => throw new InconclusiveException("Test data not implemented");
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCoerceValue6TestCases))]
-        public Tuple<int, string, bool> TryCoerceValue6Test(CoerceTestHelper<int?, int, string> helper)
+        public FuncTestData2<IFuncInvocationResult<string>, string, bool> TryCoerceValue6Test(int? inputObj, Func<int, string> ifNotNull)
         {
-            return helper.GetReturnValue(helper.InputObj.TryCoerceValue(helper.CoersionHandler, out string result), result);
+            FunctionInvocationMonitor<string> notNullMonitor = new FunctionInvocationMonitor<string>();
+            return FuncTestData2<IFuncInvocationResult<string>, string, bool>.FromInvocation((out IFuncInvocationResult<string> notNullResult, out string value) =>
+            {
+                bool result = inputObj.TryCoerceValue(notNullMonitor.CreateProxy(ifNotNull), out value);
+                notNullResult = notNullMonitor.ToResult();
+                return result;
+            });
         }
 
         public static IEnumerable<TestCaseData> GetTryCast1TestCases() => throw new InconclusiveException("Test data not implemented");
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTryCast1TestCases))]
-        public Tuple<object, int?, bool> TryCast1Test(TryCoerceTestHelper<object, object, int?> helper, bool asRawValueIfFail)
+        public FuncTestData3<IInvocationResult<int?>, IFuncInvocationResult<int?, bool>, int?, bool> TryCast1Test(object inputObj, Action<int?> ifSuccess, TryCoerceHandler<object, int?> fallback, bool asRawValueIfFail)
         {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, helper.CoersionHandler, asRawValueIfFail, out int? result), result);
+            InvocationMonitor<int?> ifSuccessMonitor = new InvocationMonitor<int?>();
+            FunctionInvocationMonitor<int?, bool> fallbackMonitor = new FunctionInvocationMonitor<int?, bool>();
+            FuncWithOutput<object, int?, bool> funcWithOutput = fallbackMonitor.CreateProxy((object obj, out int? i) => fallback(inputObj, out i));
+            return FuncTestData3<IInvocationResult<int?>, IFuncInvocationResult<int?, bool>, int?, bool>.FromInvocation((out IInvocationResult<int?> ifSuccessResult,
+                out IFuncInvocationResult<int?, bool> ifNullResult, out int? value) =>
+            {
+                bool result = inputObj.TryCast(ifSuccessMonitor.CreateProxy(ifSuccess), (object obj, out int? i) => funcWithOutput(inputObj, out i), asRawValueIfFail, out value);
+                ifSuccessResult = ifSuccessMonitor.ToResult();
+                ifNullResult = fallbackMonitor.ToResult();
+                return result;
+            });
         }
 
         public static IEnumerable<TestCaseData> GetTryCast2TestCases() => throw new InconclusiveException("Test data not implemented");
