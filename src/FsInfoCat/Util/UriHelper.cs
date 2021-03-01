@@ -36,6 +36,9 @@ namespace FsInfoCat.Util
         public const UriComponents BEFORE_FRAGMENT_COMPONENTS = UriComponents.Scheme | UriComponents.UserInfo | UriComponents.HostAndPort |
             UriComponents.PathAndQuery | UriComponents.KeepDelimiter;
 
+        /// <summary>
+        /// Matches a path segment including optional trailing slash.
+        /// </summary>
         public static readonly Regex PathSegmentPattern = new Regex(@"(?:^|\G)(?:/|([^/]+)(?:/|$))", RegexOptions.Compiled);
 
         private static readonly char[] QueryOrFragmentChar = new char[] { '?', '#' };
