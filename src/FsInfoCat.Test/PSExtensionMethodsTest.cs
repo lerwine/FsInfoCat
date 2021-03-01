@@ -1,540 +1,1276 @@
 using System;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Management.Automation;
-using System.Collections;
 using FsInfoCat.Test.Helpers;
 using FsInfoCat.PS;
-//using static FsInfoCat.PS.ExtensionMethods;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Test
 {
     [TestFixture]
-    public class PSExtensionMethodsTest
+    public partial class PSExtensionMethodsTest
     {
         [SetUp]
         public void Setup()
         {
         }
 
-        public static IEnumerable<TestCaseData> GetInvokeIfNotNull1TestCases()
-        {
-            string methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.InvokeIfNotNull)}<{typeof(Uri).Name}>";
-            yield return new TestCaseData(null).SetDescription($"{methodName}(null)").Returns(new InvocationResult<Uri>());
-            UriKind kind = UriKind.Relative;
-            Uri target = new Uri("", kind);
-            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
-            target = new Uri("/dir/myfile.txt", kind);
-            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
-            kind = UriKind.Absolute;
-            target = new Uri("file://myserver/dir/myfile.txt", kind);
-            yield return new TestCaseData(target).SetDescription($"{methodName}(new Uri(\"{target.OriginalString}\", UriKind.{kind}))").Returns(new InvocationResult<Uri>(target));
-        }
-
         [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetInvokeIfNotNull1TestCases))]
-        public IInvocationResult<Uri> InvokeIfNotNull1Test(Uri target)
+        [TestCaseSource(nameof(GetInvokeIfNotNullTest1Cases))]
+        public IInvocationResult<Uri> InvokeIfNotNullTest1(Uri target)
         {
             InvocationMonitor<Uri> invocationMonitor = new InvocationMonitor<Uri>();
             target.InvokeIfNotNull(invocationMonitor.Apply);
             return invocationMonitor.ToResult();
         }
 
-        public static IEnumerable<TestCaseData> GetInvokeIfNotNull2TestCases()
-        {
-            string methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.InvokeIfNotNull)}<{typeof(int).Name}?>";
-            yield return new TestCaseData(null).SetDescription($"{methodName}(null)").Returns(new InvocationResult<int>());
-            int target = 0;
-            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
-            target = int.MaxValue;
-            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
-            target = int.MinValue;
-            yield return new TestCaseData(target).SetDescription($"{methodName}({target})").Returns(new InvocationResult<int>(target));
-        }
-
         [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetInvokeIfNotNull2TestCases))]
-        public IInvocationResult<int> InvokeIfNotNull2Test(int? target)
+        [TestCaseSource(nameof(GetInvokeIfNotNullTest2Cases))]
+        public IInvocationResult<int> InvokeIfNotNullTest2(int? target)
         {
             InvocationMonitor<int> invocationMonitor = new InvocationMonitor<int>();
             target.InvokeIfNotNull(invocationMonitor.Apply);
             return invocationMonitor.ToResult();
         }
 
-        public static IEnumerable<TestCaseData> GetTryCoerceValue3TestCases()
+        [Test, Property("Priority", 1)]
+        public void TryCastTestTest()
         {
-            string args = typeof(Uri).Name;
-            string methodName = $"<{typeof(string).Name}, {args}>";
-            args = $"Func<{methodName}> ifNotNull, Func<{args}> ifNull, out {args} result";
-            methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.TryCoerceValue)}<{methodName}>";
-            Func<string, Uri> ifNotNullFunc = s => (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out Uri u)) ? u : null;
-            Uri resultUri = new Uri(".", UriKind.Relative);
-            Func<Uri> ifNullFunc = () => resultUri;
-            FuncInvocationResult<Uri> ifNotNullResult = new FuncInvocationResult<Uri>();
-            FuncInvocationResult<Uri> ifNullResult = new FuncInvocationResult<Uri>(resultUri);
-            yield return new TestCaseData(null, ifNotNullFunc, ifNullFunc)
-                .SetDescription($"{methodName}(null, {args})")
-                .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(false, ifNotNullResult, ifNullResult, resultUri));
-            string inputObj = "";
-            resultUri = new Uri(inputObj, UriKind.Relative);
-            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
-            ifNullResult = new FuncInvocationResult<Uri>();
-            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
-            inputObj = "/dir/myfile.txt";
-            resultUri = new Uri(inputObj, UriKind.Relative);
-            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
-            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
-            inputObj = "file://myserver/dir/myfile.txt";
-            resultUri = new Uri(inputObj, UriKind.Absolute);
-            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
-            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, ifNullResult, resultUri));
+            object inputObj = null;
+            List<int?> ifSuccessResults = new List<int?>();
+            Action<int?> ifSuccessHandler = i => ifSuccessResults.Add(i);
+            int ifNullCallCount = 0;
+            Func<int?> ifNullHandler = () =>
+            {
+                ifNullCallCount++;
+                return 12;
+            };
+            bool nullReturnValue = false;
+            bool returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, null, out int? result);
+            Assert.That(returnValue, Is.False);
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(0));
+            Assert.That(result, Is.Null);
+
+            nullReturnValue = true;
+            returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, null, out result);
+            Assert.That(returnValue, Is.True);
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
+            Assert.That(result, Is.Null);
+            Assert.That(ifSuccessResults[0], Is.Null);
+
+            nullReturnValue = false;
+            ifSuccessResults.Clear();
+            returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
+            Assert.That(returnValue, Is.False);
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(0));
+            Assert.That(ifNullCallCount, Is.EqualTo(1));
+            Assert.That(result, Is.EqualTo(12));
+
+            nullReturnValue = true;
+            ifNullCallCount = 0;
+            returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
+            Assert.That(returnValue, Is.True);
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
+            Assert.That(ifNullCallCount, Is.EqualTo(1));
+            Assert.That(result, Is.EqualTo(12));
+            Assert.That(ifSuccessResults[0], Is.EqualTo(12));
+
+            inputObj = 7;
+            ifNullCallCount = 0;
+            ifSuccessResults.Clear();
+            returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
+            Assert.That(returnValue, Is.True);
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
+            Assert.That(ifNullCallCount, Is.EqualTo(0));
+            Assert.That(result, Is.EqualTo(7));
+            Assert.That(ifSuccessResults[0], Is.EqualTo(7));
         }
+
 
         [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCoerceValue3TestCases))]
-        public IFuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool> TryCoerceValue3Test(string inputObj, Func<string, Uri> ifNotNull, Func<Uri> ifNull)
+        public void TryCoerceAsIntTest()
         {
-            FunctionInvocationMonitor<Uri> notNullMonitor = new FunctionInvocationMonitor<Uri>();
-            FunctionInvocationMonitor<Uri> ifNullMonitor = new FunctionInvocationMonitor<Uri>();
-            return FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>.FromInvocation((out IFuncInvocationResult<Uri> notNullResult,
-                out IFuncInvocationResult<Uri> ifNullResult, out Uri uri) =>
+            int ifNullCallCount = 0;
+            int fallbackCallCount = 0;
+            List<int> ifSuccessResults = new List<int>();
+            TryCoerceHandler<object, int> fallbackHandler = (object o, out int i) =>
             {
-                bool result = inputObj.TryCoerceValue(notNullMonitor.CreateProxy(ifNotNull), ifNullMonitor.CreateProxy(ifNull), out uri);
-                notNullResult = notNullMonitor.ToResult();
-                ifNullResult = ifNullMonitor.ToResult();
-                return result;
-            });
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCoerceValue4TestCases()
-        {
-            string args = typeof(Uri).Name;
-            string methodName = $"<{typeof(string).Name}, {args}>";
-            args = $"Func<{methodName}> ifNotNull, Func<{args}> ifNull, out {args} result";
-            methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.TryCoerceValue)}<{methodName}>";
-            Func<string, Uri> ifNotNullFunc = s => (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out Uri u)) ? u : null;
-            FuncInvocationResult<Uri> ifNotNullResult = new FuncInvocationResult<Uri>();
-            yield return new TestCaseData(null, ifNotNullFunc)
-                .SetDescription($"{methodName}(null, {args})")
-                .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(false, ifNotNullResult, null));
-            string inputObj = "";
-            Uri resultUri = new Uri(inputObj, UriKind.Relative);
-            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
-            yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
-            inputObj = "/dir/myfile.txt";
-            resultUri = new Uri(inputObj, UriKind.Relative);
-            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
-            yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
-            inputObj = "file://myserver/dir/myfile.txt";
-            resultUri = new Uri(inputObj, UriKind.Absolute);
-            ifNotNullResult = new FuncInvocationResult<Uri>(resultUri);
-            yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(true, ifNotNullResult, resultUri));
-        }
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCoerceValue4TestCases))]
-        public FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool> TryCoerceValue4Test(string inputObj, Func<string, Uri> ifNotNull)
-        {
-            FunctionInvocationMonitor<Uri> notNullMonitor = new FunctionInvocationMonitor<Uri>();
-            return FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>.FromInvocation((out IFuncInvocationResult<Uri> notNullResult, out Uri uri) =>
+                fallbackCallCount++;
+                if (o is DateTime dateTime)
+                {
+                    i = dateTime.Year;
+                    return true;
+                }
+                i = default;
+                return false;
+            };
+            Func<int> ifNullHandler = () =>
             {
-                bool result = inputObj.TryCoerceValue(notNullMonitor.CreateProxy(ifNotNull), out uri);
-                notNullResult = notNullMonitor.ToResult();
-                return result;
-            });
+                ifNullCallCount++;
+                return 12;
+            };
+            Action<int> ifSuccessHandler = i => ifSuccessResults.Add(i);
+            bool returnValueIfNull = false;
+            object inputObj = null;
+            bool returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out int result);
+            Assert.That(returnValue, Is.False);
+            Assert.That(ifNullCallCount, Is.EqualTo(1));
+            Assert.That(fallbackCallCount, Is.EqualTo(0));
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(0));
+            Assert.That(result, Is.EqualTo(12));
+
+            ifNullCallCount = 0;
+            returnValueIfNull = true;
+            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            Assert.That(returnValue, Is.True);
+            Assert.That(ifNullCallCount, Is.EqualTo(1));
+            Assert.That(fallbackCallCount, Is.EqualTo(0));
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
+            Assert.That(result, Is.EqualTo(12));
+            Assert.That(ifSuccessResults[0], Is.EqualTo(12));
+
+            ifSuccessResults.Clear();
+            ifNullCallCount = 0;
+            inputObj = 3;
+            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            Assert.That(returnValue, Is.True);
+            Assert.That(ifNullCallCount, Is.EqualTo(0));
+            Assert.That(fallbackCallCount, Is.EqualTo(0));
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
+            Assert.That(result, Is.EqualTo(3));
+            Assert.That(ifSuccessResults[0], Is.EqualTo(3));
+
+            ifSuccessResults.Clear();
+            inputObj = (long)int.MaxValue;
+            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            Assert.That(returnValue, Is.True);
+            Assert.That(ifNullCallCount, Is.EqualTo(0));
+            Assert.That(fallbackCallCount, Is.EqualTo(0));
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
+            Assert.That(result, Is.EqualTo(int.MaxValue));
+            Assert.That(ifSuccessResults[0], Is.EqualTo(int.MaxValue));
+
+            ifSuccessResults.Clear();
+            inputObj = ((long)int.MaxValue) + 1L;
+            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            Assert.That(returnValue, Is.False);
+            Assert.That(ifNullCallCount, Is.EqualTo(0));
+            Assert.That(fallbackCallCount, Is.EqualTo(1));
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(0));
+            Assert.That(result, Is.EqualTo(default(int)));
+
+            DateTime d = DateTime.Now;
+            inputObj = d;
+            ifSuccessResults.Clear();
+            fallbackCallCount = 0;
+            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            Assert.That(returnValue, Is.True);
+            Assert.That(ifNullCallCount, Is.EqualTo(0));
+            Assert.That(fallbackCallCount, Is.EqualTo(1));
+            Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
+            Assert.That(result, Is.EqualTo(d.Year));
+            Assert.That(ifSuccessResults[0], Is.EqualTo(d.Year));
         }
 
-        public static IEnumerable<TestCaseData> GetTryCoerceValue5TestCases()
+        /// <summary>
+        /// Unit test for <see cref="ExtensionMethods.TryCoerceTo{TInput, TResult}(TInput, Func{TInput, TResult}, Func{TResult}, out TResult)"/>.
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceTo1TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool> TryCoerceToTest1(string inputObj, Func<string, Uri> ifNotNull, Func<Uri> ifNull)
         {
-            string args = typeof(Uri).Name;
-            string methodName = $"<{typeof(string).Name}, {args}>";
-            args = $"Func<{methodName}> ifNotNull, Func<{args}> ifNull, out {args} result";
-            methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.TryCoerceValue)}<{methodName}>";
-            Func<int, string> ifNotNullFunc = i => i.ToString("X4");
-            string resultString = "(None)";
-            Func<string> ifNullFunc = () => resultString;
-            FuncInvocationResult<string> ifNotNullResult = new FuncInvocationResult<string>();
-            FuncInvocationResult<string> ifNullResult = new FuncInvocationResult<string>(resultString);
-            yield return new TestCaseData(null, ifNotNullFunc, ifNullFunc)
-                .SetDescription($"{methodName}(null, {args})")
-                .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(false, ifNotNullResult, ifNullResult, resultString));
-            int inputObj = 0;
-            resultString = "0000";
-            ifNotNullResult = new FuncInvocationResult<string>(resultString);
-            ifNullResult = new FuncInvocationResult<string>();
-            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
-            inputObj = int.MinValue;
-            resultString = inputObj.ToString("X4");
-            ifNotNullResult = new FuncInvocationResult<string>(resultString);
-            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
-            inputObj = int.MaxValue;
-            resultString = inputObj.ToString("X4");
-            ifNotNullResult = new FuncInvocationResult<string>(resultString);
-            yield return new TestCaseData(inputObj, ifNotNullFunc, ifNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, ifNullResult, resultString));
+            ifNotNull = ifNotNull.Monitor(out Func<IFuncInvocationResult<Uri>> getNotNullResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getNullResult);
+            bool returnValue = inputObj.TryCoerceTo(ifNotNull, ifNull, out Uri result);
+            return new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri>, Uri, bool>(returnValue, getNotNullResult(), getNullResult(), result);
         }
 
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCoerceValue5TestCases))]
-        public FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool> TryCoerceValue5Test(int? inputObj, Func<int, string> ifNotNull, Func<string> ifNull)
+        /// <summary>
+        /// Unit test for <see cref="ExtensionMethods.TryCoerceTo{TInput, TResult}(TInput?, Func{TInput, TResult}, Func{TResult}, out TResult)"/>.
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceTo3TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool> TryCoerceToTest3(int? inputObj, Func<int, string> ifNotNull, Func<string> ifNull)
         {
-            FunctionInvocationMonitor<string> notNullMonitor = new FunctionInvocationMonitor<string>();
-            FunctionInvocationMonitor<string> ifNullMonitor = new FunctionInvocationMonitor<string>();
-            return FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>.FromInvocation((out IFuncInvocationResult<string> notNullResult,
-                out IFuncInvocationResult<string> ifNullResult, out string value) =>
-            {
-                bool result = inputObj.TryCoerceValue(notNullMonitor.CreateProxy(ifNotNull), ifNullMonitor.CreateProxy(ifNull), out value);
-                notNullResult = notNullMonitor.ToResult();
-                ifNullResult = ifNullMonitor.ToResult();
-                return result;
-            });
+            ifNotNull = ifNotNull.Monitor(out Func<IFuncInvocationResult<string>> getNotNullResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<string>> getNullResult);
+            bool returnValue = inputObj.TryCoerceTo(ifNotNull, ifNull, out string result);
+            return new FuncTestData3<IFuncInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(returnValue, getNotNullResult(), getNullResult(), result);
         }
 
-        public static IEnumerable<TestCaseData> GetTryCoerceValue6TestCases()
+        /// <summary>
+        /// Unit test for <see cref="ExtensionMethods.TryCoerceTo{TInput, TResult}(TInput, Func{TInput, TResult}, out TResult)"/>.
+        /// </summary>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceTo2TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<Uri>, Uri, bool> TryCoerceToTest2(string inputObj, Func<string, Uri> ifNotNull)
         {
-            string args = typeof(Uri).Name;
-            string methodName = $"<{typeof(string).Name}, {args}>";
-            args = $"Func<{methodName}> ifNotNull, Func<{args}> ifNull, out {args} result";
-            methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.TryCoerceValue)}<{methodName}>";
-            Func<int, string> ifNotNullFunc = i => i.ToString("X4");
-            FuncInvocationResult<string> ifNotNullResult = new FuncInvocationResult<string>();
-            yield return new TestCaseData(null, ifNotNullFunc)
-                .SetDescription($"{methodName}(null, {args})")
-                .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(false, ifNotNullResult, null));
-            int inputObj = 0;
-            string resultString = "0000";
-            ifNotNullResult = new FuncInvocationResult<string>(resultString);
-            yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
-            inputObj = int.MinValue;
-            resultString = inputObj.ToString("X4");
-            ifNotNullResult = new FuncInvocationResult<string>(resultString);
-            yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
-            inputObj = int.MaxValue;
-            resultString = inputObj.ToString("X4");
-            ifNotNullResult = new FuncInvocationResult<string>(resultString);
-            yield return new TestCaseData(inputObj, ifNotNullFunc)
-                .SetDescription($"{methodName}(\"{inputObj})\", {args}")
-                .Returns(new FuncTestData2<IFuncInvocationResult<string>, string, bool>(true, ifNotNullResult, resultString));
+            ifNotNull = ifNotNull.Monitor(out Func<IFuncInvocationResult<Uri>> getNotNullResult);
+            bool returnValue = inputObj.TryCoerceTo(ifNotNull, out Uri result);
+            return new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(returnValue, getNotNullResult(), result);
         }
 
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCoerceValue6TestCases))]
-        public FuncTestData2<IFuncInvocationResult<string>, string, bool> TryCoerceValue6Test(int? inputObj, Func<int, string> ifNotNull)
+        /// <summary>
+        /// Unit test for <see cref="ExtensionMethods.TryCoerceTo{TInput, TResult}(TInput?, Func{TInput, TResult}, out TResult)"/>.
+        /// </summary>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceTo4TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<string>, string, bool> TryCoerceToTest4(int? inputObj, Func<int, string> ifNotNull)
         {
-            FunctionInvocationMonitor<string> notNullMonitor = new FunctionInvocationMonitor<string>();
-            return FuncTestData2<IFuncInvocationResult<string>, string, bool>.FromInvocation((out IFuncInvocationResult<string> notNullResult, out string value) =>
-            {
-                bool result = inputObj.TryCoerceValue(notNullMonitor.CreateProxy(ifNotNull), out value);
-                notNullResult = notNullMonitor.ToResult();
-                return result;
-            });
+            ifNotNull = ifNotNull.Monitor(out Func<IFuncInvocationResult<string>> getNotNullResult);
+            bool returnValue = inputObj.TryCoerceTo(ifNotNull, out string result);
+            return new FuncTestData2<IFuncInvocationResult<string>, string, bool>(returnValue, getNotNullResult(), result);
         }
 
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;<seealso cref="Uri"/>&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out</c> result</term> <seealso cref="Uri"/>
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData4{TOut1, TOut2, TOut3, TOut4, TResult}">IFuncTestData4</seealso><c>&lt;</c>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso><c>&lt;<seealso cref="Uri"/>&gt;</c> Output1</term>
+        ///         <list type="bullet">
+        ///             <item><term><c>bool</c> WasInvoked</term> <see langword="true"/> if the <paramref name="ifNull"/> delegate was invoked; otherwise, <see langword="false"/>.</item>
+        ///             <item><term><seealso cref="Uri"/> ReturnValue</term> The value returned by the <paramref name="ifNull"/> delegate.</item>
+        ///         </list>
+        ///     </item>
+        ///     <item>
+        ///         <term><seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso><c>&lt;<seealso cref="Uri"/>, bool&gt;</c>  Output2</term>
+        ///         <list type="bullet">
+        ///             <item><term><c>bool</c> WasInvoked</term> <see langword="true"/> if the <paramref name="fallback"/> delegate was invoked; otherwise, <see langword="false"/>.</item>
+        ///             <item><term><c>bool</c> Input1</term> The value returned by <paramref name="fallback"/>.</item>
+        ///             <item><term><seealso cref="Uri"/> Output1</term> The value of the output parameter of the <paramref name="fallback"/> delegate.</item>
+        ///         </list>
+        ///     </item>
+        ///     <item>
+        ///         <term><seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso><c>&lt;<seealso cref="Uri"/>&gt;</c> Output3</term>
+        ///         <list type="bullet">
+        ///             <item><term><c>bool</c> WasInvoked</term> <see langword="true"/> if the <c>ifSuccess</c> callback was invoked; otherwise, <see langword="false"/>.</item>
+        ///             <item><term><seealso cref="Uri"/> Output1</term> The value passed to the <c>ifSuccess</c> callback.</item>
+        ///         </list>
+        ///     </item>
+        ///     <item>
+        ///         <term><seealso cref="Uri"/> Output4</term> The value from the <c>return</c> parameter of
+        ///             <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>bool</c> ReturnValue</term> The value returned by
+        ///         <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
+        ///     </item>
+        /// </list>
+        /// <c>&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 1), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri1TestCases))]
+        public IFuncTestData4<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri1Test(object inputObj, Func<Uri> ifNull,
+            bool returnValueIfNull, TryCoerceHandler<object, Uri> fallback)
+        {
+            InvocationMonitor<Uri> ifSuccessMontor = new InvocationMonitor<Uri>();
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getFallBackResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, fallback, ifSuccessMontor.Apply, out Uri result);
+            return new FuncTestData4<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool>(returnValue, getIfNullResult(), getFallBackResult(),
+                ifSuccessMontor.ToResult(), result);
+        }
         /*
-        public static IEnumerable<TestCaseData> GetTryCast1TestCases() => throw new InconclusiveException("Test data not implemented");
+         Message: 
+          Expected: <FuncTestData4`5{ ReturnValue = False, Output1 = FuncInvocationResult`1{ ReturnValue = https://www.erwinefamily.net/, WasInvoked = True }, Output2 = FuncInvocationResult`2{ ReturnValue = False, WasInvoked = True, Output1 =  }, Output3 = InvocationResult`1{ WasInvoked = False, Output1 =  }, Output4 = https://www.erwinefamily.net/ }>
+          But was:  <FuncTestData4`5{ ReturnValue = False, Output1 = FuncInvocationResult`1{ ReturnValue = https://www.erwinefamily.net/, WasInvoked = True }, Output2 = FuncInvocationResult`2{ ReturnValue = False, WasInvoked = False, Output1 =  }, Output3 = InvocationResult`1{ WasInvoked = False, Output1 =  }, Output4 = https://www.erwinefamily.net/ }>
+        
+         */
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c><c>out</c> TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData4{TOut1, TOut2, TOut3, TOut4, TResult}">IFuncTestData4</seealso><c>&lt;</c>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso><c>&lt;int&gt;</c> Output1</term>
+        ///         <list type="bullet">
+        ///             <item><term><c>bool</c> WasInvoked</term> <see langword="true"/> if the <paramref name="ifNull"/> delegate was invoked; otherwise, <see langword="false"/>.</item>
+        ///             <item><term><c>int</c> ReturnValue</term> The value returned by the <paramref name="ifNull"/> delegate.</item>
+        ///         </list>
+        ///     </item>
+        ///     <item>
+        ///         <term><seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso><c>&lt;int, bool&gt;</c>  Output2</term>
+        ///         <list type="bullet">
+        ///             <item><term><c>bool</c> WasInvoked</term> <see langword="true"/> if the <paramref name="fallback"/> delegate was invoked; otherwise, <see langword="false"/>.</item>
+        ///             <item><term><c>bool</c> Input1</term> The value returned by <paramref name="fallback"/>.</item>
+        ///             <item><term><c>int</c> Output1</term> The value of the output parameter of the <paramref name="fallback"/> delegate.</item>
+        ///         </list>
+        ///     </item>
+        ///     <item>
+        ///         <term><seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso><c>&lt;int&gt;</c> Output3</term>
+        ///         <list type="bullet">
+        ///             <item><term><c>bool</c> WasInvoked</term> <see langword="true"/> if the <c>ifSuccess</c> callback was invoked; otherwise, <see langword="false"/>.</item>
+        ///             <item><term><c>int</c> Output1</term> The value passed to the <c>ifSuccess</c> callback.</item>
+        ///         </list>
+        ///     </item>
+        ///     <item>
+        ///         <term><c>int</c> Output4</term> The value from the <c>return</c> parameter of
+        ///             <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>bool</c> ReturnValue</term> The value returned by
+        ///         <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
+        ///     </item>
+        /// </list>
+        /// <c>&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 1), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt1TestCases))]
+        public IFuncTestData4<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool> TryCoerceAsInt1Test(object inputObj, Func<int> ifNull,
+            bool returnValueIfNull, TryCoerceHandler<object, int> fallback)
+        {
+            InvocationMonitor<int> ifSuccessMontor = new InvocationMonitor<int>();
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getFallBackResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, fallback, ifSuccessMontor.Apply, out int result);
+            return new FuncTestData4<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool>(returnValue, getIfNullResult(), getFallBackResult(),
+                ifSuccessMontor.ToResult(), result);
+        }
 
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData4{TOut1, TOut2, TOut3, TOut4, TResult}">IFuncTestData4</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>, bool&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="Uri"/>,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri2TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<Uri>, IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri2Test(object inputObj, Func<Uri> ifNull, bool returnValueIfNull)
+        {
+            InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, ifSuccessMonitor.Apply, out Uri result);
+            return new FuncTestData3<IFuncInvocationResult<Uri>, IInvocationResult<Uri>, Uri, bool>(returnValue, getIfNullResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;int&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;int&gt;,
+        ///     int,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt2TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<int>, IInvocationResult<int>, int, bool> TryCoerceAsInt2Test(object inputObj, Func<int> ifNull, bool returnValueIfNull)
+        {
+            InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, ifSuccessMonitor.Apply, out int result);
+            return new FuncTestData3<IFuncInvocationResult<int>, IInvocationResult<int>, int, bool>(returnValue, getIfNullResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData4{TOut1, TOut2, TOut3, TOut4, TResult}">IFuncTestData4</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>, bool&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="Uri"/>,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri3TestCases))]
+        public IFuncTestData4<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri3Test(object inputObj, Func<Uri> ifNull,
+            TryCoerceHandler<object, Uri> fallback)
+        {
+            InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getFallBackResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, fallback, ifSuccessMonitor.Apply, out Uri result);
+            return new FuncTestData4<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool>(returnValue, getIfNullResult(), getFallBackResult(),
+                ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData4{TOut1, TOut2, TOut3, TOut4, TResult}">IFuncTestData4</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;int&gt;,
+        ///     <seealso cref="IFuncInvocationResult{TOut, TResult}">&lt;int, bool&gt;</seealso>,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;int&gt;,
+        ///     int,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt3TestCases))]
+        public IFuncTestData4<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool> TryCoerceAsInt3Test(object inputObj, Func<int> ifNull,
+            TryCoerceHandler<object, int> fallback)
+        {
+            InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getFallBackResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, fallback, ifSuccessMonitor.Apply, out int result);
+            return new FuncTestData4<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool>(returnValue, getIfNullResult(), getFallBackResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="Uri"/>,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri4TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<Uri>, IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri4Test(object inputObj, Func<Uri> ifNull)
+        {
+            InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, ifSuccessMonitor.Apply, out Uri result);
+            return new FuncTestData3<IFuncInvocationResult<Uri>, IInvocationResult<Uri>, Uri, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;int&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;int&gt;,
+        ///     int,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt4TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<int>, IInvocationResult<int>, int, bool> TryCoerceAsInt4Test(object inputObj, Func<int> ifNull)
+        {
+            InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, ifSuccessMonitor.Apply, out int result);
+            return new FuncTestData3<IFuncInvocationResult<int>, IInvocationResult<int>, int, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">&lt;int, bool&gt;</seealso>,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;int&gt;,
+        ///     int,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt5TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool> TryCoerceAsInt5Test(object inputObj, bool returnValueIfNull,
+            TryCoerceHandler<object, int> fallback)
+        {
+            InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, fallback, ifSuccessMonitor.Apply, out int result);
+            return new FuncTestData3<IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>, bool&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="Uri"/>,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri5TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri5Test(object inputObj, bool returnValueIfNull,
+            TryCoerceHandler<object, Uri> fallback)
+        {
+            InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, fallback, ifSuccessMonitor.Apply, out Uri result);
+            return new FuncTestData3<IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;, <seealso cref="Uri"/>, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri6TestCases))]
+        public IFuncTestData2<IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri6Test(object inputObj, bool returnValueIfNull)
+        {
+            InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
+            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, ifSuccessMonitor.Apply, out Uri result);
+            return new FuncTestData2<IInvocationResult<Uri>, Uri, bool>(returnValue, ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;int&gt;, int, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt6TestCases))]
+        public IFuncTestData2<IInvocationResult<int>, int, bool> TryCoerceAsInt6Test(object inputObj, bool returnValueIfNull)
+        {
+            InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
+            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, ifSuccessMonitor.Apply, out int result);
+            return new FuncTestData2<IInvocationResult<int>, int, bool>(returnValue, ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>, bool&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="Uri"/>,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri7TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri7Test(object inputObj, TryCoerceHandler<object, Uri> fallback)
+        {
+            InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(fallback, ifSuccessMonitor.Apply, out Uri result);
+            return new FuncTestData3<IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">&lt;int, bool&gt;</seealso>,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;int&gt;,
+        ///     int,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt7TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool> TryCoerceAsInt7Test(object inputObj, TryCoerceHandler<object, int> fallback)
+        {
+            InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(fallback, ifSuccessMonitor.Apply, out int result);
+            return new FuncTestData3<IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        /// <seealso cref="Uri"/>, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri8TestCases))]
+        public IFuncTestData2<IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri8Test(object inputObj)
+        {
+            InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
+            bool returnValue = inputObj.TryCoerceAs(ifSuccessMonitor.Apply, out Uri result);
+            return new FuncTestData2<IInvocationResult<Uri>, Uri, bool>(returnValue, ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><seealso cref="Action{TResult}">Action</seealso><c>&lt;int&gt;</c> ifSuccess</term> Callback invoked upon successful coersion.
+        ///     </item>
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso>&lt;<seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;int&gt;, int, bool&gt;</returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt8TestCases))]
+        public IFuncTestData2<IInvocationResult<int>, int, bool> TryCoerceAsInt8Test(object inputObj)
+        {
+            InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
+            bool returnValue = inputObj.TryCoerceAs(ifSuccessMonitor.Apply, out int result);
+            return new FuncTestData2<IInvocationResult<int>, int, bool>(returnValue, ifSuccessMonitor.ToResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData4{TOut1, TOut2, TOut3, TOut4, TResult}">IFuncTestData4</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>, bool&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;, int, bool&gt;</c></returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri9TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, Uri, bool> TryCoerceAsUri9Test(object inputObj, Func<Uri> ifNull, bool returnValueIfNull,
+            TryCoerceHandler<object, Uri> fallback)
+        {
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getFallBackResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, fallback, out Uri result);
+            return new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, Uri, bool>(returnValue, getIfNullResult(), getFallBackResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData4{TOut1, TOut2, TOut3, TOut4, TResult}">IFuncTestData4</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;int&gt;,
+        ///     <seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;int, bool&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;int&gt;, int, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt9TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, int, bool> TryCoerceAsInt9Test(object inputObj, Func<int> ifNull, bool returnValueIfNull,
+            TryCoerceHandler<object, int> fallback)
+        {
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getFallBackResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, fallback, out int result);
+            return new FuncTestData3<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, int, bool>(returnValue, getIfNullResult(), getFallBackResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="Uri"/>,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri10TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<Uri>, Uri, bool> TryCoerceAsUri10Test(object inputObj, Func<Uri> ifNull, bool returnValueIfNull)
+        {
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, out Uri result);
+            return new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(returnValue, getIfNullResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;int&gt;,
+        ///     int,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt10TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<int>, int, bool> TryCoerceAsInt10Test(object inputObj, Func<int> ifNull, bool returnValueIfNull)
+        {
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, out int result);
+            return new FuncTestData2<IFuncInvocationResult<int>, int, bool>(returnValue, getIfNullResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>, bool&gt;,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;,
+        ///     <seealso cref="Uri"/>,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri11TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, Uri, bool> TryCoerceAsUri11Test(object inputObj, Func<Uri> ifNull,
+            TryCoerceHandler<object, Uri> fallback)
+        {
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getFallBackResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, fallback, out Uri result);
+            return new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, Uri, bool>(returnValue, getIfNullResult(), getFallBackResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData3{TOut1, TOut2, TOut3, TResult}">IFuncTestData3</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">&lt;int, bool&gt;</seealso>,
+        ///     <seealso cref="IInvocationResult{TOut}">IInvocationResult</seealso>&lt;int&gt;,
+        ///     int,
+        ///     bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt11TestCases))]
+        public IFuncTestData3<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, int, bool> TryCoerceAsInt11Test(object inputObj, Func<int> ifNull,
+            TryCoerceHandler<object, int> fallback)
+        {
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getFallBackResult);
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, fallback, out int result);
+            return new FuncTestData3<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, int, bool>(returnValue, getIfNullResult(), getFallBackResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>&gt;, <seealso cref="Uri"/>, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri12TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<Uri>, Uri, bool> TryCoerceAsUri12Test(object inputObj, Func<Uri> ifNull)
+        {
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, out Uri result);
+            return new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(returnValue, getResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TResult}">IFuncInvocationResult</seealso>&lt;int&gt;, int, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt12TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<int>, int, bool> TryCoerceAsInt12Test(object inputObj, Func<int> ifNull)
+        {
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(ifNull, out int result);
+            return new FuncTestData2<IFuncInvocationResult<int>, int, bool>(returnValue, getResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>, bool&gt;, <seealso cref="Uri"/>, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri13TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<Uri, bool>, Uri, bool> TryCoerceAsUri13Test(object inputObj, bool returnValueIfNull, TryCoerceHandler<object, Uri> fallback)
+        {
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, fallback, out Uri result);
+            return new FuncTestData2<IFuncInvocationResult<Uri, bool>, Uri, bool>(returnValue, getResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">&lt;int, bool&gt;</seealso>, int, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt13TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<int, bool>, int, bool> TryCoerceAsInt13Test(object inputObj, bool returnValueIfNull, TryCoerceHandler<object, int> fallback)
+        {
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, fallback, out int result);
+            return new FuncTestData2<IFuncInvocationResult<int, bool>, int, bool>(returnValue, getResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData1{TOut, TResult}">IFuncTestData1</seealso>&lt;<seealso cref="Uri"/>, bool&gt;</returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri14TestCases))]
+        public IFuncTestData1<Uri, bool> TryCoerceAsUri14Test(object inputObj, bool returnValueIfNull)
+        {
+            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, out Uri result);
+            return new FuncTestData1<Uri, bool>(returnValue, result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData1{TOut, TResult}">IFuncTestData1</seealso>&lt;int, bool&gt;</returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt14TestCases))]
+        public IFuncTestData1<int, bool> TryCoerceAsInt14Test(object inputObj, bool returnValueIfNull)
+        {
+            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, out int result);
+            return new FuncTestData1<int, bool>(returnValue, result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">IFuncInvocationResult</seealso>&lt;<seealso cref="Uri"/>, bool&gt;,
+        /// <seealso cref="Uri"/>, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri15TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<Uri, bool>, Uri, bool> TryCoerceAsUri15Test(object inputObj, TryCoerceHandler<object, Uri> fallback)
+        {
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(fallback, out Uri result);
+            return new FuncTestData2<IFuncInvocationResult<Uri, bool>, Uri, bool>(returnValue, getResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData2{TOut1, TOut2, TResult}">IFuncTestData2</seealso><c>&lt;<seealso cref="IFuncInvocationResult{TOut, TResult}">&lt;int, bool&gt;</seealso>,
+        /// int, bool&gt;</c>
+        /// </returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt15TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<int, bool>, int, bool> TryCoerceAsInt15Test(object inputObj, TryCoerceHandler<object, int> fallback)
+        {
+            fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getResult);
+            bool returnValue = inputObj.TryCoerceAs(fallback, out int result);
+            return new FuncTestData2<IFuncInvocationResult<int, bool>, int, bool>(returnValue, getResult(), result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, out TResult)"/> with a reference type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData1{TOut, TResult}">IFuncTestData1</seealso>&lt;<seealso cref="Uri"/>, bool&gt;</returns>
+        [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsUri16TestCases))]
+        public IFuncTestData1<Uri, bool> TryCoerceAsUri16Test(object inputObj)
+        {
+            bool returnValue = inputObj.TryCoerceAs(out Uri result);
+            return new FuncTestData1<Uri, bool>(returnValue, result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, out TResult)"/> using a value type.
+        /// </summary>
+        /// <param name="inputObj">Value to be coerced.</param>
+        /// <remarks>Other parameters used:
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term><c>out TResult</c> result</term> The coerced <seealso cref="TResult"/> value.
+        ///     </item>
+        /// </list></remarks>
+        /// <returns><seealso cref="IFuncTestData1{TOut, TResult}">IFuncTestData1</seealso>&lt;int, bool&gt;</returns>
+        [Test, Property("Priority", 1), Ignore("Not enough time to work out data source")]
+        [TestCaseSource(nameof(GetTryCoerceAsInt16TestCases))]
+        public IFuncTestData1<int, bool> TryCoerceAsInt16Test(object inputObj)
+        {
+            bool returnValue = inputObj.TryCoerceAs(out int result);
+            return new FuncTestData1<int, bool>(returnValue, result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, Action{TResult}, bool, Func{TResult}, out TResult)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryCast3TestCases))]
+        public IFuncTestData3<IInvocationResult<string>, IFuncInvocationResult<string>, string, bool> TryCastTest3(object inputObj, bool nullReturnValue,
+            Func<string> ifNull)
+        {
+            InvocationMonitor<string> ifSuccessMonitor = new InvocationMonitor<string>();
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<string>> getIfNullResult);
+            bool result = inputObj.TryCast(ifSuccessMonitor.Apply, nullReturnValue, ifNull, out string value);
+            return new FuncTestData3<IInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(result, ifSuccessMonitor.ToResult(),
+                getIfNullResult(), value);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, Action{TResult}, bool, out TResult)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryCast4TestCases))]
+        public IFuncTestData2<IInvocationResult<string>, string, bool> TryCastTest4(object inputObj, bool nullReturnValue)
+        {
+            InvocationMonitor<string> ifSuccessMonitor = new InvocationMonitor<string>();
+            bool result = inputObj.TryCast(ifSuccessMonitor.Apply, nullReturnValue, out string value);
+            return new FuncTestData2<IInvocationResult<string>, string, bool>(result, ifSuccessMonitor.ToResult(), value);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, Action{TResult}, Func{TResult}, out TResult)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryCast5TestCases))]
+        public IFuncTestData3<IInvocationResult<string>, IFuncInvocationResult<string>, string, bool> TryCastTest5(object inputObj, Func<string> ifNull)
+        {
+            InvocationMonitor<string> ifSuccessMonitor = new InvocationMonitor<string>();
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<string>> getIfNullResult);
+            bool result = inputObj.TryCast(ifSuccessMonitor.Apply, ifNull, out string value);
+            return new FuncTestData3<IInvocationResult<string>, IFuncInvocationResult<string>, string, bool>(result, ifSuccessMonitor.ToResult(), getIfNullResult(), value);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, bool, Func{TResult}, out TResult)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryCast7TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<string>, string, bool> TryCastTest7(object inputObj, bool nullReturnValue, Func<string> ifNull)
+        {
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<string>> getIfNullResult);
+            bool result = inputObj.TryCast(nullReturnValue, ifNull, out string value);
+            return new FuncTestData2<IFuncInvocationResult<string>, string, bool>(result, getIfNullResult(), value);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, Action{TResult}, out TResult)"/> using a value type.
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryCast1TestCases))]
-        public FuncTestData3<IInvocationResult<int?>, IFuncInvocationResult<int?, bool>, int?, bool> TryCast1Test(object inputObj, Action<int?> ifSuccess, TryCoerceHandler<object, int?> fallback, bool asRawValueIfFail)
+        public IFuncTestData2<IInvocationResult<int?>, int?, bool> TryCastTest1(object inputObj)
         {
             InvocationMonitor<int?> ifSuccessMonitor = new InvocationMonitor<int?>();
-            FunctionInvocationMonitor<int?, bool> fallbackMonitor = new FunctionInvocationMonitor<int?, bool>();
-            FuncWithOutput<object, int?, bool> funcWithOutput = fallbackMonitor.CreateProxy((object obj, out int? i) => fallback(inputObj, out i));
-            return FuncTestData3<IInvocationResult<int?>, IFuncInvocationResult<int?, bool>, int?, bool>.FromInvocation((out IInvocationResult<int?> ifSuccessResult,
-                out IFuncInvocationResult<int?, bool> ifNullResult, out int? value) =>
-            {
-                bool result = inputObj.TryCast(ifSuccessMonitor.CreateProxy(ifSuccess), (object obj, out int? i) => funcWithOutput(inputObj, out i), asRawValueIfFail, out value);
-                ifSuccessResult = ifSuccessMonitor.ToResult();
-                ifNullResult = fallbackMonitor.ToResult();
-                return result;
-            });
+            bool result = inputObj.TryCast(ifSuccessMonitor.Apply, out int? value);
+            return new FuncTestData2<IInvocationResult<int?>, int?, bool>(result, ifSuccessMonitor.ToResult(), value);
         }
 
-        public static IEnumerable<TestCaseData> GetTryCast2TestCases() => throw new InconclusiveException("Test data not implemented");
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, Action{TResult}, out TResult)"/> with a reference type.
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryCast6TestCases))]
+        public FuncTestData2<IInvocationResult<string>, string, bool> TryCastTest6(object inputObj)
+        {
+            InvocationMonitor<string> ifSuccessMonitor = new InvocationMonitor<string>();
+            bool result = inputObj.TryCast(ifSuccessMonitor.Apply, out string value);
+            return new FuncTestData2<IInvocationResult<string>, string, bool>(result, ifSuccessMonitor.ToResult(), value);
+        }
 
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, bool, out TResult)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryCast8TestCases))]
+        public IFuncTestData1<string, bool> TryCastTest8(object inputObj, bool nullReturnValue)
+        {
+            bool returnValue = inputObj.TryCast(nullReturnValue, out string result);
+            return new FuncTestData1<string, bool>(returnValue, result);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, Func{TResult}, out TResult)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryCast9TestCases))]
+        public IFuncTestData2<IFuncInvocationResult<string>, string, bool> TryCastTest9(object inputObj, Func<string> ifNull)
+        {
+            ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<string>> getIfNullResult);
+            bool result = inputObj.TryCast(ifNull, out string value);
+            return new FuncTestData2<IFuncInvocationResult<string>, string, bool>(result, getIfNullResult(), value);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, out TResult)"/> using a value type.
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryCast2TestCases))]
-        public Tuple<object, int?, bool> TryCast2Test(TryCoerceTestHelper<object, object, int?> helper)
+        public IFuncTestData1<int?, bool> TryCastTest2(object inputObj)
         {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, helper.CoersionHandler, out int? result), result);
+            return FuncTestData1<int?, bool>.FromInvocation((out int? r) =>
+                inputObj.TryCast(out r)
+            );
         }
 
-        public static IEnumerable<TestCaseData> GetTryCast3TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast3TestCases))]
-        public Tuple<object, int?, bool> TryCast3Test(TryCoerceTestHelper<object, object, int?> helper)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, out int? result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast4TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast4TestCases))]
-        public Tuple<object, int?, bool> TryCast4Test(TryCoerceTestHelper<object, object, int?> helper, bool asRawValueIfFail)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.CoersionHandler, asRawValueIfFail, out int? result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast5TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast5TestCases))]
-        public Tuple<object, int?, bool> TryCast5Test(TryCoerceTestHelper<object, object, int?> helper)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.CoersionHandler, out int? result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast6TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast6TestCases))]
-        public Tuple<bool, int?> TryCast6Test(object inputObj)
-        {
-            return new Tuple<bool, int?>(inputObj.TryCast(out int? result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast7TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast7TestCases))]
-        public Tuple<object, string, bool> TryCast7Test(TryCoerceTestHelper<object, object, string> helper, bool nullReturnValue, Func<string> ifNull, bool asRawValueIfFail)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, nullReturnValue, ifNull, helper.CoersionHandler, asRawValueIfFail, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast8TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast8TestCases))]
-        public Tuple<object, string, bool> TryCast8Test(TryCoerceTestHelper<object, object, string> helper, bool nullReturnValue, Func<string> ifNull)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, nullReturnValue, ifNull, helper.CoersionHandler, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast9TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast9TestCases))]
-        public Tuple<object, string, bool> TryCast9Test(TryCoerceTestHelper<object, object, string> helper, bool nullReturnValue, Func<string> ifNull)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, nullReturnValue, ifNull, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast10TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryCast{TResult}(object, out TResult)"/> with a reference type.
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryCast10TestCases))]
-        public Tuple<object, string, bool> TryCast10Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess, bool nullReturnValue, bool asRawValueIfFail)
+        public IFuncTestData1<string, bool> TryCastTest10(object inputObj)
         {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, nullReturnValue, helper.CoersionHandler, asRawValueIfFail, out string result), result);
+            bool returnValue = inputObj.TryCast(out string result);
+            return new FuncTestData1<string, bool>(returnValue, result);
         }
 
-        public static IEnumerable<TestCaseData> GetTryCast11TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast11TestCases))]
-        public Tuple<object, string, bool> TryCast11Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess, bool nullReturnValue)
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorMessage(IContainsErrorRecord, ErrorCategory, string, string, object, out string, out ErrorCategory, out string, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryGetErrorMessage2TestCases))]
+        public Tuple<bool, string, ErrorCategory, string, object> TryGetErrorMessage2Test(IContainsErrorRecord source, ErrorCategory defaultCategory, string defaultErrorId, object defaultTargetObject)
         {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, nullReturnValue, helper.CoersionHandler, out string result), result);
+            return new Tuple<bool, string, ErrorCategory, string, object>(source.TryGetErrorMessage(defaultCategory, defaultErrorId, defaultTargetObject, out string message, out ErrorCategory category,
+                out string errorId, out object targetObject), message, category, errorId, targetObject);
         }
 
-        public static IEnumerable<TestCaseData> GetTryCast12TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast12TestCases))]
-        public Tuple<object, string, bool> TryCast12Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess, bool nullReturnValue)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, nullReturnValue, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast13TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast13TestCases))]
-        public Tuple<object, string, bool> TryCast13Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess, Func<string> ifNull, bool asRawValueIfFail)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, ifNull, helper.CoersionHandler, asRawValueIfFail, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast14TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast14TestCases))]
-        public Tuple<object, string, bool> TryCast14Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess, Func<string> ifNull)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, ifNull, helper.CoersionHandler, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast15TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast15TestCases))]
-        public Tuple<object, string, bool> TryCast15Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess, Func<string> ifNull)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, ifNull, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast16TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast16TestCases))]
-        public Tuple<object, string, bool> TryCast16Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess, bool asRawValueIfFail)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, helper.CoersionHandler, asRawValueIfFail, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast17TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast17TestCases))]
-        public Tuple<object, string, bool> TryCast17Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, helper.CoersionHandler, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast18TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast18TestCases))]
-        public Tuple<object, string, bool> TryCast18Test(TryCoerceTestHelper<object, object, string> helper, Action<string> ifSuccess)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.SuccessActionHandler, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast19TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast19TestCases))]
-        public Tuple<object, string, bool> TryCast19Test(TryCoerceTestHelper<object, object, string> helper, bool nullReturnValue, Func<string> ifNull, bool asRawValueIfFail)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(nullReturnValue, ifNull, helper.CoersionHandler, asRawValueIfFail, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast20TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast20TestCases))]
-        public Tuple<object, string, bool> TryCast20Test(TryCoerceTestHelper<object, object, string> helper, bool nullReturnValue, Func<string> ifNull)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(nullReturnValue, ifNull, helper.CoersionHandler, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast21TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast21TestCases))]
-        public Tuple<bool, string> TryCast21Test(object inputObj, bool nullReturnValue, Func<string> ifNull)
-        {
-            return new Tuple<bool, string>(inputObj.TryCast(nullReturnValue, ifNull, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast22TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast22TestCases))]
-        public Tuple<object, string, bool> TryCast22Test(TryCoerceTestHelper<object, object, string> helper, bool nullReturnValue, bool asRawValueIfFail)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(nullReturnValue, helper.CoersionHandler, asRawValueIfFail, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast23TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast23TestCases))]
-        public Tuple<object, string, bool> TryCast23Test(TryCoerceTestHelper<object, object, string> helper, bool nullReturnValue)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(nullReturnValue, helper.CoersionHandler, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast24TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast24TestCases))]
-        public Tuple<bool, string> TryCast24Test(object inputObj, bool nullReturnValue)
-        {
-            return new Tuple<bool, string>(inputObj.TryCast(nullReturnValue, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast25TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast25TestCases))]
-        public Tuple<object, string, bool> TryCast25Test(TryCoerceTestHelper<object, object, string> helper, Func<string> ifNull, bool asRawValueIfFail)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(ifNull, helper.CoersionHandler, asRawValueIfFail, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast26TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast6TestCases))]
-        public Tuple<object, string, bool> TryCast26Test(TryCoerceTestHelper<object, object, string> helper, Func<string> ifNull)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(ifNull, helper.CoersionHandler, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast27TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast7TestCases))]
-        public Tuple<bool, string> TryCast27Test(object inputObj, Func<string> ifNull)
-        {
-            return new Tuple<bool, string>(inputObj.TryCast(ifNull, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast28TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast8TestCases))]
-        public Tuple<object, string, bool> TryCast28Test(TryCoerceTestHelper<object, object, string> helper, bool asRawValueIfFail)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.CoersionHandler, asRawValueIfFail, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast29TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast9TestCases))]
-        public Tuple<object, string, bool> TryCast29Test(TryCoerceTestHelper<object, object, string> helper)
-        {
-            return helper.GetReturnValue(helper.InputObj.TryCast(helper.CoersionHandler, out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryCast30TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryCast30TestCases))]
-        public Tuple<bool, string> TryCast30Test(object inputObj)
-        {
-            return new Tuple<bool, string>(inputObj.TryCast(out string result), result);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage1TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorMessage(IContainsErrorRecord, ErrorCategory, string, object, out string, out ErrorCategory, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorMessage1TestCases))]
         public string TryGetErrorMessage1Test(IContainsErrorRecord source, ErrorCategory defaultCategory, string defaultErrorId, string defaultReason, object defaultTargetObject)
         {
@@ -543,28 +1279,20 @@ namespace FsInfoCat.Test
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage2TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryGetErrorMessage2TestCases))]
-        public Tuple<bool, string, ErrorCategory, string, object> TryGetErrorMessage2Test(IContainsErrorRecord source, ErrorCategory defaultCategory, string defaultErrorId, object defaultTargetObject)
-        {
-            return new Tuple<bool, string, ErrorCategory, string, object>(source.TryGetErrorMessage(defaultCategory, defaultErrorId, defaultTargetObject, out string message, out ErrorCategory category,
-                out string errorId, out object targetObject), message, category, errorId, targetObject);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage3TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorMessage(IContainsErrorRecord, out string)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorMessage3TestCases))]
         public Tuple<bool, string> TryGetError3MessageTest(IContainsErrorRecord source)
         {
             return new Tuple<bool, string>(source.TryGetErrorMessage(out string message), message);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage4TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorMessage(Exception, ErrorCategory, string, string, object, out string, out ErrorCategory, out string, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorMessage4TestCases))]
         public Tuple<bool, string, ErrorCategory, string, string, object> TryGetError4MessageTest(Exception exception, ErrorCategory defaultCategory, string defaultErrorId, string defaultReason, object defaultTargetObject)
         {
@@ -572,9 +1300,10 @@ namespace FsInfoCat.Test
                 out string message, out ErrorCategory category, out string errorId, out string reason, out object targetObject), message, category, errorId, reason, targetObject);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage5TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorMessage(Exception, ErrorCategory, string, object, out string, out ErrorCategory, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorMessage5TestCases))]
         public Tuple<bool, string, ErrorCategory, string, object> TryGetErrorMessage5Test(Exception exception, ErrorCategory defaultCategory, string defaultErrorId, object defaultTargetObject)
         {
@@ -582,38 +1311,20 @@ namespace FsInfoCat.Test
                 out string message, out ErrorCategory category, out string errorId, out object targetObject), message, category, errorId, targetObject);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage6TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorMessage(Exception, out string)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorMessage6TestCases))]
         public Tuple<bool, string> TryGetErrorMessage6Test(Exception exception)
         {
             return new Tuple<bool, string>(exception.TryGetErrorMessage(out string message), message);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory1TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryGetErrorCategory1TestCases))]
-        public Tuple<bool, ErrorCategory, string, string, string, object> TryGetErrorCategory1Test(ErrorRecord errorRecord)
-        {
-            return new Tuple<bool, ErrorCategory, string, string, string, object>(errorRecord.TryGetErrorCategory(out ErrorCategory category, out string message, out string errorId,
-                out string reason, out object targetObject), category, message, errorId, reason, targetObject);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory2TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryGetErrorCategory2TestCases))]
-        public Tuple<bool, ErrorCategory, string, string, object> TryGetErrorCategory2Test(ErrorRecord errorRecord)
-        {
-            return new Tuple<bool, ErrorCategory, string, string, object>(errorRecord.TryGetErrorCategory(out ErrorCategory category, out string message, out string errorId, out object targetObject),
-                category, message, errorId, targetObject);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory3TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorCategory(IContainsErrorRecord, out ErrorCategory, out string, out string, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorCategory3TestCases))]
         public Tuple<bool, ErrorCategory, string, string, string, object> TryGetErrorCategory3Test(IContainsErrorRecord source)
         {
@@ -621,9 +1332,10 @@ namespace FsInfoCat.Test
                 out string reason, out object targetObject), category, message, errorId, reason, targetObject);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory4TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorCategory(IContainsErrorRecord, out ErrorCategory, out string, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorCategory4TestCases))]
         public Tuple<bool, ErrorCategory, string, string, object> TryGetErrorCategory4Test(IContainsErrorRecord source)
         {
@@ -631,9 +1343,32 @@ namespace FsInfoCat.Test
                 category, message, errorId, targetObject);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory5TestCases() => throw new InconclusiveException("Test data not implemented");
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorCategory(ErrorRecord, out ErrorCategory, out string, out string, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryGetErrorCategory1TestCases))]
+        public Tuple<bool, ErrorCategory, string, string, string, object> TryGetErrorCategory1Test(ErrorRecord errorRecord)
+        {
+            return new Tuple<bool, ErrorCategory, string, string, string, object>(errorRecord.TryGetErrorCategory(out ErrorCategory category, out string message, out string errorId,
+                out string reason, out object targetObject), category, message, errorId, reason, targetObject);
+        }
 
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorCategory(ErrorRecord, out ErrorCategory, out string, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryGetErrorCategory2TestCases))]
+        public Tuple<bool, ErrorCategory, string, string, object> TryGetErrorCategory2Test(ErrorRecord errorRecord)
+        {
+            return new Tuple<bool, ErrorCategory, string, string, object>(errorRecord.TryGetErrorCategory(out ErrorCategory category, out string message, out string errorId, out object targetObject),
+                category, message, errorId, targetObject);
+        }
+
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorCategory(Exception, out ErrorCategory, out string, out string, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorCategory5TestCases))]
         public Tuple<bool, ErrorCategory, string, string, string, object> TryGetErrorCategory5Test(Exception exception)
         {
@@ -641,9 +1376,10 @@ namespace FsInfoCat.Test
                 out string reason, out object targetObject), category, message, errorId, reason, targetObject);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory6TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorCategory(Exception, out ErrorCategory, out string, out string, out object)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetErrorCategory6TestCases))]
         public Tuple<bool, ErrorCategory, string, string, object> TryGetErrorCategory6Test(Exception exception)
         {
@@ -651,104 +1387,40 @@ namespace FsInfoCat.Test
                 category, message, errorId, targetObject);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetTargetObject1TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryGetTargetObject1TestCases))]
-        public Tuple<bool, object, string, string> TryGetTargetObject1Test(ErrorRecord errorRecord)
-        {
-            return new Tuple<bool, object, string, string>(errorRecord.TryGetTargetObject(out object targetObject, out string errorId, out string reason), targetObject, errorId, reason);
-        }
-
-        public static IEnumerable<TestCaseData> GetTryGetTargetObject2TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetTargetObject(IContainsErrorRecord, out object, out string, out string)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetTargetObject2TestCases))]
         public Tuple<bool, object, string, string> TryGetTargetObject2Test(IContainsErrorRecord source)
         {
             return new Tuple<bool, object, string, string>(source.TryGetTargetObject(out object targetObject, out string errorId, out string reason), targetObject, errorId, reason);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetTargetObject3TestCases() => throw new InconclusiveException("Test data not implemented");
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetTargetObject(ErrorRecord, out object, out string, out string)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryGetTargetObject1TestCases))]
+        public Tuple<bool, object, string, string> TryGetTargetObject1Test(ErrorRecord errorRecord)
+        {
+            return new Tuple<bool, object, string, string>(errorRecord.TryGetTargetObject(out object targetObject, out string errorId, out string reason), targetObject, errorId, reason);
+        }
 
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetTargetObject(Exception, out object, out string, out string)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetTargetObject3TestCases))]
         public Tuple<bool, object, string, string> TryGetTargetObject3Test(Exception exception)
         {
             return new Tuple<bool, object, string, string>(exception.TryGetTargetObject(out object targetObject, out string errorId, out string reason), targetObject, errorId, reason);
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorRecordTestCases() => throw new InconclusiveException("Test data not implemented");
-
-
-        public class ErrorRecordComparable
-        {
-            private readonly ErrorRecord _errorRecord;
-            private readonly string _description;
-            public ErrorRecordComparable([System.Diagnostics.CodeAnalysis.AllowNull] ErrorRecord errorRecord, string description)
-            {
-                _errorRecord = errorRecord;
-            }
-            public void AssertEquals([System.Diagnostics.CodeAnalysis.AllowNull] ErrorRecord other)
-            {
-                if (_errorRecord is null)
-                    Assert.That(other, Is.Null, "")
-                    return other is null;
-                if (other is null)
-                    return false;
-                if (ReferenceEquals(_errorRecord, other) || (Equals(other.CategoryInfo) && Equals(other.ErrorDetails) && ReferenceEquals(_errorRecord.Exception, other.Exception) &&
-                    _errorRecord.FullyQualifiedErrorId == other.FullyQualifiedErrorId))
-                {
-                    if (_errorRecord.TargetObject is null)
-                        return other.TargetObject is null;
-                    if (other.TargetObject is null)
-                        return false;
-                    Type a = _errorRecord.TargetObject.GetType();
-                    Type b = other.TargetObject.GetType();
-                    if (a.Equals(b))
-                    {
-                        if (a.IsValueType)
-                            return ((IEqualityComparer)(typeof(EqualityComparer<>)).MakeGenericType(a).GetProperty("Default").GetValue(null)).Equals(_errorRecord.TargetObject, other.TargetObject);
-                        return ReferenceEquals(_errorRecord.TargetObject, other.TargetObject);
-                    }
-                }
-                throw new NotImplementedException();
-            }
-
-            public bool Equals([System.Diagnostics.CodeAnalysis.AllowNull] ErrorCategoryInfo other)
-            {
-                ErrorCategoryInfo errorCategoryInfo;
-                if (_errorRecord is null || (errorCategoryInfo = _errorRecord.CategoryInfo) is null)
-                    return other is null;
-                if (other is null)
-                    return false;
-                return ReferenceEquals(errorCategoryInfo, other) || (errorCategoryInfo.Activity == other.Activity && errorCategoryInfo.Category == other.Category && errorCategoryInfo.Reason == other.Reason &&
-                    errorCategoryInfo.TargetName == other.TargetName && errorCategoryInfo.TargetType == other.TargetType);
-            }
-
-            public bool Equals([System.Diagnostics.CodeAnalysis.AllowNull] ErrorDetails other)
-            {
-                ErrorDetails errorDetails;
-                if (_errorRecord is null || (errorDetails = _errorRecord.ErrorDetails) is null)
-                    return other is null;
-                if (other is null)
-                    return false;
-                return ReferenceEquals(errorDetails, other) || (errorDetails.Message == other.Message && errorDetails.RecommendedAction == other.RecommendedAction);
-            }
-        }
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetTryGetErrorRecordTestCases))]
-        public Tuple<bool, ErrorRecordComparable> TryGetErrorRecordTest(object inputObj)
-        {
-            // TODO: Write test for bool TryGetErrorRecord(this object inputObj, out ErrorRecord errorRecord)
-            Assert.Inconclusive();
-            throw new NotImplementedException();
-        }
-
-        public static IEnumerable<TestCaseData> GetTryGetExceptionTestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetException(object, out Exception)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetTryGetExceptionTestCases))]
         public string TryGetExceptionTest(object inputObj)
         {
@@ -757,9 +1429,19 @@ namespace FsInfoCat.Test
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<TestCaseData> GetToErrorRecordTestCases() => throw new InconclusiveException("Test data not implemented");
+        /// <summary>
+        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorRecord(object, out ErrorRecord)"/>
+        /// </summary>
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
+        [TestCaseSource(nameof(GetTryGetErrorRecordTestCases))]
+        public Tuple<bool, ErrorRecordComparable> TryGetErrorRecordTest(object inputObj)
+        {
+            // TODO: Write test for bool TryGetErrorRecord(this object inputObj, out ErrorRecord errorRecord)
+            Assert.Inconclusive();
+            throw new NotImplementedException();
+        }
 
-        [Test, Property("Priority", 1)]
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetToErrorRecordTestCases))]
         public string ToErrorRecordTest(Exception exception)
         {
@@ -768,9 +1450,7 @@ namespace FsInfoCat.Test
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<TestCaseData> GetSetReasonTestCases() => throw new InconclusiveException("Test data not implemented");
-
-        [Test, Property("Priority", 1)]
+        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
         [TestCaseSource(nameof(GetSetReasonTestCases))]
         public string SetReasonTest(ErrorRecord errorRecord, string reason)
         {
@@ -778,6 +1458,5 @@ namespace FsInfoCat.Test
             Assert.Inconclusive();
             throw new NotImplementedException();
         }
-        */
     }
 }

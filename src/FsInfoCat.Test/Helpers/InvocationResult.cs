@@ -9,7 +9,7 @@ namespace FsInfoCat.Test.Helpers
     {
         public InvocationResult(bool wasInvoked) { WasInvoked = wasInvoked; }
         public bool WasInvoked { get; }
-        public bool Equals([AllowNull] InvocationResult other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public virtual bool Equals([AllowNull] InvocationResult other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
         bool IEquatable<IInvocationResult>.Equals(IInvocationResult other) => Equals(other as InvocationResult);
         public override bool Equals(object obj) => Equals(obj as InvocationResult);
         protected bool PropertiesAreEqual(InvocationResult other) => WasInvoked == other.WasInvoked;
@@ -24,7 +24,8 @@ namespace FsInfoCat.Test.Helpers
         public TOut Output1 { get; }
         public InvocationResult() : base(false) { }
         public InvocationResult(TOut o1) : base(true) { Output1 = o1; }
-        public bool Equals([AllowNull] InvocationResult<TOut> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public virtual bool Equals([AllowNull] InvocationResult<TOut> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public override bool Equals([AllowNull] InvocationResult other) => Equals(other as InvocationResult<TOut>);
         bool IEquatable<IInvocationResult<TOut>>.Equals(IInvocationResult<TOut> other) => Equals(other as InvocationResult<TOut>);
         public override bool Equals(object obj) => Equals(obj as InvocationResult<TOut>);
         public override int GetHashCode() => HashCode.Combine(Output1, WasInvoked);
@@ -38,7 +39,8 @@ namespace FsInfoCat.Test.Helpers
         public TOut2 Output2 { get; }
         public InvocationResult() { }
         public InvocationResult(TOut1 o1, TOut2 o2) : base(o1) { Output2 = o2; }
-        public bool Equals([AllowNull] InvocationResult<TOut1, TOut2> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public virtual bool Equals([AllowNull] InvocationResult<TOut1, TOut2> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public override bool Equals([AllowNull] InvocationResult<TOut1> other) => Equals(other as InvocationResult<TOut1, TOut2>);
         bool IEquatable<IInvocationResult<TOut1, TOut2>>.Equals(IInvocationResult<TOut1, TOut2> other) => Equals(other as InvocationResult<TOut1, TOut2>);
         public override bool Equals(object obj) => Equals(obj as InvocationResult<TOut1, TOut2>);
         public override int GetHashCode() => HashCode.Combine(Output1, Output2, WasInvoked);
@@ -52,7 +54,8 @@ namespace FsInfoCat.Test.Helpers
         public TOut3 Output3 { get; }
         public InvocationResult() { }
         public InvocationResult(TOut1 o1, TOut2 o2, TOut3 o3) : base(o1, o2) { Output3 = o3; }
-        public bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public virtual bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public override bool Equals([AllowNull] InvocationResult<TOut1, TOut2> other) => Equals(other as InvocationResult<TOut1, TOut2, TOut3>);
         bool IEquatable<IInvocationResult<TOut1, TOut2, TOut3>>.Equals(IInvocationResult<TOut1, TOut2, TOut3> other) => Equals(other as InvocationResult<TOut1, TOut2, TOut3>);
         public override bool Equals(object obj) => Equals(obj as InvocationResult<TOut1, TOut2, TOut3>);
         public override int GetHashCode() => HashCode.Combine(Output1, Output2, Output3, WasInvoked);
@@ -67,7 +70,8 @@ namespace FsInfoCat.Test.Helpers
         public TOut4 Output4 { get; }
         public InvocationResult() { }
         public InvocationResult(TOut1 o1, TOut2 o2, TOut3 o3, TOut4 o4) : base(o1, o2, o3) { Output4 = o4; }
-        public bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public virtual bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public override bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3> other) => Equals(other as InvocationResult<TOut1, TOut2, TOut3, TOut4>);
         bool IEquatable<IInvocationResult<TOut1, TOut2, TOut3, TOut4>>.Equals(IInvocationResult<TOut1, TOut2, TOut3, TOut4> other) =>
             Equals(other as InvocationResult<TOut1, TOut2, TOut3, TOut4>);
         public override bool Equals(object obj) => Equals(obj as InvocationResult<TOut1, TOut2, TOut3, TOut4>);
@@ -83,7 +87,8 @@ namespace FsInfoCat.Test.Helpers
         public TOut5 Output5 { get; }
         public InvocationResult() { }
         public InvocationResult(TOut1 o1, TOut2 o2, TOut3 o3, TOut4 o4, TOut5 o5) : base(o1, o2, o3, o4) { Output5 = o5; }
-        public bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public virtual bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5> other) => !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public override bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4> other) => Equals(other as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5>);
         bool IEquatable<IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5>>.Equals(IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5> other) =>
             Equals(other as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5>);
         public override bool Equals(object obj) => Equals(obj as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5>);
@@ -100,8 +105,9 @@ namespace FsInfoCat.Test.Helpers
         public TOut6 Output6 { get; }
         public InvocationResult() { }
         public InvocationResult(TOut1 o1, TOut2 o2, TOut3 o3, TOut4 o4, TOut5 o5, TOut6 o6) : base(o1, o2, o3, o4, o5) { Output6 = o6; }
-        public bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> other) =>
+        public virtual bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> other) =>
             !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public override bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5> other) => Equals(other as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>);
         bool IEquatable<IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>>.Equals(IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> other) =>
             Equals(other as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>);
         public override bool Equals(object obj) => Equals(obj as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>);
@@ -118,8 +124,10 @@ namespace FsInfoCat.Test.Helpers
         public TOut7 Output7 { get; }
         public InvocationResult() { }
         public InvocationResult(TOut1 o1, TOut2 o2, TOut3 o3, TOut4 o4, TOut5 o5, TOut6 o6, TOut7 o7) : base (o1, o2, o3, o4, o5, o6) { Output7 = o7; }
-        public bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7> other) =>
+        public virtual bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7> other) =>
             !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
+        public override bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> other) =>
+            Equals(other as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7>);
         bool IEquatable<IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7>>.Equals(IInvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7> other) =>
             Equals(other as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7>);
         public override bool Equals(object obj) => Equals(obj as InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7>);

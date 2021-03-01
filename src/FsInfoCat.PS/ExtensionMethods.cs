@@ -49,24 +49,24 @@ namespace FsInfoCat.PS
         }
 
         /// <summary>
-        /// Attempts to coerce one value from another.
+        /// Attempts to coerce a value to another type.
         /// </summary>
-        /// <typeparam name="T">The input value type.</typeparam>
-        /// <typeparam name="R">The reuslt value type.</typeparam>
+        /// <typeparam name="TInput">The input value type.</typeparam>
+        /// <typeparam name="TResult">The result value type.</typeparam>
         /// <param name="inputObj">The input value.</param>
         /// <param name="ifNotNull">The <seealso cref="Func{T, TResult}"/> that produces the result value if <paramref name="inputObj"/> is not null.</param>
         /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the result value if <paramref name="inputObj"/> is null.
-        /// If this parameter is null, then the result value will be the default value of <typeparamref name="R"/> if <paramref name="inputObj"/> is null.</param>
+        /// If this parameter is null, then the result value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The result value.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> was null; otherwise, <c>false</c>.</returns>
-        public static bool TryCoerceValue<T, R>(this T inputObj, Func<T, R> ifNotNull, Func<R> ifNull, out R result)
-            where T : class
+        public static bool TryCoerceTo<TInput, TResult>(this TInput inputObj, Func<TInput, TResult> ifNotNull, Func<TResult> ifNull, out TResult result)
+            where TInput : class
         {
             if (ifNotNull is null)
                 throw new ArgumentNullException(nameof(ifNotNull));
             if (inputObj is null)
             {
-                result = (ifNull is null) ? default(R) : ifNull();
+                result = (ifNull is null) ? default(TResult) : ifNull();
                 return false;
             }
             result = ifNotNull(inputObj);
@@ -76,27 +76,27 @@ namespace FsInfoCat.PS
         /// <summary>
         /// Attempts to coerce one value from another.
         /// </summary>
-        /// <typeparam name="T">The input value type.</typeparam>
-        /// <typeparam name="R">The reuslt value type.</typeparam>
+        /// <typeparam name="TInput">The input value type.</typeparam>
+        /// <typeparam name="TResult">The result value type.</typeparam>
         /// <param name="inputObj">The input value.</param>
         /// <param name="ifNotNull">The <seealso cref="Func{T, TResult}"/> that produces the result value if <paramref name="inputObj"/> is not null.</param>
-        /// <param name="result">The result value from <paramref name="ifNotNull"/> or the default value of <typeparamref name="R"/> if <paramref name="inputObj"/> was null.</param>
+        /// <param name="result">The result value from <paramref name="ifNotNull"/> or the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> was null.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> was null; otherwise, <c>false</c>.</returns>
-        public static bool TryCoerceValue<T, R>(this T inputObj, Func<T, R> ifNotNull, out R result) where T : class => TryCoerceValue(inputObj, ifNotNull, null, out result);
+        public static bool TryCoerceTo<TInput, TResult>(this TInput inputObj, Func<TInput, TResult> ifNotNull, out TResult result) where TInput : class => TryCoerceTo(inputObj, ifNotNull, null, out result);
 
         /// <summary>
-        /// Attempts to coerce one value from another.
+        /// Attempts to coerce a value to another type.
         /// </summary>
-        /// <typeparam name="T">The input value type.</typeparam>
-        /// <typeparam name="R">The reuslt value type.</typeparam>
+        /// <typeparam name="TInput">The input value type.</typeparam>
+        /// <typeparam name="TResult">The result value type.</typeparam>
         /// <param name="inputObj">The input value.</param>
         /// <param name="ifNotNull">The <seealso cref="Func{T, TResult}"/> that produces the result value if <paramref name="inputObj"/> is not null.</param>
         /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the result value if <paramref name="inputObj"/> is null.
-        /// If this parameter is null, then the result value will be the default value of <typeparamref name="R"/> if <paramref name="inputObj"/> is null.</param>
+        /// If this parameter is null, then the result value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The result value.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> was null; otherwise, <c>false</c>.</returns>
-        public static bool TryCoerceValue<T, R>(this T? inputObj, Func<T, R> ifNotNull, Func<R> ifNull, out R result)
-            where T : struct
+        public static bool TryCoerceTo<TInput, TResult>(this TInput? inputObj, Func<TInput, TResult> ifNotNull, Func<TResult> ifNull, out TResult result)
+            where TInput : struct
         {
             if (ifNotNull is null)
                 throw new ArgumentNullException(nameof(ifNotNull));
@@ -105,73 +105,277 @@ namespace FsInfoCat.PS
                 result = ifNotNull(inputObj.Value);
                 return true;
             }
-            result = (ifNull is null) ? default(R) : ifNull();
+            result = (ifNull is null) ? default(TResult) : ifNull();
             return false;
         }
 
         /// <summary>
-        /// Attempts to coerce one value from another.
+        /// Attempts to coerce a value to another type.
         /// </summary>
-        /// <typeparam name="T">The input value type.</typeparam>
-        /// <typeparam name="R">The reuslt value type.</typeparam>
+        /// <typeparam name="TInput">The input value type.</typeparam>
+        /// <typeparam name="TResult">The result value type.</typeparam>
         /// <param name="inputObj">The input value.</param>
         /// <param name="ifNotNull">The <seealso cref="Func{T, TResult}"/> that produces the result value if <paramref name="inputObj"/> is not null.</param>
-        /// <param name="result">The result value from <paramref name="ifNotNull"/> or the default value of <typeparamref name="R"/> if <paramref name="inputObj"/> was null.</param>
+        /// <param name="result">The result value from <paramref name="ifNotNull"/> or the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> was null.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> was null; otherwise, <c>false</c>.</returns>
-        public static bool TryCoerceValue<T, R>(this T? inputObj, Func<T, R> ifNotNull, out R result) where T : struct => TryCoerceValue(inputObj, ifNotNull, null, out result);
+        public static bool TryCoerceTo<TInput, TResult>(this TInput? inputObj, Func<TInput, TResult> ifNotNull, out TResult result) where TInput : struct => TryCoerceTo(inputObj, ifNotNull, null, out result);
 
         /// <summary>
-        /// Handler callback to attempt to coerce one value from another.
+        /// Attempts to coerce an object as a specific type.
         /// </summary>
-        /// <typeparam name="T">The input type.</typeparam>
-        /// <typeparam name="R">The result type.</typeparam>
+        /// <typeparam name="TResult">The result value type.</typeparam>
         /// <param name="inputObj">The input value.</param>
-        /// <param name="result">The input value of type <typeparamref name="T"/> cast or coerced as type <typeparamref name="R"/>.</param>
-        /// <returns><c>true</c> if the input type <typeparamref name="T"/> was succesfully coerced as type <typeparamref name="R"/>; otherwise, <c>false</c>.</returns>
-        public delegate bool TryCoerceHandler<T, R>(T inputObj, out R result);
+        /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the <paramref name="result"/> value if <paramref name="inputObj"/> is null.
+        /// If this parameter is null, then the <paramref name="result"/> value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of this method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <param name="ifSuccess">The callback that will be invoked if <paramref name="inputObj"/> was successfully converted converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Func<TResult> ifNull, bool returnValueIfNull, TryCoerceHandler<object, TResult> fallback, Action<TResult> ifSuccess, out TResult result)
+        {
+            if (inputObj is null)
+            {
+                result = (ifNull is null) ? default : ifNull();
+                if (returnValueIfNull)
+                    ifSuccess?.Invoke(result);
+                return returnValueIfNull;
+            }
+            if (inputObj is TResult r1)
+                result = r1;
+            else
+            {
+                object o = inputObj;
+                if (o is PSObject psObject && (o = psObject.BaseObject) is TResult r2)
+                    result = r2;
+                else
+                {
+                    try { result = (TResult)o; }
+                    catch
+                    {
+                        try { result = (TResult)Convert.ChangeType(o, typeof(TResult)); }
+                        catch
+                        {
+                            if (fallback is null || !fallback(o, out result))
+                            {
+                                result = default;
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            ifSuccess?.Invoke(result);
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the <paramref name="result"/> value if <paramref name="inputObj"/> is null.
+        /// If this parameter is null, then the <paramref name="result"/> value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of this method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="ifSuccess">The callback that will be invoked if <paramref name="inputObj"/> was successfully converted converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Func<TResult> ifNull, bool returnValueIfNull, Action<TResult> ifSuccess, out TResult result) =>
+            TryCoerceAs(inputObj, ifNull, returnValueIfNull, null, ifSuccess, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the <paramref name="result"/> value if <paramref name="inputObj"/> is null.
+        /// If this parameter is null, then the <paramref name="result"/> value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <param name="ifSuccess">The callback that will be invoked if <paramref name="inputObj"/> was successfully converted converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Func<TResult> ifNull, TryCoerceHandler<object, TResult> fallback, Action<TResult> ifSuccess, out TResult result) =>
+            TryCoerceAs(inputObj, ifNull, false, fallback, ifSuccess, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the <paramref name="result"/> value if <paramref name="inputObj"/> is null.
+        /// If this parameter is null, then the <paramref name="result"/> value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
+        /// <param name="ifSuccess">The callback that will be invoked if <paramref name="inputObj"/> was successfully converted converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Func<TResult> ifNull, Action<TResult> ifSuccess, out TResult result) =>
+            TryCoerceAs(inputObj, ifNull, null, ifSuccess, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="returnValueIfNull">The return value of this method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <param name="ifSuccess">The callback that will be invoked if <paramref name="inputObj"/> was successfully converted converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, bool returnValueIfNull, TryCoerceHandler<object, TResult> fallback, Action<TResult> ifSuccess, out TResult result) =>
+            TryCoerceAs(inputObj, null, returnValueIfNull, fallback, ifSuccess, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="returnValueIfNull">The return value of this method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="ifSuccess">The callback that will be invoked if <paramref name="inputObj"/> was successfully converted converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, bool returnValueIfNull, Action<TResult> ifSuccess, out TResult result) =>
+            TryCoerceAs(inputObj, null, returnValueIfNull, ifSuccess, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <param name="ifSuccess">The callback that will be invoked if <paramref name="inputObj"/> was successfully converted converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, TryCoerceHandler<object, TResult> fallback, Action<TResult> ifSuccess, out TResult result) =>
+            TryCoerceAs(inputObj, null, fallback, ifSuccess, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="ifSuccess">The callback that will be invoked if <paramref name="inputObj"/> was successfully converted converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Action<TResult> ifSuccess, out TResult result) => TryCoerceAs(inputObj, (Func<TResult>)null, ifSuccess, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the <paramref name="result"/> value if <paramref name="inputObj"/> is null.
+        /// If this parameter is null, then the <paramref name="result"/> value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of this method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Func<TResult> ifNull, bool returnValueIfNull, TryCoerceHandler<object, TResult> fallback, out TResult result) =>
+            TryCoerceAs(inputObj, ifNull, returnValueIfNull, fallback, null, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the <paramref name="result"/> value if <paramref name="inputObj"/> is null.
+        /// If this parameter is null, then the <paramref name="result"/> value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
+        /// <param name="returnValueIfNull">The return value of this method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Func<TResult> ifNull, bool returnValueIfNull, out TResult result) =>
+            TryCoerceAs(inputObj, ifNull, returnValueIfNull, null, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the <paramref name="result"/> value if <paramref name="inputObj"/> is null.
+        /// If this parameter is null, then the <paramref name="result"/> value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback conversion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Func<TResult> ifNull, TryCoerceHandler<object, TResult> fallback, out TResult result) =>
+            TryCoerceAs(inputObj, ifNull, false, fallback, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="ifNull">The <seealso cref="Func{TResult}"/> that produces the <paramref name="result"/> value if <paramref name="inputObj"/> is null.
+        /// If this parameter is null, then the <paramref name="result"/> value will be the default value of <typeparamref name="TResult"/> if <paramref name="inputObj"/> is null.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, Func<TResult> ifNull, out TResult result) => TryCoerceAs(inputObj, ifNull, null, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="returnValueIfNull">The return value of this method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="fallback">The fallback conversion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, bool returnValueIfNull, TryCoerceHandler<object, TResult> fallback, out TResult result) =>
+            TryCoerceAs(inputObj, null, returnValueIfNull, fallback, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="returnValueIfNull">The return value of this method when <paramref name="inputObj"/> is null.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, bool returnValueIfNull, out TResult result) => TryCoerceAs(inputObj, null, returnValueIfNull, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="fallback">The fallback conversion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted to type <typeparamref name="TResult"/>.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, TryCoerceHandler<object, TResult> fallback, out TResult result) =>
+            TryCoerceAs(inputObj, null, fallback, out result);
+
+        /// <summary>
+        /// Attempts to coerce an object as a specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The result value type.</typeparam>
+        /// <param name="inputObj">The input value.</param>
+        /// <param name="result">The coerced <typeparamref name="TResult"/> value.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be coerced; otherwise, <c>false</c>.</returns>
+        public static bool TryCoerceAs<TResult>(this object inputObj, out TResult result) => TryCoerceAs(inputObj, (Func<TResult>)null, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
         /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
+        /// <typeparam name="TResult">The type to be cast as.</typeparam>
         /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T?> ifSuccess, TryCoerceHandler<object, T?> fallback, bool asRawValueIfFail, out T? result)
-            where T : struct
+        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="TResult"/>.</param>
+        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
+        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
+        /// <param name="result">The value of <paramref name="inputObj"/> cast as type <typeparamref name="TResult"/>.</param>
+        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast as type <typeparamref name="TResult"/>; otherwise, <c>false</c>.</returns>
+        public static bool TryCast<TResult>(this object inputObj, Action<TResult> ifSuccess, bool nullReturnValue, Func<TResult> ifNull, out TResult result)
         {
             if (inputObj is null)
-                result = null;
-            else if (inputObj is T r1)
-                result = r1;
-            else if (inputObj is PSObject p)
             {
-                if (p.BaseObject is T r2)
-                    result = r2;
-                else
-                {
-                    if (fallback is null)
-                    {
-                        result = null;
-                        return false;
-                    }
-                    return fallback((asRawValueIfFail) ? p.BaseObject : inputObj, out result);
-                }
+                result = (ifNull is null) ? default : ifNull();
+                if (!nullReturnValue)
+                    return nullReturnValue;
             }
+            else if (inputObj is TResult r1)
+                result = r1;
+            else if (inputObj is PSObject psObject && psObject.BaseObject is TResult r2)
+                result = r2;
             else
             {
-                if (fallback is null)
-                {
-                    result = null;
-                    return false;
-                }
-                return fallback(inputObj, out result);
+                result = default;
+                return false;
             }
             ifSuccess?.Invoke(result);
             return true;
@@ -182,205 +386,11 @@ namespace FsInfoCat.PS
         /// </summary>
         /// <typeparam name="T">The type to be cast as.</typeparam>
         /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as
-        /// type <typeparamref name="T"/>.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> was a <seealso cref="PSObject"/>,
-        /// then the<seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T?> ifSuccess, TryCoerceHandler<object, T?> fallback, out T? result) where T : struct => TryCast(inputObj, ifSuccess, fallback, false, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as
-        /// type <typeparamref name="T"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T?> ifSuccess, out T? result) where T : struct => TryCast(inputObj, ifSuccess, (TryCoerceHandler<object, T?>)null, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, TryCoerceHandler<object, T?> fallback, bool asRawValueIfFail, out T? result) where T : struct => TryCast(inputObj, null, fallback, asRawValueIfFail, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> was a <seealso cref="PSObject"/>,
-        /// then the<seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, TryCoerceHandler<object, T?> fallback, out T? result) where T : struct => TryCast(inputObj, (Action<T?>)null, fallback, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, out T? result) where T : struct => TryCast(inputObj, (Action<T?>)null, (TryCoerceHandler<object, T?>)null, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, Func<T> ifNull, TryCoerceHandler<object, T> fallback, bool asRawValueIfFail, out T result)
-        {
-            if (inputObj is null)
-            {
-                result = (ifNull is null) ? default(T) : ifNull();
-                return nullReturnValue;
-            }
-
-            if (inputObj is T r1)
-            {
-                ifSuccess?.Invoke(r1);
-                result = r1;
-                return true;
-            }
-
-            if (inputObj is PSObject p)
-            {
-                if (p.BaseObject is T r2)
-                {
-                    ifSuccess?.Invoke(r2);
-                    result = r2;
-                    return true;
-                }
-                if (!(fallback is null))
-                    return fallback((asRawValueIfFail) ? p.BaseObject : inputObj, out result);
-            }
-            else if (!(fallback is null))
-                return fallback(inputObj, out result);
-            result = default(T);
-            return false;
-        }
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, Func<T> ifNull, TryCoerceHandler<object, T> fallback, out T result)  => TryCast(inputObj, ifSuccess, nullReturnValue, ifNull, fallback, false, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, Func<T> ifNull, out T result)  => TryCast(inputObj, ifSuccess, nullReturnValue, ifNull, null, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, TryCoerceHandler<object, T> fallback, bool asRawValueIfFail, out T result)  => TryCast(inputObj, ifSuccess, nullReturnValue, null, fallback, asRawValueIfFail, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, TryCoerceHandler<object, T> fallback, out T result)  => TryCast(inputObj, ifSuccess, nullReturnValue, null, fallback, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
         /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
         /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, out T result)  => TryCast(inputObj, ifSuccess, nullReturnValue, null, null, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="ifNull"></param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, Func<T> ifNull, TryCoerceHandler<object, T> fallback, bool asRawValueIfFail, out T result)  => TryCast(inputObj, ifSuccess, false, ifNull, fallback, asRawValueIfFail, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, Func<T> ifNull, TryCoerceHandler<object, T> fallback, out T result)  => TryCast(inputObj, ifSuccess, ifNull, fallback, false, out result);
+        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, out T result)  => TryCast(inputObj, ifSuccess, nullReturnValue, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -391,35 +401,7 @@ namespace FsInfoCat.PS
         /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, Func<T> ifNull, out T result)  => TryCast(inputObj, ifSuccess, ifNull, null, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, TryCoerceHandler<object, T> fallback, bool asRawValueIfFail, out T result)  => TryCast(inputObj, ifSuccess, null, fallback, asRawValueIfFail, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, TryCoerceHandler<object, T> fallback, out T result)  => TryCast(inputObj, ifSuccess, null, fallback, out result);
+        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, Func<T> ifNull, out T result)  => TryCast(inputObj, ifSuccess, false, ifNull, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -429,37 +411,7 @@ namespace FsInfoCat.PS
         /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, out T result)  => TryCast(inputObj, ifSuccess, null, null, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, bool nullReturnValue, Func<T> ifNull, TryCoerceHandler<object, T> fallback, bool asRawValueIfFail, out T result)  => TryCast(inputObj, null, nullReturnValue, ifNull, fallback, asRawValueIfFail, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, bool nullReturnValue, Func<T> ifNull, TryCoerceHandler<object, T> fallback, out T result)  => TryCast(inputObj, null, nullReturnValue, ifNull, fallback, out result);
+        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, out T result)  => TryCast(inputObj, ifSuccess, null, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -478,34 +430,6 @@ namespace FsInfoCat.PS
         /// <typeparam name="T">The type to be cast as.</typeparam>
         /// <param name="inputObj">The source object.</param>
         /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, bool nullReturnValue, TryCoerceHandler<object, T> fallback, bool asRawValueIfFail, out T result)  => TryCast(inputObj, null, nullReturnValue, fallback, asRawValueIfFail, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, bool nullReturnValue, TryCoerceHandler<object, T> fallback, out T result)  => TryCast(inputObj, null, nullReturnValue, fallback, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
         public static bool TryCast<T>(this object inputObj, bool nullReturnValue, out T result)  => TryCast(inputObj, (Action<T>)null, nullReturnValue, out result);
@@ -516,63 +440,9 @@ namespace FsInfoCat.PS
         /// <typeparam name="T">The type to be cast as.</typeparam>
         /// <param name="inputObj">The source object.</param>
         /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Func<T> ifNull, TryCoerceHandler<object, T> fallback, bool asRawValueIfFail, out T result)  => TryCast(inputObj, null, ifNull, fallback, asRawValueIfFail, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Func<T> ifNull, TryCoerceHandler<object, T> fallback, out T result)  => TryCast(inputObj, null, ifNull, fallback, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
         public static bool TryCast<T>(this object inputObj, Func<T> ifNull, out T result)  => TryCast(inputObj, null, ifNull, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>.</param>
-        /// <param name="asRawValueIfFail">If <c>true</c>, the raw value of <paramref name="inputObj"/> will be passed to the <paramref name="fallback"/>
-        /// <seealso cref="TryCoerceHandler{T, R}"/> when it is invoked; otherwise, if <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the <paramref name="fallback"/> <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, TryCoerceHandler<object, T> fallback, bool asRawValueIfFail, out T result)  => TryCast(inputObj, (Action<T>)null, fallback, asRawValueIfFail, out result);
-
-        /// <summary>
-        /// Attempts to cast an object to a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type to be cast as.</typeparam>
-        /// <param name="inputObj">The source object.</param>
-        /// <param name="fallback">The <seealso cref="TryCoerceHandler{T, R}"/> to invoke to attempt to produce a type <typeparamref name="T"/> <paramref name="result"/>
-        /// value if the <paramref name="inputObj"/> could not be cast as type <typeparamref name="T"/>. If <paramref name="inputObj"/> is a <seealso cref="PSObject"/>, the
-        /// <seealso cref="PSObject.BaseObject"/> will be passed to the this <seealso cref="TryCoerceHandler{T, R}"/>.</param>
-        /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
-        /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, TryCoerceHandler<object, T> fallback, out T result)  => TryCast(inputObj, (Action<T>)null, fallback, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -957,7 +827,7 @@ namespace FsInfoCat.PS
         /// <param name="errorRecord">The <seealso cref="ErrorRecord"/> object cast or obtained from <paramref name="inputObj"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> was an <seealso cref="ErrorRecord"/> object or an object which contained an <seealso cref="ErrorRecord"/>;
         /// otherwise, <c>false</c>.</returns>
-        public static bool TryGetErrorRecord(this object inputObj, out ErrorRecord errorRecord) => TryCast(inputObj, (object o, out ErrorRecord e) =>
+        public static bool TryGetErrorRecord(this object inputObj, out ErrorRecord errorRecord) => TryCoerceAs(inputObj, (object o, out ErrorRecord e) =>
         {
             if (o is IContainsErrorRecord c)
                 return !((e = c.ErrorRecord) is null);
@@ -972,7 +842,7 @@ namespace FsInfoCat.PS
         /// <param name="exception">The <seealso cref="Exception"/> object cast or obtained from <paramref name="inputObj"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> was an <seealso cref="Exception"/> object or an object which contained an <seealso cref="ErrorRecord"/>;
         /// otherwise, <c>false</c>.</returns>
-        public static bool TryGetException(this object inputObj, out Exception exception) => TryCast(inputObj, (object o, out Exception e) =>
+        public static bool TryGetException(this object inputObj, out Exception exception) => TryCoerceAs(inputObj, (object o, out Exception e) =>
         {
             if (o is ErrorRecord r || (o is IContainsErrorRecord c && !((r = c.ErrorRecord) is null)))
                 return !((e = r.Exception) is null);
@@ -1046,4 +916,14 @@ namespace FsInfoCat.PS
             return errorRecord;
         }
     }
+
+    /// <summary>
+    /// Handler callback to attempt to coerce one value from another.
+    /// </summary>
+    /// <typeparam name="T">The input type.</typeparam>
+    /// <typeparam name="R">The result type.</typeparam>
+    /// <param name="inputObj">The input value.</param>
+    /// <param name="result">The input value of type <typeparamref name="T"/> cast or coerced as type <typeparamref name="R"/>.</param>
+    /// <returns><c>true</c> if the input type <typeparamref name="T"/> was succesfully coerced as type <typeparamref name="R"/>; otherwise, <c>false</c>.</returns>
+    public delegate bool TryCoerceHandler<T, R>(T inputObj, out R result);
 }

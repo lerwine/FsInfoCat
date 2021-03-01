@@ -1,3 +1,4 @@
+using FsInfoCat.PS;
 using System;
 
 namespace FsInfoCat.Test.Helpers
