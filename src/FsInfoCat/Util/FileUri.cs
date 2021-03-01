@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Util
@@ -38,19 +37,30 @@ namespace FsInfoCat.Util
         public bool IsDirectory { get; }
 
         /// <summary>
-        /// Indicates whether the path represents a subdirectory (ends with <c>/</c>)
+        /// Indicates whether the path represents a subdirectory (<see cref="Segments"/>[0] is <c>/</c>)
         /// </summary>
         public bool IsAbsolute { get; }
 
         /// <summary>
-        /// Indicates whether this is an empty file URI (<see cref="Path"/> and <see cref="Host"/> are empty strings).
+        /// Indicates whether this is an empty file URI (<see cref="Segments"/> and <see cref="Host"/> are empty strings).
         /// </summary>
-        public bool IsEmpty { get;  }
+        public bool IsEmpty { get; }
+
+        /// <summary>
+        /// Creates a <see cref="FileUri"/> instance representing the parent directory.
+        /// </summary>
+        /// <returns>A <see cref="FileUri"/> instance representing the parent directory or <c>null</c> if there is no parent.</returns>
+        public FileUri GetParentUri()
+        {
+            if (Segments.Count < 2)
+                return null;
+            return new FileUri(Host, Segments.Take(Segments.Count - 1));
+        }
 
         static FileUri()
         {
-            HasAltDirectorySeparatorChar = System.IO.Path.AltDirectorySeparatorChar != System.IO.Path.DirectorySeparatorChar;
-            DirectorySeparatorSameAsUriPathSeparator = System.IO.Path.DirectorySeparatorChar == UriPathSeparatorChar;
+            HasAltDirectorySeparatorChar = Path.AltDirectorySeparatorChar != Path.DirectorySeparatorChar;
+            DirectorySeparatorSameAsUriPathSeparator = Path.DirectorySeparatorChar == UriPathSeparatorChar;
             if (DirectorySeparatorSameAsUriPathSeparator)
             {
                 _toLocalPath = p => Uri.UnescapeDataString(p);
@@ -72,11 +82,11 @@ namespace FsInfoCat.Util
             }
             else
             {
-                _toLocalPath = p => Uri.UnescapeDataString(p).Replace(UriPathSeparatorChar, System.IO.Path.DirectorySeparatorChar);
-                if (System.IO.Path.AltDirectorySeparatorChar == UriPathSeparatorChar)
+                _toLocalPath = p => Uri.UnescapeDataString(p).Replace(UriPathSeparatorChar, Path.DirectorySeparatorChar);
+                if (Path.AltDirectorySeparatorChar == UriPathSeparatorChar)
                     _getPathAndHost = (string u, out string p) =>
                     {
-                        u = Uri.EscapeDataString(u.Replace(System.IO.Path.DirectorySeparatorChar, UriPathSeparatorChar));
+                        u = Uri.EscapeDataString(u.Replace(Path.DirectorySeparatorChar, UriPathSeparatorChar));
                         if (u.Length > 2 && u[0] == UriPathSeparatorChar && u[1] == UriPathSeparatorChar)
                         {
                             int i = u.IndexOf(UriPathSeparatorChar, 2);
@@ -92,7 +102,7 @@ namespace FsInfoCat.Util
                 else
                     _getPathAndHost = (string u, out string p) =>
                     {
-                        u = Uri.EscapeDataString(u.Replace(System.IO.Path.DirectorySeparatorChar, UriPathSeparatorChar).Replace(System.IO.Path.AltDirectorySeparatorChar, UriPathSeparatorChar));
+                        u = Uri.EscapeDataString(u.Replace(Path.DirectorySeparatorChar, UriPathSeparatorChar).Replace(Path.AltDirectorySeparatorChar, UriPathSeparatorChar));
                         if (u.Length > 2 && u[0] == UriPathSeparatorChar && u[1] == UriPathSeparatorChar)
                         {
                             int i = u.IndexOf(UriPathSeparatorChar, 2);
@@ -106,22 +116,6 @@ namespace FsInfoCat.Util
                         return "";
                     };
             }
-        }
-
-        public static bool TryCreate(object obj, bool assumeLocalPath, out FileUri fileUri)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Creates a <see cref="FileUri"/> instance representing the parent /
-        /// </summary>
-        /// <returns>A <see cref="FileUri"/> instance representing the parent directory or <c>null</c> if there is no parent.</returns>
-        public FileUri GetParentUri()
-        {
-            if (Segments.Count < 2)
-                return null;
-            return new FileUri(Host, Segments.Take(Segments.Count - 1));
         }
 
         private FileUri(string host, IEnumerable<string> segments)
@@ -236,7 +230,7 @@ namespace FsInfoCat.Util
 
         public static implicit operator FileUri(FileSystemInfo fsi) =>
             (fsi is null) ? null :
-            FromLocalPath((fsi is FileInfo || fsi.FullName.EndsWith(System.IO.Path.DirectorySeparatorChar)) ? fsi.FullName : $"{fsi.FullName}/");
+            FromLocalPath((fsi is FileInfo || fsi.FullName.EndsWith(Path.DirectorySeparatorChar)) ? fsi.FullName : $"{fsi.FullName}/");
 
         /// <summary>
         /// Creates a local path string from file URI.
@@ -247,7 +241,7 @@ namespace FsInfoCat.Util
             if (IsEmpty)
                 return "";
             if (IsAbsolute)
-                return $"{System.IO.Path.DirectorySeparatorChar}{System.IO.Path.DirectorySeparatorChar}{Host}{_toLocalPath(string.Join("", Segments))}";
+                return $"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}{Host}{_toLocalPath(string.Join("", Segments))}";
             return _toLocalPath(string.Join("", Segments));
         }
 
