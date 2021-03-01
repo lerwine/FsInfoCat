@@ -5,7 +5,7 @@ using FsInfoCat.Models.Accounts;
 using FsInfoCat.Models.DB;
 using NUnit.Framework;
 
-namespace Tests
+namespace FsInfoCat.Test
 {
     [TestFixture]
     public class AccountUnitTest

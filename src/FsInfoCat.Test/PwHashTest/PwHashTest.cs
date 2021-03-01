@@ -7,7 +7,7 @@ using System.Text;
 using FsInfoCat.Util;
 using NUnit.Framework;
 
-namespace Tests
+namespace FsInfoCat.Test
 {
     [TestFixture]
     public class PwHashTest
