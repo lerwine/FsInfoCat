@@ -27,6 +27,82 @@ namespace FsInfoCat.Util
 
         public static bool IsEqualTo(this string s, char c) => null != s && s.Length == 1 && s[0] == c;
 
+        public static bool IsEqualTo(this string target, string other, int length)
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            if (target is null)
+                return other is null;
+            if (other is null)
+                return false;
+            if (length == 0)
+                return true;
+            if (target.Length == 0)
+                return other.Length == 0;
+            if (length > target.Length)
+            {
+                if (length < other.Length)
+                    return false;
+            }
+            else if (length == target.Length)
+            {
+                if (length > other.Length)
+                    return false;
+                if (length == other.Length)
+                    return target.Equals(other);
+            }
+            else if (other.Length < length)
+                return false;
+            return target.Take(length).SequenceEqual(other.Take(length));
+        }
+
+        public static bool IsSubstringEqualTo(this string target, int startIndex, string other, int otherStartIndex, int length)
+        {
+            if (startIndex < 1 && otherStartIndex < 1)
+                return IsEqualTo(target, other, length);
+            if (startIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if (otherStartIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(otherStartIndex));
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            if (target is null)
+                return other is null;
+            if (other is null)
+                return false;
+            if (startIndex >= target.Length)
+                return otherStartIndex >= other.Length;
+            if (otherStartIndex >= other.Length)
+                return false;
+            if (length == 0)
+                return true;
+            int targetEndIndex = startIndex + length;
+            int otherEndIndex = otherStartIndex + length;
+            int shortage = targetEndIndex - target.Length;
+            if ((shortage > 0) ? (otherEndIndex - other.Length != shortage) : (other.Length < otherEndIndex))
+                return false;
+            return target.Skip(startIndex).Take(length).SequenceEqual(other.Skip(startIndex).Take(length));
+        }
+
+        public static bool IsSubstringEqualTo(this string target, int startIndex, string other, int otherStartIndex)
+        {
+            if (startIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if (otherStartIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(otherStartIndex));
+            if (target is null)
+                return other is null;
+            if (startIndex == 0 && otherStartIndex == 0)
+                return target.Equals(other);
+            if (other is null)
+                return false;
+            int tLen = target.Length - startIndex;
+            int oLen = other.Length - otherStartIndex;
+            if (tLen < 1)
+                return oLen < 1;
+            return oLen == tLen && target.Skip(startIndex).SequenceEqual(other.Skip(otherStartIndex));
+        }
+
         public static bool EndsWith(this string s, char c) => !string.IsNullOrEmpty(s) && s[s.Length - 1] == c;
 
         public static string[] Split(this string s, char c) => (s is null) ? new string[0] : s.Split(new char[] { c });
