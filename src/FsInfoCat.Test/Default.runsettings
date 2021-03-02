@@ -3,9 +3,9 @@
         <ResultsDirectory>C:\Users\lerwi\source\repos\FsInfoCat\src\TestResults</ResultsDirectory>
         <SolutionDirectory>C:\Users\lerwi\source\repos\FsInfoCat\src\</SolutionDirectory>
         <TestOutputXml>C:\Users\lerwi\source\repos\FsInfoCat\src\TestResults</TestOutputXml>
-        <CollectSourceInformation>True</CollectSourceInformation>
+        <!--<CollectSourceInformation>True</CollectSourceInformation>
         <InternalTraceLevel>Debug</InternalTraceLevel>
         <Verbosity>5</Verbosity>
-        <DumpXmlTestDiscovery>true</DumpXmlTestDiscovery>
+        <DumpXmlTestDiscovery>true</DumpXmlTestDiscovery>-->
     </RunConfiguration>
 </RunSettings>

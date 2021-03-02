@@ -1412,43 +1412,11 @@ namespace FsInfoCat.Test
                     .Returns(new FuncTestData1<string, bool>(testData.ReturnValue, testData.Result));
         }
 
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage1TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage2TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage3TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage4TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage5TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorMessage6TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory1TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory2TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory3TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory4TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory5TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorCategory6TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetTargetObject1TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetTargetObject2TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetTargetObject3TestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetErrorRecordTestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetTryGetExceptionTestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetToErrorRecordTestCases() => throw new InconclusiveException("Test data not implemented");
-
-        public static IEnumerable<TestCaseData> GetSetReasonTestCases() => throw new InconclusiveException("Test data not implemented");
+        public static IEnumerable<TestCaseData> GetTryGetErrorMessage1TestCases()
+        {
+#warning GetTryGetErrorMessage1TestCases not implemented
+            return new TestCaseData[0];
+        }
 
         public class ErrorRecordComparable
         {
