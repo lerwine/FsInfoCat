@@ -25,11 +25,6 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string DriveFormat { get; set; }
 
-        // TODO: Use Identifier instead of SerialNumber
-#warning Use Identifier instead of SerialNumber
-        [Parameter(HelpMessage = "The volume serial number.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
-        public uint SerialNumber { get; set; }
-
         /// <summary>
         /// Unique identifier for the file system volume.
         /// </summary>
@@ -53,6 +48,8 @@ namespace FsInfoCat.PS.Commands
         protected override void ProcessRecord()
         {
             IEnumerable<IVolumeInfo> volumeInfos = GetVolumeInfos();
+            // TODO: Implement Register-FsVolumeInfo
+#warning Implement Register-FsVolumeInfo
         }
     }
 }

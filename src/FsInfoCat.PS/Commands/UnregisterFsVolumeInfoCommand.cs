@@ -17,12 +17,6 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string[] RootPathName { get; set; }
 
-        // TODO: Use Identifier instead of SerialNumber
-#warning Use Identifier instead of SerialNumber
-        [Parameter(HelpMessage = "The volume serial number.", Mandatory = true, ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_VOLUME_IDENTIFIER)]
-        public uint[] SerialNumber { get; set; }
-
         [Parameter(HelpMessage = "The volume serial number or UUID.", Mandatory = true, ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_VOLUME_IDENTIFIER)]
         [Alias("SerialNumber")]
