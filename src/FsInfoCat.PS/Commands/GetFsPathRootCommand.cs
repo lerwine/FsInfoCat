@@ -9,7 +9,7 @@ using System.Text;
 
 namespace FsInfoCat.PS.Commands
 {
-    // Get-FsVolumeInfo
+    // Get-FsPathRoot
     [Cmdlet(VerbsCommon.Get, "FsPathRoot", DefaultParameterSetName = PARAMETER_SET_NAME_ASSUME_URI)]
     [OutputType(typeof(FileUri))]
     public class GetFsPathRootCommand : PSCmdlet
@@ -106,6 +106,10 @@ namespace FsInfoCat.PS.Commands
             {
                 if (fileUri is null || !fileUri.IsAbsolute)
                     throw new PSArgumentOutOfRangeException(_paramName, source, _conversionErrorMessage);
+                // TODO: Check directory roots?
+                FileUri parent = fileUri.GetParentUri();
+                while (!(parent is null))
+                    parent = (fileUri = parent).GetParentUri();
                 WriteObject(fileUri);
             }
             catch (PSArgumentOutOfRangeException exc)
@@ -123,7 +127,11 @@ namespace FsInfoCat.PS.Commands
             }
             catch (Exception exc)
             {
-                // TODO: Process generic exception
+                ErrorRecord errorRecord = (exc is IContainsErrorRecord ce) ? ce.ErrorRecord : null;
+                if (errorRecord is null)
+                    WriteError(new ErrorRecord(exc, MessageId.UnexpectedError.ToString("F"), ErrorCategory.InvalidArgument, source));
+                else
+                    WriteError(new ErrorRecord(exc, errorRecord.FullyQualifiedErrorId, errorRecord.CategoryInfo.Category, errorRecord.TargetObject));
             }
         }
     }
