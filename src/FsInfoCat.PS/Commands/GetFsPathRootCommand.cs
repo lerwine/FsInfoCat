@@ -12,7 +12,7 @@ namespace FsInfoCat.PS.Commands
     // Get-FsPathRoot
     [Cmdlet(VerbsCommon.Get, "FsPathRoot", DefaultParameterSetName = PARAMETER_SET_NAME_ASSUME_URI)]
     [OutputType(typeof(FileUri))]
-    public class GetFsPathRootCommand : PSCmdlet
+    public class GetFsPathRootCommand : FsPathCommand
     {
         public const string PARAMETER_SET_NAME_ASSUME_URI = "AssumeUri";
         public const string PARAMETER_SET_NAME_ASSUME_LOCAL = "AssumeLocal";
@@ -20,11 +20,7 @@ namespace FsInfoCat.PS.Commands
         public const string PARAMETER_SET_NAME_URI = "Uri";
         private const string HELP_MESSAGE_FROM_FILE_URI = "Gets the root path URI of the volume contained by the specified path URI.";
         private const string HELP_MESSAGE_FROM_LOCAL_PATH = "Gets the root path URI of the volume contained by the specified local path.";
-        private const string ERROR_MESSAGE_INVALID_FILE_URI = "Invalid file URI.";
-        private const string ERROR_MESSAGE_INVALID_PATH_STRING = "Invalid path string.";
         private string _paramName;
-        private string _conversionErrorMessage;
-        private string _conversionErrorId;
 
         [Parameter(HelpMessage = HELP_MESSAGE_FROM_FILE_URI, Mandatory = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_ASSUME_URI)]
         [Parameter(HelpMessage = HELP_MESSAGE_FROM_LOCAL_PATH, Mandatory = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_ASSUME_LOCAL)]
@@ -53,27 +49,25 @@ namespace FsInfoCat.PS.Commands
 
         protected override void BeginProcessing()
         {
-            string errorId;
             switch (ParameterSetName)
             {
                 case PARAMETER_SET_NAME_ASSUME_LOCAL:
                     _paramName = nameof(InputObject);
-                    _conversionErrorMessage = MessageId.InvalidPath.GetDescription(out errorId);
+                    SetConversionMessageId(MessageId.InvalidPath);
                     break;
                 case PARAMETER_SET_NAME_URI:
                     _paramName = nameof(Uri);
-                    _conversionErrorMessage = MessageId.InvalidAbsoluteFileUri.GetDescription(out errorId);
+                    SetConversionMessageId(MessageId.InvalidAbsoluteFileUri);
                     break;
                 case PARAMETER_SET_NAME_PATH:
                     _paramName = nameof(LocalPath);
-                    _conversionErrorMessage = MessageId.InvalidPath.GetDescription(out errorId);
+                    SetConversionMessageId(MessageId.InvalidPath);
                     break;
                 default:
                     _paramName = nameof(InputObject);
-                    _conversionErrorMessage = MessageId.InvalidAbsoluteFileUri.GetDescription(out errorId);
+                    SetConversionMessageId(MessageId.InvalidAbsoluteFileUri);
                     break;
             }
-            _conversionErrorId = errorId;
         }
 
         protected override void ProcessRecord()
@@ -102,37 +96,12 @@ namespace FsInfoCat.PS.Commands
 
         private void ProcessItem(object source, FileUri fileUri)
         {
-            try
-            {
-                if (fileUri is null || !fileUri.IsAbsolute)
-                    throw new PSArgumentOutOfRangeException(_paramName, source, _conversionErrorMessage);
-                // TODO: Check directory roots?
-                FileUri parent = fileUri.GetParentUri();
-                while (!(parent is null))
-                    parent = (fileUri = parent).GetParentUri();
-                WriteObject(fileUri);
-            }
-            catch (PSArgumentOutOfRangeException exc)
-            {
-                if (_paramName.Equals(exc.ParamName) && ReferenceEquals(source, exc.ActualValue))
-                    WriteError(new ErrorRecord(exc, _conversionErrorId, ErrorCategory.InvalidArgument, source));
-                else
-                {
-                    ErrorRecord errorRecord = exc.ErrorRecord;
-                    if (errorRecord is null)
-                        WriteError(new ErrorRecord(exc, MessageId.UnexpectedError.ToString("F"), ErrorCategory.InvalidArgument, exc.ActualValue));
-                    else
-                        WriteError(new ErrorRecord(exc, errorRecord.FullyQualifiedErrorId, errorRecord.CategoryInfo.Category, errorRecord.TargetObject));
-                }
-            }
-            catch (Exception exc)
-            {
-                ErrorRecord errorRecord = (exc is IContainsErrorRecord ce) ? ce.ErrorRecord : null;
-                if (errorRecord is null)
-                    WriteError(new ErrorRecord(exc, MessageId.UnexpectedError.ToString("F"), ErrorCategory.InvalidArgument, source));
-                else
-                    WriteError(new ErrorRecord(exc, errorRecord.FullyQualifiedErrorId, errorRecord.CategoryInfo.Category, errorRecord.TargetObject));
-            }
+            if (!ValidateItem(source, fileUri, _paramName))
+                return;
+            FileUri parent = fileUri.GetParentUri();
+            while (!(parent is null))
+                parent = (fileUri = parent).GetParentUri();
+            WriteObject(fileUri);
         }
     }
 }
