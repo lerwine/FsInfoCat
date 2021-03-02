@@ -42,7 +42,7 @@ namespace FsInfoCat.Util
         public bool IsAbsolute { get; }
 
         /// <summary>
-        /// Indicates whether this is an empty file URI (<see cref="Segments"/> and <see cref="Host"/> are empty strings).
+        /// Indicates whether this is an empty file URI (lengths of <see cref="Segments"/> and <see cref="Host"/> are zero).
         /// </summary>
         public bool IsEmpty { get; }
 
@@ -164,7 +164,12 @@ namespace FsInfoCat.Util
         /// <summary>
         /// Creates a new <c>FileUri</c> object.
         /// </summary>
-        /// <param name="fileUriString">The relative or absolute file URI.</param>
+        /// <param name="fileUriString">The well-formed relative or absolute file URI. A <see langword="null"/> or empty value results in an <see cref="IsEmpty">empty</see> file URI.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="fileUriString"/> is not a well-formed file URI string or it is not a well-formed relative URI string.
+        /// <para>This exception will also be thrown if any path segments are empty (2 or more consecutive <c>/</c> characters).</para></exception>
+        /// <remarks>The <seealso cref="Uri.IsWellFormedUriString(string, UriKind)"/> method is utilized to determine if <paramref name="fileUriString"/> is well-formed.
+        /// <para><see cref="IsDirectory"/> will be set to <see langword="true"/> if <paramref name="fileUriString"/> ends with the <c>/</c> character, is a file URI with no path specified, or if <paramref name="fileUriString"/> is null or empty.</para>
+        /// <para><seealso cref="UriHelper.AsNormalized(Uri)"/></para></remarks>
         public FileUri(string fileUriString)
         {
             IsEmpty = string.IsNullOrEmpty(fileUriString);
