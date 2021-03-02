@@ -154,11 +154,11 @@ namespace FsInfoCat.Test
         {
             FsRoot target = new FsRoot();
             Assert.That(target.CaseSensitive, Is.False);
-            Assert.That(target.DriveFormat, Is.Null);
+            Assert.That(target.DriveFormat, Is.Empty);
             Assert.That(target.DriveType, Is.EqualTo(DriveType.Unknown));
-            Assert.That(target.RootPathName, Is.Null);
+            Assert.That(target.RootPathName, Is.Empty);
             Assert.That(target.Identifier, Is.EqualTo(VolumeIdentifier.Empty));
-            Assert.That(target.VolumeName, Is.Null);
+            Assert.That(target.VolumeName, Is.Empty);
             Assert.That(target.ChildNodes, Is.Not.Null.Or.Empty);
         }
 
