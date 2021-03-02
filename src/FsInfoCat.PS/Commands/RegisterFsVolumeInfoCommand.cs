@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Management.Automation;
 using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 
 namespace FsInfoCat.PS.Commands
 {
@@ -42,14 +46,80 @@ namespace FsInfoCat.PS.Commands
         [Alias("SerialNumber")]
         public object Identifier { get; set; }
 
-        [Parameter(HelpMessage = "Return registered volume", Mandatory = true)]
+        [Parameter(HelpMessage = "Return registered volume")]
         public SwitchParameter PassThru { get; set; }
+
+        [Parameter(HelpMessage = "Updates volume info if it has already been been registered. Also registers volume information even if the subdirectory does not exists.")]
+        public SwitchParameter Force { get; set; }
 
         protected override void ProcessRecord()
         {
-            IEnumerable<IVolumeInfo> volumeInfos = GetVolumeInfos();
-            // TODO: Implement Register-FsVolumeInfo
-#warning Implement Register-FsVolumeInfo
+            if (!(VolumeIdentifier.TryCreate((Identifier is PSObject psObj) ? psObj.BaseObject : Identifier, out VolumeIdentifier volumeIdentifer)))
+            {
+                // TODO: Write error
+            }
+
+
+            FileUri fileUri = FileUri.FromLocalPath(RootPathName);
+            if (fileUri.IsEmpty)
+            {
+                // TODO: Write error
+            }
+            if (!(Force.IsPresent || Directory.Exists(RootPathName)))
+            {
+                // TODO: Write error
+            }
+
+            Collection<PSObject> volumeRegistration = GetVolumeRegistration();
+            IEnumerable<RegisteredVolumeInfo> registeredVolumes = volumeRegistration.Select(o => o.BaseObject as RegisteredVolumeInfo);
+            RegisteredVolumeInfo volumeInfo = registeredVolumes.FirstOrDefault(v => v.Identifier.Equals(volumeIdentifer));
+            StringComparer ignoreCaseComparer = StringComparer.InvariantCultureIgnoreCase;
+            StringComparer caseSensitiveComparer = StringComparer.InvariantCultureIgnoreCase;
+            string uriString = fileUri.ToString();
+            if (volumeInfo is null)
+            {
+                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && ((v.CaseSensitive) ? caseSensitiveComparer : ignoreCaseComparer).Equals(v.RootPathName, uriString));
+                if (matching.Any())
+                {
+                    // TODO: Write error
+                }
+                matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && ((v.CaseSensitive) ? caseSensitiveComparer : ignoreCaseComparer).Equals(v.VolumeName, VolumeName));
+                if (matching.Any())
+                {
+                    // TODO: Write error
+                }
+                volumeInfo = new RegisteredVolumeInfo();
+                // TODO: Need to specify case sensitivity
+                //volumeInfo.CaseSensitive = false;
+                volumeInfo.Identifier = volumeIdentifer;
+                volumeInfo.RootPathName = uriString;
+                volumeInfo.VolumeName = VolumeName;
+                volumeInfo.DriveFormat = DriveFormat;
+            }
+            else
+            {
+                if (!Force.IsPresent)
+                {
+                    // TODO: Write error
+                }
+                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => ((v.CaseSensitive) ? caseSensitiveComparer : ignoreCaseComparer).Equals(v.RootPathName, uriString));
+                if (matching.Any())
+                {
+                    // TODO: Write error
+                }
+                matching = registeredVolumes.Where(v => ((v.CaseSensitive) ? caseSensitiveComparer : ignoreCaseComparer).Equals(v.VolumeName, VolumeName));
+                if (matching.Any())
+                {
+                    // TODO: Write error
+                }
+                // TODO: Need to specify case sensitivity
+                //volumeInfo.CaseSensitive = false;
+                volumeInfo.RootPathName = uriString;
+                volumeInfo.VolumeName = VolumeName;
+                volumeInfo.DriveFormat = DriveFormat;
+            }
+            if (!(volumeInfo is null) && PassThru.IsPresent)
+                WriteObject(volumeInfo);
         }
     }
 }
