@@ -67,7 +67,7 @@ namespace FsInfoCat.Test
                 .Returns("");
             yield return new TestCaseData(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\testazureshare")
                 .SetDescription("AsRelativeUriStringTest: UNC path")
-                .Returns("%5C%5CSERVICENOWDIAG479.FILE.CORE.WINDOWS.NET%5Ctestazureshare");
+                .Returns("/testazureshare");
             yield return new TestCaseData("http://tempuri.org/TEST Path")
                 .SetDescription("AsRelativeUriStringTest: Absolute URI")
                 .Returns("/TEST%20Path");
@@ -75,7 +75,10 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetAsRelativeUriStringTestCases))]
-        public string AsRelativeUriStringTest(string text) => text.AsRelativeUriString();
+        public string AsRelativeUriStringTest(string text)
+        {
+            return text.AsRelativeUriString();
+        }
 
         public static IEnumerable<TestCaseData> GetAsUserNameComponentEncodedTestCases()
         {
@@ -276,7 +279,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetAsPasswordComponentEncodedTestCases))]
         public string AsPasswordComponentEncodedTest(string text) => text.AsPasswordComponentEncoded();
 
-        public static IEnumerable<TestCaseData> GetGetUserNameAndPasswordTestTestCases()
+        public static IEnumerable<TestCaseData> GetGetUserNameAndPasswordTestCases()
         {
             yield return new TestCaseData(new Uri("", UriKind.Relative))
                 .SetDescription("GetUserNameAndPasswordTest: Empty Uri")
@@ -299,14 +302,14 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 2)]
-        [TestCaseSource(nameof(GetGetUserNameAndPasswordTestTestCases))]
+        [TestCaseSource(nameof(GetGetUserNameAndPasswordTestCases))]
         public Tuple<string, string> GetUserNameAndPasswordTest(Uri uri)
         {
             string userName = uri.GetUserNameAndPassword(out string password);
             return new Tuple<string, string>(userName, password);
         }
 
-        public static IEnumerable<TestCaseData> GetTrySetUserInfoComponentTestTestCases()
+        public static IEnumerable<TestCaseData> GetTrySetUserInfoComponentTestCases()
         {
             yield return new TestCaseData(new Uri("http://me:thepw@host.com", UriKind.Absolute), "new", "pw")
                 .SetDescription("TrySetUserInfoComponentTest: Replace username password")
@@ -341,14 +344,14 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 2)]
-        [TestCaseSource(nameof(GetTrySetUserInfoComponentTestTestCases))]
+        [TestCaseSource(nameof(GetTrySetUserInfoComponentTestCases))]
         public Tuple<bool, Uri> TrySetUserInfoComponentTest(Uri uri, string userName, string password)
         {
-            bool result = uri.TrySetUserInfoComponent(userName, password, out uri);
-            return new Tuple<bool, Uri>(result, uri);
+            bool returnValue = uri.TrySetUserInfoComponent(userName, password, out Uri result);
+            return new Tuple<bool, Uri>(returnValue, result);
         }
 
-        public static IEnumerable<TestCaseData> GetTrySetHostComponentTestTestCases()
+        public static IEnumerable<TestCaseData> GetTrySetHostComponentTestCases()
         {
             yield return new TestCaseData(new Uri("http://me:thepw@host.com:8080/test?qry=true#mark", UriKind.Absolute), "new", (int?)null)
                 .SetDescription("TrySetHostComponentTest: Replace between user info and path")
@@ -374,11 +377,239 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 2)]
-        [TestCaseSource(nameof(GetTrySetHostComponentTestTestCases))]
+        [TestCaseSource(nameof(GetTrySetHostComponentTestCases))]
         public Tuple<bool, Uri> TrySetHostComponentTest(Uri uri, string hostName, int? port)
         {
-            bool result = uri.TrySetHostComponent(hostName, port, out uri);
-            return new Tuple<bool, Uri>(result, uri);
+            bool returnValue = uri.TrySetHostComponent(hostName, port, out Uri result);
+            return new Tuple<bool, Uri>(returnValue, result);
+        }
+
+        //public static IEnumerable<TestCaseData> GetTrySetPathComponentTestCases()
+        //{
+        //    string[] authorityComponents = new string[] { "", "http://tempuri.org", "https://login:pw@tempuri:8080", "file://", "file://MyShare" };
+        //    var pathComponents = (new string[] { "", "Temp", "My Dir" }).SelectMany(s => new string[] { s, $"{s}/", $"{s}/t.data", $"{s}/My File.txt", $"{s}/Sub Dir/" })
+        //        .Select(s => new { Raw = s, Escaped = Uri.EscapeUriString(s) }); 
+        //    string[] queryComponents = new string[] { "", "?", "?key=value" };
+        //    string[] fragmentComponents = new string[] { "", "#", "#fragment" };
+        //    return pathComponents.Concat(pathComponents.Where(p => !p.Raw.Equals(p.Escaped)).Select(p => new { Raw = p.Escaped, Escaped = p.Escaped })).SelectMany(newPath =>
+        //        authorityComponents.SelectMany(authority =>
+        //            ((authorityComponents.Length > 0) ? pathComponents.Select(p =>
+        //                (p.Escaped.Length == 0 || p.Escaped.StartsWith('/')) ? p.Escaped : $"/{p.Escaped}") : pathComponents.Select(p => p.Escaped)
+        //            ).SelectMany(originalPath =>
+        //                queryComponents.SelectMany(oldQuery => queryComponents.SelectMany(newQuery => fragmentComponents.SelectMany(oldFragment => fragmentComponents.Select(newFragment =>
+        //                    new TestCaseData(
+        //                        new Uri($"{authority}{originalPath}{oldQuery}{oldFragment}", (authority.Length > 0) ? UriKind.Absolute : UriKind.Relative),
+        //                        $"{newPath.Raw}{newQuery}{newFragment}"
+        //                    ).Returns(new Tuple<bool, Uri>(true, new Uri(
+        //                        (newPath.Escaped.Length == 0 || newPath.Escaped.StartsWith('/')) ?
+        //                            ((newFragment.Length > 0 || newQuery.Length > 0) ?
+        //                                $"{authority}{newPath.Escaped}{newQuery}{newFragment}" :
+        //                                $"{authority}{newPath.Escaped}{oldQuery}{oldFragment}") :
+        //                            ((newFragment.Length > 0 || newQuery.Length > 0) ?
+        //                                $"{authority}/{newPath.Escaped}{newQuery}{newFragment}" :
+        //                                $"{authority}/{newPath.Escaped}{oldQuery}{oldFragment}"),
+        //                        (authority.Length > 0) ? UriKind.Absolute : UriKind.Relative
+        //                    )))
+        //                ))))
+        //            )
+        //        ).Concat(queryComponents.SelectMany(q => fragmentComponents.Select(f =>
+        //            new TestCaseData(null, $"{newPath.Raw}").Returns(new Tuple<bool, Uri>(false, null))
+        //        )))
+        //    ).Concat(authorityComponents.SelectMany(a => pathComponents.SelectMany(p => queryComponents.SelectMany(q => fragmentComponents.Select(f =>
+        //        new TestCaseData(new Uri(
+        //            (p.Escaped.Length == 0 || p.Escaped.StartsWith("/")) ? $"{a}{p.Escaped}{q}{f}" : $"{a}/{p.Escaped}{q}{f}",
+        //            (a.Length > 0) ? UriKind.Absolute : UriKind.Relative
+        //        ), null).Returns(new Tuple<bool, Uri>(true, new Uri($"{a}{q}{f}", (a.Length > 0) ? UriKind.Absolute : UriKind.Relative)))
+        //    ))))).Select(t => t.SetArgDisplayNames("uri", "path"));
+        //}
+
+        //[Test, Property("Priority", 2)]
+        //[TestCaseSource(nameof(GetTrySetPathComponentTestCases))]
+        //public static Tuple<bool, Uri> TrySetPathComponentTest(Uri uri, string path)
+        //{
+        //    bool returnValue = uri.TrySetPathComponent(path, out Uri result);
+        //    return new Tuple<bool, Uri>(returnValue, result);
+        //}
+
+        public static IEnumerable<TestCaseData> GetTrySetTrailingEmptyPathSegmentTestCases()
+        {
+            yield return new TestCaseData(new Uri("", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("/", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("/", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("/", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("\\", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("/", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test/", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test/", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test/", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test\\", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test/", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("#", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("/#", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test#", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test/#", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("/Test#", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("/Test/#", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("?", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("/?", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test?", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test/?", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test/?", UriKind.Relative), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test/?", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("file:///", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("file:///", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("file://MySite/", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("file://MySite/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("file://MySite/MyShare", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("file://MySite/MyShare/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("file://MySite/MyShare/", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("file://MySite/MyShare/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("file://MySite/MyShare/myfile.txt", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("file://MySite/MyShare/myfile.txt/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("file://MySite/MyShare/myfile.txt/", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("file://MySite/MyShare/myfile.txt/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("http://tempuri.org", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("http://tempuri.org/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("http://tempuri.org/", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("http://tempuri.org/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("http://tempuri.org/home.htm", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("http://tempuri.org/home.htm/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("http://tempuri.org/home.htm/", UriKind.Absolute), true)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("http://tempuri.org/home.htm/", UriKind.Absolute)));
+
+
+
+            yield return new TestCaseData(new Uri("", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("/", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("\\", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test/", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test\\", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("#", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("#", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test#", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test#", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("/Test#", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("/Test#", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("?", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("?", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test?", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test?", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("Test/?", UriKind.Relative), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test?", UriKind.Relative)));
+
+            yield return new TestCaseData(new Uri("file:///", UriKind.Absolute), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(false, new Uri("file:///", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("file://MySite/", UriKind.Absolute), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(false, new Uri("file://MySite/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("file://MySite/MyShare", UriKind.Absolute), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("file://MySite/MyShare", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("file://MySite/MyShare/", UriKind.Absolute), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("file://MySite/MyShare", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("http://tempuri.org", UriKind.Absolute), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(false, new Uri("http://tempuri.org/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("http://tempuri.org/", UriKind.Absolute), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(false, new Uri("http://tempuri.org/", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("http://tempuri.org/home.htm", UriKind.Absolute), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("http://tempuri.org/home.htm", UriKind.Absolute)));
+
+            yield return new TestCaseData(new Uri("http://tempuri.org/home.htm/", UriKind.Absolute), false)
+                .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
+                .Returns(new Tuple<bool, Uri>(true, new Uri("http://tempuri.org/home.htm", UriKind.Absolute)));
+        }
+
+        [Test, Property("Priority", 2)]
+        [TestCaseSource(nameof(GetTrySetTrailingEmptyPathSegmentTestCases))]
+        public static Tuple<bool, Uri> TrySetTrailingEmptyPathSegmentTest(Uri uri, bool shouldHaveTrailingSlash)
+        {
+            bool returnValue = uri.TrySetTrailingEmptyPathSegment(shouldHaveTrailingSlash, out Uri result);
+            return new Tuple<bool, Uri>(returnValue, result);
         }
 
         public static IEnumerable<TestCaseData> GetAsNormalizedTestCases()

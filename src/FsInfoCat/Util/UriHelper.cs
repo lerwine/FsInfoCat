@@ -102,9 +102,7 @@ namespace FsInfoCat.Util
                 uri.TrySetQueryComponent(null, out uri);
             if ((originalString = uri.OriginalString).Length == 0 || Uri.IsWellFormedUriString(originalString, UriKind.Relative))
                 return uri;
-            if (originalString.Contains('\\') && Uri.IsWellFormedUriString(originalString = originalString.Replace('\\', '/'), UriKind.Relative))
-                return new Uri(originalString);
-            originalString = Uri.EscapeUriString(originalString);
+            originalString = EnsureWellFormedUriPath(originalString);
             if (Uri.IsWellFormedUriString(originalString, UriKind.Relative))
                 return new Uri(originalString, UriKind.Relative);
             return new Uri(Uri.EscapeDataString(uri.OriginalString), UriKind.Relative);
@@ -205,6 +203,8 @@ namespace FsInfoCat.Util
         {
             if (string.IsNullOrEmpty(value))
                 return value;
+            if (Uri.TryCreate(value, UriKind.Absolute, out Uri uri))
+                return uri.GetComponents(UriComponents.PathAndQuery | UriComponents.Fragment | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
             if (!Uri.IsWellFormedUriString(value, UriKind.RelativeOrAbsolute))
             {
                 int n = value.IndexOf('\\');
@@ -222,8 +222,6 @@ namespace FsInfoCat.Util
                         value = Uri.EscapeUriString(value);
                 }
             }
-            if (Uri.IsWellFormedUriString(value, UriKind.Absolute))
-                return (new Uri(value, UriKind.Absolute).GetComponents(UriComponents.PathAndQuery | UriComponents.Fragment | UriComponents.KeepDelimiter, UriFormat.UriEscaped));
             return value;
         }
 
@@ -429,23 +427,239 @@ namespace FsInfoCat.Util
             if (uri is null)
                 return null;
             if (uri.IsAbsoluteUri)
-                return uri.GetComponents(UriComponents.Path, UriFormat.UriEscaped);
-            string originalString = uri.OriginalString.AsRelativeUriString();
+                return uri.GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+            string originalString = uri.OriginalString;
+            if (originalString.Length == 0)
+                return "";
             int index = originalString.IndexOfAny(QueryOrFragmentChar);
-            return (index < 0) ? originalString : originalString.Substring(0, index);
+            if (index == 0)
+                return "";
+            if (index > 0)
+                originalString = originalString.Substring(0, index);
+            return EnsureWellFormedUriPath(originalString);
+        }
+
+        public static string SplitQueryComponents(this Uri uri, out string schemeAndAuthority, out string queryAndFragment)
+        {
+            if (uri is null)
+            {
+                schemeAndAuthority = queryAndFragment = null;
+                return null;
+            }
+
+            if (uri.IsAbsoluteUri)
+            {
+                schemeAndAuthority = uri.GetComponents(UriComponents.Scheme | UriComponents.UserInfo | UriComponents.Host | UriComponents.Port | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                queryAndFragment = uri.GetComponents(UriComponents.Fragment | UriComponents.Query | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                return uri.GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+            }
+            schemeAndAuthority = "";
+            string originalString = uri.OriginalString;
+            if (originalString.Length == 0)
+            {
+                queryAndFragment = "";
+                return "";
+            }
+            originalString = EnsureWellFormedUriPath(originalString);
+
+            int pathLen = originalString.IndexOfAny(QueryOrFragmentChar);
+            if (pathLen < 0)
+            {
+                queryAndFragment = "";
+                return originalString;
+            }
+            queryAndFragment = originalString.Substring(pathLen);
+            return originalString.Substring(0, pathLen);
+        }
+
+        public static string SplitQueryComponents(this Uri uri, out string schemeAndAuthority, out string query, out string fragment)
+        {
+            if (uri is null)
+            {
+                schemeAndAuthority = query = fragment = null;
+                return null;
+            }
+
+            if (uri.IsAbsoluteUri)
+            {
+                schemeAndAuthority = uri.GetComponents(UriComponents.Scheme | UriComponents.UserInfo | UriComponents.Host | UriComponents.Port | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                query = uri.GetComponents(UriComponents.Query | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                fragment = uri.GetComponents(UriComponents.Fragment | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                return uri.GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+            }
+            schemeAndAuthority = "";
+            string originalString = uri.OriginalString;
+            if (originalString.Length == 0)
+            {
+                query = fragment = "";
+                return "";
+            }
+            originalString = EnsureWellFormedUriPath(originalString);
+
+            int pathLen = originalString.IndexOfAny(QueryOrFragmentChar);
+            if (pathLen < 0)
+            {
+                query = fragment = "";
+                return originalString;
+            }
+            else if (originalString[pathLen] == '#')
+            {
+                query = "";
+                fragment = originalString.Substring(pathLen);
+            }
+            else
+            {
+                int i = originalString.IndexOf('#', pathLen);
+                if (i < 0)
+                {
+                    fragment = "";
+                    query = originalString.Substring(pathLen);
+                }
+                else
+                {
+                    query = originalString.Substring(pathLen, i - pathLen);
+                    fragment = originalString.Substring(i);
+                }
+            }
+
+            return originalString.Substring(0, pathLen);
+        }
+
+        public static string SplitQueryComponents(this Uri uri, out string scheme, out string authority, out string query, out string fragment)
+        {
+            if (uri is null)
+            {
+                scheme = authority = query = fragment = null;
+                return null;
+            }
+
+            if (uri.IsAbsoluteUri)
+            {
+                scheme = uri.GetComponents(UriComponents.Scheme | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                authority = uri.GetComponents(UriComponents.UserInfo | UriComponents.Host | UriComponents.Port | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                query = uri.GetComponents(UriComponents.Query | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                fragment = uri.GetComponents(UriComponents.Fragment | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                return uri.GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+            }
+            scheme = authority = "";
+            string originalString = uri.OriginalString;
+            if (originalString.Length == 0)
+            {
+                query = fragment = "";
+                return "";
+            }
+            originalString = EnsureWellFormedUriPath(originalString);
+
+            int pathLen = originalString.IndexOfAny(QueryOrFragmentChar);
+            if (pathLen < 0)
+            {
+                query = fragment = "";
+                return originalString;
+            }
+            else if (originalString[pathLen] == '#')
+            {
+                query = "";
+                fragment = originalString.Substring(pathLen);
+            }
+            else
+            {
+                int i = originalString.IndexOf('#', pathLen);
+                if (i < 0)
+                {
+                    fragment = "";
+                    query = originalString.Substring(pathLen);
+                }
+                else
+                {
+                    query = originalString.Substring(pathLen, i - pathLen);
+                    fragment = originalString.Substring(i);
+                }
+            }
+
+            return originalString.Substring(0, pathLen);
+        }
+
+        public static string SplitQueryComponents(this Uri uri, out string scheme, out string userInfo, out string hostAndPort, out string query, out string fragment)
+        {
+            if (uri is null)
+            {
+                scheme = userInfo = hostAndPort = query = fragment = null;
+                return null;
+            }
+
+            if (uri.IsAbsoluteUri)
+            {
+                scheme = uri.GetComponents(UriComponents.Scheme | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                userInfo = uri.GetComponents(UriComponents.UserInfo | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                hostAndPort = uri.GetComponents(UriComponents.Host | UriComponents.Port | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                query = uri.GetComponents(UriComponents.Query | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                fragment = uri.GetComponents(UriComponents.Fragment | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+                return uri.GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
+            }
+            scheme = userInfo = hostAndPort = "";
+            string originalString = uri.OriginalString;
+            if (originalString.Length == 0)
+            {
+                query = fragment = "";
+                return "";
+            }
+            originalString = EnsureWellFormedUriPath(originalString);
+
+            int pathLen = originalString.IndexOfAny(QueryOrFragmentChar);
+            if (pathLen < 0)
+            {
+                query = fragment = "";
+                return originalString;
+            }
+            else if (originalString[pathLen] == '#')
+            {
+                query = "";
+                fragment = originalString.Substring(pathLen);
+            }
+            else
+            {
+                int i = originalString.IndexOf('#', pathLen);
+                if (i < 0)
+                {
+                    fragment = "";
+                    query = originalString.Substring(pathLen);
+                }
+                else
+                {
+                    query = originalString.Substring(pathLen, i - pathLen);
+                    fragment = originalString.Substring(i);
+                }
+            }
+
+            return originalString.Substring(0, pathLen);
+        }
+
+        public static string EnsureWellFormedUriPath(this string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return "";
+            if (Uri.IsWellFormedUriString(path, UriKind.Relative))
+                return path;
+            if (path.Contains("\\"))
+            {
+                path = path.Replace("\\", "/");
+                if (Uri.IsWellFormedUriString(path, UriKind.Relative))
+                    return path;
+            }
+            return Uri.EscapeUriString(path);
         }
 
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Path"/> component applied.
         /// </summary>
         /// <param name="uri">The original <seealso cref="Uri"/>.</param>
-        /// <param name="path">The new <seealso cref="UriComponents.Path"/> component. This can be <c>null</c> to create a <seealso cref="Uri"/> without this component.</param>
+        /// <param name="newPath">The new <seealso cref="UriComponents.Path"/> component. This can be <c>null</c> to create a <seealso cref="Uri"/> without this component.</param>
         /// <param name="result">The new <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Path"/> component applied.</param>
         /// <returns><c>true</c> if the new <paramref name="result"/> <seealso cref="Uri"/> was successfully created; otherwise, <c>false</c>.</returns>
         /// <remarks>This can return <c>false</c> in circumstances where the change would create an invalid URI string as it pertains to the current <seealso cref="Uri.Scheme"/>.
-        /// If the specified <paramref name="path"/> contains a query (<c>?</c>) and/or fragment (<c>#</c>) separator, those components will be applied
+        /// If the specified <paramref name="newPath"/> contains a query (<c>?</c>) and/or fragment (<c>#</c>) separator, those components will be applied
         /// to the <paramref name="result"/> <seealso cref="Uri"/> as well.</remarks>
-        public static bool TrySetPathComponent(this Uri uri, string path, out Uri result)
+        public static bool TrySetPathComponent(this Uri uri, string newPath, out Uri result)
         {
             if (uri is null)
             {
@@ -453,171 +667,98 @@ namespace FsInfoCat.Util
                 return false;
             }
 
-            string oldPath = uri.GetPathComponent();
-            Uri target;
-            int index;
-            if (uri.IsAbsoluteUri)
+            string newQuery, newFragment;
+            if (string.IsNullOrEmpty(newPath))
+                newPath = newQuery = newFragment = "";
+            else
             {
-                if (string.IsNullOrEmpty(path))
+                newPath = EnsureWellFormedUriPath(newPath);
+                int idx = newPath.IndexOfAny(QueryOrFragmentChar);
+                if (idx < 0)
+                    newQuery = newFragment = "";
+                else
                 {
-                    if (oldPath.Length == 0)
-                        result = uri;
+                    if (newPath[idx] == '#')
+                    {
+                        newQuery = "";
+                        newFragment = newPath.Substring(idx);
+                    }
                     else
-                        try
+                    {
+                        int i = newPath.IndexOf('#', idx);
+                        if (i < 0)
                         {
-                            result = new Uri(uri.GetComponents(BEFORE_PATH_COMPONENTS | AFTER_PATH_COMPONENTS, UriFormat.UriEscaped), UriKind.Absolute);
+                            newQuery = newPath.Substring(idx);
+                            newFragment = "";
                         }
-                        catch
+                        else
                         {
-                            result = uri;
-                            return false;
+                            newQuery = newPath.Substring(idx, i - idx);
+                            newFragment = newPath.Substring(i);
                         }
+                    }
+                    newPath = newPath.Substring(0, idx);
+                }
+            }
+            string oldPath = uri.SplitQueryComponents(out string scheme, out string authority, out string oldQuery, out string oldFragment);
+            if (uri.IsAbsoluteUri && newPath.Length > 0 && newPath[0] != '/')
+            {
+                if (scheme.StartsWith($"{URI_SCHEME_URN}:") && !(scheme.Contains("/") || oldPath.Contains("/")))
+                {
+                    if (authority.Length > 0)
+                        newPath = $":{newPath}";
+                    else
+                        newPath = $"::{newPath}";
+                }
+                else if (authority.Length > 0)
+                    newPath = $"/{newPath}";
+                else
+                    newPath = $"//{newPath}";
+            }
+            if (oldPath.Equals(newPath))
+            {
+                bool areEqual;
+                if (newQuery.Length == 0)
+                {
+                    if (newFragment.Length > 0 && !oldFragment.Equals(newFragment))
+                    {
+                        areEqual = false;
+                        newQuery = oldQuery;
+                    }
+                    else
+                        areEqual = true;
+                }
+                else if (oldQuery.Equals(newQuery))
+                    areEqual = newFragment.Length == 0 || oldFragment.Equals(newFragment);
+                else
+                {
+                    areEqual = false;
+                    if (newFragment.Length == 0)
+                        newFragment = oldFragment;
+                }
+
+                if (areEqual)
+                {
+                    result = uri;
                     return true;
                 }
-
-                path = path.AsRelativeUriString();
-                target = uri;
-                if ((index = path.IndexOfAny(QueryOrFragmentChar)) > -1 && !((path[index] == '#') ?
-                        uri.TrySetFragmentComponent(path.Substring(index + 1), out target) :
-                        uri.TrySetQueryComponent(path.Substring(index + 1), out target)))
-                {
-                    result = uri;
-                    return false;
-                }
-
-                if (oldPath != path)
-                    try
-                    {
-                        string preceding = uri.GetComponents(BEFORE_PATH_COMPONENTS, UriFormat.UriEscaped);
-                        string following = uri.GetComponents(AFTER_PATH_COMPONENTS, UriFormat.UriEscaped);
-                        if (path[0] != '/')
-                        {
-                            if (uri.Scheme == URI_SCHEME_URN && !preceding.Contains("/"))
-                            {
-                                if (uri.Host.Length > 0)
-                                    path = $":{path}";
-                                else
-                                    path = $"::{path}";
-                            }
-                            else if (uri.Host.Length > 0)
-                                path = $"/{path}";
-                            else
-                                path = $"//{path}";
-                        }
-                        result = new Uri($"{preceding}{path}{following}", UriKind.Absolute);
-                        if (preceding != uri.GetComponents(BEFORE_PATH_COMPONENTS, UriFormat.UriEscaped) ||
-                            following != uri.GetComponents(AFTER_PATH_COMPONENTS, UriFormat.UriEscaped))
-                        {
-                            result = uri;
-                            return false;
-                        }
-                    }
-                    catch
-                    {
-                        result = uri;
-                        return false;
-                    }
-                else
-                    result = uri;
-                return true;
-            }
-
-            string originalString = uri.OriginalString;
-            int fragmentIndex;
-            index = originalString.IndexOfAny(QueryOrFragmentChar);
-            if (index < 0)
-                index = fragmentIndex = originalString.Length;
-            if (originalString[index] == '#')
-                fragmentIndex = index;
-            else if (index == originalString.Length - 1 || (fragmentIndex = originalString.IndexOf('#', index + 1)) < 0)
-                fragmentIndex = originalString.Length;
-
-            if (path is null)
-            {
-                if (index == fragmentIndex)
-                    result = uri;
-                else
-                    try
-                    {
-                        if (index == 0)
-                            result = new Uri((fragmentIndex < originalString.Length) ? originalString.Substring(fragmentIndex) : "", UriKind.Relative);
-                        else if (fragmentIndex < originalString.Length)
-                            result = new Uri(originalString.Substring(0, index) + originalString.Substring(fragmentIndex), UriKind.Relative);
-                        else
-                            result = new Uri(originalString.Substring(0, index), UriKind.Relative);
-                    }
-                    catch
-                    {
-                        result = uri;
-                        return false;
-                    }
-                return true;
-            }
-
-            path = $"?{path.AsRelativeUriString()}";
-            if (path.Contains("#") || fragmentIndex == originalString.Length)
-            {
-                if (index == 0)
-                {
-                    if (path.Equals(originalString))
-                        result = uri;
-                    else
-                        try
-                        {
-                            result = new Uri(path, UriKind.Relative);
-                        }
-                        catch
-                        {
-                            result = uri;
-                            return false;
-                        }
-                }
-                else
-                {
-                    if (path.Length == originalString.Length - index && originalString.Substring(index).Equals(path))
-                        result = uri;
-                    else
-                        try
-                        {
-                            result = new Uri($"{originalString.Substring(0, index)}{path}", UriKind.Relative);
-                        }
-                        catch
-                        {
-                            result = uri;
-                            return false;
-                        }
-                }
-            }
-            else if (index == 0)
-            {
-                if (index == path.Length && path.Equals(originalString.Substring(0, index)))
-                    result = uri;
-                else
-                    try
-                    {
-                        result = new Uri($"{path}{originalString.Substring(fragmentIndex)}", UriKind.Relative);
-                    }
-                    catch
-                    {
-                        result = uri;
-                        return false;
-                    }
             }
             else
             {
-                int replaceLen = fragmentIndex - index;
-                if (replaceLen == path.Length && path.Equals(originalString.Substring(index, replaceLen)))
-                    result = uri;
-                else
-                    try
-                    {
-                        result = new Uri($"{originalString.Substring(0, index)}{path}{originalString.Substring(fragmentIndex)}", UriKind.Relative);
-                    }
-                    catch
-                    {
-                        result = uri;
-                        return false;
-                    }
+                if (newQuery.Length == 0)
+                    newQuery = oldQuery;
+                if (newFragment.Length == 0)
+                    newFragment = oldFragment;
+            }
+            try
+            {
+                result = (string.IsNullOrEmpty(scheme)) ? new Uri($"{newPath}{newQuery}{newFragment}", UriKind.Relative)
+                    : new Uri($"{scheme}{authority}{newPath}{newQuery}{newFragment}", UriKind.Absolute);
+            }
+            catch
+            {
+                result = uri;
+                return false;
             }
             return true;
         }
@@ -965,11 +1106,7 @@ namespace FsInfoCat.Util
             string u = uri.OriginalString;
             if (u.Length == 0)
                 return new string[] { u };
-            if (!(Uri.IsWellFormedUriString(u, UriKind.Relative) || (u.Contains('\\') && Uri.IsWellFormedUriString(u = u.Replace('\\', '/'), UriKind.Relative))))
-            {
-                string s = Uri.EscapeUriString(u);
-                u = (Uri.IsWellFormedUriString(s, UriKind.Relative)) ? s : Uri.EscapeDataString(u);
-            }
+            u = EnsureWellFormedUriPath(u);
             return PathSegmentPattern.Matches(u).Cast<Match>().Select(m => m.Value).ToArray();
         }
 
@@ -990,17 +1127,19 @@ namespace FsInfoCat.Util
             if (string.IsNullOrEmpty(path))
             {
                 if (shouldHaveTrailingSlash)
-                    return uri.TrySetPathComponent("/", out result) && uri.GetPathComponent().EndsWith('/');
+                    return uri.TrySetPathComponent("/", out result) && result.GetPathComponent().EndsWith('/');
             }
             else if (path.EndsWith('/') != shouldHaveTrailingSlash)
             {
                 if (shouldHaveTrailingSlash)
-                    return uri.TrySetPathComponent($"{path}/", out result) && uri.GetPathComponent().EndsWith('/');
+                    return uri.TrySetPathComponent($"{path}/", out result) && result.GetPathComponent().EndsWith('/');
                 int i = path.Length - 1;
                 while (i > 0 && path[i - 1] == '/')
                     i--;
-                return uri.TrySetPathComponent(path.Substring(0, i), out result) && !uri.GetPathComponent().EndsWith('/');
+                return uri.TrySetPathComponent(path.Substring(0, i), out result) && !result.GetPathComponent().EndsWith('/');
             }
+            if (!(uri.IsAbsoluteUri || Uri.IsWellFormedUriString(uri.OriginalString, UriKind.Relative)))
+                uri = new Uri(EnsureWellFormedUriPath(uri.OriginalString), UriKind.Relative);
             result = uri;
             return true;
         }
