@@ -1,9 +1,11 @@
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Management.Automation;
-using FsInfoCat.Models.Volumes;
 
 namespace FsInfoCat.PS.Commands
 {
@@ -14,7 +16,6 @@ namespace FsInfoCat.PS.Commands
     {
         public const string PARAMETER_SET_NAME_BY_ROOT_DIRECTORY = "ByRootDirectory";
         public const string PARAMETER_SET_NAME_BY_VOLUME_NAME = "ByVolumeName";
-        public const string PARAMETER_SET_NAME_BY_DRIVE_FORMAT = "ByDriveFormat";
         public const string PARAMETER_SET_NAME_BY_IDENTIFIER = "ByIdentifier";
         public const string PARAMETER_SET_NAME_GET_ALL = "GetAll";
 
@@ -28,10 +29,6 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string[] VolumeName { get; set; }
 
-        [Parameter(HelpMessage = "Find by name of the drive format.", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_DRIVE_FORMAT)]
-        [ValidateNotNullOrEmpty()]
-        public string[] DriveFormat { get; set; }
-
         [Parameter(HelpMessage = "Find by volume identifier.", Mandatory = true, ValueFromPipelineByPropertyName = true,
             ParameterSetName = PARAMETER_SET_NAME_BY_IDENTIFIER)]
         [Alias("SerialNumber")]
@@ -40,45 +37,60 @@ namespace FsInfoCat.PS.Commands
         [Parameter(HelpMessage = "Get all registered volumes", ParameterSetName = PARAMETER_SET_NAME_GET_ALL)]
         public SwitchParameter All { get; set; }
 
-        private Collection<IVolumeInfo> _volumeInfos;
+        [Parameter(HelpMessage = "Do case-sensitive path matching.", ParameterSetName = PARAMETER_SET_NAME_BY_ROOT_DIRECTORY)]
+        public SwitchParameter CaseSensitive { get; set; }
+
+        private Collection<PSObject> _volumeInfos;
         protected override void BeginProcessing()
         {
-            _volumeInfos = new Collection<IVolumeInfo>();
-            foreach (IVolumeInfo v in GetVolumeInfos())
-                _volumeInfos.Add(v);
+            _volumeInfos = GetVolumeRegistration();
         }
 
         protected override void ProcessRecord()
         {
             if (_volumeInfos.Count == 0)
                 return;
-            IEnumerable<IVolumeInfo> matching;
+            IEnumerable<PSObject> matching;
             switch (ParameterSetName)
             {
                 case PARAMETER_SET_NAME_BY_ROOT_DIRECTORY:
-                    matching = _volumeInfos.Where(v => RootPathName.Any(p => p == v.RootPathName));
+                    FileUri[] uris = RootPathName.Select(p => FileUri.FromFileSystemInfo(new DirectoryInfo(p))).Where(f => f.IsAbsolute).Distinct().ToArray();
+                    if (uris.Length == 1)
+                        matching = _volumeInfos.FindVolumeByRootUri<RegisteredVolumeInfo>(uris[0]);
+                    else if (uris.Length > 1)
+                        matching = _volumeInfos.FindVolumeByRootUri<RegisteredVolumeInfo>(uris);
+                    else
+                        matching = new PSObject[0];
                     break;
                 case PARAMETER_SET_NAME_BY_VOLUME_NAME:
-                    matching = _volumeInfos.Where(v => VolumeName.Any(n => n.Equals(v.VolumeName, StringComparison.InvariantCultureIgnoreCase)));
-                    break;
-                case PARAMETER_SET_NAME_BY_DRIVE_FORMAT:
-                    matching = _volumeInfos.Where(v => DriveFormat.Any(f => f.Equals(v.DriveFormat, StringComparison.InvariantCultureIgnoreCase)));
+                    string[] n = VolumeName.Distinct(StringComparer.InvariantCultureIgnoreCase).ToArray();
+                    if (n.Length == 1)
+                        matching = _volumeInfos.FindVolumeByVolumeName<RegisteredVolumeInfo>(n[0]);
+                    else if (n.Length > 1)
+                        matching = _volumeInfos.FindVolumeByVolumeName<RegisteredVolumeInfo>(n);
+                    else
+                        matching = new PSObject[0];
                     break;
                 case PARAMETER_SET_NAME_BY_IDENTIFIER:
-                    VolumeIdentifier[] identifiers = Identifier.Select(o => (o is PSObject) ? ((PSObject)o).BaseObject : o).Select(o =>
+                    VolumeIdentifier[] identifiers = Identifier.Select(o => (o is PSObject psObj) ? psObj.BaseObject : o).Select(o =>
                         (VolumeIdentifier.TryCreate(o, out VolumeIdentifier volumeIdentifer)) ? (object)volumeIdentifer : null
-                    ).OfType<VolumeIdentifier>().ToArray();
-                    matching = (identifiers.Length == 0) ? new IVolumeInfo[0] : _volumeInfos.Where(v => identifiers.Any(i => v.Identifier.Equals(i)));
+                    ).OfType<VolumeIdentifier>().Distinct().ToArray();
+                    if (identifiers.Length == 1)
+                        matching = _volumeInfos.FindVolumeByIdentifier<RegisteredVolumeInfo>(identifiers[0]);
+                    else if (identifiers.Length > 1)
+                        matching = _volumeInfos.FindVolumeByIdentifier<RegisteredVolumeInfo>(identifiers);
+                    else
+                        matching = new PSObject[0];
                     break;
                 default:
-                    foreach (IVolumeInfo v in GetVolumeInfos())
+                    foreach (IVolumeInfo v in _volumeInfos)
                         WriteObject(v);
                     return;
             }
-            foreach (IVolumeInfo v in matching.ToArray())
+            foreach (PSObject p in matching.ToArray())
             {
-                _volumeInfos.Remove(v);
-                WriteObject(v);
+                _volumeInfos.Remove(p);
+                WriteObject(p);
             }
         }
     }

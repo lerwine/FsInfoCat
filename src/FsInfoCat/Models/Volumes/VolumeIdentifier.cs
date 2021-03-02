@@ -1,7 +1,7 @@
+using FsInfoCat.Util;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Volumes
 {
@@ -12,8 +12,8 @@ namespace FsInfoCat.Models.Volumes
         public const string GROUP_NAME_VOLUME_NS = "n";
         public const string GROUP_NAME_ID_NS = "i";
         public const string GROUP_NAME_VALUE = "v";
-        public static Regex NsPathRegex = new Regex($@"^((?<{GROUP_NAME_UUID_NS}>uuid(:|$))|(?<{GROUP_NAME_VOLUME_NS}>volume(:(?<{GROUP_NAME_ID_NS}>id(:|$))?|$))?)(?<{GROUP_NAME_VALUE}>.+)?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        public static Regex SerialNumberPathRegex = new Regex(@"^(?:(?=[a-f\d]{1,4}-[a-f\d])([a-f\d]{1,4})-([a-f\d]{1,4})|([a-f\d]{5,8})(?:-([a-f\d]{1,2}))?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static readonly Regex NsPathRegex = new Regex($@"^((?<{GROUP_NAME_UUID_NS}>uuid(:|$))|(?<{GROUP_NAME_VOLUME_NS}>volume(:(?<{GROUP_NAME_ID_NS}>id(:|$))?|$))?)(?<{GROUP_NAME_VALUE}>.+)?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static readonly Regex SerialNumberPathRegex = new Regex(@"^(?:(?=[a-f\d]{1,4}-[a-f\d])([a-f\d]{1,4})-([a-f\d]{1,4})|([a-f\d]{5,8})(?:-([a-f\d]{1,2}))?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public static readonly VolumeIdentifier Empty = new VolumeIdentifier("");
 
@@ -28,13 +28,13 @@ namespace FsInfoCat.Models.Volumes
             ValidationSucceeded
         }
 
-        private Guid? _uuid;
-        private uint? _serialNumber;
-        private byte? _ordinal;
-        private Uri _location;
-        private string _query;
-        private string _fragment;
-        private ValidationCode _validation;
+        private readonly Guid? _uuid;
+        private readonly uint? _serialNumber;
+        private readonly byte? _ordinal;
+        private readonly Uri _location;
+        private readonly string _query;
+        private readonly string _fragment;
+        private readonly ValidationCode _validation;
 
         public Guid? UUID => _uuid;
 
@@ -100,9 +100,11 @@ namespace FsInfoCat.Models.Volumes
             }
             if (uri.Host.ToLower() != uri.Host || uri.Scheme.ToLower() != uri.Scheme)
             {
-                UriBuilder uriBuilder = new UriBuilder(uri);
-                uriBuilder.Scheme = uri.Scheme.ToLower();
-                uriBuilder.Host = uri.Host.ToLower();
+                UriBuilder uriBuilder = new UriBuilder(uri)
+                {
+                    Scheme = uri.Scheme.ToLower(),
+                    Host = uri.Host.ToLower()
+                };
                 uri = uriBuilder.Uri;
             }
             _fragment = uri.GetFragmentComponent();
@@ -233,28 +235,28 @@ namespace FsInfoCat.Models.Volumes
         {
             if (null == obj)
             {
-                volumeIdentifer = VolumeIdentifier.Empty;
+                volumeIdentifer = Empty;
                 return false;
             }
-            if (obj is VolumeIdentifier)
-                volumeIdentifer = (VolumeIdentifier)obj;
+            if (obj is VolumeIdentifier identifier)
+                volumeIdentifer = identifier;
             else if (obj is string s)
             {
                 if (string.IsNullOrWhiteSpace(s) || !(volumeIdentifer = new VolumeIdentifier(s)).IsValid())
                 {
-                    volumeIdentifer = VolumeIdentifier.Empty;
+                    volumeIdentifer = Empty;
                     return false;
                 }
             }
-            else if (obj is uint)
-                volumeIdentifer = new VolumeIdentifier((uint)obj);
-            else if (obj is Guid)
-                volumeIdentifer = new VolumeIdentifier((Guid)obj);
+            else if (obj is uint u)
+                volumeIdentifer = new VolumeIdentifier(u);
+            else if (obj is Guid g)
+                volumeIdentifer = new VolumeIdentifier(g);
             else if (obj is int i)
             {
                 if (i < 0)
                 {
-                    volumeIdentifer = VolumeIdentifier.Empty;
+                    volumeIdentifer = Empty;
                     return false;
                 }
                 volumeIdentifer = new VolumeIdentifier((uint)i);
@@ -263,16 +265,16 @@ namespace FsInfoCat.Models.Volumes
             {
                 if (d < 0.0 || Math.Floor(d) != d)
                 {
-                    volumeIdentifer = VolumeIdentifier.Empty;
+                    volumeIdentifer = Empty;
                     return false;
                 }
                 volumeIdentifer = new VolumeIdentifier((uint)d);
             }
             else if (obj is long l)
             {
-                if (l < 0 || l > (long)(uint.MaxValue))
+                if (l < 0 || l > uint.MaxValue)
                 {
-                    volumeIdentifer = VolumeIdentifier.Empty;
+                    volumeIdentifer = Empty;
                     return false;
                 }
                 volumeIdentifer = new VolumeIdentifier((uint)l);
@@ -281,7 +283,7 @@ namespace FsInfoCat.Models.Volumes
             {
                 if (ul > (ulong)(uint.MaxValue))
                 {
-                    volumeIdentifer = VolumeIdentifier.Empty;
+                    volumeIdentifer = Empty;
                     return false;
                 }
                 volumeIdentifer = new VolumeIdentifier((uint)ul);
@@ -290,7 +292,7 @@ namespace FsInfoCat.Models.Volumes
             {
                 if (f < 0.0f || Math.Floor(f) != f)
                 {
-                    volumeIdentifer = VolumeIdentifier.Empty;
+                    volumeIdentifer = Empty;
                     return false;
                 }
                 volumeIdentifer = new VolumeIdentifier((uint)f);
@@ -301,7 +303,7 @@ namespace FsInfoCat.Models.Volumes
             {
                 if (sb < 0)
                 {
-                    volumeIdentifer = VolumeIdentifier.Empty;
+                    volumeIdentifer = Empty;
                     return false;
                 }
                 volumeIdentifer = new VolumeIdentifier((uint)sb);
@@ -310,7 +312,7 @@ namespace FsInfoCat.Models.Volumes
             {
                 if (ss < 0)
                 {
-                    volumeIdentifer = VolumeIdentifier.Empty;
+                    volumeIdentifer = Empty;
                     return false;
                 }
                 volumeIdentifer = new VolumeIdentifier((uint)ss);
@@ -320,7 +322,7 @@ namespace FsInfoCat.Models.Volumes
             else if (!(obj is Uri uri && uri.IsAbsoluteUri && (uri.Scheme == Uri.UriSchemeFile || uri.Scheme == UriHelper.URI_SCHEME_URN) &&
                 (volumeIdentifer = new VolumeIdentifier(uri.AbsoluteUri)).IsValid()))
             {
-                volumeIdentifer = VolumeIdentifier.Empty;
+                volumeIdentifer = Empty;
                 return false;
             }
             return true;
@@ -388,9 +390,9 @@ namespace FsInfoCat.Models.Volumes
 
         public static string ToIdentifierString(Guid guid) => guid.ToString("d").ToLower();
 
-        public static string ToIdentifierString(uint serialNumber) => $"{(serialNumber >> 16).ToString("x4")}-{(serialNumber & 0xffff).ToString("x4")}";
+        public static string ToIdentifierString(uint serialNumber) => $"{serialNumber >> 16:x4}-{serialNumber & 0xffff:x4}";
 
-        public static string ToIdentifierString(uint serialNumber, byte ordinal) => $"{serialNumber.ToString("x8")}-{ordinal.ToString("x2")}";
+        public static string ToIdentifierString(uint serialNumber, byte ordinal) => $"{serialNumber:x8}-{ordinal:x2}";
 
         public static string ToUrn(Guid guid) => $"urn:uuid:{ToIdentifierString(guid)}";
 

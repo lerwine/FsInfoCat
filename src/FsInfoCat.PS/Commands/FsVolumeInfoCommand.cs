@@ -1,11 +1,11 @@
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Management.Automation;
 using System.Linq;
-using FsInfoCat.Models.Volumes;
-using FsInfoCat.Util;
+using System.Management.Automation;
 
 namespace FsInfoCat.PS.Commands
 {
@@ -34,34 +34,25 @@ namespace FsInfoCat.PS.Commands
                 object obj = psVariable.Value;
                 if (obj is null)
                     throw new PSInvalidOperationException(EXCEPTION_MESSAGE_REGISTRATION_VAR_ERROR + ": Existing variable is null.");
-                if (null == (volumeRegistration = ((obj is PSObject) ? ((PSObject)obj).BaseObject : obj) as VolumeRegistration))
+                if (null == (volumeRegistration = ((obj is PSObject psObj) ? psObj.BaseObject : obj) as VolumeRegistration))
                     throw new PSInvalidOperationException(EXCEPTION_MESSAGE_REGISTRATION_VAR_ERROR + ": Existing variable is incorrect type.");
             }
             return volumeRegistration.BackingCollection;
         }
 
-        internal Collection<PSObject> GetVolumeRegistration()
-        {
-            return GetVolumeRegistration(SessionState);
-        }
+        internal Collection<PSObject> GetVolumeRegistration() => GetVolumeRegistration(SessionState);
 
-        internal static IEnumerable<IVolumeInfo> GetVolumeInfos(SessionState sessionState)
-        {
-            return GetVolumeRegistration(sessionState).Select(o => (IVolumeInfo)o.BaseObject);
-        }
+        internal static IEnumerable<IVolumeInfo> GetVolumeInfos(SessionState sessionState) => GetVolumeRegistration(sessionState).Select(o => (IVolumeInfo)o.BaseObject);
 
-        protected IEnumerable<IVolumeInfo> GetVolumeInfos()
-        {
-            return GetVolumeInfos(SessionState);
-        }
+        protected IEnumerable<IVolumeInfo> GetVolumeInfos() => GetVolumeInfos(SessionState);
 
         protected class RegisteredVolumeInfo : IVolumeInfo, IEquatable<IVolumeInfo>, IEquatable<DriveInfo>
         {
-            public FileUri RootUri { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public FileUri RootUri { get; internal set; }
 
-            public string RootPathName { get; internal set; }
+            FileUri IVolumeInfo.RootUri { get => RootUri; set => throw new NotSupportedException(); }
 
-            string IVolumeInfo.RootPathName { get => RootPathName; set => throw new NotSupportedException(); }
+            string IVolumeInfo.RootPathName => RootUri.ToLocalPath();
 
             public string VolumeName { get; internal set; }
 
@@ -76,39 +67,27 @@ namespace FsInfoCat.PS.Commands
             VolumeIdentifier IVolumeInfo.Identifier { get => Identifier; set => throw new NotSupportedException(); }
 
             public bool CaseSensitive { get; internal set; }
+
             bool IVolumeInfo.CaseSensitive { get => CaseSensitive; set => throw new NotSupportedException(); }
 
-            public bool Equals(IVolumeInfo other)
-            {
-                return null != other && (ReferenceEquals(this, other) || (Identifier.Equals(other.Identifier) &&
-                    DriveFormat == other.DriveFormat && VolumeName == other.VolumeName && RootPathName == other.RootPathName));
-            }
+            public bool Equals(IVolumeInfo other) => null != other && (ReferenceEquals(this, other) || (Identifier.Equals(other.Identifier) && RootUri.Equals(CaseSensitive, other.RootUri, other.CaseSensitive)));
 
-            public bool Equals(DriveInfo other)
-            {
-                return other is null && DriveFormat == other.DriveFormat && VolumeName == other.VolumeLabel && RootPathName == other.RootDirectory.FullName;
-            }
+            public bool Equals(DriveInfo other) => other is null && DriveFormat == other.DriveFormat && VolumeName == other.VolumeLabel && RootUri.Equals(other.RootDirectory, CaseSensitive);
 
             public override bool Equals(object obj)
             {
                 if (obj is null)
                     return false;
-                if (obj is PSObject)
-                    obj = ((PSObject)obj).BaseObject;
-                if (obj is IVolume)
-                    return Equals((IVolume)obj);
-                return obj is DriveInfo && Equals((DriveInfo)obj);
+                if (obj is PSObject psObj)
+                    obj = psObj.BaseObject;
+                if (obj is IVolume v)
+                    return Equals(v);
+                return obj is DriveInfo d && Equals(d);
             }
 
-            public override int GetHashCode()
-            {
-                return Identifier.GetHashCode();
-            }
+            public override int GetHashCode() => Identifier.GetHashCode();
 
-            public override string ToString()
-            {
-                return "{ RootPathName=\"" + RootPathName + "\"; VolumeName=\"" + VolumeName + "\"; DriveFormat=\"" + DriveFormat + "\"; Identifer=" + Identifier.ToString() + " }";
-            }
+            public override string ToString() => $"{{ RootUri=\"{RootUri}\"; VolumeName=\"{VolumeName}\"; DriveFormat=\"{DriveFormat}\"; Identifer={Identifier}; CaseSensitive = {CaseSensitive} }}";
         }
 
         protected class VolumeRegistration : ReadOnlyCollection<PSObject>

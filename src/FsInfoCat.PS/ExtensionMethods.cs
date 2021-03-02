@@ -1,15 +1,144 @@
 using FsInfoCat.Models.Crawl;
+using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
-using System.Text;
 
 namespace FsInfoCat.PS
 {
     public static class ExtensionMethods
     {
+        public static IEnumerable<PSObject> FindVolumeByIdentifier<T>(this IEnumerable<PSObject> collection, IEnumerable<VolumeIdentifier> volumeIdentifiers)
+            where T : class, IVolumeInfo
+        {
+            if (volumeIdentifiers is null || !volumeIdentifiers.Any())
+                return new PSObject[0];
+            volumeIdentifiers = volumeIdentifiers.Distinct();
+            return collection.WhereBaseObjectOf<T>(v => volumeIdentifiers.Any(i => i.Equals(v.Identifier)));
+        }
+
+        public static IEnumerable<PSObject> FindVolumeByIdentifier<T>(this IEnumerable<PSObject> collection, VolumeIdentifier volumeIdentifier)
+            where T : class, IVolumeInfo
+        {
+            return collection.WhereBaseObjectOf<T>(v => v.Identifier.Equals(volumeIdentifier));
+        }
+
+        public static IEnumerable<PSObject> FindVolumeByRootUri<T>(this IEnumerable<PSObject> collection, IEnumerable<FileUri> fileUris)
+            where T : class, IVolumeInfo
+        {
+            if (fileUris is null || !fileUris.Any())
+                return new PSObject[0];
+            if (fileUris.Any(f => f is null))
+            {
+                if ((fileUris = fileUris.Where(f => !(f is null)).Distinct()).Any())
+                    return collection.WhereBaseObjectOf<T>(v =>
+                    {
+                        FileUri f = v.RootUri;
+                        return f is null || fileUris.Any(u => u.Equals(f, v.CaseSensitive));
+                    });
+                return collection.WhereBaseObjectOf<T>(v => v.RootUri is null);
+            }
+            fileUris = fileUris.Distinct();
+            return collection.WhereBaseObjectOf<T>(v =>
+            {
+                FileUri f = v.RootUri;
+                return !(f is null) && fileUris.Any(u => u.Equals(f, v.CaseSensitive));
+            });
+        }
+
+        public static IEnumerable<PSObject> FindVolumeByRootUri<T>(this IEnumerable<PSObject> collection, FileUri fileUri)
+            where T : class, IVolumeInfo
+        {
+            if (fileUri is null)
+                return collection.WhereBaseObjectOf<T>(v => v.RootUri is null);
+            return collection.WhereBaseObjectOf<T>(v => fileUri.Equals(v.RootUri, v.CaseSensitive));
+        }
+
+        public static IEnumerable<PSObject> FindVolumeByVolumeName<T>(this IEnumerable<PSObject> collection, IEnumerable<string> volumeNames)
+            where T : class, IVolumeInfo
+        {
+            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+            if (volumeNames is null || !volumeNames.Any())
+                return new PSObject[0];
+            if (volumeNames.Any(f => string.IsNullOrEmpty(f)))
+            {
+                if ((volumeNames = volumeNames.Where(f => !string.IsNullOrEmpty(f)).Distinct(comparer)).Any())
+                    return collection.WhereBaseObjectOf<T>(v =>
+                    {
+                        string f = v.VolumeName;
+                        return string.IsNullOrEmpty(f) || volumeNames.Any(u => u.Equals(f));
+                    });
+                return collection.WhereBaseObjectOf<T>(v => string.IsNullOrEmpty(v.VolumeName));
+            }
+            volumeNames = volumeNames.Distinct(comparer);
+            return collection.WhereBaseObjectOf<T>(v =>
+            {
+                string f = v.VolumeName;
+                return !string.IsNullOrEmpty(f) && volumeNames.Any(u => u.Equals(f));
+            });
+        }
+
+        public static IEnumerable<PSObject> FindVolumeByVolumeName<T>(this IEnumerable<PSObject> collection, string volumeName)
+            where T : class, IVolumeInfo
+        {
+            if (string.IsNullOrEmpty(volumeName))
+                return collection.WhereBaseObjectOf<T>(v => string.IsNullOrEmpty(v.VolumeName));
+            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+            return collection.WhereBaseObjectOf<T>(v => comparer.Equals(volumeName, v.VolumeName));
+        }
+
+        public static IEnumerable<PSObject> WhereBaseObjectOf<T>(this IEnumerable<PSObject> collection, Predicate<T> predicate = null)
+        {
+            if (collection is null)
+                return new PSObject[0];
+            if (predicate is null)
+                return collection.Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T);
+            return collection.Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T t && predicate(t));
+        }
+
+        public static IEnumerable<object> WhereBaseObjectOf<T>(this IEnumerable<object> collection, Predicate<T> predicate = null)
+        {
+            if (collection is null)
+                return new object[0];
+            if (predicate is null)
+                return collection.Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T);
+            return collection.Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T t && predicate(t));
+        }
+
+        public static IEnumerable<object> WhereBaseObjectOf<T>(this ICollection collection, Predicate<T> predicate = null)
+        {
+            if (collection is null || collection.Count == 0)
+                return new object[0];
+            if (predicate is null)
+                return collection.Cast<object>().Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T);
+            return collection.Cast<object>().Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T t && predicate(t));
+        }
+
+        public static IEnumerable<T> BaseObjectOfType<T>(this IEnumerable<PSObject> collection)
+        {
+            if (collection is null)
+                return new T[0];
+            return collection.Select(o => o?.BaseObject).OfType<T>();
+        }
+
+        public static IEnumerable<T> BaseObjectOfType<T>(this IEnumerable<object> collection)
+        {
+            if (collection is null)
+                return new T[0];
+            return collection.Select(o => (o is PSObject p) ? p.BaseObject : o).OfType<T>();
+        }
+
+        public static IEnumerable<T> BaseObjectOfType<T>(this ICollection collection)
+        {
+            if (collection is null || collection.Count == 0)
+                return new T[0];
+            return collection.Cast<object>().Select(o => (o is PSObject p) ? p.BaseObject : o).OfType<T>();
+        }
+
         /// <summary>
         /// Invokes an <seealso cref="Action{T}"/> if a value is not <c>null</c>.
         /// </summary>
@@ -53,10 +182,8 @@ namespace FsInfoCat.PS
             object o = (obj is PSObject psObject) ? psObject.BaseObject : obj;
             if (o is FileUri fileUri)
                 result = fileUri;
-            else if (o is FileInfo fileInfo)
-                result = FileUri.FromLocalPath(fileInfo.FullName);
             else if (o is FileSystemInfo fsi)
-                result = FileUri.FromLocalPath($"{fsi.FullName}{FileUri.UriPathSeparatorChar}");
+                result = FileUri.FromFileSystemInfo(fsi);
             else if (o is Uri uri)
             {
                 if (uri.IsAbsoluteUri && uri.Scheme == System.Uri.UriSchemeFile && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment))
@@ -76,7 +203,14 @@ namespace FsInfoCat.PS
                     try
                     {
                         if (assumeLocalPath)
-                            result = FileUri.FromLocalPath(uriString);
+                        {
+                            if (File.Exists(uriString))
+                                result = FileUri.FromFileSystemInfo(new FileInfo(uriString));
+                            else if (Directory.Exists(uriString) || string.IsNullOrEmpty(Path.GetExtension(uriString)))
+                                result = FileUri.FromFileSystemInfo(new DirectoryInfo(uriString));
+                            else
+                                result = FileUri.FromFileSystemInfo(new FileInfo(uriString));
+                        }
                         else
                             result = new FileUri(uriString);
                     }
@@ -113,7 +247,7 @@ namespace FsInfoCat.PS
                 throw new ArgumentNullException(nameof(ifNotNull));
             if (inputObj is null)
             {
-                result = (ifNull is null) ? default(TResult) : ifNull();
+                result = (ifNull is null) ? default : ifNull();
                 return false;
             }
             result = ifNotNull(inputObj);
@@ -152,7 +286,7 @@ namespace FsInfoCat.PS
                 result = ifNotNull(inputObj.Value);
                 return true;
             }
-            result = (ifNull is null) ? default(TResult) : ifNull();
+            result = (ifNull is null) ? default : ifNull();
             return false;
         }
 
@@ -437,7 +571,7 @@ namespace FsInfoCat.PS
         /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, out T result)  => TryCast(inputObj, ifSuccess, nullReturnValue, out result);
+        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, bool nullReturnValue, out T result) => TryCast(inputObj, ifSuccess, nullReturnValue, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -448,7 +582,7 @@ namespace FsInfoCat.PS
         /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, Func<T> ifNull, out T result)  => TryCast(inputObj, ifSuccess, false, ifNull, out result);
+        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, Func<T> ifNull, out T result) => TryCast(inputObj, ifSuccess, false, ifNull, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -458,7 +592,7 @@ namespace FsInfoCat.PS
         /// <param name="ifSuccess">The <seealso cref="Action{T}"/> to invoke if <paramref name="inputObj"/> was null or could be cast as type <typeparamref name="T"/>.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, out T result)  => TryCast(inputObj, ifSuccess, null, out result);
+        public static bool TryCast<T>(this object inputObj, Action<T> ifSuccess, out T result) => TryCast(inputObj, ifSuccess, null, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -469,7 +603,7 @@ namespace FsInfoCat.PS
         /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, bool nullReturnValue, Func<T> ifNull, out T result)  => TryCast(inputObj, null, nullReturnValue, ifNull, out result);
+        public static bool TryCast<T>(this object inputObj, bool nullReturnValue, Func<T> ifNull, out T result) => TryCast(inputObj, null, nullReturnValue, ifNull, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -479,7 +613,7 @@ namespace FsInfoCat.PS
         /// <param name="nullReturnValue">The return value of the method if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, bool nullReturnValue, out T result)  => TryCast(inputObj, (Action<T>)null, nullReturnValue, out result);
+        public static bool TryCast<T>(this object inputObj, bool nullReturnValue, out T result) => TryCast(inputObj, (Action<T>)null, nullReturnValue, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -489,7 +623,7 @@ namespace FsInfoCat.PS
         /// <param name="ifNull">Gets the <paramref name="result"/>value if <paramref name="inputObj"/> is null.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, Func<T> ifNull, out T result)  => TryCast(inputObj, null, ifNull, out result);
+        public static bool TryCast<T>(this object inputObj, Func<T> ifNull, out T result) => TryCast(inputObj, null, ifNull, out result);
 
         /// <summary>
         /// Attempts to cast an object to a specific type.
@@ -498,7 +632,7 @@ namespace FsInfoCat.PS
         /// <param name="inputObj">The source object.</param>
         /// <param name="result">The value of <paramref name="inputObj"/> cast or coerced as type <typeparamref name="T"/>.</param>
         /// <returns><c>true</c> if <paramref name="inputObj"/> could be cast or coerced as type <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryCast<T>(this object inputObj, out T result)  => TryCast(inputObj, (Action<T>)null, out result);
+        public static bool TryCast<T>(this object inputObj, out T result) => TryCast(inputObj, (Action<T>)null, out result);
 
         /// <summary>
         /// Attempts to get an error message and related infromation from an <seealso cref="IContainsErrorRecord"/> object.
@@ -532,7 +666,7 @@ namespace FsInfoCat.PS
                     return true;
                 }
             }
-            category = default(ErrorCategory);
+            category = default;
             targetObject = message = errorId = reason = null;
             return false;
         }
@@ -567,7 +701,7 @@ namespace FsInfoCat.PS
                     return true;
                 }
             }
-            category = default(ErrorCategory);
+            category = default;
             targetObject = message = errorId = null;
             return false;
         }
@@ -623,7 +757,7 @@ namespace FsInfoCat.PS
                     return true;
                 }
             }
-            category = default(ErrorCategory);
+            category = default;
             targetObject = message = errorId = reason = null;
             return false;
         }
@@ -658,7 +792,7 @@ namespace FsInfoCat.PS
                     return true;
                 }
             }
-            category = default(ErrorCategory);
+            category = default;
             targetObject = message = errorId = null;
             return false;
         }
@@ -722,7 +856,7 @@ namespace FsInfoCat.PS
         {
             if (errorRecord is null)
             {
-                category = default(ErrorCategory);
+                category = default;
                 targetObject = message = errorId = null;
                 return false;
             }
@@ -748,7 +882,7 @@ namespace FsInfoCat.PS
         {
             if (source is null)
             {
-                category = default(ErrorCategory);
+                category = default;
                 targetObject = message = errorId = reason = null;
                 return false;
             }
@@ -768,7 +902,7 @@ namespace FsInfoCat.PS
         {
             if (source is null)
             {
-                category = default(ErrorCategory);
+                category = default;
                 targetObject = message = errorId = null;
                 return false;
             }
@@ -789,7 +923,7 @@ namespace FsInfoCat.PS
         {
             if (exception is IContainsErrorRecord c)
                 return TryGetErrorCategory(c.ErrorRecord, out category, out message, out errorId, out reason, out targetObject);
-            category = default(ErrorCategory);
+            category = default;
             targetObject = message = errorId = reason = null;
             return false;
         }
@@ -807,7 +941,7 @@ namespace FsInfoCat.PS
         {
             if (exception is IContainsErrorRecord c)
                 return TryGetErrorCategory(c.ErrorRecord, out category, out message, out errorId, out targetObject);
-            category = default(ErrorCategory);
+            category = default;
             targetObject = message = errorId = null;
             return false;
         }

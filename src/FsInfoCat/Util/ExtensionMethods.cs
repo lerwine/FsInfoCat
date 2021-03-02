@@ -1,9 +1,9 @@
+using FsInfoCat.Models.Volumes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace FsInfoCat.Util
 {
@@ -24,6 +24,33 @@ namespace FsInfoCat.Util
         public const string MESSAGE_MAX_DEPTH_REACHED = "Maximum crawl depth has been reached.";
         public const string MESSAGE_MAX_ITEMS_REACHED = "Maximum crawl item count has been reached.";
         public const string MESSAGE_UNEXPECTED_ERROR = "An unexpected error has occurred.";
+
+        public static IEnumerable<T> FindByIdentifier<T>(this IEnumerable<T> source, VolumeIdentifier volumeIdentifier)
+            where T : class, IVolume
+        {
+            if (source is null)
+                return new T[0];
+            return source.Where(v => !(v is null) && v.Identifier.Equals(volumeIdentifier));
+        }
+
+        public static IEnumerable<T> FindByRootUri<T>(this IEnumerable<T> source, FileUri fileUri)
+            where T : class, IVolume
+        {
+            if (source is null || fileUri is null)
+                return new T[0];
+            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.CaseSensitive));
+        }
+
+        public static IEnumerable<T> FindByVolumeName<T>(this IEnumerable<T> source, string volumeName)
+            where T : class, IVolume
+        {
+            if (source is null)
+                return new T[0];
+            if (string.IsNullOrEmpty(volumeName))
+                return source.Where(v => !(v is null) && string.IsNullOrEmpty(v.VolumeName));
+            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+            return source.Where(v => !(v is null) && comparer.Equals(volumeName, v.VolumeName));
+        }
 
         public static bool IsEqualTo(this string s, char c) => null != s && s.Length == 1 && s[0] == c;
 
@@ -105,6 +132,8 @@ namespace FsInfoCat.Util
 
         public static bool EndsWith(this string s, char c) => !string.IsNullOrEmpty(s) && s[s.Length - 1] == c;
 
+        public static bool StartsWith(this string s, char c) => !string.IsNullOrEmpty(s) && s[0] == c;
+
         public static string[] Split(this string s, char c) => (s is null) ? new string[0] : s.Split(new char[] { c });
 
         public static string[] Split(this string s, char c, int count) => (s is null) ? new string[0] : s.Split(new char[] { c }, count);
@@ -113,7 +142,7 @@ namespace FsInfoCat.Util
         {
             if (source is null || source.Count == 0)
             {
-                result = default(T);
+                result = default;
                 return false;
             }
             try
@@ -122,7 +151,7 @@ namespace FsInfoCat.Util
             }
             catch (InvalidOperationException)
             {
-                result = default(T);
+                result = default;
                 return false;
             }
             return true;
@@ -150,8 +179,8 @@ namespace FsInfoCat.Util
 
         public static bool TryGetDescription<T>(this T value, out string description) where T : struct, Enum => value.GetType().GetField(value.ToString("F")).TryGetDescription(out description);
 
-        public static string GetDescription(this MemberInfo memberInfo) => (memberInfo is null) ? null : memberInfo.GetCustomAttributes<DescriptionAttribute>()
-            .Select(a => a.Description).Where(d => !String.IsNullOrWhiteSpace(d)).FirstOrDefault();
+        public static string GetDescription(this MemberInfo memberInfo) => memberInfo?.GetCustomAttributes<DescriptionAttribute>()
+            .Select(a => a.Description).Where(d => !string.IsNullOrWhiteSpace(d)).FirstOrDefault();
 
         public static string GetDescription<T>(this T value, Func<string, string> getDefaultDescription = null)
             where T : struct, Enum

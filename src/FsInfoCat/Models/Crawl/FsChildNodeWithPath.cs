@@ -16,7 +16,7 @@ namespace FsInfoCat.Models.Crawl
         public Collection<FsChildNodeWithPath> Create(FsRoot root)
         {
             Collection<FsChildNodeWithPath> result = new Collection<FsChildNodeWithPath>();
-            Create(root.RootPathName, root.ChildNodes, result);
+            Create(root.RootUri.ToLocalPath(), root.ChildNodes, result);
             return result;
         }
 
@@ -26,8 +26,8 @@ namespace FsInfoCat.Models.Crawl
             {
                 FsChildNodeWithPath item = new FsChildNodeWithPath(rootPathName, c);
                 result.Add(item);
-                if (c is IFsDirectory)
-                    Create(item.Path, ((IFsDirectory)c).ChildNodes, result);
+                if (c is IFsDirectory directory)
+                    Create(item.Path, directory.ChildNodes, result);
             }
         }
     }

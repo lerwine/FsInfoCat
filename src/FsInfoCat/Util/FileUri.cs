@@ -19,8 +19,6 @@ namespace FsInfoCat.Util
         public static bool DirectorySeparatorSameAsUriPathSeparator { get; }
         private static readonly Func<string, string> _toLocalPath;
         private static readonly GetHostAndPath _getPathAndHost;
-        private static readonly char[] _queryOrFragmentChar = new char[] { '?', '#' };
-
         /// <summary>
         /// URI encode host name.
         /// </summary>
@@ -118,13 +116,19 @@ namespace FsInfoCat.Util
             }
         }
 
+        /// <summary>
+        /// Create new <c>FileUri</c> to represent a parent <c>FileUri</c>.
+        /// </summary>
+        /// <param name="host">The host name.</param>
+        /// <param name="segments">The parent path segments</param>
         private FileUri(string host, IEnumerable<string> segments)
         {
             Host = host;
-            IsAbsolute = host.Length > 0;
-            IsEmpty = false;
-            IsDirectory = true;
             Segments = new ReadOnlyCollection<string>(segments.ToArray());
+            IsDirectory = true;
+            int endIdx = Segments.Count - 1;
+            IsEmpty = endIdx == 0 && Host.Length == 0 && Segments[endIdx].Length == 0;
+            IsAbsolute = Host.Length > 0 || Segments[0].StartsWith(UriPathSeparatorChar);
         }
 
         /// <summary>
@@ -134,31 +138,32 @@ namespace FsInfoCat.Util
         /// <param name="uriPath">The URI encoded path path</param>
         public FileUri(string host, string uriPath)
         {
-            IsAbsolute = !string.IsNullOrEmpty(host);
-            if (IsAbsolute)
-            {
-                if (Uri.CheckHostName(host = host.ToLower()) == UriHostNameType.Unknown)
-                    throw new ArgumentOutOfRangeException(nameof(host));
-                Host = host.ToLower();
-            }
-            else
-                Host = "";
+            Host = host ?? "";
             if (string.IsNullOrEmpty(uriPath))
             {
-                IsEmpty = !IsAbsolute;
-                Segments = new ReadOnlyCollection<string>((IsEmpty) ? new string[0] : new string[] { "/" });
-                IsDirectory = IsAbsolute;
-                return;
+                IsAbsolute = Host.Length > 0;
+                if (IsAbsolute && Uri.CheckHostName(Host) == UriHostNameType.Unknown)
+                    throw new ArgumentOutOfRangeException(nameof(host));
+                IsEmpty = Host.Length == 0;
+                IsDirectory = IsEmpty = true;
+                Segments = new ReadOnlyCollection<string>(new string[] { (IsEmpty) ? "" : "/" });
             }
-            IsEmpty = false;
-            if (!Uri.IsWellFormedUriString(uriPath, UriKind.Relative))
-                throw new ArgumentOutOfRangeException(nameof(uriPath));
-
-            string[] segments = UriHelper.PathSegmentPattern.Matches(uriPath).Cast<Match>().Select(m => m.Value).ToArray();
-            if ((segments[0][0] != UriPathSeparatorChar && Host.Length > 0) || segments.Skip(1).Any(s => s.IsEqualTo(UriPathSeparatorChar)))
-                throw new ArgumentOutOfRangeException(nameof(uriPath));
-            Segments = new ReadOnlyCollection<string>(segments);
-            IsDirectory = segments[segments.Length - 1].EndsWith('/');
+            else
+            {
+                string[] segments;
+                if (!Uri.IsWellFormedUriString(uriPath, UriKind.Relative) || uriPath.Contains('?') || uriPath.Contains('#') ||
+                        (segments = UriHelper.PathSegmentPattern.Matches(uriPath).Cast<Match>().Select(m => m.Value).ToArray()).Length == 0 || segments.Any(s => s.Length == 0))
+                    throw new ArgumentOutOfRangeException(nameof(uriPath));
+                if (segments.Length == 1 && Host.Length > 0 && segments[0].Length == 0)
+                    segments[0] = "/";
+                IsAbsolute = Host.Length > 0 || segments[0].StartsWith(UriPathSeparatorChar);
+                Segments = new ReadOnlyCollection<string>(segments);
+                if (IsAbsolute && Uri.CheckHostName(Host) == UriHostNameType.Unknown)
+                    throw new ArgumentOutOfRangeException(nameof(host));
+                int endIdx = segments.Length - 1;
+                IsEmpty = endIdx == 0 && Host.Length == 0 && segments[endIdx].Length == 0;
+                IsDirectory = Host.Length > 0 || segments[endIdx].EndsWith(UriPathSeparatorChar);
+            }
         }
 
         /// <summary>
@@ -170,13 +175,13 @@ namespace FsInfoCat.Util
         /// <remarks>The <seealso cref="Uri.IsWellFormedUriString(string, UriKind)"/> method is utilized to determine if <paramref name="fileUriString"/> is well-formed.
         /// <para><see cref="IsDirectory"/> will be set to <see langword="true"/> if <paramref name="fileUriString"/> ends with the <c>/</c> character, is a file URI with no path specified, or if <paramref name="fileUriString"/> is null or empty.</para>
         /// <para><seealso cref="UriHelper.AsNormalized(Uri)"/></para></remarks>
-        public FileUri(string fileUriString)
+        public FileUri(string fileUriString = "")
         {
             IsEmpty = string.IsNullOrEmpty(fileUriString);
             if (IsEmpty)
             {
                 Host = "";
-                Segments = new ReadOnlyCollection<string>(new string[0]);
+                Segments = new ReadOnlyCollection<string>(new string[] { "" });
                 IsDirectory = IsAbsolute = false;
             }
             else
@@ -190,29 +195,30 @@ namespace FsInfoCat.Util
                     Host = (uri.Host ?? "").ToLower();
                     fileUriString = uri.AbsolutePath;
                 }
-                else if (Uri.IsWellFormedUriString(fileUriString, UriKind.Relative))
+                else if (Uri.IsWellFormedUriString(fileUriString, UriKind.Relative) && !(fileUriString.Contains('?') || fileUriString.Contains('#')))
                     Host = "";
                 else
                     throw new ArgumentOutOfRangeException(nameof(fileUriString));
 
                 string[] segments = UriHelper.PathSegmentPattern.Matches(fileUriString).Cast<Match>().Select(m => m.Value).ToArray();
-                if ((segments[0][0] != UriPathSeparatorChar && Host.Length > 0) || segments.Skip(1).Any(s => s.IsEqualTo(UriPathSeparatorChar)))
+                if (segments.Length == 0 || segments.Any(s => s.Length == 0))
                     throw new ArgumentOutOfRangeException(nameof(fileUriString));
+                if (segments.Length == 1 && Host.Length > 0 && segments[0].Length == 0)
+                    segments[0] = "/";
                 Segments = new ReadOnlyCollection<string>(segments);
-                IsDirectory = segments[segments.Length - 1].EndsWith('/');
+                IsDirectory = segments[segments.Length - 1].EndsWith(UriPathSeparatorChar);
             }
         }
 
         /// <summary>
-        /// Creates a <see cref="FileUri"/> from a local file path.
+        /// Creates a <see cref="FileUri"/> from a <see cref="FileSystemInfo"/> object representing a local file system path.
         /// </summary>
-        /// <param name="path">The local filesystem path.</param>
+        /// <param name="fileSystemInfo">The<see cref="FileSystemInfo"/> object representing a local file system path.</param>
         /// <returns>A <see cref="FileUri"/> representing the specified local path.</returns>
-        public static FileUri FromLocalPath(string path)
+        public static FileUri FromFileSystemInfo(FileSystemInfo fileSystemInfo)
         {
-            if (string.IsNullOrEmpty(path))
-                return new FileUri("");
-            return new FileUri(_getPathAndHost(path, out path), path);
+            new Uri(fileSystemInfo.FullName, UriKind.Absolute).TrySetTrailingEmptyPathSegment(fileSystemInfo is DirectoryInfo, out Uri uri);
+            return new FileUri(uri.AbsoluteUri);
         }
 
         public static implicit operator FileUri(Uri uri)
@@ -233,9 +239,7 @@ namespace FsInfoCat.Util
         public static implicit operator Uri(FileUri uri) => (uri is null) ? null : ((uri.IsAbsolute) ?
             new Uri($"file://{uri.Host}{string.Join("", uri.Segments)}", UriKind.Absolute) : new Uri(string.Join("", uri.Segments), UriKind.Absolute));
 
-        public static implicit operator FileUri(FileSystemInfo fsi) =>
-            (fsi is null) ? null :
-            FromLocalPath((fsi is FileInfo || fsi.FullName.EndsWith(Path.DirectorySeparatorChar)) ? fsi.FullName : $"{fsi.FullName}/");
+        public static implicit operator FileUri(FileSystemInfo fsi) => (fsi is null) ? null : FromFileSystemInfo(fsi);
 
         /// <summary>
         /// Creates a local path string from file URI.
@@ -250,6 +254,92 @@ namespace FsInfoCat.Util
             return _toLocalPath(string.Join("", Segments));
         }
 
+        /// <summary>
+        /// Gets a <seealso cref="DirectoryInfo"/> or <seealso cref="FileInfo"/> representing the current <c>FileUri</c>.
+        /// </summary>
+        /// <returns>A <seealso cref="DirectoryInfo"/> or <seealso cref="FileInfo"/> representing the current <c>FileUri</c> or <see langword="null"/> if the current
+        /// <c>FileUri</c> <see cref="IsEmpty"/> is <see langword="true"/>, <see cref="IsAbsolute"/> is <see langword="false"/>, or if a <seealso cref="FileSystemInfo"/>
+        /// object could not be created.</returns>
+        public FileSystemInfo ToFileSystemInfo()
+        {
+            if (IsEmpty || !IsAbsolute)
+                return null;
+            try
+            {
+                if (IsDirectory)
+                    return new DirectoryInfo(ToLocalPath());
+                return new FileInfo(ToLocalPath());
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Compares <c>FileUri</c> objects with individual case sensitivity options.
+        /// </summary>
+        /// <param name="currentCaseSensitive">Indicates whether the current <c>FileUri</c> path is to be treated as case-sensitive.</param>
+        /// <param name="other">The <c>FileUri</c> to compare to.</param>
+        /// <param name="otherCaseSensitive">Indicates whether the <paramref name="other"/> <c>FileUri</c> path is to be treated as case-sensitive.</param>
+        /// <returns><see langword="true"/> if the current <c>FileUri</c> is equal to the <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>Does a case-sensitive comparison if either <paramref name="currentCaseSensitive"/> or <paramref name="otherCaseSensitive"/> is <see langword="true"/>.</remarks>
+        public bool Equals(bool currentCaseSensitive, FileUri other, bool otherCaseSensitive)
+        {
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (IsEmpty)
+                return other.IsEmpty;
+            return !other.IsEmpty && IsDirectory == other.IsDirectory && IsAbsolute == other.IsAbsolute && Host.Equals(other.Host) && Segments.Count == other.Segments.Count &&
+                Segments.SequenceEqual(other.Segments, (currentCaseSensitive || otherCaseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Compares <c>FileUri</c> objects with case sensitivity option.
+        /// </summary>
+        /// <param name="other">The <c>FileUri</c> to compare to.</param>
+        /// <param name="caseSensitive">Indicates whether the path comparisons are case-sensitive.</param>
+        /// <returns><see langword="true"/> if the current <c>FileUri</c> is equal to the <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        public bool Equals(FileUri other, bool caseSensitive)
+        {
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (IsEmpty)
+                return other.IsEmpty;
+            return !other.IsEmpty && IsDirectory == other.IsDirectory && IsAbsolute == other.IsAbsolute && Host.Equals(other.Host) && Segments.Count == other.Segments.Count &&
+                Segments.SequenceEqual(other.Segments, (caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Compares the current <c>FileUri</c> object with a <seealso cref="FileSystemInfo"/> object.
+        /// </summary>
+        /// <param name="other">The <seealso cref="FileSystemInfo"/> to compare to</param>
+        /// <param name="caseSensitive">Indicates whether the path comparisons are case-sensitive.</param>
+        /// <returns><see langword="true"/> if the current <c>FileUri</c> is equal to the <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>Host name comparison is always case-insensitive.</remarks>
+        public bool Equals(FileSystemInfo other, bool caseSensitive)
+        {
+            if (other is null || IsEmpty || !IsAbsolute || (other is DirectoryInfo) != IsDirectory)
+                return false;
+            string a = ToString();
+            Uri uri = new Uri(other.FullName);
+            if (!uri.Host.ToLower().Equals(uri.Host))
+                uri.TrySetHostComponent(uri.Host.ToLower(), null, out uri);
+            string b = uri.AbsoluteUri;
+            if (IsDirectory)
+            {
+                if (!b.EndsWith(UriPathSeparatorChar))
+                    b = $"{b}{UriPathSeparatorChar}";
+            }
+            else if (b.EndsWith(UriPathSeparatorChar))
+                b = b.Substring(b.Length - 1);
+            return ((caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase).Equals(a, b);
+        }
+
         public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) ||
             (Host.Equals(other.Host) && Segments.Count == other.Segments.Count && !Segments.Zip(other.Segments, (a, b) => !a.Equals(b)).Any()));
 
@@ -258,11 +348,11 @@ namespace FsInfoCat.Util
             string.Join("", Segments).Equals(other.AbsolutePath) :
             ((IsEmpty) ? other.OriginalString.Length == 0 : !IsAbsolute && string.Join("", Segments).Equals(other.OriginalString)));
 
-        public override bool Equals(object obj) => (obj is FileUri) ? Equals((FileUri)obj) : Equals(obj as Uri);
+        public override bool Equals(object obj) => (obj is FileUri uri) ? Equals(uri) : Equals(obj as Uri);
 
-        public override int GetHashCode() => ((IsEmpty) ? "" : Host + string.Join("", Segments)).GetHashCode();
+        public override int GetHashCode() => (IsEmpty ? "" : $"{Host}{string.Join("", Segments)}").GetHashCode();
 
-        public override string ToString() => (IsEmpty) ? "" : ((IsAbsolute) ? $"file://{Host}{string.Join("", Segments)}" : string.Join("", Segments));
+        public override string ToString() => (IsEmpty) ? "" : ((IsAbsolute) ? ((Segments.Count > 0) ? $"file://{Host}{string.Join("", Segments)}" : $"file://{Host}/") : string.Join("", Segments));
 
         public int CompareTo(FileUri other)
         {

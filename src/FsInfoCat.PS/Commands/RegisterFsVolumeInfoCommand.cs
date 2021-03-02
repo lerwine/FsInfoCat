@@ -59,16 +59,18 @@ namespace FsInfoCat.PS.Commands
                 // TODO: Write error
             }
 
-
-            FileUri fileUri = FileUri.FromLocalPath(RootPathName);
-            if (fileUri.IsEmpty)
+            DirectoryInfo directoryInfo;
+            try { directoryInfo = new DirectoryInfo(RootPathName); }
+            catch (Exception exc)
+            {
+                // TODO: Write error
+                return;
+            }
+            if (!(Force.IsPresent || directoryInfo.Exists))
             {
                 // TODO: Write error
             }
-            if (!(Force.IsPresent || Directory.Exists(RootPathName)))
-            {
-                // TODO: Write error
-            }
+            FileUri fileUri = FileUri.FromFileSystemInfo(directoryInfo);
 
             Collection<PSObject> volumeRegistration = GetVolumeRegistration();
             IEnumerable<RegisteredVolumeInfo> registeredVolumes = volumeRegistration.Select(o => o.BaseObject as RegisteredVolumeInfo);
@@ -78,21 +80,22 @@ namespace FsInfoCat.PS.Commands
             string uriString = fileUri.ToString();
             if (volumeInfo is null)
             {
-                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && ((v.CaseSensitive) ? caseSensitiveComparer : ignoreCaseComparer).Equals(v.RootPathName, uriString));
+                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && v.RootUri.Equals(fileUri, v.CaseSensitive));
                 if (matching.Any())
                 {
                     // TODO: Write error
                 }
-                matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && ((v.CaseSensitive) ? caseSensitiveComparer : ignoreCaseComparer).Equals(v.VolumeName, VolumeName));
+                matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && ((v.CaseSensitive) ? caseSensitiveComparer :
+                    ignoreCaseComparer).Equals(v.VolumeName, VolumeName));
                 if (matching.Any())
                 {
                     // TODO: Write error
                 }
                 volumeInfo = new RegisteredVolumeInfo();
-                // TODO: Need to specify case sensitivity
-                //volumeInfo.CaseSensitive = false;
+#warning Need to add parameter for case sensitivity
+                //volumeInfo.CaseSensitive = 
                 volumeInfo.Identifier = volumeIdentifer;
-                volumeInfo.RootPathName = uriString;
+                volumeInfo.RootUri = fileUri;
                 volumeInfo.VolumeName = VolumeName;
                 volumeInfo.DriveFormat = DriveFormat;
             }
@@ -102,7 +105,7 @@ namespace FsInfoCat.PS.Commands
                 {
                     // TODO: Write error
                 }
-                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => ((v.CaseSensitive) ? caseSensitiveComparer : ignoreCaseComparer).Equals(v.RootPathName, uriString));
+                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => v.RootUri.Equals(fileUri, v.CaseSensitive));
                 if (matching.Any())
                 {
                     // TODO: Write error
@@ -112,9 +115,9 @@ namespace FsInfoCat.PS.Commands
                 {
                     // TODO: Write error
                 }
-                // TODO: Need to specify case sensitivity
-                //volumeInfo.CaseSensitive = false;
-                volumeInfo.RootPathName = uriString;
+#warning Need to add parameter for case sensitivity
+                //volumeInfo.CaseSensitive = 
+                volumeInfo.RootUri = fileUri;
                 volumeInfo.VolumeName = VolumeName;
                 volumeInfo.DriveFormat = DriveFormat;
             }

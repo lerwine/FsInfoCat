@@ -1,10 +1,8 @@
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using FsInfoCat.Models.Volumes;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.DB
 {
@@ -22,7 +20,7 @@ namespace FsInfoCat.Models.DB
                 {
                     n = _volumeName;
                     if (string.IsNullOrWhiteSpace(n))
-                        n = _rootPathName;
+                        n = RootPathName;
                 }
                 return n;
             }
@@ -64,7 +62,21 @@ namespace FsInfoCat.Models.DB
 
         #endregion
 
-        public FileUri RootUri { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public FileUri RootUri
+        {
+            get => _rootUri;
+            set
+            {
+                if (value is null)
+                    _rootUri = new FileUri();
+                else
+                {
+                    if (!(value.IsEmpty || (value.IsDirectory && value.IsAbsolute)))
+                        throw new ArgumentOutOfRangeException(nameof(value));
+                    _rootUri = value;
+                }
+            }
+        }
 
         #region RootPathName
 
@@ -74,17 +86,13 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_RootPathName_Empty = "Root path name cannot be empty.";
         public const string Error_Message_RootPathName_Length = "Root path name too long.";
         public const string Error_Message_RootPathName_Invalid = "Invalid path or url.";
-        private string _rootPathName = "";
+        private FileUri _rootUri = new FileUri("");
 
         [Required(ErrorMessage = Error_Message_RootPathName_Empty)]
         [MaxLength(Max_Length_RootPathName, ErrorMessage = Error_Message_RootPathName_Length)]
         [RegularExpression(ModelHelper.PATTERN_PATH_OR_URL, ErrorMessage = Error_Message_RootPathName_Invalid)]
         [Display(Name = DisplayName_RootPathName, Description = "Enter a file URI or a windows file path.")]
-        public string RootPathName
-        {
-            get { return _rootPathName; }
-            set { _rootPathName = (value is null) ? "" : value; }
-        }
+        public string RootPathName => _rootUri.ToLocalPath();
 
         #endregion
 
@@ -246,9 +254,7 @@ namespace FsInfoCat.Models.DB
         {
             if (VolumeID.Equals(Guid.Empty))
                 VolumeID = Guid.NewGuid();
-            _rootPathName = _rootPathName.Trim();
             _driveFormat = _driveFormat.Trim();
-            _rootPathName = _rootPathName.Trim();
             _volumeName = _volumeName.Trim();
             if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
                 _displayName = _volumeName;
@@ -289,11 +295,11 @@ namespace FsInfoCat.Models.DB
                     break;
                 case PropertyName_RootPathName:
                 case DisplayName_RootPathName:
-                    if (_rootPathName.Length == 0)
+                    if (_rootUri.IsEmpty)
                         result.Add(new ValidationResult(Error_Message_RootPathName_Empty, new string[] { PropertyName_RootPathName }));
-                    else if (_rootPathName.Length > Max_Length_DisplayName)
+                    else if (_rootUri.ToLocalPath().Length > Max_Length_DisplayName)
                         result.Add(new ValidationResult(Error_Message_RootPathName_Length, new string[] { PropertyName_RootPathName }));
-                    else if (!ModelHelper.PathOrUrlRegex.IsMatch(_rootPathName))
+                    else if (!(_rootUri.IsAbsolute && _rootUri.IsDirectory))
                         result.Add(new ValidationResult(Error_Message_RootPathName_Invalid, new string[] { PropertyName_RootPathName }));
                     break;
                 case PropertyName_VolumeName:

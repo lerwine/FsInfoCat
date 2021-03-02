@@ -3,25 +3,28 @@ using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Volumes
 {
+    /// <summary>
+    /// Represents file system volume information.
+    /// </summary>
     public interface IVolumeInfo
     {
         /// <summary>
-        /// Gets the absolute file URI of the the volume root directory.
+        /// Gets or sets the absolute file URI of the the volume root directory.
         /// </summary>
         FileUri RootUri { get; set; }
 
         /// <summary>
         /// Gets the full path name of the volume root directory.
         /// </summary>
-        string RootPathName { get; set; }
+        string RootPathName { get; }
 
         /// <summary>
-        /// Gets the name of the volume.
+        /// Gets or sets the name of the volume.
         /// </summary>
         string VolumeName { get; set; }
 
         /// <summary>
-        /// Gets the name of the volume.
+        /// Gets or sets the name of the volume.
         /// </summary>
         string DriveFormat { get; set; }
 
@@ -29,8 +32,14 @@ namespace FsInfoCat.Models.Volumes
             Get-WmiObject -Class 'Win32_LogicalDisk' can be used to get 32-bit serial number in windows
             lsblk -a -b -f -J -o NAME,LABEL,MOUNTPOINT,SIZE,FSTYPE,UUID
         */
+        /// <summary>
+        /// Gets or sets the unique identifier for the volume.
+        /// </summary>
         VolumeIdentifier Identifier { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the file names are case-sensitive when saved to the target volume.
+        /// </summary>
         bool CaseSensitive { get; set; }
     }
 }

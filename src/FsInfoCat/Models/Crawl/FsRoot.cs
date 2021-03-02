@@ -1,16 +1,16 @@
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using FsInfoCat.Models.Volumes;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {
     public sealed class FsRoot : ComponentBase, IVolumeInfo, IFsDirectory, IEquatable<FsRoot>, IEqualityComparer<IFsChildNode>
     {
-        private string _rootPathName = "";
+        private FileUri _rootUri = new FileUri("");
         private string _driveFormat = "";
         private string _volumeName = "";
 
@@ -18,16 +18,26 @@ namespace FsInfoCat.Models.Crawl
         private ComponentList<CrawlMessage> _messagesList;
         private ComponentList<IFsChildNode> _childNodes;
 
-        public FileUri RootUri { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public FileUri RootUri
+        {
+            get => _rootUri;
+            set
+            {
+                if (value is null)
+                    _rootUri = new FileUri();
+                else
+                {
+                    if (!(value.IsEmpty || (value.IsDirectory && value.IsAbsolute)))
+                        throw new ArgumentOutOfRangeException(nameof(value));
+                    _rootUri = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the full path name of the volume root directory.
         /// </summary>
-        public string RootPathName
-        {
-            get => _rootPathName;
-            set => _rootPathName = value ?? "";
-        }
+        public string RootPathName => _rootUri.ToLocalPath();
 
         /// <summary>
         /// Gets the name of the file system.
@@ -51,7 +61,7 @@ namespace FsInfoCat.Models.Crawl
 
         public VolumeIdentifier Identifier { get; set; }
 
-        string INamedComponent.Name => (string.IsNullOrWhiteSpace(RootPathName)) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? Identifier.ToString() : VolumeName) : RootPathName;
+        string INamedComponent.Name => (RootUri.IsEmpty) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? Identifier.ToString() : VolumeName) : RootUri.ToLocalPath();
 
         public ComponentList<CrawlMessage> Messages
         {
@@ -90,9 +100,11 @@ namespace FsInfoCat.Models.Crawl
         {
             if (driveInfo is null)
                 throw new ArgumentNullException(nameof(driveInfo));
+            RootUri = driveInfo.RootUri;
             DriveFormat = driveInfo.DriveFormat;
             VolumeName = driveInfo.VolumeName;
             Identifier = driveInfo.Identifier;
+            CaseSensitive = driveInfo.CaseSensitive;
         }
 
         public FsRoot()
@@ -132,12 +144,12 @@ namespace FsInfoCat.Models.Crawl
         public bool Equals(FsRoot other)
         {
             return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType && String.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase) &&
-                String.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase) && RootPathName.Equals(other.RootPathName)));
+                String.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase) && RootUri.Equals(CaseSensitive, other.RootUri, other.CaseSensitive)));
         }
 
         public override bool Equals(object obj)
         {
-            return null != obj && obj is FsRoot && Equals((FsRoot)obj);
+            return null != obj && obj is FsRoot root && Equals(root);
         }
 
         public override int GetHashCode()
@@ -168,11 +180,11 @@ namespace FsInfoCat.Models.Crawl
 
         public override string ToString()
         {
-            if (string.IsNullOrWhiteSpace(RootPathName))
+            if (RootUri.IsEmpty)
                 return (VolumeName is null) ? "" : " " + VolumeName.Trim();
-            if (String.IsNullOrWhiteSpace(VolumeName))
-                return RootPathName.Trim();
-            return RootPathName.Trim() + Path.PathSeparator + " " + VolumeName.Trim();
+            if (string.IsNullOrWhiteSpace(VolumeName))
+                return RootUri.ToLocalPath();
+            return RootUri.ToLocalPath() + " " + VolumeName.Trim();
         }
         public static string NormalizePath(string path)
         {
@@ -235,7 +247,7 @@ namespace FsInfoCat.Models.Crawl
         {
             if ((path = NormalizePath(path)).Length > 0 && Directory.Exists(path))
             {
-                FileUri fileUri = FileUri.FromLocalPath(path);
+                FileUri fileUri = FileUri.FromFileSystemInfo(new DirectoryInfo(path));
                 if (!fileUri.IsEmpty)
                     return ImportDirectory(fsRoots, path, getVolumes().ToDictionary(k => k.RootPathName, v => v), out realPath);
             }

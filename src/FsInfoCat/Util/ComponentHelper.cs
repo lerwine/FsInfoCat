@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -23,13 +22,13 @@ namespace FsInfoCat.Util
             if (site is null)
                 return null;
             INestedContainer container = site.Container as INestedContainer;
-            return (container is null) ? null : container.Owner;
+            return container?.Owner;
         }
 
         public static IComponent GetOwner(this IComponent component)
         {
             INestedContainer container = component.GetContainer() as INestedContainer;
-            return (container is null) ? null : container.Owner;
+            return container?.Owner;
         }
 
         public static T FindOwner<T>(this IComponent component)
@@ -40,7 +39,7 @@ namespace FsInfoCat.Util
                 if (c is T t)
                     return t;
             }
-            return default(T);
+            return default;
         }
 
         public static IContainer GetContainer(this IComponent component)
@@ -48,7 +47,7 @@ namespace FsInfoCat.Util
             if (component is null)
                 return null;
             ISite site = component.Site;
-            return (site is null) ? null : site.Container;
+            return site?.Container;
         }
 
         private class Site : ISite

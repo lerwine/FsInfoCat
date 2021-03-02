@@ -23,7 +23,7 @@ namespace FsInfoCat.Test
                     CaseSensitive = false,
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
-                    RootPathName = "C:\\",
+                    RootUri = FileUri.FromFileSystemInfo(new DirectoryInfo("C:\\")),
                     Identifier = new VolumeIdentifier(0x9E497DE8),
                     VolumeName = "OS"
                 },
@@ -42,7 +42,7 @@ namespace FsInfoCat.Test
                     CaseSensitive = false,
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
-                    RootPathName = "D:\\",
+                    RootUri = FileUri.FromFileSystemInfo(new DirectoryInfo("D:\\")),
                     Identifier = new VolumeIdentifier(0xB744F201),
                     VolumeName = "OS"
                 },
@@ -64,7 +64,7 @@ namespace FsInfoCat.Test
                     CaseSensitive = false,
                     DriveFormat = "MAFS",
                     DriveType = DriveType.Fixed,
-                    RootPathName = "Z:\\",
+                    RootUri = FileUri.FromFileSystemInfo(new DirectoryInfo("Z:\\")),
                     Identifier = new VolumeIdentifier(@"\\servicenowdiag479.file.core.windows.net\testazureshare"),
                     VolumeName = ""
                 });
@@ -73,7 +73,7 @@ namespace FsInfoCat.Test
                     CaseSensitive = false,
                     DriveFormat = "FAT32",
                     DriveType = DriveType.Removable,
-                    RootPathName = "F:\\",
+                    RootUri = FileUri.FromFileSystemInfo(new DirectoryInfo("F:\\")),
                     Identifier = new VolumeIdentifier("urn:volume:id:3B51-8D4B"),
                     VolumeName = "HP_TOOLS"
                 });
@@ -82,7 +82,7 @@ namespace FsInfoCat.Test
                     CaseSensitive = true,
                     DriveFormat = "ext4",
                     DriveType = DriveType.Fixed,
-                    RootPathName = "/",
+                    RootUri = FileUri.FromFileSystemInfo(new DirectoryInfo("/")),
                     Identifier = new VolumeIdentifier("urn:uuid:3756934c-31d3-413c-8df9-5b7c7b1a4451"),
                     VolumeName = "cloudimg-rootfs"
                 });
@@ -98,7 +98,7 @@ namespace FsInfoCat.Test
                     CaseSensitive = false,
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
-                    RootPathName = "C:\\",
+                    RootUri = FileUri.FromFileSystemInfo(new DirectoryInfo("C:\\")),
                     Identifier = new VolumeIdentifier(0x9E497DE8),
                     VolumeName = "OS"
                 },
@@ -156,7 +156,8 @@ namespace FsInfoCat.Test
             Assert.That(target.CaseSensitive, Is.False);
             Assert.That(target.DriveFormat, Is.Empty);
             Assert.That(target.DriveType, Is.EqualTo(DriveType.Unknown));
-            Assert.That(target.RootPathName, Is.Empty);
+            Assert.That(target.RootUri, Is.Not.Null);
+            Assert.That(target.RootUri.IsEmpty, Is.True);
             Assert.That(target.Identifier, Is.EqualTo(VolumeIdentifier.Empty));
             Assert.That(target.VolumeName, Is.Empty);
             Assert.That(target.ChildNodes, Is.Not.Null.Or.Empty);
