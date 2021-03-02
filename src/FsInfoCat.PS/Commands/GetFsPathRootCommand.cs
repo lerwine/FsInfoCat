@@ -2,6 +2,7 @@ using FsInfoCat.Models.Crawl;
 using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
@@ -82,19 +83,19 @@ namespace FsInfoCat.PS.Commands
             {
                 case PARAMETER_SET_NAME_ASSUME_LOCAL:
                     foreach (object obj in InputObject)
-                        ProcessItem(obj, (FileUri.TryCreate((obj is PSObject p) ? p.BaseObject : obj, true, out fileUri)) ? fileUri : null);
+                        ProcessItem(obj, obj.TryCoerceToFileUri(true, out fileUri) ? fileUri : null);
                     break;
                 case PARAMETER_SET_NAME_URI:
                     foreach (object obj in Uri)
-                        ProcessItem(obj, (FileUri.TryCreate((obj is PSObject p) ? p.BaseObject : obj, false, out fileUri)) ? fileUri : null);
+                        ProcessItem(obj, obj.TryCoerceToFileUri(false, out fileUri) ? fileUri : null);
                     break;
                 case PARAMETER_SET_NAME_PATH:
                     foreach (object obj in LocalPath)
-                        ProcessItem(obj, (FileUri.TryCreate((obj is PSObject p) ? p.BaseObject : obj, true, out fileUri)) ? fileUri : null);
+                        ProcessItem(obj, obj.TryCoerceToFileUri(true, out fileUri) ? fileUri : null);
                     break;
                 default:
                     foreach (object obj in InputObject)
-                        ProcessItem(obj, (FileUri.TryCreate((obj is PSObject p) ? p.BaseObject : obj, false, out fileUri)) ? fileUri : null);
+                        ProcessItem(obj, obj.TryCoerceToFileUri(false, out fileUri) ? fileUri : null);
                     break;
             }
         }
@@ -122,7 +123,7 @@ namespace FsInfoCat.PS.Commands
             }
             catch (Exception exc)
             {
-
+                // TODO: Process generic exception
             }
         }
     }

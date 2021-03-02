@@ -48,6 +48,53 @@ namespace FsInfoCat.PS
             return false;
         }
 
+        public static bool TryCoerceToFileUri(this object obj, bool assumeLocalPath, out FileUri result)
+        {
+            object o = (obj is PSObject psObject) ? psObject.BaseObject : obj;
+            if (o is FileUri fileUri)
+                result = fileUri;
+            else if (o is FileInfo fileInfo)
+                result = FileUri.FromLocalPath(fileInfo.FullName);
+            else if (o is FileSystemInfo fsi)
+                result = FileUri.FromLocalPath($"{fsi.FullName}{FileUri.UriPathSeparatorChar}");
+            else if (o is Uri uri)
+            {
+                if (uri.IsAbsoluteUri && uri.Scheme == System.Uri.UriSchemeFile && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment))
+                    result = new FileUri(uri.AbsoluteUri);
+                else
+                {
+                    result = null;
+                    return false;
+                }
+            }
+            else if (obj.TryCoerceAs(out string uriString))
+            {
+                if (string.IsNullOrEmpty(uriString))
+                    result = new FileUri("");
+                else
+                {
+                    try
+                    {
+                        if (assumeLocalPath)
+                            result = FileUri.FromLocalPath(uriString);
+                        else
+                            result = new FileUri(uriString);
+                    }
+                    catch
+                    {
+                        result = null;
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Attempts to coerce a value to another type.
         /// </summary>
