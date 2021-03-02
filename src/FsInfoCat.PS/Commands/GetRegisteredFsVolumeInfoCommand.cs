@@ -56,7 +56,6 @@ namespace FsInfoCat.PS.Commands
             switch (ParameterSetName)
             {
                 case PARAMETER_SET_NAME_BY_ROOT_DIRECTORY:
-                    // TODO: Need to switch to using URI (FileUri) instead of RootPathName
                     matching = _volumeInfos.Where(v => RootPathName.Any(p => p == v.RootPathName));
                     break;
                 case PARAMETER_SET_NAME_BY_VOLUME_NAME:

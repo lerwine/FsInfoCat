@@ -64,7 +64,6 @@ namespace FsInfoCat.Models.DB
 
         #endregion
 
-#warning Volume.RootUri not implemented
         public FileUri RootUri { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         #region RootPathName
@@ -77,7 +76,6 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_RootPathName_Invalid = "Invalid path or url.";
         private string _rootPathName = "";
 
-        // TODO: Need to swith to using URI (FileUri) instead of RootPathName - Change to calculated property for human readability
         [Required(ErrorMessage = Error_Message_RootPathName_Empty)]
         [MaxLength(Max_Length_RootPathName, ErrorMessage = Error_Message_RootPathName_Length)]
         [RegularExpression(ModelHelper.PATTERN_PATH_OR_URL, ErrorMessage = Error_Message_RootPathName_Invalid)]
@@ -141,7 +139,6 @@ namespace FsInfoCat.Models.DB
         [Required()]
         [Display(Name = "Flags")]
         [EnumDataType(typeof(FileSystemFeature))]
-        // TODO: Cannot use FileSystemFeature - cannot entirely determine equivalent features from info in Linux
         public FileSystemFeature Flags { get; set; }
 
         [Display(Name = "Is Inactive")]

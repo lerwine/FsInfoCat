@@ -16,7 +16,6 @@ namespace FsInfoCat.Models.Crawl
         public Collection<FsChildNodeWithPath> Create(FsRoot root)
         {
             Collection<FsChildNodeWithPath> result = new Collection<FsChildNodeWithPath>();
-            // TODO: Need to switch to using URI (FileUri) instead of RootPathName
             Create(root.RootPathName, root.ChildNodes, result);
             return result;
         }

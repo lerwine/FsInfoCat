@@ -29,8 +29,6 @@ namespace FsInfoCat.PS.Commands
         protected override void ProcessRecord()
         {
             IEnumerable<IVolumeInfo> volumeInfos = GetVolumeInfos();
-            // TODO: Implement Unregister-FsVolumeInfo
-#warning Implement Unregister-FsVolumeInfo
         }
     }
 }

@@ -19,7 +19,6 @@ namespace FsInfoCat.Models.HostDevices
         /// </summary>
         string MachineName { get; set; }
 
-        // TODO: Change to an enum or formatted string that will distinguish host types
         /// <summary>
         /// Indicates if the host machine is a windows machine.
         /// </summary>

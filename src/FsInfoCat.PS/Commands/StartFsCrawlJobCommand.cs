@@ -44,7 +44,6 @@ namespace FsInfoCat.PS.Commands
         [ValidateNotNullOrEmpty()]
         public string MachineIdentifier { get; set; }
 
-        // TODO: Use FsInfoCat.PS.Commands.FsVolumeInfoCommand.GetVolumeInfos, instead
         [Parameter(HelpMessage = "Supplier function to get volumes", Mandatory = true)]
         [ValidateNotNull()]
         [Obsolete("Use FsInfoCat.PS.Commands.FsVolumeInfoCommand.GetVolumeInfos, instead")]
@@ -203,7 +202,6 @@ namespace FsInfoCat.PS.Commands
                 {
                     case PARAMETER_SET_NAME_BY_AGE_TRUE:
                     case PARAMETER_SET_NAME_BY_AGE_FALSE:
-        // TODO: Use Identifier instead of SerialNumber
                         crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS), MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumes, Name);
                         break;
                     case PARAMETER_SET_NAME_DATE_TIME_TRUE:

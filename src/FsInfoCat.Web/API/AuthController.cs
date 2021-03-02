@@ -45,12 +45,10 @@ namespace FsInfoCat.Web.API
             catch (SqlException exc)
             {
                 string message = SqlHelper.GetErrorMessages(exc);
-                // TODO: Log exception
                 return new RequestResponse<Account>(null, message);
             }
             catch (Exception exc)
             {
-                // TODO: Log exception
                 return new RequestResponse<Account>(null, (string.IsNullOrWhiteSpace(exc.Message)) ?
                     "An unexpected " + exc.GetType().Name + " occurred while accessing the database." :
                     "An unexpected error occurred while accessing the database: " + exc.Message);
@@ -114,7 +112,6 @@ namespace FsInfoCat.Web.API
             return await Logout(User, HttpContext, _logger);
         }
 
-        // TODO: Replace this with using PwHash directly
         public static bool CheckPwHash(string pwHash, string rawPw)
         {
             if (string.IsNullOrEmpty(rawPw))

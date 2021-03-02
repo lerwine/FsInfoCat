@@ -10,7 +10,6 @@ namespace FsInfoCat.Models.Volumes
         /// </summary>
         FileUri RootUri { get; set; }
 
-        // TODO: Need to swith to using URI (FileUri) instead of RootPathName - Change to calculated property for human readability
         /// <summary>
         /// Gets the full path name of the volume root directory.
         /// </summary>

@@ -20,7 +20,6 @@ namespace FsInfoCat.Models.Crawl
 
         public FileUri RootUri { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        // TODO: Need to swith to using URI (FileUri) instead of RootPathName - Change to calculated property for human readability
         /// <summary>
         /// Gets the full path name of the volume root directory.
         /// </summary>
@@ -39,7 +38,6 @@ namespace FsInfoCat.Models.Crawl
             set => _driveFormat = value ?? "";
         }
 
-        // TODO: Cannot use DriveType - cannot always accurately determine drivetype from info in Linux
         public DriveType DriveType { get; set; }
 
         /// <summary>
@@ -191,7 +189,6 @@ namespace FsInfoCat.Models.Crawl
             return path;
         }
 
-#warning This is flawed: Some root directories might have different case sensitivities and cannot be looked up using a normal dictionary
         private static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Dictionary<string, IVolumeInfo> drives, out string realPath)
         {
             string key = path;
@@ -240,7 +237,6 @@ namespace FsInfoCat.Models.Crawl
             {
                 FileUri fileUri = FileUri.FromLocalPath(path);
                 if (!fileUri.IsEmpty)
-#warning This is flawed: Some root directories might have different case sensitivities and cannot be looked up using a normal dictionary. Also need to look up using FileUri value instead
                     return ImportDirectory(fsRoots, path, getVolumes().ToDictionary(k => k.RootPathName, v => v), out realPath);
             }
             realPath = null;

@@ -1141,7 +1141,6 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetTryGetErrorMessage1TestCases))]
         public string TryGetErrorMessage1Test(IContainsErrorRecord source, ErrorCategory defaultCategory, string defaultErrorId, string defaultReason, object defaultTargetObject)
         {
-            // TODO: Write test for bool TryGetErrorMessage(this IContainsErrorRecord source, ErrorCategory defaultCategory, string defaultErrorId, string defaultReason, object defaultTargetObject, out string message, out ErrorCategory category, out string errorId, out string reason, out object targetObject)
             Assert.Inconclusive();
             throw new NotImplementedException();
         }

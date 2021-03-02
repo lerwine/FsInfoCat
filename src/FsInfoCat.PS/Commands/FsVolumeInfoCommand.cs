@@ -57,10 +57,8 @@ namespace FsInfoCat.PS.Commands
 
         protected class RegisteredVolumeInfo : IVolumeInfo, IEquatable<IVolumeInfo>, IEquatable<DriveInfo>
         {
-#warning RegisteredVolumeInfo.RootUri is not implemented
             public FileUri RootUri { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-            // TODO: Need to swith to using FileUri
             public string RootPathName { get; internal set; }
 
             string IVolumeInfo.RootPathName { get => RootPathName; set => throw new NotSupportedException(); }
