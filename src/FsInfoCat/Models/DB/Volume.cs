@@ -139,6 +139,7 @@ namespace FsInfoCat.Models.DB
         [Required()]
         [Display(Name = "Flags")]
         [EnumDataType(typeof(FileSystemFeature))]
+        [Obsolete("Issue #25")]
         public FileSystemFeature Flags { get; set; }
 
         [Display(Name = "Is Inactive")]
