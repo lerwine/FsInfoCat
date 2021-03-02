@@ -6,8 +6,14 @@ namespace FsInfoCat.Models.Volumes
     public interface IVolumeInfo
     {
         /// <summary>
+        /// Gets the absolute file URI of the the volume root directory.
+        /// </summary>
+        FileUri RootUri { get; set; }
+
+        // TODO: Need to swith to using URI (FileUri) instead of RootPathName - Change to calculated property for human readability
+        /// <summary>
         /// Gets the full path name of the volume root directory.
-        /// /// </summary>
+        /// </summary>
         string RootPathName { get; set; }
 
         /// <summary>

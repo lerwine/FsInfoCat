@@ -23,6 +23,7 @@ namespace FsInfoCat.Test
                     CaseSensitive = false,
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
+                    // TODO: Need to swith to using URI (FileUri) instead of RootPathName
                     RootPathName = "C:\\",
                     Identifier = new VolumeIdentifier(0x9E497DE8),
                     VolumeName = "OS"

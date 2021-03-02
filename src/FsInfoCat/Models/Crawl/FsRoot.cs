@@ -18,6 +18,9 @@ namespace FsInfoCat.Models.Crawl
         private ComponentList<CrawlMessage> _messagesList;
         private ComponentList<IFsChildNode> _childNodes;
 
+        public FileUri RootUri { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        // TODO: Need to swith to using URI (FileUri) instead of RootPathName - Change to calculated property for human readability
         /// <summary>
         /// Gets the full path name of the volume root directory.
         /// </summary>
@@ -188,6 +191,7 @@ namespace FsInfoCat.Models.Crawl
             return path;
         }
 
+#warning This is flawed: Some root directories might have different case sensitivities and cannot be looked up using a normal dictionary
         private static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Dictionary<string, IVolumeInfo> drives, out string realPath)
         {
             string key = path;
@@ -233,7 +237,12 @@ namespace FsInfoCat.Models.Crawl
         public static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Func<IEnumerable<IVolumeInfo>> getVolumes, out string realPath)
         {
             if ((path = NormalizePath(path)).Length > 0 && Directory.Exists(path))
-                return ImportDirectory(fsRoots, path, getVolumes().ToDictionary(k => k.RootPathName, v => v), out realPath);
+            {
+                FileUri fileUri = FileUri.FromLocalPath(path);
+                if (!fileUri.IsEmpty)
+#warning This is flawed: Some root directories might have different case sensitivities and cannot be looked up using a normal dictionary. Also need to look up using FileUri value instead
+                    return ImportDirectory(fsRoots, path, getVolumes().ToDictionary(k => k.RootPathName, v => v), out realPath);
+            }
             realPath = null;
             return null;
         }
