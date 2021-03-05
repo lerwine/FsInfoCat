@@ -10,6 +10,7 @@ namespace FsInfoCat.Models.HostDevices
         private string _displayName = "";
         private string _machineIdentifer = "";
         private string _machineName = "";
+        private PlatformType _platform;
 
         [MaxLength(DB.HostDevice.Max_Length_DisplayName, ErrorMessage = DB.HostDevice.Error_Message_DisplayName)]
         [Display(Name = DB.HostDevice.DisplayName_DisplayName)]
@@ -38,8 +39,8 @@ namespace FsInfoCat.Models.HostDevices
             set { _machineName = (value is null) ? "" : value; }
         }
 
-        [Display(Name = "Is Windows OS")]
-        public bool IsWindows { get; set; }
+        [Display(Name = "Host OS Platform Type")]
+        public PlatformType Platform { get => _platform; set => _platform = ModelHelper.ToPlatformType((byte)value); }
 
         [Display(Name = "Allow Local Crawl")]
         public bool AllowCrawl { get; set; }

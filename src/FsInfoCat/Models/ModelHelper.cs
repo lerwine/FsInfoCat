@@ -99,5 +99,15 @@ namespace FsInfoCat.Models
                 return TryFindVolume(volumes, directoryInfo.Parent, out result);
             return true;
         }
+
+        public static Accounts.UserRole ToUserRole(byte value)
+        {
+            return Enum.GetValues(typeof(Accounts.UserRole)).Cast<Accounts.UserRole>().Where(t => t.Equals(value)).FirstOrDefault();
+        }
+
+        public static HostDevices.PlatformType ToPlatformType(byte value)
+        {
+            return Enum.GetValues(typeof(HostDevices.PlatformType)).Cast<HostDevices.PlatformType>().Where(t => t.Equals(value)).FirstOrDefault();
+        }
     }
 }

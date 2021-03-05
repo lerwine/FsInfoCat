@@ -143,13 +143,14 @@
         <Obj N="Value" RefId="9">
           <TNRef RefId="1" />
           <LST>
-            <S><![CDATA[CREATE TABLE dbo.HostDevice
+            <S>
+        <![CDATA[CREATE TABLE dbo.HostDevice
 (
     HostDeviceID UNIQUEIDENTIFIER NOT NULL, -- primary key column
     DisplayName NVARCHAR(128) NOT NULL DEFAULT '',
     MachineIdentifer NVARCHAR(128) NOT NULL,
     MachineName NVARCHAR(128) NOT NULL,
-    IsWindows BIT NOT NULL DEFAULT 0,
+    Platform TINYINT NOT NULL DEFAULT 0,
     AllowCrawl BIT NOT NULL DEFAULT 0,
     IsInactive BIT NOT NULL DEFAULT 0,
     Notes NTEXT NOT NULL DEFAULT '',

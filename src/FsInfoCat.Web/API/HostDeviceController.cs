@@ -49,7 +49,7 @@ namespace FsInfoCat.Web.API
                 dbContext.HostDevice.Add(result.Result);
                 await dbContext.SaveChangesAsync();
             }
-            else if (request.IsWindows != matching.IsWindows)
+            else if (request.Platform != matching.Platform)
                 result = new RequestResponse<HostDevice>(matching, "System type mismatch");
             else
             {

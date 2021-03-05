@@ -20,10 +20,9 @@ namespace FsInfoCat.Models.HostDevices
         string MachineName { get; set; }
 
         /// <summary>
-        /// Indicates if the host machine is a windows machine.
+        /// The host device platform type.
         /// </summary>
-        /// <value></value>
-        bool IsWindows { get; set; }
+        PlatformType Platform { get; set; }
 
         /// <summary>
         /// Determines whether to allow crawling.

@@ -91,8 +91,15 @@ namespace FsInfoCat.Models.DB
 
         #endregion
 
-        [Display(Name = "Is Windows OS")]
-        public bool IsWindows { get; set; }
+        #region Platform
+
+        public const string DisplayName_Platform = "Host OS Platform Type";
+        private PlatformType _platform;
+
+        [Display(Name = DisplayName_Platform)]
+        public PlatformType Platform { get => _platform; set => _platform = ModelHelper.ToPlatformType((byte)value); }
+
+        #endregion
 
         [Display(Name = "Allow Local Crawl")]
         public bool AllowCrawl { get; set; }
@@ -177,7 +184,7 @@ namespace FsInfoCat.Models.DB
             MachineIdentifer = host.MachineIdentifer;
             MachineName = host.MachineName;
             AllowCrawl = host.AllowCrawl;
-            IsWindows = host.IsWindows;
+            Platform = host.Platform;
             CreatedOn = host.CreatedOn;
             CreatedBy = host.CreatedBy;
             ModifiedOn = host.ModifiedOn;
@@ -192,7 +199,7 @@ namespace FsInfoCat.Models.DB
             MachineIdentifer = request.MachineIdentifer;
             MachineName = request.MachineName;
             AllowCrawl = request.AllowCrawl;
-            IsWindows = request.IsWindows;
+            Platform = request.Platform;
             CreatedBy = ModifiedBy = createdBy;
         }
 
@@ -204,7 +211,7 @@ namespace FsInfoCat.Models.DB
             MachineIdentifer = request.MachineIdentifer;
             MachineName = request.MachineName;
             AllowCrawl = request.AllowCrawl;
-            IsWindows = request.IsWindows;
+            Platform = request.Platform;
             Creator = Modifier = createdBy;
             CreatedBy = ModifiedBy = createdBy.AccountID;
         }
