@@ -1,5 +1,5 @@
-using System;
 using FsInfoCat.Util;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Models.Volumes
 {
@@ -41,5 +41,7 @@ namespace FsInfoCat.Models.Volumes
         /// Gets or sets a value indicating whether the file names are case-sensitive when saved to the target volume.
         /// </summary>
         bool CaseSensitive { get; set; }
+
+        IEqualityComparer<string> SegmentNameComparer { get; }
     }
 }

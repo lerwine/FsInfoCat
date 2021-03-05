@@ -25,8 +25,18 @@ namespace FsInfoCat.Util
         public const string MESSAGE_MAX_ITEMS_REACHED = "Maximum crawl item count has been reached.";
         public const string MESSAGE_UNEXPECTED_ERROR = "An unexpected error has occurred.";
 
+        public static T FindByChildItem<T>(this IEnumerable<T> source, FileUri fileUri)
+            where T : class, IVolumeInfo
+        {
+            if (source is null || fileUri is null)
+                return null;
+
+            // Compare name. If matches, go up to parent volume and compare there
+            throw new NotImplementedException();
+        }
+
         public static IEnumerable<T> FindByIdentifier<T>(this IEnumerable<T> source, VolumeIdentifier volumeIdentifier)
-            where T : class, IVolume
+            where T : class, IVolumeInfo
         {
             if (source is null)
                 return new T[0];
@@ -34,15 +44,15 @@ namespace FsInfoCat.Util
         }
 
         public static IEnumerable<T> FindByRootUri<T>(this IEnumerable<T> source, FileUri fileUri)
-            where T : class, IVolume
+            where T : class, IVolumeInfo
         {
             if (source is null || fileUri is null)
                 return new T[0];
-            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.CaseSensitive));
+            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.SegmentNameComparer));
         }
 
         public static IEnumerable<T> FindByVolumeName<T>(this IEnumerable<T> source, string volumeName)
-            where T : class, IVolume
+            where T : class, IVolumeInfo
         {
             if (source is null)
                 return new T[0];

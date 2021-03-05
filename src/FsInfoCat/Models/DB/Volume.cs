@@ -70,11 +70,7 @@ namespace FsInfoCat.Models.DB
                 if (value is null)
                     _rootUri = new FileUri();
                 else
-                {
-                    if (!(value.IsEmpty || (value.IsDirectory && value.IsAbsolute)))
-                        throw new ArgumentOutOfRangeException(nameof(value));
                     _rootUri = value;
-                }
             }
         }
 
@@ -156,6 +152,8 @@ namespace FsInfoCat.Models.DB
         #region Notes
 
         private string _notes = "";
+        private bool _caseSensitive;
+        private StringComparer _segmentNameComparer;
 
         [Required()]
         [Display(Name = "Notes")]
@@ -210,9 +208,30 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-        public bool CaseSensitive { get; set; }
-
         #endregion
+
+        public bool CaseSensitive
+        {
+            get => _caseSensitive;
+            set
+            {
+                if (_caseSensitive == value)
+                    return;
+                _caseSensitive = value;
+                _segmentNameComparer = null;
+            }
+        }
+
+        public IEqualityComparer<string> SegmentNameComparer
+        {
+            get
+            {
+                StringComparer comparer = _segmentNameComparer;
+                if (comparer is null)
+                    _segmentNameComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                return comparer;
+            }
+        }
 
         #endregion
 
@@ -295,12 +314,10 @@ namespace FsInfoCat.Models.DB
                     break;
                 case PropertyName_RootPathName:
                 case DisplayName_RootPathName:
-                    if (_rootUri.IsEmpty)
+                    if (_rootUri.IsEmpty())
                         result.Add(new ValidationResult(Error_Message_RootPathName_Empty, new string[] { PropertyName_RootPathName }));
                     else if (_rootUri.ToLocalPath().Length > Max_Length_DisplayName)
                         result.Add(new ValidationResult(Error_Message_RootPathName_Length, new string[] { PropertyName_RootPathName }));
-                    else if (!(_rootUri.IsAbsolute && _rootUri.IsDirectory))
-                        result.Add(new ValidationResult(Error_Message_RootPathName_Invalid, new string[] { PropertyName_RootPathName }));
                     break;
                 case PropertyName_VolumeName:
                 case DisplayName_VolumeName:

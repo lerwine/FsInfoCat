@@ -46,8 +46,11 @@ namespace FsInfoCat.PS.Commands
 
         protected IEnumerable<IVolumeInfo> GetVolumeInfos() => GetVolumeInfos(SessionState);
 
-        protected class RegisteredVolumeInfo : IVolumeInfo, IEquatable<IVolumeInfo>, IEquatable<DriveInfo>
+        protected class RegisteredVolumeInfo : IVolumeInfo, IEquatable<IVolumeInfo>
         {
+            private bool _caseSensitive;
+            private StringComparer _segmentNameComparer;
+
             public FileUri RootUri { get; internal set; }
 
             FileUri IVolumeInfo.RootUri { get => RootUri; set => throw new NotSupportedException(); }
@@ -66,13 +69,33 @@ namespace FsInfoCat.PS.Commands
 
             VolumeIdentifier IVolumeInfo.Identifier { get => Identifier; set => throw new NotSupportedException(); }
 
-            public bool CaseSensitive { get; internal set; }
+            public bool CaseSensitive
+            {
+                get => _caseSensitive;
+                internal set
+                {
+                    if (_caseSensitive == value)
+                        return;
+                    _caseSensitive = value;
+                    _segmentNameComparer = null;
+                }
+            }
 
             bool IVolumeInfo.CaseSensitive { get => CaseSensitive; set => throw new NotSupportedException(); }
 
-            public bool Equals(IVolumeInfo other) => null != other && (ReferenceEquals(this, other) || (Identifier.Equals(other.Identifier) && RootUri.Equals(CaseSensitive, other.RootUri, other.CaseSensitive)));
+            public IEqualityComparer<string> SegmentNameComparer
+            {
+                get
+                {
+                    StringComparer comparer = _segmentNameComparer;
+                    if (comparer is null)
+                        _segmentNameComparer = comparer = _caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                    return comparer;
+                }
+            }
 
-            public bool Equals(DriveInfo other) => other is null && DriveFormat == other.DriveFormat && VolumeName == other.VolumeLabel && RootUri.Equals(other.RootDirectory, CaseSensitive);
+            public bool Equals(IVolumeInfo other) => null != other && (ReferenceEquals(this, other) || (Identifier.Equals(other.Identifier) &&
+                RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? SegmentNameComparer : other.SegmentNameComparer)));
 
             public override bool Equals(object obj)
             {

@@ -12,83 +12,109 @@ namespace FsInfoCat.PS
 {
     public static class ExtensionMethods
     {
-        public static IEnumerable<PSObject> FindVolumeByIdentifier<T>(this IEnumerable<PSObject> collection, IEnumerable<VolumeIdentifier> volumeIdentifiers)
-            where T : class, IVolumeInfo
-        {
-            if (volumeIdentifiers is null || !volumeIdentifiers.Any())
-                return new PSObject[0];
-            volumeIdentifiers = volumeIdentifiers.Distinct();
-            return collection.WhereBaseObjectOf<T>(v => volumeIdentifiers.Any(i => i.Equals(v.Identifier)));
-        }
+        //public static IEnumerable<PSObject> FindVolumeByIdentifier<T>(this IEnumerable<PSObject> collection, IEnumerable<VolumeIdentifier> volumeIdentifiers)
+        //    where T : class, IVolumeInfo
+        //{
+        //    if (volumeIdentifiers is null || !volumeIdentifiers.Any())
+        //        return new PSObject[0];
+        //    volumeIdentifiers = volumeIdentifiers.Distinct();
+        //    return collection.WhereBaseObjectOf<T>(v => volumeIdentifiers.Any(i => i.Equals(v.Identifier)));
+        //}
 
-        public static IEnumerable<PSObject> FindVolumeByIdentifier<T>(this IEnumerable<PSObject> collection, VolumeIdentifier volumeIdentifier)
-            where T : class, IVolumeInfo
-        {
-            return collection.WhereBaseObjectOf<T>(v => v.Identifier.Equals(volumeIdentifier));
-        }
+        //public static IEnumerable<PSObject> FindVolumeByIdentifier<T>(this IEnumerable<PSObject> collection, VolumeIdentifier volumeIdentifier)
+        //    where T : class, IVolumeInfo
+        //{
+        //    return collection.WhereBaseObjectOf<T>(v => v.Identifier.Equals(volumeIdentifier));
+        //}
 
-        public static IEnumerable<PSObject> FindVolumeByRootUri<T>(this IEnumerable<PSObject> collection, IEnumerable<FileUri> fileUris)
-            where T : class, IVolumeInfo
+        //public static IEnumerable<PSObject> FindVolumeByRootUri<T>(this IEnumerable<PSObject> collection, IEnumerable<FileUri> fileUris)
+        //    where T : class, IVolumeInfo
+        //{
+        //    if (fileUris is null || !fileUris.Any())
+        //        return new PSObject[0];
+        //    if (fileUris.Any(f => f is null))
+        //    {
+        //        if ((fileUris = fileUris.Where(f => !(f is null)).Distinct()).Any())
+        //            return collection.WhereBaseObjectOf<T>(v =>
+        //            {
+        //                FileUri f = v.RootUri;
+        //                return f is null || fileUris.Any(u => u.Equals(f, v.SegmentNameComparer));
+        //            });
+        //        return collection.WhereBaseObjectOf<T>(v => v.RootUri is null);
+        //    }
+        //    fileUris = fileUris.Distinct();
+        //    return collection.WhereBaseObjectOf<T>(v =>
+        //    {
+        //        FileUri f = v.RootUri;
+        //        return !(f is null) && fileUris.Any(u => u.Equals(f, v.SegmentNameComparer));
+        //    });
+        //}
+
+        //public static IEnumerable<PSObject> FindVolumeByRootUri<T>(this IEnumerable<PSObject> collection, FileUri fileUri)
+        //    where T : class, IVolumeInfo
+        //{
+        //    if (fileUri is null)
+        //        return collection.WhereBaseObjectOf<T>(v => v.RootUri is null);
+        //    return collection.WhereBaseObjectOf<T>(v => fileUri.Equals(v.RootUri, v.SegmentNameComparer) || fileUri.IsParentUri(v.RootUri, v.SegmentNameComparer, true));
+        //}
+
+        //public static IEnumerable<PSObject> FindVolumeByVolumeName<T>(this IEnumerable<PSObject> collection, IEnumerable<string> volumeNames)
+        //    where T : class, IVolumeInfo
+        //{
+        //    StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+        //    if (volumeNames is null || !volumeNames.Any())
+        //        return new PSObject[0];
+        //    if (volumeNames.Any(f => string.IsNullOrEmpty(f)))
+        //    {
+        //        if ((volumeNames = volumeNames.Where(f => !string.IsNullOrEmpty(f)).Distinct(comparer)).Any())
+        //            return collection.WhereBaseObjectOf<T>(v =>
+        //            {
+        //                string f = v.VolumeName;
+        //                return string.IsNullOrEmpty(f) || volumeNames.Any(u => u.Equals(f));
+        //            });
+        //        return collection.WhereBaseObjectOf<T>(v => string.IsNullOrEmpty(v.VolumeName));
+        //    }
+        //    volumeNames = volumeNames.Distinct(comparer);
+        //    return collection.WhereBaseObjectOf<T>(v =>
+        //    {
+        //        string f = v.VolumeName;
+        //        return !string.IsNullOrEmpty(f) && volumeNames.Any(u => u.Equals(f));
+        //    });
+        //}
+
+        //public static IEnumerable<PSObject> FindVolumeByVolumeName<T>(this IEnumerable<PSObject> collection, string volumeName)
+        //    where T : class, IVolumeInfo
+        //{
+        //    if (string.IsNullOrEmpty(volumeName))
+        //        return collection.WhereBaseObjectOf<T>(v => string.IsNullOrEmpty(v.VolumeName));
+        //    StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+        //    return collection.WhereBaseObjectOf<T>(v => comparer.Equals(volumeName, v.VolumeName));
+        //}
+
+        public static bool TryFindFirstBaseObject<T>(this IEnumerable<PSObject> collection, Predicate<T> predicate, out PSObject psObject, out T result)
         {
-            if (fileUris is null || !fileUris.Any())
-                return new PSObject[0];
-            if (fileUris.Any(f => f is null))
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            if (collection is null)
             {
-                if ((fileUris = fileUris.Where(f => !(f is null)).Distinct()).Any())
-                    return collection.WhereBaseObjectOf<T>(v =>
-                    {
-                        FileUri f = v.RootUri;
-                        return f is null || fileUris.Any(u => u.Equals(f, v.CaseSensitive));
-                    });
-                return collection.WhereBaseObjectOf<T>(v => v.RootUri is null);
+                psObject = null;
+                result = default;
+                return false;
             }
-            fileUris = fileUris.Distinct();
-            return collection.WhereBaseObjectOf<T>(v =>
-            {
-                FileUri f = v.RootUri;
-                return !(f is null) && fileUris.Any(u => u.Equals(f, v.CaseSensitive));
-            });
-        }
 
-        public static IEnumerable<PSObject> FindVolumeByRootUri<T>(this IEnumerable<PSObject> collection, FileUri fileUri)
-            where T : class, IVolumeInfo
-        {
-            if (fileUri is null)
-                return collection.WhereBaseObjectOf<T>(v => v.RootUri is null);
-            return collection.WhereBaseObjectOf<T>(v => fileUri.Equals(v.RootUri, v.CaseSensitive));
-        }
-
-        public static IEnumerable<PSObject> FindVolumeByVolumeName<T>(this IEnumerable<PSObject> collection, IEnumerable<string> volumeNames)
-            where T : class, IVolumeInfo
-        {
-            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
-            if (volumeNames is null || !volumeNames.Any())
-                return new PSObject[0];
-            if (volumeNames.Any(f => string.IsNullOrEmpty(f)))
+            foreach (PSObject p in collection)
             {
-                if ((volumeNames = volumeNames.Where(f => !string.IsNullOrEmpty(f)).Distinct(comparer)).Any())
-                    return collection.WhereBaseObjectOf<T>(v =>
-                    {
-                        string f = v.VolumeName;
-                        return string.IsNullOrEmpty(f) || volumeNames.Any(u => u.Equals(f));
-                    });
-                return collection.WhereBaseObjectOf<T>(v => string.IsNullOrEmpty(v.VolumeName));
+                if (!(p is null) && p.BaseObject is T t && predicate(t))
+                {
+                    result = t;
+                    psObject = p;
+                    return true;
+                }
             }
-            volumeNames = volumeNames.Distinct(comparer);
-            return collection.WhereBaseObjectOf<T>(v =>
-            {
-                string f = v.VolumeName;
-                return !string.IsNullOrEmpty(f) && volumeNames.Any(u => u.Equals(f));
-            });
-        }
-
-        public static IEnumerable<PSObject> FindVolumeByVolumeName<T>(this IEnumerable<PSObject> collection, string volumeName)
-            where T : class, IVolumeInfo
-        {
-            if (string.IsNullOrEmpty(volumeName))
-                return collection.WhereBaseObjectOf<T>(v => string.IsNullOrEmpty(v.VolumeName));
-            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
-            return collection.WhereBaseObjectOf<T>(v => comparer.Equals(volumeName, v.VolumeName));
+            psObject = null;
+            result = default;
+            return false;
         }
 
         public static IEnumerable<PSObject> WhereBaseObjectOf<T>(this IEnumerable<PSObject> collection, Predicate<T> predicate = null)
@@ -109,14 +135,14 @@ namespace FsInfoCat.PS
             return collection.Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T t && predicate(t));
         }
 
-        public static IEnumerable<object> WhereBaseObjectOf<T>(this ICollection collection, Predicate<T> predicate = null)
-        {
-            if (collection is null || collection.Count == 0)
-                return new object[0];
-            if (predicate is null)
-                return collection.Cast<object>().Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T);
-            return collection.Cast<object>().Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T t && predicate(t));
-        }
+        //public static IEnumerable<object> WhereBaseObjectOf<T>(this ICollection collection, Predicate<T> predicate = null)
+        //{
+        //    if (collection is null || collection.Count == 0)
+        //        return new object[0];
+        //    if (predicate is null)
+        //        return collection.Cast<object>().Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T);
+        //    return collection.Cast<object>().Where(o => !(o is null) && ((o is PSObject p) ? p.BaseObject : o) is T t && predicate(t));
+        //}
 
         public static IEnumerable<T> BaseObjectOfType<T>(this IEnumerable<PSObject> collection)
         {
@@ -132,12 +158,12 @@ namespace FsInfoCat.PS
             return collection.Select(o => (o is PSObject p) ? p.BaseObject : o).OfType<T>();
         }
 
-        public static IEnumerable<T> BaseObjectOfType<T>(this ICollection collection)
-        {
-            if (collection is null || collection.Count == 0)
-                return new T[0];
-            return collection.Cast<object>().Select(o => (o is PSObject p) ? p.BaseObject : o).OfType<T>();
-        }
+        //public static IEnumerable<T> BaseObjectOfType<T>(this ICollection collection)
+        //{
+        //    if (collection is null || collection.Count == 0)
+        //        return new T[0];
+        //    return collection.Cast<object>().Select(o => (o is PSObject p) ? p.BaseObject : o).OfType<T>();
+        //}
 
         /// <summary>
         /// Invokes an <seealso cref="Action{T}"/> if a value is not <c>null</c>.
@@ -183,7 +209,7 @@ namespace FsInfoCat.PS
             if (o is FileUri fileUri)
                 result = fileUri;
             else if (o is FileSystemInfo fsi)
-                result = FileUri.FromFileSystemInfo(fsi);
+                result = new FileUri(fsi);
             else if (o is Uri uri)
             {
                 if (uri.IsAbsoluteUri && uri.Scheme == System.Uri.UriSchemeFile && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment))
@@ -205,11 +231,11 @@ namespace FsInfoCat.PS
                         if (assumeLocalPath)
                         {
                             if (File.Exists(uriString))
-                                result = FileUri.FromFileSystemInfo(new FileInfo(uriString));
+                                result = new FileUri(new FileInfo(uriString));
                             else if (Directory.Exists(uriString) || string.IsNullOrEmpty(Path.GetExtension(uriString)))
-                                result = FileUri.FromFileSystemInfo(new DirectoryInfo(uriString));
+                                result = new FileUri(new DirectoryInfo(uriString));
                             else
-                                result = FileUri.FromFileSystemInfo(new FileInfo(uriString));
+                                result = new FileUri(new FileInfo(uriString));
                         }
                         else
                             result = new FileUri(uriString);

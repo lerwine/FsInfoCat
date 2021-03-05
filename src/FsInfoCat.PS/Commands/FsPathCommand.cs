@@ -20,7 +20,7 @@ namespace FsInfoCat.PS.Commands
         {
             try
             {
-                if (fileUri is null || !fileUri.IsAbsolute)
+                if (fileUri is null || fileUri.IsEmpty())
                     throw new PSArgumentOutOfRangeException(paramName, source, _conversionErrorMessage);
                 return true;
             }

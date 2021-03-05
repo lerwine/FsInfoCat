@@ -35,7 +35,6 @@ namespace FsInfoCat.PS
 
         internal int MaxDepth { get; }
 
-        [Obsolete("Use FsInfoCat.PS.Commands.FsVolumeInfoCommand.GetVolumeInfos, instead")]
         public Func<IEnumerable<IVolumeInfo>> GetVolumes { get; }
 
         internal Func<bool> IsExpired { get; }

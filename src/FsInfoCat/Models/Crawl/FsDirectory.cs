@@ -1,8 +1,7 @@
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {

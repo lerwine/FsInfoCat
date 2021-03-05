@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using FsInfoCat.Models.DB;
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 
 namespace FsInfoCat.Models
 {
-    public class ModelHelper
+    public static class ModelHelper
     {
         public const string Role_Name_Viewer = "viewer";
         public const string Role_Name_User = "user";
@@ -78,6 +80,18 @@ namespace FsInfoCat.Models
                     target.CreatedOn = CoerceAsLocalTimeOrDefault(target.CreatedOn, target.ModifiedOn);
             }
             return target.ValidateAll();
+        }
+
+        public static bool TryFindVolume<T>(this IEnumerable<T> volumes, FileUri fileUri, out T result)
+            where T : class, IVolumeInfo
+        {
+            if (volumes is null || fileUri is null)
+            {
+                result = null;
+                return false;
+            }
+            // TODO: Implement TryFindVolume<T>(this IEnumerable<T>, FileUri, out T)
+            throw new NotImplementedException();
         }
     }
 }

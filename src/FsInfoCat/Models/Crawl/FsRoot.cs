@@ -1,3 +1,4 @@
+using FsInfoCat.Models;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
@@ -17,6 +18,8 @@ namespace FsInfoCat.Models.Crawl
         private readonly ComponentList.AttachableContainer _container;
         private ComponentList<CrawlMessage> _messagesList;
         private ComponentList<IFsChildNode> _childNodes;
+        private bool _caseSensitive;
+        private StringComparer _segmentNameComparer;
 
         public FileUri RootUri
         {
@@ -26,11 +29,7 @@ namespace FsInfoCat.Models.Crawl
                 if (value is null)
                     _rootUri = new FileUri();
                 else
-                {
-                    if (!(value.IsEmpty || (value.IsDirectory && value.IsAbsolute)))
-                        throw new ArgumentOutOfRangeException(nameof(value));
                     _rootUri = value;
-                }
             }
         }
 
@@ -61,7 +60,7 @@ namespace FsInfoCat.Models.Crawl
 
         public VolumeIdentifier Identifier { get; set; }
 
-        string INamedComponent.Name => (RootUri.IsEmpty) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? Identifier.ToString() : VolumeName) : RootUri.ToLocalPath();
+        string INamedComponent.Name => (RootUri.IsEmpty()) ? ((string.IsNullOrWhiteSpace(VolumeName)) ? Identifier.ToString() : VolumeName) : RootUri.ToLocalPath();
 
         public ComponentList<CrawlMessage> Messages
         {
@@ -94,7 +93,28 @@ namespace FsInfoCat.Models.Crawl
         }
         IList<IFsChildNode> IFsDirectory.ChildNodes { get => _childNodes; set => ChildNodes = (ComponentList<IFsChildNode>)value; }
 
-        public bool CaseSensitive { get; set; }
+        public bool CaseSensitive
+        {
+            get => _caseSensitive;
+            set
+            {
+                if (_caseSensitive == value)
+                    return;
+                _caseSensitive = value;
+                _segmentNameComparer = null;
+            }
+        }
+
+        public IEqualityComparer<string> SegmentNameComparer
+        {
+            get
+            {
+                StringComparer comparer = _segmentNameComparer;
+                if (comparer is null)
+                    _segmentNameComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                return comparer;
+            }
+        }
 
         public FsRoot(IVolumeInfo driveInfo) : this()
         {
@@ -144,7 +164,8 @@ namespace FsInfoCat.Models.Crawl
         public bool Equals(FsRoot other)
         {
             return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType && String.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase) &&
-                String.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase) && RootUri.Equals(CaseSensitive, other.RootUri, other.CaseSensitive)));
+                string.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase) &&
+                RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? SegmentNameComparer : other.SegmentNameComparer)));
         }
 
         public override bool Equals(object obj)
@@ -180,79 +201,75 @@ namespace FsInfoCat.Models.Crawl
 
         public override string ToString()
         {
-            if (RootUri.IsEmpty)
+            if (RootUri.IsEmpty())
                 return (VolumeName is null) ? "" : " " + VolumeName.Trim();
             if (string.IsNullOrWhiteSpace(VolumeName))
                 return RootUri.ToLocalPath();
             return RootUri.ToLocalPath() + " " + VolumeName.Trim();
         }
-        public static string NormalizePath(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-                return "";
-            path = Path.GetFullPath(path);
-            while (string.IsNullOrEmpty(Path.GetFileName(path)))
-            {
-                string d = Path.GetDirectoryName(path);
-                if (string.IsNullOrEmpty(d))
-                    break;
-                path = d;
-            }
-            return path;
-        }
-
-        private static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Dictionary<string, IVolumeInfo> drives, out string realPath)
-        {
-            string key = path;
-            FsRoot root;
-            if (drives.ContainsKey(key) || null != (key = drives.Keys.FirstOrDefault(d => StringComparer.InvariantCultureIgnoreCase.Equals(d, path))))
-            {
-                if (null == (root = fsRoots.FirstOrDefault(r => StringComparer.InvariantCulture.Equals(key))))
-                {
-                    root = new FsRoot(drives[key]);
-                    fsRoots.Add(root);
-                }
-                realPath = key;
-                return root;
-            }
-            string name = Path.GetFileName(path);
-            string directoryName = Path.GetDirectoryName(path);
-            if (string.IsNullOrEmpty(directoryName))
-                root = null;
-            else
-            {
-                IFsDirectory parent = ImportDirectory(fsRoots, directoryName, drives, out realPath);
-                if (null != parent)
-                {
-                    string[] names = Directory.GetDirectories(directoryName).Select(p => Path.GetFileName(p)).ToArray();
-                    if (names.Any(n => StringComparer.InvariantCulture.Equals(n, name)) || null != (name = names.FirstOrDefault(n => StringComparer.InvariantCultureIgnoreCase.Equals(n, name))))
-                    {
-                        FsDirectory result = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(d => StringComparer.InvariantCulture.Equals(d.Name, name));
-                        if (result is null)
-                        {
-                            result = new FsDirectory() { Name = name };
-                            parent.ChildNodes.Add(result);
-                        }
-                        realPath = Path.Combine(realPath, name);
-                        return result;
-                    }
-                }
-            }
-            realPath = null;
-            return null;
-        }
-
 
         public static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Func<IEnumerable<IVolumeInfo>> getVolumes, out string realPath)
         {
-            if ((path = NormalizePath(path)).Length > 0 && Directory.Exists(path))
+            if (fsRoots is null)
+                throw new ArgumentNullException(nameof(fsRoots));
+            if (getVolumes is null)
+                throw new ArgumentNullException(nameof(getVolumes));
+            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            if (!directoryInfo.Exists)
             {
-                FileUri fileUri = FileUri.FromFileSystemInfo(new DirectoryInfo(path));
-                if (!fileUri.IsEmpty)
-                    return ImportDirectory(fsRoots, path, getVolumes().ToDictionary(k => k.RootPathName, v => v), out realPath);
+                realPath = null;
+                return null;
             }
-            realPath = null;
-            return null;
+            if (!getVolumes().TryFindVolume(new FileUri(directoryInfo), out IVolumeInfo volume))
+            {
+                realPath = null;
+                return null;
+            }
+
+            DirectoryInfo root = new DirectoryInfo(volume.RootUri.ToLocalPath());
+            // TODO: Implement ImportDirectory(Collection<FsRoot>, string, Func<IEnumerable<IVolumeInfo>>, out string)
+            throw new NotImplementedException();
         }
+
+        //private static IFsDirectory ImportDirectory(Collection<FsRoot> fsRoots, string path, Dictionary<string, IVolumeInfo> drives, out string realPath)
+        //{
+        //    string key = path;
+        //    FsRoot root;
+        //    if (drives.ContainsKey(key) || null != (key = drives.Keys.FirstOrDefault(d => StringComparer.InvariantCultureIgnoreCase.Equals(d, path))))
+        //    {
+        //        if (null == (root = fsRoots.FirstOrDefault(r => StringComparer.InvariantCulture.Equals(key))))
+        //        {
+        //            root = new FsRoot(drives[key]);
+        //            fsRoots.Add(root);
+        //        }
+        //        realPath = key;
+        //        return root;
+        //    }
+        //    string name = Path.GetFileName(path);
+        //    string directoryName = Path.GetDirectoryName(path);
+        //    if (string.IsNullOrEmpty(directoryName))
+        //        root = null;
+        //    else
+        //    {
+        //        IFsDirectory parent = ImportDirectory(fsRoots, directoryName, drives, out realPath);
+        //        if (null != parent)
+        //        {
+        //            string[] names = Directory.GetDirectories(directoryName).Select(p => Path.GetFileName(p)).ToArray();
+        //            if (names.Any(n => StringComparer.InvariantCulture.Equals(n, name)) || null != (name = names.FirstOrDefault(n => StringComparer.InvariantCultureIgnoreCase.Equals(n, name))))
+        //            {
+        //                FsDirectory result = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(d => StringComparer.InvariantCulture.Equals(d.Name, name));
+        //                if (result is null)
+        //                {
+        //                    result = new FsDirectory() { Name = name };
+        //                    parent.ChildNodes.Add(result);
+        //                }
+        //                realPath = Path.Combine(realPath, name);
+        //                return result;
+        //            }
+        //        }
+        //    }
+        //    realPath = null;
+        //    return null;
+        //}
     }
 }

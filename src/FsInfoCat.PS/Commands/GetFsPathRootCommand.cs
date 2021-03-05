@@ -98,10 +98,8 @@ namespace FsInfoCat.PS.Commands
         {
             if (!ValidateItem(source, fileUri, _paramName))
                 return;
-            FileUri parent = fileUri.GetParentUri();
-            while (!(parent is null))
-                parent = (fileUri = parent).GetParentUri();
-            WriteObject(fileUri);
+            
+            throw new NotImplementedException();
         }
     }
 }

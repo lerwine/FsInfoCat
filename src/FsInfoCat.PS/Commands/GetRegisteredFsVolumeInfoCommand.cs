@@ -19,6 +19,8 @@ namespace FsInfoCat.PS.Commands
         public const string PARAMETER_SET_NAME_BY_IDENTIFIER = "ByIdentifier";
         public const string PARAMETER_SET_NAME_GET_ALL = "GetAll";
 
+        private Collection<PSObject> _volumeInfos;
+
         [Parameter(HelpMessage = "Find by full, case-sensitive path name of the volume root directory.", Mandatory = true,
             ValueFromPipelineByPropertyName = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_BY_ROOT_DIRECTORY)]
         [Alias("FullName", "Path")]
@@ -37,10 +39,6 @@ namespace FsInfoCat.PS.Commands
         [Parameter(HelpMessage = "Get all registered volumes", ParameterSetName = PARAMETER_SET_NAME_GET_ALL)]
         public SwitchParameter All { get; set; }
 
-        [Parameter(HelpMessage = "Do case-sensitive path matching.", ParameterSetName = PARAMETER_SET_NAME_BY_ROOT_DIRECTORY)]
-        public SwitchParameter CaseSensitive { get; set; }
-
-        private Collection<PSObject> _volumeInfos;
         protected override void BeginProcessing()
         {
             _volumeInfos = GetVolumeRegistration();
@@ -54,20 +52,27 @@ namespace FsInfoCat.PS.Commands
             switch (ParameterSetName)
             {
                 case PARAMETER_SET_NAME_BY_ROOT_DIRECTORY:
-                    FileUri[] uris = RootPathName.Select(p => FileUri.FromFileSystemInfo(new DirectoryInfo(p))).Where(f => f.IsAbsolute).Distinct().ToArray();
+                    FileUri[] uris = RootPathName.Select(p => new FileUri(new DirectoryInfo(p))).Distinct().ToArray();
                     if (uris.Length == 1)
-                        matching = _volumeInfos.FindVolumeByRootUri<RegisteredVolumeInfo>(uris[0]);
+                    {
+                        FileUri u = uris[0];
+                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => f.RootUri.Equals(u, f.SegmentNameComparer));
+                    }
                     else if (uris.Length > 1)
-                        matching = _volumeInfos.FindVolumeByRootUri<RegisteredVolumeInfo>(uris);
+                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => uris.Any(u => f.RootUri.Equals(u, f.SegmentNameComparer)));
                     else
                         matching = new PSObject[0];
                     break;
                 case PARAMETER_SET_NAME_BY_VOLUME_NAME:
-                    string[] n = VolumeName.Distinct(StringComparer.InvariantCultureIgnoreCase).ToArray();
-                    if (n.Length == 1)
-                        matching = _volumeInfos.FindVolumeByVolumeName<RegisteredVolumeInfo>(n[0]);
-                    else if (n.Length > 1)
-                        matching = _volumeInfos.FindVolumeByVolumeName<RegisteredVolumeInfo>(n);
+                    string[] names = VolumeName.Distinct(StringComparer.InvariantCultureIgnoreCase).ToArray();
+                    StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+                    if (names.Length == 1)
+                    {
+                        string n = names[0];
+                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => comparer.Equals(f.VolumeName, n));
+                    }
+                    else if (names.Length > 1)
+                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => names.Any(n => comparer.Equals(f.VolumeName, n)));
                     else
                         matching = new PSObject[0];
                     break;
@@ -76,9 +81,12 @@ namespace FsInfoCat.PS.Commands
                         (VolumeIdentifier.TryCreate(o, out VolumeIdentifier volumeIdentifer)) ? (object)volumeIdentifer : null
                     ).OfType<VolumeIdentifier>().Distinct().ToArray();
                     if (identifiers.Length == 1)
-                        matching = _volumeInfos.FindVolumeByIdentifier<RegisteredVolumeInfo>(identifiers[0]);
+                    {
+                        VolumeIdentifier id = identifiers[0];
+                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => f.Identifier.Equals(id));
+                    }
                     else if (identifiers.Length > 1)
-                        matching = _volumeInfos.FindVolumeByIdentifier<RegisteredVolumeInfo>(identifiers);
+                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => identifiers.Any(id => f.Identifier.Equals(id)));
                     else
                         matching = new PSObject[0];
                     break;

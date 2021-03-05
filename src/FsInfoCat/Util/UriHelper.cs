@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Util
@@ -39,16 +41,218 @@ namespace FsInfoCat.Util
         /// <summary>
         /// Matches a path segment including optional trailing slash.
         /// </summary>
-        public static readonly Regex PathSegmentPattern = new Regex(@"(?:^|\G)(?:/|([^/]+)(?:/|$))", RegexOptions.Compiled);
+        public static readonly Regex URI_PATH_SEGMENT_REGEX = new Regex(@"(?:^|\G)(?:/|([^/]+)(?:/|$))", RegexOptions.Compiled);
 
-        private static readonly char[] QueryOrFragmentChar = new char[] { '?', '#' };
-        private static readonly char[] InvalidPathChars;
+        public const char URI_QUERY_DELIMITER_CHAR = '?';
+        public const char URI_FRAGMENT_DELIMITER_CHAR = '#';
+        public const char URI_PATH_SEPARATOR_CHAR = '/';
+        public const string URI_PATH_SEPARATOR_STRING = "/";
+        public const char URI_SCHEME_SEPARATOR_CHAR = ':';
+
+        public static readonly Regex INVALID_WINDOWS_URI_FILENAME_REGEX = new Regex(@"[\u0000-\u0019""<>|:*?\\/]|%([01]\d|2[2AF]|3[ACEF]|[57]C)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex INVALID_LINUX_URI_FILENAME_REGEX = new Regex(@"[\u0000/]|%(00|2F)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex INVALID_URI_FILENAME_REGEX;
+        public static readonly Regex INVALID_WINDOWS_URI_PATH_REGEX = new Regex(@"[\u0000-\u0019""<>|*?]|%([01]\d|2[2A]|3[CEF]|7C)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex INVALID_LINUX_URI_PATH_REGEX = new Regex(@"\u0000|%00", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex INVALID_URI_PATH_REGEX;
+
+        private static readonly char[] _QUERY_OR_FRAGMENT_DELIMITER = new char[] { URI_QUERY_DELIMITER_CHAR, URI_FRAGMENT_DELIMITER_CHAR };
+        private static readonly char[] _INVALID_FILENAME_CHARS;
+        private static readonly Func<string, string> _FROM_LOCAL_PATH_PRE_ENCODE;
+        private static int _UriGetPartIndexes(string text, out int schemeLength, out int hostNameLength)
+        {
+            using (CharEnumerator enumerator = text.GetEnumerator())
+            {
+                schemeLength = hostNameLength = 0;
+                if (!enumerator.MoveNext())
+                    return -1;
+                switch (enumerator.Current)
+                {
+                    case URI_PATH_SEPARATOR_CHAR:
+                    case URI_FRAGMENT_DELIMITER_CHAR:
+                    case URI_QUERY_DELIMITER_CHAR:
+                    case URI_SCHEME_SEPARATOR_CHAR:
+                        return -1;
+                }
+                while (enumerator.MoveNext())
+                {
+                    schemeLength++;
+                    switch (enumerator.Current)
+                    {
+                        case URI_SCHEME_SEPARATOR_CHAR:
+                            if (enumerator.MoveNext() && enumerator.Current == URI_PATH_SEPARATOR_CHAR && enumerator.MoveNext() && enumerator.Current == URI_PATH_SEPARATOR_CHAR)
+                            {
+                                while (enumerator.MoveNext())
+                                {
+                                    switch (enumerator.Current)
+                                    {
+                                        case URI_PATH_SEPARATOR_CHAR:
+                                        case URI_FRAGMENT_DELIMITER_CHAR:
+                                        case URI_QUERY_DELIMITER_CHAR:
+                                            return hostNameLength + schemeLength + 2;
+                                    }
+                                    hostNameLength++;
+                                }
+                                return hostNameLength + schemeLength + 2;
+                            }
+                            schemeLength = hostNameLength = 0;
+                            return -1;
+                        case URI_PATH_SEPARATOR_CHAR:
+                        case URI_FRAGMENT_DELIMITER_CHAR:
+                        case URI_QUERY_DELIMITER_CHAR:
+                            schemeLength = hostNameLength = 0;
+                            return -1;
+                    }
+                }
+            }
+            schemeLength = hostNameLength = 0;
+            return -1;
+        }
 
         static UriHelper()
         {
-            char[] invalidPathChars = System.IO.Path.GetInvalidPathChars();
-            char[] notIncluded = QueryOrFragmentChar.Where(c => !invalidPathChars.Contains(c)).ToArray();
-            InvalidPathChars = (notIncluded.Length == 0) ? invalidPathChars : notIncluded.Concat(invalidPathChars).ToArray();
+            char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
+            _INVALID_FILENAME_CHARS = invalidFileNameChars.Contains(Path.PathSeparator) ? invalidFileNameChars : invalidFileNameChars.Concat(new char[] { Path.PathSeparator }).ToArray();
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                INVALID_URI_FILENAME_REGEX = INVALID_WINDOWS_URI_FILENAME_REGEX;
+                INVALID_URI_PATH_REGEX = INVALID_WINDOWS_URI_PATH_REGEX;
+                _FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("/", "%5C");
+            }
+            else
+            {
+                INVALID_URI_FILENAME_REGEX = INVALID_LINUX_URI_FILENAME_REGEX;
+                INVALID_URI_PATH_REGEX = INVALID_LINUX_URI_PATH_REGEX;
+                _FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("?", "%3F");
+            }
+        }
+
+        public static bool TryParseFileUriString(string uriString, out string hostName, out string absolutePath, out int leafIndex)
+        {
+            if (string.IsNullOrEmpty(uriString))
+            {
+                hostName = "";
+                absolutePath = "";
+                leafIndex = 0;
+                return true;
+            }
+            uriString = _FROM_LOCAL_PATH_PRE_ENCODE((uriString[0] == URI_PATH_SEPARATOR_CHAR && (uriString.Length == 1 || uriString[1] != URI_PATH_SEPARATOR_CHAR)) ?
+                $"file://{uriString}" : uriString);
+            if (Uri.TryCreate(uriString, UriKind.Absolute, out Uri uri) && uri.Scheme.Equals(Uri.UriSchemeFile) && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment))
+            {
+                hostName = uri.Host;
+                absolutePath = uri.AbsolutePath;
+                int i = absolutePath.LastIndexOf(URI_PATH_SEPARATOR_CHAR);
+                if (i > 0 && absolutePath[i] == URI_PATH_SEPARATOR_CHAR)
+                {
+                    absolutePath = absolutePath.Substring(0, i);
+                    i = absolutePath.LastIndexOf(URI_PATH_SEPARATOR_CHAR);
+                }
+                leafIndex = (i < 0) ? 0 : i + 1;
+                return true;
+            }
+            hostName =  absolutePath = null;
+            leafIndex = 0;
+            return false;
+        }
+
+        public static bool TryCreateFileUriFromUriString(string uriString, out Uri uri)
+        {
+            if (string.IsNullOrEmpty(uriString))
+            {
+                uri = new Uri("", UriKind.Relative);
+                return true;
+            }
+            uriString = _FROM_LOCAL_PATH_PRE_ENCODE(uriString);
+            if (Uri.TryCreate(uriString, UriKind.Absolute, out uri))
+                return uri.Scheme.Equals(Uri.UriSchemeFile) && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment);
+            return Uri.TryCreate((Uri.IsWellFormedUriString(uriString, UriKind.Relative)) ? uriString : Uri.EscapeUriString(uriString), UriKind.Relative, out uri) &&
+                uri.OriginalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER) < 0;
+        }
+
+        public static bool TryCreateFileUriFromLocalPath(string localPath, out Uri uri)
+        {
+            if (string.IsNullOrEmpty(localPath))
+            {
+                uri = new Uri("", UriKind.Relative);
+                return true;
+            }
+            localPath = _FROM_LOCAL_PATH_PRE_ENCODE(localPath);
+            if (Uri.TryCreate(localPath, UriKind.Absolute, out uri))
+                return uri.Scheme.Equals(Uri.UriSchemeFile) && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment);
+            return Uri.TryCreate(localPath, UriKind.Relative, out uri) && uri.OriginalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER) < 0;
+        }
+
+        public static Uri ToUri(this FileSystemInfo fileSystemInfo)
+        {
+            if (fileSystemInfo is null)
+                return new Uri("", UriKind.Relative);
+            return new Uri(_FROM_LOCAL_PATH_PRE_ENCODE(fileSystemInfo.FullName), UriKind.Absolute);
+        }
+
+        /// <summary>
+        /// Determines whether a URI string is well-formed and compatible with the <seealso cref="Uri.UriSchemeFile">file</seealso> URI scheme.
+        /// </summary>
+        /// <param name="uri">The URI string to test</param>
+        /// <param name="kind">The type of URI string.</param>
+        /// <returns><see langword="true"/> if <paramref name="uri"/> well-formed and compatible with the <seealso cref="Uri.UriSchemeFile">file</seealso> URI scheme; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>For relative URI strings, this will also check to see if the URI string utilizes any special local file system path characters that would otherwise be considered part of a valid relative URI string.</remarks>
+        public static bool IsWellFormedFileUriString(string uri, UriKind kind)
+        {
+            if (string.IsNullOrEmpty(uri))
+                return kind != UriKind.Absolute;
+            if (!Uri.IsWellFormedUriString(uri, kind))
+                return false;
+            int startIndex = _UriGetPartIndexes(uri, out int schemeLength, out _);
+            if (startIndex < 0)
+                return false;
+            if (startIndex > 0)
+                return uri.Substring(0, schemeLength).Equals(Uri.UriSchemeFile) && (startIndex == uri.Length || !INVALID_URI_PATH_REGEX.IsMatch(uri.Substring(startIndex)));
+            return !INVALID_URI_PATH_REGEX.IsMatch(uri);
+        }
+
+        /// <summary>
+        /// Determines whether a string is valid for use as a file name on the local file system.
+        /// </summary>
+        /// <param name="name">The file name to test.</param>
+        /// <returns><see langword="true"/> if <paramref name="name"/> is not <see langword="null"/> or empty and contains only valid local file system characters.</returns>
+        public static bool IsValidLocalFileName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return false;
+            if (name.Length < _INVALID_FILENAME_CHARS.Length)
+                return !name.ToCharArray().Any(c => _INVALID_FILENAME_CHARS.Contains(c));
+            return !_INVALID_FILENAME_CHARS.Any(c => name.Contains(c));
+        }
+
+        /// <summary>
+        /// Gets the length of the path contained within a relative URI string.
+        /// </summary>
+        /// <param name="relativeUriString">The relative URI string</param>
+        /// <param name="nextIsQuery">Returns <see langword="true"/> if the next character is the start of the query, <see langword="false"/> if it starts the fragment or <see langword="null"/> if the <paramref name="relativeUriString"/>
+        /// contains no query or fragment.</param>
+        /// <returns>The length of the path contained within the <paramref name="relativeUriString"/>.</returns>
+        public static int GetUriPathLength(string relativeUriString, out bool? nextIsQuery)
+        {
+            if (relativeUriString is null)
+            {
+                nextIsQuery = null;
+                return 0;
+            }
+
+            int len = relativeUriString.Length;
+            if (len > 0)
+            {
+                int i = relativeUriString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
+                if (i > -1)
+                {
+                    nextIsQuery = relativeUriString[i] == URI_QUERY_DELIMITER_CHAR;
+                    return i;
+                }
+            }
+
+            nextIsQuery = null;
+            return len;
         }
 
         /// <summary>
@@ -67,9 +271,11 @@ namespace FsInfoCat.Util
             {
                 if (!(uri.Scheme.ToLower().Equals(uri.Scheme) && uri.Host.ToLower().Equals(uri.Host)))
                 {
-                    UriBuilder uriBuilder = new UriBuilder(uri);
-                    uriBuilder.Scheme = uri.Scheme.ToLower();
-                    uriBuilder.Host = uri.Host.ToLower();
+                    UriBuilder uriBuilder = new UriBuilder(uri)
+                    {
+                        Scheme = uri.Scheme.ToLower(),
+                        Host = uri.Host.ToLower()
+                    };
                     if (uri.Query == "?")
                         uriBuilder.Query = "";
                     if (uri.Fragment == "#")
@@ -136,7 +342,7 @@ namespace FsInfoCat.Util
             }
 
             string originalString = uri.OriginalString;
-            int index = originalString.IndexOfAny(QueryOrFragmentChar);
+            int index = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (index < 0)
             {
                 query = fragment = null;
@@ -212,7 +418,7 @@ namespace FsInfoCat.Util
                     value = Uri.EscapeUriString(value);
                 else
                 {
-                    int i = value.IndexOfAny(QueryOrFragmentChar);
+                    int i = value.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
                     if (i < 0)
                     {
                         if (!Uri.IsWellFormedUriString(value = value.Replace('\\', '/'), UriKind.RelativeOrAbsolute))
@@ -431,7 +637,7 @@ namespace FsInfoCat.Util
             string originalString = uri.OriginalString;
             if (originalString.Length == 0)
                 return "";
-            int index = originalString.IndexOfAny(QueryOrFragmentChar);
+            int index = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (index == 0)
                 return "";
             if (index > 0)
@@ -462,7 +668,7 @@ namespace FsInfoCat.Util
             }
             originalString = EnsureWellFormedUriPath(originalString);
 
-            int pathLen = originalString.IndexOfAny(QueryOrFragmentChar);
+            int pathLen = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (pathLen < 0)
             {
                 queryAndFragment = "";
@@ -496,7 +702,7 @@ namespace FsInfoCat.Util
             }
             originalString = EnsureWellFormedUriPath(originalString);
 
-            int pathLen = originalString.IndexOfAny(QueryOrFragmentChar);
+            int pathLen = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (pathLen < 0)
             {
                 query = fragment = "";
@@ -550,7 +756,7 @@ namespace FsInfoCat.Util
             }
             originalString = EnsureWellFormedUriPath(originalString);
 
-            int pathLen = originalString.IndexOfAny(QueryOrFragmentChar);
+            int pathLen = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (pathLen < 0)
             {
                 query = fragment = "";
@@ -605,7 +811,7 @@ namespace FsInfoCat.Util
             }
             originalString = EnsureWellFormedUriPath(originalString);
 
-            int pathLen = originalString.IndexOfAny(QueryOrFragmentChar);
+            int pathLen = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (pathLen < 0)
             {
                 query = fragment = "";
@@ -673,7 +879,7 @@ namespace FsInfoCat.Util
             else
             {
                 newPath = EnsureWellFormedUriPath(newPath);
-                int idx = newPath.IndexOfAny(QueryOrFragmentChar);
+                int idx = newPath.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
                 if (idx < 0)
                     newQuery = newFragment = "";
                 else
@@ -776,7 +982,7 @@ namespace FsInfoCat.Util
             if (uri.IsAbsoluteUri)
                 return (uri.Query.Length == 0) ? null : uri.Query.Substring(1);
             string originalString = uri.OriginalString.AsRelativeUriString();
-            int index = originalString.IndexOfAny(QueryOrFragmentChar);
+            int index = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (index < 0 || originalString[index] == '#')
                 return null;
             int fragmentIndex = index + 1;
@@ -803,7 +1009,6 @@ namespace FsInfoCat.Util
                 return false;
             }
 
-            Uri target;
             int index;
             if (uri.IsAbsoluteUri)
             {
@@ -825,8 +1030,7 @@ namespace FsInfoCat.Util
                 }
 
                 query = query.AsRelativeUriString();
-                target = uri;
-                if ((index = query.IndexOf('#')) > -1 && !uri.TrySetFragmentComponent(query.Substring(index + 1), out target))
+                if ((index = query.IndexOf('#')) > -1 && !uri.TrySetFragmentComponent(query.Substring(index + 1), out _))
                 {
                     result = uri;
                     return false;
@@ -857,9 +1061,9 @@ namespace FsInfoCat.Util
 
             string originalString = uri.OriginalString;
             int fragmentIndex;
-            index = originalString.IndexOfAny(QueryOrFragmentChar);
+            index = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (index < 0)
-                index = fragmentIndex = originalString.Length;
+                index = originalString.Length;
             if (originalString[index] == '#')
                 fragmentIndex = index;
             else if (index == originalString.Length - 1 || (fragmentIndex = originalString.IndexOf('#', index + 1)) < 0)
@@ -1107,7 +1311,7 @@ namespace FsInfoCat.Util
             if (u.Length == 0)
                 return new string[] { u };
             u = EnsureWellFormedUriPath(u);
-            return PathSegmentPattern.Matches(u).Cast<Match>().Select(m => m.Value).ToArray();
+            return URI_PATH_SEGMENT_REGEX.Matches(u).Cast<Match>().Select(m => m.Value).ToArray();
         }
 
         /// <summary>
