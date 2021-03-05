@@ -103,7 +103,7 @@ namespace FsInfoCat.Models.Crawl
             }
         }
 
-        public IEqualityComparer<string> SegmentNameComparer
+        public IEqualityComparer<string> PathComparer
         {
             get
             {
@@ -164,7 +164,7 @@ namespace FsInfoCat.Models.Crawl
             return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType
                 && string.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase)
                 && string.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase)
-                && RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? SegmentNameComparer : other.SegmentNameComparer)));
+                && RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? PathComparer : other.PathComparer)));
         }
 
         public override bool Equals(object obj)

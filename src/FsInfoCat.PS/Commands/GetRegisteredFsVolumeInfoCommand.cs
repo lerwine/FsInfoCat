@@ -56,10 +56,10 @@ namespace FsInfoCat.PS.Commands
                     if (uris.Length == 1)
                     {
                         FileUri u = uris[0];
-                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => f.RootUri.Equals(u, f.SegmentNameComparer));
+                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => f.RootUri.Equals(u, f.PathComparer));
                     }
                     else if (uris.Length > 1)
-                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => uris.Any(u => f.RootUri.Equals(u, f.SegmentNameComparer)));
+                        matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => uris.Any(u => f.RootUri.Equals(u, f.PathComparer)));
                     else
                         matching = new PSObject[0];
                     break;

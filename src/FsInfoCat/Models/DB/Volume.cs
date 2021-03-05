@@ -216,7 +216,7 @@ namespace FsInfoCat.Models.DB
 
         #endregion
 
-        public IEqualityComparer<string> SegmentNameComparer
+        public IEqualityComparer<string> PathComparer
         {
             get
             {

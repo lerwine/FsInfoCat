@@ -32,7 +32,7 @@ namespace FsInfoCat.PS.Commands
                 {
                     ErrorRecord errorRecord = exc.ErrorRecord;
                     if (errorRecord is null)
-                        WriteError(new ErrorRecord(exc, MessageId.UnexpectedError.ToString("F"), ErrorCategory.InvalidArgument, exc.ActualValue));
+                        WriteError(MessageId.UnexpectedError.ToErrorRecord(exc, ErrorCategory.InvalidArgument, exc.ParamName, exc.ActualValue));
                     else
                         WriteError(new ErrorRecord(exc, errorRecord.FullyQualifiedErrorId, errorRecord.CategoryInfo.Category, errorRecord.TargetObject));
                 }
@@ -41,7 +41,7 @@ namespace FsInfoCat.PS.Commands
             {
                 ErrorRecord errorRecord = (exc is IContainsErrorRecord ce) ? ce.ErrorRecord : null;
                 if (errorRecord is null)
-                    WriteError(new ErrorRecord(exc, MessageId.UnexpectedError.ToString("F"), ErrorCategory.InvalidArgument, source));
+                    WriteError(MessageId.UnexpectedError.ToErrorRecord(exc, ErrorCategory.InvalidArgument, paramName, source));
                 else
                     WriteError(new ErrorRecord(exc, errorRecord.FullyQualifiedErrorId, errorRecord.CategoryInfo.Category, errorRecord.TargetObject));
             }

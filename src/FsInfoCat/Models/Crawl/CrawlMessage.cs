@@ -1,7 +1,5 @@
-using System;
-using System.ComponentModel;
-using System.Linq;
 using FsInfoCat.Util;
+using System;
 
 namespace FsInfoCat.Models.Crawl
 {
@@ -19,10 +17,7 @@ namespace FsInfoCat.Models.Crawl
         protected CrawlMessage(MessageId id)
         {
             ID = id;
-            Type t = id.GetType();
-            string name = Enum.GetName(t, id);
-            Message = t.GetField(name).GetCustomAttributes(typeof(DescriptionAttribute), false).OfType<DescriptionAttribute>().Select(a => a.Description)
-                .Where(d => !string.IsNullOrWhiteSpace(d)).DefaultIfEmpty(name).First();
+            Message = id.GetDescription();
         }
 
         protected CrawlMessage(string message, MessageId id)

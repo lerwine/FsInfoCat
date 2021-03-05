@@ -1,4 +1,6 @@
-Set-Variable -Name 'IsWindows' -Option Constant -Scope 'Script' -Value ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT');
+if ($null -eq $Script:IsWindows) {
+    Set-Variable -Name 'IsWindows' -Option Constant -Scope 'Script' -Value ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT');
+}
 
 Function Get-ExceptionObject {
     [CmdletBinding()]
@@ -155,6 +157,8 @@ Function Get-ErrorRecord {
 
 Write-Verbose -Message "Performing $(if ($PSVersionTable.PSEdition -eq 'Desktop') { 'Desktop edition' } else { "$($PSVersionTable.Platform) platform" })-specific initialization";
 &{
+    # Calculating constant variable "LocalMachineIdentifier" within encapsulated script block so variables of the rest of the module aren't polluted.
+    if ($null -ne $Script:LocalMachineIdentifier) { return }
     $Identifier = '';
     $OldErrorAction = $ErrorActionPreference;
     $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop;
@@ -395,7 +399,7 @@ Function Test-PasswordHash {
 }
 
 class FsLogicalVolume {
-   [string]$RootPath;
+    [string]$RootPath;
     [string]$VolumeName;
     [string]$VolumeId;
     [string]$FsName;
@@ -403,6 +407,7 @@ class FsLogicalVolume {
     [bool]$IsReadOnly;
     [bool]$IsFixed;
     [bool]$IsNetwork;
+    [bool]$CaseSensitive;
 }
 
 Function Get-FsLogicalVolume {
@@ -433,14 +438,15 @@ Function Get-FsLogicalVolume {
                 Set-Variable -Name 'ErrorId' -Value 'CimAssociatedInstanceFail' -Scope 0;
                 Set-Variable -Name 'ErrorCategory' -Value ([System.Management.Automation.ErrorCategory]::ObjectNotFound) -Scope 0;
                 Set-Variable -Name 'Reason' -Value "Failed to invoke Get-CimAssociatedInstance -ResultClassName 'CIM_Directory'" -Scope 0;
-                Write-Verbose -Message $($PSCmdlet.MyInvocation.InvocationName): "Creating new FsLogicalVolume from LogicalDisk $TargetObject and Directory $($_.Directory)";
+                Write-Verbose -Message "$($PSCmdlet.MyInvocation.InvocationName): Creating new FsLogicalVolume from LogicalDisk $TargetObject and Directory $($_.Directory)";
                 $LogicalDisk = $TargetObject;
                 $FsLogicalVolume = [FsLogicalVolume]@{
-                    RootPath = $_.Directory.Name;
-                    VolumeName = $LogicalDisk.VolumeName;
-                    VolumeId = $LogicalDisk.VolumeSerialNumber;
-                    FsName = $LogicalDisk.FileSystem;
+                    RootPath = '' + $_.Directory.Name;
+                    VolumeName = '' + $LogicalDisk.VolumeName;
+                    VolumeId = '' + $LogicalDisk.VolumeSerialNumber;
+                    FsName = '' + $LogicalDisk.FileSystem;
                     IsReadOnly = ($LogicalDisk.Access -ne 0 -and ($LogicalDisk.Access -band 2) -eq 0);
+                    CaseSensitive = $false;
                 };
                 switch ($LogicalDisk.DriveType) {
                     1 { # No Root
@@ -464,7 +470,7 @@ Function Get-FsLogicalVolume {
                     4 { # Network Drive
                         $FsLogicalVolume.IsFixed = $false;
                         $FsLogicalVolume.IsNetwork = $true;
-                        $FsLogicalVolume.RemotePath = $LogicalDisk.ProviderName;
+                        $FsLogicalVolume.RemotePath = '' + $LogicalDisk.ProviderName;
                         Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Created $FsLogicalVolume";
                         $FsLogicalVolume | Write-Output;
                         break;
@@ -564,17 +570,18 @@ Function Get-FsLogicalVolume {
                                     $ExplicitRW = @($mc | Where-Object { $_.Groups['k'].Value -eq 'rw' -and -not $_.Groups['v'].Success}).Count -gt 0;
                                     if (-not ($ExplicitRO -or $ExplicitRW)) { $ExplicitRO = $characteristics.isRemovable }
                                     $FsLogicalVolume = [FsLogicalVolume]@{
-                                        RootPath = $_.target;
-                                        VolumeName = $_.label;
+                                        RootPath = '' + $_.target;
+                                        VolumeName = '' + $_.label;
                                         FsName = $_.fstype;
                                         IsReadOnly = $ExplicitRO -and -not $ExplicitRW;
                                         IsFixed = -not ($_.hotplug -ne '0' -or $characteristics.isRemovable);
+                                        CaseSensitive = $true;
                                     };
                                     if ($characteristics.isNetwork) {
-                                        $FsLogicalVolume.RemotePath = $_.source;
+                                        $FsLogicalVolume.RemotePath = '' + $_.source;
                                     } else {
                                         if (-not $characteristics.isRemovable) {
-                                            $FsLogicalVolume.VolumeId = $_.uuid;
+                                            $FsLogicalVolume.VolumeId = '' + $_.uuid;
                                         }
                                     }
                                     Write-Debug -Message "$($PSCmdlet.MyInvocation.InvocationName): Created $FsLogicalVolume";
@@ -595,6 +602,107 @@ Function Get-FsLogicalVolume {
         Write-Debug -Message "Setting '$Identifier' as LocalMachineIdentifier";
         if (-not [string]::IsNullOrWhiteSpace($Reason)) {
             Write-Error -Message "Failed to detect current machine identifier: $Reason" -Category $Category -ErrorId $ErrorId -CategoryReason $Reason -TargetObject $TargetObject;
+        }
+    }
+}
+
+Function Register-FsLogicalVolume {
+    <#
+    .SYNOPSIS
+        Registers a logical volume for crawl commands.
+
+    .DESCRIPTION
+        Utilizes output from Get-FsLogicalVolume to invoke the Register-FsVolumeInfo commmand.
+        
+    .PARAMETER LogicalVolume
+        The logical volme to register.
+        
+    .PARAMETER CaseSensitive
+        Overrides OS default case sensitivity.
+        
+    .PARAMETER Force
+        Allows existing registration to be updated if it has already been registered. Also allows non-existant root directories to be registered.
+
+    .PARAMETER PassThru
+        Returns the IVolumeInfo object for the registered volume.
+    #>
+    [CmdletBinding()]
+    [OutputType([FsInfoCat.Models.Volumes.IVolumeInfo])]
+    Param(
+        [Parameter(ValueFromPipeline = $true)]
+        [FsLogicalVolume]$LogicalVolume,
+        
+        [bool]$CaseSensitive,
+
+        [switch]$Force,
+
+        [switch]$PassThru
+    )
+
+    Begin {
+        if ($null -eq $Script:__Register_FsLogicalVolume_IdRegex) {
+            Set-Variable -Name '__Register_FsLogicalVolume_IdRegex' -Value (
+                [System.Text.RegularExpressions.Regex]::new('^((?<vid>[a-f\d]{8})(-(<ord>[a-f\d][a-f\d]?))?|(?<vh>[a-f\d]{4})-(?<vl>[a-f\d]{4}))$',
+                ([System.Text.RegularExpressions.RegexOptions]([System.Text.RegularExpressions.RegexOptions]::Compiled -bor [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)))
+            ) -Option Constant -Scope 'Script';
+        }
+    }
+
+    Process {
+        $Splat = @{ RootPathName = $LogicalVolume.RootPath; DriveFormat = $LogicalVolume.FsName; VolumeName = $LogicalVolume.VolumeName }
+        if ($LogicalVolume.IsNetwork) {
+            if ([string]::IsNullOrWhiteSpace($LogicalVolume.RemotePath)) {
+                Write-Warning -Message "Cannot register logical volume - RemotePath missing for $LogicalVolume";
+            } else {
+                $Uri = $null;
+                if ([Uri]::TryCreate($LogicalVolume.RemotePath, [UriKind]::Absolute, [ref]$Uri)) {
+                    $Splat['Identifier'] = $Uri;
+                } else {
+                    Write-Warning -Message "Cannot register logical volume - Cannot create absolute URI from RemotePath for $LogicalVolume";
+                }
+            }
+        } else {
+            if ([string]::IsNullOrWhiteSpace($LogicalVolume.VolumeId)) {
+                Write-Warning -Message "Cannot register logical volume - VolumeId missing or not supported for $LogicalVolume";
+            } else {
+                $m = $Script:__Register_FsLogicalVolume_IdRegex.Match($LogicalVolume.VolumeId);
+                if ($m.Success) {
+                    if ($m.Groups['ord'].Success) {
+                        $Splat['Identifier'] = [VolumeIdentifier]::new([System.UInt32]::Parse($m.Groups['vid'].Value, [System.Globalization.NumberStyles]::HexNumber),
+                            [System.UInt32]::Parse($m.Groups['ord'].Value, [System.Globalization.NumberStyles]::HexNumber));
+                    } else {
+                        if ($m.Groups['vid'].Success) {
+                            $Splat['Identifier'] = [VolumeIdentifier]::new([System.UInt32]::Parse($m.Groups['vid'].Value, [System.Globalization.NumberStyles]::HexNumber));
+                        } else {
+                            $Splat['Identifier'] = [VolumeIdentifier]::new(((
+                                [System.UInt32]::Parse($m.Groups['vh'].Value, [System.Globalization.NumberStyles]::HexNumber) -shl 8
+                            ) -bor [System.UInt32]::Parse($m.Groups['vl'].Value, [System.Globalization.NumberStyles]::HexNumber)));
+                        }
+                    }
+                } else {
+                    $uuid = $null;
+                    if ([Guid]::TryParse($LogicalVolume.VolumeId, [ref]$uuid)) {
+                        $Splat['Identifier'] = $uuid;
+                    } else {
+                        Write-Warning -Message "Cannot register logical volume - Unable to parse VolumeId for $LogicalVolume";
+                    }
+                }
+            }
+        }
+        if ($null -ne $Splat['Identifier']) {
+            if ([string]::IsNullOrWhiteSpace($Splat['VolumeName'])) { $Splat['VolumeName'] = '' + $Splat['Identifier'] }
+            if ($PSBoundParameters.ContainsKey('CaseSensitive')) {
+                if ($CaseSensitive) {
+                    $Splat['CaseSensitive'] = [System.Management.Automation.SwitchParameter]::Present;
+                }
+            } else {
+                if ($LogicalVolume.CaseSensitive) {
+                    $Splat['CaseSensitive'] = [System.Management.Automation.SwitchParameter]::Present;
+                }
+            }
+            if ($Force.IsPresent) { $Splat['Force'] = $Force }
+            if ($PassThru.IsPresent) { $Splat['PassThru'] = $PassThru }
+            Register-FsVolumeInfo @Splat;
         }
     }
 }
@@ -620,292 +728,5 @@ Function Get-LocalMachineIdentifier {
         Write-Warning -Message 'Module initialization failed - no machine identifier to return';
     } else {
         $Script:LocalMachineIdentifier | Write-Output;
-    }
-}
-
-Function ConvertTo-FsVolumeInfo {
-    [CmdletBinding()]
-    [OutputType([FsInfoCat.Models.Crawl.FsRoot])]
-    Param(
-        [Parameter(ValueFromPipeline = $true)]
-        [FsLogicalVolume]$LogicalVolume,
-
-        [switch]$Force
-    )
-
-    Process {
-        $IsValid = $true;
-        $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
-        $FsRoot.DriveFormat = $LogicalVolume.FsName;
-        if ([string]::IsNullOrWhiteSpace($FsRoot.DriveFormat)) {
-            if ($Force.IsPresent) {
-                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlWarning]::new("Drive format was not specified",
-                    [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
-            } else {
-                $IsValid = $false;
-                Write-Error -Message "Drive format was not specified" -Category InvalidResult -ErrorId 'NoDriveFormat' -TargetObject $LogicalVolume;
-            }
-        }
-        $FsRoot.VolumeName = $LogicalVolume.VolumeName;
-        if ([string]::IsNullOrWhiteSpace($FsRoot.VolumeName)) { $FsRoot.VolumeName = ''; }
-        $VolumeIdentifier = [FsInfoCat.Models.Volumes.VolumeIdentifier]::new([Guid]::Empty);
-        $idObj = $LogicalVolume.VolumeId;
-        if ([string]::IsNullOrWhiteSpace($idObj)) { $idObj = $LogicalVolume.RemotePath }
-        if (-not [FsInfoCat.Models.Volumes.VolumeIdentifier]::TryCreate($idObj, [ref]$VolumeIdentifier)) {
-            if ($Force.IsPresent) {
-                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("Unable to parse volume serial number",
-                    [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
-            } else {
-                $IsValid = $false;
-                Write-Error -Message "Unable to parse volume serial number" -Category InvalidResult -ErrorId 'InvalidSerialNumber' -TargetObject $LogicalVolume;
-            }
-        }
-        $FsRoot.Identifier = $VolumeIdentifier;
-        try {
-            [System.IO.DriveType]$FsRoot.DriveType = $LogicalVolume.DriveType;
-        } catch {
-            if ($Force.IsPresent) {
-                if ($_ -is [System.Exception]) {
-                    $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new($_, [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
-                } else {
-                    if ($_.Exception -is [System.Exception]) {
-                        $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new($_.Exception, [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
-                    } else {
-                        $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new('' + $_, [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
-                    }
-                }
-            } else {
-                $IsValid = $false;
-                if ($_ -is [System.Exception]) {
-                    Write-Error -Exception $_ -Message "Unable to discern drive type" -Category InvalidResult -ErrorId 'InvalidDriveType' -TargetObject $LogicalVolume;
-                } else {
-                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                        Write-Error -ErrorRecord $_ -CategoryReason "Invalid Drive Type";
-                    } else {
-                        Write-Error -Message "Unable to discern drive type: $_" -Category InvalidResult -ErrorId 'InvalidDriveType' -TargetObject $LogicalVolume;
-                    }
-                }
-            }
-        }
-        if ($FsRoot.DriveType -eq [System.IO.DriveType]::NoRootDirectory) {
-            if ($Force.IsPresent) {
-                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("Incompatible drive type (no root directory)",
-                    [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
-            } else {
-                $IsValid = $false;
-                Write-Error -Message "Incompatible drive type (no root directory)" -Category InvalidResult -ErrorId 'NoRootDirectory' -TargetObject $LogicalVolume;
-            }
-        } else {
-            if ([string]::IsNullOrWhiteSpace($LogicalVolume.RootPath)) {
-                if ($Force.IsPresent) {
-                    $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("Could not determine root directory",
-                        [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
-                } else {
-                    $IsValid = $false;
-                    Write-Error -Message "Could not determine root directory" -Category InvalidResult -ErrorId 'NoRootDirectory' -TargetObject $LogicalVolume;
-                }
-            } else {
-                $FsRoot.RootPathName = $LogicalVolume.RootPath;
-            }
-        }
-        if ($IsValid) { $FsRoot | Write-Output }
-    }
-}
-
-Function Get-FsVolumeInfo {
-    <#
-    .SYNOPSIS
-        Get filesystem volume information.
-
-    .DESCRIPTION
-        Gets information about system volumes.
-        
-    .PARAMETER Path
-        The root path name(s) of the volumes to search for.
-        
-    .PARAMETER Force
-        Returns a FsInfoCat.Models.Crawl.FsRoot for each path, even if a match is not found. The messages property will contain information about any errors encountered.
-
-    .PARAMETER All
-        Returns information for all volumes. This is the default behavior if the Path parameter is not used.
-
-    .EXAMPLE
-        PS C:\> $VolumeInfo = Get-FsVolumeInfo -Path 'D:\';
-
-    .OUTPUTS
-        VolumeInfo object(s) that contain information about file system volumes
-    #>
-    [CmdletBinding(DefaultParameterSetName = 'All')]
-    [OutputType([FsInfoCat.Models.Crawl.FsRoot])]
-    Param(
-        [Parameter(ValueFromPipeline = $true, ParameterSetName = 'Explicit')]
-        [string[]]$Path,
-
-        [Parameter(ParameterSetName = 'Explicit')]
-        [switch]$Force,
-
-        [Parameter(ParameterSetName = 'All')]
-        [switch]$All
-    )
-
-    if ($PSBoundParameters.ContainsKey('Path')) {
-        [FsLogicalVolume[]]$AllVolumes = Get-FsLogicalVolume;
-        if ($Force.IsPresent) {
-        } else {
-        }
-    } else {
-        Get-FsLogicalVolume | ConvertTo-FsVolumeInfo;
-    }
-    if ($Script:IsWindows) {
-        $LogicalDiskAndRoot = @($LogicalDiskCollection | ForEach-Object {
-            $Directory = $_ | Get-CimAssociatedInstance -ResultClassName 'CIM_Directory';
-            if ($null -ne $Directory -and -not [string]::IsNullOrWhiteSpace($Directory.Name)) {
-                [PsCustomObject]@{
-                    RootPath = $Directory.Name;
-                    LogicalDisk = $_;
-                };
-            }
-        });
-        if ($PSBoundParameters.ContainsKey('Path')) {
-            if ($Force.IsPresent) {
-                $Path | ForEach-Object {
-                    $dr = $PathRoot = $null;
-                    $p = $_;
-                    try {
-                        $PathRoot = [System.IO.Path]::GetPathRoot([System.IO.Path]::GetFullPath($p));
-                        $dr = $LogicalDiskAndRoot | Where-Object { $PathRoot -ceq $_.RootPath } | Select-Object -First 1;
-                        if ($null -eq $dr) {
-                            $dr = $LogicalDiskAndRoot | Where-Object { $PathRoot -ieq $_.RootPath } | Select-Object -First 1;
-                        }
-                    } catch {
-                        $dr = $PathRoot = $null;
-                        $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
-                        $FsRoot.RootPathName = $p;
-                        if ($_ -is [System.Exception]) {
-                            $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new($_, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
-                        } else {
-                            if ($_.Exception -is [System.Exception]) {
-                                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new($_.Exception, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
-                            } else {
-                                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new('' + $_, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
-                            }
-                        }
-                        $FsRoot | Write-Output;
-                    }
-                    if ($null -ne $dr) {
-                        ($dr | ConvertTo-FsVolumeInfo -Force) | Write-Output;
-                    } else {
-                        if ($null -ne $PathRoot) {
-                            $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
-                            $FsRoot.RootPathName = $PathRoot;
-                            $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("No matching volume found",
-                                [FsInfoCat.Models.Crawl.MessageId]::PathNotFound));
-                            $FsRoot | Write-Output;
-                        }
-                    }
-                }
-            } else {
-                $Path | ForEach-Object {
-                    $dr = $null;
-                    $p = $_;
-                    try {
-                        $PathRoot = [System.IO.Path]::GetPathRoot([System.IO.Path]::GetFullPath($p));
-                        $dr = $LogicalDiskAndRoot | Where-Object { $PathRoot -ceq $_.RootPath } | Select-Object -First 1;
-                        if ($null -eq $dr) {
-                            $dr = $LogicalDiskAndRoot | Where-Object { $PathRoot -ieq $_.RootPath } | Select-Object -First 1;
-                        }
-                    } catch {
-                        if ($_ -is [System.Exception]) {
-                            Write-Error -Exception $_ -Message "Unable to determine root path" -Category InvalidArgument -ErrorId 'InvalidRootPath' -TargetObject $p;
-                        } else {
-                            if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                                Write-Error -ErrorRecord $_ -CategoryReason "Invalid Root Path";
-                            } else {
-                                Write-Error -Message "Unable to discern drive type: $_" -Category InvalidArgument -ErrorId 'InvalidRootPath' -TargetObject $p;
-                            }
-                        }
-                        $dr = $null;
-                    }
-                    if ($null -ne $dr) {
-                        ($dr | ConvertTo-FsVolumeInfo) | Write-Output;
-                    }
-                }
-            }
-        } else {
-            if ($Force.IsPresent) {
-                ((Get-CimInstance -ClassName 'CIM_LogicalDisk') | ConvertTo-FsVolumeInfo -Force) | Write-Output;
-            } else {
-                ((Get-CimInstance -ClassName 'CIM_LogicalDisk') | ConvertTo-FsVolumeInfo) | Write-Output;
-            }
-        }
-    } else {
-        if ($PSBoundParameters.ContainsKey('Path')) {
-            if ($Force.IsPresent) {
-                $Path | ForEach-Object {
-                    $dr = $PathRoot = $null;
-                    $p = $_;
-                    try {
-                        # TODO: Create Get-FsPathRoot function
-                        $PathRoot = [System.IO.Path]::GetFullPath($p) | Get-FsPathRoot;
-                        $dr = $BlockDevices | Where-Object { $PathRoot -ceq $_.mountpoint } | Select-Object -First 1;
-                    } catch {
-                        $dr = $PathRoot = $null;
-                        $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
-                        $FsRoot.RootPathName = $p;
-                        if ($_ -is [System.Exception]) {
-                            $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new($_, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
-                        } else {
-                            if ($_.Exception -is [System.Exception]) {
-                                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new($_.Exception, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
-                            } else {
-                                $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new('' + $_, [FsInfoCat.Models.Crawl.MessageId]::InvalidPath));
-                            }
-                        }
-                        $FsRoot | Write-Output;
-                    }
-                    if ($null -ne $dr) {
-                        # TODO: Modify ConvertTo-FsVolumeInfo for linux to accept JSON ojbect. Maybe create a custom Select-Object?
-                        ($dr | ConvertTo-FsVolumeInfo -Force) | Write-Output;
-                    } else {
-                        if ($null -ne $PathRoot) {
-                            $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
-                            $FsRoot.RootPathName = $PathRoot;
-                            $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("No matching volume found",
-                                [FsInfoCat.Models.Crawl.MessageId]::PathNotFound));
-                            $FsRoot | Write-Output;
-                        }
-                    }
-                }
-            } else {
-                $Path | ForEach-Object {
-                    $dr = $null;
-                    $p = $_;
-                    try {
-                        $PathRoot = [System.IO.Path]::GetFullPath($p) | Get-FsPathRoot;
-                        $dr = $BlockDevices | Where-Object { $PathRoot -ceq $_.mountpoint } | Select-Object -First 1;
-                    } catch {
-                        if ($_ -is [System.Exception]) {
-                            Write-Error -Exception $_ -Message "Unable to determine root path" -Category InvalidArgument -ErrorId 'InvalidRootPath' -TargetObject $p;
-                        } else {
-                            if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                                Write-Error -ErrorRecord $_ -CategoryReason "Invalid Root Path";
-                            } else {
-                                Write-Error -Message "Unable to discern drive type: $_" -Category InvalidArgument -ErrorId 'InvalidRootPath' -TargetObject $p;
-                            }
-                        }
-                        $dr = $null;
-                    }
-                    if ($null -ne $dr) {
-                        ($dr | ConvertTo-FsVolumeInfo) | Write-Output;
-                    }
-                }
-            }
-        } else {
-            if ($Force.IsPresent) {
-                ($BlockDevices | ConvertTo-FsVolumeInfo -Force) | Write-Output;
-            } else {
-                ($BlockDevices | ConvertTo-FsVolumeInfo) | Write-Output;
-            }
-        }
     }
 }

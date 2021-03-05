@@ -143,7 +143,20 @@ namespace FsInfoCat.Util
 
         public string GetName() => Uri.UnescapeDataString(AbsolutePath.Substring(_nameIndex));
 
-        public bool Equals(FileUri other, IEqualityComparer<string> comparer) => !(other is null) && Host.Equals(other.Host) && comparer.Equals(AbsolutePath, other.AbsolutePath);
+        public bool Equals(FileUri other, IEqualityComparer<string> comparer)
+        {
+            if (comparer is null)
+                throw new ArgumentNullException(nameof(comparer));
+            return !(other is null) && Host.Equals(other.Host) && comparer.Equals(AbsolutePath, other.AbsolutePath);
+        }
+
+        public bool Contains(FileUri other, IEqualityComparer<string> comparer)
+        {
+            if (comparer is null)
+                throw new ArgumentNullException(nameof(comparer));
+            return !(other is null || ReferenceEquals(this, other)) && Host.Equals(other.Host, StringComparison.InvariantCultureIgnoreCase) &&
+                AbsolutePath.Length < other.AbsolutePath.Length && other.AbsolutePath.StartsWith($"{AbsolutePath}{UriHelper.URI_PATH_SEPARATOR_CHAR}");
+        }
 
         /// <summary>
         /// Creates a local path string from file URI.

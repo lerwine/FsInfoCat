@@ -1,3 +1,4 @@
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -67,8 +68,8 @@ namespace FsInfoCat.Models.Crawl
             if (exception is null)
                 throw new ArgumentNullException(nameof(exception));
             List<CrawlError> innerErrors;
-            if (exception is AggregateException)
-                innerErrors = ((AggregateException)exception).InnerExceptions.Select(e => new CrawlError(e, id)).ToList();
+            if (exception is AggregateException aggExc)
+                innerErrors = aggExc.InnerExceptions.Select(e => new CrawlError(e, id)).ToList();
             else
             {
                 innerErrors = new List<CrawlError>();
@@ -79,6 +80,6 @@ namespace FsInfoCat.Models.Crawl
         }
 
         public override string ToString() =>
-            $"Error {ID.ToString("F")} {{ Message=\"{Message}\", \"Category={_category}\", Activity=\"{_activity}\", TargetName=\"{_targetName}\", TargetType=\"{_targetType}\", Reason=\"{_reason}\", RecommendedAction=\"{_recommendedAction}\" }}";
+            $"Error {ID.GetName()} {{ Message=\"{Message}\", \"Category={_category}\", Activity=\"{_activity}\", TargetName=\"{_targetName}\", TargetType=\"{_targetType}\", Reason=\"{_reason}\", RecommendedAction=\"{_recommendedAction}\" }}";
     }
 }

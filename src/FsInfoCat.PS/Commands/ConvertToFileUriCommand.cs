@@ -75,19 +75,19 @@ namespace FsInfoCat.PS.Commands
             {
                 case PARAMETER_SET_NAME_ASSUME_LOCAL:
                     foreach (object obj in InputObject)
-                        ProcessItem(obj, obj.TryCoerceToFileUri(true, out fileUri) ? fileUri : null);
+                        ProcessItem(obj, CoersionHelper.TryCoerceToFileUri(obj, true, out fileUri) ? fileUri : null);
                     break;
                 case PARAMETER_SET_NAME_URI:
                     foreach (object obj in Uri)
-                        ProcessItem(obj, obj.TryCoerceToFileUri(false, out fileUri) ? fileUri : null);
+                        ProcessItem(obj, CoersionHelper.TryCoerceToFileUri(obj, false, out fileUri) ? fileUri : null);
                     break;
                 case PARAMETER_SET_NAME_PATH:
                     foreach (object obj in LocalPath)
-                        ProcessItem(obj, obj.TryCoerceToFileUri(true, out fileUri) ? fileUri : null);
+                        ProcessItem(obj, CoersionHelper.TryCoerceToFileUri(obj, true, out fileUri) ? fileUri : null);
                     break;
                 default:
                     foreach (object obj in InputObject)
-                        ProcessItem(obj, obj.TryCoerceToFileUri(false, out fileUri) ? fileUri : null);
+                        ProcessItem(obj, CoersionHelper.TryCoerceToFileUri(obj, false, out fileUri) ? fileUri : null);
                     break;
             }
         }

@@ -13,6 +13,10 @@ namespace FsInfoCat.Util
         public const string MESSAGE_ERROR_GETTING_MACHINE_IDENTIFIER = "Error getting machine identifier.";
         public const string MESSAGE_INVALID_PATH = "Path is invalid.";
         public const string MESSAGE_INVALID_ABSOLUTE_FILE_URI = "Invalid URI or not an absolute file URI.";
+        public const string MESSAGE_INVALID_IDENTIFIER = "Unknown identifier type or format.";
+        public const string MESSAGE_VOLUME_ID_ALREADY_REGISTERED = "Volume identifier already registered.";
+        public const string MESSAGE_DIRECTORY_ROOT_ALREADY_REGISTERED = "Directory root path already registered with a different volume identifier.";
+        public const string MESSAGE_VOLUME_NAME_ALREADY_REGISTERED = "Volume name already registered with a different volume identifier.";
         public const string MESSAGE_PATH_NOT_FOUND = "Path not found.";
         public const string MESSAGE_FILESYSTEM_INFO_PROPERTY_ACCESS_ERROR = "Unable to obtain name or length.";
         public const string MESSAGE_CREATION_TIME_ACCESS_ERROR = "Unable to obtain creation time.";
@@ -48,7 +52,7 @@ namespace FsInfoCat.Util
         {
             if (source is null || fileUri is null)
                 return new T[0];
-            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.SegmentNameComparer));
+            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.PathComparer));
         }
 
         public static IEnumerable<T> FindByVolumeName<T>(this IEnumerable<T> source, string volumeName)

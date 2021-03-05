@@ -1,5 +1,5 @@
 using FsInfoCat.Models.Crawl;
-using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using Microsoft.PowerShell.Commands;
 using System;
 using System.Collections.Generic;
@@ -88,10 +88,8 @@ namespace FsInfoCat.PS.Commands
                     foreach (string p in RootPath)
                     {
                         if (string.IsNullOrWhiteSpace(p))
-                            WriteError(new ErrorRecord(new PSArgumentNullException("RootPath"), MessageId.InvalidPath.ToString("F"), ErrorCategory.InvalidArgument, p)
-                            {
-                                ErrorDetails = new ErrorDetails("Path cannot be empty")
-                            });
+                            WriteError(MessageId.InvalidPath.ToErrorRecord("Path cannot be empty", new PSArgumentNullException("RootPath"),
+                                ErrorCategory.InvalidArgument, nameof(RootPath), p));
                         else
                         {
                             Collection<PathInfo> resolvedPaths;
@@ -101,23 +99,20 @@ namespace FsInfoCat.PS.Commands
                             }
                             catch (NotSupportedException exc)
                             {
-                                WriteError(new ErrorRecord(exc, MessageId.InvalidPath.ToString("F"), ErrorCategory.InvalidArgument, p)
-                                {
-                                    ErrorDetails = new ErrorDetails("Path references an unsupported provider type")
-                                });
+                                WriteError(MessageId.InvalidPath.ToErrorRecord("Path references an unsupported provider type", exc, ErrorCategory.InvalidArgument, nameof(RootPath), p));
                                 continue;
                             }
                             catch (ItemNotFoundException exc)
                             {
-                                WriteError(new ErrorRecord(exc, MessageId.PathNotFound.ToString("F"), ErrorCategory.ObjectNotFound, p));
+                                WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(RootPath), p));
                                 continue;
                             }
                             catch (Exception exc)
                             {
                                 if (exc is System.Management.Automation.DriveNotFoundException || exc is ProviderNotFoundException)
-                                    WriteError(new ErrorRecord(exc, MessageId.PathNotFound.ToString("F"), ErrorCategory.ObjectNotFound, p));
+                                    WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(RootPath), p));
                                 else
-                                    WriteError(new ErrorRecord(exc, MessageId.InvalidPath.ToString("F"), ErrorCategory.InvalidOperation, p));
+                                    WriteError(MessageId.InvalidPath.ToErrorRecord(exc, nameof(RootPath), p));
                                 continue;
                             }
 
@@ -137,13 +132,15 @@ namespace FsInfoCat.PS.Commands
                                     }
                                     catch (Exception exc)
                                     {
-                                        WriteError(new ErrorRecord(exc, MessageId.InvalidPath.ToString("F"), ErrorCategory.InvalidArgument, p));
+                                        WriteError(MessageId.InvalidPath.ToErrorRecord(exc, ErrorCategory.InvalidArgument, nameof(RootPath), p));
                                         continue;
                                     }
                                     if (fileExists)
-                                        WriteError(new ErrorRecord(new DirectoryNotFoundException("Path refers does not refer to a subdirectory"), MessageId.PathNotFound.ToString("F"), ErrorCategory.ObjectNotFound, p));
+                                        WriteError(MessageId.PathNotFound.ToErrorRecord(new DirectoryNotFoundException("Path refers does not refer to a subdirectory"),
+                                            ErrorCategory.ObjectNotFound, nameof(RootPath), p));
                                     else
-                                        WriteError(new ErrorRecord(new DirectoryNotFoundException("Subdirectory not found"), MessageId.PathNotFound.ToString("F"), ErrorCategory.ObjectNotFound, p));
+                                        WriteError(MessageId.PathNotFound.ToErrorRecord(new DirectoryNotFoundException("Subdirectory not found"), ErrorCategory.ObjectNotFound,
+                                            nameof(RootPath), p));
                                 }
                             }
                         }
@@ -153,10 +150,8 @@ namespace FsInfoCat.PS.Commands
                     foreach (string p in RootPath)
                     {
                         if (string.IsNullOrWhiteSpace(p))
-                            WriteError(new ErrorRecord(new PSArgumentNullException("RootPath"), MessageId.InvalidPath.ToString("F"), ErrorCategory.InvalidArgument, p)
-                            {
-                                ErrorDetails = new ErrorDetails("Path cannot be empty")
-                            });
+                            WriteError(MessageId.InvalidPath.ToErrorRecord("Path cannot be empty", new PSArgumentNullException(nameof(RootPath)),
+                                ErrorCategory.InvalidArgument, nameof(RootPath), p));
                         else
                         {
                             try
@@ -167,20 +162,17 @@ namespace FsInfoCat.PS.Commands
                                 else
                                 {
                                     if (File.Exists(pp))
-                                        throw new DirectoryNotFoundException("Path refers does not refer to a subdirectory");
+                                        throw new DirectoryNotFoundException("Path does not refer to a subdirectory");
                                     throw new DirectoryNotFoundException("Subdirectory not found");
                                 }
                             }
                             catch (DirectoryNotFoundException exc)
                             {
-                                WriteError(new ErrorRecord(exc, MessageId.PathNotFound.ToString("F"), ErrorCategory.ObjectNotFound, p));
+                                WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(RootPath), p));
                             }
                             catch (Exception exc)
                             {
-                                WriteError(new ErrorRecord(exc, MessageId.InvalidPath.ToString("F"), ErrorCategory.InvalidArgument, p)
-                                {
-                                    ErrorDetails = new ErrorDetails("Cannot determine provider path")
-                                });
+                                WriteError(MessageId.InvalidPath.ToErrorRecord("Cannot determine provider path", exc, ErrorCategory.InvalidArgument, nameof(RootPath), p));
                             }
                         }
                     }

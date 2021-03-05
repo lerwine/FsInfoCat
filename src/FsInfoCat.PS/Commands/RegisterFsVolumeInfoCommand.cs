@@ -1,3 +1,4 @@
+using FsInfoCat.Models.Crawl;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
@@ -16,6 +17,7 @@ namespace FsInfoCat.PS.Commands
     {
         [Parameter(HelpMessage = "The full, case-sensitive path name of the volume root directory.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
+        [Alias("RootPath")]
         public string RootPathName { get; set; }
 
         [Parameter(HelpMessage = "The name of the volume.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
@@ -43,7 +45,7 @@ namespace FsInfoCat.PS.Commands
         /// </list>
         /// </remarks>
         [Parameter(HelpMessage = "The volume serial number or UUID.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
-        [Alias("SerialNumber")]
+        [Alias("SerialNumber", "VolumeId")]
         public object Identifier { get; set; }
 
         [Parameter(HelpMessage = "Do case-sensitive path matching.")]
@@ -57,23 +59,29 @@ namespace FsInfoCat.PS.Commands
 
         protected override void ProcessRecord()
         {
-            if (!(VolumeIdentifier.TryCreate((Identifier is PSObject psObj) ? psObj.BaseObject : Identifier, out VolumeIdentifier volumeIdentifer)))
+            if (!VolumeIdentifier.TryCreate((Identifier is PSObject psObj) ? psObj.BaseObject : Identifier, out VolumeIdentifier volumeIdentifer))
             {
-                // TODO: Write error
+                WriteError(MessageId.InvalidIdentifier.ToArgumentOutOfRangeError(nameof(Identifier), Identifier));
+                return;
             }
 
             DirectoryInfo directoryInfo;
-            try { directoryInfo = new DirectoryInfo(RootPathName); }
+            FileUri fileUri;
+            try
+            {
+                directoryInfo = new DirectoryInfo(RootPathName);
+                fileUri = new FileUri(directoryInfo);
+            }
             catch (Exception exc)
             {
-                // TODO: Write error
+                WriteError(MessageId.UnexpectedError.ToErrorRecord(exc, ErrorCategory.ReadError, nameof(RootPathName), RootPathName));
                 return;
             }
             if (!(Force.IsPresent || directoryInfo.Exists))
             {
-                // TODO: Write error
+                WriteError(MessageId.PathNotFound.ToArgumentOutOfRangeError(nameof(RootPathName), RootPathName));
+                return;
             }
-            FileUri fileUri = new FileUri(directoryInfo);
 
             Collection<PSObject> volumeRegistration = GetVolumeRegistration();
             IEnumerable<RegisteredVolumeInfo> registeredVolumes = volumeRegistration.Select(o => o.BaseObject as RegisteredVolumeInfo);
@@ -82,15 +90,17 @@ namespace FsInfoCat.PS.Commands
             string uriString = fileUri.ToString();
             if (volumeInfo is null)
             {
-                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && v.RootUri.Equals(fileUri, v.SegmentNameComparer));
+                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => v.RootUri.Equals(fileUri, v.PathComparer));
                 if (matching.Any())
                 {
-                    // TODO: Write error
+                    WriteError(MessageId.DirectoryRootAlreadyRegistered.ToArgumentOutOfRangeError(nameof(RootPathName), RootPathName));
+                    return;
                 }
-                matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && ignoreCaseComparer.Equals(v.VolumeName, VolumeName));
+                matching = registeredVolumes.Where(v => ignoreCaseComparer.Equals(v.VolumeName, VolumeName));
                 if (matching.Any())
                 {
-                    // TODO: Write error
+                    WriteError(MessageId.VolumeNameAlreadyRegistered.ToArgumentOutOfRangeError(nameof(VolumeName), VolumeName));
+                    return;
                 }
                 volumeInfo = new RegisteredVolumeInfo
                 {
@@ -100,29 +110,33 @@ namespace FsInfoCat.PS.Commands
                     VolumeName = VolumeName,
                     DriveFormat = DriveFormat
                 };
+                volumeRegistration.Add(PSObject.AsPSObject(volumeInfo));
             }
             else
             {
                 if (!Force.IsPresent)
                 {
-                    // TODO: Write error
+                    WriteError(MessageId.VolumeIdAlreadyRegistered.ToArgumentOutOfRangeError(nameof(Identifier), Identifier));
+                    return;
                 }
-                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => v.RootUri.Equals(fileUri, v.SegmentNameComparer));
+                IEnumerable<RegisteredVolumeInfo> matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && v.RootUri.Equals(fileUri, v.PathComparer));
                 if (matching.Any())
                 {
-                    // TODO: Write error
+                    WriteError(MessageId.DirectoryRootAlreadyRegistered.ToArgumentOutOfRangeError(nameof(RootPathName), RootPathName));
+                    return;
                 }
-                matching = registeredVolumes.Where(v => ignoreCaseComparer.Equals(v.VolumeName, VolumeName));
+                matching = registeredVolumes.Where(v => !ReferenceEquals(volumeInfo, v) && ignoreCaseComparer.Equals(v.VolumeName, VolumeName));
                 if (matching.Any())
                 {
-                    // TODO: Write error
+                    WriteError(MessageId.VolumeNameAlreadyRegistered.ToArgumentOutOfRangeError(nameof(VolumeName), VolumeName));
+                    return;
                 }
                 volumeInfo.CaseSensitive = CaseSensitive.IsPresent;
                 volumeInfo.RootUri = fileUri;
                 volumeInfo.VolumeName = VolumeName;
                 volumeInfo.DriveFormat = DriveFormat;
             }
-            if (!(volumeInfo is null) && PassThru.IsPresent)
+            if (PassThru.IsPresent)
                 WriteObject(volumeInfo);
         }
     }

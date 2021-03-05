@@ -1,6 +1,6 @@
+using FsInfoCat.Util;
 using System;
 using System.ComponentModel;
-using System.Linq;
 
 namespace FsInfoCat.Models.Crawl
 {
@@ -26,6 +26,6 @@ namespace FsInfoCat.Models.Crawl
         public CrawlWarning() { }
 
         public override string ToString() =>
-            $"Warning {ID.ToString("F")} {{ Message=\"{Message}\" }}";
+            $"Warning {ID.GetName()} {{ Message=\"{Message}\" }}";
     }
 }

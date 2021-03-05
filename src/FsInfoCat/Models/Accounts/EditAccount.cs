@@ -1,9 +1,8 @@
+using FsInfoCat.Models.DB;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models.Accounts
 {
@@ -92,11 +91,7 @@ namespace FsInfoCat.Models.Accounts
             {
                 string n = _roleDisplay;
                 if (n is null)
-                {
-                    n = Enum.GetName(_role.GetType(), _role);
-                    _roleDisplay = n = _role.GetType().GetField(n).GetCustomAttributes(typeof(DescriptionAttribute), false).OfType<DescriptionAttribute>()
-                        .Select(a => a.Description).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty(n).First();
-                }
+                    _roleDisplay = n = _role.GetDescription();
                 return n;
             }
         }
@@ -367,7 +362,7 @@ namespace FsInfoCat.Models.Accounts
 
         public override string ToString()
         {
-            return "[AccountID=" + AccountID.ToString("d") + "; LoginName=\"" + LoginName.Replace("\"", "\\\"") + "\"; LoginName=\"" + DisplayName.Replace("\"", "\\\"") + "\"; Role=" + Role.ToString("F") + "]";
+            return "[AccountID=" + AccountID.ToString("d") + "; LoginName=\"" + LoginName.Replace("\"", "\\\"") + "\"; LoginName=\"" + DisplayName.Replace("\"", "\\\"") + "\"; Role=" + Role.GetName() + "]";
         }
     }
 }

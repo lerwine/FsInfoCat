@@ -49,7 +49,9 @@ namespace FsInfoCat.PS.Commands
         protected class RegisteredVolumeInfo : IVolumeInfo, IEquatable<IVolumeInfo>
         {
             private bool _caseSensitive;
-            private StringComparer _segmentNameComparer;
+            private StringComparer _pathComparer;
+            private PSObject _parent;
+            private Collection<PSObject> _nested = new Collection<PSObject>();
 
             public FileUri RootUri { get; internal set; }
 
@@ -77,25 +79,25 @@ namespace FsInfoCat.PS.Commands
                     if (_caseSensitive == value)
                         return;
                     _caseSensitive = value;
-                    _segmentNameComparer = null;
+                    _pathComparer = null;
                 }
             }
 
             bool IVolumeInfo.CaseSensitive { get => CaseSensitive; set => throw new NotSupportedException(); }
 
-            public IEqualityComparer<string> SegmentNameComparer
+            public IEqualityComparer<string> PathComparer
             {
                 get
                 {
-                    StringComparer comparer = _segmentNameComparer;
+                    StringComparer comparer = _pathComparer;
                     if (comparer is null)
-                        _segmentNameComparer = comparer = _caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                        _pathComparer = comparer = _caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
                     return comparer;
                 }
             }
 
             public bool Equals(IVolumeInfo other) => null != other && (ReferenceEquals(this, other) || (Identifier.Equals(other.Identifier) &&
-                RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? SegmentNameComparer : other.SegmentNameComparer)));
+                RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? PathComparer : other.PathComparer)));
 
             public override bool Equals(object obj)
             {

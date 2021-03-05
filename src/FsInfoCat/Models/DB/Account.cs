@@ -1,10 +1,10 @@
+using FsInfoCat.Models.Accounts;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using FsInfoCat.Models.Accounts;
 
 namespace FsInfoCat.Models.DB
 {
@@ -79,11 +79,7 @@ namespace FsInfoCat.Models.DB
             {
                 string n = _roleDisplay;
                 if (n is null)
-                {
-                    n = Enum.GetName(_role.GetType(), _role);
-                    _roleDisplay = n = _role.GetType().GetField(n).GetCustomAttributes(typeof(DescriptionAttribute), false).OfType<DescriptionAttribute>()
-                        .Select(a => a.Description).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty(n).First();
-                }
+                    _roleDisplay = n = _role.GetDescription();
                 return n;
             }
         }
@@ -169,8 +165,7 @@ namespace FsInfoCat.Models.DB
                 new
                 {
                     Value = r,
-                    Name = r.GetType().GetField(r.ToString("F")).GetCustomAttributes(typeof(AmbientValueAttribute), false)
-                    .Cast<AmbientValueAttribute>().Select(a => a.Value as string).FirstOrDefault(v => null != v)
+                    Name = r.GetName()
                 }).Where(a => null != a.Name))
             {
                 toRoleNameMap.Add(m.Value, m.Name);
@@ -312,7 +307,7 @@ namespace FsInfoCat.Models.DB
 
         public override string ToString()
         {
-            return "[AccountID=" + AccountID.ToString("d") + "; LoginName=\"" + LoginName.Replace("\"", "\\\"") + "\"; LoginName=\"" + DisplayName.Replace("\"", "\\\"") + "\"; Role=" + Role.ToString("F") + "]";
+            return "[AccountID=" + AccountID.ToString("d") + "; LoginName=\"" + LoginName.Replace("\"", "\\\"") + "\"; LoginName=\"" + DisplayName.Replace("\"", "\\\"") + "\"; Role=" + Role.GetName() + "]";
         }
 
         public static string ToRoleName(UserRole role)

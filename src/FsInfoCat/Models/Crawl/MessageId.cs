@@ -49,6 +49,18 @@ namespace FsInfoCat.Models.Crawl
         MaxItemsReached,
 
         [Description(MESSAGE_UNEXPECTED_ERROR)]
-        UnexpectedError
+        UnexpectedError,
+
+        [Description(MESSAGE_INVALID_IDENTIFIER)]
+        InvalidIdentifier,
+
+        [Description(MESSAGE_VOLUME_ID_ALREADY_REGISTERED)]
+        VolumeIdAlreadyRegistered,
+
+        [Description(MESSAGE_DIRECTORY_ROOT_ALREADY_REGISTERED)]
+        DirectoryRootAlreadyRegistered,
+
+        [Description(MESSAGE_VOLUME_NAME_ALREADY_REGISTERED)]
+        VolumeNameAlreadyRegistered
     }
 }

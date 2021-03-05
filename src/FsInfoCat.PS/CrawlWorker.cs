@@ -85,7 +85,7 @@ namespace FsInfoCat.PS
             }
             else
             {
-                result = childNodes.OfType<FsDirectory>().FirstOrDefault(d => fsRoot.SegmentNameComparer.Equals(d.Name, n));
+                result = childNodes.OfType<FsDirectory>().FirstOrDefault(d => fsRoot.PathComparer.Equals(d.Name, n));
                 if (!(result is null))
                     return result;
             }

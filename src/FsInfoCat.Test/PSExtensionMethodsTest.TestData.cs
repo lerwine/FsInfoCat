@@ -12,7 +12,7 @@ namespace FsInfoCat.Test
     {
         public static IEnumerable<TestCaseData> GetInvokeIfNotNullTest1Cases()
         {
-            string methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.InvokeIfNotNull)}<{typeof(Uri).Name}>";
+            string methodName = $"{typeof(PS.CoersionHelper).FullName}.{nameof(PS.CoersionHelper.InvokeIfNotNull)}<{typeof(Uri).Name}>";
             yield return new TestCaseData(null).SetArgDisplayNames("target").Returns(new InvocationResult<Uri>());
             UriKind kind = UriKind.Relative;
             Uri target = new Uri("", kind);
@@ -28,7 +28,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetInvokeIfNotNullTest2Cases()
         {
-            string methodName = $"{typeof(PS.ExtensionMethods).FullName}.{nameof(PS.ExtensionMethods.InvokeIfNotNull)}<{typeof(int).Name}?>";
+            string methodName = $"{typeof(PS.CoersionHelper).FullName}.{nameof(PS.CoersionHelper.InvokeIfNotNull)}<{typeof(int).Name}?>";
             yield return new TestCaseData(null).SetArgDisplayNames("target").Returns(new InvocationResult<int>());
             foreach (int target in GetTestIntValues())
                 yield return new TestCaseData(target).SetArgDisplayNames("target").Returns(new InvocationResult<int>(target));
@@ -101,7 +101,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri1Test(object, Func{Uri}, bool, TryCoerceHandler{object, Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -126,7 +126,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt1Test(object, Func{int}, bool, TryCoerceHandler{object, int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -151,7 +151,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri2Test(object, Func{Uri}, bool)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -174,7 +174,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt2Test(object, Func{int}, bool)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -197,7 +197,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri3Test(object, Func{Uri}, TryCoerceHandler{object, Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -221,7 +221,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt3Test(object, Func{int}, TryCoerceHandler{object, int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -244,7 +244,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri4Test(object, Func{Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -265,7 +265,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt4Test(object, Func{int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -286,7 +286,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt5Test(object, bool, TryCoerceHandler{object, int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -309,7 +309,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri5Test(object, bool, TryCoerceHandler{object, Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -333,7 +333,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri6Test(object, bool)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -354,7 +354,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt6Test(object, bool)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -375,7 +375,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri7Test(object, TryCoerceHandler{object, Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -397,7 +397,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt7Test(object, TryCoerceHandler{object, int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -419,7 +419,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri8Test(object)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -439,7 +439,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt8Test(object)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -459,7 +459,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri9Test(object, Func{Uri}, bool, TryCoerceHandler{object, Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -483,7 +483,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt9Test(object, Func{int}, bool, TryCoerceHandler{object, int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -507,7 +507,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri10Test(object, Func{Uri}, bool)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -528,7 +528,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt10Test(object, Func{int}, bool)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -549,7 +549,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri11Test(object, Func{Uri}, TryCoerceHandler{object, Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -570,7 +570,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt11Test(object, Func{int}, TryCoerceHandler{object, int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -591,7 +591,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri12Test(object, Func{Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -611,7 +611,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt12Test(object, Func{int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -631,7 +631,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri13Test(object, bool, TryCoerceHandler{object, Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -652,7 +652,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt13Test(object, bool, TryCoerceHandler{object, int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -673,7 +673,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri14Test(object, bool)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -693,7 +693,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt14Test(object, bool)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -714,7 +714,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri15Test(object, TryCoerceHandler{object, Uri})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> for a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> for a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -734,7 +734,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt15Test(object, TryCoerceHandler{object, int})"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -754,7 +754,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsUri16Test(object)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, out TResult)"/> with a reference type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, out TResult)"/> with a reference type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">
@@ -773,7 +773,7 @@ namespace FsInfoCat.Test
 
         /// <summary>
         /// Test data for <see cref="TryCoerceAsInt16Test(object)"/>, targeting
-        /// <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, out TResult)"/> with a value type.
+        /// <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, out TResult)"/> with a value type.
         /// </summary>
         /// <remarks>Parameters in target method:
         /// <list type="number">

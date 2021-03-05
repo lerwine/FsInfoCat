@@ -46,13 +46,13 @@ namespace FsInfoCat.Test
                 return 12;
             };
             bool nullReturnValue = false;
-            bool returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, null, out int? result);
+            bool returnValue = CoersionHelper.TryCast(inputObj, ifSuccessHandler, nullReturnValue, null, out int? result);
             Assert.That(returnValue, Is.False);
             Assert.That(ifSuccessResults.Count, Is.EqualTo(0));
             Assert.That(result, Is.Null);
 
             nullReturnValue = true;
-            returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, null, out result);
+            returnValue = CoersionHelper.TryCast(inputObj, ifSuccessHandler, nullReturnValue, null, out result);
             Assert.That(returnValue, Is.True);
             Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
             Assert.That(result, Is.Null);
@@ -60,7 +60,7 @@ namespace FsInfoCat.Test
 
             nullReturnValue = false;
             ifSuccessResults.Clear();
-            returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
+            returnValue = CoersionHelper.TryCast(inputObj, ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
             Assert.That(returnValue, Is.False);
             Assert.That(ifSuccessResults.Count, Is.EqualTo(0));
             Assert.That(ifNullCallCount, Is.EqualTo(1));
@@ -68,7 +68,7 @@ namespace FsInfoCat.Test
 
             nullReturnValue = true;
             ifNullCallCount = 0;
-            returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
+            returnValue = CoersionHelper.TryCast(inputObj, ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
             Assert.That(returnValue, Is.True);
             Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
             Assert.That(ifNullCallCount, Is.EqualTo(1));
@@ -78,7 +78,7 @@ namespace FsInfoCat.Test
             inputObj = 7;
             ifNullCallCount = 0;
             ifSuccessResults.Clear();
-            returnValue = inputObj.TryCast(ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
+            returnValue = CoersionHelper.TryCast(inputObj, ifSuccessHandler, nullReturnValue, ifNullHandler, out result);
             Assert.That(returnValue, Is.True);
             Assert.That(ifSuccessResults.Count, Is.EqualTo(1));
             Assert.That(ifNullCallCount, Is.EqualTo(0));
@@ -112,7 +112,7 @@ namespace FsInfoCat.Test
             Action<int> ifSuccessHandler = i => ifSuccessResults.Add(i);
             bool returnValueIfNull = false;
             object inputObj = null;
-            bool returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out int result);
             Assert.That(returnValue, Is.False);
             Assert.That(ifNullCallCount, Is.EqualTo(1));
             Assert.That(fallbackCallCount, Is.EqualTo(0));
@@ -121,7 +121,7 @@ namespace FsInfoCat.Test
 
             ifNullCallCount = 0;
             returnValueIfNull = true;
-            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
             Assert.That(returnValue, Is.True);
             Assert.That(ifNullCallCount, Is.EqualTo(1));
             Assert.That(fallbackCallCount, Is.EqualTo(0));
@@ -132,7 +132,7 @@ namespace FsInfoCat.Test
             ifSuccessResults.Clear();
             ifNullCallCount = 0;
             inputObj = 3;
-            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
             Assert.That(returnValue, Is.True);
             Assert.That(ifNullCallCount, Is.EqualTo(0));
             Assert.That(fallbackCallCount, Is.EqualTo(0));
@@ -142,7 +142,7 @@ namespace FsInfoCat.Test
 
             ifSuccessResults.Clear();
             inputObj = (long)int.MaxValue;
-            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
             Assert.That(returnValue, Is.True);
             Assert.That(ifNullCallCount, Is.EqualTo(0));
             Assert.That(fallbackCallCount, Is.EqualTo(0));
@@ -152,7 +152,7 @@ namespace FsInfoCat.Test
 
             ifSuccessResults.Clear();
             inputObj = ((long)int.MaxValue) + 1L;
-            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
             Assert.That(returnValue, Is.False);
             Assert.That(ifNullCallCount, Is.EqualTo(0));
             Assert.That(fallbackCallCount, Is.EqualTo(1));
@@ -163,7 +163,7 @@ namespace FsInfoCat.Test
             inputObj = d;
             ifSuccessResults.Clear();
             fallbackCallCount = 0;
-            returnValue = inputObj.TryCoerceAs(ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
+            returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNullHandler, returnValueIfNull, fallbackHandler, ifSuccessHandler, out result);
             Assert.That(returnValue, Is.True);
             Assert.That(ifNullCallCount, Is.EqualTo(0));
             Assert.That(fallbackCallCount, Is.EqualTo(1));
@@ -173,7 +173,7 @@ namespace FsInfoCat.Test
         }
 
         /// <summary>
-        /// Unit test for <see cref="ExtensionMethods.TryCoerceTo{TInput, TResult}(TInput, Func{TInput, TResult}, Func{TResult}, out TResult)"/>.
+        /// Unit test for <see cref="CoersionHelper.TryCoerceTo{TInput, TResult}(TInput, Func{TInput, TResult}, Func{TResult}, out TResult)"/>.
         /// </summary>
         [Test, Property("Priority", 1), Ignore("Not enough time to work out data source")]
         [TestCaseSource(nameof(GetTryCoerceTo1TestCases))]
@@ -186,7 +186,7 @@ namespace FsInfoCat.Test
         }
 
         /// <summary>
-        /// Unit test for <see cref="ExtensionMethods.TryCoerceTo{TInput, TResult}(TInput?, Func{TInput, TResult}, Func{TResult}, out TResult)"/>.
+        /// Unit test for <see cref="CoersionHelper.TryCoerceTo{TInput, TResult}(TInput?, Func{TInput, TResult}, Func{TResult}, out TResult)"/>.
         /// </summary>
         [Test, Property("Priority", 1), Ignore("Not enough time to work out data source")]
         [TestCaseSource(nameof(GetTryCoerceTo3TestCases))]
@@ -199,7 +199,7 @@ namespace FsInfoCat.Test
         }
 
         /// <summary>
-        /// Unit test for <see cref="ExtensionMethods.TryCoerceTo{TInput, TResult}(TInput, Func{TInput, TResult}, out TResult)"/>.
+        /// Unit test for <see cref="CoersionHelper.TryCoerceTo{TInput, TResult}(TInput, Func{TInput, TResult}, out TResult)"/>.
         /// </summary>
         [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
         [TestCaseSource(nameof(GetTryCoerceTo2TestCases))]
@@ -211,7 +211,7 @@ namespace FsInfoCat.Test
         }
 
         /// <summary>
-        /// Unit test for <see cref="ExtensionMethods.TryCoerceTo{TInput, TResult}(TInput?, Func{TInput, TResult}, out TResult)"/>.
+        /// Unit test for <see cref="CoersionHelper.TryCoerceTo{TInput, TResult}(TInput?, Func{TInput, TResult}, out TResult)"/>.
         /// </summary>
         [Test, Property("Priority", 2), Ignore("Not enough time to work out data source")]
         [TestCaseSource(nameof(GetTryCoerceTo4TestCases))]
@@ -223,7 +223,7 @@ namespace FsInfoCat.Test
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -264,11 +264,11 @@ namespace FsInfoCat.Test
         ///     </item>
         ///     <item>
         ///         <term><seealso cref="Uri"/> Output4</term> The value from the <c>return</c> parameter of
-        ///             <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
+        ///             <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
         ///     </item>
         ///     <item>
         ///         <term><c>bool</c> ReturnValue</term> The value returned by
-        ///         <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
+        ///         <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
         ///     </item>
         /// </list>
         /// <c>&gt;</c>
@@ -281,7 +281,7 @@ namespace FsInfoCat.Test
             InvocationMonitor<Uri> ifSuccessMontor = new InvocationMonitor<Uri>();
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getFallBackResult);
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, fallback, ifSuccessMontor.Apply, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, returnValueIfNull, fallback, ifSuccessMontor.Apply, out Uri result);
             return new FuncTestData4<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool>(returnValue, getIfNullResult(), getFallBackResult(),
                 ifSuccessMontor.ToResult(), result);
         }
@@ -292,7 +292,7 @@ namespace FsInfoCat.Test
         
          */
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -333,11 +333,11 @@ namespace FsInfoCat.Test
         ///     </item>
         ///     <item>
         ///         <term><c>int</c> Output4</term> The value from the <c>return</c> parameter of
-        ///             <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
+        ///             <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
         ///     </item>
         ///     <item>
         ///         <term><c>bool</c> ReturnValue</term> The value returned by
-        ///         <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
+        ///         <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/>.
         ///     </item>
         /// </list>
         /// <c>&gt;</c>
@@ -350,13 +350,13 @@ namespace FsInfoCat.Test
             InvocationMonitor<int> ifSuccessMontor = new InvocationMonitor<int>();
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getFallBackResult);
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, fallback, ifSuccessMontor.Apply, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, returnValueIfNull, fallback, ifSuccessMontor.Apply, out int result);
             return new FuncTestData4<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool>(returnValue, getIfNullResult(), getFallBackResult(),
                 ifSuccessMontor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -382,12 +382,12 @@ namespace FsInfoCat.Test
         {
             InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, ifSuccessMonitor.Apply, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, returnValueIfNull, ifSuccessMonitor.Apply, out Uri result);
             return new FuncTestData3<IFuncInvocationResult<Uri>, IInvocationResult<Uri>, Uri, bool>(returnValue, getIfNullResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, Action{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -412,12 +412,12 @@ namespace FsInfoCat.Test
         {
             InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, ifSuccessMonitor.Apply, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, returnValueIfNull, ifSuccessMonitor.Apply, out int result);
             return new FuncTestData3<IFuncInvocationResult<int>, IInvocationResult<int>, int, bool>(returnValue, getIfNullResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -445,13 +445,13 @@ namespace FsInfoCat.Test
             InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getFallBackResult);
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, fallback, ifSuccessMonitor.Apply, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, fallback, ifSuccessMonitor.Apply, out Uri result);
             return new FuncTestData4<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool>(returnValue, getIfNullResult(), getFallBackResult(),
                 ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -479,12 +479,12 @@ namespace FsInfoCat.Test
             InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getFallBackResult);
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, fallback, ifSuccessMonitor.Apply, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, fallback, ifSuccessMonitor.Apply, out int result);
             return new FuncTestData4<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool>(returnValue, getIfNullResult(), getFallBackResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -508,12 +508,12 @@ namespace FsInfoCat.Test
         {
             InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, ifSuccessMonitor.Apply, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, ifSuccessMonitor.Apply, out Uri result);
             return new FuncTestData3<IFuncInvocationResult<Uri>, IInvocationResult<Uri>, Uri, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, Action{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -537,12 +537,12 @@ namespace FsInfoCat.Test
         {
             InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, ifSuccessMonitor.Apply, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, ifSuccessMonitor.Apply, out int result);
             return new FuncTestData3<IFuncInvocationResult<int>, IInvocationResult<int>, int, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
@@ -568,12 +568,12 @@ namespace FsInfoCat.Test
         {
             InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, fallback, ifSuccessMonitor.Apply, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, returnValueIfNull, fallback, ifSuccessMonitor.Apply, out int result);
             return new FuncTestData3<IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
@@ -599,12 +599,12 @@ namespace FsInfoCat.Test
         {
             InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, fallback, ifSuccessMonitor.Apply, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, returnValueIfNull, fallback, ifSuccessMonitor.Apply, out Uri result);
             return new FuncTestData3<IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
@@ -624,12 +624,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri6Test(object inputObj, bool returnValueIfNull)
         {
             InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
-            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, ifSuccessMonitor.Apply, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, returnValueIfNull, ifSuccessMonitor.Apply, out Uri result);
             return new FuncTestData2<IInvocationResult<Uri>, Uri, bool>(returnValue, ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, Action{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
@@ -649,12 +649,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IInvocationResult<int>, int, bool> TryCoerceAsInt6Test(object inputObj, bool returnValueIfNull)
         {
             InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
-            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, ifSuccessMonitor.Apply, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, returnValueIfNull, ifSuccessMonitor.Apply, out int result);
             return new FuncTestData2<IInvocationResult<int>, int, bool>(returnValue, ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
@@ -678,12 +678,12 @@ namespace FsInfoCat.Test
         {
             InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(fallback, ifSuccessMonitor.Apply, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, fallback, ifSuccessMonitor.Apply, out Uri result);
             return new FuncTestData3<IFuncInvocationResult<Uri, bool>, IInvocationResult<Uri>, Uri, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, Action{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
@@ -707,12 +707,12 @@ namespace FsInfoCat.Test
         {
             InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(fallback, ifSuccessMonitor.Apply, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, fallback, ifSuccessMonitor.Apply, out int result);
             return new FuncTestData3<IFuncInvocationResult<int, bool>, IInvocationResult<int>, int, bool>(returnValue, getResult(), ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <remarks>Other parameters used:
@@ -732,12 +732,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IInvocationResult<Uri>, Uri, bool> TryCoerceAsUri8Test(object inputObj)
         {
             InvocationMonitor<Uri> ifSuccessMonitor = new InvocationMonitor<Uri>();
-            bool returnValue = inputObj.TryCoerceAs(ifSuccessMonitor.Apply, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifSuccessMonitor.Apply, out Uri result);
             return new FuncTestData2<IInvocationResult<Uri>, Uri, bool>(returnValue, ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Action{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <remarks>Other parameters used:
@@ -755,12 +755,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IInvocationResult<int>, int, bool> TryCoerceAsInt8Test(object inputObj)
         {
             InvocationMonitor<int> ifSuccessMonitor = new InvocationMonitor<int>();
-            bool returnValue = inputObj.TryCoerceAs(ifSuccessMonitor.Apply, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifSuccessMonitor.Apply, out int result);
             return new FuncTestData2<IInvocationResult<int>, int, bool>(returnValue, ifSuccessMonitor.ToResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -782,12 +782,12 @@ namespace FsInfoCat.Test
         {
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getFallBackResult);
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, fallback, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, returnValueIfNull, fallback, out Uri result);
             return new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, Uri, bool>(returnValue, getIfNullResult(), getFallBackResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -810,12 +810,12 @@ namespace FsInfoCat.Test
         {
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getFallBackResult);
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, fallback, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, returnValueIfNull, fallback, out int result);
             return new FuncTestData3<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, int, bool>(returnValue, getIfNullResult(), getFallBackResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -835,12 +835,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IFuncInvocationResult<Uri>, Uri, bool> TryCoerceAsUri10Test(object inputObj, Func<Uri> ifNull, bool returnValueIfNull)
         {
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, returnValueIfNull, out Uri result);
             return new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(returnValue, getIfNullResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, bool, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -860,12 +860,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IFuncInvocationResult<int>, int, bool> TryCoerceAsInt10Test(object inputObj, Func<int> ifNull, bool returnValueIfNull)
         {
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, returnValueIfNull, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, returnValueIfNull, out int result);
             return new FuncTestData2<IFuncInvocationResult<int>, int, bool>(returnValue, getIfNullResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -888,12 +888,12 @@ namespace FsInfoCat.Test
         {
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getFallBackResult);
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, fallback, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, fallback, out Uri result);
             return new FuncTestData3<IFuncInvocationResult<Uri>, IFuncInvocationResult<Uri, bool>, Uri, bool>(returnValue, getIfNullResult(), getFallBackResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -916,12 +916,12 @@ namespace FsInfoCat.Test
         {
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getFallBackResult);
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getIfNullResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, fallback, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, fallback, out int result);
             return new FuncTestData3<IFuncInvocationResult<int>, IFuncInvocationResult<int, bool>, int, bool>(returnValue, getIfNullResult(), getFallBackResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -938,12 +938,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IFuncInvocationResult<Uri>, Uri, bool> TryCoerceAsUri12Test(object inputObj, Func<Uri> ifNull)
         {
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<Uri>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, out Uri result);
             return new FuncTestData2<IFuncInvocationResult<Uri>, Uri, bool>(returnValue, getResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, Func{TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="ifNull">Produces the result value when <paramref name="inputObj"/> is null.</param>
@@ -960,12 +960,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IFuncInvocationResult<int>, int, bool> TryCoerceAsInt12Test(object inputObj, Func<int> ifNull)
         {
             ifNull = ifNull.Monitor(out Func<IFuncInvocationResult<int>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(ifNull, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, ifNull, out int result);
             return new FuncTestData2<IFuncInvocationResult<int>, int, bool>(returnValue, getResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
@@ -983,12 +983,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IFuncInvocationResult<Uri, bool>, Uri, bool> TryCoerceAsUri13Test(object inputObj, bool returnValueIfNull, TryCoerceHandler<object, Uri> fallback)
         {
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, fallback, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, returnValueIfNull, fallback, out Uri result);
             return new FuncTestData2<IFuncInvocationResult<Uri, bool>, Uri, bool>(returnValue, getResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
@@ -1006,12 +1006,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IFuncInvocationResult<int, bool>, int, bool> TryCoerceAsInt13Test(object inputObj, bool returnValueIfNull, TryCoerceHandler<object, int> fallback)
         {
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, fallback, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, returnValueIfNull, fallback, out int result);
             return new FuncTestData2<IFuncInvocationResult<int, bool>, int, bool>(returnValue, getResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
@@ -1026,12 +1026,12 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetTryCoerceAsUri14TestCases))]
         public IFuncTestData1<Uri, bool> TryCoerceAsUri14Test(object inputObj, bool returnValueIfNull)
         {
-            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, returnValueIfNull, out Uri result);
             return new FuncTestData1<Uri, bool>(returnValue, result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, bool, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, bool, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="returnValueIfNull">The return value of the target method when <paramref name="inputObj"/> is null.</param>
@@ -1046,12 +1046,12 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetTryCoerceAsInt14TestCases))]
         public IFuncTestData1<int, bool> TryCoerceAsInt14Test(object inputObj, bool returnValueIfNull)
         {
-            bool returnValue = inputObj.TryCoerceAs(returnValueIfNull, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, returnValueIfNull, out int result);
             return new FuncTestData1<int, bool>(returnValue, result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> using a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
@@ -1069,12 +1069,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IFuncInvocationResult<Uri, bool>, Uri, bool> TryCoerceAsUri15Test(object inputObj, TryCoerceHandler<object, Uri> fallback)
         {
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<Uri, bool>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(fallback, out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, fallback, out Uri result);
             return new FuncTestData2<IFuncInvocationResult<Uri, bool>, Uri, bool>(returnValue, getResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, TryCoerceHandler{object, TResult}, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <param name="fallback">The fallback coersion handler that will be invoked if <paramref name="inputObj"/> is not null and cannot be converted.</param>
@@ -1092,12 +1092,12 @@ namespace FsInfoCat.Test
         public IFuncTestData2<IFuncInvocationResult<int, bool>, int, bool> TryCoerceAsInt15Test(object inputObj, TryCoerceHandler<object, int> fallback)
         {
             fallback = fallback.Monitor(out Func<IFuncInvocationResult<int, bool>> getResult);
-            bool returnValue = inputObj.TryCoerceAs(fallback, out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, fallback, out int result);
             return new FuncTestData2<IFuncInvocationResult<int, bool>, int, bool>(returnValue, getResult(), result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, out TResult)"/> with a reference type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, out TResult)"/> with a reference type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <remarks>Other parameters used:
@@ -1111,12 +1111,12 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetTryCoerceAsUri16TestCases))]
         public IFuncTestData1<Uri, bool> TryCoerceAsUri16Test(object inputObj)
         {
-            bool returnValue = inputObj.TryCoerceAs(out Uri result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, out Uri result);
             return new FuncTestData1<Uri, bool>(returnValue, result);
         }
 
         /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryCoerceAs{TResult}(object, out TResult)"/> using a value type.
+        /// Unit test for <seealso cref="CoersionHelper.TryCoerceAs{TResult}(object, out TResult)"/> using a value type.
         /// </summary>
         /// <param name="inputObj">Value to be coerced.</param>
         /// <remarks>Other parameters used:
@@ -1130,20 +1130,8 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetTryCoerceAsInt16TestCases))]
         public IFuncTestData1<int, bool> TryCoerceAsInt16Test(object inputObj)
         {
-            bool returnValue = inputObj.TryCoerceAs(out int result);
+            bool returnValue = CoersionHelper.TryCoerceAs(inputObj, out int result);
             return new FuncTestData1<int, bool>(returnValue, result);
         }
-
-        /// <summary>
-        /// Unit test for <seealso cref="ExtensionMethods.TryGetErrorMessage(IContainsErrorRecord, ErrorCategory, string, object, out string, out ErrorCategory, out string, out object)"/>
-        /// </summary>
-        [Test, Property("Priority", 1), Ignore("Isolating to rule out cause of stack trace")]
-        [TestCaseSource(nameof(GetTryGetErrorMessage1TestCases))]
-        public string TryGetErrorMessage1Test(IContainsErrorRecord source, ErrorCategory defaultCategory, string defaultErrorId, string defaultReason, object defaultTargetObject)
-        {
-            Assert.Inconclusive();
-            throw new NotImplementedException();
-        }
-
     }
 }
