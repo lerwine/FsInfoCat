@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using FsInfoCat.Models.DB;
 using FsInfoCat.Models.Volumes;
@@ -82,16 +85,19 @@ namespace FsInfoCat.Models
             return target.ValidateAll();
         }
 
-        public static bool TryFindVolume<T>(this IEnumerable<T> volumes, FileUri fileUri, out T result)
+        public static bool TryFindVolume<T>(this IEnumerable<T> volumes, DirectoryInfo directoryInfo, out T result)
             where T : class, IVolumeInfo
         {
-            if (volumes is null || fileUri is null)
+            if (volumes is null || directoryInfo is null)
             {
                 result = null;
                 return false;
             }
-            // TODO: Implement TryFindVolume<T>(this IEnumerable<T>, FileUri, out T)
-            throw new NotImplementedException();
+            FileUri fileUri = new FileUri(directoryInfo);
+            result = volumes.FirstOrDefault(v => v.RootUri.Equals(fileUri));
+            if (result is null)
+                return TryFindVolume(volumes, directoryInfo.Parent, out result);
+            return true;
         }
     }
 }
