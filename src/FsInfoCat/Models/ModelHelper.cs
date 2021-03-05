@@ -1,13 +1,12 @@
+using FsInfoCat.Models.DB;
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using FsInfoCat.Models.DB;
-using FsInfoCat.Models.Volumes;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.Models
 {
@@ -15,9 +14,7 @@ namespace FsInfoCat.Models
     {
         public const string Role_Name_Viewer = "viewer";
         public const string Role_Name_User = "user";
-        public const string Role_Name_Host_Contrib = "host-contrib";
         public const string Role_Name_App_Contrib = "app-contrib";
-        public const string Role_Name_Any_Contrib = "host-contrib,app-contrib";
         public const string Role_Name_Admin = "admin";
         public const string PATTERN_DOTTED_NAME = @"(?i)^\s*([a-z][a-z\d_]*(\.[a-z][a-z\d_]*)*)\s*$";
         public const string PATTERN_MACHINE_NAME = @"^\s*(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?\s*$";
@@ -28,15 +25,24 @@ namespace FsInfoCat.Models
         public static readonly Regex PathOrUrlRegex = new Regex(PATTERN_PATH_OR_URL, RegexOptions.Compiled);
         public static readonly Regex NonNormalWsRegex = new Regex(@" \s+|(?! )\s+", RegexOptions.Compiled);
         public static readonly Regex Base64Regex = new Regex(PATTERN_BASE64, RegexOptions.Compiled);
+
         public static string CoerceAsString(object baseValue) => (baseValue is null) ? "" : ((baseValue is string) ? (string)baseValue : baseValue.ToString());
+
         public static string CoerceAsTrimmedString(object baseValue) => (baseValue is null) ? "" : ((baseValue is string) ? (string)baseValue : baseValue.ToString()).Trim();
+
         public static string CoerceAsWsNormalizedString(object baseValue) => CoerceAsWsNormalized((baseValue is null || baseValue is string) ? baseValue as string : baseValue.ToString());
+
         public static Guid CoerceAsGuid(object baseValue) => (null != baseValue && baseValue is Guid) ? (Guid)baseValue : Guid.Empty;
+
         public static bool CoerceAsBoolean(object baseValue) => (null != baseValue && baseValue is bool) ? (bool)baseValue : false;
-        public static string CoerceAsNonNull(string value) => (value is null) ? "" : value;
-        public static string CoerceAsTrimmed(string value) => (value is null) ? "" : value.Trim();
-        public static string CoerceAsWsNormalized(string value) => ((value = CoerceAsTrimmed(value)).Length > 0) ? NonNormalWsRegex.Replace(value, " ") : value;
-        public static DateTime CoerceAsLocalTime(DateTime value)
+
+        public static string CoerceAsNonNull(this string value) => (value is null) ? "" : value;
+
+        public static string CoerceAsTrimmed(this string value) => (value is null) ? "" : value.Trim();
+
+        public static string CoerceAsWsNormalized(this string value) => ((value = CoerceAsTrimmed(value)).Length > 0) ? NonNormalWsRegex.Replace(value, " ") : value;
+
+        public static DateTime CoerceAsLocalTime(this DateTime value)
         {
             switch (value.Kind)
             {
@@ -48,9 +54,12 @@ namespace FsInfoCat.Models
                     return value.ToLocalTime();
             }
         }
-        public static DateTime CoerceAsLocalTimeOrNow(DateTime? value) => (value.HasValue) ? CoerceAsLocalTime(value.Value) : DateTime.Now;
-        public static DateTime CoerceAsLocalTimeOrDefault(DateTime? value, DateTime defaultValue) => CoerceAsLocalTime((value.HasValue) ?  value.Value : default);
-        public static DateTime CoerceAsUniversalTime(DateTime value)
+
+        public static DateTime CoerceAsLocalTimeOrNow(this DateTime? value) => (value.HasValue) ? CoerceAsLocalTime(value.Value) : DateTime.Now;
+
+        public static DateTime CoerceAsLocalTimeOrDefault(this DateTime? value, DateTime defaultValue) => CoerceAsLocalTime(value ?? defaultValue);
+
+        public static DateTime CoerceAsUniversalTime(this DateTime value)
         {
             switch (value.Kind)
             {
@@ -62,9 +71,12 @@ namespace FsInfoCat.Models
                     return value.ToUniversalTime();
             }
         }
-        public static DateTime CoerceAsUniversalTimeOrNow(DateTime? value) => (value.HasValue) ? CoerceAsUniversalTime(value.Value) : DateTime.UtcNow;
-        public static DateTime CoerceAsUniversalTimeOrDefault(DateTime? value, DateTime defaultValue) => CoerceAsUniversalTime((value.HasValue) ?  value.Value : default);
-        public static IList<ValidationResult> ValidateForSave(IModficationAuditable target, Account modifiedBy, bool isCreate)
+
+        public static DateTime CoerceAsUniversalTimeOrNow(this DateTime? value) => (value.HasValue) ? CoerceAsUniversalTime(value.Value) : DateTime.UtcNow;
+
+        public static DateTime CoerceAsUniversalTimeOrDefault(this DateTime? value, DateTime defaultValue) => CoerceAsUniversalTime(value ?? defaultValue);
+
+        public static IList<ValidationResult> ValidateForSave(this IModficationAuditable target, Account modifiedBy, bool isCreate)
         {
             if (target is null)
                 throw new ArgumentNullException("target");

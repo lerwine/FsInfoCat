@@ -1,21 +1,20 @@
+using FsInfoCat.Models;
+using FsInfoCat.Models.Accounts;
+using FsInfoCat.Models.DB;
+using FsInfoCat.Util;
+using FsInfoCat.Web.Data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using FsInfoCat.Models;
-using FsInfoCat.Models.DB;
-using FsInfoCat.Web.Data;
-using Microsoft.Data.SqlClient;
-using FsInfoCat.Models.Accounts;
-using FsInfoCat.Models.HostDevices;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.Web.API
 {
@@ -40,7 +39,7 @@ namespace FsInfoCat.Web.API
             Account user;
             try
             {
-                user = dbContext.Account.Include<Account, UserCredential>(t => t.UserCredential).FirstOrDefault(u => u.LoginName == request.LoginName);
+                user = dbContext.Account.Include(t => t.UserCredential).FirstOrDefault(u => u.LoginName == request.LoginName);
             }
             catch (SqlException exc)
             {
@@ -65,22 +64,7 @@ namespace FsInfoCat.Web.API
                 new Claim(ClaimTypes.Name, (string.IsNullOrWhiteSpace(user.DisplayName)) ? user.LoginName : user.DisplayName)
             };
             foreach (UserRole role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.None && r <= user.Role))
-                claims.Add(new Claim(ClaimTypes.Role, role.ToString("F")));
-            // TODO: Need to find some other way to retrieve device reg for local host
-#warning Need to find some other way to retrieve device reg for local host
-            // HostDeviceRegRequest deviceReg = HostDeviceRegRequest.CreateForLocal();
-            // HostDevice host = await ViewModelHelper.LookUp(dbContext.HostDevice, deviceReg.MachineName, deviceReg.MachineIdentifer);
-            // if (null != host && host.AllowCrawl)
-            // {
-            //     if (user.Role >= UserRole.Crawler)
-            //         claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
-            //     else
-            //     {
-            //         HostContributor c = await ViewModelHelper.Lookup(dbContext.HostContributor, user.AccountID, host.HostDeviceID);
-            //         if (null != c)
-            //             claims.Add(new Claim(ClaimTypes.Role, ModelHelper.Role_Name_Host_Contrib));
-            //     }
-            // }
+                claims.Add(new Claim(ClaimTypes.Role, role.GetName()));
             ClaimsPrincipal cp = new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", ClaimTypes.NameIdentifier, ClaimTypes.Role));
             await httpContext.SignInAsync(cp);
             return new RequestResponse<Account>(new Account(user));

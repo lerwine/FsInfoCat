@@ -167,6 +167,22 @@ namespace FsInfoCat.Util
             return true;
         }
 
+        public static bool TryGetAmbientValue<T>(this MemberInfo memberInfo, out T ambientValue)
+        {
+            using (IEnumerator<T> enumerator = memberInfo.GetCustomAttributes<AmbientValueAttribute>().Select(a => a.Value).OfType<T>().GetEnumerator())
+            {
+                if (enumerator.MoveNext())
+                {
+                    ambientValue = enumerator.Current;
+                    return true;
+                }
+            }
+            ambientValue = default;
+            return false;
+        }
+
+        public static bool TryGetAmbientValue<TEnum, TValue>(this TEnum enumValue, out TValue ambientValue) where TEnum : struct, Enum => enumValue.GetType().GetField(enumValue.ToString("F")).TryGetAmbientValue(out ambientValue);
+
         public static bool TryGetDescription(this MemberInfo memberInfo, out string description)
         {
             description = null;
@@ -177,14 +193,6 @@ namespace FsInfoCat.Util
                     return true;
             }
             return false;
-        }
-
-        public static bool TryGetDescription<T>(this T value, out string description, out string name)
-            where T : struct, Enum
-        {
-            Type t = value.GetType();
-            name = value.ToString("F");
-            return t.GetField(name).TryGetDescription(out description);
         }
 
         public static bool TryGetDescription<T>(this T value, out string description) where T : struct, Enum => value.GetType().GetField(value.ToString("F")).TryGetDescription(out description);
@@ -198,6 +206,19 @@ namespace FsInfoCat.Util
             if (value.TryGetDescription(out string description, out string name))
                 return description;
             return (getDefaultDescription is null) ? $"ID: {name}" : getDefaultDescription(name);
+        }
+
+        public static string GetName<T>(this T value) where T : struct, Enum => (value.TryGetAmbientValue(out string ambientValue)) ? ambientValue : value.ToString("F");
+
+        public static bool TryGetDescription<T>(this T value, out string description, out string name)
+            where T : struct, Enum
+        {
+            Type t = value.GetType();
+            string fieldName = value.ToString("F");
+            FieldInfo fieldInfo = t.GetField(fieldName);
+            if (!fieldInfo.TryGetAmbientValue(out name))
+                name = fieldName;
+            return fieldInfo.TryGetDescription(out description);
         }
 
         public static string GetDescription<T>(this T value, out string name) where T : struct, Enum => (value.TryGetDescription(out string description, out name)) ? description : $"ID: {name}";

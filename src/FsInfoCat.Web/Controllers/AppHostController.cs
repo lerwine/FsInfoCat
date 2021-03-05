@@ -1,14 +1,14 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using FsInfoCat.Models;
 using FsInfoCat.Web.Data;
 using FsInfoCat.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Web.Controllers
 {
-    [Authorize(Roles = ModelHelper.Role_Name_Any_Contrib)]
+    [Authorize(Roles = ModelHelper.Role_Name_App_Contrib)]
     public class AppHostController : Controller
     {
         private readonly FsInfoDataContext _context;
