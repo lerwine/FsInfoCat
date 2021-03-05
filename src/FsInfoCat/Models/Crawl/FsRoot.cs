@@ -1,9 +1,7 @@
-using FsInfoCat.Models;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -163,9 +161,10 @@ namespace FsInfoCat.Models.Crawl
 
         public bool Equals(FsRoot other)
         {
-            return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType && String.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase) &&
-                RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? SegmentNameComparer : other.SegmentNameComparer)));
+            return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType
+                && string.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase)
+                && RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? SegmentNameComparer : other.SegmentNameComparer)));
         }
 
         public override bool Equals(object obj)
