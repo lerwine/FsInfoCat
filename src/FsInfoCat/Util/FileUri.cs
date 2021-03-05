@@ -156,26 +156,6 @@ namespace FsInfoCat.Util
             return new Uri(ToString()).LocalPath;
         }
 
-        /// <summary>
-        /// Gets a <seealso cref="DirectoryInfo"/> or <seealso cref="FileInfo"/> representing the current <c>FileUri</c>.
-        /// </summary>
-        /// <returns>A <seealso cref="DirectoryInfo"/> or <seealso cref="FileInfo"/> representing the current <c>FileUri</c> or <see langword="null"/> if the current
-        /// <c>FileUri</c> <see cref="IsEmpty"/> is <see langword="true"/>, <see cref="IsAbsolute"/> is <see langword="false"/>, or if a <seealso cref="FileSystemInfo"/>
-        /// object could not be created.</returns>
-        public FileSystemInfo ToFileSystemInfo()
-        {
-            if (IsEmpty())
-                return null;
-            try
-            {
-                return new FileInfo(new Uri(ToString()).LocalPath);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
         public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) || Host.Equals(other.Host) && AbsolutePath.Equals(other.AbsolutePath));
 
         public override bool Equals(object obj) => obj is FileUri fileUri && Equals(fileUri);

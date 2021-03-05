@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
+using FsInfoCat.Models;
 using FsInfoCat.Models.Crawl;
+using FsInfoCat.Models.Volumes;
 
 namespace FsInfoCat.PS
 {
@@ -29,20 +32,71 @@ namespace FsInfoCat.PS
         /// <returns>True if ran to completion; otherwise, false.</returns>
         internal static bool Run(string startingDirectory, long maxItems, FsCrawlJob job, out long totalItems)
         {
-            IFsDirectory parent = FsRoot.ImportDirectory(job.FsRoots, startingDirectory, job.GetVolumes, out string realPath);
-            if (parent is null)
+            DirectoryInfo directoryInfo = new DirectoryInfo(startingDirectory);
+            if (!directoryInfo.Exists)
             {
                 totalItems = 0L;
                 return true;
             }
+            IFsDirectory parent;
+            if (!job.FsRoots.TryFindVolume(directoryInfo, out FsRoot fsRoot))
+            {
+                if (job.GetVolumes().TryFindVolume(directoryInfo, out IVolumeInfo volume))
+                    fsRoot = new FsRoot(volume);
+                else
+                {
+                    totalItems = 0L;
+                    return true;
+                }
+            } 
             if (job.IsExpired())
             {
                 totalItems = 0L;
                 return false;
             }
+            parent = ImportDirectory(fsRoot, new DirectoryInfo(fsRoot.RootUri.ToLocalPath()), directoryInfo);
+            if (parent is null)
+            {
+                totalItems = 0L;
+                return false;
+            }
             CrawlWorker crawler = new CrawlWorker(maxItems, job);
-            bool result = crawler.Crawl(parent, new DirectoryInfo(realPath), job.MaxDepth);
+            bool result = crawler.Crawl(parent, directoryInfo, job.MaxDepth);
             totalItems = crawler._totalItems;
+            return result;
+        }
+
+        private static IFsDirectory ImportDirectory(FsRoot fsRoot, DirectoryInfo rootDir, DirectoryInfo directoryInfo)
+        {
+            if (directoryInfo is null)
+                return null;
+            if (rootDir.FullName.Equals(directoryInfo.FullName, StringComparison.InvariantCultureIgnoreCase))
+                return fsRoot;
+            IFsDirectory parent = ImportDirectory(fsRoot, rootDir, directoryInfo.Parent);
+            if (parent is null)
+                return null;
+            string n = directoryInfo.Name;
+            IList<IFsChildNode> childNodes = parent.ChildNodes;
+            FsDirectory result;
+            if (childNodes is null)
+            {
+                childNodes = new Collection<IFsChildNode>();
+                parent.ChildNodes = childNodes;
+            }
+            else
+            {
+                result = childNodes.OfType<FsDirectory>().FirstOrDefault(d => fsRoot.SegmentNameComparer.Equals(d.Name, n));
+                if (!(result is null))
+                    return result;
+            }
+            result = new FsDirectory
+            {
+                CreationTime = directoryInfo.CreationTimeUtc,
+                LastWriteTime = directoryInfo.LastWriteTimeUtc,
+                Attributes = (int)directoryInfo.Attributes,
+                Name = directoryInfo.Name
+            };
+            childNodes.Add(result);
             return result;
         }
 
