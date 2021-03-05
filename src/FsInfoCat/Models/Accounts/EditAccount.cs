@@ -336,11 +336,11 @@ namespace FsInfoCat.Models.Accounts
         public void Normalize()
         {
             _loginName = _loginName.Trim();
-            if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
+            if ((_displayName = _displayName.CoerceAsWsNormalized()).Length == 0)
                 _displayName = _loginName;
             _notes = _notes.Trim();
-            CreatedOn = ModelHelper.CoerceAsLocalTime(CreatedOn);
-            ModifiedOn = ModelHelper.CoerceAsLocalTime(ModifiedOn);
+            CreatedOn = CreatedOn.CoerceAsLocalTime();
+            ModifiedOn = ModifiedOn.CoerceAsLocalTime();
             if (null != Creator)
                 CreatedBy = Creator.AccountID;
             if (null != Modifier)

@@ -63,7 +63,7 @@ namespace FsInfoCat.Models.DB
 
         public void Normalize()
         {
-            CreatedOn = ModelHelper.CoerceAsLocalTime(CreatedOn);
+            CreatedOn = CreatedOn.CoerceAsLocalTime();
             if (null != Account)
                 AccountID = Account.AccountID;
             if (null != Host)

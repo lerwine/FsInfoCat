@@ -247,8 +247,8 @@ namespace FsInfoCat.Models.DB
             ModifiedOn = user.ModifiedOn;
             Role = user.Role;
             Notes = user.Notes;
-            if (user is Account)
-                UserCredential = ((Account)user).UserCredential;
+            if (user is Account account)
+                UserCredential = account.UserCredential;
         }
 
         private void Validate(List<ValidationResult> result, string propertyName)
@@ -281,11 +281,11 @@ namespace FsInfoCat.Models.DB
         public void Normalize()
         {
             _loginName = _loginName.Trim();
-            if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
+            if ((_displayName = _displayName.CoerceAsWsNormalized()).Length == 0)
                 _displayName = _loginName;
             _notes = _notes.Trim();
-            CreatedOn = ModelHelper.CoerceAsLocalTime(CreatedOn);
-            ModifiedOn = ModelHelper.CoerceAsLocalTime(ModifiedOn);
+            CreatedOn = CreatedOn.CoerceAsLocalTime();
+            ModifiedOn = ModifiedOn.CoerceAsLocalTime();
             if (null != Creator)
                 CreatedBy = Creator.AccountID;
             if (null != Modifier)

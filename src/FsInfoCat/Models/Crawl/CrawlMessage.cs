@@ -11,7 +11,7 @@ namespace FsInfoCat.Models.Crawl
         public string Message
         {
             get => _message;
-            set => _message = ModelHelper.CoerceAsTrimmed(value);
+            set => _message = value.CoerceAsTrimmed();
         }
 
         public MessageId ID { get; set; }

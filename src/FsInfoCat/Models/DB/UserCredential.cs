@@ -117,8 +117,8 @@ namespace FsInfoCat.Models.DB
 
         public void Normalize()
         {
-            CreatedOn = ModelHelper.CoerceAsLocalTime(CreatedOn);
-            ModifiedOn = ModelHelper.CoerceAsLocalTime(ModifiedOn);
+            CreatedOn = CreatedOn.CoerceAsLocalTime();
+            ModifiedOn = ModifiedOn.CoerceAsLocalTime();
             if (null != Creator)
                 CreatedBy = Creator.AccountID;
             if (null != Modifier)

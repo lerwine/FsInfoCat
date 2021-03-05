@@ -49,9 +49,9 @@ namespace FsInfoCat.Models.HostDevices
 
         public void Normalize()
         {
-            _machineIdentifer = ModelHelper.CoerceAsWsNormalized(_machineIdentifer);
+            _machineIdentifer = _machineIdentifer.CoerceAsWsNormalized();
             _machineName = _machineName.Trim();
-            if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
+            if ((_displayName = _displayName.CoerceAsWsNormalized()).Length == 0)
                 _displayName = _machineName;
         }
 

@@ -17,33 +17,33 @@ namespace FsInfoCat.Models.Crawl
         public string Activity
         {
             get => _activity;
-            set => _activity = ModelHelper.CoerceAsWsNormalized(value);
+            set => _activity = value.CoerceAsWsNormalized();
         }
         public string Category
         {
             get => _category;
-            set => _category = ModelHelper.CoerceAsWsNormalized(value);
+            set => _category = value.CoerceAsWsNormalized();
         }
         public string Reason
         {
             get => _reason;
-            set => _reason = ModelHelper.CoerceAsTrimmed(value);
+            set => _reason = value.CoerceAsTrimmed();
         }
         public string TargetName
         {
             get => _targetName;
-            set => _targetName = ModelHelper.CoerceAsWsNormalized(value);
+            set => _targetName = value.CoerceAsWsNormalized();
         }
         public string TargetType
         {
             get => _targetType;
-            set => _targetType = ModelHelper.CoerceAsWsNormalized(value);
+            set => _targetType = value.CoerceAsWsNormalized();
         }
 
         public string RecommendedAction
         {
             get => _recommendedAction;
-            set => _recommendedAction = ModelHelper.CoerceAsTrimmed(value);
+            set => _recommendedAction = value.CoerceAsTrimmed();
         }
 
         public Collection<CrawlError> InnerErrors { get; set; }

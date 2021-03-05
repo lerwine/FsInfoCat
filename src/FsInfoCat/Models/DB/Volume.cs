@@ -269,11 +269,11 @@ namespace FsInfoCat.Models.DB
                 VolumeID = Guid.NewGuid();
             _driveFormat = _driveFormat.Trim();
             _volumeName = _volumeName.Trim();
-            if ((_displayName = ModelHelper.CoerceAsWsNormalized(_displayName)).Length == 0)
+            if ((_displayName = _displayName.CoerceAsWsNormalized()).Length == 0)
                 _displayName = _volumeName;
             _notes = _notes.Trim();
-            CreatedOn = ModelHelper.CoerceAsLocalTime(CreatedOn);
-            ModifiedOn = ModelHelper.CoerceAsLocalTime(ModifiedOn);
+            CreatedOn = CreatedOn.CoerceAsLocalTime();
+            ModifiedOn = ModifiedOn.CoerceAsLocalTime();
             if (null != Creator)
                 CreatedBy = Creator.AccountID;
             if (null != Modifier)
