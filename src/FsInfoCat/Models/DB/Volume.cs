@@ -140,11 +140,17 @@ namespace FsInfoCat.Models.DB
         [Display(Name = "Max Name Length")]
         public uint MaxNameLength { get; set; }
 
-        [Required()]
-        [Display(Name = "Flags")]
-        [EnumDataType(typeof(FileSystemFeature))]
-        [Obsolete("Issue #25")]
-        public FileSystemFeature Flags { get; set; }
+        public bool CaseSensitive
+        {
+            get => _caseSensitive;
+            set
+            {
+                if (_caseSensitive == value)
+                    return;
+                _caseSensitive = value;
+                _segmentNameComparer = null;
+            }
+        }
 
         [Display(Name = "Is Inactive")]
         public bool IsInactive { get; set; }
@@ -209,18 +215,6 @@ namespace FsInfoCat.Models.DB
         }
 
         #endregion
-
-        public bool CaseSensitive
-        {
-            get => _caseSensitive;
-            set
-            {
-                if (_caseSensitive == value)
-                    return;
-                _caseSensitive = value;
-                _segmentNameComparer = null;
-            }
-        }
 
         public IEqualityComparer<string> SegmentNameComparer
         {
