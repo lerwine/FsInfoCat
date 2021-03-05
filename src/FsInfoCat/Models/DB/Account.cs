@@ -96,10 +96,12 @@ namespace FsInfoCat.Models.DB
             get { return _role; }
             set
             {
-                if (value != _role)
+                // Normalize enum value
+                UserRole role = ModelHelper.ToUserRole((byte)value);
+                if (role != _role)
                 {
                     _roleDisplay = null;
-                    _role = value;
+                    _role = role;
                 }
             }
         }

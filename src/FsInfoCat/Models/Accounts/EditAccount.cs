@@ -109,19 +109,21 @@ namespace FsInfoCat.Models.Accounts
             get { return _role; }
             set
             {
-                if (value != _role)
+                // Normalize enum value
+                UserRole role = ModelHelper.ToUserRole((byte)value);
+                if (role != _role)
                 {
                     _roleDisplay = null;
-                    _role = value;
+                    _role = role;
                 }
-                _isViewer = value != UserRole.None;
+                _isViewer = role != UserRole.None;
                 if (_isViewer)
                 {
-                    _isUser = value != UserRole.Viewer;
+                    _isUser = role != UserRole.Viewer;
                     if (_isUser)
                     {
-                        _isAppContrib = value != UserRole.User;
-                        _isAdmin = value == UserRole.Admin;
+                        _isAppContrib = role != UserRole.User;
+                        _isAdmin = role == UserRole.Admin;
                         return;
                     }
                 }
