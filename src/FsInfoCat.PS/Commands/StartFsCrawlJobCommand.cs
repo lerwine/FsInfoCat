@@ -26,17 +26,22 @@ namespace FsInfoCat.PS.Commands
         public const int DEFAULT_MAX_DEPTH = 512;
         public const long DEFAULT_MAX_ITEMS = 4294967295L;
         public const long MAX_VALUE_TTL = 9223372036854775L;
+        private const string HELP_MESSAGE_ROOT_PATH = "Root crawl path";
+        private const string HELP_MESSAGE_LITERAL_PATH = "Literal Root crawl path";
+        private const string HELP_MESSAGE_TTL = "Number of minutes to allow crawl to run.";
+        private const string HELP_MESSAGE_STOP_AT = "Date/Time when crawl will be stopped if it has not already completed.";
+        private const string HELP_MESSAGE_NO_EXPIRE = "Job does not expire";
         private string[] _fileSystemProviders = new string[0];
 
-        [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_NONE_TRUE)]
-        [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_TRUE)]
-        [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_TRUE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_ROOT_PATH, Mandatory = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_NONE_TRUE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_ROOT_PATH, Mandatory = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_TRUE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_ROOT_PATH, Mandatory = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_TRUE)]
         [ValidateNotNullOrEmpty()]
         public string[] RootPath { get; set; }
 
-        [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_NONE_FALSE)]
-        [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_FALSE)]
-        [Parameter(HelpMessage = "Root crawl path", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_FALSE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_LITERAL_PATH, Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_NONE_FALSE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_LITERAL_PATH, Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_FALSE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_LITERAL_PATH, Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_FALSE)]
         [ValidateNotNullOrEmpty()]
         public string[] LiteralPath { get; set; }
 
@@ -52,18 +57,18 @@ namespace FsInfoCat.PS.Commands
         [ValidateRange(1L, long.MaxValue)]
         public long MaxItems { get; set; } = DEFAULT_MAX_ITEMS;
 
-        [Parameter(HelpMessage = "Number of minutes to allow crawl to run.", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_TRUE)]
-        [Parameter(HelpMessage = "Number of minutes to allow crawl to run.", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_FALSE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_TTL, Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_TRUE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_TTL, Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_AGE_FALSE)]
         [ValidateRange(1L, MAX_VALUE_TTL)]
         public long Ttl { get; set; }
 
-        [Parameter(HelpMessage = "Date/Time when crawl will be stopped if it has not already completed.", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_TRUE)]
-        [Parameter(HelpMessage = "Date/Time when crawl will be stopped if it has not already completed.", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_FALSE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_STOP_AT, Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_TRUE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_STOP_AT, Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_DATE_TIME_FALSE)]
         [ValidateNotNull()]
         public DateTime StopAt { get; set; }
 
-        [Parameter(HelpMessage = "Job does not expire", ParameterSetName = PARAMETER_SET_NAME_NONE_TRUE)]
-        [Parameter(HelpMessage = "Job does not expire", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_NONE_FALSE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_NO_EXPIRE, ParameterSetName = PARAMETER_SET_NAME_NONE_TRUE)]
+        [Parameter(HelpMessage = HELP_MESSAGE_NO_EXPIRE, Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_NONE_FALSE)]
         public SwitchParameter NoExpire { get; set; }
 
         [Parameter(HelpMessage = "Job name.")]
@@ -74,7 +79,7 @@ namespace FsInfoCat.PS.Commands
         {
             Type t = typeof(FileSystemProvider);
             _fileSystemProviders = SessionState.Provider.GetAll().Where(p => t.IsAssignableFrom(p.ImplementingType)).Select(p => p.Name).ToArray();
-            this.SessionState.PSVariable.Set(PS_PROPERTY_NAME_ALL_PATHS, new Collection<string>());
+            SessionState.PSVariable.Set(PS_PROPERTY_NAME_ALL_PATHS, new Collection<string>());
         }
 
         protected override void ProcessRecord()
