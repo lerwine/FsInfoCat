@@ -25,7 +25,7 @@ namespace FsInfoCat.PS
         /// <summary>
         /// Craws a subdirectory.
         /// </summary>
-        /// <param name="startingDirectory">The filesystem path to be crawled.</param>
+        /// <param name="startingDirectory">The starting subdirectory to be crawled.</param>
         /// <param name="maxItems">The maximum number of items to crawl.</param>
         /// <param name="job">The job running this crawler.</param>
         /// <param name="totalItems">The number of new items crawled.</param>
