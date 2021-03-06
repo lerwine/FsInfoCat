@@ -50,8 +50,6 @@ namespace FsInfoCat.PS.Commands
         {
             private bool _caseSensitive;
             private StringComparer _pathComparer;
-            private PSObject _parent;
-            private Collection<PSObject> _nested = new Collection<PSObject>();
 
             public FileUri RootUri { get; internal set; }
 
