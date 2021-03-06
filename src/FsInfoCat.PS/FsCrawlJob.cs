@@ -102,11 +102,20 @@ namespace FsInfoCat.PS
             _stopWatch = null;
         }
 
+        internal void WriteDebug(string message)
+        {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(message);
+#endif
+            Debug.Add(new DebugRecord(message));
+        }
         internal void StartJob(object state)
         {
+            WriteDebug("CrawlJob.StartJob invoked. Starting background task.");
             _isRunning = true;
-            _task = Task.Factory.StartNew<bool>(() =>
+            _task = Task.Factory.StartNew(() =>
             {
+                WriteDebug("Background task started.");
                 SetJobState(JobState.Running);
                 return RunNext(state);
             }, _cancellationTokenSource.Token);
@@ -118,22 +127,25 @@ namespace FsInfoCat.PS
             JobState jobState;
             if (task.IsCanceled)
             {
+                WriteDebug("Background task was canceled.");
                 jobState = JobState.Stopped;
                 Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, "Aborted") { RecordType = ProgressRecordType.Completed });
             }
             else
             {
+                WriteDebug("Background task completed.");
                 if (task.Result)
                 {
-                    // if (null != result.Item2)
-                    //     Output.Add(PSObject.AsPSObject(result.Item2));
-                    _task = Task.Factory.StartNew<bool>(RunNext, state, _cancellationTokenSource.Token);
+                    WriteDebug("Starting next background task.");
+                    _task = Task.Factory.StartNew(RunNext, state, _cancellationTokenSource.Token);
                     _task.ContinueWith(CrawlCompleted, _cancellationTokenSource.Token, _cancellationTokenSource.Token);
                     return;
                 }
+                WriteDebug("No more directories to be crawled.");
                 jobState = JobState.Completed;
                 Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, "Completed") { RecordType = ProgressRecordType.Completed });
             }
+            WriteDebug($"Creating new FsHost {{ MachineIdentifier = \"{_machineIdentifier}\", MachineName = \"{Environment.MachineName}\" ... }}");
             Output.Add(PSObject.AsPSObject(new FsHost()
             {
                 MachineIdentifier = _machineIdentifier,
@@ -147,20 +159,27 @@ namespace FsInfoCat.PS
         private bool RunNext(object state)
         {
             long itemsRemaining;
-            if (IsExpired() || (itemsRemaining = _maxItems - _totalItemCount) < 1L)
+            if (IsExpired())
+                WriteDebug("Job has reached time limit.");
+            else if ((itemsRemaining = _maxItems - _totalItemCount) < 1L)
+                WriteDebug("Job has reached item limit.");
+            else
             {
-                _currentStartingDirectory = null;
-                return false;
+                if (!_startingDirectories.TryDequeue(out string startingDirectory))
+                {
+                    WriteDebug("No more items in queue.");
+                    _currentStartingDirectory = null;
+                    return true;
+                }
+                WriteDebug($"Crawling \"{startingDirectory}\"");
+                _currentStartingDirectory = startingDirectory;
+                bool result = CrawlWorker.Run(startingDirectory, itemsRemaining, this, out itemsRemaining);
+                _totalItemCount += itemsRemaining;
+                WriteDebug($"CrawlWorker returned {result}. {itemsRemaining} items crawled in \"{startingDirectory}\". Current total: {_totalItemCount}");
+                return result;
             }
-            if (!_startingDirectories.TryDequeue(out string startingDirectory))
-            {
-                _currentStartingDirectory = null;
-                return true;
-            }
-            _currentStartingDirectory = startingDirectory;
-            bool result = CrawlWorker.Run(startingDirectory, itemsRemaining, this, out itemsRemaining);
-            _totalItemCount += itemsRemaining;
-            return result;
+            _currentStartingDirectory = null;
+            return false;
         }
 
         public override void StopJob()

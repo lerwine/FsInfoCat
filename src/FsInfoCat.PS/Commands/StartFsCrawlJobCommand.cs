@@ -79,6 +79,7 @@ namespace FsInfoCat.PS.Commands
         {
             Type t = typeof(FileSystemProvider);
             _fileSystemProviders = SessionState.Provider.GetAll().Where(p => t.IsAssignableFrom(p.ImplementingType)).Select(p => p.Name).ToArray();
+            WriteDebug($"Retrieved {_fileSystemProviders.Length} file system providers: {{ \"{string.Join("\", \"", _fileSystemProviders)}\" }}");
             SessionState.PSVariable.Set(PS_PROPERTY_NAME_ALL_PATHS, new Collection<string>());
         }
 
@@ -90,39 +91,42 @@ namespace FsInfoCat.PS.Commands
                 case PARAMETER_SET_NAME_NONE_TRUE:
                 case PARAMETER_SET_NAME_BY_AGE_TRUE:
                 case PARAMETER_SET_NAME_DATE_TIME_TRUE:
-                    foreach (string p in RootPath)
+                    foreach (string rPath in RootPath)
                     {
-                        if (string.IsNullOrWhiteSpace(p))
+                        WriteDebug($"Processing RootPath: \"{rPath}\"");
+                        if (string.IsNullOrWhiteSpace(rPath))
                             WriteError(MessageId.InvalidPath.ToErrorRecord("Path cannot be empty", new PSArgumentNullException("RootPath"),
-                                ErrorCategory.InvalidArgument, nameof(RootPath), p));
+                                ErrorCategory.InvalidArgument, nameof(RootPath), rPath));
                         else
                         {
                             Collection<PathInfo> resolvedPaths;
                             try
                             {
-                                resolvedPaths = SessionState.Path.GetResolvedPSPathFromPSPath(p);
+                                resolvedPaths = SessionState.Path.GetResolvedPSPathFromPSPath(rPath);
+                                WriteDebug($"Resolved {resolvedPaths.Count} paths: \"{string.Join("\", \"", resolvedPaths.Select(p => p.ProviderPath))}\"");
                             }
                             catch (NotSupportedException exc)
                             {
-                                WriteError(MessageId.InvalidPath.ToErrorRecord("Path references an unsupported provider type", exc, ErrorCategory.InvalidArgument, nameof(RootPath), p));
+                                WriteError(MessageId.InvalidPath.ToErrorRecord("Path references an unsupported provider type", exc, ErrorCategory.InvalidArgument, nameof(RootPath), rPath));
                                 continue;
                             }
                             catch (ItemNotFoundException exc)
                             {
-                                WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(RootPath), p));
+                                WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(RootPath), rPath));
                                 continue;
                             }
                             catch (Exception exc)
                             {
                                 if (exc is System.Management.Automation.DriveNotFoundException || exc is ProviderNotFoundException)
-                                    WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(RootPath), p));
+                                    WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(RootPath), rPath));
                                 else
-                                    WriteError(MessageId.InvalidPath.ToErrorRecord(exc, nameof(RootPath), p));
+                                    WriteError(MessageId.InvalidPath.ToErrorRecord(exc, nameof(RootPath), rPath));
                                 continue;
                             }
 
                             foreach (PathInfo pathInfo in resolvedPaths)
                             {
+                                WriteDebug($"Processing resolved path: \"{pathInfo.ProviderPath}\"");
                                 if (null != pathInfo.Provider && _fileSystemProviders.Contains(pathInfo.Provider.Name, StringComparer.InvariantCultureIgnoreCase))
                                 {
                                     bool fileExists;
@@ -133,51 +137,56 @@ namespace FsInfoCat.PS.Commands
                                             allPaths.Add(pathInfo.ProviderPath);
                                             continue;
                                         }
+                                        WriteDebug($"Directory not found: \"{pathInfo.ProviderPath}\"");
                                         fileExists = File.Exists(pathInfo.ProviderPath);
                                     }
                                     catch (Exception exc)
                                     {
-                                        WriteError(MessageId.InvalidPath.ToErrorRecord(exc, ErrorCategory.InvalidArgument, nameof(RootPath), p));
+                                        WriteError(MessageId.InvalidPath.ToErrorRecord(exc, ErrorCategory.InvalidArgument, nameof(RootPath), rPath));
                                         continue;
                                     }
                                     if (fileExists)
                                         WriteError(MessageId.PathNotFound.ToErrorRecord(new DirectoryNotFoundException("Path refers does not refer to a subdirectory"),
-                                            ErrorCategory.ObjectNotFound, nameof(RootPath), p));
+                                            ErrorCategory.ObjectNotFound, nameof(RootPath), rPath));
                                     else
                                         WriteError(MessageId.PathNotFound.ToErrorRecord(new DirectoryNotFoundException("Subdirectory not found"), ErrorCategory.ObjectNotFound,
-                                            nameof(RootPath), p));
+                                            nameof(RootPath), rPath));
                                 }
+                                else
+                                    WriteWarning($"Path is not for a supported provider: {pathInfo.ProviderPath}");
                             }
                         }
                     }
                     break;
                 default:
-                    foreach (string p in RootPath)
+                    foreach (string lPath in LiteralPath)
                     {
-                        if (string.IsNullOrWhiteSpace(p))
-                            WriteError(MessageId.InvalidPath.ToErrorRecord("Path cannot be empty", new PSArgumentNullException(nameof(RootPath)),
-                                ErrorCategory.InvalidArgument, nameof(RootPath), p));
+                        WriteDebug($"Processing LiteralPath: \"{lPath}\"");
+                        if (string.IsNullOrWhiteSpace(lPath))
+                            WriteError(MessageId.InvalidPath.ToErrorRecord("Path cannot be empty", new PSArgumentNullException(nameof(LiteralPath)),
+                                ErrorCategory.InvalidArgument, nameof(LiteralPath), lPath));
                         else
                         {
                             try
                             {
-                                string pp = GetUnresolvedProviderPathFromPSPath(p);
-                                if (Directory.Exists(pp))
-                                    allPaths.Add(pp);
+                                string pPath = GetUnresolvedProviderPathFromPSPath(lPath);
+                                WriteDebug($"Unresolved provider path from LiteralPath: \"{pPath}\"");
+                                if (Directory.Exists(pPath))
+                                    allPaths.Add(pPath);
                                 else
                                 {
-                                    if (File.Exists(pp))
+                                    if (File.Exists(pPath))
                                         throw new DirectoryNotFoundException("Path does not refer to a subdirectory");
                                     throw new DirectoryNotFoundException("Subdirectory not found");
                                 }
                             }
                             catch (DirectoryNotFoundException exc)
                             {
-                                WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(RootPath), p));
+                                WriteError(MessageId.PathNotFound.ToErrorRecord(exc, ErrorCategory.ObjectNotFound, nameof(LiteralPath), lPath));
                             }
                             catch (Exception exc)
                             {
-                                WriteError(MessageId.InvalidPath.ToErrorRecord("Cannot determine provider path", exc, ErrorCategory.InvalidArgument, nameof(RootPath), p));
+                                WriteError(MessageId.InvalidPath.ToErrorRecord("Cannot determine provider path", exc, ErrorCategory.InvalidArgument, nameof(LiteralPath), lPath));
                             }
                         }
                     }
@@ -190,22 +199,27 @@ namespace FsInfoCat.PS.Commands
             try
             {
                 FsCrawlJob crawlJob;
+                IEnumerable<string> allPaths = (IEnumerable<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS);
                 switch (ParameterSetName)
                 {
                     case PARAMETER_SET_NAME_BY_AGE_TRUE:
                     case PARAMETER_SET_NAME_BY_AGE_FALSE:
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS), MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumeInfos, Name);
+                        WriteDebug($"Creating new FsCrawlJob(startingDirectories: {{ \"{string.Join("\", \"", allPaths.ToArray())}\" }}, maxDepth: {MaxDepth}, maxItems: {MaxItems}, ttl: {Ttl}, machineIdentifier: \"{MachineIdentifier}\", getVolumes: GetVolumeInfos, friendlyName=\"{Name}\")");
+                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumeInfos, Name);
                         break;
                     case PARAMETER_SET_NAME_DATE_TIME_TRUE:
                     case PARAMETER_SET_NAME_DATE_TIME_FALSE:
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS), MaxDepth, MaxItems, StopAt, MachineIdentifier, GetVolumeInfos, Name);
+                        WriteDebug($"Creating new FsCrawlJob(startingDirectories: {{ \"{string.Join("\", \"", allPaths.ToArray())}\" }}, maxDepth: {MaxDepth}, maxItems: {MaxItems}, stopAt: {StopAt}, machineIdentifier: \"{MachineIdentifier}\", getVolumes: GetVolumeInfos, friendlyName=\"{Name}\")");
+                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, StopAt, MachineIdentifier, GetVolumeInfos, Name);
                         break;
                     default:
-                        crawlJob = new FsCrawlJob((IEnumerable<string>)SessionState.PSVariable.GetValue(PS_PROPERTY_NAME_ALL_PATHS), MaxDepth, MaxItems, -1L, MachineIdentifier, GetVolumeInfos, Name);
+                        WriteDebug($"Creating new FsCrawlJob(startingDirectories: {{ \"{string.Join("\", \"", allPaths.ToArray())}\" }}, maxDepth: {MaxDepth}, maxItems: {MaxItems}, ttl: -1L, machineIdentifier: \"{MachineIdentifier}\", getVolumes: GetVolumeInfos, friendlyName=\"{Name}\")");
+                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, -1L, MachineIdentifier, GetVolumeInfos, Name);
                         break;
                 }
                 JobRepository.Add(crawlJob);
                 WriteObject(crawlJob);
+                WriteDebug("Queueing work item (CrawlJob.StartJob)");
                 ThreadPool.QueueUserWorkItem(crawlJob.StartJob);
             }
             catch (Exception e)

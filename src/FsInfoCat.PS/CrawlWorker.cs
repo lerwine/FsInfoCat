@@ -32,34 +32,45 @@ namespace FsInfoCat.PS
         /// <returns>True if ran to completion; otherwise, false.</returns>
         internal static bool Run(string startingDirectory, long maxItems, FsCrawlJob job, out long totalItems)
         {
+            job.WriteDebug($"CrawlWorker processing \"{startingDirectory}\"; maxItems: {maxItems}");
             DirectoryInfo directoryInfo = new DirectoryInfo(startingDirectory);
             if (!directoryInfo.Exists)
             {
+                job.WriteDebug("Directory does not exist.");
                 totalItems = 0L;
                 return true;
             }
             IFsDirectory parent;
-            if (!job.FsRoots.TryFindVolume(directoryInfo, out FsRoot fsRoot))
+            if (job.FsRoots.TryFindVolume(directoryInfo, out FsRoot fsRoot))
+                job.WriteDebug($"Using existing FsRoot({fsRoot.RootPathName})");
+            else
             {
                 if (job.GetVolumes().TryFindVolume(directoryInfo, out IVolumeInfo volume))
+                {
+                    job.WriteDebug($"Adding new FsRoot({volume})");
                     fsRoot = new FsRoot(volume);
+                }
                 else
                 {
+                    job.WriteDebug($"No existing FsRoot or registered volume found for \"{startingDirectory}\".");
                     totalItems = 0L;
                     return true;
                 }
             } 
             if (job.IsExpired())
             {
+                job.WriteDebug("Job has reached time limit.");
                 totalItems = 0L;
                 return false;
             }
             parent = ImportDirectory(fsRoot, new DirectoryInfo(fsRoot.RootUri.ToLocalPath()), directoryInfo);
             if (parent is null)
             {
+                job.WriteDebug("Failed to import parent directory");
                 totalItems = 0L;
                 return false;
             }
+            job.WriteDebug("Crawling subdirectories");
             CrawlWorker crawler = new CrawlWorker(maxItems, job);
             bool result = crawler.Crawl(parent, directoryInfo, job.MaxDepth);
             totalItems = crawler._totalItems;
@@ -114,29 +125,34 @@ namespace FsInfoCat.PS
             {
                 _job.Error.Add(new ErrorRecord(exc, MessageId.DirectoryFilesAccessError.ToString(), ErrorCategory.ReadError, parentDirectoryInfo)
                 {
-                    ErrorDetails = new ErrorDetails("Error reading files from " + parentDirectoryInfo.FullName)
+                    ErrorDetails = new ErrorDetails($"Error reading files from {parentDirectoryInfo.FullName}")
                 });
                 files = new FileInfo[0];
+                _job.WriteDebug("Reading subdirectories");
                 try { directories = parentDirectoryInfo.GetDirectories(); } catch { directories = new DirectoryInfo[0]; }
             }
             if (directories is null)
             {
+                _job.WriteDebug("Reading subdirectories");
                 try { directories = parentDirectoryInfo.GetDirectories(); }
                 catch (Exception exc)
                 {
                     _job.Error.Add(new ErrorRecord(exc, MessageId.SubdirectoriesAccessError.ToString(), ErrorCategory.ReadError, parentDirectoryInfo)
                     {
-                        ErrorDetails = new ErrorDetails("Error reading subdirectories from " + parentDirectoryInfo.FullName)
+                        ErrorDetails = new ErrorDetails($"Error reading subdirectories from {parentDirectoryInfo.FullName}")
                     });
                     directories = new DirectoryInfo[0];
                 }
             }
             for (int i = 0; i < files.Length; i++)
             {
+                _job.WriteDebug($"Importing file #{i}");
                 FileInfo fileInfo = files[i];
+                // TODO: Need to do case-appropriate name lookups
                 FsFile fsFile = parent.ChildNodes.OfType<FsFile>().FirstOrDefault(f => f.Name.Equals(fileInfo.Name));
                 if (fsFile is null)
                 {
+                    _job.WriteDebug($"Adding new FsFile {{ Name = \"{fileInfo.Name}\", Length = {fileInfo.Length}, CreationTime = {fileInfo.CreationTimeUtc}, LastWriteTime = {fileInfo.LastWriteTimeUtc}, Attributes = {(int)fileInfo.Attributes} }}");
                     parent.ChildNodes.Add(new FsFile
                     {
                         Name = fileInfo.Name,
@@ -147,6 +163,8 @@ namespace FsInfoCat.PS
                     });
                     if (++_totalItems == _maxItems)
                     {
+                        _job.WriteDebug("Reached item limit");
+                        // TODO: Need to do case-appropriate name lookups
                         IEnumerable<string> skippedItems = files.Skip(i).Where(f => !parent.ChildNodes.OfType<FsFile>().Any(n => n.Name.Equals(f.Name))).Select(f => f.Name);
                         if (maxDepth > 0)
                             skippedItems = directories.Select(d => d.Name).Concat(skippedItems);
@@ -160,6 +178,7 @@ namespace FsInfoCat.PS
                 }
                 else
                 {
+                    _job.WriteDebug($"Updating existing FsFile {{ Name = \"{fsFile.Name}\", Length = {fileInfo.Length}, CreationTime = {fileInfo.CreationTimeUtc}, LastWriteTime = {fileInfo.LastWriteTimeUtc}, Attributes = {(int)fileInfo.Attributes} }}");
                     fsFile.Length = fileInfo.Length;
                     fsFile.CreationTime = fileInfo.CreationTimeUtc;
                     fsFile.LastWriteTime = fileInfo.LastWriteTimeUtc;
@@ -168,17 +187,22 @@ namespace FsInfoCat.PS
             }
             if (maxDepth < 1)
             {
+                _job.WriteDebug("Depth limit");
                 if (directories.Length > 0)
                     parent.Messages.Add(new CrawlWarning(MessageId.MaxDepthReached));
                 return true;
             }
             for (int i = 0; i < directories.Length; i++)
             {
+                _job.WriteDebug($"Importing subdirectory #{i}");
                 DirectoryInfo directoryInfo = directories[i];
+                // TODO: Need to do case-appropriate name lookups.
+                // TODO: Need to do check if subdirectory matches any existing registered volumes and do not crawl if so.
                 FsDirectory fsDirectory = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(f => f.Name.Equals(directoryInfo.Name));
                 if (fsDirectory is null)
                 {
                     ++_totalItems;
+                    _job.WriteDebug($"Adding new FsDirectory {{ Name = \"{directoryInfo.Name}\", CreationTime = {directoryInfo.CreationTimeUtc}, LastWriteTime = {directoryInfo.LastWriteTimeUtc}, Attributes = {(int)directoryInfo.Attributes} }}");
                     fsDirectory = new FsDirectory
                     {
                         Name = directoryInfo.Name,
@@ -190,18 +214,32 @@ namespace FsInfoCat.PS
                 }
                 else
                 {
+                    _job.WriteDebug($"Updating existing FsDirectory {{ Name = \"{fsDirectory.Name}\", CreationTime = {directoryInfo.CreationTimeUtc}, LastWriteTime = {directoryInfo.LastWriteTimeUtc}, Attributes = {(int)directoryInfo.Attributes} }}");
                     fsDirectory.CreationTime = directoryInfo.CreationTimeUtc;
                     fsDirectory.LastWriteTime = directoryInfo.LastWriteTimeUtc;
                     fsDirectory.Attributes = (int)directoryInfo.Attributes;
                 }
-                if (_totalItems == _maxItems || _job.IsExpired() || !Crawl(fsDirectory, directoryInfo, maxDepth - 1))
+                if (_totalItems == _maxItems)
                 {
+                    _job.WriteDebug("Reached item limit");
+                    return false;
+                }
+                else if (_job.IsExpired())
+                {
+                    _job.WriteDebug("Job has reached time limit.");
+                    return false;
+                }
+                if (!Crawl(fsDirectory, directoryInfo, maxDepth - 1))
+                {
+                    _job.WriteDebug("Subdirectory crawl returned false.");
+                    // TODO: Need to do case-appropriate name lookups
                     IEnumerable<string> skippedItems = directories.Skip(i).Where(f => !parent.ChildNodes.OfType<FsDirectory>().Any(n => n.Name.Equals(f.Name))).Select(f => f.Name);
                     if (!skippedItems.Any())
                         return true;
                     parent.Messages.Add(new PartialCrawlWarning(MessageId.MaxItemsReached, skippedItems));
                     return false;
                 }
+                _job.WriteDebug("Subdirectory crawl returned true.");
             }
             return true;
         }
