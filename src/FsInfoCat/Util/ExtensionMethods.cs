@@ -1,4 +1,3 @@
-using FsInfoCat.Models.Volumes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,43 +27,6 @@ namespace FsInfoCat.Util
         public const string MESSAGE_MAX_DEPTH_REACHED = "Maximum crawl depth has been reached.";
         public const string MESSAGE_MAX_ITEMS_REACHED = "Maximum crawl item count has been reached.";
         public const string MESSAGE_UNEXPECTED_ERROR = "An unexpected error has occurred.";
-
-        public static T FindByChildItem<T>(this IEnumerable<T> source, FileUri fileUri)
-            where T : class, IVolumeInfo
-        {
-            if (source is null || fileUri is null)
-                return null;
-
-            // Compare name. If matches, go up to parent volume and compare there
-            throw new NotImplementedException();
-        }
-
-        public static IEnumerable<T> FindByIdentifier<T>(this IEnumerable<T> source, VolumeIdentifier volumeIdentifier)
-            where T : class, IVolumeInfo
-        {
-            if (source is null)
-                return new T[0];
-            return source.Where(v => !(v is null) && v.Identifier.Equals(volumeIdentifier));
-        }
-
-        public static IEnumerable<T> FindByRootUri<T>(this IEnumerable<T> source, FileUri fileUri)
-            where T : class, IVolumeInfo
-        {
-            if (source is null || fileUri is null)
-                return new T[0];
-            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.PathComparer));
-        }
-
-        public static IEnumerable<T> FindByVolumeName<T>(this IEnumerable<T> source, string volumeName)
-            where T : class, IVolumeInfo
-        {
-            if (source is null)
-                return new T[0];
-            if (string.IsNullOrEmpty(volumeName))
-                return source.Where(v => !(v is null) && string.IsNullOrEmpty(v.VolumeName));
-            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
-            return source.Where(v => !(v is null) && comparer.Equals(volumeName, v.VolumeName));
-        }
 
         public static bool IsEqualTo(this string s, char c) => null != s && s.Length == 1 && s[0] == c;
 

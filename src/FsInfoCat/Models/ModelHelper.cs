@@ -12,70 +12,30 @@ namespace FsInfoCat.Models
 {
     public static class ModelHelper
     {
-        public const string Role_Name_Viewer = "viewer";
-        public const string Role_Name_User = "user";
-        public const string Role_Name_App_Contrib = "app-contrib";
-        public const string Role_Name_Admin = "admin";
-        public const string PATTERN_DOTTED_NAME = @"(?i)^\s*([a-z][a-z\d_]*(\.[a-z][a-z\d_]*)*)\s*$";
-        public const string PATTERN_MACHINE_NAME = @"^\s*(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?\s*$";
-        public const string PATTERN_PATH_OR_URL = @"(?i)^([a-z]:[\\/]$|file:///[a-z]:/$|([a-z]:|[\\/]{2}([a-z]+(-[a-z\d]+)*(\.[a-z]+(-[a-z\d]+)*)*|(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)(\.(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)){3}))([\\/][^\\/:""<>|*?\x00-\x19]+)+[\\/]?$|file://(/[a-z]:|[a-z]+(-[a-z\d]+)*(\.[a-z]+(-[a-z\d]+)*)*|(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)(\.(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)){3})?([\\/][^\\/:""<>|*?\x00-\x19]+)+/?$)";
+        public const string ROLE_NAME_VIEWER = "viewer";
+        public const string ROLE_NAME_USER = "user";
+        public const string ROLE_NAME_APP_CONTRIB = "app-contrib";
+        public const string ROLE_NAME_ADMIN = "admin";
+
+        //public const string PATTERN_PATH_OR_URL = @"(?i)^([a-z]:[\\/]$|file:///[a-z]:/$|([a-z]:|[\\/]{2}([a-z]+(-[a-z\d]+)*(\.[a-z]+(-[a-z\d]+)*)*|(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)(\.(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)){3}))([\\/][^\\/:""<>|*?\x00-\x19]+)+[\\/]?$|file://(/[a-z]:|[a-z]+(-[a-z\d]+)*(\.[a-z]+(-[a-z\d]+)*)*|(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)(\.(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)){3})?([\\/][^\\/:""<>|*?\x00-\x19]+)+/?$)";
+
+        public const string PATTERN_LOGIN_NAME_VALIDATION = @"(?i)^\s*([a-z][a-z\d_]*(\.[a-z][a-z\d_]*)*)\s*$";
+        public static readonly Regex LOGIN_NAME_VALIDATION_REGEX = new Regex(PATTERN_LOGIN_NAME_VALIDATION, RegexOptions.Compiled);
+
+        public const string PATTERN_MACHINE_NAME = @"(?i)^\s*((?=((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})\d+(\.\d+){3}(?![.\d])|(?=\[[a-f\d:]+\]|[a-f\d]*:)\[?(:(:[a-f\d]{1,4}){1,7}|(?=([a-f\d]+:)+((:[a-f\d]+)+|:|[a-f\d]+))([a-f\d]{0,4}:){1,7}[a-f\d]{0,4})\]?|(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
+        public static readonly Regex MACHINE_NAME_REGEX = new Regex(PATTERN_MACHINE_NAME, RegexOptions.Compiled);
+
         public const string PATTERN_BASE64 = @"^\s*(([A-Za-z\d+/])\s*)?$";
-        public static readonly Regex DottedNameRegex = new Regex(PATTERN_DOTTED_NAME, RegexOptions.Compiled);
-        public static readonly Regex MachineNameRegex = new Regex(PATTERN_MACHINE_NAME, RegexOptions.Compiled);
-        public static readonly Regex PathOrUrlRegex = new Regex(PATTERN_PATH_OR_URL, RegexOptions.Compiled);
-        public static readonly Regex NonNormalWsRegex = new Regex(@" \s+|(?! )\s+", RegexOptions.Compiled);
         public static readonly Regex Base64Regex = new Regex(PATTERN_BASE64, RegexOptions.Compiled);
 
-        public static string CoerceAsString(object baseValue) => (baseValue is null) ? "" : ((baseValue is string) ? (string)baseValue : baseValue.ToString());
-
-        public static string CoerceAsTrimmedString(object baseValue) => (baseValue is null) ? "" : ((baseValue is string) ? (string)baseValue : baseValue.ToString()).Trim();
-
-        public static string CoerceAsWsNormalizedString(object baseValue) => CoerceAsWsNormalized((baseValue is null || baseValue is string) ? baseValue as string : baseValue.ToString());
-
-        public static Guid CoerceAsGuid(object baseValue) => (null != baseValue && baseValue is Guid) ? (Guid)baseValue : Guid.Empty;
-
-        public static bool CoerceAsBoolean(object baseValue) => (null != baseValue && baseValue is bool) ? (bool)baseValue : false;
-
-        public static string CoerceAsNonNull(this string value) => (value is null) ? "" : value;
-
-        public static string CoerceAsTrimmed(this string value) => (value is null) ? "" : value.Trim();
-
-        public static string CoerceAsWsNormalized(this string value) => ((value = CoerceAsTrimmed(value)).Length > 0) ? NonNormalWsRegex.Replace(value, " ") : value;
-
-        public static DateTime CoerceAsLocalTime(this DateTime value)
-        {
-            switch (value.Kind)
-            {
-                case DateTimeKind.Unspecified:
-                    return new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Millisecond, DateTimeKind.Local);
-                case DateTimeKind.Local:
-                    return value;
-                default:
-                    return value.ToLocalTime();
-            }
-        }
-
-        public static DateTime CoerceAsLocalTimeOrNow(this DateTime? value) => (value.HasValue) ? CoerceAsLocalTime(value.Value) : DateTime.Now;
-
-        public static DateTime CoerceAsLocalTimeOrDefault(this DateTime? value, DateTime defaultValue) => CoerceAsLocalTime(value ?? defaultValue);
-
-        public static DateTime CoerceAsUniversalTime(this DateTime value)
-        {
-            switch (value.Kind)
-            {
-                case DateTimeKind.Unspecified:
-                    return new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Millisecond, DateTimeKind.Utc);
-                case DateTimeKind.Utc:
-                    return value;
-                default:
-                    return value.ToUniversalTime();
-            }
-        }
-
-        public static DateTime CoerceAsUniversalTimeOrNow(this DateTime? value) => (value.HasValue) ? CoerceAsUniversalTime(value.Value) : DateTime.UtcNow;
-
-        public static DateTime CoerceAsUniversalTimeOrDefault(this DateTime? value, DateTime defaultValue) => CoerceAsUniversalTime(value ?? defaultValue);
-
+        /// <summary>
+        /// Validates an <seealso cref="IModficationAuditable"/>.
+        /// </summary>
+        /// <param name="target">The <seealso cref="IModficationAuditable"/> to validate.</param>
+        /// <param name="modifiedBy">The <seealso cref="IModficationAuditable.ModifiedBy"/> to apply to the <paramref name="target"/> <seealso cref="IModficationAuditable"/>.</param>
+        /// <param name="isCreate">Set to <see langword="true"/> if this is being validated for a database insert operation.</param>
+        /// <returns>An <seealso cref="IList{T}">IList</seealso><c>&lt;<see cref="ValidationResult"/>&gt;</c> that contains the property validation results for
+        /// the <paramref name="target"/> <seealso cref="IModficationAuditable"/></returns>
         public static IList<ValidationResult> ValidateForSave(this IModficationAuditable target, Account modifiedBy, bool isCreate)
         {
             if (target is null)
@@ -89,14 +49,19 @@ namespace FsInfoCat.Models
                 target.CreatedOn = target.ModifiedOn;
                 target.CreatedBy = target.ModifiedBy;
             }
-            else
-            {
-                if (null == (target.CreatedOn = (target.CreatedOn)))
-                    target.CreatedOn = CoerceAsLocalTimeOrDefault(target.CreatedOn, target.ModifiedOn);
-            }
             return target.ValidateAll();
         }
 
+        /// <summary>
+        /// Finds the <seealso cref="IVolumeInfo"/> that contains the specified <seealso cref="DirectoryInfo"/>.
+        /// </summary>
+        /// <typeparam name="T">The <seealso cref="IVolumeInfo"/> type.</typeparam>
+        /// <param name="volumes">The collection of <seealso cref="IVolumeInfo"/> objects.</param>
+        /// <param name="directoryInfo">The target <seealso cref="DirectoryInfo"/>.</param>
+        /// <param name="result">The <seealso cref="IVolumeInfo"/> of type <typeparamref name="T"/> to which <paramref name="directoryInfo"/> or <see langword="null"/>
+        /// if no match was found.</param>
+        /// <returns><see langword="true"/> if <paramref name="directoryInfo"/> belongs to one of the items in <paramref name="volumes"/>;
+        /// otherwise, <see langword="false"/>.</returns>
         public static bool TryFindVolume<T>(this IEnumerable<T> volumes, DirectoryInfo directoryInfo, out T result)
             where T : class, IVolumeInfo
         {
@@ -112,14 +77,51 @@ namespace FsInfoCat.Models
             return true;
         }
 
+        public static T FindByChildItem<T>(this IEnumerable<T> source, FileUri fileUri)
+            where T : class, IVolumeInfo
+        {
+            if (source is null || fileUri is null)
+                return null;
+
+            // Compare name. If matches, go up to parent volume and compare there
+            throw new NotImplementedException();
+        }
+
+        public static IEnumerable<T> FindByIdentifier<T>(this IEnumerable<T> source, VolumeIdentifier volumeIdentifier)
+            where T : class, IVolumeInfo
+        {
+            if (source is null)
+                return new T[0];
+            return source.Where(v => !(v is null) && v.Identifier.Equals(volumeIdentifier));
+        }
+
+        public static IEnumerable<T> FindByRootUri<T>(this IEnumerable<T> source, FileUri fileUri)
+            where T : class, IVolumeInfo
+        {
+            if (source is null || fileUri is null)
+                return new T[0];
+            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.PathComparer));
+        }
+
+        public static IEnumerable<T> FindByVolumeName<T>(this IEnumerable<T> source, string volumeName)
+            where T : class, IVolumeInfo
+        {
+            if (source is null)
+                return new T[0];
+            if (string.IsNullOrEmpty(volumeName))
+                return source.Where(v => !(v is null) && string.IsNullOrEmpty(v.VolumeName));
+            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+            return source.Where(v => !(v is null) && comparer.Equals(volumeName, v.VolumeName));
+        }
+
         public static Accounts.UserRole ToUserRole(byte value)
         {
             return Enum.GetValues(typeof(Accounts.UserRole)).Cast<Accounts.UserRole>().Where(t => t.Equals(value)).FirstOrDefault();
         }
 
-        public static HostDevices.PlatformType ToPlatformType(byte value)
+        public static PlatformType ToPlatformType(byte value)
         {
-            return Enum.GetValues(typeof(HostDevices.PlatformType)).Cast<HostDevices.PlatformType>().Where(t => t.Equals(value)).FirstOrDefault();
+            return Enum.GetValues(typeof(PlatformType)).Cast<PlatformType>().Where(t => t.Equals(value)).FirstOrDefault();
         }
     }
 }

@@ -1,7 +1,8 @@
+using FsInfoCat.Models.DB;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models.HostDevices
 {
@@ -77,7 +78,7 @@ namespace FsInfoCat.Models.HostDevices
                         result.Add(new ValidationResult(HostDevice.Error_Message_MachineName_Empty, new string[] { HostDevice.PropertyName_MachineName }));
                     else if (_machineName.Length > HostDevice.Max_Length_DisplayName)
                         result.Add(new ValidationResult(HostDevice.Error_Message_MachineName_Length, new string[] { HostDevice.PropertyName_MachineName }));
-                    else if (!ModelHelper.MachineNameRegex.IsMatch(_machineName))
+                    else if (!ModelHelper.MACHINE_NAME_REGEX.IsMatch(_machineName))
                         result.Add(new ValidationResult(HostDevice.Error_Message_MachineName_Invalid, new string[] { HostDevice.PropertyName_MachineName }));
                     break;
             }

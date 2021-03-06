@@ -1,4 +1,4 @@
-namespace FsInfoCat.Models.HostDevices
+namespace FsInfoCat
 {
     public enum PlatformType : byte
     {

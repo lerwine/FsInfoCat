@@ -64,7 +64,7 @@ namespace FsInfoCat.Models.DB
         [Required(ErrorMessage = Error_Message_Login_Empty)]
         [MinLength(1, ErrorMessage = Error_Message_Login_Empty)]
         [MaxLength(Max_Length_Login_Name, ErrorMessage = Error_Message_Login_Length)]
-        [RegularExpression(ModelHelper.PATTERN_DOTTED_NAME, ErrorMessage = Error_Message_Login_Invalid)]
+        [RegularExpression(ModelHelper.PATTERN_LOGIN_NAME_VALIDATION, ErrorMessage = Error_Message_Login_Invalid)]
         [Display(Name = DisplayName_LoginName)]
         public string LoginName
         {
@@ -261,7 +261,7 @@ namespace FsInfoCat.Models.DB
                         result.Add(new ValidationResult(Error_Message_Login_Empty, new string[] { PropertyName_LoginName }));
                     else if (_loginName.Length > Max_Length_Login_Name)
                         result.Add(new ValidationResult(Error_Message_Login_Length, new string[] { PropertyName_LoginName }));
-                    else if (!ModelHelper.DottedNameRegex.IsMatch(_loginName))
+                    else if (!ModelHelper.LOGIN_NAME_VALIDATION_REGEX.IsMatch(_loginName))
                         result.Add(new ValidationResult(Error_Message_Login_Invalid, new string[] { PropertyName_LoginName }));
                     break;
             }

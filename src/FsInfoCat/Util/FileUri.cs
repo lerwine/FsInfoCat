@@ -11,21 +11,6 @@ namespace FsInfoCat.Util
     {
         private readonly int _nameIndex;
 
-        ///// <summary>
-        ///// Indicates whether the path represents a subdirectory (ends with <c>/</c>)
-        ///// </summary>
-        //public bool IsDirectory { get; }
-
-        ///// <summary>
-        ///// Indicates whether the path represents a subdirectory (<see cref="Segments"/>[0] is <c>/</c>)
-        ///// </summary>
-        //public bool IsAbsolute { get; }
-
-        ///// <summary>
-        ///// Indicates whether this is an empty file URI (lengths of <see cref="Segments"/> and <see cref="Host"/> are zero).
-        ///// </summary>
-        //public bool IsEmpty { get; }
-
         /// <summary>
         /// URI encode host name.
         /// </summary>
@@ -150,23 +135,26 @@ namespace FsInfoCat.Util
             return !(other is null) && Host.Equals(other.Host) && comparer.Equals(AbsolutePath, other.AbsolutePath);
         }
 
-        public bool Contains(FileUri other, IEqualityComparer<string> comparer)
-        {
-            if (comparer is null)
-                throw new ArgumentNullException(nameof(comparer));
-            return !(other is null || ReferenceEquals(this, other)) && Host.Equals(other.Host, StringComparison.InvariantCultureIgnoreCase) &&
-                AbsolutePath.Length < other.AbsolutePath.Length && other.AbsolutePath.StartsWith($"{AbsolutePath}{UriHelper.URI_PATH_SEPARATOR_CHAR}");
-        }
-
         /// <summary>
         /// Creates a local path string from file URI.
         /// </summary>
         /// <returns>A local path string from file URI.</returns>
-        public string ToLocalPath()
+        public string ToLocalPath(PlatformType platform = PlatformType.Unknown)
         {
             if (IsEmpty())
-                return "";
-            return new Uri(ToString()).LocalPath;
+                return ""; 
+            switch ((platform == PlatformType.Unknown) ? UriHelper.PLATFORM_TYPE : platform)
+            {
+                case PlatformType.Linux:
+                case PlatformType.OSX:
+                    if (Host.Length == 0)
+                        return Uri.UnescapeDataString(AbsolutePath);
+                    return $"//{Host}/{Uri.UnescapeDataString(AbsolutePath)}";
+                default:
+                    if (Host.Length == 0)
+                        return Uri.UnescapeDataString(AbsolutePath).Replace('/', '\\');
+                    return $"\\\\{Host}\\{Uri.UnescapeDataString(AbsolutePath)}";
+            }
         }
 
         public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) || Host.Equals(other.Host) && AbsolutePath.Equals(other.AbsolutePath));

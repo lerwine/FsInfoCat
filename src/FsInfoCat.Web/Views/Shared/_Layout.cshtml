@@ -22,7 +22,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-@if(User.IsInRole(FsInfoCat.Models.ModelHelper.Role_Name_App_Contrib))
+@if(User.IsInRole(FsInfoCat.Models.ModelHelper.ROLE_NAME_APP_CONTRIB))
 {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="AppHost" asp-action="Index">App Host</a>

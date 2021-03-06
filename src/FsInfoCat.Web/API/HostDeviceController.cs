@@ -28,7 +28,7 @@ namespace FsInfoCat.Web.API
 
         // GET: api/HostDevice/GetById/{id}
         [HttpGet("{id}")]
-        [Authorize(Roles = ModelHelper.Role_Name_Viewer)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_VIEWER)]
         public async Task<ActionResult<HostDevice>> GetById(Guid id)
         {
             return await _context.HostDevice.FindAsync(id);
@@ -70,7 +70,7 @@ namespace FsInfoCat.Web.API
 
         // POST: api/HostDevice/Register
         [HttpPost]
-        [Authorize(Roles = ModelHelper.Role_Name_App_Contrib)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_APP_CONTRIB)]
         // [ValidateAntiForgeryToken]
         public async Task<ActionResult<RequestResponse<HostDevice>>> Register(HostDeviceRegRequest host)
         {
@@ -79,7 +79,7 @@ namespace FsInfoCat.Web.API
 
         // DELETE: api/HostDevice/UnRegister/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_ADMIN)]
         public async Task<ActionResult<bool>> UnRegister(Guid id)
         {
             return await _context.HostDevice.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {

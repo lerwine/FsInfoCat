@@ -13,10 +13,10 @@ namespace FsInfoCat.Models.Crawl
             ChildNode = childNode;
         }
 
-        public Collection<FsChildNodeWithPath> Create(FsRoot root)
+        public Collection<FsChildNodeWithPath> Create(FsRoot root, PlatformType platform = PlatformType.Unknown)
         {
             Collection<FsChildNodeWithPath> result = new Collection<FsChildNodeWithPath>();
-            Create(root.RootUri.ToLocalPath(), root.ChildNodes, result);
+            Create(root.RootUri.ToLocalPath(platform), root.ChildNodes, result);
             return result;
         }
 

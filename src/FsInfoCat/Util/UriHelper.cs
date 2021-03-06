@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Util
@@ -49,16 +45,200 @@ namespace FsInfoCat.Util
         public const string URI_PATH_SEPARATOR_STRING = "/";
         public const char URI_SCHEME_SEPARATOR_CHAR = ':';
 
-        public static readonly Regex INVALID_WINDOWS_URI_FILENAME_REGEX = new Regex(@"[\u0000-\u0019""<>|:*?\\/]|%([01]\d|2[2AF]|3[ACEF]|[57]C)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public static readonly Regex INVALID_LINUX_URI_FILENAME_REGEX = new Regex(@"[\u0000/]|%(00|2F)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public static readonly Regex INVALID_URI_FILENAME_REGEX;
-        public static readonly Regex INVALID_WINDOWS_URI_PATH_REGEX = new Regex(@"[\u0000-\u0019""<>|*?]|%([01]\d|2[2A]|3[CEF]|7C)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public static readonly Regex INVALID_LINUX_URI_PATH_REGEX = new Regex(@"\u0000|%00", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public static readonly Regex INVALID_URI_PATH_REGEX;
+        public const string PATTERN_DNS_NAME = @"(?i)^\s*(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?\s*$";
+        public static readonly Regex DNS_NAME_REGEX = new Regex(PATTERN_DNS_NAME, RegexOptions.Compiled);
+
+        public const string PATTERN_IPV6_ADDRESS = @"(?i)^\s*(?=\[[a-f\d:]+\]|[a-f\d]*:)\[?(:(:[a-f\d]{1,4}){1,7}|(?=([a-f\d]+:)+((:[a-f\d]+)+|:|[a-f\d]+))([a-f\d]{0,4}:){1,7}[a-f\d]{0,4})\]?\s*$";
+        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(PATTERN_IPV6_ADDRESS, RegexOptions.Compiled);
+
+        public const string PATTERN_IPV2_ADDRESS = @"^\s*(?=((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})\d+(\.\d+){3}\s*$";
+        public static readonly Regex IPV2_ADDRESS_REGEX = new Regex(PATTERN_IPV2_ADDRESS, RegexOptions.Compiled);
+
+        public static class Windows
+        {
+            public const string PATTERN_LOCAL_FS_NAME = @"^[^\u0000-\u0019""<>|:*?\\/]+$";
+            public static readonly Regex LOCAL_FS_NAME_REGEX = new Regex(PATTERN_LOCAL_FS_NAME, RegexOptions.Compiled);
+
+            public const string PATTERN_LOCAL_FS_PATH = @"(?i)^\s*([a-z]:[\\/]?|[a-z]:([\\/][^\u0000-\u0019""<>|:*?\\/]+)+[\\/]?|[\\/][\\/]((?=((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})\d+(\.\d+){3}|(?=\[[a-f\d:]+\]|[a-f\d]*:)\[?(:(:[a-f\d]{1,4}){1,7}|(?=([a-f\d]+:)+((:[a-f\d]+)+|:|[a-f\d]+))([a-f\d]{0,4}:){1,7}[a-f\d]{0,4})\]?|(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)([\\/]|([\\/][^\u0000-\u0019""<>|:*?\\/]+)+[\\/]?|([\\/][^\u0000-\u0019""<>|:*?\\/]+)+[\\/]?)?)\s*$";
+            public static readonly Regex LOCAL_FS_PATH_REGEX = new Regex(PATTERN_LOCAL_FS_PATH, RegexOptions.Compiled);
+
+            public const string PATTERN_FS_URI_NAME = @"(?i)^([^\u0000-\u0019""<>|:*?\\/%]+|%([^012357%]|2[^2af]|3[^acef]|[57][^c]|(?=%|$)))+$";
+            public static readonly Regex FS_URI_NAME_REGEX = new Regex(PATTERN_FS_URI_NAME, RegexOptions.Compiled);
+
+            public const string PATTERN_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(?=\S)(file://([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?|/[a-f]:)|[\\/]{2}([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)|[a-f]:)([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff/"" <>\\/|]+|%([^012357%]|2[^2af]|3[^acef]|[57][^c]|(?=%|$)))+)*[\\/]?\s*$";
+            public static readonly Regex ABS_FILE_URI_OR_LOCAL_LAX_REGEX = new Regex(PATTERN_ABS_FILE_URI_OR_LOCAL_LAX, RegexOptions.Compiled);
+
+            /// <summary>
+            /// <seealso cref="Regex"/> that can be used to guess the format of a string from the perspective of a typical Windows file system.
+            /// </summary>
+            /// <remarks>Named group match meanings:
+            /// <list type="bullet">
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_FILE_URL">f</see></term> Text appears to be a file URL.</item>
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_URN">u</see></term> Text appears to be URN notation.</item>
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_HOST_NAME">h</see></term> Host name.</item>
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_ABS_PATH">a</see></term> Absolute path.</item>
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_NON_FILE">x</see></term> Text appears to be a non-file URI.</item>
+            /// <item>Any group match may succeeed independently of other groups.</item>
+            /// <item>At least one group will match if the entire expression matches.</item>
+            /// <item>Groups <c>f</c>, <c>u</c> and <c>x</c> are exclusive of each other.</item>
+            /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be a local path.</item>
+            /// <item>If the expression does not match at all, then the text is assumed to be a relative path.</item>
+            /// </list></remarks>
+            public static readonly Regex FORMAT_GUESS_LOCAL_REGEX = new Regex(@"(?i)^((?<f>file:[\\/]{2}(?<h>[^\\/]+)?(?<a>.+)?)|(?<u>[\\/]{2}(?<h>[^\\/]+)(?<a>.+)?)|(?<a>[a-z]:(\\/.*)?)|(?<x>[a-z][\w-]+:.*))?$", RegexOptions.Compiled);
+
+            /// <summary>
+            /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical Windows filesystem.
+            /// </summary>
+            /// <remarks>Named group match meanings:
+            /// <list type="bullet">
+            /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_ABS_FILE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
+            /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
+            /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
+            /// </list></remarks>
+            public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"(?i)^((?<a>file://(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)?(?<p>(/([!$&-)+-.;=@[\]\w]+|%([46][\da-f]|2[13-9]|3[\dbd]|[57][\dabde]))+)*/?))|(?<p>([!$&-)+-.;=@[\]\w]+|%([46][\da-f]|2[13-9]|3[\dbd]|[57][\dabde]))*(/([!$&-)+-.;=@[\]\w]+|%([46][\da-f]|2[13-9]|3[\dbd]|[57][\dabde]))+)*/?))$", RegexOptions.Compiled);
+        }
+
+        public static class Linux
+        {
+            public const string PATTERN_LOCAL_FS_NAME = @"^[^\u0000/]+$";
+            public static readonly Regex LOCAL_FS_NAME_REGEX = new Regex(PATTERN_LOCAL_FS_NAME, RegexOptions.Compiled);
+
+            public const string PATTERN_LOCAL_FS_PATH = @"(?i)^\s*(/|(/[^\u0000/]+)+/?|//((?=((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})\d+(\.\d+){3}|(?=\[[a-f\d:]+\]|[a-f\d]*:)\[?(:(:[a-f\d]{1,4}){1,7}|(?=([a-f\d]+:)+((:[a-f\d]+)+|:|[a-f\d]+))([a-f\d]{0,4}:){1,7}[a-f\d]{0,4})\]?|(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)(/|(/[^\u0000/]+)+/?|(/[^\u0000/]+)+/?)?)\s*$";
+            public static readonly Regex LOCAL_FS_PATH_REGEX = new Regex(PATTERN_LOCAL_FS_PATH, RegexOptions.Compiled);
+
+            public const string PATTERN_FS_URI_NAME = @"(?i)^([^\u0000/%]+|%([^02%]|0[^0]|2[^f]|(?=%|$)))+$";
+            public static readonly Regex FS_URI_NAME_REGEX = new Regex(PATTERN_FS_URI_NAME, RegexOptions.Compiled);
+
+            public const string PATTERN_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(?=\S)(file://([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)?|//([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?))?((/([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff/]+|%([^02%]|0[^0]|2[^f]|(?=%|$)))+)*/?)\s*$";
+            public static readonly Regex ABS_FILE_URI_OR_LOCAL_LAX_REGEX = new Regex(PATTERN_ABS_FILE_URI_OR_LOCAL_LAX, RegexOptions.Compiled);
+
+            /// <summary>
+            /// <seealso cref="Regex"/> that can be used to guess the format of a string from the perspective of a typical Linux file system.
+            /// </summary>
+            /// <remarks>Named group match meanings:
+            /// <list type="bullet">
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_FILE_URL">f</see></term> Text appears to be a file URL.</item>
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_URN">u</see></term> Text appears to be URN notation.</item>
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_HOST_NAME">h</see></term> Host name.</item>
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_ABS_PATH">a</see></term> Absolute path.</item>
+            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_NON_FILE">x</see></term> Text appears to be a non-file URI.</item>
+            /// <item>Any group match may succeeed independently of other groups.</item>
+            /// <item>At least one group will match if the entire expression matches.</item>
+            /// <item>Groups <c>f</c>, <c>u</c> and <c>x</c> are exclusive of each other.</item>
+            /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be a local path.</item>
+            /// <item>If the expression does not match at all, then the text is assumed to be a relative path.</item>
+            /// </list></remarks>
+            public static readonly Regex FORMAT_GUESS_LOCAL_REGEX = new Regex(@"(?i)^((?<f>file://(?<h>[^/]+)?(?<a>.+)?)|(?<u>//(?<h>[^/]+)(?<a>.+)?)|(?<a>/.+)|(?<x>[a-z][\w-]*:.*))?$", RegexOptions.Compiled);
+
+            /// <summary>
+            /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical Linux filesystem.
+            /// </summary>
+            /// <remarks>Named group match meanings:
+            /// <list type="bullet">
+            /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_ABS_FILE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
+            /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
+            /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
+            /// </list></remarks>
+            public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"(?i)^((?<a>file://(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)?(?<p>(/([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?))|(?<p>([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))*(/([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?))$", RegexOptions.Compiled);
+        }
+
+        public const string PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(?=\S)(file://([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?|/[a-f]:)?|[\\/]{2}([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)|[a-f]:)?(([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff\\/]+|%([^025%]|0[^0]|2[^f]|5[\dabde](?=%|$)))+)*/?)\s*$";
+        public static readonly Regex ANY_ABS_FILE_URI_OR_LOCAL_LAX_REGEX = new Regex(PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX, RegexOptions.Compiled);
+
+        /// <summary>
+        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="Windows.FORMAT_GUESS_LOCAL_REGEX"/> and <see cref="Linux.FORMAT_GUESS_LOCAL_REGEX"/>
+        /// for absolute file URL match.
+        /// </summary>
+        public const string FORMAT_GUESS_MATCH_GROUP_FILE_URL = "f";
+
+        /// <summary>
+        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="Windows.FORMAT_GUESS_LOCAL_REGEX"/> and <see cref="Linux.FORMAT_GUESS_LOCAL_REGEX"/>
+        /// for URN path match.
+        /// </summary>
+        public const string FORMAT_GUESS_MATCH_GROUP_URN = "u";
+
+        /// <summary>
+        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="Windows.FORMAT_GUESS_LOCAL_REGEX"/> and <see cref="Linux.FORMAT_GUESS_LOCAL_REGEX"/>
+        /// for host name match.
+        /// </summary>
+        public const string FORMAT_GUESS_MATCH_GROUP_HOST_NAME = "h";
+
+        /// <summary>
+        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="Windows.FORMAT_GUESS_LOCAL_REGEX"/> and <see cref="Linux.FORMAT_GUESS_LOCAL_REGEX"/>
+        /// for absolute path match.
+        /// </summary>
+        public const string FORMAT_GUESS_MATCH_GROUP_ABS_PATH = "a";
+
+        /// <summary>
+        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="Windows.FORMAT_GUESS_LOCAL_REGEX"/> and <see cref="Linux.FORMAT_GUESS_LOCAL_REGEX"/>
+        /// for non-file URI match.
+        /// </summary>
+        public const string FORMAT_GUESS_MATCH_GROUP_NON_FILE = "x";
+
+        /// <summary>
+        /// <seealso cref="Regex"/> that can be used to guess the format of a string from the perspective of the current host file system.
+        /// </summary>
+        /// <remarks>Named group match meanings:
+        /// <list type="bullet">
+        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_FILE_URL">f</see></term> Text appears to be a file URL.</item>
+        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_URN">u</see></term> Text appears to be URN notation.</item>
+        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_HOST_NAME">h</see></term> Host name.</item>
+        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_ABS_PATH">a</see></term> Absolute path.</item>
+        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_NON_FILE">x</see></term> Text appears to be a non-file URI.</item>
+        /// <item>Any group match may succeeed independently of other groups.</item>
+        /// <item>At least one group will match if the entire expression matches.</item>
+        /// <item>Groups <c>f</c>, <c>u</c> and <c>x</c> are exclusive of each other.</item>
+        /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be a local path.</item>
+        /// <item>If the expression does not match at all, then the text is assumed to be a relative path.</item>
+        /// </list></remarks>
+        public static readonly Regex FORMAT_GUESS_LOCAL_REGEX;
+
+        /// <summary>
+        /// Match group name for <see cref="ANY_FILE_URI_STRICT_REGEX"/>, <see cref="FILE_URI_STRICT_REGEX"/>, <see cref="Windows.FILE_URI_STRICT_REGEX"/>
+        /// and <see cref="Linux.FILE_URI_STRICT_REGEX"/> for absolute file URL match.
+        /// </summary>
+        public const string FILE_URI_STRICT_MATCH_GROUP_ABS_FILE = "a";
+
+        /// <summary>
+        /// Match group name for <see cref="ANY_FILE_URI_STRICT_REGEX"/>, <see cref="FILE_URI_STRICT_REGEX"/>, <see cref="Windows.FILE_URI_STRICT_REGEX"/>
+        /// and <see cref="Linux.FILE_URI_STRICT_REGEX"/> for host name match.
+        /// </summary>
+        public const string FILE_URI_STRICT_MATCH_GROUP_HOST = "h";
+
+        /// <summary>
+        /// Match group name for <see cref="ANY_FILE_URI_STRICT_REGEX"/>, <see cref="FILE_URI_STRICT_REGEX"/>, <see cref="Windows.FILE_URI_STRICT_REGEX"/>
+        /// and <see cref="Linux.FILE_URI_STRICT_REGEX"/> for path match.
+        /// </summary>
+        public const string FILE_URI_STRICT_MATCH_GROUP_PATH = "p";
+
+        /// <summary>
+        /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on the typical filesystem for the current host .
+        /// </summary>
+        /// <remarks>Named group match meanings:
+        /// <list type="bullet">
+        /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_ABS_FILE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
+        /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
+        /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
+        /// </list></remarks>
+        public static readonly Regex FILE_URI_STRICT_REGEX;
+
+        /// <summary>
+        /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on the typical filesystem for the current host .
+        /// </summary>
+        /// <remarks>Named group match meanings:
+        /// <list type="bullet">
+        /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_ABS_FILE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
+        /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
+        /// <item><term><seealso cref="FILE_URI_STRICT_MATCH_GROUP_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
+        /// </list></remarks>
+        public static readonly Regex ANY_FILE_URI_STRICT_REGEX = new Regex(@"(?i)^((?<a>file://(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)?(?<p>(/([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?))|(?<p>([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))*(/([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?))$", RegexOptions.Compiled);
+
+        public static PlatformType PLATFORM_TYPE { get; }
 
         private static readonly char[] _QUERY_OR_FRAGMENT_DELIMITER = new char[] { URI_QUERY_DELIMITER_CHAR, URI_FRAGMENT_DELIMITER_CHAR };
         private static readonly char[] _INVALID_FILENAME_CHARS;
         private static readonly Func<string, string> _FROM_LOCAL_PATH_PRE_ENCODE;
+
         private static int _UriGetPartIndexes(string text, out int schemeLength, out int hostNameLength)
         {
             using (CharEnumerator enumerator = text.GetEnumerator())
@@ -115,14 +295,16 @@ namespace FsInfoCat.Util
             _INVALID_FILENAME_CHARS = invalidFileNameChars.Contains(Path.PathSeparator) ? invalidFileNameChars : invalidFileNameChars.Concat(new char[] { Path.PathSeparator }).ToArray();
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                INVALID_URI_FILENAME_REGEX = INVALID_WINDOWS_URI_FILENAME_REGEX;
-                INVALID_URI_PATH_REGEX = INVALID_WINDOWS_URI_PATH_REGEX;
+                PLATFORM_TYPE = PlatformType.Windows;
+                FILE_URI_STRICT_REGEX = Windows.FILE_URI_STRICT_REGEX;
+                FORMAT_GUESS_LOCAL_REGEX = Windows.FORMAT_GUESS_LOCAL_REGEX;
                 _FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("/", "%5C");
             }
             else
             {
-                INVALID_URI_FILENAME_REGEX = INVALID_LINUX_URI_FILENAME_REGEX;
-                INVALID_URI_PATH_REGEX = INVALID_LINUX_URI_PATH_REGEX;
+                PLATFORM_TYPE = PlatformType.Linux;
+                FILE_URI_STRICT_REGEX = Linux.FILE_URI_STRICT_REGEX;
+                FORMAT_GUESS_LOCAL_REGEX = Linux.FORMAT_GUESS_LOCAL_REGEX;
                 _FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("?", "%3F");
             }
         }
@@ -151,7 +333,7 @@ namespace FsInfoCat.Util
                 leafIndex = (i < 0) ? 0 : i + 1;
                 return true;
             }
-            hostName =  absolutePath = null;
+            hostName = absolutePath = null;
             leafIndex = 0;
             return false;
         }
@@ -207,8 +389,8 @@ namespace FsInfoCat.Util
             if (startIndex < 0)
                 return false;
             if (startIndex > 0)
-                return uri.Substring(0, schemeLength).Equals(Uri.UriSchemeFile) && (startIndex == uri.Length || !INVALID_URI_PATH_REGEX.IsMatch(uri.Substring(startIndex)));
-            return !INVALID_URI_PATH_REGEX.IsMatch(uri);
+                return uri.Substring(0, schemeLength).Equals(Uri.UriSchemeFile) && (startIndex == uri.Length || ANY_FILE_URI_STRICT_REGEX.IsMatch(uri.Substring(startIndex)));
+            return ANY_FILE_URI_STRICT_REGEX.IsMatch(uri);
         }
 
         /// <summary>

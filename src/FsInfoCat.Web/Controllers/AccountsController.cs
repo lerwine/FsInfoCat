@@ -25,14 +25,14 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts
-        [Authorize(Roles = ModelHelper.Role_Name_Viewer)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_VIEWER)]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Account.ToListAsync());
         }
 
         // GET: Accounts/Details/5
-        [Authorize(Roles = ModelHelper.Role_Name_Viewer)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_VIEWER)]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -51,7 +51,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts/Create
-        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_ADMIN)]
         public IActionResult Create()
         {
             return View(new EditAccount(null) { ChangePassword = true });
@@ -62,7 +62,7 @@ namespace FsInfoCat.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_ADMIN)]
         public async Task<IActionResult> Create([Bind("DisplayName,LoginName,ChangePassword,Password,Confirm,Role,Notes")] EditAccount editAccount)
         {
             if (ModelState.IsValid)
@@ -89,7 +89,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts/Edit/5
-        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_ADMIN)]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -110,7 +110,7 @@ namespace FsInfoCat.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_ADMIN)]
         public async Task<IActionResult> Edit(Guid id, [Bind("AccountID,DisplayName,LoginName,ChangePassword,Password,Confirm,Role,Notes,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] EditAccount editAccount)
         {
             if (id != editAccount.AccountID)
@@ -163,7 +163,7 @@ namespace FsInfoCat.Web.Controllers
         }
 
         // GET: Accounts/Delete/5
-        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_ADMIN)]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -184,7 +184,7 @@ namespace FsInfoCat.Web.Controllers
         // POST: Accounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = ModelHelper.Role_Name_Admin)]
+        [Authorize(Roles = ModelHelper.ROLE_NAME_ADMIN)]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var account = await _context.Account.FindAsync(id);

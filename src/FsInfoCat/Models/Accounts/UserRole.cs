@@ -9,19 +9,19 @@ namespace FsInfoCat.Models.Accounts
         None = 0,
 
         [Description(EditAccount.DisplayName_Viewer)]
-        [AmbientValue(ModelHelper.Role_Name_Viewer)]
+        [AmbientValue(ModelHelper.ROLE_NAME_VIEWER)]
         Viewer = 1,
 
         [Description(EditAccount.DisplayName_Normal_User)]
-        [AmbientValue(ModelHelper.Role_Name_User)]
+        [AmbientValue(ModelHelper.ROLE_NAME_USER)]
         User = 2,
 
         [Description(EditAccount.DisplayName_App_Contributor)]
-        [AmbientValue(ModelHelper.Role_Name_App_Contrib)]
+        [AmbientValue(ModelHelper.ROLE_NAME_APP_CONTRIB)]
         Crawler = 3,
 
         [Description(EditAccount.DisplayName_App_Administrator)]
-        [AmbientValue(ModelHelper.Role_Name_Admin)]
+        [AmbientValue(ModelHelper.ROLE_NAME_ADMIN)]
         Admin = 4
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Web.Controllers
 {
-    [Authorize(Roles = ModelHelper.Role_Name_App_Contrib)]
+    [Authorize(Roles = ModelHelper.ROLE_NAME_APP_CONTRIB)]
     public class AppHostController : Controller
     {
         private readonly FsInfoDataContext _context;
