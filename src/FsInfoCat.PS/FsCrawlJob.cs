@@ -1,3 +1,6 @@
+using FsInfoCat.Models.Crawl;
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,9 +9,6 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
-using FsInfoCat.Models.Crawl;
-using FsInfoCat.Models.Volumes;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.PS
 {
@@ -18,7 +18,7 @@ namespace FsInfoCat.PS
 
         public const string ACTIVITY = "Crawl Subdirectory";
 
-        private object _syncRoot = new object();
+        private readonly object _syncRoot = new object();
         private bool _isRunning = false;
         private Task<bool> _task;
         private string _statusMessage = "";
@@ -109,6 +109,7 @@ namespace FsInfoCat.PS
 #endif
             Debug.Add(new DebugRecord(message));
         }
+
         internal void StartJob(object state)
         {
             WriteDebug("CrawlJob.StartJob invoked. Starting background task.");

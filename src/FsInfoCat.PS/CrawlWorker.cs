@@ -1,12 +1,12 @@
+using FsInfoCat.Models;
+using FsInfoCat.Models.Crawl;
+using FsInfoCat.Models.Volumes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
-using FsInfoCat.Models;
-using FsInfoCat.Models.Crawl;
-using FsInfoCat.Models.Volumes;
 
 namespace FsInfoCat.PS
 {
@@ -56,7 +56,7 @@ namespace FsInfoCat.PS
                     totalItems = 0L;
                     return true;
                 }
-            } 
+            }
             if (job.IsExpired())
             {
                 job.WriteDebug("Job has reached time limit.");

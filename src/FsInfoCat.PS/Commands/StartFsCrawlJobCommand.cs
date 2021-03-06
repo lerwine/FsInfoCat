@@ -1,5 +1,4 @@
 using FsInfoCat.Models.Crawl;
-using FsInfoCat.Util;
 using Microsoft.PowerShell.Commands;
 using System;
 using System.Collections.Generic;
