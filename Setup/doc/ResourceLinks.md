@@ -3,7 +3,7 @@
 - [Resource Links](#resource-links)
   - [General](#general)
   - [Library Repositories](#library-repositories)
-  - [Languages, Formats and Markup](#languages,-Formats-and-Markup)
+  - [Languages, Formats and Markup](#languages-Formats-and-Markup)
   - [Client Side APIs](#client-side-apis)
   - [.NET Core API](#net-core-api)
     - [ASP.NET](#aspnet)
