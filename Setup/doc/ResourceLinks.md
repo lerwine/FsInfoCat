@@ -3,6 +3,7 @@
 - [Resource Links](#resource-links)
   - [General](#general)
   - [Library Repositories](#library-repositories)
+  - [Languages, Formats and Markup](#languages,-Formats-and-Markup)
   - [Client Side APIs](#client-side-apis)
   - [.NET Core API](#net-core-api)
     - [ASP.NET](#aspnet)
@@ -20,8 +21,6 @@
 
 ## General
 
-- [Markdown Syntax](https://www.markdownguide.org/cheat-sheet/)
-- [Writing a T4 Text Template](https://docs.microsoft.com/en-us/visualstudio/modeling/writing-a-t4-text-template?view=vs-2019)
 - [GDI+ Property Item Descriptions](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-property-item-descriptions)
 - [Configuration Manager Client WMI Programming](https://msdn.microsoft.com/en-us/library/cc144081.aspx)
 - [Documentation for Visual Studio Code](https://code.visualstudio.com/docs)
@@ -32,6 +31,19 @@
 - [PowerShell Gallery | Home](https://www.powershellgallery.com/)
 - [cdnjs - The #1 free and open source CDN built to make life easier for developers](https://cdnjs.com/)
 Simple. Fast. Reliable. Content delivery at its finest. cdnjs is a free and open-source CDN service trusted by over 11% of all websites, powered by Cloudflare. We make it faster and easier to load library files on your websites.
+
+## Languages, Formats and Markup
+
+- [Markdown Syntax](https://www.markdownguide.org/cheat-sheet/)
+- [Writing a T4 Text Template](https://docs.microsoft.com/en-us/visualstudio/modeling/writing-a-t4-text-template?view=vs-2019)
+- [XML](http://www.w3.org/TR/xml/)
+    - [Namespaces in XML](http://www.w3.org/TR/xml-names/)
+    - [XPath](https://www.w3.org/TR/xpath-31/)
+    - [XSLT](https://www.w3.org/TR/xslt-30/)
+    - [XSD Part 1: Structures](https://www.w3.org/TR/xmlschema11-1)
+    - [XSD Part 2: Datatypes](https://www.w3.org/TR/xmlschema11-2)
+- [HTML5](https://www.w3.org/TR/html5/)
+- [URI](http://www.ietf.org/rfc/rfc3986.txt)
 
 ## Client Side APIs
 
