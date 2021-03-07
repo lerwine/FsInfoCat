@@ -1,11 +1,3 @@
-# FsInfoCat Setup and Configuration
+# FsInfoCat Setup and Configuration Files
 
-## Setup
-
-- [Production Environment Setup](doc/ProdEnvSetup.md)
-- [Testing Environment Setup](doc/TestEnvSetup.md)
-- [Development Environment Setup](doc/DevEnvSetup.md)
-
-## Configuration and Maintentance
-
-- [Development Operations](doc/DevOps.md)
+Refer to [Setup and Configuration WIKI Page](https://github.com/lerwine/FsInfoCat/wiki/Setup%20and%20Configuration) for documentation.
