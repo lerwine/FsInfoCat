@@ -59,7 +59,7 @@ namespace FsInfoCat.Test.Helpers
         public override bool Equals(object obj) => Equals(obj as FuncInvocationResult<TOut1, TOut2, TResult>);
         public override int GetHashCode() => HashCode.Combine(WasInvoked, Output1, Output2, ReturnValue);
         protected bool PropertiesAreEqual([DisallowNull] FuncInvocationResult<TOut1, TOut2, TResult> other) => base.PropertiesAreEqual(other) && _comparer.Equals(Output2, other.Output2);
-        protected override StringBuilder PropertiesToString(StringBuilder sb) => base.PropertiesToString(sb).Append(", ").Append(nameof(Output1)).Append(" = ").Append(Output1);
+        protected override StringBuilder PropertiesToString(StringBuilder sb) => base.PropertiesToString(sb).Append(", ").Append(nameof(Output2)).Append(" = ").Append(Output2);
     }
 
     public class FuncInvocationResult<TOut1, TOut2, TOut3, TResult> : FuncInvocationResult<TOut1, TOut2, TResult>, IFuncInvocationResult<TOut1, TOut2, TOut3, TResult>,
