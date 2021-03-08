@@ -2,162 +2,9 @@ if ($null -eq $Script:IsWindows) {
     Set-Variable -Name 'IsWindows' -Option Constant -Scope 'Script' -Value ($PSVersionTable.PSEdition -eq 'Desktop' -or $PSVersionTable.Platform -eq 'Win32NT');
 }
 
-Function Get-ExceptionObject {
-    [CmdletBinding()]
-    [OutputType([System.Exception])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [AllowEmptycollection]
-        [AllowEmptyString]
-        [AllowNull]
-        [object]$InputObject,
-
-        [switch]$Immediate
-    )
-
-    Process {
-        $Exception = $null;
-        if ($InputObject -is [System.Exception]) {
-            $Exception = $InputObject;
-        } else {
-            $ErrorRecord = $null;
-            if ($InputObject -is [System.Management.Automation.ErrorRecord]) {
-                $ErrorRecord = $InputObject;
-            } else {
-                if ($InputObject -is [System.Management.Automation.IContainsErrorRecord]) {
-                    $ErrorRecord = ([System.Management.Automation.IContainsErrorRecord]$InputObject).ErrorRecord;
-                }
-            }
-            if ($null -ne $ErrorRecord) { $Exception = $ErrorRecord.Exception }
-        }
-        if ($null -ne $Exception) {
-            if (-not $Immediate.IsPresent) {
-                while ($Exception -is [System.Management.Automation.RuntimeException] -and $null -ne $Exception.InnerException) {
-                    $Exception = $Exception.InnerException;
-                }
-            }
-            $Exeption | Write-Output;
-        }
-    }
-}
-
-Function Get-ErrorRecord {
-    [CmdletBinding()]
-    [OutputType([System.Management.Automation.ErrorRecord])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [AllowEmptycollection]
-        [AllowEmptyString]
-        [AllowNull]
-        [object]$InputObject,
-        
-        [string]$Message,
-
-        [string]$ErrorId = 'UnexpectedException',
-
-        [System.Management.Automation.ErrorCategory]$Category = [System.Management.Automation.ErrorCategory]::NotSpecified,
-        
-        [AllowEmptycollection]
-        [AllowEmptyString]
-        [AllowNull]
-        [object]$TargetObject
-    )
-
-    Process {
-        [System.Management.Automation.ErrorRecord]$ErrorRecord = $null;
-        $Exception = $null;
-        if ($InputObject -is [System.Management.Automation.ErrorRecord]) {
-            $ErrorRecord = $InputObject;
-            $Exception = $ErrorRecord.Exception;
-        } else {
-            if ($InputObject -is [System.Management.Automation.IContainsErrorRecord]) {
-                $ErrorRecord = $InputObject.ErrorRecord;
-            }
-            if ($null -eq $ErrorRecord) {
-                if ($InputObject -is [System.Exception]) {
-                    $Exception = $InputObject;
-                } else {
-                    $m = '' + $InputObject;
-                    if ([string]::IsNullOrWhiteSpace($m)) { $m = 'Unexpected error' }
-                    $Exception = [System.Exception]::new($m);
-                }
-            } else {
-                $Exception = $ErrorRecord.Exception;
-            }
-        }
-        
-        $CreateNewErrorRecord = $null -eq $ErrorRecord;
-        $m = '';
-        $i = $ErrorId;
-        $c = $Category;
-        $t = $null;
-        if ($CreateNewErrorRecord) {
-            if ($PSBoundParameters.ContainsKey('TargetObject')) { $t = $TargetObject }
-            if ($PSBoundParameters.ContainsKey('Message')) { $m = $Message }
-        } else {
-            if ($PSBoundParameters.ContainsKey('TargetObject')) {
-                $t = $TargetObject;
-                $CreateNewErrorRecord = $t -ne $ErrorRecord.TargetObject;
-            } else {
-                $t = $ErrorRecord.TargetObject;
-            }
-            if ($PSBoundParameters.ContainsKey('ErrorId')) {
-                $CreateNewErrorRecord = $CreateNewErrorRecord -or $i -ne $ErrorRecord.FullyQualifiedErrorId;
-            } else {
-                $i = $ErrorRecord.FullyQualifiedErrorId;
-            }
-            if ($PSBoundParameters.ContainsKey('Category')) {
-                $CreateNewErrorRecord = $CreateNewErrorRecord -or $c -ne $ErrorRecord.CategoryInfo.Category;
-            } else {
-                $Category = $ErrorRecord.CategoryInfo.Category;
-            }
-            if ($PSBoundParameters.ContainsKey('Message')) {
-                $m = $Message
-                $CreateNewErrorRecord = $CreateNewErrorRecord -or $m -ne $ErrorRecord.ToString();
-            } else {
-                $m = $ErrorRecord.ToString();
-            }
-        }
-
-        if ($CreateNewErrorRecord) {
-            if ([string]::IsNullOrWhiteSpace($m)) {
-                if ([string]::IsNullOrWhiteSpace($Exception.Message)) {
-                    $m = '' + $InputObject;
-                    if ([string]::IsNullOrWhiteSpace($m)) { $m = 'Unexpected error' }
-                } else {
-                    $m = $Exception.Message;
-                }
-            }
-            if ($null -ne $t -or $null -eq $InputObject) {
-                [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $t) | Write-Output;
-            } else {
-                if ($null -ne $InputObject.ItemName) {
-                    [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $InputObject.ItemName) | Write-Output;
-                } else {
-                    if ($null -ne $InputObject.FileName) {
-                        [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $InputObject.FileName) | Write-Output;
-                    } else {
-                        if ($null -ne $InputObject.CommandName) {
-                            [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $InputObject.CommandName) | Write-Output;
-                        } else {
-                            if ($null -ne $InputObject.ParamName) {
-                                [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $InputObject.ParamName) | Write-Output;
-                            } else {
-                                [System.Management.Automation.ErrorRecord]::new($Exception, $i, $c, $null) | Write-Output;
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            $ErrorRecord | Write-Output;
-        }
-    }
-}
-
 Write-Verbose -Message "Performing $(if ($PSVersionTable.PSEdition -eq 'Desktop') { 'Desktop edition' } else { "$($PSVersionTable.Platform) platform" })-specific initialization";
 &{
-    # Calculating constant variable "LocalMachineIdentifier" within encapsulated script block so variables of the rest of the module aren't polluted.
+    # Calculate constant variable "LocalMachineIdentifier" within encapsulated script block so variables of the rest of the module aren't polluted.
     if ($null -ne $Script:LocalMachineIdentifier) { return }
     $Identifier = '';
     $OldErrorAction = $ErrorActionPreference;
@@ -268,8 +115,17 @@ Write-Verbose -Message "Performing $(if ($PSVersionTable.PSEdition -eq 'Desktop'
         }
     } catch {
         $ErrorActionPreference = $OldErrorAction;
-        $ErrorRecord = Get-ErrorRecord -InputObject $_ -ErrorId $ErrorId -Category $Category -TargetObject $TargetObject -Reason $Reason;
-        Write-Error -ErrorRecord $ErrorRecord -CategoryReason $Reason;
+        $ErrorRecord = $null;
+        if ([FsInfoCat.PS.CoersionHelper]::TryGetErrorRecord($_, [ref]$ErrorRecord)) {
+            Write-Error -ErrorRecord $ErrorRecord -CategoryReason $Reason;
+        } else {
+            $Exception = $null;
+            if ([FsInfoCat.PS.CoersionHelper]::TryGetException($_, [ref]$Exception)) {
+                Write-Error -Exception $Exception -Category $Category -ErrorId $ErrorId -CategoryReason $Reason -TargetObject $TargetObject;
+            } else {
+                Write-Error -Message ('' + $_) -Category $Category -ErrorId $ErrorId -CategoryReason $Reason -TargetObject $TargetObject;
+            }
+        }
     } finally {
         Write-Debug -Message "Setting '$Identifier' as LocalMachineIdentifier";
         Set-Variable -Name 'LocalMachineIdentifier' -Value $Identifier -Description 'Current host machine identifier' -Option Constant -Scope 'Script';
@@ -411,6 +267,19 @@ class FsLogicalVolume {
 }
 
 Function Get-FsLogicalVolume {
+    <#
+    .SYNOPSIS
+        Gets logical volumes for local host.
+
+    .DESCRIPTION
+        Detects logical volumes on the current local host machine.
+        
+    .INPUTS
+        None
+
+    .OUTPUTS
+        FsLogicalVolume objects representing logical volumes detected on the local host.
+    #>
     [CmdletBinding()]
     [OutputType([FsLogicalVolume])]
     Param()
@@ -596,8 +465,17 @@ Function Get-FsLogicalVolume {
         }
     } catch {
         $ErrorActionPreference = $OldErrorAction;
-        $ErrorRecord = Get-ErrorRecord -InputObject $_ -ErrorId $ErrorId -Category $Category -TargetObject $TargetObject -Reason $Reason;
-        Write-Error -ErrorRecord $ErrorRecord -CategoryReason $Reason;
+        $ErrorRecord = $null;
+        if ([FsInfoCat.PS.CoersionHelper]::TryGetErrorRecord($_, [ref]$ErrorRecord)) {
+            Write-Error -ErrorRecord $ErrorRecord -CategoryReason $Reason;
+        } else {
+            $Exception = $null;
+            if ([FsInfoCat.PS.CoersionHelper]::TryGetException($_, [ref]$Exception)) {
+                Write-Error -Exception $Exception -Category $ErrorCategory -ErrorId $ErrorId -CategoryReason $Reason -TargetObject $TargetObject;
+            } else {
+                Write-Error -Message ('' + $_) -Category $Category -ErrorId $ErrorId -CategoryReason $Reason -TargetObject $TargetObject;
+            }
+        }
     } finally {
         Write-Debug -Message "Setting '$Identifier' as LocalMachineIdentifier";
         if (-not [string]::IsNullOrWhiteSpace($Reason)) {
@@ -618,21 +496,43 @@ Function Register-FsLogicalVolume {
         The logical volme to register.
         
     .PARAMETER CaseSensitive
-        Overrides OS default case sensitivity.
+        Forces file name lookups in the specified volume to be case-sensitive.
+        
+    .PARAMETER IgnoreCase
+        Forces case file name lookups in the specified volume to ignore letter casing.
         
     .PARAMETER Force
-        Allows existing registration to be updated if it has already been registered. Also allows non-existant root directories to be registered.
+        Allows existing registration to be updated even if it has already been registered. Also allows non-existant root directories to be registered.
 
     .PARAMETER PassThru
         Returns the IVolumeInfo object for the registered volume.
+
+    .EXAMPLE
+        PS C:\> Get-FsLogicalVolume | Register-FsLogicalVolume
+        Registers all logical volumes.
+
+    .EXAMPLE
+        PS C:\> $Lv = Get-FsLogicalVolume | Where-Object { $_.RemotePath -eq '\\MyRemoteMachine\MyShare' }
+        PS C:\> $Volume = Register-FsLogicalVolume -LogicalVolume -CaseSensitive -PassThru;
+        Registers a specific logical volume where file name lookups are case-sensitive and returns the IVolume object.
+
+    .OUTPUTS
+        An IVolumeInfo if the Passthru switch is used.
+
+    .NOTES
+        By default, on Windows systems, volumes are assumed to ignore letter casing for file name lookups and non-windows systems are assumed to be case-senstive.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'IgnoreCaseOpt')]
     [OutputType([FsInfoCat.Models.Volumes.IVolumeInfo])]
     Param(
         [Parameter(ValueFromPipeline = $true)]
         [FsLogicalVolume]$LogicalVolume,
         
-        [bool]$CaseSensitive,
+        [Parameter(Mandatory = $true, ParameterSetName = 'ForceCaseSensitive')]
+        [switch]$CaseSensitive,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'IgnoreCaseOpt')]
+        [switch]$IgnoreCase,
 
         [switch]$Force,
 
@@ -691,12 +591,10 @@ Function Register-FsLogicalVolume {
         }
         if ($null -ne $Splat['Identifier']) {
             if ([string]::IsNullOrWhiteSpace($Splat['VolumeName'])) { $Splat['VolumeName'] = '' + $Splat['Identifier'] }
-            if ($PSBoundParameters.ContainsKey('CaseSensitive')) {
-                if ($CaseSensitive) {
-                    $Splat['CaseSensitive'] = [System.Management.Automation.SwitchParameter]::Present;
-                }
+            if ($CaseSensitive.IsPresent) {
+                $Splat['CaseSensitive'] = $CaseSensitive;
             } else {
-                if ($LogicalVolume.CaseSensitive) {
+                if ($LogicalVolume.CaseSensitive -and -not $IgnoreCase.IsPresent) {
                     $Splat['CaseSensitive'] = [System.Management.Automation.SwitchParameter]::Present;
                 }
             }
@@ -705,6 +603,88 @@ Function Register-FsLogicalVolume {
             Register-FsVolumeInfo @Splat;
         }
     }
+}
+
+Function Start-FileSystemCrawl {
+    <#
+    .SYNOPSIS
+        Starts the crawl of one or more subdirectories to gather information about the files and directory structure contained within.
+
+    .DESCRIPTION
+        Starts a background job to the specified subdirectories to gather information about the files and directory structure contained within.
+        The output of this command is intended to be uploaded to the FSInfoCat website.
+         
+    .PARAMETER RootPath
+        The starting subdirectory to crawl (supports wildcards).
+      
+    .PARAMETER LiteralPath
+        The literal path(s) of the starting subdirectory to crawl.
+      
+    .PARAMETER MaxDepth
+        Maximum depth of sub-folders to crawl. This can be used to mitigate possible endless recursion due to the possiblity of a symbolic link referencing a parent folder.
+        A value less than 1 only crawls the root path. The default is 32.
+      
+    .PARAMETER MaxItems
+        Maximum number of files and subdirectories to process. The default is 4,294,967,295. This applies to the entire crawl job (as opposed to each starting subdirectory).
+        This can be used to help limit the size of the package to be uploaded to the FsInfoCat website.
+      
+    .PARAMETER Ttl
+        The maximum number of minutes to allow the background crawl job to run. The default value is 4,320 (3 days) unless the StopAt parameter or NoExpire switch is used.
+      
+    .PARAMETER StopAt
+        Date and Time when the background crawl job will be stopped if it has not already terminated.
+      
+    .PARAMETER NoExpire
+        Job does not expire and continues to crawl files util it is completed, is explicitly stopped, or it encounters a terminal error.
+      
+    .PARAMETER Name
+        Specifies a friendly name for the new job. You can use the name to identify the job to other job cmdlets, such as the Stop-Job cmdlet.
+      
+    .EXAMPLE
+        PS C:\> $id = Get-LocalMachineIdentifier
+
+    .OUTPUTS
+        The string value of the SID or UUID that uniquely identifies the current host machine.
+
+    .NOTES
+        On Windows Systems, the machine SID is determined through this SID of the local administrator account. The local administrator account is retrieved by using the
+        Microsoft.PowerShell.Management module to invoke a CIM query.
+        On Linux and OSX systems, the contents of the local machine UUID is determined by reading the contents of the /etc/machine-id file.
+    #>
+    [CmdletBinding(DefaultParameterSetName = "age:true")]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = "none:true")]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = "age:true")]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = "datetime:true")]
+        [string]$RootPath,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = "none:false")]
+        [Parameter(Mandatory = $true, ParameterSetName = "age:false")]
+        [Parameter(Mandatory = $true, ParameterSetName = "datetime:false")]
+        [string]$LiteralPath,
+        
+        [int]$MaxDepth,
+
+        [long]$MaxItems,
+        
+        [Parameter(ParameterSetName = "age:true")]
+        [Parameter(Mandatory = $true, ParameterSetName = "age:false")]
+        [long]$Ttl,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = "datetime:true")]
+        [Parameter(Mandatory = $true, ParameterSetName = "datetime:false")]
+        [ValidateNotNull()]
+        [DateTime]$StopAt,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = "none:true")]
+        [Parameter(Mandatory = $true, ParameterSetName = "none:false")]
+        [switch]$NoExpire,
+
+        [string]$Name
+    )
+    
+    [FsLogicalVolume[]]$LogicalVolumes = Get-FsLogicalVolume;
+
 }
 
 Function Get-LocalMachineIdentifier {
@@ -720,6 +700,11 @@ Function Get-LocalMachineIdentifier {
 
     .OUTPUTS
         The string value of the SID or UUID that uniquely identifies the current host machine.
+
+    .NOTES
+        On Windows Systems, the machine SID is determined through this SID of the local administrator account. The local administrator account is retrieved by using the
+        Microsoft.PowerShell.Management module to invoke a CIM query.
+        On Linux and OSX systems, the contents of the local machine UUID is determined by reading the contents of the /etc/machine-id file.
     #>
     [CmdletBinding()]
     Param()
