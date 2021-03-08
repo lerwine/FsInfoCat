@@ -46,6 +46,114 @@ namespace FsInfoCat.PS.Commands
 
         protected IEnumerable<IVolumeInfo> GetVolumeInfos() => GetVolumeInfos(SessionState);
 
+        protected IEnumerable<string> ResolveDirectoryFromLiteralPath(IEnumerable<string> literalPaths)
+        {
+            foreach (string lPath in literalPaths)
+            {
+                if (TryResolveDirectoryFromLiteralPath(lPath, out string providerPath))
+                    yield return providerPath;
+            }
+        }
+
+        private bool TryResolveDirectoryFromLiteralPath(string path, out string providerPath)
+        {
+            WriteDebug($"Processing LiteralPath: \"{path}\"");
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                providerPath = null;
+                return false;
+            }
+            try
+            {
+                providerPath = GetUnresolvedProviderPathFromPSPath(path);
+                WriteDebug($"Unresolved provider path from LiteralPath: \"{providerPath}\"");
+                if (!Directory.Exists(providerPath))
+                    providerPath = null;
+            }
+            catch (ItemNotFoundException nfExc)
+            {
+                OnItemNotFoundException(path, nfExc);
+                providerPath = null;
+                return false;
+            }
+            catch (Exception exc)
+            {
+                OnProviderNotSupportedException(path, exc);
+                providerPath = null;
+                return false;
+            }
+            if (providerPath is null)
+            {
+                if (File.Exists(path))
+                    OnPathIsFileError(path);
+                else
+                    OnItemNotFoundException(path, null);
+                return false;
+            }
+            return true;
+        }
+
+        protected IEnumerable<string> ResolveDirectoryFromWcPath(string path)
+        {
+            WriteDebug($"Resolving Path: \"{path}\"");
+            if (string.IsNullOrWhiteSpace(path))
+                yield break;
+
+            Collection<PathInfo> resolvedPaths;
+            try
+            {
+                resolvedPaths = SessionState.Path.GetResolvedPSPathFromPSPath(path);
+                WriteDebug($"Resolved {resolvedPaths.Count} paths: \"{string.Join("\", \"", resolvedPaths.Select(p => p.ProviderPath))}\"");
+            }
+            catch (NotSupportedException nsExc)
+            {
+                OnProviderNotSupportedException(path, nsExc);
+                yield break;
+            }
+            catch (ItemNotFoundException nfExc)
+            {
+                OnItemNotFoundException(path, nfExc);
+                yield break;
+            }
+            catch (Exception exc)
+            {
+                OnResolveError(path, exc);
+                yield break;
+            }
+
+            foreach (PathInfo pathInfo in resolvedPaths)
+            {
+                WriteDebug($"Processing resolved path: \"{pathInfo.ProviderPath}\"");
+                string p;
+                try
+                {
+                    p = (Directory.Exists(pathInfo.ProviderPath)) ? pathInfo.ProviderPath : null;
+                }
+                catch (Exception exc)
+                {
+                    OnProviderNotSupportedException(path, exc);
+                    continue;
+                }
+                if (p is null)
+                {
+                    if (File.Exists(pathInfo.ProviderPath))
+                        OnPathIsFileError(pathInfo.ProviderPath);
+                    else
+                        OnItemNotFoundException(path, null);
+                }
+                else
+                    yield return p;
+            }
+        }
+
+        protected abstract void OnProviderNotSupportedException(string path, Exception exc);
+
+        protected abstract void OnItemNotFoundException(string path, ItemNotFoundException exc);
+
+        protected abstract void OnResolveError(string path, Exception exc);
+
+        protected abstract void OnPathIsFileError(string providerPath);
+
         protected class RegisteredVolumeInfo : IVolumeInfo, IEquatable<IVolumeInfo>
         {
             private bool _caseSensitive;

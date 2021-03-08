@@ -1,3 +1,4 @@
+using FsInfoCat.Models.Crawl;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
@@ -14,6 +15,8 @@ namespace FsInfoCat.PS.Commands
     [OutputType(typeof(IVolumeInfo))]
     public class GetRegisteredFsVolumeInfoCommand : FsVolumeInfoCommand
     {
+        public const string PARAMETER_SET_NAME_BY_PATH = "ByPath";
+        public const string PARAMETER_SET_NAME_BY_LITERAL_PATH = "ByLiteralPath";
         public const string PARAMETER_SET_NAME_BY_ROOT_DIRECTORY = "ByRootDirectory";
         public const string PARAMETER_SET_NAME_BY_VOLUME_NAME = "ByVolumeName";
         public const string PARAMETER_SET_NAME_BY_IDENTIFIER = "ByIdentifier";
@@ -21,27 +24,60 @@ namespace FsInfoCat.PS.Commands
 
         private Collection<PSObject> _volumeInfos;
 
-        [Parameter(HelpMessage = "Find by full, case-sensitive path name of the volume root directory.", Mandatory = true,
-            ValueFromPipelineByPropertyName = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_BY_ROOT_DIRECTORY)]
-        [Alias("FullName", "Path")]
+        [Parameter(HelpMessage = "Gets registered volume information for the volume that contains the specified path (wildcards accepted). Case-sensitivity is dependent upon the registered volume.",
+            Mandatory = true, ValueFromPipelineByPropertyName = true, ValueFromPipeline = true, ParameterSetName = PARAMETER_SET_NAME_BY_PATH)]
         [ValidateNotNullOrEmpty()]
+        public string[] Path { get; set; }
+
+        [Parameter(HelpMessage = "Gets registered volume information for the volume that contains the specified literal path. Case-sensitivity is dependent upon the registered volume.",
+            Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_BY_LITERAL_PATH)]
+        [Alias("FullName")]
+        [ValidateNotNullOrEmpty()]
+        public string[] LiteralPath { get; set; }
+
+        [Parameter(HelpMessage = "Gets registered volume information that matches the specified full path name of the of the volume's root directory. Case-sensitivity is dependent upon the registered volume.",
+            Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_BY_ROOT_DIRECTORY)]
+        [ValidateNotNullOrEmpty()]
+        [Alias("RootPath")]
         public string[] RootPathName { get; set; }
 
-        [Parameter(HelpMessage = "Find by name of the volume.", Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_VOLUME_NAME)]
+        [Parameter(HelpMessage = "Gets registered volume information that matches the specified volume name. This is not case-sensitive.",
+            Mandatory = true, ParameterSetName = PARAMETER_SET_NAME_BY_VOLUME_NAME)]
         [ValidateNotNullOrEmpty()]
         public string[] VolumeName { get; set; }
 
-        [Parameter(HelpMessage = "Find by volume identifier.", Mandatory = true, ValueFromPipelineByPropertyName = true,
-            ParameterSetName = PARAMETER_SET_NAME_BY_IDENTIFIER)]
-        [Alias("SerialNumber")]
+        [Parameter(HelpMessage = "Gets registered volume information that matches the specified volume guid / serial number. For remote file shares, this should be the URN of the remote source. This is not case-sensitive.",
+            Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = PARAMETER_SET_NAME_BY_IDENTIFIER)]
+        [Alias("SerialNumber", "VolumeId", "VSN", "UUID")]
         public object[] Identifier { get; set; }
 
-        [Parameter(HelpMessage = "Get all registered volumes", ParameterSetName = PARAMETER_SET_NAME_GET_ALL)]
+        [Parameter(HelpMessage = "Gets all registered volumes. This is the default behavior if no other parameters are used.",
+            ParameterSetName = PARAMETER_SET_NAME_GET_ALL)]
         public SwitchParameter All { get; set; }
 
         protected override void BeginProcessing()
         {
             _volumeInfos = GetVolumeRegistration();
+        }
+
+        protected override void OnItemNotFoundException(string path, ItemNotFoundException exc)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnPathIsFileError(string providerPath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnProviderNotSupportedException(string path, Exception exc)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnResolveError(string path, Exception exc)
+        {
+            throw new NotImplementedException();
         }
 
         protected override void ProcessRecord()
@@ -51,8 +87,25 @@ namespace FsInfoCat.PS.Commands
             IEnumerable<PSObject> matching;
             switch (ParameterSetName)
             {
+                case PARAMETER_SET_NAME_BY_PATH:
+                    var items = _volumeInfos.Select(v => new { Obj = v, V = (RegisteredVolumeInfo)v.BaseObject });
+                    foreach (DirectoryInfo directoryInfo in Path.SelectMany(p => ResolveDirectoryFromWcPath(p)).Select(p => new DirectoryInfo(p)).Distinct())
+                    {
+                        for (DirectoryInfo d = directoryInfo; !(d is null); d = d.Parent)
+                        {
+                            FileUri fileUri = new FileUri(d);
+                            matching = _volumeInfos.WhereBaseObjectOf<RegisteredVolumeInfo>(f => f.RootUri.Equals(fileUri, f.PathComparer));
+                        }
+                    }
+                    break;
+                case PARAMETER_SET_NAME_BY_LITERAL_PATH:
+                    foreach (DirectoryInfo directoryInfo in ResolveDirectoryFromLiteralPath(RootPathName).Select(p => new DirectoryInfo(p)).Distinct())
+                    {
+
+                    }
+                    break;
                 case PARAMETER_SET_NAME_BY_ROOT_DIRECTORY:
-                    FileUri[] uris = RootPathName.Select(p => new FileUri(new DirectoryInfo(p))).Distinct().ToArray();
+                    FileUri[] uris = ResolveDirectoryFromLiteralPath(RootPathName).Select(p => new FileUri(new DirectoryInfo(p))).Distinct().ToArray();
                     if (uris.Length == 1)
                     {
                         FileUri u = uris[0];
@@ -95,11 +148,13 @@ namespace FsInfoCat.PS.Commands
                         WriteObject(v);
                     return;
             }
-            foreach (PSObject p in matching.ToArray())
-            {
-                _volumeInfos.Remove(p);
-                WriteObject(p);
-            }
+            throw new NotImplementedException();
+            // TODO: Finish implementation
+            //foreach (PSObject p in matching.ToArray())
+            //{
+            //    _volumeInfos.Remove(p);
+            //    WriteObject(p);
+            //}
         }
     }
 }

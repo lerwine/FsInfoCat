@@ -24,7 +24,7 @@ namespace FsInfoCat.Models.Volumes
         string VolumeName { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the volume.
+        /// Gets or sets the The name of the filesystem / format for the volume.
         /// </summary>
         string DriveFormat { get; set; }
 

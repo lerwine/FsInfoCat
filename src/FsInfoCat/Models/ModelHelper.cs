@@ -77,13 +77,67 @@ namespace FsInfoCat.Models
             return true;
         }
 
+        public static bool TryFindVolume<TSource, TItem>(this IEnumerable<TSource> volumes, Func<TSource, TItem> mapper, DirectoryInfo directoryInfo, out TSource result)
+            where TItem : class, IVolumeInfo
+            where TSource : class
+        {
+            if (volumes is null || directoryInfo is null)
+            {
+                result = null;
+                return false;
+            }
+            FileUri fileUri = new FileUri(directoryInfo);
+            result = volumes.FirstOrDefault(v => mapper(v).RootUri.Equals(fileUri));
+            if (result is null)
+                return TryFindVolume(volumes, mapper, directoryInfo.Parent, out result);
+            return true;
+        }
+
         public static T FindByChildItem<T>(this IEnumerable<T> source, FileUri fileUri)
             where T : class, IVolumeInfo
         {
             if (source is null || fileUri is null)
                 return null;
 
-            // Compare name. If matches, go up to parent volume and compare there
+            Stack<FileUri> stack = new Stack<FileUri>();
+            stack.Push(fileUri);
+            while (!((fileUri = fileUri.ToParentUri()) is null))
+                stack.Push(fileUri);
+
+            while (!(fileUri is null))
+            {
+                T result = source.FirstOrDefault(v => v.RootUri.Equals(fileUri));
+                if (result is null)
+                    fileUri = fileUri.ToParentUri();
+                else
+                {
+                    for (FileUri baseUri = result.RootUri.ToParentUri(); !(baseUri is null); baseUri = baseUri.ToParentUri())
+                    {
+                        if ((fileUri = fileUri.ToParentUri()) is null)
+                            return result;
+                        T b1 = FindByChildItem(source, baseUri);
+                        T b2 = FindByChildItem(source, fileUri);
+                        if (b2 is null)
+                        {
+                            if (b1 is null)
+                                return result;
+
+                        }
+                    }
+                }
+            }
+            // TODO: Compare name. If matches, go up to parent volume and compare there
+            throw new NotImplementedException();
+        }
+
+        public static TSource FindByChildItem<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, TItem> mapper, FileUri fileUri)
+            where TItem : class, IVolumeInfo
+            where TSource : class
+        {
+            if (source is null || fileUri is null)
+                return null;
+
+            // TODO: Compare name. If matches, go up to parent volume and compare there
             throw new NotImplementedException();
         }
 
@@ -95,12 +149,36 @@ namespace FsInfoCat.Models
             return source.Where(v => !(v is null) && v.Identifier.Equals(volumeIdentifier));
         }
 
+        public static IEnumerable<TSource> FindByIdentifier<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, TItem> mapper, VolumeIdentifier volumeIdentifier)
+            where TItem : class, IVolumeInfo
+            where TSource : class
+        {
+            if (source is null)
+                return new TSource[0];
+            return source.Where(v => !(v is null) && mapper(v).Identifier.Equals(volumeIdentifier));
+        }
+
         public static IEnumerable<T> FindByRootUri<T>(this IEnumerable<T> source, FileUri fileUri)
             where T : class, IVolumeInfo
         {
             if (source is null || fileUri is null)
                 return new T[0];
             return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.PathComparer));
+        }
+
+        public static IEnumerable<TSource> FindByRootUri<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, TItem> mapper, FileUri fileUri)
+            where TItem : class, IVolumeInfo
+            where TSource : class
+        {
+            if (source is null || fileUri is null)
+                return new TSource[0];
+            return source.Where(s =>
+            {
+                if (s is null)
+                    return false;
+                TItem v = mapper(s);
+                return fileUri.Equals(v.RootUri, v.PathComparer);
+            });
         }
 
         public static IEnumerable<T> FindByVolumeName<T>(this IEnumerable<T> source, string volumeName)
@@ -112,6 +190,18 @@ namespace FsInfoCat.Models
                 return source.Where(v => !(v is null) && string.IsNullOrEmpty(v.VolumeName));
             StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
             return source.Where(v => !(v is null) && comparer.Equals(volumeName, v.VolumeName));
+        }
+
+        public static IEnumerable<TSource> FindByVolumeName<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, TItem> mapper, string volumeName)
+            where TItem : class, IVolumeInfo
+            where TSource : class
+        {
+            if (source is null)
+                return new TSource[0];
+            if (string.IsNullOrEmpty(volumeName))
+                return source.Where(v => !(v is null) && string.IsNullOrEmpty(mapper(v).VolumeName));
+            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+            return source.Where(v => !(v is null) && comparer.Equals(volumeName, mapper(v).VolumeName));
         }
 
         public static Accounts.UserRole ToUserRole(byte value)

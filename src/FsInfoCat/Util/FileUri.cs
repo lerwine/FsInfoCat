@@ -18,38 +18,6 @@ namespace FsInfoCat.Util
 
         public string AbsolutePath { get; }
 
-        ///// <summary>
-        ///// URI path segments.
-        ///// </summary>
-        //public ReadOnlyCollection<string> Segments { get; }
-
-        ///// <summary>
-        ///// Create new <c>FileUri</c> to represent a parent <c>FileUri</c>.
-        ///// </summary>
-        ///// <param name="host">The host name.</param>
-        ///// <param name="segments">The parent path segments</param>
-        //private FileUri(string host, IEnumerable<string> segments, bool isAbsolute)
-        //{
-        //    Host = host;
-        //    string[] arr = segments.ToArray();
-        //    _nameIndex = arr.Length - 1;
-        //    if (_nameIndex < 0)
-        //    {
-        //        Segments = new ReadOnlyCollection<string>(new string[0]);
-        //    }
-        //    else
-        //    {
-        //        string name = arr[_nameIndex];
-        //        int len = name.Length - 1;
-        //        if (len > 0 && name[len] == UriHelper.URI_PATH_SEPARATOR_CHAR)
-        //            arr[_nameIndex] = name.Substring(0, len);
-        //    }
-        //    Segments = new ReadOnlyCollection<string>(arr);
-        //    IsDirectory = true;
-        //    IsEmpty = _nameIndex < 0 && !isAbsolute;
-        //    IsAbsolute = isAbsolute;
-        //}
-
         /// <summary>
         /// Creates a new <c>FileUri</c> object.
         /// </summary>
@@ -102,6 +70,43 @@ namespace FsInfoCat.Util
                     AbsolutePath = absolutePath;
                 _nameIndex = (i < 0) ? 0 : i + 1;
             }
+        }
+
+        private FileUri(string host, string absolutePath)
+        {
+            int i = absolutePath.LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR);
+            _nameIndex = (i < 0) ? 0 : i + 1;
+            Host = host;
+            AbsolutePath = absolutePath;
+        }
+
+        public FileUri ToParentUri()
+        {
+            /*
+             * Host = "", AbsolutePath = "", _nameIndex = 0
+             * Host = "Name", AbsolutePath = "", _nameIndex = 0
+             * Host = "", AbsolutePath = "/", _nameIndex = 1
+             * Host = "Name", AbsolutePath = "/", _nameIndex = 1
+             * Host = "", AbsolutePath = "/RootChild", _nameIndex = 10
+             * Host = "", AbsolutePath = "/C:", _nameIndex = 10
+             * Host = "Name", AbsolutePath = "/RootChild", _nameIndex = 10
+             */
+            if (_nameIndex == 0)
+                return null;
+            return new FileUri(Host, AbsolutePath.Substring(0, _nameIndex - 1));
+        }
+
+        public bool Contains(FileUri other, IEqualityComparer<string> comparer)
+        {
+            if (other is null)
+                return false;
+
+            if (other.Host.Equals(Host, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotImplementedException();
+            }
+            // TODO: Implement Contains(FileUri, IEqualityComparer<string>)
+            throw new NotImplementedException();
         }
 
         //public static implicit operator FileUri(Uri uri)

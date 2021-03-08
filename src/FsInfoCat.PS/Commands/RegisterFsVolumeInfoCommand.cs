@@ -15,12 +15,12 @@ namespace FsInfoCat.PS.Commands
     [OutputType(typeof(IVolumeInfo))]
     public class RegisterFsVolumeInfoCommand : FsVolumeInfoCommand
     {
-        [Parameter(HelpMessage = "The full, case-sensitive path name of the volume root directory.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
+        [Parameter(HelpMessage = "The full path name of the volume root directory.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        [Alias("RootPath")]
+        [Alias("RootPath", "FullName")]
         public string RootPathName { get; set; }
 
-        [Parameter(HelpMessage = "The name of the volume.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
+        [Parameter(HelpMessage = "The name of the file system volume.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
         public string VolumeName { get; set; }
 
@@ -44,18 +44,38 @@ namespace FsInfoCat.PS.Commands
         /// See <seealso cref="VolumeIdentifier"/> for more information on supported string formats.</item>
         /// </list>
         /// </remarks>
-        [Parameter(HelpMessage = "The volume serial number or UUID.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
-        [Alias("SerialNumber", "VolumeId")]
+        [Parameter(HelpMessage = "The volume VSN or UUID that will be used as the unique identifier for the file system volume. For remote file shares, this should be the URN of the remote source.", Mandatory = true, ValueFromPipelineByPropertyName = true)]
+        [Alias("SerialNumber", "VolumeId", "VSN", "UUID")]
         public object Identifier { get; set; }
 
-        [Parameter(HelpMessage = "Do case-sensitive path matching.")]
+        [Parameter(HelpMessage = "File name/path lookups are case-sensitive.")]
         public SwitchParameter CaseSensitive { get; set; }
 
-        [Parameter(HelpMessage = "Return registered volume")]
+        [Parameter(HelpMessage = "Return registered volume information object.")]
         public SwitchParameter PassThru { get; set; }
 
-        [Parameter(HelpMessage = "Updates volume info if it has already been been registered. Also registers volume information even if the subdirectory does not exists.")]
+        [Parameter(HelpMessage = "Updates volume info event if it has already been been registered. Also registers volume information even if the subdirectory does not exist.")]
         public SwitchParameter Force { get; set; }
+
+        protected override void OnItemNotFoundException(string path, ItemNotFoundException exc)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnPathIsFileError(string providerPath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnProviderNotSupportedException(string path, Exception exc)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnResolveError(string path, Exception exc)
+        {
+            throw new NotImplementedException();
+        }
 
         protected override void ProcessRecord()
         {
@@ -69,6 +89,7 @@ namespace FsInfoCat.PS.Commands
             FileUri fileUri;
             try
             {
+                // TODO: Need to use GetUnresolvedProviderPathFromPSPath on RootPathName
                 directoryInfo = new DirectoryInfo(RootPathName);
                 fileUri = new FileUri(directoryInfo);
             }

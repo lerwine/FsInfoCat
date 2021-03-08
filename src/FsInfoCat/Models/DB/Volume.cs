@@ -109,10 +109,10 @@ namespace FsInfoCat.Models.DB
                 {
                     HostDevice host = Host;
                     Regex regex = (host is null) ? UriHelper.FORMAT_GUESS_LOCAL_REGEX : (host.Platform == PlatformType.Linux || host.Platform == PlatformType.OSX) ?
-                        UriHelper.Linux.FORMAT_GUESS_LOCAL_REGEX : UriHelper.Windows.FORMAT_GUESS_LOCAL_REGEX;
+                        UriHelper.Linux.FORMAT_GUESS_REGEX : UriHelper.Windows.FORMAT_GUESS_REGEX;
                     Match match = regex.Match(value);
-                    if (match.Success || (match = (ReferenceEquals(regex, UriHelper.Windows.FORMAT_GUESS_LOCAL_REGEX) ? UriHelper.Linux.FORMAT_GUESS_LOCAL_REGEX :
-                            UriHelper.Windows.FORMAT_GUESS_LOCAL_REGEX).Match(value)).Success && !match.Groups[UriHelper.FORMAT_GUESS_MATCH_GROUP_NON_FILE].Success)
+                    if (match.Success || (match = (ReferenceEquals(regex, UriHelper.Windows.FORMAT_GUESS_REGEX) ? UriHelper.Linux.FORMAT_GUESS_REGEX :
+                            UriHelper.Windows.FORMAT_GUESS_REGEX).Match(value)).Success && !match.Groups[UriHelper.FORMAT_GUESS_MATCH_GROUP_NON_FILE].Success)
                         try
                         {
                             if (match.Groups[UriHelper.FORMAT_GUESS_MATCH_GROUP_FILE_URL].Success)
