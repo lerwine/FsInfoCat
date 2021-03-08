@@ -236,7 +236,8 @@
   <complexType name="typeType">
     <sequence>
       <element ref="maml:name" minOccurs="0"/>
-      <element ref="maml:uri"/>
+        <!-- LTE: Added ' minOccurs="0"' so it will validate correctly for PSMaml. -->
+      <element ref="maml:uri" minOccurs="0"/>
       <element ref="maml:description" minOccurs="0"/>
     </sequence>
     <attributeGroup ref="maml:contentIdentificationSharingAndConditionGroup"/>

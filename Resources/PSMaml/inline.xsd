@@ -162,7 +162,8 @@
     </annotation>
     <sequence>
       <element ref="maml:linkText"/>
-      <element ref="maml:uri"/>
+        <!-- LTE: Added ' minOccurs="0"' so it will validate correctly for PSMaml. -->
+      <element ref="maml:uri" minOccurs="0"/>
     </sequence>
     <attribute name="targetVerification" type="boolean" default="false"/>
     <attributeGroup ref="maml:contentIdentificationSharingAndConditionGroup"/>

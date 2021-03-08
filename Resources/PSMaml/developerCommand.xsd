@@ -22,8 +22,10 @@
       <element ref="maml:description"/>
       <element ref="command:syntax"/>
       <element ref="command:parameters" minOccurs="0"/>
-      <element ref="command:inputTypes"/>
-      <element ref="command:returnValues"/>
+        <!-- LTE: Added ' minOccurs="0"' so it will validate correctly for PSMaml. -->
+      <element ref="command:inputTypes" minOccurs="0"/>
+        <!-- LTE: Added ' minOccurs="0"' so it will validate correctly for PSMaml. -->
+      <element ref="command:returnValues" minOccurs="0"/>
       <element ref="command:terminatingErrors"/>
       <element ref="command:nonTerminatingErrors"/>
       <element ref="maml:alertSet" minOccurs="0" maxOccurs="unbounded"/>
@@ -146,6 +148,12 @@
     <attribute name="globbing" type="boolean" use="required"/>
     <attribute name="pipelineInput" type="string" use="required"/>
     <attribute name="position" type="string" use="required"/>
+    <!-- LTE: Added so it will validate correctly for PSMaml. -->
+    <attribute name="aliases" type="string" use="required">
+        <annotation>
+            <documentation>Use 'none' or separate aliases by commas.</documentation>
+        </annotation>
+    </attribute>
     <attribute ref="command:requiresTrustedData" use="optional"/>
   </complexType>
   <!-- end parameter definition -->
