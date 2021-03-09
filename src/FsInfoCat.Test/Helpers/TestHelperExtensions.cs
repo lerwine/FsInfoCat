@@ -1,10 +1,58 @@
 using FsInfoCat.PS;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace FsInfoCat.Test.Helpers
 {
     public static class TestHelperExtensions
     {
+        public static XmlElement AppendElement(this XmlDocument xmlDocument, string localName) => (XmlElement)xmlDocument.AppendChild(xmlDocument.CreateElement(localName));
+
+        public static XmlElement AppendElement(this XmlElement element, string localName) => (XmlElement)element.AppendChild(element.OwnerDocument.CreateElement(localName));
+
+        public static XmlElement SetAttributeValue(this XmlElement element, string localName, string value)
+        {
+            XmlAttribute attribute = element.GetAttributeNode(localName);
+            if (value is null)
+            {
+                if (!(attribute is null))
+                    element.Attributes.Remove(attribute);
+            }
+            else if (attribute is null)
+                element.Attributes.Append(element.OwnerDocument.CreateAttribute(localName)).Value = value;
+            else
+                attribute.Value = value;
+            return element;
+        }
+
+        public static XmlElement SetAttributeValue(this XmlElement element, string localName, bool value) => SetAttributeValue(element, localName, XmlConvert.ToString(value));
+
+        public static string SerializesAsXml(Match match, params string[] groupNames)
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            IEnumerable<Group> groups = match.Groups.Cast<Group>();
+            xmlDocument.AppendChild(xmlDocument.CreateElement("Match")).Attributes.Append(xmlDocument.CreateAttribute("Success")).Value = XmlConvert.ToString(match.Success);
+            if (match.Success && !(groupNames is null || groupNames.Length == 0))
+            {
+                foreach (Group g in match.Groups)
+                {
+                    if (groupNames.Contains(g.Name))
+                    {
+                        XmlElement element = (XmlElement)xmlDocument.DocumentElement.AppendChild(xmlDocument.CreateElement("Group"));
+                        element.Attributes.Append(xmlDocument.CreateAttribute("Success")).Value = XmlConvert.ToString(g.Success);
+                        if (g.Success)
+                            element.InnerText = g.Value;
+                        else
+                            element.IsEmpty = true;
+                    }
+                }
+            }
+            return xmlDocument.OuterXml;
+        }
+
         public static Func<T1, T2, T3, TResult> Monitor<T1, T2, T3, TResult>(this Func<T1, T2, T3, TResult> target, out Func<IFuncInvocationResult<TResult>> getResult)
         {
             FunctionInvocationMonitor<TResult> monitor = new FunctionInvocationMonitor<TResult>();
