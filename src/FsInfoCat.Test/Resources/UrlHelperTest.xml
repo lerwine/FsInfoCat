@@ -1,0 +1,2413 @@
+<UrlHelperTest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./UrlHelperTest.xsd">
+    <TestData Value="" Description="Empty String">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+            </FileUriStrict>
+        </Linux>
+        <AuthorityCaseInsensitiveEquals CompareTo="" Returns="true" Description="Empty URI" />
+        <AuthorityCaseInsensitiveEquals CompareTo=" " Returns="false" Description="White space" />
+    </TestData>
+    <TestData Value="^_`jkq{}" Description="Relative single segment path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">^_`jkq{}</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">^_`jkq{}</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">^_`jkq{}</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">^_`jkq{}</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="%5E_jkq%7B%7D" Description="Relative single segment URI">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">%5E_jkq%7B%7D</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">%5E_jkq%7B%7D</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">%5E_jkq%7B%7D</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">%5E_jkq%7B%7D</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">%5E_jkq%7B%7D</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">%5E_jkq%7B%7D</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="!$'+,@BKQY\" Description="Relative single segment Windows path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="!$'+,@BKQY/" Description="Relative single segment Linux path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="AppData\Local\Temp" Description="Relative Nested Windows path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">AppData\Local\Temp</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">AppData\Local\Temp</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">AppData\Local\Temp</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">AppData\Local\Temp</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="!$'+,@BKQY\" Description="Relative Nested Linux path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY\</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="!$'+,@BKQY/" Description="Relative Nested URI">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">!$'+,@BKQY</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+
+    <TestData Value="file:///z:/Index%233&amp;4" Description="Windows Drive URL">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///z:/Index%233&amp;4</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///z:/Index%233&amp;4</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///z:/Index%233&amp;4</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///z:/Index%233&amp;4</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file:///z:/Index%233&amp;4/" Description="Windows Drive URL with trailing separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///z:/Index%233&amp;4/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///z:/Index%233&amp;4/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///z:/Index%233&amp;4/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///z:/Index%233&amp;4/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/z:/Index%233&amp;4/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file:///H:/" Description="Windows Drive Root URL">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///H:/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/H:/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///H:/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/H:/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file:///H:/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///H:/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/H:/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///H:/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/H:/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file:///H:" Description="Windows Drive Root URL with no separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///H:</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/H:</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///H:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/H:</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file:///H:</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///H:</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/H:</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///H:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/H:</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio" Description="Windows Drive Nested URL">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/" Description="Windows Drive Nested URL with trailing separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file://C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/" Description="Drive in place of host">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">C:</Group>
+                <Group Name="p" Success="true">/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">C:</Group>
+                <Group Name="p" Success="true">/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="z:\Index#3&amp;4" Description="Windows Drive Path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">z:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:\Index#3&amp;4</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">z:\Index#3&amp;4</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:\Index#3&amp;4</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:\Index#3&amp;4</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:\Index#3&amp;4</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="z:\Index#3&amp;4\" Description="Windows Drive Path with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">z:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:\Index#3&amp;4\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">z:\Index#3&amp;4\</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:\Index#3&amp;4\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:\Index#3&amp;4\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:\Index#3&amp;4\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="z:" Description="Windows Drive Letter">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">z:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">z:</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="z:/" Description="Windows Drive Root">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">z:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">z:</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">z:/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="C:\Program Files (x86)\Microsoft Visual Studio" Description="Windows Drive Nested Path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">C:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:\Program Files (x86)\Microsoft Visual Studio</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">C:\Program Files (x86)\Microsoft Visual Studio</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:\Program Files (x86)\Microsoft Visual Studio</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:\Program Files (x86)\Microsoft Visual Studio</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:\Program Files (x86)\Microsoft Visual Studio</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="C:\Program Files (x86)\Microsoft Visual Studio\" Description="Windows Drive Nested Path with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">C:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:\Program Files (x86)\Microsoft Visual Studio\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">C:\Program Files (x86)\Microsoft Visual Studio\</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:\Program Files (x86)\Microsoft Visual Studio\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:\Program Files (x86)\Microsoft Visual Studio\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:\Program Files (x86)\Microsoft Visual Studio\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="C:/Program Files (x86)/Microsoft Visual Studio" Description="Windows Drive Nested Alt Path Separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">C:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:/Program Files (x86)/Microsoft Visual Studio</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">C:/Program Files (x86)/Microsoft Visual Studio</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:/Program Files (x86)/Microsoft Visual Studio</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:/Program Files (x86)/Microsoft Visual Studio</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program Files (x86)/Microsoft Visual Studio</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="C:/Program Files (x86)/Microsoft Visual Studio/" Description="Windows Drive Nested Alt Path Separator with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">C:</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:/Program Files (x86)/Microsoft Visual Studio/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">C:/Program Files (x86)/Microsoft Visual Studio/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:/Program Files (x86)/Microsoft Visual Studio/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">C:/Program Files (x86)/Microsoft Visual Studio/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/C:/Program Files (x86)/Microsoft Visual Studio/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="file:///etc" Description="Linux Local URI">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///etc</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///etc</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file:///etc</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///etc</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///etc</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file:///etc/" Description="Linux Local URI with trailing separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///etc/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///etc/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file:///etc/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///etc/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///etc/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file:///" Description="Linux Local Root URI">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file:///</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+            </FileUriStrict>
+        </Linux>
+        <AuthorityCaseInsensitiveEquals CompareTo="" Returns="true" Description="Empty URI" />
+    </TestData>
+    <TestData Value="file:///mnt/cdrom/image.idx" Description="Linux Nested Local URI">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///mnt/cdrom/image.idx</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///mnt/cdrom/image.idx</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file:///mnt/cdrom/image.idx</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///mnt/cdrom/image.idx</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///mnt/cdrom/image.idx</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file:///mnt/cdrom/image.idx/" Description="Linux Nested Local URI with trailing separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///mnt/cdrom/image.idx/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///mnt/cdrom/image.idx/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file:///mnt/cdrom/image.idx/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file:///mnt/cdrom/image.idx/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file:///mnt/cdrom/image.idx/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="/etc" Description="Linux Local Path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">etc/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">/etc</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="/etc/" Description="Linux Local Path with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">etc/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">/etc</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/etc/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="/" Description="Linux Local Root Path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="/mnt/cdrom/image.idx" Description="Linux Nested Local Path">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">/mnt/cdrom/image.idx</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="/mnt/cdrom/image.idx/" Description="Linux Nested Local Path with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">/mnt/cdrom/image.idx/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt/cdrom/image.idx/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazureshare" Description="File URL to FQDN Host">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazureshare/" Description="File URL to FQDN Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Linux>
+        <AuthorityCaseInsensitiveEquals CompareTo="file://servicenowdiag479.file.core.windows.net/testazureshare" Returns="true" Description="Difference in slash at end" />
+    </TestData>
+    <TestData Value="file://servicenowdiag479.file.core.windows.net:44/testazureshare" Description="File URL with port">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net:44/testazureshare</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net:44</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://servicenowdiag479.file.core.windows.net:44/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.ne:44t/testazureshare</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net:44</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://servicenowdiag479.file.core.windows.net:44/testazureshare</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net:44</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FileUriStrict>
+        </Linux>
+        <AuthorityCaseInsensitiveEquals CompareTo="file://servicenowdiag479.file.core.windows.net:22/testazureshare" Returns="false" Description="Same host, different port" />
+    </TestData>
+    <TestData Value="\\servicenowdiag479.file.core.windows.net\testazureshare" Description="Windows UNC to FQDN Host">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">\testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">\\servicenowdiag479.file.core.windows.net\testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\servicenowdiag479.file.core.windows.net\testazureshare</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\servicenowdiag479.file.core.windows.net\testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\servicenowdiag479.file.core.windows.net\testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+        <AuthorityCaseInsensitiveEquals CompareTo="\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\testazureshare" Returns="true" Description="Upper-case URI host" />
+        <AuthorityCaseInsensitiveEquals CompareTo="\\servicenowdiag479.file.core.windows.net\TESTAZURESHARE" Returns="false" Description="Different path case" />
+    </TestData>
+    <TestData Value="\\servicenowdiag479.file.core.windows.net\testazureshare\" Description="Windows UNC to FQDN Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">\testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">\\servicenowdiag479.file.core.windows.net\testazureshare\</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\servicenowdiag479.file.core.windows.net\testazureshare\</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\servicenowdiag479.file.core.windows.net\testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\servicenowdiag479.file.core.windows.net\testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="//servicenowdiag479.file.core.windows.net/testazureshare" Description="Linux UNC to FQDN Host">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//servicenowdiag479.file.core.windows.net/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//servicenowdiag479.file.core.windows.net/testazureshare</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//servicenowdiag479.file.core.windows.net/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//servicenowdiag479.file.core.windows.net/testazureshare</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="//servicenowdiag479.file.core.windows.net/testazureshare/" Description="Linux UNC to FQDN Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//servicenowdiag479.file.core.windows.net/testazureshare/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//servicenowdiag479.file.core.windows.net/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//servicenowdiag479.file.core.windows.net/testazureshare</Group>
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="file://mysite/testazureshare" Description="File URL to AName Host">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://mysite/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://mysite/testazureshare/</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://mysite/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://mysite/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://mysite/testazureshare/</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file://mysite/testazureshare/" Description="File URL to AName Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://mysite/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://mysite/testazureshare/</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://mysite/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://mysite/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://mysite/testazureshare/</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="\\mysite\testazureshare" Description="Windows UNC to AName Host">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">\testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">\\mysite\testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\mysite\testazureshare</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\mysite\testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="\\mysite\testazureshare\" Description="Windows UNC to AName Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">\testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">\\mysite\testazureshare\</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\mysite\testazureshare\</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\mysite\testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="//mysite/testazureshare" Description="Linux UNC to AName Host">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//mysite/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//mysite/testazureshare</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//mysite/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//mysite/testazureshare</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="//mysite/testazureshare/" Description="Linux UNC to AName Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//mysite/testazureshare/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//mysite/testazureshare/</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//mysite/testazureshare/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//mysite/testazureshare/</Group>
+                <Group Name="h" Success="true">mysite</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="file://10.0.0.1/testazureshare" Description="File URL to IPV4 Host">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://10.0.0.1/testazureshare</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://10.0.0.1/testazureshare</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://10.0.0.1/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://10.0.0.1/testazureshare</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://10.0.0.1/testazureshare</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file://10.0.0.1/testazureshare/" Description="File URL to IPV4 Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://10.0.0.1/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://10.0.0.1/testazureshare/</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://10.0.0.1/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://10.0.0.1/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://10.0.0.1/testazureshare/</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="\\10.0.0.1\testazureshare" Description="Windows UNC to IPV4 Host">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">\testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">\\10.0.0.1\testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\10.0.0.1\testazureshare</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\10.0.0.1\testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\10.0.0.1\testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="\\10.0.0.1\testazureshare\" Description="Windows UNC to IPV4 Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">\testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">\\10.0.0.1\testazureshare\</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\10.0.0.1\testazureshare\</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\10.0.0.1\testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\10.0.0.1\testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="//10.0.0.1/testazureshare" Description="Linux UNC to IPV4 Host">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//10.0.0.1/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//10.0.0.1/testazureshare</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//10.0.0.1/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//10.0.0.1/testazureshare</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="//10.0.0.1/testazureshare/" Description="Linux UNC to IPV4 Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//10.0.0.1/testazureshare/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//10.0.0.1/testazureshare/</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//10.0.0.1/testazureshare/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//10.0.0.1/testazureshare/</Group>
+                <Group Name="h" Success="true">10.0.0.1</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="file://[fe80::1dee:91b0:4872:1f9]/testazureshare" Description="File URL to IPV6 Host">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="file://[fe80::1dee:91b0:4872:1f9]/testazureshare/" Description="File URL to IPV6 Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare/</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="true">file://[fe80::1dee:91b0:4872:1f9]/testazureshare/</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="\\[fe80::1dee:91b0:4872:1f9]\testazureshare" Description="Windows UNC to IPV6 Host">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">\testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">\\[fe80::1dee:91b0:4872:1f9]\testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\[fe80::1dee:91b0:4872:1f9]\testazureshare</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">\testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\[fe80::1dee:91b0:4872:1f9]\testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\[fe80::1dee:91b0:4872:1f9]\testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="\\[fe80::1dee:91b0:4872:1f9]\testazureshare\" Description="Windows UNC to IPV6 Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">\testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">\\[fe80::1dee:91b0:4872:1f9]\testazureshare\</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\[fe80::1dee:91b0:4872:1f9]\testazureshare\</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">\testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\[fe80::1dee:91b0:4872:1f9]\testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\[fe80::1dee:91b0:4872:1f9]\testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="//[fe80::1dee:91b0:4872:1f9]/testazureshare" Description="Linux UNC to IPV6 Host">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//[fe80::1dee:91b0:4872:1f9]/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//[fe80::1dee:91b0:4872:1f9]/testazureshare</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//[fe80::1dee:91b0:4872:1f9]/testazureshare</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//[fe80::1dee:91b0:4872:1f9]/testazureshare</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="//[fe80::1dee:91b0:4872:1f9]/testazureshare/" Description="Linux UNC to IPV6 Host with trailing separator">
+        <Windows>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//[fe80::1dee:91b0:4872:1f9]/testazureshare/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//[fe80::1dee:91b0:4872:1f9]/testazureshare/</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="true">/</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="true">//[fe80::1dee:91b0:4872:1f9]/testazureshare/</FsPathPattern>
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">//[fe80::1dee:91b0:4872:1f9]/testazureshare/</Group>
+                <Group Name="h" Success="true">[fe80::1dee:91b0:4872:1f9]</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="\\servicenowdiag479.-file.core.windows.net\testazureshare\" Description="Windows UNC with invalid host name">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\servicenowdiag479.-file.core.windows.net\testazureshare\</Group>
+                <Group Name="h" Success="true">servicenowdiag479.-file.core.windows.net</Group>
+                <Group Name="p" Success="true">testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\servicenowdiag479.-file.core.windows.net\testazureshare\</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\servicenowdiag479.-file.core.windows.net\testazureshare\</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="///testazureshare" Description="UNC with missing host name">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="false">
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="false">
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="file://-servicenowdiag479.file.core.windows.net/testazureshare/" Description="File URL with invalid host">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://-servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">-servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">file://-servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://-servicenowdiag479.file.core.windows.net/testazureshare/</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">-servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare/</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="/mnt//cdrom/image.idx" Description="Invalid Linux Local path">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">/mnt//cdrom/image.idx</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+            </FsPathRegex>
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="true">
+                <Group Name="a" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true"></Group>
+            </FileUriStrict>
+        </Linux>
+    </TestData>
+    <TestData Value="1:\Program Files (x86)\Microsoft Visual Studio" Description="Invalid drive letter">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">Program Files (x86)</Group>
+                <Group Name="p" Success="true">\Microsoft Visual Studio</Group>
+                <Group Name="x" Success="true">1:\Program Files (x86)\Microsoft Visual Studio</Group>
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">Program Files (x86)</Group>
+                <Group Name="p" Success="true">\Microsoft Visual Studio</Group>
+                <Group Name="x" Success="true">1:\Program Files (x86)\Microsoft Visual Studio</Group>
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value=":\Program Files (x86)" Description="No drive letter">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">:\Program Files (x86)</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">:\Program Files (x86)</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\test&lt;share" Description="Invalid Windows File name char">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\test&lt;share</Group>
+                <Group Name="h" Success="true">SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET</Group>
+                <Group Name="p" Success="true">\test&lt;share</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="false" />
+                <Group Name="p" Success="true">\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\test&lt;share</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="\\[::3::6:7:8]\testazureshare" Description="Invalid IPF6 Address">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\[::3::6:7:8]\testazureshare</Group>
+                <Group Name="h" Success="true">[::3::6:7:8]</Group>
+                <Group Name="p" Success="true">\testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="false" />
+                <Group Name="u" Success="true">\\[::3::6:7:8]\testazureshare</Group>
+                <Group Name="h" Success="true">[::3::6:7:8]</Group>
+                <Group Name="p" Success="true">\testazureshare</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazureshare//" Description="Extra trailing slash">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare//</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare//</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazureshare//</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
+                <Group Name="p" Success="true">/testazureshare//</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="ZmlsZTovL215AHNpdGUvdGVzdGF6dXJlc2hhcmU=" Base64="true" Description="Invalid file name char">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">ZmlsZTovL215AHNpdGUvdGVzdGF6dXJlc2hhcmU=</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">bXkAc2l0ZQ==</Group>
+                <Group Name="p" Success="true">L3Rlc3RhenVyZXNoYXJl</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">ZmlsZTovL215AHNpdGUvdGVzdGF6dXJlc2hhcmU=</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">bXkAc2l0ZQ==</Group>
+                <Group Name="p" Success="true">L3Rlc3RhenVyZXNoYXJl</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+    </TestData>
+    <TestData Value="http://user@tempuri.org/?test=one" Description="URI with auth">
+        <Windows>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">ZmlsZTovL215AHNpdGUvdGVzdGF6dXJlc2hhcmU=</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">bXkAc2l0ZQ==</Group>
+                <Group Name="p" Success="true">L3Rlc3RhenVyZXNoYXJl</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Windows>
+        <Linux>
+            <FsPathRegex Success="false" />
+            <FsPathPattern Success="false" />
+            <FormatGuess Success="true">
+                <Group Name="f" Success="true">ZmlsZTovL215AHNpdGUvdGVzdGF6dXJlc2hhcmU=</Group>
+                <Group Name="u" Success="false" />
+                <Group Name="h" Success="true">bXkAc2l0ZQ==</Group>
+                <Group Name="p" Success="true">L3Rlc3RhenVyZXNoYXJl</Group>
+                <Group Name="x" Success="false" />
+            </FormatGuess>
+            <FileUriStrict Success="false" />
+        </Linux>
+        <AuthorityCaseInsensitiveEquals CompareTo="http://used@tempuri.org/?test=one" Returns="false" Description="Alternating username" />
+        <AuthorityCaseInsensitiveEquals CompareTo="https://used@tempuri.org/?test=one" Returns="false" Description="Alternating scheme" />
+        <AuthorityCaseInsensitiveEquals CompareTo="https://used@tempuri.org/?test=ONE" Returns="false" Description="Alternating query case" />
+        <AuthorityCaseInsensitiveEquals CompareTo="https://used@tempuri.org/?test=one#six" Returns="false" Description="Adding fragment" />
+    </TestData>
+    <!-- TODO: Test for invalid ">|;*? -->
+</UrlHelperTest>

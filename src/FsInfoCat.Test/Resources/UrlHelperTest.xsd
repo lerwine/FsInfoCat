@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="CaptureType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="Success" type="xs:boolean" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="GroupType">
+        <xs:complexContent>
+            <xs:extension base="CaptureType">
+                <xs:attribute name="Name" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="MatchType">
+        <xs:sequence minOccurs="0">
+            <xs:element maxOccurs="unbounded" name="Group" type="GroupType" />
+        </xs:sequence>
+        <xs:attribute name="Success" type="xs:boolean" use="required" />
+    </xs:complexType>
+    <xs:complexType name="OSType">
+        <xs:sequence>
+            <xs:element name="FsPathRegex" type="MatchType" />
+            <xs:element name="FsPathPattern" type="CaptureType" />
+            <xs:element name="FormatGuess" type="MatchType" />
+            <xs:element name="FileUriStrict" type="MatchType" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AuthorityCaseInsensitiveEqualsType">
+        <xs:attribute name="Description" type="xs:string" use="required" />
+        <xs:attribute name="CompareTo" type="xs:string" use="required" />
+        <xs:attribute name="Returns" type="xs:boolean" use="required" />
+    </xs:complexType>
+    <xs:complexType name="TestDataType">
+        <xs:sequence>
+            <xs:element name="Windows" type="OSType" />
+            <xs:element name="Linux"  type="OSType" />
+            <xs:element name="AuthorityCaseInsensitiveEquals" type="AuthorityCaseInsensitiveEqualsType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Value" type="xs:string" use="required" />
+        <xs:attribute name="Description" type="xs:string" use="required" />
+        <xs:attribute name="Base64" type="xs:boolean" use="optional" />
+    </xs:complexType>
+    <xs:element name="UrlHelperTest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="TestData" type="TestDataType" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

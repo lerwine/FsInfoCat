@@ -6,868 +6,408 @@ using System.IO;
 using System.Linq;
 using FsInfoCat.Test.Helpers;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace FsInfoCat.Test
 {
     [TestFixture]
     public class UrlHelperTest
     {
+        private static XmlDocument _urlHelperTestData;
+
+        private static IEnumerable<XmlElement> GetUrlHelperTestData()
+        {
+            if (_urlHelperTestData is null)
+            {
+                _urlHelperTestData = new XmlDocument();
+                _urlHelperTestData.LoadXml(Properties.Resources.UrlHelperTest);
+            }
+            return _urlHelperTestData.DocumentElement.SelectNodes("//TestData").Cast<XmlElement>();
+        }
+
         [SetUp]
         public void Setup()
         {
         }
 
+        
         public static IEnumerable<TestCaseData> GetWindowsFsPathRegexTestCases()
         {
-            foreach (var item in (new[]
+            return GetUrlHelperTestData().Select(element =>
             {
-                new { Value = "SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET", Description = "FQDN Host" },
-                new { Value = "MyHost", Description = "AName host" },
-                new { Value = "192.168.1.1", Description = "IPV2 host" },
-                new { Value = "::1", Description = "Simple IPV6 host" },
-                new { Value = "1:2:3:4:5:6:7:8", Description = "Full IPV6 host" },
-                new { Value = "::3:4:5:6:7:8", Description = "Leading partial IPV6 host" },
-                new { Value = "1:2:3:4:5:6::", Description = "Trailing partial IPV6 host" },
-                new { Value = "1:2::6:7:8", Description = "Inner partial IPV6 host" }
-            }).SelectMany(host => (new[]
-            {
-                new { Value = @"\test azure share", Description = "URN" },
-                new { Value = @"\test.azure#share", Description = "URN with unacceptable URL character" },
-                new { Value = @"\test azure share/", Description = "URN with trailing slash" },
-                new { Value = @"\", Description = "URN with root path" },
-                new { Value = @"", Description = "URN with no path" },
-                new { Value = @"/test azure share\", Description = "URN with slashes and trailing backslash" },
-                new { Value = @"/", Description = "URN with root slash" }
-            }).SelectMany(a => (new[] { new { Value = "//", Name = "2 slashes" }, new { Value = "\\\\", Name = "2 backslashes" } }).Select(s =>
-                new { Value = @$"{s.Value}{host.Value}{a.Value}", Description = $"{s.Name}; {host.Description} {a.Description}", Host = host.Value, Path = a.Value }
-            ))))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(true, null, item.Host, item.Path));
-            foreach (var item in (new[]
-            {
-                new { Value = "A", Description = "UC A" },
-                new { Value = "a", Description = "LC a" },
-                new { Value = "Z", Description = "UC Z" },
-                new { Value = "z", Description = "LC z" }
-            }).SelectMany(drive => (new[]
-            {
-                new { Value = @"\test azure share", Description = "Drive" },
-                new { Value = @"\test.azure#share", Description = "Drive with unacceptable URL character" },
-                new { Value = @"\test azure share/", Description = "Drive with trailing slash" },
-                new { Value = @"\", Description = "Drive with root path" },
-                new { Value = @"", Description = "Drive with no path" },
-                new { Value = @"/test azure share\", Description = "Drive with slashes and trailing backslash" },
-                new { Value = @"/", Description = "Drive with root slash" }
-            }).Select(a =>
-                new { Value = @$"{drive.Value}:{a.Value}", Description = $"{drive.Description} {a.Description}", Drive = drive.Value, Path = $"{drive.Value}:{a.Value}" }
-            )))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(true, $"{item.Drive}:", null, item.Path));
-            foreach (var item in (new[]
-            {
-                new { Value = @"test azure share", Description = "Relative path" },
-                new { Value = @"test azure share/", Description = "Relative path leading backslash with trailing slash" },
-                new { Value = @"test azure share\", Description = "Relative path leading backslash with trailing backslash" },
-                new { Value = @"\test azure share", Description = "Relative path with leading backslash" },
-                new { Value = @"\test.azure#share", Description = "Relative path with unacceptable URL character" },
-                new { Value = @"\test azure share/", Description = "Relative path leading backslash with trailing slash" },
-                new { Value = @"\", Description = "Relative path with root only" },
-                new { Value = @"", Description = "Empty path" },
-                new { Value = @"/test azure share\", Description = "Relative path with leading slash and trailing backslash" },
-                new { Value = @"/", Description = "Relative path as root slash" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(true, null, null, item.Value));
-
-            foreach (var item in (new[]
-            {
-                new { Value = @"\\-host\test azure share", Description = "Invalid host name #1" },
-                new { Value = @"\\SERVICENOWDIAG479 NET\test azure share", Description = "Invalid host name #2" },
-                new { Value = @"\\host \test azure share", Description = "Invalid host name #3" },
-                new { Value = @"\\192.168..255\test azure share", Description = "Invalid IPV2 address" },
-                new { Value = @"\\1:2:3:4:5:6x:7:8\test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = @"\\::3::6:7:8\test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = @"\\:1\test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = @"\\\test azure share", Description = "Mising host #1" },
-                new { Value = @"\\\", Description = "Mising host #2" },
-                new { Value = @"\\", Description = "Mising host #3" },
-                new { Value = @"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\test<share", Description = "URN with invalid file name char" },
-                new { Value = @"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\/test azure share", Description = "URN with invalid separator" },
-                new { Value = @"C://test azure share", Description = "Drive with invalid separator" },
-                new { Value = @"1://test azure share", Description = "Invalid drive #1" },
-                new { Value = @"://test azure share", Description = "Invalid drive #2" },
-                new { Value = @"AA://test azure share", Description = "Invalid drive #3" },
-                new { Value = @"C:/test azure>share", Description = "Drive with invalid file name char" },
-                new { Value = @"test azure share\\", Description = "Relative with invalid separator" },
-                new { Value = @"/test azure;share", Description = "Drive with invalid file name char" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(false, null, null, null));
+                string expected = element.SelectSingleNode("Windows/FsPathRegex").OuterXml;
+                Console.WriteLine($"Emitting {expected}");
+                string base64Encoded = element.GetAttribute("Base64");
+                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected);
+            });
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetWindowsFsPathRegexTestCases))]
-        public IFuncInvocationResult<string, string, string, bool> WindowsFsPathRegexTest(string uri)
+        public string WindowsFsPathRegexTest(string uri, bool base64Encoded)
         {
-            Match match = UriHelper.Windows.FS_PATH_REGEX.Match(uri);
-            if (match.Success)
-                return new FuncInvocationResult<string, string, string, bool>(true,
-                    (match.Groups["a"].Success) ? match.Groups["a"].Value : null,
-                    (match.Groups["h"].Success) ? match.Groups["h"].Value : null,
-                    (match.Groups["p"].Success) ? match.Groups["p"].Value : null);
-            return new FuncInvocationResult<string, string, string, bool>(false, null, null, null);
+            XmlElement resultElement = new XmlDocument().AppendElement("FsPathRegex");
+            if (base64Encoded)
+            {
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                uri = encoding.GetString(Convert.FromBase64String(uri));
+                Match match = UriHelper.Windows.FS_PATH_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "a", "h", "p" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
+                    }
+            }
+            else
+            {
+                Match match = UriHelper.Windows.FS_PATH_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "a", "h", "p" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = g.Value;
+                    }
+            }
+            return resultElement.OuterXml;
         }
 
         public static IEnumerable<TestCaseData> GetWindowsFsPathPatternTestCases()
         {
-            foreach (var item in (new[]
+            return GetUrlHelperTestData().Select(element =>
             {
-                new { Value = "SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET", Description = "FQDN Host" },
-                new { Value = "MyHost", Description = "AName host" },
-                new { Value = "192.168.1.1", Description = "IPV2 host" },
-                new { Value = "::1", Description = "Simple IPV6 host" },
-                new { Value = "1:2:3:4:5:6:7:8", Description = "Full IPV6 host" },
-                new { Value = "::3:4:5:6:7:8", Description = "Leading partial IPV6 host" },
-                new { Value = "1:2:3:4:5:6::", Description = "Trailing partial IPV6 host" },
-                new { Value = "1:2::6:7:8", Description = "Inner partial IPV6 host" }
-            }).SelectMany(host => (new[]
-            {
-                new { Value = @"\test azure share", Description = "URN" },
-                new { Value = @"\test.azure#share", Description = "URN with unacceptable URL character" },
-                new { Value = @"\test azure share/", Description = "URN with trailing slash" },
-                new { Value = @"\", Description = "URN with root path" },
-                new { Value = @"", Description = "URN with no path" },
-                new { Value = @"/test azure share\", Description = "URN with slashes and trailing backslash" },
-                new { Value = @"/", Description = "URN with root slash" }
-            }).SelectMany(a => (new[] { new { Value = "//", Name = "2 slashes" }, new { Value = "\\\\", Name = "2 backslashes" } }).Select(s =>
-                new { Value = @$"{s.Value}{host.Value}{a.Value}", Description = $"{s.Name}; {host.Description} {a.Description}" }
-            ))).SelectMany(v => (new[] { new { Value = v.Value, Description = v.Description }, new { Value = $" {v.Value}", Description = $"{v.Description} and leading space" } })))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(true, item.Value));
-            foreach (var item in (new[]
-            {
-                new { Value = "A", Description = "UC A" },
-                new { Value = "a", Description = "LC a" },
-                new { Value = "Z", Description = "UC Z" },
-                new { Value = "z", Description = "LC z" },
-            }).SelectMany(drive => (new[]
-            {
-                new { Value = @"\test azure share", Description = "Drive" },
-                new { Value = @"\test.azure#share", Description = "Drive with unacceptable URL character" },
-                new { Value = @"\test azure share/", Description = "Drive with trailing slash" },
-                new { Value = @"\", Description = "Drive with root path" },
-                new { Value = @"", Description = "Drive with no path" },
-                new { Value = @"/test azure share\", Description = "Drive with slashes and trailing backslash" },
-                new { Value = @"/", Description = "Drive with root slash" }
-            }).Select(a =>
-                new { Value = @$"{drive.Value}:{a.Value}", Description = $"{drive.Description} {a.Description}" }
-            )).SelectMany(v => (new[] { new { Value = v.Value, Description = v.Description }, new { Value = $" {v.Value}", Description = $"{v.Description} and leading space" } })))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(true, item.Value));
-            foreach (var item in (new[]
-            {
-                new { Value = @"test azure share", Description = "Relative path" },
-                new { Value = @"test azure share/", Description = "Relative path leading backslash with trailing slash" },
-                new { Value = @"test azure share\", Description = "Relative path leading backslash with trailing backslash" },
-                new { Value = @"\test azure share", Description = "Relative path with leading backslash" },
-                new { Value = @"\test.azure#share", Description = "Relative path with unacceptable URL character" },
-                new { Value = @"\test azure share/", Description = "Relative path leading backslash with trailing slash" },
-                new { Value = @"\", Description = "Relative path with root only" },
-                new { Value = @"", Description = "Empty path" },
-                new { Value = @"/test azure share\", Description = "Relative path with leading slash and trailing backslash" },
-                new { Value = @"/", Description = "Relative path as root slash" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(true, item.Value));
-
-            foreach (var item in (new[]
-            {
-                new { Value = @"\\-host\test azure share", Description = "Invalid host name #1" },
-                new { Value = @"\\SERVICENOWDIAG479 NET\test azure share", Description = "Invalid host name #2" },
-                new { Value = @"\\host \test azure share", Description = "Invalid host name #3" },
-                new { Value = @"\\192.168..255\test azure share", Description = "Invalid IPV2 address" },
-                new { Value = @"\\1:2:3:4:5:6x:7:8\test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = @"\\::3::6:7:8\test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = @"\\:1\test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = @"\\\test azure share", Description = "Mising host #1" },
-                new { Value = @"\\\", Description = "Mising host #2" },
-                new { Value = @"\\", Description = "Mising host #3" },
-                new { Value = @"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\test<share", Description = "URN with invalid file name char" },
-                new { Value = @"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\/test azure share", Description = "URN with invalid separator" },
-                new { Value = @"C://test azure share", Description = "Drive with invalid separator" },
-                new { Value = @"1:/test azure share", Description = "Invalid drive #1" },
-                new { Value = @":/test azure share", Description = "Invalid drive #2" },
-                new { Value = @"AA:/test azure share", Description = "Invalid drive #3" },
-                new { Value = @"C:/test azure>share", Description = "Drive with invalid file name char" },
-                new { Value = @"test azure share\\", Description = "Relative with invalid separator" },
-                new { Value = @"/test azure;share", Description = "Drive with invalid file name char" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(false, null));
+                string expected = element.SelectSingleNode("Windows/FsPathPattern").OuterXml;
+                Console.WriteLine($"Emitting {expected}");
+                string base64Encoded = element.GetAttribute("Base64");
+                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected);
+            });
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetWindowsFsPathPatternTestCases))]
-        public IFuncInvocationResult<string, bool> WindowsFsPathPatternTest(string uri)
+        public string WindowsFsPathPatternTest(string uri, bool base64Encoded)
         {
-            Match match = Regex.Match(uri, UriHelper.Windows.PATTERN_ABS_FS_PATH);
-            if (match.Success)
-                return new FuncInvocationResult<string, bool>(true, match.Value);
-            return new FuncInvocationResult<string, bool>(false, null);
+            XmlElement resultElement = new XmlDocument().AppendElement("FsPathPattern");
+            if (base64Encoded)
+            {
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                uri = encoding.GetString(Convert.FromBase64String(uri));
+                Match match = Regex.Match(uri, UriHelper.Windows.PATTERN_ABS_FS_PATH);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    resultElement.InnerText = Convert.ToBase64String(encoding.GetBytes(match.Value));
+            }
+            else
+            {
+                Match match = Regex.Match(uri, UriHelper.Windows.PATTERN_ABS_FS_PATH);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    resultElement.InnerText = match.Value;
+            }
+            return resultElement.OuterXml;
         }
 
         public static IEnumerable<TestCaseData> GetLinuxFsPathRegexTestCases()
         {
-            foreach (var item in (new[]
+            return GetUrlHelperTestData().Select(element =>
             {
-                new { Value = "SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET", Description = "FQDN Host" },
-                new { Value = "MyHost", Description = "AName host" },
-                new { Value = "192.168.1.1", Description = "IPV2 host" },
-                new { Value = "::1", Description = "Simple IPV6 host" },
-                new { Value = "1:2:3:4:5:6:7:8", Description = "Full IPV6 host" },
-                new { Value = "::3:4:5:6:7:8", Description = "Leading partial IPV6 host" },
-                new { Value = "1:2:3:4:5:6::", Description = "Trailing partial IPV6 host" },
-                new { Value = "1:2::6:7:8", Description = "Inner partial IPV6 host" },
-            }).SelectMany(host => (new[]
-            {
-                new { Value = "/test azure share", Description = "URN" },
-                new { Value = "/test.azure#share", Description = "URN with unacceptable URL character" },
-                new { Value = "/test azure share/", Description = "URN with trailing slash" },
-                new { Value = "/", Description = "URN with root path" },
-                new { Value = "", Description = "URN with no path" }
-            }).Select(a =>
-                new { Value = @$"//{host.Value}{a.Value}", Description = $"{host.Description} {a.Description}", Abs = (a.Value.Length > 0) ? "/" : null, Host = host.Value, Path = a.Value }
-            )))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(true, item.Abs, item.Host, item.Path));
-            foreach (var item in (new[]
-            {
-                new { Value = "A", Description = "UC A" },
-                new { Value = "a", Description = "LC a" },
-                new { Value = "Z", Description = "UC Z" },
-                new { Value = "z", Description = "LC z" }
-            }).SelectMany(drive => (new[]
-            {
-                new { Value = @"/test azure share", Description = "Drive" },
-                new { Value = @"/test.azure#share", Description = "Drive with unacceptable URL character" },
-                new { Value = @"/test azure share/", Description = "Drive with trailing slash" },
-                new { Value = @"/", Description = "Drive with root path" },
-                new { Value = @"", Description = "Drive with no path" }
-            }).Select(a =>
-                new { Value = @$"{drive.Value}:{a.Value}", Description = $"{drive.Description} {a.Description}" }
-            )))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(true, null, null, item.Value));
-            foreach (var item in (new[]
-            {
-                new { Value = @"/test azure share", Description = "Relative path leading slash" },
-                new { Value = @"/test azure share/", Description = "Relative path leading and trailing slash" },
-                new { Value = @"/test.azure#share", Description = "Relative path with unacceptable URL character" },
-                new { Value = @"/", Description = "Relative path with root only" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(true, "/", null, item.Value));
-            foreach (var item in (new[]
-            {
-                new { Value = @"test azure share", Description = "Relative path" },
-                new { Value = @"test azure share/", Description = "Relative path trailing slash" },
-                new { Value = @"", Description = "Empty path" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(true, null, null, item.Value));
-
-            foreach (var item in (new[]
-            {
-                new { Value = "//-host/test azure share", Description = "Invalid host name #1" },
-                new { Value = "//SERVICENOWDIAG479 NET/test azure share", Description = "Invalid host name #2" },
-                new { Value = "//host /test azure share", Description = "Invalid host name #3" },
-                new { Value = "//192.168..255/test azure share", Description = "Invalid IPV2 address" },
-                new { Value = "//1:2:3:4:5:6x:7:8/test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = "//::3::6:7:8/test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = "//:1/test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = "///test azure share", Description = "Mising host #1" },
-                new { Value = "///", Description = "Mising host #2" },
-                new { Value = "//", Description = "Mising host #3" },
-                new { Value = "//SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/test\u0000share", Description = "URN with invalid file name char" },
-                new { Value = "//SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET//test azure share", Description = "URN with invalid separator" },
-                new { Value = "C://test azure share", Description = "Drive with invalid separator" },
-                new { Value = "C:/test azure\u0000share", Description = "Drive with invalid file name char" },
-                new { Value = "test azure share//", Description = "Relative with invalid separator" },
-                new { Value = "/test azure\u0000share", Description = "Relative with invalid file name char" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathRegex: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, bool>(false, null, null, null));
+                string expected = element.SelectSingleNode("Linux/FsPathRegex").OuterXml;
+                Console.WriteLine($"Emitting {expected}");
+                string base64Encoded = element.GetAttribute("Base64");
+                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected);
+            });
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetLinuxFsPathRegexTestCases))]
-        public IFuncInvocationResult<string, string, string, bool> LinuxFsPathRegexTest(string uri)
+        public string LinuxFsPathRegexTest(string uri, bool base64Encoded)
         {
-            Match match = UriHelper.Linux.FS_PATH_REGEX.Match(uri);
-            if (match.Success)
-                return new FuncInvocationResult<string, string, string, bool>(true,
-                    (match.Groups["a"].Success) ? match.Groups["a"].Value : null,
-                    (match.Groups["h"].Success) ? match.Groups["h"].Value : null,
-                    (match.Groups["p"].Success) ? match.Groups["p"].Value : null);
-            return new FuncInvocationResult<string, string, string, bool>(false, null, null, null);
+            XmlElement resultElement = new XmlDocument().AppendElement("FsPathRegex");
+            if (base64Encoded)
+            {
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                uri = encoding.GetString(Convert.FromBase64String(uri));
+                Match match = UriHelper.Linux.FS_PATH_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "a", "h", "p" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
+                    }
+            }
+            else
+            {
+                Match match = UriHelper.Linux.FS_PATH_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "a", "h", "p" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = g.Value;
+                    }
+            }
+            return resultElement.OuterXml;
         }
 
         public static IEnumerable<TestCaseData> GetLinuxFsPathPatternTestCases()
         {
-            foreach (var item in (new[]
+            return GetUrlHelperTestData().Select(element =>
             {
-                new { Value = "SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET", Description = "FQDN Host" },
-                new { Value = "MyHost", Description = "AName host" },
-                new { Value = "192.168.1.1", Description = "IPV2 host" },
-                new { Value = "::1", Description = "Simple IPV6 host" },
-                new { Value = "1:2:3:4:5:6:7:8", Description = "Full IPV6 host" },
-                new { Value = "::3:4:5:6:7:8", Description = "Leading partial IPV6 host" },
-                new { Value = "1:2:3:4:5:6::", Description = "Trailing partial IPV6 host" },
-                new { Value = "1:2::6:7:8", Description = "Inner partial IPV6 host" }
-            }).SelectMany(host => (new[]
-            {
-                new { Value = "/test azure share", Description = "URN" },
-                new { Value = "/test.azure#share", Description = "URN with unacceptable URL character" },
-                new { Value = "/test azure share/", Description = "URN with trailing slash" },
-                new { Value = "/", Description = "URN with root path" },
-                new { Value = "", Description = "URN with no path" },
-                new { Value = "/test azure share/", Description = "URN with slashes and trailing backslash" }
-            }).SelectMany(a => (new[] { new { Value = "//", Name = "2 slashes" }, new { Value = "//", Name = "2 backslashes" } }).Select(s =>
-                new { Value = $"{s.Value}{host.Value}{a.Value}", Description = $"{s.Name}; {host.Description} {a.Description}" }
-            ))).SelectMany(v => (new[] { new { Value = v.Value, Description = v.Description }, new { Value = $" {v.Value}", Description = $"{v.Description} and leading space" } })))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(true, item.Value));
-            foreach (var item in (new[]
-            {
-                new { Value = "A", Description = "UC A" },
-                new { Value = "a", Description = "LC a" },
-                new { Value = "Z", Description = "UC Z" },
-                new { Value = "z", Description = "LC z" }
-            }).SelectMany(drive => (new[]
-            {
-                new { Value = "/test azure share", Description = "Drive" },
-                new { Value = "/test.azure#share", Description = "Drive with unacceptable URL character" },
-                new { Value = "/test azure share/", Description = "Drive with trailing slash" },
-                new { Value = "/", Description = "Drive with root path" },
-                new { Value = "", Description = "Drive with no path" },
-                new { Value = "/test azure share/", Description = "Drive with slashes and trailing backslash" }
-            }).Select(a =>
-                new { Value = $"{drive.Value}:{a.Value}", Description = $"{drive.Description} {a.Description}" }
-            )).SelectMany(v => (new[] { new { Value = v.Value, Description = v.Description }, new { Value = $" {v.Value}", Description = $"{v.Description} and leading space" } })))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(false, null));
-            foreach (var item in (new[]
-            {
-                new { Value = "test azure share", Description = "Relative path" },
-                new { Value = "test azure share/", Description = "Relative path with trailing slash" },
-                new { Value = "", Description = "Empty path" },
-                new { Value = @"\test azure share/", Description = "Relative path with leading backslash and trailing slash" },
-                new { Value = "\\", Description = "Relative path as root baclslash" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(false, null));
-            foreach (var item in (new[]
-            {
-                new { Value = "/test azure share", Description = "Rooted path" },
-                new { Value = "/test azure share/", Description = "Rooted path with trailing slash" },
-                new { Value = "/test.azure#share", Description = "Rooted path with unacceptable URL character" },
-                new { Value = "/", Description = "Rooted path with slash only" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(true, item.Value));
-
-            foreach (var item in (new[]
-            {
-                new { Value = @"\\MyHost/test azure share", Description = "Invalid URN separator #1" },
-                new { Value = "//MyHost\u0000test azure share", Description = "Invalid URN separator #2" },
-                new { Value = "//-host/test azure share", Description = "Invalid host name #1" },
-                new { Value = "//SERVICENOWDIAG479 NET/test azure share", Description = "Invalid host name #2" },
-                new { Value = "//host /test azure share", Description = "Invalid host name #3" },
-                new { Value = "//192.168..255/test azure share", Description = "Invalid IPV2 address" },
-                new { Value = "//1:2:3:4:5:6x:7:8/test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = "//::3::6:7:8/test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = "//:1/test azure share", Description = "Invalid IPV6 address #1" },
-                new { Value = "///test azure share", Description = "Mising host #1" },
-                new { Value = "///", Description = "Mising host #2" },
-                new { Value = "//", Description = "Mising host #3" },
-                new { Value = "//SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/test\u0000share", Description = "URN with invalid file name char" },
-                new { Value = "//SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET//test azure share", Description = "URN with invalid separator" },
-                new { Value = "C://test azure share", Description = "Drive with invalid separator" },
-                new { Value = "1://test azure share", Description = "Invalid drive #1" },
-                new { Value = "://test azure share", Description = "Invalid drive #2" },
-                new { Value = "AA://test azure share", Description = "Invalid drive #3" },
-                new { Value = "C:/test azure\u0000share", Description = "Drive with invalid file name char" },
-                new { Value = "test azure share//", Description = "Relative with invalid separator" },
-                new { Value = "/test azure\u0000share", Description = "Rooted with invalid file name char" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"LinuxFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, bool>(false, null));
+                string expected = element.SelectSingleNode("Linux/FsPathPattern").OuterXml;
+                Console.WriteLine($"Emitting {expected}");
+                string base64Encoded = element.GetAttribute("Base64");
+                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected);
+            });
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetLinuxFsPathPatternTestCases))]
-        public IFuncInvocationResult<string, bool> LinuxFsPathPatternTest(string uri)
+        public string LinuxFsPathPatternTest(string uri, bool base64Encoded)
         {
-            Match match = Regex.Match(uri, UriHelper.Linux.PATTERN_ABS_FS_PATH);
-            if (match.Success)
-                return new FuncInvocationResult<string, bool>(true, match.Value);
-            return new FuncInvocationResult<string, bool>(false, null);
+            XmlElement resultElement = new XmlDocument().AppendElement("FsPathPattern");
+            if (base64Encoded)
+            {
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                uri = encoding.GetString(Convert.FromBase64String(uri));
+                Match match = Regex.Match(uri, UriHelper.Linux.PATTERN_ABS_FS_PATH);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    resultElement.InnerText = Convert.ToBase64String(encoding.GetBytes(match.Value));
+            }
+            else
+            {
+                Match match = Regex.Match(uri, UriHelper.Linux.PATTERN_ABS_FS_PATH);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    resultElement.InnerText = match.Value;
+            }
+            return resultElement.OuterXml;
         }
 
         public static IEnumerable<TestCaseData> GetWindowsFormatGuessRegexTestCases()
         {
-            yield return new TestCaseData("file://mysite.org/dir/file.txt")
-                .SetDescription("WindowsFormatGuess: file URL")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file://mysite.org/dir/file.txt", // f
-                    null, // u
-                    "mysite.org", // h
-                    "/dir/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"file:\\mysite.org\dir\file.txt")
-                .SetDescription("WindowsFormatGuess: file URL with alt separators")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    @"file:\\mysite.org\dir\file.txt", // f
-                    null, // u
-                    "mysite.org", // h
-                    @"\dir\file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file://mysite.org/dir/")
-                .SetDescription("WindowsFormatGuess: file URL, trailing slash")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file://mysite.org/dir/", // f
-                    null, // u
-                    "mysite.org", // h
-                    "/dir/", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file:///C:/dir/file.txt")
-                .SetDescription("WindowsFormatGuess: file drive URL")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file:///C:/dir/file.txt", // f
-                    null, // u
-                    null, // h
-                    "/C:/dir/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file:\\\\\\C:\\dir\\file.txt")
-                .SetDescription("WindowsFormatGuess: file drive URL with alt separators")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file:\\\\\\C:\\dir\\file.txt", // f
-                    null, // u
-                    null, // h
-                    "\\C:\\dir\\file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file:///C:/dir/")
-                .SetDescription("WindowsFormatGuess: file drive URL, trailing slash")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file:///C:/dir/", // f
-                    null, // u
-                    null, // h
-                    "/C:/dir/", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file://C:/dir/file.txt")
-                .SetDescription("WindowsFormatGuess: file URL bad host")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file://C:/dir/file.txt", // f
-                    null, // u
-                    "C:", // h
-                    "/dir/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"\\mysite.org\dir\file.txt")
-                .SetDescription("WindowsFormatGuess: URN string")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    @"\\mysite.org\dir\file.txt", // u
-                    "mysite.org", // h
-                    @"\dir\file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("//mysite.org/dir/file.txt")
-                .SetDescription("WindowsFormatGuess: URN with alt separators")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    "//mysite.org/dir/file.txt", // u
-                    "mysite.org", // h
-                    "/dir/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"\\mysite.org\dir\")
-                .SetDescription("WindowsFormatGuess: URN string with trailing slash")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    @"\\mysite.org\dir\", // u
-                    "mysite.org", // h
-                    @"\dir\", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"\\mysite.org\")
-                .SetDescription("WindowsFormatGuess: URN string with root only")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    @"\\mysite.org\", // u
-                    "mysite.org", // h
-                    @"\", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"\\mysite.org")
-                .SetDescription("WindowsFormatGuess: URN string with no path")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    @"\\mysite.org", // u
-                    "mysite.org", // h
-                    @"", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"C:\mysite.org\file.txt")
-                .SetDescription("WindowsFormatGuess: UC Drive path")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    @"C:\mysite.org\file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"z:\mysite.org\file.txt")
-                .SetDescription("WindowsFormatGuess: LC Drive path")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    @"z:\mysite.org\file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"c:\")
-                .SetDescription("WindowsFormatGuess: Drive root")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    @"c:\", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"Z:")
-                .SetDescription("WindowsFormatGuess: Drive only")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    @"Z:", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"C:\mysite.org\dir\")
-                .SetDescription("WindowsFormatGuess: Drive with trailing slash")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    @"C:\mysite.org\dir\", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"C:\")
-                .SetDescription("WindowsFormatGuess: Drive with root path")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    @"C:\", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"C:")
-                .SetDescription("WindowsFormatGuess: Drive with colon only")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    @"C:", // p
-                    null // x
-                ));
-            yield return new TestCaseData(@"C:/mysite.org\dir/")
-                .SetDescription("WindowsFormatGuess: Drive with alt separators")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    @"C:/mysite.org\dir/", // p
-                    null // x
-                ));
-            yield return new TestCaseData("http://tempuri.org/my/file.txt")
-                .SetDescription("WindowsFormatGuess: Alt scheme")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    "tempuri.org", // h
-                    "/my/file.txt", // p
-                    "http://tempuri.org/my/file.txt" // x
-                ));
-            yield return new TestCaseData("xx:")
-                .SetDescription("WindowsFormatGuess: Alt scheme only")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    "", // p
-                    "xx:" // x
-                ));
-
-            foreach (var item in (new[]
+            return GetUrlHelperTestData().Select(element =>
             {
-                new { Value = "", Description = "Empty path" },
-                new { Value = "/", Description = "Relative path slash only" },
-                new { Value = @"\mysite.org\dir\file.txt", Description = "Relative path with leading backslash" },
-                new { Value = @"mysite.org\dir\file.txt", Description = "Relative path" },
-                new { Value = "//", Description = "Missing host #1" },
-                new { Value = "///", Description = "Missing host #1" },
-                new { Value = "///test", Description = "Missing host #3" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription($"WindowsFsPathPattern: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(false,  null,  null,  null, null, null));
+                string expected = element.SelectSingleNode("Windows/FormatGuess").OuterXml;
+                Console.WriteLine($"Emitting {expected}");
+                string base64Encoded = element.GetAttribute("Base64");
+                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected);
+            });
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetWindowsFormatGuessRegexTestCases))]
-        public IFuncInvocationResult<string, string, string, string, string, bool> WindowsFormatGuessRegexTest(string uri)
+        public string WindowsFormatGuessRegexTest(string uri, bool base64Encoded)
         {
-            Match match = UriHelper.Windows.FORMAT_GUESS_REGEX.Match(uri);
-            if (match.Success)
-                return new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    (match.Groups["f"].Success) ? match.Groups["f"].Value : null,
-                    (match.Groups["u"].Success) ? match.Groups["u"].Value : null,
-                    (match.Groups["h"].Success) ? match.Groups["h"].Value : null,
-                    (match.Groups["p"].Success) ? match.Groups["p"].Value : null,
-                    (match.Groups["x"].Success) ? match.Groups["x"].Value : null);
-            return new FuncInvocationResult<string, string, string, string, string, bool>(false, null, null, null, null, null);
+            XmlElement resultElement = new XmlDocument().AppendElement("FormatGuess");
+            if (base64Encoded)
+            {
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                uri = encoding.GetString(Convert.FromBase64String(uri));
+                Match match = UriHelper.Windows.FORMAT_GUESS_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "f", "u", "h", "p", "x" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
+                    }
+            }
+            else
+            {
+                Match match = UriHelper.Windows.FORMAT_GUESS_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "f", "u", "h", "p", "x" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = g.Value;
+                    }
+            }
+            return resultElement.OuterXml;
         }
 
         public static IEnumerable<TestCaseData> GetLinuxFormatGuessRegexTestCases()
         {
-            yield return new TestCaseData("file://mysite.org/dir/file.txt")
-                .SetDescription("LinuxFormatGuess: file URL")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file://mysite.org/dir/file.txt", // f
-                    null, // u
-                    "mysite.org", // h
-                    "/dir/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file://mysite.org/dir/")
-                .SetDescription("LinuxFormatGuess: file URL, trailing slash")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file://mysite.org/dir/", // f
-                    null, // u
-                    "mysite.org", // h
-                    "/dir/", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file:///C:/dir/file.txt")
-                .SetDescription("LinuxFormatGuess: file drive URL")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file:///C:/dir/file.txt", // f
-                    null, // u
-                    null, // h
-                    "/C:/dir/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file:///C:/dir/")
-                .SetDescription("LinuxFormatGuess: file drive URL, trailing slash")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file:///C:/dir/", // f
-                    null, // u
-                    null, // h
-                    "/C:/dir/", // p
-                    null // x
-                ));
-            yield return new TestCaseData("file://C:/dir/file.txt")
-                .SetDescription("LinuxFormatGuess: file URL bad host")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    "file://C:/dir/file.txt", // f
-                    null, // u
-                    "C:", // h
-                    "/dir/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("//mysite.org/dir/file.txt")
-                .SetDescription("LinuxFormatGuess: URN")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    "//mysite.org/dir/file.txt", // u
-                    "mysite.org", // h
-                    "/dir/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("//mysite.org/dir/")
-                .SetDescription("LinuxFormatGuess: URN string with trailing slash")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    "//mysite.org/dir/", // u
-                    "mysite.org", // h
-                    "/dir/", // p
-                    null // x
-                ));
-            yield return new TestCaseData("//mysite.org/")
-                .SetDescription("LinuxFormatGuess: URN string with root only")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    "//mysite.org/", // u
-                    "mysite.org", // h
-                    "/", // p
-                    null // x
-                ));
-            yield return new TestCaseData("//mysite.org")
-                .SetDescription("LinuxFormatGuess: URN string with no path")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    "//mysite.org", // u
-                    "mysite.org", // h
-                    "", // p
-                    null // x
-                ));
-            yield return new TestCaseData("/mysite.org/file.txt")
-                .SetDescription("LinuxFormatGuess: Rooted path")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    "/mysite.org/file.txt", // p
-                    null // x
-                ));
-            yield return new TestCaseData("/")
-                .SetDescription("LinuxFormatGuess: Root only")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    "/", // p
-                    null // x
-                ));
-            yield return new TestCaseData("http://tempuri.org/my/file.txt")
-                .SetDescription("LinuxFormatGuess: Alt scheme")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    "tempuri.org", // h
-                    "/my/file.txt", // p
-                    "http://tempuri.org/my/file.txt" // x
-                ));
-            yield return new TestCaseData("xx:")
-                .SetDescription("LinuxFormatGuess: Alt scheme only")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    null, // h
-                    "", // p
-                    "xx:" // x
-                ));
-            yield return new TestCaseData(@"C:\mysite.org\file.txt")
-                .SetDescription("Drive path")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u  
-                    @"\mysite.org\file.txt", // h
-                    "", // p
-                    @"C:\mysite.org\file.txt" // x
-                ));
-            yield return new TestCaseData(@"file:\\mysite.org\dir\file.txt")
-                .SetDescription("File URL with alt separators")
-                .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    null, // f
-                    null, // u
-                    @"\\mysite.org\dir\file.txt", // h
-                    "", // p
-                    @"file:\\mysite.org\dir\file.txt" // x
-                ));
-
-            foreach (var item in (new[]
+            return GetUrlHelperTestData().Select(element =>
             {
-                new { Value = "", Description = "Empty path" },
-                new { Value = @"mysite.org\dir\file.txt", Description = "Relative path" },
-                new { Value = "//", Description = "Missing host #1" },
-                new { Value = "///", Description = "Missing host #1" },
-                new { Value = "///test", Description = "Missing host #3" }
-            }))
-                yield return new TestCaseData(item.Value)
-                    .SetDescription("LinuxFormatGuess: {item.Description}")
-                    .Returns(new FuncInvocationResult<string, string, string, string, string, bool>(false, null, null, null, null, null));
+                string expected = element.SelectSingleNode("Linux/FormatGuess").OuterXml;
+                Console.WriteLine($"Emitting {expected}");
+                string base64Encoded = element.GetAttribute("Base64");
+                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected);
+            });
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetLinuxFormatGuessRegexTestCases))]
-        public IFuncInvocationResult<string, string, string, string, string, bool> LinuxFormatGuessRegexTest(string uri)
+        public string LinuxFormatGuessRegexTest(string uri, bool base64Encoded)
         {
-            Match match = UriHelper.Linux.FORMAT_GUESS_REGEX.Match(uri);
-            if (match.Success)
-                return new FuncInvocationResult<string, string, string, string, string, bool>(true,
-                    (match.Groups["f"].Success) ? match.Groups["f"].Value : null,
-                    (match.Groups["u"].Success) ? match.Groups["u"].Value : null,
-                    (match.Groups["h"].Success) ? match.Groups["h"].Value : null,
-                    (match.Groups["p"].Success) ? match.Groups["p"].Value : null,
-                    (match.Groups["x"].Success) ? match.Groups["x"].Value : null);
-            return new FuncInvocationResult<string, string, string, string, string, bool>(false, null, null, null, null, null);
+            XmlElement resultElement = new XmlDocument().AppendElement("FormatGuess");
+            if (base64Encoded)
+            {
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                uri = encoding.GetString(Convert.FromBase64String(uri));
+                Match match = UriHelper.Linux.FORMAT_GUESS_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "f", "u", "h", "p", "x" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
+                    }
+            }
+            else
+            {
+                Match match = UriHelper.Linux.FORMAT_GUESS_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "f", "u", "h", "p", "x" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = g.Value;
+                    }
+            }
+            return resultElement.OuterXml;
+        }
+
+        public static IEnumerable<TestCaseData> GetWindowsFileUriStrictTestCases()
+        {
+            return GetUrlHelperTestData().Select(element =>
+            {
+                string expected = element.SelectSingleNode("Windows/FileUriStrict").OuterXml;
+                Console.WriteLine($"Emitting {expected}");
+                string base64Encoded = element.GetAttribute("Base64");
+                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected);
+            });
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetWindowsFileUriStrictTestCases))]
+        public string WindowsFileUriStrictTest(string uri, bool base64Encoded)
+        {
+            XmlElement resultElement = new XmlDocument().AppendElement("FileUriStrict");
+            if (base64Encoded)
+            {
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                uri = encoding.GetString(Convert.FromBase64String(uri));
+                Match match = UriHelper.Windows.FILE_URI_STRICT_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "a", "h", "p" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
+                    }
+            }
+            else
+            {
+                Match match = UriHelper.Windows.FILE_URI_STRICT_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "a", "h", "p" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = g.Value;
+                    }
+            }
+            return resultElement.OuterXml;
+        }
+
+        public static IEnumerable<TestCaseData> GetLinuxFileUriStrictTestCases()
+        {
+            return GetUrlHelperTestData().Select(element =>
+            {
+                string expected = element.SelectSingleNode("Linux/FileUriStrict").OuterXml;
+                Console.WriteLine($"Emitting {expected}");
+                string base64Encoded = element.GetAttribute("Base64");
+                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected);
+            });
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetLinuxFileUriStrictTestCases))]
+        public string LinuxFileUriStrictTest(string uri, bool base64Encoded)
+        {
+            XmlElement resultElement = new XmlDocument().AppendElement("FileUriStrict");
+            if (base64Encoded)
+            {
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                uri = encoding.GetString(Convert.FromBase64String(uri));
+                Match match = UriHelper.Linux.FILE_URI_STRICT_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "a", "h", "p" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
+                    }
+            }
+            else
+            {
+                Match match = UriHelper.Linux.FILE_URI_STRICT_REGEX.Match(uri);
+                resultElement.SetAttributeValue("Success", match.Success);
+                if (match.Success)
+                    foreach (string n in new string[] { "a", "h", "p" })
+                    {
+                        Group g = match.Groups[n];
+                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
+                        if (g.Success)
+                            element.InnerText = g.Value;
+                    }
+            }
+            return resultElement.OuterXml;
         }
 
         public static IEnumerable<TestCaseData> GetAuthorityCaseInsensitiveEqualsTestCases()
         {
-            yield return new TestCaseData(new Uri("", UriKind.Relative), new Uri("", UriKind.Relative))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: 2 Empty Uri values")
-                .Returns(true);
-            yield return new TestCaseData(new Uri(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\testazureshare", UriKind.Absolute),
-                    new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: 2 different original strings and case, same absolute URI")
-                .Returns(true);
-            yield return new TestCaseData(new Uri("http://tempuri.org/TEST", UriKind.Absolute), new Uri("http://tempuri.org/test", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Same host, different path case")
-                .Returns(false);
-            yield return new TestCaseData(new Uri("http://tempuri.org/TEST", UriKind.Absolute), new Uri("HTTP://TEMPURI.ORG/test", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating cases")
-                .Returns(false);
-            yield return new TestCaseData(new Uri("http://tempuri.org:80", UriKind.Absolute), new Uri("http://tempuri.org:75", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Same host, different port")
-                .Returns(false);
-            yield return new TestCaseData(new Uri("http://tempuri.org/", UriKind.Absolute), new Uri("http://tempuri.org", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Same host, one  omitting root slash")
-                .Returns(true);
-            yield return new TestCaseData(new Uri("HTTP://tempuri.org/", UriKind.Absolute), new Uri("http://tempuri.org", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Different case scheme")
-                .Returns(true);
-            yield return new TestCaseData(new Uri("http://tempuri.org/", UriKind.Absolute), new Uri("https://tempuri.org", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating scheme")
-                .Returns(false);
-            yield return new TestCaseData(new Uri("http://user@tempuri.org/", UriKind.Absolute), new Uri("http://used@tempuri.org", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating username")
-                .Returns(false);
-            yield return new TestCaseData(new Uri("http://tempuri.org/?test=one", UriKind.Absolute), new Uri("http://tempuri.org?test=two", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating query")
-                .Returns(false);
-            yield return new TestCaseData(new Uri("http://tempuri.org/?test=one", UriKind.Absolute), new Uri("http://tempuri.org?test=ONE", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating query case")
-                .Returns(false);
-            yield return new TestCaseData(new Uri("http://tempuri.org/?test=one#six", UriKind.Absolute), new Uri("http://tempuri.org?test=one#two", UriKind.Absolute))
-                .SetDescription("AuthorityCaseInsensitiveEqualsTest: Alternating fragment")
-                .Returns(false);
+            return GetUrlHelperTestData().SelectMany(element => element.SelectNodes("AuthorityCaseInsensitiveEquals").Cast<XmlElement>().Select(c =>
+            {
+                string expected = c.OuterXml;
+                return new TestCaseData(new Uri(element.GetAttribute("Value"), UriKind.RelativeOrAbsolute), new Uri(c.GetAttribute("CompareTo"), UriKind.RelativeOrAbsolute))
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(XmlConvert.ToBoolean(c.GetAttribute("Returns")));
+            }));
         }
 
         [Test, Property("Priority", 1)]
