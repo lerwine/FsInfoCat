@@ -105,7 +105,7 @@ namespace FsInfoCat.Util
             /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
             /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
             /// </list></remarks>
-            public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)(?=[^/]+|/[a-z]:)(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)?(?<p>(/[a-z]:)?(/([!$&-)+-.;=@[\]\w]+|%([46][\da-f]|2[13-9]|3[\dd]|[57][\dabde]))+)*/?))|(?<p>(?i)(/(?!/))?(([!$&-)+-.;=@[\]\w]+|%([46][\da-f]|2[13-9]|3[\dbd]|[57][\dabde]))+(/|(?=$)))*))$", RegexOptions.Compiled);
+            public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)(?=[^/]+|/[a-z]:)(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)?(?<p>(/[a-z]:)?(/([!$&-)+-.=@[\]\w]+|%([46][\da-f]|2[^2]|3[\dd]|[57][\dabde]))+)*/?))|(?<p>(?i)(/(?!/))?(([!$&-)+-.=@[\]\w]+|%([46][\da-f]|2[^2]|3[\dbd]|[57][\dabde]))+(/|(?=$)))*))$", RegexOptions.Compiled);
         }
 
         public static class Linux
