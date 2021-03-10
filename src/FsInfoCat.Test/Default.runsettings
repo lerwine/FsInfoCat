@@ -1,11 +1,12 @@
 <RunSettings>
     <RunConfiguration>
-        <ResultsDirectory>C:\Users\lerwi\source\repos\FsInfoCat\src\TestResults</ResultsDirectory>
+        <WorkDirectory>C:\Users\lerwi\Git\FsInfoCat\src\TestResultData\</WorkDirectory>
         <SolutionDirectory>C:\Users\lerwi\source\repos\FsInfoCat\src\</SolutionDirectory>
-        <TestOutputXml>C:\Users\lerwi\source\repos\FsInfoCat\src\TestResults</TestOutputXml>
+        <TestOutputXml>C:\Users\lerwi\Git\FsInfoCat\src\TestResultInfo\</TestOutputXml>
+        <Verbosity>5</Verbosity>
+        <CollectSourceInformation>True</CollectSourceInformation>
         <!--<CollectSourceInformation>True</CollectSourceInformation>
         <InternalTraceLevel>Debug</InternalTraceLevel>
-        <Verbosity>5</Verbosity>
         <DumpXmlTestDiscovery>true</DumpXmlTestDiscovery>-->
     </RunConfiguration>
 </RunSettings>

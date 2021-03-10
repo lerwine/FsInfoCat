@@ -9,27 +9,6 @@ namespace FsInfoCat.Test.Helpers
 {
     public static class TestHelperExtensions
     {
-        public static XmlElement AppendElement(this XmlDocument xmlDocument, string localName) => (XmlElement)xmlDocument.AppendChild(xmlDocument.CreateElement(localName));
-
-        public static XmlElement AppendElement(this XmlElement element, string localName) => (XmlElement)element.AppendChild(element.OwnerDocument.CreateElement(localName));
-
-        public static XmlElement SetAttributeValue(this XmlElement element, string localName, string value)
-        {
-            XmlAttribute attribute = element.GetAttributeNode(localName);
-            if (value is null)
-            {
-                if (!(attribute is null))
-                    element.Attributes.Remove(attribute);
-            }
-            else if (attribute is null)
-                element.Attributes.Append(element.OwnerDocument.CreateAttribute(localName)).Value = value;
-            else
-                attribute.Value = value;
-            return element;
-        }
-
-        public static XmlElement SetAttributeValue(this XmlElement element, string localName, bool value) => SetAttributeValue(element, localName, XmlConvert.ToString(value));
-
         public static string SerializesAsXml(Match match, params string[] groupNames)
         {
             XmlDocument xmlDocument = new XmlDocument();

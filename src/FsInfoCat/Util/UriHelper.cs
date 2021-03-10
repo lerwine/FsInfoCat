@@ -59,7 +59,8 @@ namespace FsInfoCat.Util
             public const string PATTERN_LOCAL_FS_NAME = @"^[^\u0000-\u0019""<>|:*?\\/]+$";
             public static readonly Regex LOCAL_FS_NAME_REGEX = new Regex(PATTERN_LOCAL_FS_NAME, RegexOptions.Compiled);
 
-            public const string PATTERN_ABS_FS_PATH = @"(?i)^(?:\s+(?=//|\\\\|[a-z]:))?((//|\\\\)([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)(?=[/\\]|$))?([a-z]:(?=[/\\]|$))?[/\\]?([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*$";
+            public const string  PATTERN_ABS_FS_PATH = @"(?i)^((//|\\\\)([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)|[a-z]:)([/\\]([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*)?$";
+            public static readonly Regex F = new Regex(@"(?i)^((//|\\\\)([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)|[a-z]:)([/\\]([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             /// <summary>
             /// Matches a well-formed local path on the typical Windows filesystem.
@@ -94,7 +95,7 @@ namespace FsInfoCat.Util
             /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be an absolute local path.</item>
             /// <item>If the expression does not match at all, then the text is assumed to be a non-rooted relative path.</item>
             /// </list></remarks>
-            public static readonly Regex FORMAT_GUESS_REGEX = new Regex(@"^((?<f>file:[\\/]{2}((?<h>[^\\/]+)(?<p>[\\/].*)?|(?<p>[\\/][a-z]:([\\/].*)?)))|(?<u>[\\/]{2}(?<h>[^\\/]+)(?<p>([\\/](?![\\/]).*)?))|(?<p>[a-z]:([\\/].*)?)|(?<x>[a-z][\w-]+:([\\/][\\/]?)?(?<h>([^?#/@:]*(:[^?#/@:]*)?@)?[^?#/@:]+(:\d+)?)?(?<p>([\\/:].*)?)))$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            public static readonly Regex FORMAT_GUESS_REGEX = new Regex(@"^((?<f>file:[\\/]{2}((?<h>[^\\/]+)(?<p>[\\/].*)?|(?<p>[\\/][a-z]:([\\/].*)?)))|(?<u>[\\/]{2}(?<h>[^\\/]+)(?<p>([\\/](?![\\/]).*)?))|(?<p>[a-z]:([\\/].*)?)|(?<x>(?!file:)[a-z][\w-]+:([\\/][\\/]?)?(?<h>([^?#/@:]*(:[^?#/@:]*)?@)?[^?#/@:]+(:\d+)?)?(?<p>([\\/:].*)?)))$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             /// <summary>
             /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical Windows filesystem.
@@ -149,7 +150,7 @@ namespace FsInfoCat.Util
             /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be an absolute local path.</item>
             /// <item>If the expression does not match at all, then the text is assumed to be a non-rooted relative path.</item>
             /// </list></remarks>
-            public static readonly Regex FORMAT_GUESS_REGEX = new Regex(@"^((?<f>file://(?<h>[^/]+)?(?<p>/.*)?)|(?<u>//(?<h>[^/]+)(?<p>(/.*)?))|(?<p>/(?!/).*)|(?<x>[a-z][\w-]*:(//?)?(?<h>([^?#/@:]*(:[^?#/@:]*)?@)?[^?#/@:]+(:\d+)?)?(?<p>([/:].*)?)))$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            public static readonly Regex FORMAT_GUESS_REGEX = new Regex(@"^((?<f>file://(?<h>[^/]+)?(?<p>/.*)?)|(?<u>//(?<h>[^/]+)(?<p>(/.*)?))|(?<p>/(?!/).*)|(?<x>(?!file:)[a-z][\w-]*:(//?)?(?<h>([^?#/@:]*(:[^?#/@:]*)?@)?[^?#/@:]+(:\d+)?)?(?<p>([/:].*)?)))$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             /// <summary>
             /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical Linux filesystem.

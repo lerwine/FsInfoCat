@@ -7,6 +7,7 @@ using System.Linq;
 using FsInfoCat.Test.Helpers;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Text;
 
 namespace FsInfoCat.Test
 {
@@ -30,17 +31,56 @@ namespace FsInfoCat.Test
         {
         }
 
-        
+        private static string ToTestReturnValueXml(Match match, string rootElementName, bool base64Encoded, params string[] groupNames)
+        {
+            XmlElement resultElement = XmlBuilder.NewDocument(rootElementName).WithAttribute("Success", match.Success);
+            if (match.Success)
+            {
+                if (base64Encoded)
+                {
+                    System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                    if (groupNames is null || groupNames.Length == 0)
+                        return resultElement.WithInnerText((match.Length > 0) ? Convert.ToBase64String(encoding.GetBytes(match.Value)) : "").OuterXml;
+                    foreach (string n in groupNames)
+                    {
+                        Group g = match.Groups[n];
+                        resultElement.AppendElement("Group", groupElement =>
+                        {
+                            groupElement.WithAttribute("Name", n).WithAttribute("Success", g.Success);
+                            if (g.Success)
+                                groupElement.WithInnerText((g.Length > 0) ? Convert.ToBase64String(encoding.GetBytes(g.Value)) : "");
+                        });
+                    }
+                }
+                else
+                {
+                    if (groupNames is null || groupNames.Length == 0)
+                        return resultElement.WithInnerText(match.Value).OuterXml;
+                    foreach (string n in groupNames)
+                    {
+                        Group g = match.Groups[n];
+                        resultElement.AppendElement("Group", groupElement =>
+                        {
+                            groupElement.WithAttribute("Name", n).WithAttribute("Success", g.Success);
+                            if (g.Success)
+                                groupElement.WithInnerText(g.Value);
+                        });
+                    }
+                }
+            }
+            return resultElement.OuterXml;
+        }
+
         public static IEnumerable<TestCaseData> GetWindowsFsPathRegexTestCases()
         {
             return GetUrlHelperTestData().Select(element =>
             {
-                string expected = element.SelectSingleNode("Windows/FsPathRegex").OuterXml;
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FsPathRegex");
                 Console.WriteLine($"Emitting {expected}");
-                string base64Encoded = element.GetAttribute("Base64");
-                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
                     .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected);
+                    .Returns(expected.OuterXml);
             });
         }
 
@@ -48,48 +88,20 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetWindowsFsPathRegexTestCases))]
         public string WindowsFsPathRegexTest(string uri, bool base64Encoded)
         {
-            XmlElement resultElement = new XmlDocument().AppendElement("FsPathRegex");
-            if (base64Encoded)
-            {
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
-                uri = encoding.GetString(Convert.FromBase64String(uri));
-                Match match = UriHelper.Windows.FS_PATH_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "a", "h", "p" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
-                    }
-            }
-            else
-            {
-                Match match = UriHelper.Windows.FS_PATH_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "a", "h", "p" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = g.Value;
-                    }
-            }
-            return resultElement.OuterXml;
+            Match match = UriHelper.Windows.FS_PATH_REGEX.Match(uri);
+            return ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "a", "h", "p");
         }
 
         public static IEnumerable<TestCaseData> GetWindowsFsPathPatternTestCases()
         {
             return GetUrlHelperTestData().Select(element =>
             {
-                string expected = element.SelectSingleNode("Windows/FsPathPattern").OuterXml;
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FsPathPattern");
                 Console.WriteLine($"Emitting {expected}");
-                string base64Encoded = element.GetAttribute("Base64");
-                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
                     .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected);
+                    .Returns(expected.OuterXml);
             });
         }
 
@@ -97,36 +109,20 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetWindowsFsPathPatternTestCases))]
         public string WindowsFsPathPatternTest(string uri, bool base64Encoded)
         {
-            XmlElement resultElement = new XmlDocument().AppendElement("FsPathPattern");
-            if (base64Encoded)
-            {
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
-                uri = encoding.GetString(Convert.FromBase64String(uri));
-                Match match = Regex.Match(uri, UriHelper.Windows.PATTERN_ABS_FS_PATH);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    resultElement.InnerText = Convert.ToBase64String(encoding.GetBytes(match.Value));
-            }
-            else
-            {
-                Match match = Regex.Match(uri, UriHelper.Windows.PATTERN_ABS_FS_PATH);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    resultElement.InnerText = match.Value;
-            }
-            return resultElement.OuterXml;
+            Match match = Regex.Match(uri, UriHelper.Windows.PATTERN_ABS_FS_PATH);
+            return ToTestReturnValueXml(match, "FsPathPattern", base64Encoded);
         }
 
         public static IEnumerable<TestCaseData> GetLinuxFsPathRegexTestCases()
         {
             return GetUrlHelperTestData().Select(element =>
             {
-                string expected = element.SelectSingleNode("Linux/FsPathRegex").OuterXml;
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FsPathRegex");
                 Console.WriteLine($"Emitting {expected}");
-                string base64Encoded = element.GetAttribute("Base64");
-                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
                     .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected);
+                    .Returns(expected.OuterXml);
             });
         }
 
@@ -134,48 +130,20 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetLinuxFsPathRegexTestCases))]
         public string LinuxFsPathRegexTest(string uri, bool base64Encoded)
         {
-            XmlElement resultElement = new XmlDocument().AppendElement("FsPathRegex");
-            if (base64Encoded)
-            {
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
-                uri = encoding.GetString(Convert.FromBase64String(uri));
-                Match match = UriHelper.Linux.FS_PATH_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "a", "h", "p" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
-                    }
-            }
-            else
-            {
-                Match match = UriHelper.Linux.FS_PATH_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "a", "h", "p" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = g.Value;
-                    }
-            }
-            return resultElement.OuterXml;
+            Match match = UriHelper.Linux.FS_PATH_REGEX.Match(uri);
+            return ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "a", "h", "p");
         }
 
         public static IEnumerable<TestCaseData> GetLinuxFsPathPatternTestCases()
         {
             return GetUrlHelperTestData().Select(element =>
             {
-                string expected = element.SelectSingleNode("Linux/FsPathPattern").OuterXml;
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FsPathPattern");
                 Console.WriteLine($"Emitting {expected}");
-                string base64Encoded = element.GetAttribute("Base64");
-                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
                     .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected);
+                    .Returns(expected.OuterXml);
             });
         }
 
@@ -183,36 +151,20 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetLinuxFsPathPatternTestCases))]
         public string LinuxFsPathPatternTest(string uri, bool base64Encoded)
         {
-            XmlElement resultElement = new XmlDocument().AppendElement("FsPathPattern");
-            if (base64Encoded)
-            {
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
-                uri = encoding.GetString(Convert.FromBase64String(uri));
-                Match match = Regex.Match(uri, UriHelper.Linux.PATTERN_ABS_FS_PATH);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    resultElement.InnerText = Convert.ToBase64String(encoding.GetBytes(match.Value));
-            }
-            else
-            {
-                Match match = Regex.Match(uri, UriHelper.Linux.PATTERN_ABS_FS_PATH);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    resultElement.InnerText = match.Value;
-            }
-            return resultElement.OuterXml;
+            Match match = Regex.Match(uri, UriHelper.Linux.PATTERN_ABS_FS_PATH);
+            return ToTestReturnValueXml(match, "FsPathPattern", base64Encoded);
         }
 
         public static IEnumerable<TestCaseData> GetWindowsFormatGuessRegexTestCases()
         {
             return GetUrlHelperTestData().Select(element =>
             {
-                string expected = element.SelectSingleNode("Windows/FormatGuess").OuterXml;
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FormatGuess");
                 Console.WriteLine($"Emitting {expected}");
-                string base64Encoded = element.GetAttribute("Base64");
-                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
                     .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected);
+                    .Returns(expected.OuterXml);
             });
         }
 
@@ -220,48 +172,20 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetWindowsFormatGuessRegexTestCases))]
         public string WindowsFormatGuessRegexTest(string uri, bool base64Encoded)
         {
-            XmlElement resultElement = new XmlDocument().AppendElement("FormatGuess");
-            if (base64Encoded)
-            {
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
-                uri = encoding.GetString(Convert.FromBase64String(uri));
-                Match match = UriHelper.Windows.FORMAT_GUESS_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "f", "u", "h", "p", "x" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
-                    }
-            }
-            else
-            {
-                Match match = UriHelper.Windows.FORMAT_GUESS_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "f", "u", "h", "p", "x" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = g.Value;
-                    }
-            }
-            return resultElement.OuterXml;
+            Match match = UriHelper.Windows.FORMAT_GUESS_REGEX.Match(uri);
+            return ToTestReturnValueXml(match, "FormatGuess", base64Encoded, "f", "u", "h", "p", "x");
         }
 
         public static IEnumerable<TestCaseData> GetLinuxFormatGuessRegexTestCases()
         {
             return GetUrlHelperTestData().Select(element =>
             {
-                string expected = element.SelectSingleNode("Linux/FormatGuess").OuterXml;
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FormatGuess");
                 Console.WriteLine($"Emitting {expected}");
-                string base64Encoded = element.GetAttribute("Base64");
-                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
                     .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected);
+                    .Returns(expected.OuterXml);
             });
         }
 
@@ -269,48 +193,20 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetLinuxFormatGuessRegexTestCases))]
         public string LinuxFormatGuessRegexTest(string uri, bool base64Encoded)
         {
-            XmlElement resultElement = new XmlDocument().AppendElement("FormatGuess");
-            if (base64Encoded)
-            {
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
-                uri = encoding.GetString(Convert.FromBase64String(uri));
-                Match match = UriHelper.Linux.FORMAT_GUESS_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "f", "u", "h", "p", "x" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
-                    }
-            }
-            else
-            {
-                Match match = UriHelper.Linux.FORMAT_GUESS_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "f", "u", "h", "p", "x" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = g.Value;
-                    }
-            }
-            return resultElement.OuterXml;
+            Match match = UriHelper.Linux.FORMAT_GUESS_REGEX.Match(uri);
+            return ToTestReturnValueXml(match, "FormatGuess", base64Encoded, "f", "u", "h", "p", "x");
         }
 
         public static IEnumerable<TestCaseData> GetWindowsFileUriStrictTestCases()
         {
             return GetUrlHelperTestData().Select(element =>
             {
-                string expected = element.SelectSingleNode("Windows/FileUriStrict").OuterXml;
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FileUriStrict");
                 Console.WriteLine($"Emitting {expected}");
-                string base64Encoded = element.GetAttribute("Base64");
-                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
                     .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected);
+                    .Returns(expected.OuterXml);
             });
         }
 
@@ -318,48 +214,20 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetWindowsFileUriStrictTestCases))]
         public string WindowsFileUriStrictTest(string uri, bool base64Encoded)
         {
-            XmlElement resultElement = new XmlDocument().AppendElement("FileUriStrict");
-            if (base64Encoded)
-            {
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
-                uri = encoding.GetString(Convert.FromBase64String(uri));
-                Match match = UriHelper.Windows.FILE_URI_STRICT_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "a", "h", "p" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
-                    }
-            }
-            else
-            {
-                Match match = UriHelper.Windows.FILE_URI_STRICT_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "a", "h", "p" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = g.Value;
-                    }
-            }
-            return resultElement.OuterXml;
+            Match match = UriHelper.Windows.FILE_URI_STRICT_REGEX.Match(uri);
+            return ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "a", "h", "p");
         }
 
         public static IEnumerable<TestCaseData> GetLinuxFileUriStrictTestCases()
         {
             return GetUrlHelperTestData().Select(element =>
             {
-                string expected = element.SelectSingleNode("Linux/FileUriStrict").OuterXml;
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FileUriStrict");
                 Console.WriteLine($"Emitting {expected}");
-                string base64Encoded = element.GetAttribute("Base64");
-                return new TestCaseData(element.GetAttribute("Value"), base64Encoded == "true")
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
                     .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected);
+                    .Returns(expected.OuterXml);
             });
         }
 
@@ -367,36 +235,8 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetLinuxFileUriStrictTestCases))]
         public string LinuxFileUriStrictTest(string uri, bool base64Encoded)
         {
-            XmlElement resultElement = new XmlDocument().AppendElement("FileUriStrict");
-            if (base64Encoded)
-            {
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
-                uri = encoding.GetString(Convert.FromBase64String(uri));
-                Match match = UriHelper.Linux.FILE_URI_STRICT_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "a", "h", "p" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = Convert.ToBase64String(encoding.GetBytes(g.Value));
-                    }
-            }
-            else
-            {
-                Match match = UriHelper.Linux.FILE_URI_STRICT_REGEX.Match(uri);
-                resultElement.SetAttributeValue("Success", match.Success);
-                if (match.Success)
-                    foreach (string n in new string[] { "a", "h", "p" })
-                    {
-                        Group g = match.Groups[n];
-                        XmlElement element = resultElement.AppendElement("Group").SetAttributeValue("Name", n).SetAttributeValue("Success", g.Success);
-                        if (g.Success)
-                            element.InnerText = g.Value;
-                    }
-            }
-            return resultElement.OuterXml;
+            Match match = UriHelper.Linux.FILE_URI_STRICT_REGEX.Match(uri);
+            return ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "a", "h", "p");
         }
 
         public static IEnumerable<TestCaseData> GetAuthorityCaseInsensitiveEqualsTestCases()
@@ -404,7 +244,18 @@ namespace FsInfoCat.Test
             return GetUrlHelperTestData().SelectMany(element => element.SelectNodes("AuthorityCaseInsensitiveEquals").Cast<XmlElement>().Select(c =>
             {
                 string expected = c.OuterXml;
-                return new TestCaseData(new Uri(element.GetAttribute("Value"), UriKind.RelativeOrAbsolute), new Uri(c.GetAttribute("CompareTo"), UriKind.RelativeOrAbsolute))
+                Uri x, y;
+                try
+                {
+                    x = new Uri(element.GetAttribute("Value"), UriKind.RelativeOrAbsolute);
+                    y = new Uri(c.GetAttribute("CompareTo"), UriKind.RelativeOrAbsolute);
+                }
+                catch (Exception exc)
+                {
+                    System.Diagnostics.Debug.WriteLine(exc.ToString());
+                    throw;
+                }
+                return new TestCaseData(x, y)
                     .SetDescription(element.GetAttribute("Description"))
                     .Returns(XmlConvert.ToBoolean(c.GetAttribute("Returns")));
             }));
