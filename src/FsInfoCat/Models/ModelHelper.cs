@@ -52,16 +52,7 @@ namespace FsInfoCat.Models
             return target.ValidateAll();
         }
 
-        /// <summary>
-        /// Finds the <seealso cref="IVolumeInfo"/> that contains the specified <seealso cref="DirectoryInfo"/>.
-        /// </summary>
-        /// <typeparam name="T">The <seealso cref="IVolumeInfo"/> type.</typeparam>
-        /// <param name="volumes">The collection of <seealso cref="IVolumeInfo"/> objects.</param>
-        /// <param name="directoryInfo">The target <seealso cref="DirectoryInfo"/>.</param>
-        /// <param name="result">The <seealso cref="IVolumeInfo"/> of type <typeparamref name="T"/> to which <paramref name="directoryInfo"/> or <see langword="null"/>
-        /// if no match was found.</param>
-        /// <returns><see langword="true"/> if <paramref name="directoryInfo"/> belongs to one of the items in <paramref name="volumes"/>;
-        /// otherwise, <see langword="false"/>.</returns>
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static bool TryFindVolume<T>(this IEnumerable<T> volumes, DirectoryInfo directoryInfo, out T result)
             where T : class, IVolumeInfo
         {
@@ -77,6 +68,7 @@ namespace FsInfoCat.Models
             return true;
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static bool TryFindVolume<TSource, TItem>(this IEnumerable<TSource> volumes, Func<TSource, TItem> mapper, DirectoryInfo directoryInfo, out TSource result)
             where TItem : class, IVolumeInfo
             where TSource : class
@@ -93,6 +85,7 @@ namespace FsInfoCat.Models
             return true;
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static T FindByChildItem<T>(this IEnumerable<T> source, FileUri fileUri)
             where T : class, IVolumeInfo
         {
@@ -130,6 +123,7 @@ namespace FsInfoCat.Models
             throw new NotImplementedException();
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static TSource FindByChildItem<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, TItem> mapper, FileUri fileUri)
             where TItem : class, IVolumeInfo
             where TSource : class
@@ -141,6 +135,7 @@ namespace FsInfoCat.Models
             throw new NotImplementedException();
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static IEnumerable<T> FindByIdentifier<T>(this IEnumerable<T> source, VolumeIdentifier volumeIdentifier)
             where T : class, IVolumeInfo
         {
@@ -149,6 +144,7 @@ namespace FsInfoCat.Models
             return source.Where(v => !(v is null) && v.Identifier.Equals(volumeIdentifier));
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static IEnumerable<TSource> FindByIdentifier<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, TItem> mapper, VolumeIdentifier volumeIdentifier)
             where TItem : class, IVolumeInfo
             where TSource : class
@@ -158,6 +154,7 @@ namespace FsInfoCat.Models
             return source.Where(v => !(v is null) && mapper(v).Identifier.Equals(volumeIdentifier));
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static IEnumerable<T> FindByRootUri<T>(this IEnumerable<T> source, FileUri fileUri)
             where T : class, IVolumeInfo
         {
@@ -166,6 +163,7 @@ namespace FsInfoCat.Models
             return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.PathComparer));
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static IEnumerable<TSource> FindByRootUri<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, TItem> mapper, FileUri fileUri)
             where TItem : class, IVolumeInfo
             where TSource : class
@@ -181,6 +179,7 @@ namespace FsInfoCat.Models
             });
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static IEnumerable<T> FindByVolumeName<T>(this IEnumerable<T> source, string volumeName)
             where T : class, IVolumeInfo
         {
@@ -192,6 +191,7 @@ namespace FsInfoCat.Models
             return source.Where(v => !(v is null) && comparer.Equals(volumeName, v.VolumeName));
         }
 
+        [Obsolete("Use IVolumeSetProvider, instead")]
         public static IEnumerable<TSource> FindByVolumeName<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, TItem> mapper, string volumeName)
             where TItem : class, IVolumeInfo
             where TSource : class
