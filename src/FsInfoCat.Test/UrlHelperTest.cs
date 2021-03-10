@@ -38,7 +38,7 @@ namespace FsInfoCat.Test
             {
                 if (base64Encoded)
                 {
-                    System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding(false, true);
+                    UTF8Encoding encoding = new UTF8Encoding(false, true);
                     if (groupNames is null || groupNames.Length == 0)
                         return resultElement.WithInnerText((match.Length > 0) ? Convert.ToBase64String(encoding.GetBytes(match.Value)) : "").OuterXml;
                     foreach (string n in groupNames)
@@ -237,6 +237,93 @@ namespace FsInfoCat.Test
         {
             Match match = UriHelper.Linux.FILE_URI_STRICT_REGEX.Match(uri);
             return ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "a", "h", "p");
+        }
+
+        public static IEnumerable<TestCaseData> GetTryParseFileUriStringTestCases()
+        {
+            return GetUrlHelperTestData().Select(element =>
+            {
+                XmlElement expected = (XmlElement)element.SelectSingleNode("TryParseFileUriString");
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected.OuterXml);
+            });
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetTryParseFileUriStringTestCases))]
+        public string TryParseFileUriStringTest(string uriString, bool base64Encoded)
+        {
+            bool result = UriHelper.TryParseFileUriString(uriString, out string hostName, out string absolutePath, out int leafIndex);
+            if (base64Encoded)
+            {
+                UTF8Encoding encoding = new UTF8Encoding(false, true);
+                return XmlBuilder.NewDocument("TryParseFileUriString")
+                    .WithAttribute("HostName", (string.IsNullOrEmpty(hostName)) ? hostName : Convert.ToBase64String(encoding.GetBytes(hostName)))
+                    .WithAttribute("AbsolutePath", (string.IsNullOrEmpty(absolutePath)) ? absolutePath : Convert.ToBase64String(encoding.GetBytes(absolutePath)))
+                    .WithAttribute("LeafIndex", leafIndex)
+                    .WithInnerText(result).OuterXml;
+            }
+            return XmlBuilder.NewDocument("TryParseFileUriString")
+                .WithAttribute("HostName", hostName)
+                .WithAttribute("AbsolutePath", absolutePath)
+                .WithAttribute("LeafIndex", leafIndex)
+                .WithInnerText(result).OuterXml;
+        }
+
+        public static IEnumerable<TestCaseData> GetIsWellFormedFileUriStringTestCases()
+        {
+            return GetUrlHelperTestData().Select(element =>
+            {
+                XmlElement expected = (XmlElement)element.SelectSingleNode("IsWellFormedFileUriString");
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"),
+                        Enum.Parse(typeof(UriKind), expected.GetAttribute("Kind")))
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(XmlConvert.ToBoolean(expected.InnerText));
+            });
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetIsWellFormedFileUriStringTestCases))]
+        public bool IsWellFormedFileUriStringTest(string uriString, UriKind kind)
+        {
+            bool result = UriHelper.IsWellFormedFileUriString(uriString, kind);
+            return result;
+        }
+
+        public static IEnumerable<TestCaseData> GetParseUriOrPathTestCases()
+        {
+            return GetUrlHelperTestData().Where(e => !(e.SelectSingleNode("ParseUriOrPath") is null)).Select(element =>
+            {
+                XmlElement expected = (XmlElement)element.SelectSingleNode("ParseUriOrPath");
+                bool preferFsPath = XmlConvert.ToBoolean(expected.GetAttribute("PreferFsPath"));
+                bool base64Encoded = element.GetAttribute("Base64") == "true";
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"),
+                        preferFsPath, base64Encoded)
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected.SelectSingleNode("Expected").OuterXml);
+            });
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetParseUriOrPathTestCases))]
+        public string ParseUriOrPathTest(string source, bool preferFsPath, bool base64Encoded)
+        {
+            FileStringFormat result = UriHelper.ParseUriOrPath(source, preferFsPath, out string hostName, out string path);
+            if (base64Encoded)
+            {
+                UTF8Encoding encoding = new UTF8Encoding(false, true);
+                return XmlBuilder.NewDocument("Expected")
+                    .WithAttribute("HostName", (string.IsNullOrEmpty(hostName)) ? hostName : Convert.ToBase64String(encoding.GetBytes(hostName)))
+                    .WithAttribute("Path", (string.IsNullOrEmpty(path)) ? path : Convert.ToBase64String(encoding.GetBytes(path)))
+                    .WithInnerText(result.ToString("F")).OuterXml;
+            }
+            return XmlBuilder.NewDocument("Expected")
+                .WithAttribute("HostName", hostName)
+                .WithAttribute("Path", path)
+                .WithInnerText(result.ToString("F")).OuterXml;
         }
 
         public static IEnumerable<TestCaseData> GetAuthorityCaseInsensitiveEqualsTestCases()

@@ -513,6 +513,8 @@ namespace FsInfoCat.Test.Helpers
 
         public static readonly Regex WhitespaceRegex = new Regex(@"^[^\S\r\n]*(?<s>(\r\n?|\n)[^\S\r\n]*(\r\n?|\n))?[\s\r\n]*$");
 
+        #region WithInnerText overloads
+
         public static XmlElement WithInnerText([NotNull] this XmlElement parent, string value)
         {
             if (parent.IsEmpty)
@@ -613,5 +615,46 @@ namespace FsInfoCat.Test.Helpers
                 innerTextNodes(textNodes);
             return parent;
         }
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, bool? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, Guid? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, int? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, long? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, uint? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, ulong? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, byte? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, sbyte? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, float? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, double? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, char? value) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, DateTime? value, XmlDateTimeSerializationMode dateTimeOption) =>
+            WithInnerText(parent, (value.HasValue) ? XmlConvert.ToString(value.Value, dateTimeOption) : null);
+
+        public static XmlElement WithInnerText([NotNull] this XmlElement parent, Uri value) =>
+            WithInnerText(parent, (value is null) ? null : ((value.IsAbsoluteUri) ? value.AbsoluteUri : value.OriginalString));
+
+        #endregion
     }
 }

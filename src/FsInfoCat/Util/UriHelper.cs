@@ -161,7 +161,7 @@ namespace FsInfoCat.Util
             /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>1:2:3:4:5:6:7:8
             /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
             /// </list></remarks>
-            public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)?(?i)(?<p>((/([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?|/(?=$))))|(?i)(?<p>(/(?!/))?(([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+(/|(?=$)))*))$", RegexOptions.Compiled);
+            public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)?(?i)(?<p>((/([!$&-.:;=@[\]()\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?|/(?=$))))|(?i)(?<p>(/(?!/))?(([!$&-.:;=@[\]()\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+(/|(?=$)))*))$", RegexOptions.Compiled);
         }
 
         public static readonly string LOCAL_FILE_SYSTEM_DISPLAY_NAME;
@@ -300,7 +300,7 @@ namespace FsInfoCat.Util
         /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
         /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
         /// </list></remarks>
-        public static readonly Regex ANY_FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)^(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)?(?<p>(/([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?))|(?<p>(?i)(/(?!/))?(([!$&-.:;=@[\]\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+(/|(?=$)))*))$", RegexOptions.Compiled);
+        public static readonly Regex ANY_FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)^(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)?(?<p>(/([!$&-.:;=@[\]()\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?))|(?<p>(?i)(/(?!/))?(([!$&-.:;=@[\]()\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+(/|(?=$)))*))$", RegexOptions.Compiled);
 
         public static PlatformType PLATFORM_TYPE { get; }
 
@@ -319,7 +319,8 @@ namespace FsInfoCat.Util
                 ALT_FILE_URI_STRICT_REGEX = Linux.FILE_URI_STRICT_REGEX;
                 FORMAT_GUESS_LOCAL_REGEX = Windows.FORMAT_GUESS_REGEX;
                 FORMAT_GUESS_ALT_REGEX = Linux.FORMAT_GUESS_REGEX;
-                _FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("/", "%5C");
+                //_FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("\\", "%5C");
+                _FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("\\", "/");
                 LOCAL_FILE_SYSTEM_DISPLAY_NAME = "Windows";
                 ALT_FILE_SYSTEM_DISPLAY_NAME = "Linux";
             }
@@ -569,6 +570,7 @@ namespace FsInfoCat.Util
                                     switch (enumerator.Current)
                                     {
                                         case URI_PATH_SEPARATOR_CHAR:
+                                            return hostNameLength + schemeLength + 3;
                                         case URI_FRAGMENT_DELIMITER_CHAR:
                                         case URI_QUERY_DELIMITER_CHAR:
                                             return hostNameLength + schemeLength + 2;
@@ -595,10 +597,9 @@ namespace FsInfoCat.Util
         {
             if (string.IsNullOrEmpty(uriString))
             {
-                hostName = "";
-                absolutePath = "";
+                hostName = absolutePath = null;
                 leafIndex = 0;
-                return true;
+                return false;
             }
 
 
@@ -610,7 +611,7 @@ namespace FsInfoCat.Util
                 hostName = uri.Host;
                 absolutePath = uri.AbsolutePath;
                 int i = absolutePath.LastIndexOf(URI_PATH_SEPARATOR_CHAR);
-                if (i > 0 && absolutePath[i] == URI_PATH_SEPARATOR_CHAR)
+                if (i > 0 && i == absolutePath.Length - 1)
                 {
                     absolutePath = absolutePath.Substring(0, i);
                     i = absolutePath.LastIndexOf(URI_PATH_SEPARATOR_CHAR);
@@ -672,7 +673,10 @@ namespace FsInfoCat.Util
                 return false;
             int startIndex = _UriGetPartIndexes(uri, out int schemeLength, out _);
             if (startIndex < 0)
-                return false;
+            {
+                if (kind == UriKind.Absolute)
+                    return false;
+            }
             if (startIndex > 0)
                 return uri.Substring(0, schemeLength).Equals(Uri.UriSchemeFile) && (startIndex == uri.Length || ANY_FILE_URI_STRICT_REGEX.IsMatch(uri.Substring(startIndex)));
             return ANY_FILE_URI_STRICT_REGEX.IsMatch(uri);
