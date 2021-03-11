@@ -1,12 +1,13 @@
 using FsInfoCat.Util;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace FsInfoCat.Models.Volumes
 {
     /// <summary>
     /// Represents file system volume information.
     /// </summary>
-    public interface IVolumeInfo
+    public interface IVolumeInfo : INotifyPropertyValueChanging, INotifyPropertyValueChanged
     {
         /// <summary>
         /// Gets or sets the absolute file URI of the the volume root directory.

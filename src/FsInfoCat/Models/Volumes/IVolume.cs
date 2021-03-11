@@ -1,4 +1,5 @@
 using FsInfoCat.Models.DB;
+using FsInfoCat.Models.HostDevices;
 using System;
 
 namespace FsInfoCat.Models.Volumes
@@ -11,7 +12,7 @@ namespace FsInfoCat.Models.Volumes
 
         Guid? HostDeviceID { get; set; }
 
-        HostDevice Host { get; set; }
+        IHostDevice Host { get; set; }
 
         string HostName { get; }
 
@@ -20,5 +21,11 @@ namespace FsInfoCat.Models.Volumes
         bool IsInactive { get; set; }
 
         string Notes { get; set; }
+    }
+
+    public interface IVolume<H> : IVolume
+        where H : IHostDevice
+    {
+        new H Host { get; set;  }
     }
 }

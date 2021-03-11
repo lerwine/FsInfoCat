@@ -1,8 +1,10 @@
+using FsInfoCat.Models;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -154,10 +156,16 @@ namespace FsInfoCat.PS.Commands
 
         protected abstract void OnPathIsFileError(string providerPath);
 
+        [Obsolete("Use VolumeInfoRegistration.RegisteredVolumeInfo, instead")]
         protected class RegisteredVolumeInfo : IVolumeInfo, IEquatable<IVolumeInfo>
         {
             private bool _caseSensitive;
             private StringComparer _pathComparer;
+
+            public event PropertyValueChangeEventHandler PropertyValueChanging;
+            public event PropertyChangingEventHandler PropertyChanging;
+            public event PropertyValueChangeEventHandler PropertyValueChanged;
+            public event PropertyChangedEventHandler PropertyChanged;
 
             public FileUri RootUri { get; internal set; }
 

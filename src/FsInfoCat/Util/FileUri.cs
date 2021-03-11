@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace FsInfoCat.Util
 {
@@ -9,14 +11,14 @@ namespace FsInfoCat.Util
     /// </summary>
     public class FileUri : IEquatable<FileUri>
     {
-        private readonly int _nameIndex;
-
         /// <summary>
         /// URI encode host name.
         /// </summary>
         public string Host { get; }
 
-        public string AbsolutePath { get; }
+        public string Name { get; }
+
+        public FileUri Parent { get; }
 
         /// <summary>
         /// Creates a new <c>FileUri</c> object.
@@ -31,17 +33,37 @@ namespace FsInfoCat.Util
         {
             if (string.IsNullOrEmpty(fileUriString))
             {
-                Host = AbsolutePath = "";
-                _nameIndex = 0;
+                Host = Name = "";
+                Parent = null;
             }
             else if (UriHelper.TryParseFileUriString(fileUriString, out string hostName, out string absolutePath, out int leafIndex))
             {
                 Host = hostName.ToLower();
-                _nameIndex = leafIndex;
-                AbsolutePath = absolutePath;
+                if (leafIndex > 0 && absolutePath.Length > 1)
+                {
+                    Name = absolutePath.Substring(leafIndex);
+                    Parent = new FileUri(Host, absolutePath.Substring(0, (leafIndex > 1) ? leafIndex - 1 : leafIndex));
+                }
+                else
+                {
+                    Parent = null;
+                    Name = absolutePath;
+                }
             }
             else
                 throw new ArgumentOutOfRangeException(nameof(fileUriString));
+        }
+
+        public FileUri(FileUri parent, string name)
+        {
+            if (parent is null)
+                throw new ArgumentNullException(nameof(parent));
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (name.Length == 0 || (name = UriHelper.EnsureWellFormedUriPath(name)).Contains(UriHelper.URI_PATH_SEPARATOR_CHAR))
+                throw new ArgumentOutOfRangeException(nameof(name));
+            Name = name;
+            Parent = parent;
         }
 
         /// <summary>
@@ -51,93 +73,71 @@ namespace FsInfoCat.Util
         public FileUri(FileSystemInfo fileSystemInfo)
         {
             if (fileSystemInfo is null)
-            {
-                Host = AbsolutePath = "";
-                _nameIndex = 0;
-            }
+                Host = Name = "";
             else
             {
                 Uri uri = fileSystemInfo.ToUri();
                 Host = uri.Host.ToLower();
                 string absolutePath = uri.AbsolutePath;
-                int i = absolutePath.LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR);
-                if (i > 0 && absolutePath[i] == UriHelper.URI_PATH_SEPARATOR_CHAR)
+                if (absolutePath.Length > 1)
                 {
-                    AbsolutePath = absolutePath.Substring(0, i);
-                    i = AbsolutePath.LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR);
+                    int leafIndex = absolutePath.LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR);
+                    if (((leafIndex == absolutePath.Length - 1) ? (leafIndex = (absolutePath = absolutePath.Substring(0, leafIndex)).LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR)) : leafIndex) > -1)
+                    {
+                        Name = absolutePath.Substring(leafIndex - 1);
+                        Parent = new FileUri(Host, absolutePath.Substring(0, (leafIndex == 0) ? 1 : leafIndex));
+                        return;
+                    }
                 }
-                else
-                    AbsolutePath = absolutePath;
-                _nameIndex = (i < 0) ? 0 : i + 1;
+                Name = absolutePath;
             }
+            Parent = null;
         }
 
         private FileUri(string host, string absolutePath)
         {
-            int i = absolutePath.LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR);
-            _nameIndex = (i < 0) ? 0 : i + 1;
             Host = host;
-            AbsolutePath = absolutePath;
-        }
-
-        public FileUri ToParentUri()
-        {
-            /*
-             * Host = "", AbsolutePath = "", _nameIndex = 0
-             * Host = "Name", AbsolutePath = "", _nameIndex = 0
-             * Host = "", AbsolutePath = "/", _nameIndex = 1
-             * Host = "Name", AbsolutePath = "/", _nameIndex = 1
-             * Host = "", AbsolutePath = "/RootChild", _nameIndex = 10
-             * Host = "", AbsolutePath = "/C:", _nameIndex = 10
-             * Host = "Name", AbsolutePath = "/RootChild", _nameIndex = 10
-             */
-            if (_nameIndex == 0)
-                return null;
-            return new FileUri(Host, AbsolutePath.Substring(0, _nameIndex - 1));
-        }
-
-        public bool Contains(FileUri other, IEqualityComparer<string> comparer)
-        {
-            if (other is null)
-                return false;
-
-            if (other.Host.Equals(Host, StringComparison.InvariantCultureIgnoreCase))
+            int leafIndex;
+            if (absolutePath.Length < 2 || (leafIndex = absolutePath.LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR)) < 0)
             {
-                throw new NotImplementedException();
+                Name = absolutePath;
+                Parent = null;
             }
-            // TODO: Implement Contains(FileUri, IEqualityComparer<string>)
-            throw new NotImplementedException();
+            else
+            {
+                Name = absolutePath.Substring(leafIndex + 1);
+                Parent = new FileUri(host, absolutePath.Substring(0, leafIndex - 1));
+            }
         }
-
-        //public static implicit operator FileUri(Uri uri)
-        //{
-        //    if (uri is null)
-        //        return null;
-        //    if (uri.IsAbsoluteUri)
-        //    {
-        //        if (uri.Scheme != Uri.UriSchemeFile || !(string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment)))
-        //            return null;
-        //        return new FileUri(uri.Host, uri.AbsolutePath);
-        //    }
-        //    if (Uri.IsWellFormedUriString(uri.OriginalString, UriKind.Relative))
-        //        return new FileUri("", uri.OriginalString);
-        //    return null;
-        //}
-
-        //public static implicit operator Uri(FileUri uri) => (uri is null) ? null : ((uri.IsAbsolute) ?
-        //    new Uri($"file://{uri.Host}{string.Join("", uri.Segments)}", UriKind.Absolute) : new Uri(string.Join("", uri.Segments), UriKind.Absolute));
 
         public static implicit operator FileUri(FileSystemInfo fsi) => (fsi is null) ? null : new FileUri(fsi);
 
-        public bool IsEmpty() => AbsolutePath.Length == 0 && Host.Length == 0;
+        public IEnumerable<string> GetPathComponents()
+        {
+            FileUri fileUri = this;
+            if (!(Parent is null))
+                do
+                {
+                    yield return fileUri.Name;
+                } while (!((fileUri = fileUri.Parent) is null));
+            yield return (Name == UriHelper.URI_PATH_SEPARATOR_STRING) ? "" : Name;
+        }
 
-        public string GetName() => Uri.UnescapeDataString(AbsolutePath.Substring(_nameIndex));
+        public bool IsEmpty() => Name.Length == 0 && Host.Length == 0 && Parent is null;
 
+        [Obsolete("This not logical due to posible case sensitivity differences with parent paths.")]
         public bool Equals(FileUri other, IEqualityComparer<string> comparer)
         {
             if (comparer is null)
                 throw new ArgumentNullException(nameof(comparer));
-            return !(other is null) && Host.Equals(other.Host) && comparer.Equals(AbsolutePath, other.AbsolutePath);
+            return !(other is null) && Host.Equals(other.Host) && comparer.Equals(Name, other.Name) && ((Parent is null) ? other.Parent is null : Parent.Equals(other.Parent, comparer));
+        }
+
+        private StringBuilder ToLocalPath(char separator, StringBuilder stringBuilder)
+        {
+            if (Parent is null)
+                return (Name.Equals(UriHelper.URI_PATH_SEPARATOR_STRING)) ? stringBuilder : stringBuilder.Append(separator).Append(Name);
+            return Parent.ToLocalPath(separator, stringBuilder).Append(separator).Append(Name);
         }
 
         /// <summary>
@@ -152,22 +152,43 @@ namespace FsInfoCat.Util
             {
                 case PlatformType.Linux:
                 case PlatformType.OSX:
-                    if (Host.Length == 0)
-                        return Uri.UnescapeDataString(AbsolutePath);
-                    return $"//{Host}/{Uri.UnescapeDataString(AbsolutePath)}";
+                    if (Parent is null)
+                    {
+                        if (Host.Length == 0)
+                            return $"/{Uri.UnescapeDataString(Name)}";
+                        return $"//{Host}/{Uri.UnescapeDataString(Name)}";
+                    }
+                    return ToLocalPath('/', (Host.Length == 0) ? new StringBuilder() : new StringBuilder("//").Append(Host)).ToString();
                 default:
-                    if (Host.Length == 0)
-                        return Uri.UnescapeDataString(AbsolutePath).Replace('/', '\\');
-                    return $"\\\\{Host}\\{Uri.UnescapeDataString(AbsolutePath)}";
+                    if (Parent is null)
+                    {
+                        if (Host.Length == 0)
+                            return $"\\{Uri.UnescapeDataString(Name)}";
+                        return $"\\\\{Host}\\{Uri.UnescapeDataString(Name)}";
+                    }
+                    return ToLocalPath('\\', (Host.Length == 0) ? new StringBuilder() : new StringBuilder("\\\\").Append(Host)).ToString();
             }
         }
 
-        public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) || Host.Equals(other.Host) && AbsolutePath.Equals(other.AbsolutePath));
+        [Obsolete("This not logical due to posible case sensitivity differences with parent paths.")]
+        public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) || (Host.Equals(other.Host) && Name.Equals(other.Name) && ((Parent is null) ? other.Parent is null : Parent.Equals(other.Parent))));
 
         public override bool Equals(object obj) => obj is FileUri fileUri && Equals(fileUri);
 
         public override int GetHashCode() => ToString().GetHashCode();
 
-        public override string ToString() => (IsEmpty()) ? "" : $"file://{Host}/{AbsolutePath}/";
+        private StringBuilder ToString(StringBuilder stringBuilder)
+        {
+            if (Parent is null)
+                return (Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? stringBuilder.Append(Name) : stringBuilder.Append(UriHelper.URI_PATH_SEPARATOR_STRING).Append(Name);
+            return Parent.ToString(stringBuilder).Append(UriHelper.URI_PATH_SEPARATOR_STRING).Append(Name);
+        }
+
+        public override string ToString()
+        {
+            if (Parent is null)
+                return (IsEmpty()) ? "" : ((Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? $"file://{Host}{Name}" : $"file://{Host}/{Name}");
+            return Parent.ToString((Host.Length == 0) ? new StringBuilder("file://") : new StringBuilder("file://").Append(Host)).Append(Name).ToString();
+        }
     }
 }

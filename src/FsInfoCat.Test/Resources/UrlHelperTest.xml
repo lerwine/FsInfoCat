@@ -1,5 +1,5 @@
 <UrlHelperTest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./UrlHelperTest.xsd">
-    <TestData Value="" Description="Empty String">
+    <URI Value="" Description="Empty String">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -40,8 +40,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="">WellformedRelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="^_`jkq{}" Description="Relative single segment path">
+    </URI>
+    <URI Value="^_`jkq{}" Description="Relative single segment path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -72,8 +72,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="^_`jkq{}">WellFormedRelativeLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="%5E_jkq%7B%7D" Description="Relative single segment URI">
+    </URI>
+    <URI Value="%5E_jkq%7B%7D" Description="Relative single segment URI">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -112,8 +112,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="%5E_jkq%7B%7D">WellformedRelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="!$'+,@BKQY\" Description="Relative single segment Windows path">
+    </URI>
+    <URI Value="!$'+,@BKQY\" Description="Relative single segment Windows path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -144,8 +144,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="!$'+,@BKQY\">WellformedRelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="!$'+,@BKQY/" Description="Relative single segment Linux path">
+    </URI>
+    <URI Value="!$'+,@BKQY/" Description="Relative single segment Linux path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -184,8 +184,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="!$'+,@BKQY/">WellformedRelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test.txt" Description="Relative file name">
+    </URI>
+    <URI Value="Test.txt" Description="Relative file name">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -224,8 +224,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test.txt">WellformedRelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test&quot;.txt" Description="Relative file name within invalid char (&quot;)">
+    </URI>
+    <URI Value="Test&quot;.txt" Description="Relative file name within invalid char (&quot;)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -252,8 +252,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test&quot;.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test&gt;.txt" Description="Relative file name within invalid char (&gt;)">
+    </URI>
+    <URI Value="Test&gt;.txt" Description="Relative file name within invalid char (&gt;)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -280,8 +280,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test&gt;.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test|.txt" Description="Relative file name within invalid char (|)">
+    </URI>
+    <URI Value="Test|.txt" Description="Relative file name within invalid char (|)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -308,8 +308,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test|.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test;.txt" Description="Relative file name within invalid char (;)">
+    </URI>
+    <URI Value="Test;.txt" Description="Relative file name within invalid char (;)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -340,8 +340,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test;.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test*.txt" Description="Relative file name within invalid char (*)">
+    </URI>
+    <URI Value="Test*.txt" Description="Relative file name within invalid char (*)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -372,8 +372,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test*.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test?.txt" Description="Relative file name within invalid char (?)">
+    </URI>
+    <URI Value="Test?.txt" Description="Relative file name within invalid char (?)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -400,8 +400,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test?.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test%22.txt" Description="Relative file name within invalid char (%22)">
+    </URI>
+    <URI Value="Test%22.txt" Description="Relative file name within invalid char (%22)">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -436,8 +436,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test%22.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test%3E.txt" Description="Relative file name within invalid char (%3E)">
+    </URI>
+    <URI Value="Test%3E.txt" Description="Relative file name within invalid char (%3E)">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -472,8 +472,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test%3E.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test%7C.txt" Description="Relative file name within invalid char (%7C)">
+    </URI>
+    <URI Value="Test%7C.txt" Description="Relative file name within invalid char (%7C)">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -508,8 +508,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test%7C.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test%3B.txt" Description="Relative file name within invalid char (%3B)">
+    </URI>
+    <URI Value="Test%3B.txt" Description="Relative file name within invalid char (%3B)">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -544,8 +544,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test%3B.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test%2A.txt" Description="Relative file name within invalid char (%2A)">
+    </URI>
+    <URI Value="Test%2A.txt" Description="Relative file name within invalid char (%2A)">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -580,8 +580,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test%2A.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="Test%3F.txt" Description="Relative file name within invalid char (%3F)">
+    </URI>
+    <URI Value="Test%3F.txt" Description="Relative file name within invalid char (%3F)">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -616,8 +616,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="Test%3F.txt">RelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="AppData\Local\Temp" Description="Relative Nested Windows path">
+    </URI>
+    <URI Value="AppData\Local\Temp" Description="Relative Nested Windows path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -648,8 +648,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="AppData\Local\Temp">WellformedRelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="mnt/cdrom files" Description="Relative Nested Linux path">
+    </URI>
+    <URI Value="mnt/cdrom files" Description="Relative Nested Linux path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -680,8 +680,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="mnt/cdrom files">WellformedRelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="mnt/cdrom%20files" Description="Relative Nested URI">
+    </URI>
+    <URI Value="mnt/cdrom%20files" Description="Relative Nested URI">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -720,8 +720,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="mnt/cdrom%20files">WellformedRelativeLocalUri</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///z:/Index%233&amp;4" Description="Windows Drive URL">
+    </URI>
+    <URI Value="file:///z:/Index%233&amp;4" Description="Windows Drive URL">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -764,8 +764,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="z:/Index%233&amp;4">WellformedAbsoluteLocalUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///z:/Index%233&amp;4/" Description="Windows Drive URL with trailing separator">
+    </URI>
+    <URI Value="file:///z:/Index%233&amp;4/" Description="Windows Drive URL with trailing separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -808,8 +808,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="z:/Index%233&amp;4/">WellformedAbsoluteLocalUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///H:/" Description="Windows Drive Root URL">
+    </URI>
+    <URI Value="file:///H:/" Description="Windows Drive Root URL">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -852,8 +852,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="H:/">WellformedAbsoluteLocalUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///H:" Description="Windows Drive Root URL with no separator">
+    </URI>
+    <URI Value="file:///H:" Description="Windows Drive Root URL with no separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -896,8 +896,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="H:">AbsoluteLocalUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio" Description="Windows Drive Nested URL">
+    </URI>
+    <URI Value="file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio" Description="Windows Drive Nested URL">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -940,8 +940,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio">WellformedAbsoluteLocalUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/" Description="Windows Drive Nested URL with trailing separator">
+    </URI>
+    <URI Value="file:///C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/" Description="Windows Drive Nested URL with trailing separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -984,8 +984,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/">WellformedAbsoluteLocalUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/" Description="Drive in place of host">
+    </URI>
+    <URI Value="file://C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/" Description="Drive in place of host">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1014,8 +1014,8 @@
         <IsWellFormedFileUriString Kind="RelativeOrAbsolute">false</IsWellFormedFileUriString>
         <IsWellFormedFileUriString Kind="Relative">false</IsWellFormedFileUriString>
         <IsWellFormedFileUriString Kind="Absolute">false</IsWellFormedFileUriString>
-    </TestData>
-    <TestData Value="z:\Index#3&amp;4" Description="Windows Drive Path">
+    </URI>
+    <URI Value="z:\Index#3&amp;4" Description="Windows Drive Path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="true">z:</Group>
@@ -1052,8 +1052,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="C:/Program%20Files%20(x86)/Microsoft%20Visual%20Studio/">AbsoluteLocalUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="z:\Index#3&amp;4\" Description="Windows Drive Path with trailing separator">
+    </URI>
+    <URI Value="z:\Index#3&amp;4\" Description="Windows Drive Path with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="true">z:</Group>
@@ -1090,8 +1090,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="z:\Index#3&amp;4\">WellFormedAbsoluteLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="z:" Description="Windows Drive Letter">
+    </URI>
+    <URI Value="z:" Description="Windows Drive Letter">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="true">z:</Group>
@@ -1138,8 +1138,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="z:">WellFormedAbsoluteLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="z:/" Description="Windows Drive Root">
+    </URI>
+    <URI Value="z:/" Description="Windows Drive Root">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="true">z:</Group>
@@ -1186,8 +1186,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="z:/">WellFormedAbsoluteLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="C:\Program Files (x86)\Microsoft Visual Studio" Description="Windows Drive Nested Path">
+    </URI>
+    <URI Value="C:\Program Files (x86)\Microsoft Visual Studio" Description="Windows Drive Nested Path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="true">C:</Group>
@@ -1230,8 +1230,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="C:\Program Files (x86)\Microsoft Visual Studio">WellFormedAbsoluteLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="C:\Program Files (x86)\Microsoft Visual Studio\" Description="Windows Drive Nested Path with trailing separator">
+    </URI>
+    <URI Value="C:\Program Files (x86)\Microsoft Visual Studio\" Description="Windows Drive Nested Path with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="true">C:</Group>
@@ -1274,8 +1274,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="C:\Program Files (x86)\Microsoft Visual Studio\">WellFormedAbsoluteLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="C:/Program Files (x86)/Microsoft Visual Studio" Description="Windows Drive Nested Alt Path Separator">
+    </URI>
+    <URI Value="C:/Program Files (x86)/Microsoft Visual Studio" Description="Windows Drive Nested Alt Path Separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="true">C:</Group>
@@ -1318,8 +1318,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="C:/Program Files (x86)/Microsoft Visual Studio">WellFormedAbsoluteLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="C:/Program Files (x86)/Microsoft Visual Studio/" Description="Windows Drive Nested Alt Path Separator with trailing separator">
+    </URI>
+    <URI Value="C:/Program Files (x86)/Microsoft Visual Studio/" Description="Windows Drive Nested Alt Path Separator with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="true">C:</Group>
@@ -1362,8 +1362,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="C:/Program Files (x86)/Microsoft Visual Studio/">WellFormedAbsoluteLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///etc" Description="Linux Local URI">
+    </URI>
+    <URI Value="file:///etc" Description="Linux Local URI">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1396,8 +1396,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="/etc" Path="">WellformedAbsoluteAltUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///etc/" Description="Linux Local URI with trailing separator">
+    </URI>
+    <URI Value="file:///etc/" Description="Linux Local URI with trailing separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1430,8 +1430,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/etc/">WellformedAbsoluteAltUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///" Description="Linux Local Root URI">
+    </URI>
+    <URI Value="file:///" Description="Linux Local Root URI">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1465,8 +1465,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/">WellformedAbsoluteAltUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///mnt/cdrom/image.idx" Description="Linux Nested Local URI">
+    </URI>
+    <URI Value="file:///mnt/cdrom/image.idx" Description="Linux Nested Local URI">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1499,8 +1499,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/mnt/cdrom/image.idx">WellformedAbsoluteAltUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file:///mnt/cdrom/image.idx/" Description="Linux Nested Local URI with trailing separator">
+    </URI>
+    <URI Value="file:///mnt/cdrom/image.idx/" Description="Linux Nested Local URI with trailing separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1533,8 +1533,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/mnt/cdrom/image.idx/">WellformedAbsoluteAltUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="/etc" Description="Linux Local Path">
+    </URI>
+    <URI Value="/etc" Description="Linux Local Path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -1579,8 +1579,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/etc">WellFormedAbsoluteAltPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="/etc/" Description="Linux Local Path with trailing separator">
+    </URI>
+    <URI Value="/etc/" Description="Linux Local Path with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -1625,8 +1625,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/etc/">WellFormedAbsoluteAltPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="/" Description="Linux Local Root Path">
+    </URI>
+    <URI Value="/" Description="Linux Local Root Path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -1671,8 +1671,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/">WellFormedAbsoluteAltPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="/mnt/cdrom/image.idx" Description="Linux Nested Local Path">
+    </URI>
+    <URI Value="/mnt/cdrom/image.idx" Description="Linux Nested Local Path">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -1717,8 +1717,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/mnt/cdrom/image.idx">WellFormedAbsoluteAltPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="/mnt/cdrom/image.idx/" Description="Linux Nested Local Path with trailing separator">
+    </URI>
+    <URI Value="/mnt/cdrom/image.idx/" Description="Linux Nested Local Path with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -1763,8 +1763,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/mnt/cdrom/image.idx/">WellFormedAbsoluteAltPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazureshare" Description="File URL to FQDN Host">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazureshare" Description="File URL to FQDN Host">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1807,8 +1807,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazureshare/" Description="File URL to FQDN Host with trailing separator">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazureshare/" Description="File URL to FQDN Host with trailing separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1852,8 +1852,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazureshare/">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net:44/testazureshare" Description="File URL with port">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net:44/testazureshare" Description="File URL with port">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -1888,8 +1888,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net:44" Path="/testazureshare">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\servicenowdiag479.file.core.windows.net\testazureshare" Description="Windows UNC to FQDN Host">
+    </URI>
+    <URI Value="\\servicenowdiag479.file.core.windows.net\testazureshare" Description="Windows UNC to FQDN Host">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -1928,8 +1928,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="\testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\servicenowdiag479.file.core.windows.net\testazureshare\" Description="Windows UNC to FQDN Host with trailing separator">
+    </URI>
+    <URI Value="\\servicenowdiag479.file.core.windows.net\testazureshare\" Description="Windows UNC to FQDN Host with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -1966,8 +1966,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="\testazureshare\">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="//servicenowdiag479.file.core.windows.net/testazureshare" Description="Linux UNC to FQDN Host">
+    </URI>
+    <URI Value="//servicenowdiag479.file.core.windows.net/testazureshare" Description="Linux UNC to FQDN Host">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2010,8 +2010,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="//servicenowdiag479.file.core.windows.net/testazureshare/" Description="Linux UNC to FQDN Host with trailing separator">
+    </URI>
+    <URI Value="//servicenowdiag479.file.core.windows.net/testazureshare/" Description="Linux UNC to FQDN Host with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2054,8 +2054,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazureshare/">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://mysite/testazureshare" Description="File URL to AName Host">
+    </URI>
+    <URI Value="file://mysite/testazureshare" Description="File URL to AName Host">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2098,8 +2098,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="mysite" Path="/testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://mysite/testazureshare/" Description="File URL to AName Host with trailing separator">
+    </URI>
+    <URI Value="file://mysite/testazureshare/" Description="File URL to AName Host with trailing separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2142,8 +2142,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="mysite" Path="/testazureshare/">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\mysite\testazureshare" Description="Windows UNC to AName Host">
+    </URI>
+    <URI Value="\\mysite\testazureshare" Description="Windows UNC to AName Host">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2180,8 +2180,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="mysite" Path="\testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\mysite\testazureshare\" Description="Windows UNC to AName Host with trailing separator">
+    </URI>
+    <URI Value="\\mysite\testazureshare\" Description="Windows UNC to AName Host with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2218,8 +2218,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="mysite" Path="\testazureshare\">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="//mysite/testazureshare" Description="Linux UNC to AName Host">
+    </URI>
+    <URI Value="//mysite/testazureshare" Description="Linux UNC to AName Host">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2262,8 +2262,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="mysite" Path="/testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="//mysite/testazureshare/" Description="Linux UNC to AName Host with trailing separator">
+    </URI>
+    <URI Value="//mysite/testazureshare/" Description="Linux UNC to AName Host with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2306,8 +2306,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="mysite" Path="/testazureshare/">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://10.0.0.1/testazureshare" Description="File URL to IPV4 Host">
+    </URI>
+    <URI Value="file://10.0.0.1/testazureshare" Description="File URL to IPV4 Host">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2350,8 +2350,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="10.0.0.1" Path="/testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://10.0.0.1/testazureshare/" Description="File URL to IPV4 Host with trailing separator">
+    </URI>
+    <URI Value="file://10.0.0.1/testazureshare/" Description="File URL to IPV4 Host with trailing separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2394,8 +2394,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="10.0.0.1" Path="/testazureshare/">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\10.0.0.1\testazureshare" Description="Windows UNC to IPV4 Host">
+    </URI>
+    <URI Value="\\10.0.0.1\testazureshare" Description="Windows UNC to IPV4 Host">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2432,8 +2432,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="10.0.0.1" Path="\testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\10.0.0.1\testazureshare\" Description="Windows UNC to IPV4 Host with trailing separator">
+    </URI>
+    <URI Value="\\10.0.0.1\testazureshare\" Description="Windows UNC to IPV4 Host with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2470,8 +2470,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="10.0.0.1" Path="\testazureshare\">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="//10.0.0.1/testazureshare" Description="Linux UNC to IPV4 Host">
+    </URI>
+    <URI Value="//10.0.0.1/testazureshare" Description="Linux UNC to IPV4 Host">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2514,8 +2514,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="10.0.0.1" Path="/testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="//10.0.0.1/testazureshare/" Description="Linux UNC to IPV4 Host with trailing separator">
+    </URI>
+    <URI Value="//10.0.0.1/testazureshare/" Description="Linux UNC to IPV4 Host with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2558,8 +2558,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="10.0.0.1" Path="/testazureshare/">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://[fe80::1dee:91b0:4872:1f9]/testazureshare" Description="File URL to IPV6 Host">
+    </URI>
+    <URI Value="file://[fe80::1dee:91b0:4872:1f9]/testazureshare" Description="File URL to IPV6 Host">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2602,8 +2602,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="[fe80::1dee:91b0:4872:1f9]" Path="/testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://[fe80::1dee:91b0:4872:1f9]/testazureshare/" Description="File URL to IPV6 Host with trailing separator">
+    </URI>
+    <URI Value="file://[fe80::1dee:91b0:4872:1f9]/testazureshare/" Description="File URL to IPV6 Host with trailing separator">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2646,8 +2646,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="[fe80::1dee:91b0:4872:1f9]" Path="/testazureshare/">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\[fe80::1dee:91b0:4872:1f9]\testazureshare" Description="Windows UNC to IPV6 Host">
+    </URI>
+    <URI Value="\\[fe80::1dee:91b0:4872:1f9]\testazureshare" Description="Windows UNC to IPV6 Host">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2684,8 +2684,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="[fe80::1dee:91b0:4872:1f9]" Path="\testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\[fe80::1dee:91b0:4872:1f9]\testazureshare\" Description="Windows UNC to IPV6 Host with trailing separator">
+    </URI>
+    <URI Value="\\[fe80::1dee:91b0:4872:1f9]\testazureshare\" Description="Windows UNC to IPV6 Host with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2722,8 +2722,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="[fe80::1dee:91b0:4872:1f9]" Path="\testazureshare\">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="//[fe80::1dee:91b0:4872:1f9]/testazureshare" Description="Linux UNC to IPV6 Host">
+    </URI>
+    <URI Value="//[fe80::1dee:91b0:4872:1f9]/testazureshare" Description="Linux UNC to IPV6 Host">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2766,8 +2766,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="[fe80::1dee:91b0:4872:1f9]" Path="/testazureshare">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="//[fe80::1dee:91b0:4872:1f9]/testazureshare/" Description="Linux UNC to IPV6 Host with trailing separator">
+    </URI>
+    <URI Value="//[fe80::1dee:91b0:4872:1f9]/testazureshare/" Description="Linux UNC to IPV6 Host with trailing separator">
         <Windows>
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
@@ -2810,8 +2810,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="[fe80::1dee:91b0:4872:1f9]" Path="/testazureshare/">WellFormedLocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\servicenowdiag479.-file.core.windows.net\testazureshare\" Description="Windows UNC with invalid host name">
+    </URI>
+    <URI Value="\\servicenowdiag479.-file.core.windows.net\testazureshare\" Description="Windows UNC with invalid host name">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2844,8 +2844,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.-file.core.windows.net" Path="\testazureshare\">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="///testazureshare" Description="UNC with missing host name">
+    </URI>
+    <URI Value="///testazureshare" Description="UNC with missing host name">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2868,8 +2868,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/testazureshare">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://-servicenowdiag479.file.core.windows.net/testazureshare/" Description="File URL with invalid host">
+    </URI>
+    <URI Value="file://-servicenowdiag479.file.core.windows.net/testazureshare/" Description="File URL with invalid host">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2904,8 +2904,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="-servicenowdiag479.file.core.windows.net" Path="/testazureshare/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="/mnt//cdrom/image.idx" Description="Invalid Linux Local path">
+    </URI>
+    <URI Value="/mnt//cdrom/image.idx" Description="Invalid Linux Local path">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2934,8 +2934,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="/mnt//cdrom/image.idx">RelativeLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="1:\Program Files (x86)\Microsoft Visual Studio" Description="Invalid drive letter">
+    </URI>
+    <URI Value="1:\Program Files (x86)\Microsoft Visual Studio" Description="Invalid drive letter">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2962,8 +2962,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path="1:\Program Files (x86)\Microsoft Visual Studio">RelativeLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value=":\Program Files (x86)" Description="No drive letter">
+    </URI>
+    <URI Value=":\Program Files (x86)" Description="No drive letter">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -2990,8 +2990,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="" Path=":\Program Files (x86)">RelativeLocalPath</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\test&lt;share" Description="Invalid Windows File name char">
+    </URI>
+    <URI Value="\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\test&lt;share" Description="Invalid Windows File name char">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3024,8 +3024,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET" Path="\test&lt;share">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="\\[::3::6:7:8]\testazureshare" Description="Invalid IPF6 Address">
+    </URI>
+    <URI Value="\\[::3::6:7:8]\testazureshare" Description="Invalid IPF6 Address">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3058,8 +3058,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="[::3::6:7:8]" Path="\testazureshare">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazureshare//" Description="Extra trailing slash">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazureshare//" Description="Extra trailing slash">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3094,8 +3094,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazureshare//">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="ZmlsZTovL215AHNpdGUvdGVzdGF6dXJlc2hhcmU=" Base64="true" Description="Invalid file name char">
+    </URI>
+    <URI Value="ZmlsZTovL215AHNpdGUvdGVzdGF6dXJlc2hhcmU=" Base64="true" Description="Invalid file name char">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3130,8 +3130,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="bXkAc2l0ZQ==" Path="L3Rlc3RhenVyZXNoYXJl">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="http://user@tempuri.org/?test=one" Description="URI with auth">
+    </URI>
+    <URI Value="http://user@tempuri.org/?test=one" Description="URI with auth">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3170,8 +3170,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="user@tempuri.org" Path="/">NonFileUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="http://user@tempuri.org:81/?test=one" Description="URI with auth">
+    </URI>
+    <URI Value="http://user@tempuri.org:81/?test=one" Description="URI with auth">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3211,8 +3211,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="used@tempuri.org" Path="/">NonFileUrl</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure&quot;share/" Description="File URL to FQDN Host with trailing separator within invalid char (&quot;)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure&quot;share/" Description="File URL to FQDN Host with trailing separator within invalid char (&quot;)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3248,8 +3248,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure&quot;share/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure&gt;share/" Description="File URL to FQDN Host with trailing separator within invalid char (&gt;)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure&gt;share/" Description="File URL to FQDN Host with trailing separator within invalid char (&gt;)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3285,8 +3285,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure&gt;share/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure|share/" Description="File URL to FQDN Host with trailing separator within invalid char (|)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure|share/" Description="File URL to FQDN Host with trailing separator within invalid char (|)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3322,8 +3322,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure|share/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure;share/" Description="File URL to FQDN Host with trailing separator within invalid char (;)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure;share/" Description="File URL to FQDN Host with trailing separator within invalid char (;)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3363,8 +3363,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure;share/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure*share/" Description="File URL to FQDN Host with trailing separator within invalid char (*)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure*share/" Description="File URL to FQDN Host with trailing separator within invalid char (*)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3404,8 +3404,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure*share/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure?share/" Description="File URL to FQDN Host with trailing separator within invalid char (?)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure?share/" Description="File URL to FQDN Host with trailing separator within invalid char (?)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3441,8 +3441,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure?share/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure%22share/" Description="File URL to FQDN Host with trailing separator within invalid char (%22)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure%22share/" Description="File URL to FQDN Host with trailing separator within invalid char (%22)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3482,8 +3482,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure%22share/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure%3Eshare/" Description="File URL to FQDN Host with trailing separator within invalid char (%3E)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure%3Eshare/" Description="File URL to FQDN Host with trailing separator within invalid char (%3E)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3523,8 +3523,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure%3Eshare/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure%7Cshare/" Description="File URL to FQDN Host with trailing separator within invalid char (%7C)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure%7Cshare/" Description="File URL to FQDN Host with trailing separator within invalid char (%7C)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3564,8 +3564,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure%7Cshare/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure%3Bshare/" Description="File URL to FQDN Host with trailing separator within invalid char (%3B)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure%3Bshare/" Description="File URL to FQDN Host with trailing separator within invalid char (%3B)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3605,8 +3605,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure%3Bshare/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure%2Ashare/" Description="File URL to FQDN Host with trailing separator within invalid char (%2A)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure%2Ashare/" Description="File URL to FQDN Host with trailing separator within invalid char (%2A)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3646,8 +3646,8 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure%2Ashare/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
-    <TestData Value="file://servicenowdiag479.file.core.windows.net/testazure%3Fshare/" Description="File URL to FQDN Host with trailing separator within invalid char (%3F)">
+    </URI>
+    <URI Value="file://servicenowdiag479.file.core.windows.net/testazure%3Fshare/" Description="File URL to FQDN Host with trailing separator within invalid char (%3F)">
         <Windows>
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
@@ -3687,5 +3687,160 @@
         <ParseUriOrPath PreferFsPath="false">
             <Expected HostName="servicenowdiag479.file.core.windows.net" Path="/testazure%3Fshare/">LocalUrn</Expected>
         </ParseUriOrPath>
-    </TestData>
+    </URI>
+    <HostName Value="" Description="Empty string">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80" Description="Hex string">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80:0:3a:1dee:91b0:4872:1f9:44" Description="Full IPV6">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="::3a:1dee:91b0:4872:1f9:44" Description="IPV6 with first two combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80:0:3a:1dee:91b0:4872::" Description="IPV6 with last two combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80::1dee:91b0:4872:1f9" Description="IPV6 with middle two combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="0::1dee:91b0:4872:1f9" Description="IPV6 with middle 3 combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80::91b0:4872:1f9" Description="IPV6 with middle 4 combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80::4872:1f9" Description="IPV6 with middle 5 combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80::1f9" Description="IPV6 with middle 6 combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="0:1dee::" Description="IPV6 with last 6 combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="::0:9" Description="IPV6 with first 6 combined">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80::" Description="Invalid IPV6 single 4-digit hex">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="::fe80" Description="IPV6 single 4-digit hex">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="1::" Description="Invalid IPV6 single 1-digit hex">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="::1" Description="IPV6 single 1-digit hex">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80-0-3a-1dee-91b0-4872-1f9-44.ipv6-literal.net" Description="Full IPV6, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="--3a-1dee-91b0-4872-1f9-44.ipv6-literal.net" Description="IPV6 with first two combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80-0-3a-1dee-91b0-4872--.ipv6-literal.net" Description="IPV6 with last two combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80--1dee-91b0-4872-1f9.ipv6-literal.net" Description="IPV6 with middle two combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="0--1dee-91b0-4872-1f9.ipv6-literal.net" Description="IPV6 with middle 3 combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80--91b0-4872-1f9.ipv6-literal.net" Description="IPV6 with middle 4 combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80--4872-1f9.ipv6-literal.net" Description="IPV6 with middle 5 combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80--1f9.ipv6-literal.net" Description="IPV6 with middle 6 combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="0-1dee--.ipv6-literal.net" Description="IPV6 with last 6 combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="--0-9.ipv6-literal.net" Description="IPV6 with first 6 combined, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="fe80--.ipv6-literal.net" Description="Invalid IPV6 single 4-digit hex, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="--fe80.ipv6-literal.net" Description="IPV6 single 4-digit hex, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="1--.ipv6-literal.net" Description="Invalid IPV6 single 1-digit hex, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="--1.ipv6-literal.net" Description="IPV6 single 1-digit hex, UNC format">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
+    <HostName Value="" Description="">
+        <Ipv2AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="false" />
+    </HostName>
 </UrlHelperTest>

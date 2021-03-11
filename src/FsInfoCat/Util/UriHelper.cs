@@ -34,25 +34,58 @@ namespace FsInfoCat.Util
         public const UriComponents BEFORE_FRAGMENT_COMPONENTS = UriComponents.Scheme | UriComponents.UserInfo | UriComponents.HostAndPort |
             UriComponents.PathAndQuery | UriComponents.KeepDelimiter;
 
-        /// <summary>
-        /// Matches a path segment including optional trailing slash.
-        /// </summary>
-        public static readonly Regex URI_PATH_SEGMENT_REGEX = new Regex(@"(?:^|\G)(?:/|([^/]+)(?:/|$))", RegexOptions.Compiled);
-
         public const char URI_QUERY_DELIMITER_CHAR = '?';
         public const char URI_FRAGMENT_DELIMITER_CHAR = '#';
         public const char URI_PATH_SEPARATOR_CHAR = '/';
         public const string URI_PATH_SEPARATOR_STRING = "/";
         public const char URI_SCHEME_SEPARATOR_CHAR = ':';
 
+        /// <summary>
+        /// Matches a path segment including optional trailing slash.
+        /// </summary>
+        public static readonly Regex URI_PATH_SEGMENT_REGEX = new Regex(@"(?:^|\G)(?:/|([^/]+)(?:/|$))", RegexOptions.Compiled);
+
         public const string PATTERN_DNS_NAME = @"(?i)^\s*(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?\s*$";
-        public static readonly Regex DNS_NAME_REGEX = new Regex(PATTERN_DNS_NAME, RegexOptions.Compiled);
+        public static readonly Regex DNS_NAME_REGEX = new Regex(@"^(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public const string PATTERN_IPV6_ADDRESS = @"(?i)^\s*(?=\[[a-f\d:]+\]|[a-f\d]*:)\[?(:(:[a-f\d]{1,4}){1,7}|(?=([a-f\d]+:)+((:[a-f\d]+)+|:|[a-f\d]+))([a-f\d]{0,4}:){1,7}[a-f\d]{0,4})\]?\s*$";
-        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(PATTERN_IPV6_ADDRESS, RegexOptions.Compiled);
 
-        public const string PATTERN_IPV2_ADDRESS = @"^\s*(?=((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})\d+(\.\d+){3}\s*$";
-        public static readonly Regex IPV2_ADDRESS_REGEX = new Regex(PATTERN_IPV2_ADDRESS, RegexOptions.Compiled);
+        public const string PATTERN_HOST_NAME = @"(?i)^\s*((?=\d+(\.\d+){3})((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}|(?=\[[:\da-f]+\]|[:\da-f]+|[\da-f-]+\.ipv6-literal\.net)\[?([:-]([:-][a-f\d]{1,4}){1,7}|([a-f\d]{1,4}[:-]){7}[a-f\d]{1,4}|(?=[a-f\d]+([:-][a-f\d]*){1,7})([a-f\d]{1,4}[:-])+(([:-][a-f\d]{1,4})+|[:-]))(\]|\.ipv6-literal\.net)?|(?=\S{1,255}\s*$)[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
+
+        /// <summary>
+        /// Matches a host name.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_IPV2">ipv2</seealso></term> Matches IPV2 address.</item>
+        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_IPV6">ipv6</seealso></term> Matches an IPV6 address without any surrounding brackets or the UNC domain text.</item>
+        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_UNC">unc</seealso></term> Matches the <c>.ipv6-literal.net</c> domain name for IPV6 UNC notation.
+        /// If this group matches, then hexidecimal groups for the IPV6 address are separated by dashes rather than colons.</item>
+        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_DNS">dns</seealso></term> Matches a DNS host name.</item>
+        /// </list></remarks>
+        public static readonly Regex HOST_NAME_REGEX = new Regex(@"^((?=\d+(\.\d+){3})(?<ipv2>((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})|(?=\[[:\da-f]+\]|[:\da-f]+|[\da-f-]+\.ipv6-literal\.net)\[?(?<ipv6>[:-]([:-][a-f\d]{1,4}){1,7}|([a-f\d]{1,4}[:-]){7}[a-f\d]{1,4}|(?=[a-f\d]+([:-][a-f\d]*){1,7})([a-f\d]{1,4}[:-])+(([:-][a-f\d]{1,4})+|[:-]))(\]|(?<unc>\.ipv6-literal\.net))?|(?=\S{1,255}\s*$)(?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?))$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public const string HOST_NAME_MATCH_GROUP_NAME_IPV2 = "ipv2";
+
+        public const string HOST_NAME_MATCH_GROUP_NAME_IPV6 = "ipv6";
+
+        public const string HOST_NAME_MATCH_GROUP_NAME_UNC = "unc";
+
+        public const string HOST_NAME_MATCH_GROUP_NAME_DNS = "dns";
+
+        public const string PATTERN_IPV6_ADDRESS = @"^\s*(?i)(?=\[[:\da-f]+\]|[:\da-f]+|[\da-f-]+\.ipv6-literal\.net)\[?([:-]([:-][a-f\d]{1,4}){1,7}|([a-f\d]{1,4}[:-]){7}[a-f\d]{1,4}|(?=[a-f\d]+([:-][a-f\d]*){1,7})([a-f\d]{1,4}[:-])+(([:-][a-f\d]{1,4})+|[:-]))(\]|\.ipv6-literal\.net)?\s*$";
+
+        /// <summary>
+        /// Matches an IPV6 address
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_IPV6">ipv6</seealso></term> Matches the actual address without any surrounding brackets or the UNC domain text.</item>
+        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_UNC">unc</seealso></term> Matches the <c>.ipv6-literal.net</c> domain name for UNC notation. If this group matches, then hexidecimal groups are separated by dashes rather than colons.</item>
+        /// </list></remarks>
+        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(@"^(?=\[[:\da-f]+\]|[:\da-f]+|[\da-f-]+\.ipv6-literal\.net)\[?(?<ipv6>[:-]([:-][a-f\d]{1,4}){1,7}|([a-f\d]{1,4}[:-]){7}[a-f\d]{1,4}|(?=[a-f\d]+([:-][a-f\d]*){1,7})([a-f\d]{1,4}[:-])+(([:-][a-f\d]{1,4})+|[:-]))(\]|(?<unc>\.ipv6-literal\.net))?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public const string PATTERN_IPV2_ADDRESS = @"^\s*(?=\d+(\.\d+){3})((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}\s*$";
+        public static readonly Regex IPV2_ADDRESS_REGEX = new Regex(@"^(?=\d+(\.\d+){3})((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}$", RegexOptions.Compiled);
 
         public static class Windows
         {

@@ -39,8 +39,8 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_DisplayName = "Display name too long.";
         private string _displayName = "";
 
-        [MaxLength(DB.HostDevice.Max_Length_DisplayName, ErrorMessage = DB.HostDevice.Error_Message_DisplayName)]
-        [Display(Name = DB.HostDevice.DisplayName_DisplayName)]
+        [MaxLength(Max_Length_DisplayName, ErrorMessage = Error_Message_DisplayName)]
+        [Display(Name = DisplayName_DisplayName)]
         public string DisplayName
         {
             get { return _displayName; }
@@ -57,8 +57,8 @@ namespace FsInfoCat.Models.DB
         public const string Error_Message_MachineIdentifer = "Machine identifier too long.";
         private string _machineIdentifer = "";
 
-        [MaxLength(DB.HostDevice.Max_Length_MachineIdentifer, ErrorMessage = DB.HostDevice.Error_Message_MachineIdentifer)]
-        [Display(Name = DB.HostDevice.DisplayName_MachineIdentifer)]
+        [MaxLength(Max_Length_MachineIdentifer, ErrorMessage = Error_Message_MachineIdentifer)]
+        [Display(Name = DisplayName_MachineIdentifer)]
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
@@ -79,9 +79,9 @@ namespace FsInfoCat.Models.DB
 
         [Required()]
         [MinLength(1)]
-        [MaxLength(DB.HostDevice.Max_Length_MachineName, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Length)]
-        [Display(Name = DB.HostDevice.DisplayName_MachineName)]
-        [RegularExpression(ModelHelper.PATTERN_MACHINE_NAME, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Invalid)]
+        [MaxLength(Max_Length_MachineName, ErrorMessage = Error_Message_MachineName_Length)]
+        [Display(Name = DisplayName_MachineName)]
+        [RegularExpression(UriHelper.PATTERN_HOST_NAME, ErrorMessage = Error_Message_MachineName_Invalid)]
         public string MachineName
         {
             get { return _machineName; }
@@ -269,7 +269,7 @@ namespace FsInfoCat.Models.DB
                         result.Add(new ValidationResult(Error_Message_MachineName_Empty, new string[] { PropertyName_MachineName }));
                     else if (_machineName.Length > Max_Length_DisplayName)
                         result.Add(new ValidationResult(Error_Message_MachineName_Length, new string[] { PropertyName_MachineName }));
-                    else if (!ModelHelper.MACHINE_NAME_REGEX.IsMatch(_machineName))
+                    else if (!UriHelper.HOST_NAME_REGEX.IsMatch(_machineName))
                         result.Add(new ValidationResult(Error_Message_MachineName_Invalid, new string[] { PropertyName_MachineName }));
                     break;
             }

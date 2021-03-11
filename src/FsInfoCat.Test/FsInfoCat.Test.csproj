@@ -5,6 +5,7 @@
     <ProjectGuid>{ED1D2FD5-EC51-45CE-8C58-7B7AD724F9F8}</ProjectGuid>
     <IsPackable>false</IsPackable>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.3.1" />

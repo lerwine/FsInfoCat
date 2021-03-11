@@ -106,7 +106,7 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-    <xs:complexType name="TestDataType">
+    <xs:complexType name="URITestDataType">
         <xs:sequence>
             <xs:sequence minOccurs="0" maxOccurs="1">
                 <xs:element name="Windows" type="OSType" />
@@ -124,10 +124,20 @@
         <xs:attribute name="Description" type="xs:string" use="required" />
         <xs:attribute name="Base64" type="xs:boolean" use="optional" />
     </xs:complexType>
+    <xs:complexType name="HostNameTestDataType">
+        <xs:sequence>
+            <xs:element name="Ipv2AddressRegex" type="CaptureType" />
+            <xs:element name="Ipv6AddressRegex" type="MatchType" />
+            <xs:element name="DnsNameRegex" type="CaptureType" />
+        </xs:sequence>
+        <xs:attribute name="Value" type="xs:string" use="required" />
+        <xs:attribute name="Description" type="xs:string" use="required" />
+    </xs:complexType>
     <xs:element name="UrlHelperTest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" name="TestData" type="TestDataType" />
+                <xs:element maxOccurs="unbounded" name="URI" type="URITestDataType" />
+                <xs:element maxOccurs="unbounded" name="HostName" type="HostNameTestDataType" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
