@@ -31,6 +31,8 @@ namespace FsInfoCat.Test
         {
         }
 
+        private static string ToTestReturnValueXml(Match match, params string[] groupNames) => ToTestReturnValueXml(match, "Match", false, groupNames);
+
         private static string ToTestReturnValueXml(Match match, string rootElementName, bool base64Encoded, params string[] groupNames)
         {
             XmlElement resultElement = XmlBuilder.NewDocument(rootElementName).WithAttribute("Success", match.Success);
@@ -86,9 +88,9 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetWindowsFsPathRegexTestCases))]
-        public string WindowsFsPathRegexTest(string uri, bool base64Encoded)
+        public string WindowsFsPathRegexTest(string input, bool base64Encoded)
         {
-            Match match = UriHelper.Windows.FS_PATH_REGEX.Match(uri);
+            Match match = UriHelper.Windows.FS_PATH_REGEX.Match(input);
             return ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "a", "h", "p");
         }
 
@@ -107,9 +109,9 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetWindowsFsPathPatternTestCases))]
-        public string WindowsFsPathPatternTest(string uri, bool base64Encoded)
+        public string WindowsFsPathPatternTest(string input, bool base64Encoded)
         {
-            Match match = Regex.Match(uri, UriHelper.Windows.PATTERN_ABS_FS_PATH);
+            Match match = Regex.Match(input, UriHelper.Windows.PATTERN_ABS_FS_PATH);
             return ToTestReturnValueXml(match, "FsPathPattern", base64Encoded);
         }
 
@@ -128,9 +130,9 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetLinuxFsPathRegexTestCases))]
-        public string LinuxFsPathRegexTest(string uri, bool base64Encoded)
+        public string LinuxFsPathRegexTest(string input, bool base64Encoded)
         {
-            Match match = UriHelper.Linux.FS_PATH_REGEX.Match(uri);
+            Match match = UriHelper.Linux.FS_PATH_REGEX.Match(input);
             return ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "a", "h", "p");
         }
 
@@ -149,9 +151,9 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetLinuxFsPathPatternTestCases))]
-        public string LinuxFsPathPatternTest(string uri, bool base64Encoded)
+        public string LinuxFsPathPatternTest(string input, bool base64Encoded)
         {
-            Match match = Regex.Match(uri, UriHelper.Linux.PATTERN_ABS_FS_PATH);
+            Match match = Regex.Match(input, UriHelper.Linux.PATTERN_ABS_FS_PATH);
             return ToTestReturnValueXml(match, "FsPathPattern", base64Encoded);
         }
 
@@ -170,9 +172,9 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetWindowsFormatGuessRegexTestCases))]
-        public string WindowsFormatGuessRegexTest(string uri, bool base64Encoded)
+        public string WindowsFormatGuessRegexTest(string input, bool base64Encoded)
         {
-            Match match = UriHelper.Windows.FORMAT_GUESS_REGEX.Match(uri);
+            Match match = UriHelper.Windows.FORMAT_GUESS_REGEX.Match(input);
             return ToTestReturnValueXml(match, "FormatGuess", base64Encoded, "f", "u", "h", "p", "x");
         }
 
@@ -191,9 +193,9 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetLinuxFormatGuessRegexTestCases))]
-        public string LinuxFormatGuessRegexTest(string uri, bool base64Encoded)
+        public string LinuxFormatGuessRegexTest(string input, bool base64Encoded)
         {
-            Match match = UriHelper.Linux.FORMAT_GUESS_REGEX.Match(uri);
+            Match match = UriHelper.Linux.FORMAT_GUESS_REGEX.Match(input);
             return ToTestReturnValueXml(match, "FormatGuess", base64Encoded, "f", "u", "h", "p", "x");
         }
 
@@ -212,9 +214,9 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetWindowsFileUriStrictTestCases))]
-        public string WindowsFileUriStrictTest(string uri, bool base64Encoded)
+        public string WindowsFileUriStrictTest(string input, bool base64Encoded)
         {
-            Match match = UriHelper.Windows.FILE_URI_STRICT_REGEX.Match(uri);
+            Match match = UriHelper.Windows.FILE_URI_STRICT_REGEX.Match(input);
             return ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "a", "h", "p");
         }
 
@@ -233,10 +235,139 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetLinuxFileUriStrictTestCases))]
-        public string LinuxFileUriStrictTest(string uri, bool base64Encoded)
+        public string LinuxFileUriStrictTest(string input, bool base64Encoded)
         {
-            Match match = UriHelper.Linux.FILE_URI_STRICT_REGEX.Match(uri);
+            Match match = UriHelper.Linux.FILE_URI_STRICT_REGEX.Match(input);
             return ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "a", "h", "p");
+        }
+
+        public static IEnumerable<TestCaseData> GetIpv2AddressRegexTestCases()
+        {
+            return (new[] {
+                new { Value = (string)null, Description = "Null Value" },
+                new { Value = "", Description = "Empty string" },
+                new { Value = "255", Description = "Single digit" }
+            }).Select(a => new TestCaseData(a.Value)
+                .SetDescription(a.Description)
+                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml))
+            .Concat((new[] {
+                "x.0.0.0",
+                "0.0. 0.0",
+                "0.0.0.0.0",
+                ".0.0.0",
+                "0.0.0.",
+                "000.000.000.0000",
+                "0000.000.000.000",
+                "192.168.1.1",
+                "192.168.1.1.1",
+                "355.255.255.255",
+                "255.255.255.355",
+                "256.255.255.255",
+                "255.256.255.255",
+                "255.255.256.255",
+                "255.255.255.256",
+                "0255.255.255.255",
+                "255.0255.255.255",
+                "255.255.0255.255",
+                "255.255.255.0255"
+            }).Select(a => new TestCaseData(a)
+                .SetDescription($"Invalid Address {a}")
+                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml)))
+            .Concat((new[] {
+                "2.0.0.0",
+                "02.00.00.00",
+                "002.000.000.000",
+                "3.168.1.1",
+                "10.12.1.0",
+                "10.012.01.00",
+                "10.012.001.000",
+                "255.255.255.255"
+            }).Select(a => new TestCaseData(a)
+                .SetDescription($"IP Address {a}")
+                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", true).WithInnerText(a).OuterXml)));
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetIpv2AddressRegexTestCases))]
+        public string Ipv2AddressRegexTest(string input)
+        {
+            Match match = UriHelper.IPV2_ADDRESS_REGEX.Match(input);
+            return ToTestReturnValueXml(match);
+        }
+
+        public static IEnumerable<TestCaseData> GetIpv6AddressRegexTestCases()
+        {
+            return (new[] {
+                new { Value = (string)null, Description = "Null Value" },
+                new { Value = "", Description = "Empty string" },
+                new { Value = "fe80", Description = "Hex Number" }
+            }).Select(a => new TestCaseData(a.Value)
+                .SetDescription(a.Description)
+                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml))
+            .Concat((new[] {
+                "fe80:0:3a:1dee::91b0:4872:1f9:44",
+                "fe80:0:4dca:3a:1dee:91b0:4872:1f9:44",
+                "fe80:0:3a:1dee:91b0:4872:1f9:44",
+                ":fe80:0:3a:1dee:91b0:4872:1f9:44:",
+                ":fe80:0:3a:1dee:91b0:4872:1f9:44",
+                "::fe80:0:3a:1dee:91b0:4872:1f9:44",
+                "fe80:0:3a:1dee:91b0:4872:1f9:44:",
+                "fe80::3a:1dee:91b0:4872:1f9:44",
+                "fe80::1dee::91b0:4872:1f9",
+                "::fe80::1dee:91b0:4872:1f9",
+                "fe80::1dee:91b0:4872:1f9::",
+                "::fe80::1f9",
+                "fe80::1f9::",
+                "fe80:::1f9",
+                "0:::9",
+                ":fe80::",
+                ":::fe80",
+                "1:::",
+                ":::1"
+            }).Select(a => new TestCaseData(a)
+                .SetDescription($"Invalid Address {a}")
+                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml)))
+            .Concat((new[] {
+                "fe80:0:3a:1dee:91b0:4872:1f9:44",
+                "::3a:1dee:91b0:4872:1f9:44",
+                "fe80:0:3a:1dee:91b0:4872::",
+                "fe80::1dee:91b0:4872:1f9",
+                "0::1dee:91b0:4872:1f9",
+                "fe80::91b0:4872:1f9",
+                "fe80::4872:1f9",
+                "fe80::1f9",
+                "0:1dee::",
+                "::0:9",
+                "fe80::",
+                "::fe80",
+                "1::",
+                "::1"
+            }).SelectMany(a => new TestCaseData[]
+            {
+                new TestCaseData(a)
+                    .SetDescription($"IPV6 Address {a}")
+                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", true).WithInnerText(a).OuterXml),
+                new TestCaseData($"[{a}]")
+                    .SetDescription($"IPV6 Address [{a}]")
+                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", true).WithInnerText(a).OuterXml),
+                new TestCaseData($"{a.Replace(":", "-")}.ipv6-literal.net")
+                    .SetDescription($"UNC format Address {a.Replace(":", "-")}.ipv6-literal.net")
+                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", true).WithInnerText(a.Replace(":", "-")).OuterXml),
+                new TestCaseData($"{a}]")
+                    .SetDescription($"Invalid Address {a}]")
+                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml),
+                new TestCaseData($"{a.Replace(":", "-")}")
+                    .SetDescription($"Invalid Address {a.Replace(":", "-")}")
+                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml)
+            }));
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetIpv6AddressRegexTestCases))]
+        public string Ipv6AddressRegexTest(string input)
+        {
+            Match match = UriHelper.IPV6_ADDRESS_REGEX.Match(input);
+            return ToTestReturnValueXml(match, "ipv6", "unc");
         }
 
         public static IEnumerable<TestCaseData> GetTryParseFileUriStringTestCases()

@@ -358,14 +358,14 @@ namespace FsInfoCat.Models.Crawl
             return RootUri.ToLocalPath() + " " + VolumeName.Trim();
         }
 
-        private void RaisePropertyChanging<T>([DisallowNull] string propertyName, T oldValue, T newValue)
+        private void RaisePropertyChanging<T>(string propertyName, T oldValue, T newValue)
         {
             PropertyValueChangingEventArgs<T> args = new PropertyValueChangingEventArgs<T>(propertyName, oldValue, newValue);
             PropertyValueChanging?.Invoke(this, args);
             PropertyChanging?.Invoke(this, args);
         }
 
-        private void RaisePropertyChanged<T>([DisallowNull] string propertyName, T oldValue, T newValue)
+        private void RaisePropertyChanged<T>(string propertyName, T oldValue, T newValue)
         {
             PropertyValueChangedEventArgs<T> args = new PropertyValueChangedEventArgs<T>(propertyName, oldValue, newValue);
             try { PropertyValueChanged?.Invoke(this, args); }

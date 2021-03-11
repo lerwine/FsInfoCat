@@ -33,7 +33,7 @@ namespace FsInfoCat.Models.HostDevices
         [MinLength(1)]
         [MaxLength(DB.HostDevice.Max_Length_MachineName, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Length)]
         [Display(Name = DB.HostDevice.DisplayName_MachineName)]
-        [RegularExpression(ModelHelper.PATTERN_MACHINE_NAME, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Invalid)]
+        [RegularExpression(UriHelper.PATTERN_DNS_NAME, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Invalid)]
         public string MachineName
         {
             get { return _machineName; }
@@ -78,7 +78,7 @@ namespace FsInfoCat.Models.HostDevices
                         result.Add(new ValidationResult(HostDevice.Error_Message_MachineName_Empty, new string[] { HostDevice.PropertyName_MachineName }));
                     else if (_machineName.Length > HostDevice.Max_Length_DisplayName)
                         result.Add(new ValidationResult(HostDevice.Error_Message_MachineName_Length, new string[] { HostDevice.PropertyName_MachineName }));
-                    else if (!ModelHelper.MACHINE_NAME_REGEX.IsMatch(_machineName))
+                    else if (!UriHelper.HOST_NAME_REGEX.IsMatch(_machineName))
                         result.Add(new ValidationResult(HostDevice.Error_Message_MachineName_Invalid, new string[] { HostDevice.PropertyName_MachineName }));
                     break;
             }

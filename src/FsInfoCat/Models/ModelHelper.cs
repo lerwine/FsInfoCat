@@ -17,16 +17,11 @@ namespace FsInfoCat.Models
         public const string ROLE_NAME_APP_CONTRIB = "app-contrib";
         public const string ROLE_NAME_ADMIN = "admin";
 
-        //public const string PATTERN_PATH_OR_URL = @"(?i)^([a-z]:[\\/]$|file:///[a-z]:/$|([a-z]:|[\\/]{2}([a-z]+(-[a-z\d]+)*(\.[a-z]+(-[a-z\d]+)*)*|(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)(\.(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)){3}))([\\/][^\\/:""<>|*?\x00-\x19]+)+[\\/]?$|file://(/[a-z]:|[a-z]+(-[a-z\d]+)*(\.[a-z]+(-[a-z\d]+)*)*|(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)(\.(([01]\d?|[3-9])\d?|2(5[0-5]?|[0-4]?\d?)?)){3})?([\\/][^\\/:""<>|*?\x00-\x19]+)+/?$)";
-
         public const string PATTERN_LOGIN_NAME_VALIDATION = @"(?i)^\s*([a-z][a-z\d_]*(\.[a-z][a-z\d_]*)*)\s*$";
         public static readonly Regex LOGIN_NAME_VALIDATION_REGEX = new Regex(PATTERN_LOGIN_NAME_VALIDATION, RegexOptions.Compiled);
 
-        public const string PATTERN_MACHINE_NAME = @"(?i)^\s*((?=((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})\d+(\.\d+){3}(?![.\d])|(?=\[[a-f\d:]+\]|[a-f\d]*:)\[?(:(:[a-f\d]{1,4}){1,7}|(?=([a-f\d]+:)+((:[a-f\d]+)+|:|[a-f\d]+))([a-f\d]{0,4}:){1,7}[a-f\d]{0,4})\]?|(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
-        public static readonly Regex MACHINE_NAME_REGEX = new Regex(PATTERN_MACHINE_NAME, RegexOptions.Compiled);
-
-        public const string PATTERN_BASE64 = @"^\s*(([A-Za-z\d+/])\s*)?$";
-        public static readonly Regex Base64Regex = new Regex(PATTERN_BASE64, RegexOptions.Compiled);
+        public const string PATTERN_BASE64 = @"^\s*(?i)(([A-Za-z\d+/]{4})\s*)?$";
+        public static readonly Regex Base64Regex = new Regex(@"^\s*(?i)(([A-Za-z\d+/]{2}([A-Za-z\d+/]([A-Za-z\d+/]|=)|==))\s*)+$", RegexOptions.Compiled);
 
         /// <summary>
         /// Validates an <seealso cref="IModficationAuditable"/>.
@@ -39,9 +34,9 @@ namespace FsInfoCat.Models
         public static IList<ValidationResult> ValidateForSave(this IModficationAuditable target, Account modifiedBy, bool isCreate)
         {
             if (target is null)
-                throw new ArgumentNullException("target");
+                throw new ArgumentNullException(nameof(target));
             if (modifiedBy is null)
-                throw new ArgumentNullException("modifiedBy");
+                throw new ArgumentNullException(nameof(modifiedBy));
             target.ModifiedOn = DateTime.Now;
             target.ModifiedBy = modifiedBy.AccountID;
             if (isCreate)
@@ -94,19 +89,19 @@ namespace FsInfoCat.Models
 
             Stack<FileUri> stack = new Stack<FileUri>();
             stack.Push(fileUri);
-            while (!((fileUri = fileUri.ToParentUri()) is null))
+            while (!((fileUri = fileUri.Parent) is null))
                 stack.Push(fileUri);
 
             while (!(fileUri is null))
             {
                 T result = source.FirstOrDefault(v => v.RootUri.Equals(fileUri));
                 if (result is null)
-                    fileUri = fileUri.ToParentUri();
+                    fileUri = fileUri.Parent;
                 else
                 {
-                    for (FileUri baseUri = result.RootUri.ToParentUri(); !(baseUri is null); baseUri = baseUri.ToParentUri())
+                    for (FileUri baseUri = result.RootUri.Parent; !(baseUri is null); baseUri = baseUri.Parent)
                     {
-                        if ((fileUri = fileUri.ToParentUri()) is null)
+                        if ((fileUri = fileUri.Parent) is null)
                             return result;
                         T b1 = FindByChildItem(source, baseUri);
                         T b2 = FindByChildItem(source, fileUri);

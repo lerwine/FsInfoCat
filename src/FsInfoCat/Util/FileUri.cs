@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace FsInfoCat.Util
 {
@@ -16,11 +17,6 @@ namespace FsInfoCat.Util
         public string Host { get; }
 
         public string Name { get; }
-
-        [Obsolete("Use GetAbsolutePath(), instead")]
-        public string AbsolutePath => GetAbsolutePath();
-
-        public string GetAbsolutePath() => (Parent is null) ? Name : string.Join(UriHelper.URI_PATH_SEPARATOR_STRING, GetPathComponents());
 
         public FileUri Parent { get; }
 
@@ -114,30 +110,6 @@ namespace FsInfoCat.Util
             }
         }
 
-        [Obsolete("Use Parent property")]
-        public FileUri ToParentUri(out string leaf)
-        {
-            leaf = Name;
-            return Parent;
-        }
-
-        [Obsolete("Use Parent property")]
-        public FileUri ToParentUri() => Parent;
-
-        [Obsolete("This not logical due to posible case sensitivity differences with parent paths.")]
-        public bool Contains(FileUri other, IEqualityComparer<string> comparer)
-        {
-            if (other is null)
-                return false;
-
-            if (other.Host.Equals(Host, StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new NotImplementedException();
-            }
-            // TODO: Implement Contains(FileUri, IEqualityComparer<string>) - Need to work through an S
-            throw new NotImplementedException();
-        }
-
         public static implicit operator FileUri(FileSystemInfo fsi) => (fsi is null) ? null : new FileUri(fsi);
 
         public IEnumerable<string> GetPathComponents()
@@ -151,17 +123,21 @@ namespace FsInfoCat.Util
             yield return (Name == UriHelper.URI_PATH_SEPARATOR_STRING) ? "" : Name;
         }
 
-        public bool IsEmpty() => AbsolutePath.Length == 0 && Host.Length == 0;
-
-        [Obsolete("Maybe change to method named GetUnescapedName()")]
-        public string GetName() => Uri.UnescapeDataString(Name);
+        public bool IsEmpty() => Name.Length == 0 && Host.Length == 0 && Parent is null;
 
         [Obsolete("This not logical due to posible case sensitivity differences with parent paths.")]
         public bool Equals(FileUri other, IEqualityComparer<string> comparer)
         {
             if (comparer is null)
                 throw new ArgumentNullException(nameof(comparer));
-            return !(other is null) && Host.Equals(other.Host) && comparer.Equals(AbsolutePath, other.AbsolutePath);
+            return !(other is null) && Host.Equals(other.Host) && comparer.Equals(Name, other.Name) && ((Parent is null) ? other.Parent is null : Parent.Equals(other.Parent, comparer));
+        }
+
+        private StringBuilder ToLocalPath(char separator, StringBuilder stringBuilder)
+        {
+            if (Parent is null)
+                return (Name.Equals(UriHelper.URI_PATH_SEPARATOR_STRING)) ? stringBuilder : stringBuilder.Append(separator).Append(Name);
+            return Parent.ToLocalPath(separator, stringBuilder).Append(separator).Append(Name);
         }
 
         /// <summary>
@@ -176,23 +152,43 @@ namespace FsInfoCat.Util
             {
                 case PlatformType.Linux:
                 case PlatformType.OSX:
-                    if (Host.Length == 0)
-                        return Uri.UnescapeDataString(AbsolutePath);
-                    return $"//{Host}/{Uri.UnescapeDataString(AbsolutePath)}";
+                    if (Parent is null)
+                    {
+                        if (Host.Length == 0)
+                            return $"/{Uri.UnescapeDataString(Name)}";
+                        return $"//{Host}/{Uri.UnescapeDataString(Name)}";
+                    }
+                    return ToLocalPath('/', (Host.Length == 0) ? new StringBuilder() : new StringBuilder("//").Append(Host)).ToString();
                 default:
-                    if (Host.Length == 0)
-                        return Uri.UnescapeDataString(AbsolutePath).Replace('/', '\\');
-                    return $"\\\\{Host}\\{Uri.UnescapeDataString(AbsolutePath)}";
+                    if (Parent is null)
+                    {
+                        if (Host.Length == 0)
+                            return $"\\{Uri.UnescapeDataString(Name)}";
+                        return $"\\\\{Host}\\{Uri.UnescapeDataString(Name)}";
+                    }
+                    return ToLocalPath('\\', (Host.Length == 0) ? new StringBuilder() : new StringBuilder("\\\\").Append(Host)).ToString();
             }
         }
 
         [Obsolete("This not logical due to posible case sensitivity differences with parent paths.")]
-        public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) || Host.Equals(other.Host) && AbsolutePath.Equals(other.AbsolutePath));
+        public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) || (Host.Equals(other.Host) && Name.Equals(other.Name) && ((Parent is null) ? other.Parent is null : Parent.Equals(other.Parent))));
 
         public override bool Equals(object obj) => obj is FileUri fileUri && Equals(fileUri);
 
         public override int GetHashCode() => ToString().GetHashCode();
 
-        public override string ToString() => (IsEmpty()) ? "" : $"file://{Host}/{AbsolutePath}/";
+        private StringBuilder ToString(StringBuilder stringBuilder)
+        {
+            if (Parent is null)
+                return (Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? stringBuilder.Append(Name) : stringBuilder.Append(UriHelper.URI_PATH_SEPARATOR_STRING).Append(Name);
+            return Parent.ToString(stringBuilder).Append(UriHelper.URI_PATH_SEPARATOR_STRING).Append(Name);
+        }
+
+        public override string ToString()
+        {
+            if (Parent is null)
+                return (IsEmpty()) ? "" : ((Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? $"file://{Host}{Name}" : $"file://{Host}/{Name}");
+            return Parent.ToString((Host.Length == 0) ? new StringBuilder("file://") : new StringBuilder("file://").Append(Host)).Append(Name).ToString();
+        }
     }
 }
