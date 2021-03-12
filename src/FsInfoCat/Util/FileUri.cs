@@ -147,7 +147,7 @@ namespace FsInfoCat.Util
         public string ToLocalPath(PlatformType platform = PlatformType.Unknown)
         {
             if (IsEmpty())
-                return ""; 
+                return "";
             switch ((platform == PlatformType.Unknown) ? UriHelper.PLATFORM_TYPE : platform)
             {
                 case PlatformType.Linux:
@@ -180,8 +180,8 @@ namespace FsInfoCat.Util
         private StringBuilder ToString(StringBuilder stringBuilder)
         {
             if (Parent is null)
-                return (Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? stringBuilder.Append(Name) : stringBuilder.Append(UriHelper.URI_PATH_SEPARATOR_STRING).Append(Name);
-            return Parent.ToString(stringBuilder).Append(UriHelper.URI_PATH_SEPARATOR_STRING).Append(Name);
+                return (Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? stringBuilder.Append(Name) : stringBuilder.Append(UriHelper.URI_PATH_SEPARATOR_CHAR).Append(Name);
+            return Parent.ToString(stringBuilder).Append(UriHelper.URI_PATH_SEPARATOR_CHAR).Append(Name);
         }
 
         public override string ToString()

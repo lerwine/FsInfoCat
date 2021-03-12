@@ -92,7 +92,7 @@ namespace FsInfoCat.Util
             public const string PATTERN_LOCAL_FS_NAME = @"^[^\u0000-\u0019""<>|:*?\\/]+$";
             public static readonly Regex LOCAL_FS_NAME_REGEX = new Regex(PATTERN_LOCAL_FS_NAME, RegexOptions.Compiled);
 
-            public const string  PATTERN_ABS_FS_PATH = @"(?i)^((//|\\\\)([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)|[a-z]:)([/\\]([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*)?$";
+            public const string PATTERN_ABS_FS_PATH = @"(?i)^((//|\\\\)([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)|[a-z]:)([/\\]([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*)?$";
             public static readonly Regex F = new Regex(@"(?i)^((//|\\\\)([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)|[a-z]:)([/\\]([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             /// <summary>

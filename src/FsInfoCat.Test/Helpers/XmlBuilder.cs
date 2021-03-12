@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -602,7 +601,7 @@ namespace FsInfoCat.Test.Helpers
         public static XmlElement WithInnerText([NotNull] this XmlElement parent, [NotNull] Action<IEnumerable<XmlCharacterData>> innerTextNodes)
         {
             if (parent.IsEmpty)
-                innerTextNodes(new XmlCharacterData[0]);
+                innerTextNodes(Array.Empty<XmlCharacterData>());
             IEnumerable<XmlCharacterData> textNodes = parent.ChildNodes.OfType<XmlCharacterData>().Where(n => !(n is XmlComment));
             if (textNodes.Skip(1).Any())
             {

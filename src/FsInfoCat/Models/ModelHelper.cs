@@ -135,7 +135,7 @@ namespace FsInfoCat.Models
             where T : class, IVolumeInfo
         {
             if (source is null)
-                return new T[0];
+                return Array.Empty<T>();
             return source.Where(v => !(v is null) && v.Identifier.Equals(volumeIdentifier));
         }
 
@@ -145,7 +145,7 @@ namespace FsInfoCat.Models
             where TSource : class
         {
             if (source is null)
-                return new TSource[0];
+                return Array.Empty<TSource>();
             return source.Where(v => !(v is null) && mapper(v).Identifier.Equals(volumeIdentifier));
         }
 
@@ -154,7 +154,7 @@ namespace FsInfoCat.Models
             where T : class, IVolumeInfo
         {
             if (source is null || fileUri is null)
-                return new T[0];
+                return Array.Empty<T>();
             return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.GetPathComparer()));
         }
 
@@ -164,7 +164,7 @@ namespace FsInfoCat.Models
             where TSource : class
         {
             if (source is null || fileUri is null)
-                return new TSource[0];
+                return Array.Empty<TSource>();
             return source.Where(s =>
             {
                 if (s is null)
@@ -179,7 +179,7 @@ namespace FsInfoCat.Models
             where T : class, IVolumeInfo
         {
             if (source is null)
-                return new T[0];
+                return Array.Empty<T>();
             if (string.IsNullOrEmpty(volumeName))
                 return source.Where(v => !(v is null) && string.IsNullOrEmpty(v.VolumeName));
             StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
@@ -192,7 +192,7 @@ namespace FsInfoCat.Models
             where TSource : class
         {
             if (source is null)
-                return new TSource[0];
+                return Array.Empty<TSource>();
             if (string.IsNullOrEmpty(volumeName))
                 return source.Where(v => !(v is null) && string.IsNullOrEmpty(mapper(v).VolumeName));
             StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;

@@ -743,7 +743,7 @@ namespace FsInfoCat.Models.DB
         public Volume(string displayName, HostDevice host, Account createdBy) : this()
         {
             if (createdBy is null)
-                throw new ArgumentNullException("createdBy");
+                throw new ArgumentNullException(nameof(createdBy));
             VolumeID = Guid.NewGuid();
             DisplayName = displayName;
             if (host is null)

@@ -1,5 +1,4 @@
 using FsInfoCat.Models;
-using FsInfoCat.Models.Crawl;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
@@ -18,8 +17,8 @@ namespace FsInfoCat.PS
         public static readonly StringComparer CASE_IGNORED_NAME_COMPARER = StringComparer.InvariantCultureIgnoreCase;
         public static readonly StringComparer CASE_SENSITIVE_NAME_COMPARER = StringComparer.InvariantCulture;
 
-        private object _syncRoot = new object();
-        private Collection<RegisteredVolumeItem> _backingCollection = new Collection<RegisteredVolumeItem>();
+        private readonly object _syncRoot = new object();
+        private readonly Collection<RegisteredVolumeItem> _backingCollection = new Collection<RegisteredVolumeItem>();
 
         public RegisteredVolumeItem this[VolumeIdentifier key] => TryGetValue(key, out RegisteredVolumeItem result) ? result : null;
 
@@ -154,8 +153,8 @@ namespace FsInfoCat.PS
                 return false;
             if (ReferenceEquals(x, y))
                 return true;
-            x = CreateKey(x, out RegisteredVolumeItem a);
-            y = CreateKey(y, out RegisteredVolumeItem b);
+            x = CreateKey(x, out _);
+            y = CreateKey(y, out _);
             if (ReferenceEquals(x, y))
                 return true;
             throw new NotImplementedException();
@@ -247,7 +246,7 @@ namespace FsInfoCat.PS
             event PropertyValueChangeEventHandler INotifyPropertyValueChanging.PropertyValueChanging
             {
                 add => ((RegisteredVolumeInfo)BaseObject).PropertyValueChanging += value;
-                remove => ((RegisteredVolumeInfo) BaseObject).PropertyValueChanging -= value;
+                remove => ((RegisteredVolumeInfo)BaseObject).PropertyValueChanging -= value;
             }
 
             event PropertyChangingEventHandler INotifyPropertyChanging.PropertyChanging

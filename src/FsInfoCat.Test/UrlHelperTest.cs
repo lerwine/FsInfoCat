@@ -1,13 +1,12 @@
-using System;
-using NUnit.Framework;
-using FsInfoCat.Util;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using FsInfoCat.Test.Helpers;
+using FsInfoCat.Util;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Text;
 
 namespace FsInfoCat.Test
 {
@@ -1089,9 +1088,9 @@ namespace FsInfoCat.Test
                 }
                 string snId = serialNumber.Value.ToString("x8");
                 string ordId = ordinal.Value.ToString("x2");
-                    return new SerialNumberUrlAndDescription(serialNumber.Value, ordinal.Value,
-                        new Uri($"urn:volume:id:{snId}-{ordId}", UriKind.Absolute),
-                        $"serialNumber = {snId} ({serialNumber.Description}), ordinal = {ordId} ({ordinal.Description})");
+                return new SerialNumberUrlAndDescription(serialNumber.Value, ordinal.Value,
+                    new Uri($"urn:volume:id:{snId}-{ordId}", UriKind.Absolute),
+                    $"serialNumber = {snId} ({serialNumber.Description}), ordinal = {ordId} ({ordinal.Description})");
             }
         }
 
