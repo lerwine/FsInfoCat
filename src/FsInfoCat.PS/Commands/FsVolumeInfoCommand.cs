@@ -199,6 +199,7 @@ namespace FsInfoCat.PS.Commands
 
             bool IVolumeInfo.CaseSensitive { get => CaseSensitive; set => throw new NotSupportedException(); }
 
+            [Obsolete("Use GetPathComparer()")]
             public IEqualityComparer<string> PathComparer
             {
                 get
@@ -210,8 +211,16 @@ namespace FsInfoCat.PS.Commands
                 }
             }
 
+            public IEqualityComparer<string> GetPathComparer()
+            {
+                StringComparer comparer = _pathComparer;
+                if (comparer is null)
+                    _pathComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                return comparer;
+            }
+
             public bool Equals(IVolumeInfo other) => null != other && (ReferenceEquals(this, other) || (Identifier.Equals(other.Identifier) &&
-                RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? PathComparer : other.PathComparer)));
+                RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? GetPathComparer() : other.GetPathComparer())));
 
             public override bool Equals(object obj)
             {

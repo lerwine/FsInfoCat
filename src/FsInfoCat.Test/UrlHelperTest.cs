@@ -16,14 +16,24 @@ namespace FsInfoCat.Test
     {
         private static XmlDocument _urlHelperTestData;
 
-        private static IEnumerable<XmlElement> GetUrlHelperTestData()
+        private static IEnumerable<XmlElement> GetUriTestData()
         {
             if (_urlHelperTestData is null)
             {
                 _urlHelperTestData = new XmlDocument();
                 _urlHelperTestData.LoadXml(Properties.Resources.UrlHelperTest);
             }
-            return _urlHelperTestData.DocumentElement.SelectNodes("//TestData").Cast<XmlElement>();
+            return _urlHelperTestData.DocumentElement.SelectNodes("//URI").Cast<XmlElement>();
+        }
+
+        private static IEnumerable<XmlElement> GetHostNameTestData()
+        {
+            if (_urlHelperTestData is null)
+            {
+                _urlHelperTestData = new XmlDocument();
+                _urlHelperTestData.LoadXml(Properties.Resources.UrlHelperTest);
+            }
+            return _urlHelperTestData.DocumentElement.SelectNodes("//HostName").Cast<XmlElement>();
         }
 
         [SetUp]
@@ -31,7 +41,9 @@ namespace FsInfoCat.Test
         {
         }
 
-        private static string ToTestReturnValueXml(Match match, params string[] groupNames) => ToTestReturnValueXml(match, "Match", false, groupNames);
+        private static string ToTestReturnValueXml(Match match, params string[] groupNames) => ToTestReturnValueXml(match, "Match", groupNames);
+
+        private static string ToTestReturnValueXml(Match match, string rootElementName, params string[] groupNames) => ToTestReturnValueXml(match, rootElementName, false, groupNames);
 
         private static string ToTestReturnValueXml(Match match, string rootElementName, bool base64Encoded, params string[] groupNames)
         {
@@ -75,7 +87,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetWindowsFsPathRegexTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FsPathRegex");
                 Console.WriteLine($"Emitting {expected}");
@@ -96,7 +108,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetWindowsFsPathPatternTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FsPathPattern");
                 Console.WriteLine($"Emitting {expected}");
@@ -117,7 +129,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetLinuxFsPathRegexTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FsPathRegex");
                 Console.WriteLine($"Emitting {expected}");
@@ -138,7 +150,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetLinuxFsPathPatternTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FsPathPattern");
                 Console.WriteLine($"Emitting {expected}");
@@ -159,7 +171,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetWindowsFormatGuessRegexTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FormatGuess");
                 Console.WriteLine($"Emitting {expected}");
@@ -180,7 +192,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetLinuxFormatGuessRegexTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FormatGuess");
                 Console.WriteLine($"Emitting {expected}");
@@ -201,7 +213,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetWindowsFileUriStrictTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FileUriStrict");
                 Console.WriteLine($"Emitting {expected}");
@@ -222,7 +234,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetLinuxFileUriStrictTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FileUriStrict");
                 Console.WriteLine($"Emitting {expected}");
@@ -243,48 +255,13 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetIpv2AddressRegexTestCases()
         {
-            return (new[] {
-                new { Value = (string)null, Description = "Null Value" },
-                new { Value = "", Description = "Empty string" },
-                new { Value = "255", Description = "Single digit" }
-            }).Select(a => new TestCaseData(a.Value)
-                .SetDescription(a.Description)
-                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml))
-            .Concat((new[] {
-                "x.0.0.0",
-                "0.0. 0.0",
-                "0.0.0.0.0",
-                ".0.0.0",
-                "0.0.0.",
-                "000.000.000.0000",
-                "0000.000.000.000",
-                "192.168.1.1",
-                "192.168.1.1.1",
-                "355.255.255.255",
-                "255.255.255.355",
-                "256.255.255.255",
-                "255.256.255.255",
-                "255.255.256.255",
-                "255.255.255.256",
-                "0255.255.255.255",
-                "255.0255.255.255",
-                "255.255.0255.255",
-                "255.255.255.0255"
-            }).Select(a => new TestCaseData(a)
-                .SetDescription($"Invalid Address {a}")
-                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml)))
-            .Concat((new[] {
-                "2.0.0.0",
-                "02.00.00.00",
-                "002.000.000.000",
-                "3.168.1.1",
-                "10.12.1.0",
-                "10.012.01.00",
-                "10.012.001.000",
-                "255.255.255.255"
-            }).Select(a => new TestCaseData(a)
-                .SetDescription($"IP Address {a}")
-                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", true).WithInnerText(a).OuterXml)));
+            return GetHostNameTestData().Select(element =>
+            {
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Ipv2AddressRegex");
+                return new TestCaseData(element.GetAttribute("Value"))
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected.OuterXml);
+            });
         }
 
         [Test, Property("Priority", 1)]
@@ -292,74 +269,18 @@ namespace FsInfoCat.Test
         public string Ipv2AddressRegexTest(string input)
         {
             Match match = UriHelper.IPV2_ADDRESS_REGEX.Match(input);
-            return ToTestReturnValueXml(match);
+            return ToTestReturnValueXml(match, "Ipv2AddressRegex");
         }
 
         public static IEnumerable<TestCaseData> GetIpv6AddressRegexTestCases()
         {
-            return (new[] {
-                new { Value = (string)null, Description = "Null Value" },
-                new { Value = "", Description = "Empty string" },
-                new { Value = "fe80", Description = "Hex Number" }
-            }).Select(a => new TestCaseData(a.Value)
-                .SetDescription(a.Description)
-                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml))
-            .Concat((new[] {
-                "fe80:0:3a:1dee::91b0:4872:1f9:44",
-                "fe80:0:4dca:3a:1dee:91b0:4872:1f9:44",
-                "fe80:0:3a:1dee:91b0:4872:1f9:44",
-                ":fe80:0:3a:1dee:91b0:4872:1f9:44:",
-                ":fe80:0:3a:1dee:91b0:4872:1f9:44",
-                "::fe80:0:3a:1dee:91b0:4872:1f9:44",
-                "fe80:0:3a:1dee:91b0:4872:1f9:44:",
-                "fe80::3a:1dee:91b0:4872:1f9:44",
-                "fe80::1dee::91b0:4872:1f9",
-                "::fe80::1dee:91b0:4872:1f9",
-                "fe80::1dee:91b0:4872:1f9::",
-                "::fe80::1f9",
-                "fe80::1f9::",
-                "fe80:::1f9",
-                "0:::9",
-                ":fe80::",
-                ":::fe80",
-                "1:::",
-                ":::1"
-            }).Select(a => new TestCaseData(a)
-                .SetDescription($"Invalid Address {a}")
-                .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml)))
-            .Concat((new[] {
-                "fe80:0:3a:1dee:91b0:4872:1f9:44",
-                "::3a:1dee:91b0:4872:1f9:44",
-                "fe80:0:3a:1dee:91b0:4872::",
-                "fe80::1dee:91b0:4872:1f9",
-                "0::1dee:91b0:4872:1f9",
-                "fe80::91b0:4872:1f9",
-                "fe80::4872:1f9",
-                "fe80::1f9",
-                "0:1dee::",
-                "::0:9",
-                "fe80::",
-                "::fe80",
-                "1::",
-                "::1"
-            }).SelectMany(a => new TestCaseData[]
+            return GetHostNameTestData().Select(element =>
             {
-                new TestCaseData(a)
-                    .SetDescription($"IPV6 Address {a}")
-                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", true).WithInnerText(a).OuterXml),
-                new TestCaseData($"[{a}]")
-                    .SetDescription($"IPV6 Address [{a}]")
-                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", true).WithInnerText(a).OuterXml),
-                new TestCaseData($"{a.Replace(":", "-")}.ipv6-literal.net")
-                    .SetDescription($"UNC format Address {a.Replace(":", "-")}.ipv6-literal.net")
-                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", true).WithInnerText(a.Replace(":", "-")).OuterXml),
-                new TestCaseData($"{a}]")
-                    .SetDescription($"Invalid Address {a}]")
-                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml),
-                new TestCaseData($"{a.Replace(":", "-")}")
-                    .SetDescription($"Invalid Address {a.Replace(":", "-")}")
-                    .Returns(XmlBuilder.NewDocument("Match").WithAttribute("Success", false).OuterXml)
-            }));
+                XmlElement expected = (XmlElement)element.SelectSingleNode("Ipv6AddressRegex");
+                return new TestCaseData(element.GetAttribute("Value"))
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected.OuterXml);
+            });
         }
 
         [Test, Property("Priority", 1)]
@@ -367,12 +288,50 @@ namespace FsInfoCat.Test
         public string Ipv6AddressRegexTest(string input)
         {
             Match match = UriHelper.IPV6_ADDRESS_REGEX.Match(input);
-            return ToTestReturnValueXml(match, "ipv6", "unc");
+            return ToTestReturnValueXml(match, "Ipv6AddressRegex", "ipv6", "unc");
+        }
+
+        public static IEnumerable<TestCaseData> GetDnsNameRegexTestCases()
+        {
+            return GetHostNameTestData().Select(element =>
+            {
+                XmlElement expected = (XmlElement)element.SelectSingleNode("DnsNameRegex");
+                return new TestCaseData(element.GetAttribute("Value"))
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected.OuterXml);
+            });
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetDnsNameRegexTestCases))]
+        public string DnsNameRegexTest(string input)
+        {
+            Match match = UriHelper.DNS_NAME_REGEX.Match(input);
+            return ToTestReturnValueXml(match, "DnsNameRegex");
+        }
+
+        public static IEnumerable<TestCaseData> GetHostNameRegexTestCases()
+        {
+            return GetHostNameTestData().Select(element =>
+            {
+                XmlElement expected = (XmlElement)element.SelectSingleNode("HostNameRegex");
+                return new TestCaseData(element.GetAttribute("Value"))
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected.OuterXml);
+            });
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetHostNameRegexTestCases))]
+        public string HostNameRegexTest(string input)
+        {
+            Match match = UriHelper.DNS_NAME_REGEX.Match(input);
+            return ToTestReturnValueXml(match, "HostNameRegex");
         }
 
         public static IEnumerable<TestCaseData> GetTryParseFileUriStringTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("TryParseFileUriString");
                 bool base64Encoded = element.GetAttribute("Base64") == "true";
@@ -405,7 +364,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetIsWellFormedFileUriStringTestCases()
         {
-            return GetUrlHelperTestData().Select(element =>
+            return GetUriTestData().Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("IsWellFormedFileUriString");
                 bool base64Encoded = element.GetAttribute("Base64") == "true";
@@ -426,7 +385,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetParseUriOrPathTestCases()
         {
-            return GetUrlHelperTestData().Where(e => !(e.SelectSingleNode("ParseUriOrPath") is null)).Select(element =>
+            return GetUriTestData().Where(e => !(e.SelectSingleNode("ParseUriOrPath") is null)).Select(element =>
             {
                 XmlElement expected = (XmlElement)element.SelectSingleNode("ParseUriOrPath");
                 bool preferFsPath = XmlConvert.ToBoolean(expected.GetAttribute("PreferFsPath"));
@@ -459,7 +418,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetAuthorityCaseInsensitiveEqualsTestCases()
         {
-            return GetUrlHelperTestData().SelectMany(element => element.SelectNodes("AuthorityCaseInsensitiveEquals").Cast<XmlElement>().Select(c =>
+            return GetUriTestData().SelectMany(element => element.SelectNodes("AuthorityCaseInsensitiveEquals").Cast<XmlElement>().Select(c =>
             {
                 string expected = c.OuterXml;
                 Uri x, y;
@@ -1123,7 +1082,7 @@ namespace FsInfoCat.Test
                     throw new ArgumentNullException(nameof(serialNumber));
                 if (ordinal is null)
                 {
-                    string id = $"{(serialNumber.Value << 8).ToString("x4")}-{(serialNumber.Value & 0xffff).ToString("x4")}";
+                    string id = $"{serialNumber.Value << 8:x4}-{serialNumber.Value & 0xffff:x4}";
                     return new SerialNumberUrlAndDescription(serialNumber.Value, null,
                         new Uri($"urn:volume:id:{id}", UriKind.Absolute),
                         $"serialNumber = {id} ({serialNumber.Description})");
@@ -1203,7 +1162,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<SerialNumberValueAndDescription<Uri>> GetVolumeSerialNumberUriValues() => GetSerialNumberValues().Select(sn =>
         {
-            string id = $"{(sn.Value << 8).ToString("x4")}-{(sn.Value & 0xffff).ToString("x4")}";
+            string id = $"{sn.Value << 8:x4}-{sn.Value & 0xffff:x4}";
             return new SerialNumberValueAndDescription<Uri>(sn.Value, null, new Uri($"urn:volume:id:{id}", UriKind.Absolute), sn.Description);
         });
 

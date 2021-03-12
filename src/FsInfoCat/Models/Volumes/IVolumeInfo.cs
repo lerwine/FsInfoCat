@@ -1,4 +1,5 @@
 using FsInfoCat.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -43,6 +44,6 @@ namespace FsInfoCat.Models.Volumes
         /// </summary>
         bool CaseSensitive { get; set; }
 
-        IEqualityComparer<string> PathComparer { get; }
+        IEqualityComparer<string> GetPathComparer();
     }
 }

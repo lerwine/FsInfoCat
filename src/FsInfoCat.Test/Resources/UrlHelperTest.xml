@@ -236,7 +236,7 @@
             <FsPathRegex Success="true">
                 <Group Name="a" Success="false" />
                 <Group Name="h" Success="false" />
-                <Group Name="p" Success="true">Test&quot;.txt</Group>
+                <Group Name="p" Success="true">Test".txt</Group>
             </FsPathRegex>
             <FsPathPattern Success="false" />
             <FormatGuess Success="false" />
@@ -3217,10 +3217,10 @@
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
             <FormatGuess Success="true">
-                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazure&quot;share/</Group>
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazure"share/</Group>
                 <Group Name="u" Success="false" />
                 <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
-                <Group Name="p" Success="true">/testazure&quot;share/</Group>
+                <Group Name="p" Success="true">/testazure"share/</Group>
                 <Group Name="x" Success="false" />
             </FormatGuess>
             <FileUriStrict Success="false" />
@@ -3229,10 +3229,10 @@
             <FsPathRegex Success="false" />
             <FsPathPattern Success="false" />
             <FormatGuess Success="true">
-                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazure&quot;share/</Group>
+                <Group Name="f" Success="true">file://servicenowdiag479.file.core.windows.net/testazure"share/</Group>
                 <Group Name="u" Success="false" />
                 <Group Name="h" Success="true">servicenowdiag479.file.core.windows.net</Group>
-                <Group Name="p" Success="true">/testazure&quot;share/</Group>
+                <Group Name="p" Success="true">/testazure"share/</Group>
                 <Group Name="x" Success="false" />
             </FormatGuess>
             <FileUriStrict Success="false" />
@@ -3692,155 +3692,497 @@
         <Ipv2AddressRegex Success="false" />
         <Ipv6AddressRegex Success="false" />
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="false" />
     </HostName>
     <HostName Value="fe80" Description="Hex string">
         <Ipv2AddressRegex Success="false" />
         <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <DnsNameRegex Success="true">fe80</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="true">fe80</Group>
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80:0:3a:1dee:91b0:4872:1f9:44" Description="Full IPV6">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80:0:3a:1dee:91b0:4872:1f9:44</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80:0:3a:1dee:91b0:4872:1f9:44</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="::3a:1dee:91b0:4872:1f9:44" Description="IPV6 with first two combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">::3a:1dee:91b0:4872:1f9:44</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">::3a:1dee:91b0:4872:1f9:44</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80:0:3a:1dee:91b0:4872::" Description="IPV6 with last two combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80:0:3a:1dee:91b0:4872::</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80:0:3a:1dee:91b0:4872::</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80::1dee:91b0:4872:1f9" Description="IPV6 with middle two combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80::1dee:91b0:4872:1f9</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80::1dee:91b0:4872:1f9</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="0::1dee:91b0:4872:1f9" Description="IPV6 with middle 3 combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">0::1dee:91b0:4872:1f9</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">0::1dee:91b0:4872:1f9</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80::91b0:4872:1f9" Description="IPV6 with middle 4 combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80::91b0:4872:1f9</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80::91b0:4872:1f9</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80::4872:1f9" Description="IPV6 with middle 5 combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80::4872:1f9</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80::4872:1f9</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80::1f9" Description="IPV6 with middle 6 combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80::1f9</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80::1f9</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="0:1dee::" Description="IPV6 with last 6 combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">0:1dee::</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">0:1dee::</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="::0:9" Description="IPV6 with first 6 combined">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">::0:9</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">::0:9</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80::" Description="Invalid IPV6 single 4-digit hex">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80::</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80::</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="::fe80" Description="IPV6 single 4-digit hex">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">::fe80</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">::fe80</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="1::" Description="Invalid IPV6 single 1-digit hex">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">1::</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">1::</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="::1" Description="IPV6 single 1-digit hex">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">::1</Group>
+            <Group Name="unc" Success="false" />
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">::1</Group>
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80-0-3a-1dee-91b0-4872-1f9-44.ipv6-literal.net" Description="Full IPV6, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80-0-3a-1dee-91b0-4872-1f9-44</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">fe80-0-3a-1dee-91b0-4872-1f9-44.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80-0-3a-1dee-91b0-4872-1f9-44.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="--3a-1dee-91b0-4872-1f9-44.ipv6-literal.net" Description="IPV6 with first two combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">--3a-1dee-91b0-4872-1f9-44</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">--3a-1dee-91b0-4872-1f9-44.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80-0-3a-1dee-91b0-4872--.ipv6-literal.net" Description="IPV6 with last two combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80-0-3a-1dee-91b0-4872--</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">fe80-0-3a-1dee-91b0-4872--.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80-0-3a-1dee-91b0-4872--.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80--1dee-91b0-4872-1f9.ipv6-literal.net" Description="IPV6 with middle two combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80--1dee-91b0-4872-1f9</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">fe80--1dee-91b0-4872-1f9.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80--1dee-91b0-4872-1f9.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="0--1dee-91b0-4872-1f9.ipv6-literal.net" Description="IPV6 with middle 3 combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">0--1dee-91b0-4872-1f9</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">0--1dee-91b0-4872-1f9.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">0--1dee-91b0-4872-1f9.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80--91b0-4872-1f9.ipv6-literal.net" Description="IPV6 with middle 4 combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80--91b0-4872-1f9</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">fe80--91b0-4872-1f9.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80--91b0-4872-1f9.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80--4872-1f9.ipv6-literal.net" Description="IPV6 with middle 5 combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80--4872-1f9</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">fe80--4872-1f9.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80--4872-1f9.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80--1f9.ipv6-literal.net" Description="IPV6 with middle 6 combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80--1f9</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">fe80--1f9.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80--1f9.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="0-1dee--.ipv6-literal.net" Description="IPV6 with last 6 combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">0-1dee--</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">0-1dee--.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">0-1dee--.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="--0-9.ipv6-literal.net" Description="IPV6 with first 6 combined, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">--0-9</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">--0-9.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="fe80--.ipv6-literal.net" Description="Invalid IPV6 single 4-digit hex, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">fe80--</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">fe80--.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">fe80--.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="--fe80.ipv6-literal.net" Description="IPV6 single 4-digit hex, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">--fe80</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">--fe80.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="1--.ipv6-literal.net" Description="Invalid IPV6 single 1-digit hex, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">1--</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
+        <DnsNameRegex Success="true">1--.ipv6-literal.net</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">1--.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
     <HostName Value="--1.ipv6-literal.net" Description="IPV6 single 1-digit hex, UNC format">
         <Ipv2AddressRegex Success="false" />
-        <Ipv6AddressRegex Success="false" />
+        <Ipv6AddressRegex Success="true">
+            <Group Name="ipv6" Success="true">--1</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+        </Ipv6AddressRegex>
         <DnsNameRegex Success="false" />
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="false" />
+            <Group Name="ipv6" Success="true">--1.ipv6-literal.net</Group>
+            <Group Name="unc" Success="true">.ipv6-literal.net</Group>
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
-    <HostName Value="" Description="">
-        <Ipv2AddressRegex Success="false" />
+    <HostName Value="0.0.0.0" Description="IPV2 Address 0.0.0.0">
+        <Ipv2AddressRegex Success="true">0.0.0.0</Ipv2AddressRegex>
         <Ipv6AddressRegex Success="false" />
-        <DnsNameRegex Success="false" />
+        <DnsNameRegex Success="true">0.0.0.0</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="true">0.0.0.0</Group>
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
+    </HostName>
+    <HostName Value="00.00.00.00" Description="IPV2 Address 00.00.00.00">
+        <Ipv2AddressRegex Success="true">00.00.00.00</Ipv2AddressRegex>
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="true">00.00.00.00</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="true">00.00.00.00</Group>
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
+    </HostName>
+    <HostName Value="000.000.000.000" Description="IPV2 Address 000.000.000.000">
+        <Ipv2AddressRegex Success="true">000.000.000.000</Ipv2AddressRegex>
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="true">000.000.000.000</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="true">000.000.000.000</Group>
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
+    </HostName>
+    <HostName Value="192.168.1.2" Description="IPV2 Address 192.168.1.2">
+        <Ipv2AddressRegex Success="true">192.168.1.2</Ipv2AddressRegex>
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="true">192.168.1.2</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="true">192.168.1.2</Group>
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
+    </HostName>
+    <HostName Value="10.255.51.3" Description="IPV2 Address 10.255.51.3">
+        <Ipv2AddressRegex Success="true">10.255.51.3</Ipv2AddressRegex>
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="true">10.255.51.3</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="true">10.255.51.3</Group>
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
+    </HostName>
+    <HostName Value="010.255.051.03" Description="IPV2 Address 010.255.051.03">
+        <Ipv2AddressRegex Success="true">010.255.051.03</Ipv2AddressRegex>
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="true">010.255.051.03</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="true">010.255.051.03</Group>
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
+    </HostName>
+    <HostName Value="010.255.051.003" Description="IPV2 Address 010.255.051.003">
+        <Ipv2AddressRegex Success="true">010.255.051.003</Ipv2AddressRegex>
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="true">010.255.051.003</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="true">010.255.051.003</Group>
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
+    </HostName>
+    <HostName Value="255.255.255.255" Description="IPV2 Address 255.255.255.255">
+        <Ipv2AddressRegex Success="true">255.255.255.255</Ipv2AddressRegex>
+        <Ipv6AddressRegex Success="false" />
+        <DnsNameRegex Success="true">255.255.255.255</DnsNameRegex>
+        <HostNameRegex Success="true">
+            <Group Name="ipv2" Success="true">255.255.255.255</Group>
+            <Group Name="ipv6" Success="false" />
+            <Group Name="unc" Success="false" />
+            <Group Name="dns" Success="false" />
+        </HostNameRegex>
     </HostName>
 </UrlHelperTest>

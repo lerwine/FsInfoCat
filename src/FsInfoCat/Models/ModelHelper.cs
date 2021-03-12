@@ -155,7 +155,7 @@ namespace FsInfoCat.Models
         {
             if (source is null || fileUri is null)
                 return new T[0];
-            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.PathComparer));
+            return source.Where(v => !(v is null) && fileUri.Equals(v.RootUri, v.GetPathComparer()));
         }
 
         [Obsolete("Use IVolumeSetProvider, instead")]
@@ -170,7 +170,7 @@ namespace FsInfoCat.Models
                 if (s is null)
                     return false;
                 TItem v = mapper(s);
-                return fileUri.Equals(v.RootUri, v.PathComparer);
+                return fileUri.Equals(v.RootUri, v.GetPathComparer());
             });
         }
 

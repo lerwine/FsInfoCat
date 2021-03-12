@@ -105,12 +105,12 @@ namespace FsInfoCat.PS
             if (fileUri.Parent is null)
             {
                 string host = fileUri.Host;
-                string path = fileUri.GetAbsolutePath();
+                string path = fileUri.ToString();
                 foreach (RegisteredVolumeItem item in _backingCollection)
                 {
                     RegisteredVolumeInfo i = (RegisteredVolumeInfo)item.BaseObject;
                     FileUri f = i.RootUri;
-                    if (CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && i.PathComparer.Equals(path, f.GetAbsolutePath()))
+                    if (CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && i.PathComparer.Equals(path, f.ToString()))
                     {
                         result = item;
                         return f;
@@ -123,12 +123,12 @@ namespace FsInfoCat.PS
             if (result is null)
             {
                 string host = fileUri.Host;
-                string path = fileUri.GetAbsolutePath();
+                string path = fileUri.ToString();
                 result = _backingCollection.FirstOrDefault(v =>
                 {
                     RegisteredVolumeInfo rvi = (RegisteredVolumeInfo)v.BaseObject;
                     FileUri f = rvi.RootUri;
-                    return CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && rvi.PathComparer.Equals(path, f.GetAbsolutePath());
+                    return CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && rvi.PathComparer.Equals(path, f.ToString());
                 });
             }
             else
@@ -243,7 +243,7 @@ namespace FsInfoCat.PS
             string IVolumeInfo.DriveFormat { get => ((RegisteredVolumeInfo)BaseObject).DriveFormat; set => throw new NotSupportedException(); }
             VolumeIdentifier IVolumeInfo.Identifier { get => ((RegisteredVolumeInfo)BaseObject).Identifier; set => throw new NotSupportedException(); }
             bool IVolumeInfo.CaseSensitive { get => ((RegisteredVolumeInfo)BaseObject).CaseSensitive; set => throw new NotSupportedException(); }
-            IEqualityComparer<string> IVolumeInfo.PathComparer => ((RegisteredVolumeInfo)BaseObject).PathComparer;
+            IEqualityComparer<string> IVolumeInfo.GetPathComparer() => ((RegisteredVolumeInfo)BaseObject).PathComparer;
             event PropertyValueChangeEventHandler INotifyPropertyValueChanging.PropertyValueChanging
             {
                 add => ((RegisteredVolumeInfo)BaseObject).PropertyValueChanging += value;
@@ -301,6 +301,7 @@ namespace FsInfoCat.PS
             public string DriveFormat { get; }
             public VolumeIdentifier Identifier { get; }
             public bool CaseSensitive { get; }
+            public IEqualityComparer<string> GetPathComparer() => PathComparer;
             public IEqualityComparer<string> PathComparer { get; }
             FileUri IVolumeInfo.RootUri { get => RootUri; set => throw new NotSupportedException(); }
             string IVolumeInfo.VolumeName { get => VolumeName; set => throw new NotSupportedException(); }

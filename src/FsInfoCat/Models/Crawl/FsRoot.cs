@@ -250,7 +250,7 @@ namespace FsInfoCat.Models.Crawl
             }
         }
 
-#warning This should be a method.
+        [Obsolete("Use GetPathComparer()")]
         public IEqualityComparer<string> PathComparer
         {
             get
@@ -260,6 +260,14 @@ namespace FsInfoCat.Models.Crawl
                     _segmentNameComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
                 return comparer;
             }
+        }
+
+        public IEqualityComparer<string> GetPathComparer()
+        {
+            StringComparer comparer = _segmentNameComparer;
+            if (comparer is null)
+                _segmentNameComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+            return comparer;
         }
 
         public FsRoot(IVolumeInfo driveInfo) : this()
@@ -315,7 +323,7 @@ namespace FsInfoCat.Models.Crawl
             return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType
                 && string.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase)
                 && string.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase)
-                && RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? PathComparer : other.PathComparer)));
+                && RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? GetPathComparer() : other.GetPathComparer())));
         }
 
         public override bool Equals(object obj)

@@ -1808,7 +1808,7 @@ namespace FsInfoCat.Util
         public static string[] GetPathSegments(this Uri uri)
         {
             if (uri is null)
-                return new string[0];
+                return Array.Empty<string>();
             if (uri.IsAbsoluteUri)
                 return uri.Segments;
             string u = uri.OriginalString;
