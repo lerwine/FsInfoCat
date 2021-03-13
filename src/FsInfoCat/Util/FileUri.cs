@@ -36,7 +36,7 @@ namespace FsInfoCat.Util
                 Host = Name = "";
                 Parent = null;
             }
-            else if (UriHelper.TryParseFileUriString(fileUriString, out string hostName, out string absolutePath, out int leafIndex))
+            else if (FileUriFactory.TryParseFileUriString(fileUriString, out string hostName, out string absolutePath, out int leafIndex))
             {
                 Host = hostName.ToLower();
                 if (leafIndex > 0 && absolutePath.Length > 1)
@@ -60,7 +60,7 @@ namespace FsInfoCat.Util
                 throw new ArgumentNullException(nameof(parent));
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
-            if (name.Length == 0 || (name = UriHelper.EnsureWellFormedUriPath(name)).Contains(UriHelper.URI_PATH_SEPARATOR_CHAR))
+            if (name.Length == 0 || (name = UriHelper.CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(name)).Contains(FileUriFactory.URI_PATH_SEPARATOR_CHAR))
                 throw new ArgumentOutOfRangeException(nameof(name));
             Name = name;
             Parent = parent;
@@ -81,8 +81,8 @@ namespace FsInfoCat.Util
                 string absolutePath = uri.AbsolutePath;
                 if (absolutePath.Length > 1)
                 {
-                    int leafIndex = absolutePath.LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR);
-                    if (((leafIndex == absolutePath.Length - 1) ? (leafIndex = (absolutePath = absolutePath.Substring(0, leafIndex)).LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR)) : leafIndex) > -1)
+                    int leafIndex = absolutePath.LastIndexOf(FileUriFactory.URI_PATH_SEPARATOR_CHAR);
+                    if (((leafIndex == absolutePath.Length - 1) ? (leafIndex = (absolutePath = absolutePath.Substring(0, leafIndex)).LastIndexOf(FileUriFactory.URI_PATH_SEPARATOR_CHAR)) : leafIndex) > -1)
                     {
                         Name = absolutePath.Substring(leafIndex - 1);
                         Parent = new FileUri(Host, absolutePath.Substring(0, (leafIndex == 0) ? 1 : leafIndex));
@@ -98,7 +98,7 @@ namespace FsInfoCat.Util
         {
             Host = host;
             int leafIndex;
-            if (absolutePath.Length < 2 || (leafIndex = absolutePath.LastIndexOf(UriHelper.URI_PATH_SEPARATOR_CHAR)) < 0)
+            if (absolutePath.Length < 2 || (leafIndex = absolutePath.LastIndexOf(FileUriFactory.URI_PATH_SEPARATOR_CHAR)) < 0)
             {
                 Name = absolutePath;
                 Parent = null;
@@ -120,7 +120,7 @@ namespace FsInfoCat.Util
                 {
                     yield return fileUri.Name;
                 } while (!((fileUri = fileUri.Parent) is null));
-            yield return (Name == UriHelper.URI_PATH_SEPARATOR_STRING) ? "" : Name;
+            yield return (Name == FileUriFactory.URI_PATH_SEPARATOR_STRING) ? "" : Name;
         }
 
         public bool IsEmpty() => Name.Length == 0 && Host.Length == 0 && Parent is null;
@@ -136,7 +136,7 @@ namespace FsInfoCat.Util
         private StringBuilder ToLocalPath(char separator, StringBuilder stringBuilder)
         {
             if (Parent is null)
-                return (Name.Equals(UriHelper.URI_PATH_SEPARATOR_STRING)) ? stringBuilder : stringBuilder.Append(separator).Append(Name);
+                return (Name.Equals(FileUriFactory.URI_PATH_SEPARATOR_STRING)) ? stringBuilder : stringBuilder.Append(separator).Append(Name);
             return Parent.ToLocalPath(separator, stringBuilder).Append(separator).Append(Name);
         }
 
@@ -148,7 +148,7 @@ namespace FsInfoCat.Util
         {
             if (IsEmpty())
                 return "";
-            switch ((platform == PlatformType.Unknown) ? UriHelper.PLATFORM_TYPE : platform)
+            switch ((platform == PlatformType.Unknown) ? UriHelper.CURRENT_FILE_URI_FACTORY.FsPlatform : platform)
             {
                 case PlatformType.Linux:
                 case PlatformType.OSX:
@@ -180,14 +180,14 @@ namespace FsInfoCat.Util
         private StringBuilder ToString(StringBuilder stringBuilder)
         {
             if (Parent is null)
-                return (Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? stringBuilder.Append(Name) : stringBuilder.Append(UriHelper.URI_PATH_SEPARATOR_CHAR).Append(Name);
-            return Parent.ToString(stringBuilder).Append(UriHelper.URI_PATH_SEPARATOR_CHAR).Append(Name);
+                return (Name.StartsWith(FileUriFactory.URI_PATH_SEPARATOR_STRING)) ? stringBuilder.Append(Name) : stringBuilder.Append(FileUriFactory.URI_PATH_SEPARATOR_CHAR).Append(Name);
+            return Parent.ToString(stringBuilder).Append(FileUriFactory.URI_PATH_SEPARATOR_CHAR).Append(Name);
         }
 
         public override string ToString()
         {
             if (Parent is null)
-                return (IsEmpty()) ? "" : ((Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? $"file://{Host}{Name}" : $"file://{Host}/{Name}");
+                return (IsEmpty()) ? "" : ((Name.StartsWith(FileUriFactory.URI_PATH_SEPARATOR_STRING)) ? $"file://{Host}{Name}" : $"file://{Host}/{Name}");
             return Parent.ToString((Host.Length == 0) ? new StringBuilder("file://") : new StringBuilder("file://").Append(Host)).Append(Name).ToString();
         }
     }

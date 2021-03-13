@@ -35,544 +35,32 @@ namespace FsInfoCat.Util
             UriComponents.PathAndQuery | UriComponents.KeepDelimiter;
 
         public const char URI_QUERY_DELIMITER_CHAR = '?';
+        public const string URI_QUERY_DELIMITER_STRING = "?";
+        public const string URI_QUERY_DELIMITER_ESCAPED = "%3F";
         public const char URI_FRAGMENT_DELIMITER_CHAR = '#';
-        public const char URI_PATH_SEPARATOR_CHAR = '/';
-        public const string URI_PATH_SEPARATOR_STRING = "/";
+        public const string URI_FRAGMENT_DELIMITER_STRING = "#";
+        public const string URI_FRAGMENT_DELIMITER_ESCAPED = "%23";
         public const char URI_SCHEME_SEPARATOR_CHAR = ':';
-
-        /// <summary>
-        /// Matches a path segment including optional trailing slash.
-        /// </summary>
-        public static readonly Regex URI_PATH_SEGMENT_REGEX = new Regex(@"(?:^|\G)(?:/|([^/]+)(?:/|$))", RegexOptions.Compiled);
-
-        public const string PATTERN_DNS_NAME = @"(?i)^\s*(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?\s*$";
-        public static readonly Regex DNS_NAME_REGEX = new Regex(@"^(?=\S{1,255}\s*$)(?=[\d.]*[a-z_-])[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-
-        public const string PATTERN_HOST_NAME = @"(?i)^\s*((?=\d+(\.\d+){3})((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}|(?=\[[:\da-f]+\]|[:\da-f]+|[\da-f-]+\.ipv6-literal\.net)\[?([:-]([:-][a-f\d]{1,4}){1,7}|([a-f\d]{1,4}[:-]){7}[a-f\d]{1,4}|(?=[a-f\d]+([:-][a-f\d]*){1,7})([a-f\d]{1,4}[:-])+(([:-][a-f\d]{1,4})+|[:-]))(\]|\.ipv6-literal\.net)?|(?=\S{1,255}\s*$)[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
-
-        /// <summary>
-        /// Matches a host name.
-        /// </summary>
-        /// <remarks>
-        /// <list type="bullet">
-        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_IPV2">ipv2</seealso></term> Matches IPV2 address.</item>
-        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_IPV6">ipv6</seealso></term> Matches an IPV6 address without any surrounding brackets or the UNC domain text.</item>
-        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_UNC">unc</seealso></term> Matches the <c>.ipv6-literal.net</c> domain name for IPV6 UNC notation.
-        /// If this group matches, then hexidecimal groups for the IPV6 address are separated by dashes rather than colons.</item>
-        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_DNS">dns</seealso></term> Matches a DNS host name.</item>
-        /// </list></remarks>
-        public static readonly Regex HOST_NAME_REGEX = new Regex(@"^((?=\d+(\.\d+){3})(?<ipv2>((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})|(?=\[[:\da-f]+\]|[:\da-f]+|[\da-f-]+\.ipv6-literal\.net)\[?(?<ipv6>[:-]([:-][a-f\d]{1,4}){1,7}|([a-f\d]{1,4}[:-]){7}[a-f\d]{1,4}|(?=[a-f\d]+([:-][a-f\d]*){1,7})([a-f\d]{1,4}[:-])+(([:-][a-f\d]{1,4})+|[:-]))(\]|(?<unc>\.ipv6-literal\.net))?|(?=\S{1,255}\s*$)(?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?))$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public const string HOST_NAME_MATCH_GROUP_NAME_IPV2 = "ipv2";
-
-        public const string HOST_NAME_MATCH_GROUP_NAME_IPV6 = "ipv6";
-
-        public const string HOST_NAME_MATCH_GROUP_NAME_UNC = "unc";
-
-        public const string HOST_NAME_MATCH_GROUP_NAME_DNS = "dns";
-
-        public const string PATTERN_IPV6_ADDRESS = @"^\s*(?i)(?=\[[:\da-f]+\]|[:\da-f]+|[\da-f-]+\.ipv6-literal\.net)\[?([:-]([:-][a-f\d]{1,4}){1,7}|([a-f\d]{1,4}[:-]){7}[a-f\d]{1,4}|(?=[a-f\d]+([:-][a-f\d]*){1,7})([a-f\d]{1,4}[:-])+(([:-][a-f\d]{1,4})+|[:-]))(\]|\.ipv6-literal\.net)?\s*$";
-
-        /// <summary>
-        /// Matches an IPV6 address
-        /// </summary>
-        /// <remarks>
-        /// <list type="bullet">
-        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_IPV6">ipv6</seealso></term> Matches the actual address without any surrounding brackets or the UNC domain text.</item>
-        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_UNC">unc</seealso></term> Matches the <c>.ipv6-literal.net</c> domain name for UNC notation. If this group matches, then hexidecimal groups are separated by dashes rather than colons.</item>
-        /// </list></remarks>
-        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(@"^(?=\[[:\da-f]+\]|[:\da-f]+|[\da-f-]+\.ipv6-literal\.net)\[?(?<ipv6>[:-]([:-][a-f\d]{1,4}){1,7}|([a-f\d]{1,4}[:-]){7}[a-f\d]{1,4}|(?=[a-f\d]+([:-][a-f\d]*){1,7})([a-f\d]{1,4}[:-])+(([:-][a-f\d]{1,4})+|[:-]))(\]|(?<unc>\.ipv6-literal\.net))?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public const string PATTERN_IPV2_ADDRESS = @"^\s*(?=\d+(\.\d+){3})((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}\s*$";
-        public static readonly Regex IPV2_ADDRESS_REGEX = new Regex(@"^(?=\d+(\.\d+){3})((2(5[0-5]?|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}$", RegexOptions.Compiled);
-
-        public static class Windows
-        {
-            public const string PATTERN_LOCAL_FS_NAME = @"^[^\u0000-\u0019""<>|:*?\\/]+$";
-            public static readonly Regex LOCAL_FS_NAME_REGEX = new Regex(PATTERN_LOCAL_FS_NAME, RegexOptions.Compiled);
-
-            public const string PATTERN_ABS_FS_PATH = @"(?i)^((//|\\\\)([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)|[a-z]:)([/\\]([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*)?$";
-            public static readonly Regex F = new Regex(@"(?i)^((//|\\\\)([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)|[a-z]:)([/\\]([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-            /// <summary>
-            /// Matches a well-formed local path on the typical Windows filesystem.
-            /// </summary>
-            /// <remarks>Named group match meanings:
-            /// <list type="bullet">
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute local path. If this group is not matched, then the text is either a URN or a relative local path.</item>
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This implies that the text is a URN.</item>
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path minus the host name. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-            /// </list></remarks>
-            public static readonly Regex FS_PATH_REGEX = new Regex(@"^((//|\\\\)(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)(?=[/\\]|$))?(?<p>(?<a>[a-z]:(?=[/\\]|$))?[/\\]?([^\u0000-\u0019""<>|:;*?\\/]+([\\/](?![\\/]))?)*)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-            public const string PATTERN_FS_URI_NAME = @"(?i)^([^\u0000-\u0019""<>|:;*?\\/%]+|%([^012357%]|2[^2af]|3[\dd]|[57][^c]|(?=%|$)))+$";
-            public static readonly Regex FS_URI_NAME_REGEX = new Regex(PATTERN_FS_URI_NAME, RegexOptions.Compiled);
-
-            public const string PATTERN_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(?=\S)(file://([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?|/[a-f]:)|[\\/]{2}([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)|[a-f]:)([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff/"" <>\\/|]+|%([^012357%]|2[^2af]|3[^acef]|[57][^c]|(?=%|$)))+)*[\\/]?\s*$";
-            public static readonly Regex ABS_FILE_URI_OR_LOCAL_LAX_REGEX = new Regex(PATTERN_ABS_FILE_URI_OR_LOCAL_LAX, RegexOptions.Compiled);
-
-            /// <summary>
-            /// <seealso cref="Regex"/> that can be used to guess the format of a string from the perspective of a typical Windows file system.
-            /// </summary>
-            /// <remarks>Named group match meanings:
-            /// <list type="bullet">
-            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_FILE_URL">f</see></term> Text appears to be a file URL.</item>
-            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_URN">u</see></term> Text appears to be URN notation.</item>
-            /// <item><term><see cref="PATH_MATCH_GROUP_NAME_HOST">h</see></term> Host name.</item>
-            /// <item><term><see cref="PATH_MATCH_GROUP_NAME_PATH">p</see></term> Absolute path.</item>
-            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_NON_FILE">x</see></term> Text appears to be a non-file URI.</item>
-            /// <item>Any group match may succeeed independently of other groups.</item>
-            /// <item>At least one group will match if the entire expression matches.</item>
-            /// <item>Groups <c>f</c>, <c>u</c> and <c>x</c> are exclusive of each other.</item>
-            /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be an absolute local path.</item>
-            /// <item>If the expression does not match at all, then the text is assumed to be a non-rooted relative path.</item>
-            /// </list></remarks>
-            public static readonly Regex FORMAT_GUESS_REGEX = new Regex(@"^((?<f>file:[\\/]{2}((?<h>[^\\/]+)(?<p>[\\/].*)?|(?<p>[\\/][a-z]:([\\/].*)?)))|(?<u>[\\/]{2}(?<h>[^\\/]+)(?<p>([\\/](?![\\/]).*)?))|(?<p>[a-z]:([\\/].*)?)|(?<x>(?!file:)[a-z][\w-]+:([\\/][\\/]?)?(?<h>([^?#/@:]*(:[^?#/@:]*)?@)?[^?#/@:]+(:\d+)?)?(?<p>([\\/:].*)?)))$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-            /// <summary>
-            /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical Windows filesystem.
-            /// </summary>
-            /// <remarks>Named group match meanings:
-            /// <list type="bullet">
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-            /// </list></remarks>
-            public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)(?=[^/]+|/[a-z]:)(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)?(?<p>(/[a-z]:)?(/([!$&-)+-.=@[\]\w]+|%([46][\da-f]|2[^2]|3[\dd]|[57][\dabde]))+)*/?))|(?<p>(?i)(/(?!/))?(([!$&-)+-.=@[\]\w]+|%([46][\da-f]|2[^2]|3[\dbd]|[57][\dabde]))+(/|(?=$)))*))$", RegexOptions.Compiled);
-        }
-
-        public static class Linux
-        {
-            public const string PATTERN_LOCAL_FS_NAME = @"^[^\u0000/]+$";
-            public static readonly Regex LOCAL_FS_NAME_REGEX = new Regex(PATTERN_LOCAL_FS_NAME, RegexOptions.Compiled);
-
-            public const string PATTERN_ABS_FS_PATH = @"(?i)^(\s+(?=//))?(//([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)(?=/|$)|(?=/))(/(?!/))?([^\u0000/]+(/(?!/))?)*$";
-
-            /// <summary>
-            /// Matches a well-formed local path on the typical Linux filesystem.
-            /// </summary>
-            /// <remarks>Named group match meanings:
-            /// <list type="bullet">
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute local path. If this group is not matched, then the text is a relative local path.</item>
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This implies that the text is a URN.</item>
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path minus the host name. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-            /// </list></remarks>
-            public static readonly Regex FS_PATH_REGEX = new Regex(@"^(//(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)(?=/|$))?(?<p>(?<a>/(?!/))?([^\u0000/]+(/(?!/))?)*)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            //public static readonly Regex FS_PATH_REGEz = new Regex(@"(?i)^(\s+(?=//))?(//([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)(?=/|$)|(?=/))(/(?!/))?([^\u0000/]+(/(?!/))?)*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-            public const string PATTERN_FS_URI_NAME = @"(?i)^([^\u0000/%]+|%([^02%]|0[^0]|2[^f]|(?=%|$)))+$";
-            public static readonly Regex FS_URI_NAME_REGEX = new Regex(PATTERN_FS_URI_NAME, RegexOptions.Compiled);
-
-            public const string PATTERN_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(?=\S)(file://([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)?|//([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?))?((/([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff/]+|%([^02%]|0[^0]|2[^f]|(?=%|$)))+)*/?)\s*$";
-            public static readonly Regex ABS_FILE_URI_OR_LOCAL_LAX_REGEX = new Regex(PATTERN_ABS_FILE_URI_OR_LOCAL_LAX, RegexOptions.Compiled);
-
-            /// <summary>
-            /// <seealso cref="Regex"/> that can be used to guess the format of a string from the perspective of a typical Linux file system.
-            /// </summary>
-            /// <remarks>Named group match meanings:
-            /// <list type="bullet">
-            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_FILE_URL">f</see></term> Text appears to be a file URL.</item>
-            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_URN">u</see></term> Text appears to be URN notation.</item>
-            /// <item><term><see cref="PATH_MATCH_GROUP_NAME_HOST">h</see></term> Host name.</item>
-            /// <item><term><see cref="PATH_MATCH_GROUP_NAME_PATH">p</see></term> Absolute path.</item>
-            /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_NON_FILE">x</see></term> Text appears to be a non-file URI.</item>
-            /// <item>Any group match may succeeed independently of other groups.</item>
-            /// <item>At least one group will match if the entire expression matches.</item>
-            /// <item>Groups <c>f</c>, <c>u</c> and <c>x</c> are exclusive of each other.</item>
-            /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be an absolute local path.</item>
-            /// <item>If the expression does not match at all, then the text is assumed to be a non-rooted relative path.</item>
-            /// </list></remarks>
-            public static readonly Regex FORMAT_GUESS_REGEX = new Regex(@"^((?<f>file://(?<h>[^/]+)?(?<p>/.*)?)|(?<u>//(?<h>[^/]+)(?<p>(/.*)?))|(?<p>/(?!/).*)|(?<x>(?!file:)[a-z][\w-]*:(//?)?(?<h>([^?#/@:]*(:[^?#/@:]*)?@)?[^?#/@:]+(:\d+)?)?(?<p>([/:].*)?)))$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-            /// <summary>
-            /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical Linux filesystem.
-            /// </summary>
-            /// <remarks>Named group match meanings:
-            /// <list type="bullet">
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>1:2:3:4:5:6:7:8
-            /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-            /// </list></remarks>
-            public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(([a-f\d]+|:)(?!:[\da-f])|(:[a-f\d]+)+(?!:[\da-f])))\]?)?(?i)(?<p>((/([!$&-.:;=@[\]()\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?|/(?=$))))|(?i)(?<p>(/(?!/))?(([!$&-.:;=@[\]()\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+(/|(?=$)))*))$", RegexOptions.Compiled);
-        }
-
-        public static readonly string LOCAL_FILE_SYSTEM_DISPLAY_NAME;
-        public static readonly string ALT_FILE_SYSTEM_DISPLAY_NAME;
-
-        /// <summary>
-        /// Matches a well-formed local path on the typical filesystem for the current host.
-        /// </summary>
-        /// <remarks>Named group match meanings:
-        /// <list type="bullet">
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute local path. If this group is not matched, then the text is either a URN or a relative local path.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This implies that the text is a URN.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path minus the host name. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-        /// </list></remarks>
-        public static readonly Regex LOCAL_FS_PATH_REGEX;
-
-        /// <summary>
-        /// Matches a well-formed filesystem-local path for a filesystem alternative to the current host.
-        /// </summary>
-        /// <remarks>Named group match meanings:
-        /// <list type="bullet">
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute filesystem-local path. If this group is not matched, then the text is either a URN or a relative path.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This implies that the text is a URN.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path minus the host name. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-        /// </list></remarks>
-        public static readonly Regex ALT_FS_PATH_REGEX;
-
-        public const string PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(?=\S)(file://([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?|/[a-f]:)?|[\\/]{2}([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)|[a-f]:)?(([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff\\/]+|%([^025%]|0[^0]|2[^f]|5[\dabde](?=%|$)))+)*/?)\s*$";
-        public static readonly Regex ANY_ABS_FILE_URI_OR_LOCAL_LAX_REGEX = new Regex(PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX, RegexOptions.Compiled);
-
-        /// <summary>
-        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="FORMAT_GUESS_ALT_REGEX"/>, <see cref="Windows.FORMAT_GUESS_REGEX"/>
-        /// and <see cref="Linux.FORMAT_GUESS_REGEX"/> for absolute file URL match.
-        /// </summary>
-        public const string FORMAT_GUESS_MATCH_GROUP_FILE_URL = "f";
-
-        /// <summary>
-        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="FORMAT_GUESS_ALT_REGEX"/>, <see cref="Windows.FORMAT_GUESS_REGEX"/>
-        /// and <see cref="Linux.FORMAT_GUESS_REGEX"/> for URN path match.
-        /// </summary>
-        public const string FORMAT_GUESS_MATCH_GROUP_URN = "u";
-
-        /// <summary>
-        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="FORMAT_GUESS_ALT_REGEX"/>, <see cref="Windows.FORMAT_GUESS_REGEX"/>
-        /// and <see cref="Linux.FORMAT_GUESS_REGEX"/> for non-file URI match.
-        /// </summary>
-        public const string FORMAT_GUESS_MATCH_GROUP_NON_FILE = "x";
-
-        /// <summary>
-        /// <seealso cref="Regex"/> that can be used to guess the format of a string from the perspective of the current host file system.
-        /// </summary>
-        /// <remarks>Named group match meanings:
-        /// <list type="bullet">
-        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_FILE_URL">f</see></term> Text appears to be a file URL.</item>
-        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_URN">u</see></term> Text appears to be URN notation.</item>
-        /// <item><term><see cref="PATH_MATCH_GROUP_NAME_HOST">h</see></term> Host name.</item>
-        /// <item><term><see cref="PATH_MATCH_GROUP_NAME_PATH">p</see></term> Absolute path.</item>
-        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_NON_FILE">x</see></term> Text appears to be a non-file URI.</item>
-        /// <item>Any group match may succeeed independently of other groups.</item>
-        /// <item>At least one group will match if the entire expression matches.</item>
-        /// <item>Groups <c>f</c>, <c>u</c> and <c>x</c> are exclusive of each other.</item>
-        /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be an absolute path.</item>
-        /// <item>If the expression does not match at all, then the text is assumed to be a non-rooted relative path.</item>
-        /// </list></remarks>
-        public static readonly Regex FORMAT_GUESS_LOCAL_REGEX;
-
-        /// <summary>
-        /// <seealso cref="Regex"/> that can be used to guess the format of a string from the perspective alternate to the current host file system.
-        /// </summary>
-        /// <remarks>Named group match meanings:
-        /// <list type="bullet">
-        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_FILE_URL">f</see></term> Text appears to be a file URL.</item>
-        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_URN">u</see></term> Text appears to be URN notation.</item>
-        /// <item><term><see cref="PATH_MATCH_GROUP_NAME_HOST">h</see></term> Host name.</item>
-        /// <item><term><see cref="PATH_MATCH_GROUP_NAME_PATH">p</see></term> Absolute path.</item>
-        /// <item><term><see cref="FORMAT_GUESS_MATCH_GROUP_NON_FILE">x</see></term> Text appears to be a non-file URI.</item>
-        /// <item>Any group match may succeeed independently of other groups.</item>
-        /// <item>At least one group will match if the entire expression matches.</item>
-        /// <item>Groups <c>f</c>, <c>u</c> and <c>x</c> are exclusive of each other.</item>
-        /// <item>If the expression matches, but groups <c>f</c> and <c>u</c> do not, then text appears to be an absolute path.</item>
-        /// <item>If the expression does not match at all, then the text is assumed to be a non-rooted relative path.</item>
-        /// </list></remarks>
-        public static readonly Regex FORMAT_GUESS_ALT_REGEX;
-
-        /// <summary>
-        /// Match group name for <see cref="ANY_FILE_URI_STRICT_REGEX"/>, <see cref="LOCAL_FILE_URI_STRICT_REGEX"/>, <see cref="ALT_FILE_URI_STRICT_REGEX"/>,
-        /// <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="FORMAT_GUESS_ALT_REGEX"/>, <see cref="LOCAL_FS_PATH_REGEX"/>, <see cref="ALT_FS_PATH_REGEX"/>,
-        /// <see cref="Windows.FILE_URI_STRICT_REGEX"/>, <see cref="Windows.FORMAT_GUESS_REGEX"/>, <see cref="Linux.FORMAT_GUESS_REGEX"/>,
-        /// <see cref="Linux.FILE_URI_STRICT_REGEX"/>, <see cref="Windows.FS_PATH_REGEX"/> and <see cref="Linux.FS_PATH_REGEX"/> for absolute path match.
-        /// </summary>
-        public const string PATH_MATCH_GROUP_NAME_ABSOLUTE = "a";
-
-        /// <summary>
-        /// Match group name for <see cref="LOCAL_FS_PATH_REGEX"/>, <see cref="ALT_FS_PATH_REGEX"/>, <see cref="ANY_FILE_URI_STRICT_REGEX"/>,
-        /// <see cref="LOCAL_FILE_URI_STRICT_REGEX"/>, <see cref="ALT_FILE_URI_STRICT_REGEX"/>, <see cref="Windows.FS_PATH_REGEX"/>, <see cref="Linux.FS_PATH_REGEX"/>,
-        /// <see cref="Windows.FILE_URI_STRICT_REGEX"/> and <see cref="Linux.FILE_URI_STRICT_REGEX"/> for path match.
-        /// </summary>
-        public const string PATH_MATCH_GROUP_NAME_PATH = "p";
-
-        /// <summary>
-        /// Match group name for <see cref="FORMAT_GUESS_LOCAL_REGEX"/>, <see cref="FORMAT_GUESS_ALT_REGEX"/>, <see cref="LOCAL_FS_PATH_REGEX"/>, <see cref="ALT_FS_PATH_REGEX"/>,
-        /// <see cref="ANY_FILE_URI_STRICT_REGEX"/>, <see cref="LOCAL_FILE_URI_STRICT_REGEX"/>, <see cref="ALT_FILE_URI_STRICT_REGEX"/>, <see cref="Windows.FORMAT_GUESS_REGEX"/>
-        /// and <see cref="Linux.FORMAT_GUESS_REGEX"/>, <see cref="Windows.FS_PATH_REGEX"/>, <see cref="Linux.FS_PATH_REGEX"/>, <see cref="Windows.FILE_URI_STRICT_REGEX"/>
-        /// and <see cref="Linux.FILE_URI_STRICT_REGEX"/> for host name match.
-        /// </summary>
-        public const string PATH_MATCH_GROUP_NAME_HOST = "h";
-
-        /// <summary>
-        /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on the typical filesystem for the current host.
-        /// </summary>
-        /// <remarks>Named group match meanings:
-        /// <list type="bullet">
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-        /// </list></remarks>
-        public static readonly Regex LOCAL_FILE_URI_STRICT_REGEX;
-
-        /// <summary>
-        /// Matches a well-formed URI that can be converted to a valid absolute or relative filesystem-local path on the filesystem alternative to the current host.
-        /// </summary>
-        /// <remarks>Named group match meanings:
-        /// <list type="bullet">
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-        /// </list></remarks>
-        public static readonly Regex ALT_FILE_URI_STRICT_REGEX;
-
-        /// <summary>
-        /// Matches a well-formed URI that can be converted to a valid absolute or relative filesystem-local path.
-        /// </summary>
-        /// <remarks>Named group match meanings:
-        /// <list type="bullet">
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-        /// </list></remarks>
-        public static readonly Regex ANY_FILE_URI_STRICT_REGEX = new Regex(@"^((?<a>file://(?i)^(?<h>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)?(?<p>(/([!$&-.:;=@[\]()\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+)*/?))|(?<p>(?i)(/(?!/))?(([!$&-.:;=@[\]()\w]+|%([13-9a-f][\da-f]|0[1-9a-f]|2[\da-e]))+(/|(?=$)))*))$", RegexOptions.Compiled);
-
-        public static PlatformType PLATFORM_TYPE { get; }
+        public const string URI_SCHEME_SEPARATOR_STRING = ":";
 
         private static readonly char[] _QUERY_OR_FRAGMENT_DELIMITER = new char[] { URI_QUERY_DELIMITER_CHAR, URI_FRAGMENT_DELIMITER_CHAR };
-        private static readonly char[] _INVALID_FILENAME_CHARS;
-        private static readonly Func<string, string> _FROM_LOCAL_PATH_PRE_ENCODE;
+
+        public static readonly FileUriFactory CURRENT_FILE_URI_FACTORY;
+        public static readonly FileUriFactory ALT_FILE_URI_FACTORY;
 
         static UriHelper()
         {
             char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
-            _INVALID_FILENAME_CHARS = invalidFileNameChars.Contains(Path.PathSeparator) ? invalidFileNameChars : invalidFileNameChars.Concat(new char[] { Path.PathSeparator }).ToArray();
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                PLATFORM_TYPE = PlatformType.Windows;
-                LOCAL_FILE_URI_STRICT_REGEX = Windows.FILE_URI_STRICT_REGEX;
-                ALT_FILE_URI_STRICT_REGEX = Linux.FILE_URI_STRICT_REGEX;
-                FORMAT_GUESS_LOCAL_REGEX = Windows.FORMAT_GUESS_REGEX;
-                FORMAT_GUESS_ALT_REGEX = Linux.FORMAT_GUESS_REGEX;
-                //_FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("\\", "%5C");
-                _FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("\\", "/");
-                LOCAL_FILE_SYSTEM_DISPLAY_NAME = "Windows";
-                ALT_FILE_SYSTEM_DISPLAY_NAME = "Linux";
+                CURRENT_FILE_URI_FACTORY = WindowsFileUriFactory.INSTANCE;
+                ALT_FILE_URI_FACTORY = LinuxFileUriFactory.INSTANCE;
             }
             else
             {
-                PLATFORM_TYPE = PlatformType.Linux;
-                LOCAL_FILE_URI_STRICT_REGEX = Linux.FILE_URI_STRICT_REGEX;
-                ALT_FILE_URI_STRICT_REGEX = Windows.FILE_URI_STRICT_REGEX;
-                FORMAT_GUESS_LOCAL_REGEX = Linux.FORMAT_GUESS_REGEX;
-                FORMAT_GUESS_ALT_REGEX = Windows.FORMAT_GUESS_REGEX;
-                _FROM_LOCAL_PATH_PRE_ENCODE = s => s.Replace("#", "%23").Replace("?", "%3F");
-                LOCAL_FILE_SYSTEM_DISPLAY_NAME = "Windows";
-                ALT_FILE_SYSTEM_DISPLAY_NAME = "Linux";
+                CURRENT_FILE_URI_FACTORY = LinuxFileUriFactory.INSTANCE;
+                ALT_FILE_URI_FACTORY = WindowsFileUriFactory.INSTANCE;
             }
-        }
-
-        public static FileStringFormat ParseUriOrPath(string source, bool preferFsPath, out string hostName, out string path)
-        {
-            if (string.IsNullOrEmpty(source))
-            {
-                hostName = "";
-                path = "";
-                return (preferFsPath) ? FileStringFormat.RelativeLocalPath : FileStringFormat.RelativeLocalUri;
-            }
-
-            Match guessMatch = FORMAT_GUESS_LOCAL_REGEX.Match(source);
-            Match uriMatch, fsMatch;
-            if (guessMatch.Success)
-            {
-                if (guessMatch.Groups[FORMAT_GUESS_MATCH_GROUP_NON_FILE].Success)
-                {
-                    hostName = GetHostGroupMatchValue(guessMatch);
-                    path = GetPathGroupMatchValue(guessMatch);
-                    if (!(guessMatch = FORMAT_GUESS_ALT_REGEX.Match(source)).Success || guessMatch.Groups[FORMAT_GUESS_MATCH_GROUP_NON_FILE].Success)
-                        return (Uri.IsWellFormedUriString(source, UriKind.Absolute)) ? FileStringFormat.WellFormedNonFileUrl : FileStringFormat.NonFileUrl;
-                }
-                else
-                {
-                    if ((uriMatch = LOCAL_FILE_URI_STRICT_REGEX.Match(source)).Success && IsAbsoluteGroupMatch(uriMatch))
-                    {
-                        hostName = GetHostGroupMatchValue(uriMatch);
-                        path = GetPathGroupMatchValue(uriMatch);
-                        return FileStringFormat.WellformedAbsoluteLocalUrl;
-                    }
-                    Match altUriMatch = ALT_FILE_URI_STRICT_REGEX.Match(source);
-                    if (altUriMatch.Success && IsAbsoluteGroupMatch(altUriMatch))
-                    {
-                        hostName = GetHostGroupMatchValue(altUriMatch);
-                        path = GetPathGroupMatchValue(altUriMatch);
-                        return FileStringFormat.WellformedAbsoluteAltUrl;
-                    }
-                    if (guessMatch.Groups[FORMAT_GUESS_MATCH_GROUP_FILE_URL].Success)
-                    {
-                        path = GetPathGroupMatchValue(guessMatch);
-                        hostName = GetHostGroupMatchValue(guessMatch);
-                        return (uriMatch.Success || !altUriMatch.Success) ? FileStringFormat.AbsoluteLocalUrl : FileStringFormat.AbsoluteAltUrl;
-                    }
-                    if ((fsMatch = ALT_FS_PATH_REGEX.Match(source)).Success && IsAbsoluteGroupMatch(fsMatch))
-                    {
-                        path = GetPathGroupMatchValue(fsMatch);
-                        return ((hostName = GetHostGroupMatchValue(fsMatch)).Length > 0) ? FileStringFormat.WellFormedLocalUrn : FileStringFormat.WellFormedAbsoluteLocalPath;
-                    }
-                    Match altFsMatch = ALT_FS_PATH_REGEX.Match(source);
-                    if (altFsMatch.Success && IsAbsoluteGroupMatch(altFsMatch))
-                    {
-                        path = GetPathGroupMatchValue(fsMatch);
-                        return ((hostName = GetHostGroupMatchValue(fsMatch)).Length > 0) ? FileStringFormat.WellFormedAltUrn : FileStringFormat.WellFormedAbsoluteAltPath;
-                    }
-                    hostName = GetHostGroupMatchValue(guessMatch);
-                    if (guessMatch.Groups[FORMAT_GUESS_MATCH_GROUP_URN].Success)
-                    {
-                        path = GetPathGroupMatchValue(guessMatch);
-                        return (fsMatch.Success || !altFsMatch.Success) ? FileStringFormat.LocalUrn : FileStringFormat.AltUrn;
-                    }
-                    if (preferFsPath)
-                    {
-                        if (fsMatch.Success)
-                        {
-                            path = GetPathGroupMatchValue(fsMatch);
-                            return FileStringFormat.WellFormedRelativeLocalPath;
-                        }
-                        if (altFsMatch.Success)
-                        {
-                            path = GetPathGroupMatchValue(altFsMatch);
-                            return FileStringFormat.WellFormedRelativeAltPath;
-                        }
-                        if (uriMatch.Success)
-                        {
-                            path = GetPathGroupMatchValue(uriMatch);
-                            return FileStringFormat.WellformedRelativeLocalUri;
-                        }
-                        if (altUriMatch.Success)
-                        {
-                            path = GetPathGroupMatchValue(altUriMatch);
-                            return FileStringFormat.WellformedRelativeAltUri;
-                        }
-                        path = GetPathGroupMatchValue(guessMatch);
-                        return FileStringFormat.RelativeAltPath;
-                    }
-                    if (uriMatch.Success)
-                    {
-                        path = GetPathGroupMatchValue(uriMatch);
-                        return FileStringFormat.WellformedRelativeLocalUri;
-                    }
-                    if (altUriMatch.Success)
-                    {
-                        path = GetPathGroupMatchValue(altUriMatch);
-                        return FileStringFormat.WellformedRelativeAltUri;
-                    }
-                    if (fsMatch.Success)
-                    {
-                        path = GetPathGroupMatchValue(fsMatch);
-                        return FileStringFormat.WellFormedRelativeLocalPath;
-                    }
-                    if (altFsMatch.Success)
-                    {
-                        path = GetPathGroupMatchValue(altFsMatch);
-                        return FileStringFormat.WellFormedRelativeAltPath;
-                    }
-                    path = GetPathGroupMatchValue(guessMatch);
-                    return FileStringFormat.RelativeAltUri;
-                }
-            }
-            else
-            {
-                if ((guessMatch = FORMAT_GUESS_ALT_REGEX.Match(source)).Success)
-                {
-                    if (guessMatch.Groups[FORMAT_GUESS_MATCH_GROUP_NON_FILE].Success)
-                    {
-                        hostName = GetHostGroupMatchValue(guessMatch);
-                        path = GetPathGroupMatchValue(guessMatch);
-                        return (Uri.IsWellFormedUriString(source, UriKind.Absolute)) ? FileStringFormat.WellFormedNonFileUrl : FileStringFormat.NonFileUrl;
-                    }
-                }
-                else
-                {
-                    hostName = "";
-                    path = source;
-                    return FileStringFormat.Invalid;
-                }
-            }
-
-            if ((uriMatch = ALT_FILE_URI_STRICT_REGEX.Match(source)).Success && IsAbsoluteGroupMatch(uriMatch))
-            {
-                hostName = GetHostGroupMatchValue(uriMatch);
-                path = GetPathGroupMatchValue(uriMatch);
-                return FileStringFormat.WellformedAbsoluteAltUrl;
-            }
-
-            if (guessMatch.Groups[FORMAT_GUESS_MATCH_GROUP_FILE_URL].Success)
-            {
-                hostName = GetHostGroupMatchValue(guessMatch);
-                path = GetPathGroupMatchValue(guessMatch);
-                return FileStringFormat.AbsoluteAltUrl;
-            }
-
-            if ((fsMatch = ALT_FS_PATH_REGEX.Match(source)).Success && IsAbsoluteGroupMatch(fsMatch))
-            {
-                path = GetPathGroupMatchValue(fsMatch);
-                return ((hostName = GetHostGroupMatchValue(fsMatch)).Length > 0) ? FileStringFormat.WellFormedAltUrn : FileStringFormat.WellFormedAbsoluteAltPath;
-            }
-            hostName = GetHostGroupMatchValue(guessMatch);
-            if (guessMatch.Groups[FORMAT_GUESS_MATCH_GROUP_URN].Success)
-            {
-                path = GetPathGroupMatchValue(guessMatch);
-                return FileStringFormat.AltUrn;
-            }
-
-            if (preferFsPath)
-            {
-                if (fsMatch.Success)
-                {
-                    path = GetPathGroupMatchValue(fsMatch);
-                    return FileStringFormat.WellFormedRelativeAltPath;
-                }
-                if (uriMatch.Success)
-                {
-                    path = GetPathGroupMatchValue(uriMatch);
-                    return FileStringFormat.WellformedRelativeAltUri;
-                }
-                path = GetPathGroupMatchValue(guessMatch);
-                return FileStringFormat.RelativeAltPath;
-            }
-            if (uriMatch.Success)
-            {
-                path = GetPathGroupMatchValue(uriMatch);
-                return FileStringFormat.WellformedRelativeAltUri;
-            }
-            if (fsMatch.Success)
-            {
-                path = GetPathGroupMatchValue(fsMatch);
-                return FileStringFormat.WellFormedRelativeAltPath;
-            }
-            path = GetPathGroupMatchValue(guessMatch);
-            return FileStringFormat.RelativeAltUri;
-        }
-
-        public static bool IsAbsoluteGroupMatch(Match match) => match.Success && match.Groups[PATH_MATCH_GROUP_NAME_ABSOLUTE].Success;
-
-        public static string GetPathGroupMatchValue(Match match)
-        {
-            if (match.Success)
-            {
-                Group g = match.Groups[PATH_MATCH_GROUP_NAME_PATH];
-                if (g.Success)
-                    return g.Value;
-            }
-            return "";
-        }
-
-        public static string GetHostGroupMatchValue(Match match)
-        {
-            if (match.Success)
-            {
-                Group g = match.Groups[PATH_MATCH_GROUP_NAME_HOST];
-                if (g.Success)
-                    return g.Value;
-            }
-            return "";
         }
 
         private static int _UriGetPartIndexes(string text, out int schemeLength, out int hostNameLength)
@@ -584,7 +72,7 @@ namespace FsInfoCat.Util
                     return -1;
                 switch (enumerator.Current)
                 {
-                    case URI_PATH_SEPARATOR_CHAR:
+                    case FileUriFactory.URI_PATH_SEPARATOR_CHAR:
                     case URI_FRAGMENT_DELIMITER_CHAR:
                     case URI_QUERY_DELIMITER_CHAR:
                     case URI_SCHEME_SEPARATOR_CHAR:
@@ -596,13 +84,13 @@ namespace FsInfoCat.Util
                     switch (enumerator.Current)
                     {
                         case URI_SCHEME_SEPARATOR_CHAR:
-                            if (enumerator.MoveNext() && enumerator.Current == URI_PATH_SEPARATOR_CHAR && enumerator.MoveNext() && enumerator.Current == URI_PATH_SEPARATOR_CHAR)
+                            if (enumerator.MoveNext() && enumerator.Current == FileUriFactory.URI_PATH_SEPARATOR_CHAR && enumerator.MoveNext() && enumerator.Current == FileUriFactory.URI_PATH_SEPARATOR_CHAR)
                             {
                                 while (enumerator.MoveNext())
                                 {
                                     switch (enumerator.Current)
                                     {
-                                        case URI_PATH_SEPARATOR_CHAR:
+                                        case FileUriFactory.URI_PATH_SEPARATOR_CHAR:
                                             return hostNameLength + schemeLength + 3;
                                         case URI_FRAGMENT_DELIMITER_CHAR:
                                         case URI_QUERY_DELIMITER_CHAR:
@@ -614,7 +102,7 @@ namespace FsInfoCat.Util
                             }
                             schemeLength = hostNameLength = 0;
                             return -1;
-                        case URI_PATH_SEPARATOR_CHAR:
+                        case FileUriFactory.URI_PATH_SEPARATOR_CHAR:
                         case URI_FRAGMENT_DELIMITER_CHAR:
                         case URI_QUERY_DELIMITER_CHAR:
                             schemeLength = hostNameLength = 0;
@@ -626,137 +114,18 @@ namespace FsInfoCat.Util
             return -1;
         }
 
-        public static bool TryParseFileUriString(string uriString, out string hostName, out string absolutePath, out int leafIndex)
-        {
-            if (string.IsNullOrEmpty(uriString))
-            {
-                hostName = absolutePath = null;
-                leafIndex = 0;
-                return false;
-            }
-
-
-            uriString = _FROM_LOCAL_PATH_PRE_ENCODE((uriString[0] == URI_PATH_SEPARATOR_CHAR && (uriString.Length == 1 || uriString[1] != URI_PATH_SEPARATOR_CHAR)) ?
-                $"file://{uriString}" : uriString);
-
-            if (Uri.TryCreate(uriString, UriKind.Absolute, out Uri uri) && uri.Scheme.Equals(Uri.UriSchemeFile) && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment))
-            {
-                hostName = uri.Host;
-                absolutePath = uri.AbsolutePath;
-                int i = absolutePath.LastIndexOf(URI_PATH_SEPARATOR_CHAR);
-                if (i > 0 && i == absolutePath.Length - 1)
-                {
-                    absolutePath = absolutePath.Substring(0, i);
-                    i = absolutePath.LastIndexOf(URI_PATH_SEPARATOR_CHAR);
-                }
-                leafIndex = (i < 0) ? 0 : i + 1;
-                return true;
-            }
-            hostName = absolutePath = null;
-            leafIndex = 0;
-            return false;
-        }
-
-        public static bool TryCreateFileUriFromUriString(string uriString, out Uri uri)
-        {
-            if (string.IsNullOrEmpty(uriString))
-            {
-                uri = new Uri("", UriKind.Relative);
-                return true;
-            }
-            uriString = _FROM_LOCAL_PATH_PRE_ENCODE(uriString);
-            if (Uri.TryCreate(uriString, UriKind.Absolute, out uri))
-                return uri.Scheme.Equals(Uri.UriSchemeFile) && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment);
-            return Uri.TryCreate((Uri.IsWellFormedUriString(uriString, UriKind.Relative)) ? uriString : Uri.EscapeUriString(uriString), UriKind.Relative, out uri) &&
-                uri.OriginalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER) < 0;
-        }
-
-        public static bool TryCreateFileUriFromLocalPath(string localPath, out Uri uri)
-        {
-            if (string.IsNullOrEmpty(localPath))
-            {
-                uri = new Uri("", UriKind.Relative);
-                return true;
-            }
-            localPath = _FROM_LOCAL_PATH_PRE_ENCODE(localPath);
-            if (Uri.TryCreate(localPath, UriKind.Absolute, out uri))
-                return uri.Scheme.Equals(Uri.UriSchemeFile) && string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment);
-            return Uri.TryCreate(localPath, UriKind.Relative, out uri) && uri.OriginalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER) < 0;
-        }
-
         public static Uri ToUri(this FileSystemInfo fileSystemInfo)
         {
-            if (fileSystemInfo is null)
-                return new Uri("", UriKind.Relative);
-            return new Uri(_FROM_LOCAL_PATH_PRE_ENCODE(fileSystemInfo.FullName), UriKind.Absolute);
-        }
-
-        /// <summary>
-        /// Determines whether a URI string is well-formed and compatible with the <seealso cref="Uri.UriSchemeFile">file</seealso> URI scheme.
-        /// </summary>
-        /// <param name="uri">The URI string to test</param>
-        /// <param name="kind">The type of URI string.</param>
-        /// <returns><see langword="true"/> if <paramref name="uri"/> well-formed and compatible with the <seealso cref="Uri.UriSchemeFile">file</seealso> URI scheme; otherwise, <see langword="false"/>.</returns>
-        /// <remarks>For relative URI strings, this will also check to see if the URI string utilizes any special local file system path characters that would otherwise be considered part of a valid relative URI string.</remarks>
-        public static bool IsWellFormedFileUriString(string uri, UriKind kind)
-        {
-            if (string.IsNullOrEmpty(uri))
-                return kind != UriKind.Absolute;
-            if (!Uri.IsWellFormedUriString(uri, kind))
-                return false;
-            int startIndex = _UriGetPartIndexes(uri, out int schemeLength, out _);
-            if (startIndex < 0)
+            string path = CURRENT_FILE_URI_FACTORY.FromLocalFsPath(fileSystemInfo.FullName, out string hostName);
+            if (string.IsNullOrEmpty(hostName))
             {
-                if (kind == UriKind.Absolute)
-                    return false;
+                if (path.StartsWith(FileUriFactory.URI_PATH_SEPARATOR_CHAR))
+                    return new Uri($"file://{path}", UriKind.Absolute);
+                return new Uri($"file:///{path}", UriKind.Absolute);
             }
-            if (startIndex > 0)
-                return uri.Substring(0, schemeLength).Equals(Uri.UriSchemeFile) && (startIndex == uri.Length || ANY_FILE_URI_STRICT_REGEX.IsMatch(uri.Substring(startIndex)));
-            return ANY_FILE_URI_STRICT_REGEX.IsMatch(uri);
-        }
-
-        /// <summary>
-        /// Determines whether a string is valid for use as a file name on the local file system.
-        /// </summary>
-        /// <param name="name">The file name to test.</param>
-        /// <returns><see langword="true"/> if <paramref name="name"/> is not <see langword="null"/> or empty and contains only valid local file system characters.</returns>
-        public static bool IsValidLocalFileName(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                return false;
-            if (name.Length < _INVALID_FILENAME_CHARS.Length)
-                return !name.ToCharArray().Any(c => _INVALID_FILENAME_CHARS.Contains(c));
-            return !_INVALID_FILENAME_CHARS.Any(c => name.Contains(c));
-        }
-
-        /// <summary>
-        /// Gets the length of the path contained within a relative URI string.
-        /// </summary>
-        /// <param name="relativeUriString">The relative URI string</param>
-        /// <param name="nextIsQuery">Returns <see langword="true"/> if the next character is the start of the query, <see langword="false"/> if it starts the fragment or <see langword="null"/> if the <paramref name="relativeUriString"/>
-        /// contains no query or fragment.</param>
-        /// <returns>The length of the path contained within the <paramref name="relativeUriString"/>.</returns>
-        public static int GetUriPathLength(string relativeUriString, out bool? nextIsQuery)
-        {
-            if (relativeUriString is null)
-            {
-                nextIsQuery = null;
-                return 0;
-            }
-
-            int len = relativeUriString.Length;
-            if (len > 0)
-            {
-                int i = relativeUriString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
-                if (i > -1)
-                {
-                    nextIsQuery = relativeUriString[i] == URI_QUERY_DELIMITER_CHAR;
-                    return i;
-                }
-            }
-
-            nextIsQuery = null;
-            return len;
+            if (path.StartsWith(FileUriFactory.URI_PATH_SEPARATOR_CHAR))
+                return new Uri($"file://{hostName}{path}", UriKind.Absolute);
+            return new Uri($"file://{hostName}/{path}", UriKind.Absolute);
         }
 
         /// <summary>
@@ -812,7 +181,7 @@ namespace FsInfoCat.Util
                 uri.TrySetQueryComponent(null, out uri);
             if ((originalString = uri.OriginalString).Length == 0 || Uri.IsWellFormedUriString(originalString, UriKind.Relative))
                 return uri;
-            originalString = EnsureWellFormedUriPath(originalString);
+            originalString = CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(originalString);
             if (Uri.IsWellFormedUriString(originalString, UriKind.Relative))
                 return new Uri(originalString, UriKind.Relative);
             return new Uri(Uri.EscapeDataString(uri.OriginalString), UriKind.Relative);
@@ -1146,7 +515,7 @@ namespace FsInfoCat.Util
                 return "";
             if (index > 0)
                 originalString = originalString.Substring(0, index);
-            return EnsureWellFormedUriPath(originalString);
+            return CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(originalString);
         }
 
         public static string SplitQueryComponents(this Uri uri, out string schemeAndAuthority, out string queryAndFragment)
@@ -1170,7 +539,7 @@ namespace FsInfoCat.Util
                 queryAndFragment = "";
                 return "";
             }
-            originalString = EnsureWellFormedUriPath(originalString);
+            originalString = CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(originalString);
 
             int pathLen = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (pathLen < 0)
@@ -1204,7 +573,7 @@ namespace FsInfoCat.Util
                 query = fragment = "";
                 return "";
             }
-            originalString = EnsureWellFormedUriPath(originalString);
+            originalString = CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(originalString);
 
             int pathLen = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (pathLen < 0)
@@ -1258,7 +627,7 @@ namespace FsInfoCat.Util
                 query = fragment = "";
                 return "";
             }
-            originalString = EnsureWellFormedUriPath(originalString);
+            originalString = CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(originalString);
 
             int pathLen = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (pathLen < 0)
@@ -1313,7 +682,7 @@ namespace FsInfoCat.Util
                 query = fragment = "";
                 return "";
             }
-            originalString = EnsureWellFormedUriPath(originalString);
+            originalString = CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(originalString);
 
             int pathLen = originalString.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
             if (pathLen < 0)
@@ -1344,21 +713,6 @@ namespace FsInfoCat.Util
             return originalString.Substring(0, pathLen);
         }
 
-        public static string EnsureWellFormedUriPath(this string path)
-        {
-            if (string.IsNullOrEmpty(path))
-                return "";
-            if (Uri.IsWellFormedUriString(path, UriKind.Relative))
-                return path;
-            if (path.Contains("\\"))
-            {
-                path = path.Replace("\\", "/");
-                if (Uri.IsWellFormedUriString(path, UriKind.Relative))
-                    return path;
-            }
-            return Uri.EscapeUriString(path);
-        }
-
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Path"/> component applied.
         /// </summary>
@@ -1382,7 +736,7 @@ namespace FsInfoCat.Util
                 newPath = newQuery = newFragment = "";
             else
             {
-                newPath = EnsureWellFormedUriPath(newPath);
+                newPath = CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(newPath);
                 int idx = newPath.IndexOfAny(_QUERY_OR_FRAGMENT_DELIMITER);
                 if (idx < 0)
                     newQuery = newFragment = "";
@@ -1814,8 +1168,8 @@ namespace FsInfoCat.Util
             string u = uri.OriginalString;
             if (u.Length == 0)
                 return new string[] { u };
-            u = EnsureWellFormedUriPath(u);
-            return URI_PATH_SEGMENT_REGEX.Matches(u).Cast<Match>().Select(m => m.Value).ToArray();
+            u = CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(u);
+            return FileUriFactory.URI_PATH_SEGMENT_REGEX.Matches(u).Cast<Match>().Select(m => m.Value).ToArray();
         }
 
         /// <summary>
@@ -1847,7 +1201,7 @@ namespace FsInfoCat.Util
                 return uri.TrySetPathComponent(path.Substring(0, i), out result) && !result.GetPathComponent().EndsWith('/');
             }
             if (!(uri.IsAbsoluteUri || Uri.IsWellFormedUriString(uri.OriginalString, UriKind.Relative)))
-                uri = new Uri(EnsureWellFormedUriPath(uri.OriginalString), UriKind.Relative);
+                uri = new Uri(CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(uri.OriginalString), UriKind.Relative);
             result = uri;
             return true;
         }

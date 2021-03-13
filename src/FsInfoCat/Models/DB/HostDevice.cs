@@ -81,7 +81,7 @@ namespace FsInfoCat.Models.DB
         [MinLength(1)]
         [MaxLength(Max_Length_MachineName, ErrorMessage = Error_Message_MachineName_Length)]
         [Display(Name = DisplayName_MachineName)]
-        [RegularExpression(UriHelper.PATTERN_HOST_NAME, ErrorMessage = Error_Message_MachineName_Invalid)]
+        [RegularExpression(FileUriFactory.PATTERN_HOST_NAME, ErrorMessage = Error_Message_MachineName_Invalid)]
         public string MachineName
         {
             get { return _machineName; }
@@ -177,7 +177,7 @@ namespace FsInfoCat.Models.DB
         protected HostDevice(HostDevice host)
         {
             if (host is null)
-                throw new ArgumentNullException("host");
+                throw new ArgumentNullException(nameof(host));
             HostDeviceID = host.HostDeviceID;
             DisplayName = host.DisplayName;
             MachineIdentifer = host.MachineIdentifer;
@@ -193,7 +193,7 @@ namespace FsInfoCat.Models.DB
         public HostDevice(HostDeviceRegRequest request, Guid createdBy) : this()
         {
             if (request is null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
             HostDeviceID = Guid.NewGuid();
             MachineIdentifer = request.MachineIdentifer;
             MachineName = request.MachineName;
@@ -205,7 +205,7 @@ namespace FsInfoCat.Models.DB
         public HostDevice(HostDeviceRegRequest request, Account createdBy) : this()
         {
             if (request is null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
             HostDeviceID = Guid.NewGuid();
             MachineIdentifer = request.MachineIdentifer;
             MachineName = request.MachineName;
@@ -269,7 +269,7 @@ namespace FsInfoCat.Models.DB
                         result.Add(new ValidationResult(Error_Message_MachineName_Empty, new string[] { PropertyName_MachineName }));
                     else if (_machineName.Length > Max_Length_DisplayName)
                         result.Add(new ValidationResult(Error_Message_MachineName_Length, new string[] { PropertyName_MachineName }));
-                    else if (!UriHelper.HOST_NAME_REGEX.IsMatch(_machineName))
+                    else if (!FileUriFactory.HOST_NAME_REGEX.IsMatch(_machineName))
                         result.Add(new ValidationResult(Error_Message_MachineName_Invalid, new string[] { PropertyName_MachineName }));
                     break;
             }

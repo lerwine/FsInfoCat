@@ -247,7 +247,7 @@ namespace FsInfoCat.Models.DB
 
         [Required(ErrorMessage = Error_Message_RootPathName_Empty)]
         [MaxLength(Max_Length_RootPathName, ErrorMessage = Error_Message_RootPathName_Length)]
-        [RegularExpression(UriHelper.PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX, ErrorMessage = Error_Message_RootPathName_Invalid)]
+        [RegularExpression(FileUriFactory.PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX, ErrorMessage = Error_Message_RootPathName_Invalid)]
         [Display(Name = DisplayName_RootPathName, Description = "Enter a file URI or a windows file path.")]
         public string RootPathName
         {
@@ -269,18 +269,19 @@ namespace FsInfoCat.Models.DB
                     if (rootPathName.Trim().Length > 0)
                     {
                         HostDevice host = Host;
-                        Regex regex = (host is null) ? UriHelper.FORMAT_GUESS_LOCAL_REGEX : (host.Platform == PlatformType.Linux || host.Platform == PlatformType.OSX) ?
-                            UriHelper.Linux.FORMAT_GUESS_REGEX : UriHelper.Windows.FORMAT_GUESS_REGEX;
+                        Regex regex = (host is null) ? UriHelper.CURRENT_FILE_URI_FACTORY.FormatDetectionRegex : (host.Platform == PlatformType.Linux || host.Platform == PlatformType.OSX) ?
+                            LinuxFileUriFactory.FORMAT_DETECTION_REGEX : WindowsFileUriFactory.FORMAT_DETECTION_REGEX;
+#warning This may not work - Need to re-think this
                         Match match = regex.Match(value);
-                        if (match.Success || (match = (ReferenceEquals(regex, UriHelper.Windows.FORMAT_GUESS_REGEX) ? UriHelper.Linux.FORMAT_GUESS_REGEX :
-                                UriHelper.Windows.FORMAT_GUESS_REGEX).Match(value)).Success && !match.Groups[UriHelper.FORMAT_GUESS_MATCH_GROUP_NON_FILE].Success)
+                        if (match.Success || (match = (ReferenceEquals(regex, WindowsFileUriFactory.FORMAT_DETECTION_REGEX) ? LinuxFileUriFactory.FORMAT_DETECTION_REGEX :
+                                WindowsFileUriFactory.FORMAT_DETECTION_REGEX).Match(value)).Success && !match.Groups[FileUriFactory.FORMAT_DETECT_MATCH_GROUP_NON_FILE].Success)
                             try
                             {
-                                if (match.Groups[UriHelper.FORMAT_GUESS_MATCH_GROUP_FILE_URL].Success)
-                                    newRootUri = new FileUri(value.EnsureWellFormedUriPath());
+                                if (match.Groups[FileUriFactory.FORMAT_DETECT_MATCH_GROUP_FILE_URL].Success)
+                                    newRootUri = new FileUri(UriHelper.CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(value));
                                 else
                                     try { newRootUri = new FileUri(new DirectoryInfo(value)); }
-                                    catch { newRootUri = new FileUri(value.EnsureWellFormedUriPath()); }
+                                    catch { newRootUri = new FileUri(UriHelper.CURRENT_FILE_URI_FACTORY.EnsureWellFormedRelativeUriPath(value)); }
                             }
                             catch { newRootUri = (_rootUri.IsEmpty()) ? _rootUri : new FileUri(""); }
                         else
