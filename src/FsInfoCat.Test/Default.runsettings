@@ -1,15 +1,16 @@
 <RunSettings>
     <RunConfiguration>
         <SolutionDirectory>C:\Users\lerwi\source\repos\FsInfoCat\src\</SolutionDirectory>
-        <!--
-        <Verbosity>5</Verbosity>
-        <CollectSourceInformation>True</CollectSourceInformation>
-        <InternalTraceLevel>Debug</InternalTraceLevel>
-        <DumpXmlTestDiscovery>true</DumpXmlTestDiscovery>-->
     </RunConfiguration>
     <NUnit>
         <UseNUnitIdforTestCaseId>true</UseNUnitIdforTestCaseId>
+        <ShowInternalProperties>true</ShowInternalProperties>
+        <Verbosity>3</Verbosity>
         <WorkDirectory>C:\Users\lerwi\Git\FsInfoCat\src\TestResultData\</WorkDirectory>
         <TestOutputXml>C:\Users\lerwi\Git\FsInfoCat\src\TestResultInfo\</TestOutputXml>
+        <!--
+        <CollectSourceInformation>True</CollectSourceInformation>
+        <InternalTraceLevel>Debug</InternalTraceLevel>
+        <DumpXmlTestDiscovery>true</DumpXmlTestDiscovery>-->
     </NUnit>
 </RunSettings>

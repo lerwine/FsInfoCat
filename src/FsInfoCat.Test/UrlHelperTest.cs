@@ -127,7 +127,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetAsRelativeUriStringTestCases))]
         public string AsRelativeUriStringTest(string text)
         {
-            return text.AsRelativeUriString();
+            return UriHelper.AsRelativeUriString(text);
         }
 
         public static IEnumerable<TestCaseData> GetAsUserNameComponentEncodedTestCases()
@@ -229,7 +229,7 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetAsUserNameComponentEncodedTestCases))]
-        public string AsUserNameComponentEncodedTest(string text) => text.AsUserNameComponentEncoded();
+        public string AsUserNameComponentEncodedTest(string text) => UriHelper.AsUserNameComponentEncoded(text);
 
         public static IEnumerable<TestCaseData> GetAsPasswordComponentEncodedTestCases()
         {
@@ -327,7 +327,7 @@ namespace FsInfoCat.Test
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetAsPasswordComponentEncodedTestCases))]
-        public string AsPasswordComponentEncodedTest(string text) => text.AsPasswordComponentEncoded();
+        public string AsPasswordComponentEncodedTest(string text) => UriHelper.AsPasswordComponentEncoded(text);
 
         public static IEnumerable<TestCaseData> GetGetUserNameAndPasswordTestCases()
         {

@@ -23,7 +23,7 @@
     <xs:complexType name="OSType">
         <xs:sequence>
             <xs:element name="FsPathRegex" type="MatchType" />
-            <xs:element name="FsPathPattern" type="CaptureType" />
+            <!--<xs:element name="FsPathPattern" type="CaptureType" />-->
             <xs:element name="FormatGuess" type="MatchType" />
             <xs:element name="FileUriStrict" type="MatchType" />
         </xs:sequence>
@@ -67,7 +67,7 @@
             <xs:enumeration value="Relative" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:complexType name="ParseUriOrPathType">
+    <!--<xs:complexType name="ParseUriOrPathType">
         <xs:sequence>
             <xs:element name="Expected">
                 <xs:complexType>
@@ -81,7 +81,7 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute name="PreferFsPath" type="xs:string" use="required" />
-    </xs:complexType>
+    </xs:complexType>-->
     <xs:complexType name="TryParseFileUriStringType">
         <xs:simpleContent>
             <xs:extension base="xs:boolean">
@@ -115,7 +115,7 @@
             <xs:element name="AuthorityCaseInsensitiveEquals" type="AuthorityCaseInsensitiveEqualsType" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="TryParseFileUriString" type="TryParseFileUriStringType" minOccurs="0" />
             <xs:element name="IsWellFormedFileUriString" type="IsWellFormedFileUriStringType" minOccurs="0" maxOccurs="3" />
-            <xs:element name="ParseUriOrPath" type="ParseUriOrPathType" minOccurs="0" maxOccurs="2" />
+            <!--<xs:element name="ParseUriOrPath" type="ParseUriOrPathType" minOccurs="0" maxOccurs="2" />-->
             <xs:element name="AsNormalized" type="xs:string" minOccurs="0" />
             <xs:element name="SplitQueryAndFragment" type="SplitQueryAndFragmentType" minOccurs="0" />
             <xs:element name="AsRelativeUriString" type="xs:string" minOccurs="0" />

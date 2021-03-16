@@ -11,7 +11,7 @@ using System.Xml;
 namespace FsInfoCat.Test
 {
     [TestFixture]
-    public class WindowsFileUriFactoryTest
+    public class WindowsFileUriConverterTest
     {
         public static IEnumerable<TestCaseData> GetFsPathRegexTestCases()
         {
@@ -30,30 +30,30 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFsPathRegexTestCases))]
         public string FsPathRegexTest(string input, bool base64Encoded)
         {
-            Match match = WindowsFileUriFactory.FS_PATH_REGEX.Match(input);
+            Match match = WindowsFileUriConverter.FS_PATH_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "a", "h", "p");
         }
 
-        public static IEnumerable<TestCaseData> GetFsPathPatternTestCases()
-        {
-            return UrlHelperTest.GetUriTestData().Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FsPathPattern");
-                Console.WriteLine($"Emitting {expected}");
-                bool base64Encoded = element.GetAttribute("Base64") == "true";
-                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.OuterXml);
-            });
-        }
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetFsPathPatternTestCases))]
-        public string FsPathPatternTest(string input, bool base64Encoded)
-        {
-            Match match = Regex.Match(input, WindowsFileUriFactory.PATTERN_ABS_FS_PATH);
-            return UrlHelperTest.ToTestReturnValueXml(match, "FsPathPattern", base64Encoded);
-        }
+        //public static IEnumerable<TestCaseData> GetFsPathPatternTestCases()
+        //{
+        //    return UrlHelperTest.GetUriTestData().Select(element =>
+        //    {
+        //        XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FsPathPattern");
+        //        Console.WriteLine($"Emitting {expected}");
+        //        bool base64Encoded = element.GetAttribute("Base64") == "true";
+        //        return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
+        //            .SetDescription(element.GetAttribute("Description"))
+        //            .Returns(expected.OuterXml);
+        //    });
+        //}
+        //
+        //[Test, Property("Priority", 1)]
+        //[TestCaseSource(nameof(GetFsPathPatternTestCases))]
+        //public string FsPathPatternTest(string input, bool base64Encoded)
+        //{
+        //    Match match = Regex.Match(input, WindowsFileUriConverter.PATTERN_ABS_FS_PATH);
+        //    return UrlHelperTest.ToTestReturnValueXml(match, "FsPathPattern", base64Encoded);
+        //}
 
         public static IEnumerable<TestCaseData> GetFormatDetectionRegexTestCases()
         {
@@ -72,7 +72,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFormatDetectionRegexTestCases))]
         public string FormatDetectionRegexTest(string input, bool base64Encoded)
         {
-            Match match = WindowsFileUriFactory.FORMAT_DETECTION_REGEX.Match(input);
+            Match match = WindowsFileUriConverter.FORMAT_DETECTION_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "FormatGuess", base64Encoded, "f", "u", "h", "p", "x");
         }
 
@@ -93,7 +93,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFileUriStrictTestCases))]
         public string FileUriStrictTest(string input, bool base64Encoded)
         {
-            Match match = WindowsFileUriFactory.FILE_URI_STRICT_REGEX.Match(input);
+            Match match = WindowsFileUriConverter.FILE_URI_STRICT_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "a", "h", "p");
         }
 
@@ -112,7 +112,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetIpv6AddressRegexTestCases))]
         public string Ipv6AddressRegexTest(string input)
         {
-            Match match = WindowsFileUriFactory.LOCAL_IPV6_ADDRESS_REGEX.Match(input);
+            Match match = WindowsFileUriConverter.LOCAL_IPV6_ADDRESS_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "Ipv6AddressRegex", "ipv6", "unc");
         }
 
@@ -131,7 +131,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetHostNameRegexTestCases))]
         public string HostNameRegexTest(string input)
         {
-            Match match = WindowsFileUriFactory.HOST_NAME_W_UNC_REGEX.Match(input);
+            Match match = WindowsFileUriConverter.HOST_NAME_W_UNC_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "HostNameRegex", "ipv2", "ipv6", "unc", "dns");
         }
 
@@ -152,41 +152,41 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetIsWellFormedFileUriStringTestCases))]
         public bool IsWellFormedFileUriStringTest(string uriString, UriKind kind)
         {
-            bool result = WindowsFileUriFactory.INSTANCE.IsWellFormedFileUriString(uriString, kind);
+            bool result = WindowsFileUriConverter.INSTANCE.IsWellFormedUriString(uriString, kind);
             return result;
         }
 
-        public static IEnumerable<TestCaseData> GetParseUriOrPathTestCases()
-        {
-            return UrlHelperTest.GetUriTestData().Where(e => !(e.SelectSingleNode("ParseUriOrPath") is null)).Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("ParseUriOrPath");
-                bool preferFsPath = XmlConvert.ToBoolean(expected.GetAttribute("PreferFsPath"));
-                bool base64Encoded = element.GetAttribute("Base64") == "true";
-                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"),
-                        preferFsPath, base64Encoded)
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.SelectSingleNode("Expected").OuterXml);
-            });
-        }
+        //public static IEnumerable<TestCaseData> GetParseUriOrPathTestCases()
+        //{
+        //    return UrlHelperTest.GetUriTestData().Where(e => !(e.SelectSingleNode("ParseUriOrPath") is null)).Select(element =>
+        //    {
+        //        XmlElement expected = (XmlElement)element.SelectSingleNode("ParseUriOrPath");
+        //        bool preferFsPath = XmlConvert.ToBoolean(expected.GetAttribute("PreferFsPath"));
+        //        bool base64Encoded = element.GetAttribute("Base64") == "true";
+        //        return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"),
+        //                preferFsPath, base64Encoded)
+        //            .SetDescription(element.GetAttribute("Description"))
+        //            .Returns(expected.SelectSingleNode("Expected").OuterXml);
+        //    });
+        //}
 
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetParseUriOrPathTestCases))]
-        public string ParseUriOrPathTest(string source, bool preferFsPath, bool base64Encoded)
-        {
-            FileStringFormat result = WindowsFileUriFactory.INSTANCE.ParseUriOrPath(source, preferFsPath, out string hostName, out string path);
-            if (base64Encoded)
-            {
-                UTF8Encoding encoding = new UTF8Encoding(false, true);
-                return XmlBuilder.NewDocument("Expected")
-                    .WithAttribute("HostName", (string.IsNullOrEmpty(hostName)) ? hostName : Convert.ToBase64String(encoding.GetBytes(hostName)))
-                    .WithAttribute("Path", (string.IsNullOrEmpty(path)) ? path : Convert.ToBase64String(encoding.GetBytes(path)))
-                    .WithInnerText(result.ToString("F")).OuterXml;
-            }
-            return XmlBuilder.NewDocument("Expected")
-                .WithAttribute("HostName", hostName)
-                .WithAttribute("Path", path)
-                .WithInnerText(result.ToString("F")).OuterXml;
-        }
+        //[Test, Property("Priority", 1)]
+        //[TestCaseSource(nameof(GetParseUriOrPathTestCases))]
+        //public string ParseUriOrPathTest(string source, bool preferFsPath, bool base64Encoded)
+        //{
+        //    FileStringFormat result = WindowsFileUriConverter.INSTANCE.ParseUriOrPath(source, preferFsPath, out string hostName, out string path);
+        //    if (base64Encoded)
+        //    {
+        //        UTF8Encoding encoding = new UTF8Encoding(false, true);
+        //        return XmlBuilder.NewDocument("Expected")
+        //            .WithAttribute("HostName", (string.IsNullOrEmpty(hostName)) ? hostName : Convert.ToBase64String(encoding.GetBytes(hostName)))
+        //            .WithAttribute("Path", (string.IsNullOrEmpty(path)) ? path : Convert.ToBase64String(encoding.GetBytes(path)))
+        //            .WithInnerText(result.ToString("F")).OuterXml;
+        //    }
+        //    return XmlBuilder.NewDocument("Expected")
+        //        .WithAttribute("HostName", hostName)
+        //        .WithAttribute("Path", path)
+        //        .WithInnerText(result.ToString("F")).OuterXml;
+        //}
     }
 }

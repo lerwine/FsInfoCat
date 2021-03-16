@@ -11,26 +11,26 @@ using System.Xml;
 namespace FsInfoCat.Test
 {
     [TestFixture]
-    public class FileUriFactoryTest
+    public class FileUriConverterTest
     {
-        public static IEnumerable<TestCaseData> GetIpv2AddressRegexTestCases()
-        {
-            return UrlHelperTest.GetHostNameTestData().Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("Ipv2AddressRegex");
-                return new TestCaseData(element.GetAttribute("Value"))
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.OuterXml);
-            });
-        }
+        //public static IEnumerable<TestCaseData> GetIpv2AddressRegexTestCases()
+        //{
+        //    return UrlHelperTest.GetHostNameTestData().Select(element =>
+        //    {
+        //        XmlElement expected = (XmlElement)element.SelectSingleNode("Ipv2AddressRegex");
+        //        return new TestCaseData(element.GetAttribute("Value"))
+        //            .SetDescription(element.GetAttribute("Description"))
+        //            .Returns(expected.OuterXml);
+        //    });
+        //}
 
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetIpv2AddressRegexTestCases))]
-        public string Ipv2AddressRegexTest(string input)
-        {
-            Match match = FileUriFactory.IPV2_ADDRESS_REGEX.Match(input);
-            return UrlHelperTest.ToTestReturnValueXml(match, "Ipv2AddressRegex");
-        }
+        //[Test, Property("Priority", 1)]
+        //[TestCaseSource(nameof(GetIpv2AddressRegexTestCases))]
+        //public string Ipv2AddressRegexTest(string input)
+        //{
+        //    Match match = FileUriConverter.IPV2_ADDRESS_REGEX.Match(input);
+        //    return UrlHelperTest.ToTestReturnValueXml(match, "Ipv2AddressRegex");
+        //}
 
         public static IEnumerable<TestCaseData> GetIpv6AddressRegexTestCases()
         {
@@ -47,28 +47,28 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetIpv6AddressRegexTestCases))]
         public string Ipv6AddressRegexTest(string input)
         {
-            Match match = FileUriFactory.IPV6_ADDRESS_REGEX.Match(input);
+            Match match = FileUriConverter.IPV6_ADDRESS_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "Ipv6AddressRegex", "ipv6");
         }
 
-        public static IEnumerable<TestCaseData> GetDnsNameRegexTestCases()
-        {
-            return UrlHelperTest.GetHostNameTestData().Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("DnsNameRegex");
-                return new TestCaseData(element.GetAttribute("Value"))
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.OuterXml);
-            });
-        }
+        //public static IEnumerable<TestCaseData> GetDnsNameRegexTestCases()
+        //{
+        //    return UrlHelperTest.GetHostNameTestData().Select(element =>
+        //    {
+        //        XmlElement expected = (XmlElement)element.SelectSingleNode("DnsNameRegex");
+        //        return new TestCaseData(element.GetAttribute("Value"))
+        //            .SetDescription(element.GetAttribute("Description"))
+        //            .Returns(expected.OuterXml);
+        //    });
+        //}
 
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetDnsNameRegexTestCases))]
-        public string DnsNameRegexTest(string input)
-        {
-            Match match = FileUriFactory.DNS_NAME_REGEX.Match(input);
-            return UrlHelperTest.ToTestReturnValueXml(match, "DnsNameRegex");
-        }
+        //[Test, Property("Priority", 1)]
+        //[TestCaseSource(nameof(GetDnsNameRegexTestCases))]
+        //public string DnsNameRegexTest(string input)
+        //{
+        //    Match match = FileUriConverter.DNS_NAME_REGEX.Match(input);
+        //    return UrlHelperTest.ToTestReturnValueXml(match, "DnsNameRegex");
+        //}
 
         public static IEnumerable<TestCaseData> GetTryParseFileUriStringTestCases()
         {
@@ -86,7 +86,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetTryParseFileUriStringTestCases))]
         public string TryParseFileUriStringTest(string uriString, bool base64Encoded)
         {
-            bool result = FileUriFactory.TryParseFileUriString(uriString, out string hostName, out string absolutePath, out int leafIndex);
+            bool result = FileUriConverter.TrySplitFileUriString(uriString, out string hostName, out string absolutePath, out int leafIndex);
             if (base64Encoded)
             {
                 UTF8Encoding encoding = new UTF8Encoding(false, true);
