@@ -13,15 +13,15 @@ namespace FsInfoCat.Models.Accounts
         Viewer = 1,
 
         [Description(EditAccount.DisplayName_Normal_User)]
-        [AmbientValue(ModelHelper.ROLE_NAME_USER)]
+        [AmbientValue(ModelHelper.ROLE_NAME_CONTRIBUTOR)]
         User = 2,
 
         [Description(EditAccount.DisplayName_App_Contributor)]
-        [AmbientValue(ModelHelper.ROLE_NAME_APP_CONTRIB)]
+        [AmbientValue(ModelHelper.ROLE_NAME_CONTENT_ADMIN)]
         Crawler = 3,
 
         [Description(EditAccount.DisplayName_App_Administrator)]
-        [AmbientValue(ModelHelper.ROLE_NAME_ADMIN)]
+        [AmbientValue(ModelHelper.ROLE_NAME_APP_ADMIN)]
         Admin = 4
     }
 }
