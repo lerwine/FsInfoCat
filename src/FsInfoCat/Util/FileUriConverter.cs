@@ -88,7 +88,7 @@ namespace FsInfoCat.Util
         /// <remarks>
         /// <list type="bullet">
         /// <item><term>ipv2</term> Matches IPV2 address.</item>
-        /// <item><term>ipv6</term> Matches an IPV6 address without any surrounding brackets or the UNC domain text.</item>
+        /// <item><term>ipv6</term> Matches an IPV6 address without any surrounding brackets.</item>
         /// If this group matches, then hexidecimal groups for the IPV6 address are separated by dashes rather than colons.</item>
         /// <item><term>dns</term> Matches a DNS host name.</item>
         /// </list></remarks>
@@ -119,7 +119,22 @@ namespace FsInfoCat.Util
 
         public const string PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(((?<file>file)://|[\\/]{2})(?<host>(?=(\d+\.){3}\d+)(?<ipv2>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})|(?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)(?<d>\.ipv6-literal\.net)?\]?|(?=[^\s/]{1,255}(![\w-]))(?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?))|((?<file>file):///)?(?=[a-z]:|/))(?<path>([a-z]:)?([\\/](?=\s*$)|([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff\\/%]+|%((?![a-f\d]{2})|0[1-9a-f]|[1-9a-f]))+)*))[\\/]?\s*$";
 
-        public static readonly Regex FILE_URI_COMPONENTS_LAX_REGEX = new Regex(@"^(?<file>file://(?<host>[^/?#]+)?)?(?<path>.+?)((?<fileName>[/](?=$))|(?<fileName>[^/]*)/?)$");
+        public static readonly Regex FILE_URI_COMPONENTS_LAX_REGEX = new Regex(@"^
+(?<file>
+    file://
+    (?<host>[^/?#]+)?
+)?
+(?<path>
+    /(?=$)
+    |
+    ((?=[^/]+/[^/])[^/]+)?
+    (
+        (?=/[^/]+/[^/])
+        /
+        [^/]+
+    )*
+)
+(?<fileName>[^/]*)/?$");
 
         private static readonly char[] _INVALID_FILENAME_CHARS;
 

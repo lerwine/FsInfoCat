@@ -13,6 +13,52 @@ namespace FsInfoCat.Test
     [TestFixture]
     public class FileUriConverterTest
     {
+        public static IEnumerable<TestCaseData> GetUriPathSegmentRegexTestCases()
+        {
+            return (new string[][]
+            {
+                new string[] { "" },
+                new string[] { "/" },
+                new string[] { "/", "Test" },
+                new string[] { "/", "Test/" },
+                new string[] { "/", "Test/", "Two" },
+                new string[] { "/", "Test/", "Two/" },
+                new string[] { "Test" },
+                new string[] { "Test/" },
+                new string[] { "Test/", "Two" },
+                new string[] { "Test/", "Two/" }
+            }).Select(expected => new TestCaseData(string.Join("", expected))
+                .SetDescription($"\"{string.Join("\" + \"", expected)}\"")
+                .Returns(expected));
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetUriPathSegmentRegexTestCases))]
+        public string[] UriPathSegmentRegexTest(string input)
+        {
+            MatchCollection matches = FileUriConverter.URI_PATH_SEGMENT_REGEX.Matches(input);
+            return matches.Select(m => m.Value).ToArray();
+        }
+
+        public static IEnumerable<TestCaseData> GetPatternHostNameTestCases()
+        {
+            return UrlHelperTest.GetHostNameTestData().Select(element =>
+            {
+                XmlElement expected = (XmlElement)element.SelectSingleNode("PatternHostName");
+                return new TestCaseData(element.GetAttribute("Value"))
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected.OuterXml);
+            });
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetPatternHostNameTestCases))]
+        public string PatternHostNameTest(string input)
+        {
+            Match match = Regex.Match(input, FileUriConverter.PATTERN_HOST_NAME);
+            return UrlHelperTest.ToTestReturnValueXml(match, "PatternHostName");
+        }
+
         //public static IEnumerable<TestCaseData> GetIpv2AddressRegexTestCases()
         //{
         //    return UrlHelperTest.GetHostNameTestData().Select(element =>
@@ -51,24 +97,24 @@ namespace FsInfoCat.Test
             return UrlHelperTest.ToTestReturnValueXml(match, "Ipv6AddressRegex", "ipv6");
         }
 
-        //public static IEnumerable<TestCaseData> GetDnsNameRegexTestCases()
-        //{
-        //    return UrlHelperTest.GetHostNameTestData().Select(element =>
-        //    {
-        //        XmlElement expected = (XmlElement)element.SelectSingleNode("DnsNameRegex");
-        //        return new TestCaseData(element.GetAttribute("Value"))
-        //            .SetDescription(element.GetAttribute("Description"))
-        //            .Returns(expected.OuterXml);
-        //    });
-        //}
+        public static IEnumerable<TestCaseData> GetPatternDnsNameTestCases()
+        {
+            return UrlHelperTest.GetHostNameTestData().Select(element =>
+            {
+                XmlElement expected = (XmlElement)element.SelectSingleNode("PatternDnsName");
+                return new TestCaseData(element.GetAttribute("Value"))
+                    .SetDescription(element.GetAttribute("Description"))
+                    .Returns(expected.OuterXml);
+            });
+        }
 
-        //[Test, Property("Priority", 1)]
-        //[TestCaseSource(nameof(GetDnsNameRegexTestCases))]
-        //public string DnsNameRegexTest(string input)
-        //{
-        //    Match match = FileUriConverter.DNS_NAME_REGEX.Match(input);
-        //    return UrlHelperTest.ToTestReturnValueXml(match, "DnsNameRegex");
-        //}
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetPatternDnsNameTestCases))]
+        public string PatternDnsNameTest(string input)
+        {
+            Match match = Regex.Match(input, FileUriConverter.PATTERN_DNS_NAME);
+            return UrlHelperTest.ToTestReturnValueXml(match, "PatternDnsName");
+        }
 
         public static IEnumerable<TestCaseData> GetTryParseFileUriStringTestCases()
         {

@@ -119,6 +119,8 @@
             <xs:element name="AsNormalized" type="xs:string" minOccurs="0" />
             <xs:element name="SplitQueryAndFragment" type="SplitQueryAndFragmentType" minOccurs="0" />
             <xs:element name="AsRelativeUriString" type="xs:string" minOccurs="0" />
+            <xs:element name="PatternAnyAbsFileUriOrLocalLax" type="CaptureType" />
+            <xs:element name="FileUriComponentsLaxRegex" type="MatchType" />
         </xs:sequence>
         <xs:attribute name="Value" type="xs:string" use="required" />
         <xs:attribute name="Description" type="xs:string" use="required" />
@@ -126,10 +128,12 @@
     </xs:complexType>
     <xs:complexType name="HostNameTestDataType">
         <xs:sequence>
-            <xs:element name="Ipv2AddressRegex" type="CaptureType" />
+            <!--<xs:element name="Ipv2AddressRegex" type="CaptureType" />-->
             <xs:element name="Ipv6AddressRegex" type="MatchType" />
-            <xs:element name="DnsNameRegex" type="CaptureType" />
             <xs:element name="HostNameRegex" type="MatchType" />
+            <xs:element name="PatternHostName" type="CaptureType" />
+            <xs:element name="HostNameWUncRegex" type="MatchType" />
+            <xs:element name="PatternDnsName" type="CaptureType" />
         </xs:sequence>
         <xs:attribute name="Value" type="xs:string" use="required" />
         <xs:attribute name="Description" type="xs:string" use="required" />
