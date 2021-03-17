@@ -89,8 +89,7 @@ namespace FsInfoCat.Util
                 Monitor.Enter(list._syncRoot);
                 try
                 {
-                    AttachableContainer oldContainer = list._container as AttachableContainer;
-                    if (null != oldContainer)
+                    if (list._container is AttachableContainer oldContainer)
                     {
                         if (ReferenceEquals(oldContainer, this))
                             return;
@@ -110,9 +109,8 @@ namespace FsInfoCat.Util
                 Monitor.Enter(list._syncRoot);
                 try
                 {
-                    AttachableContainer oldContainer = list._container as AttachableContainer;
-                    if (null != oldContainer && ReferenceEquals(oldContainer, this))
-                    Monitor.Enter(SyncRoot);
+                    if (list._container is AttachableContainer oldContainer && ReferenceEquals(oldContainer, this))
+                        Monitor.Enter(SyncRoot);
                     try { Site.Detach(list); }
                     finally { Monitor.Exit(SyncRoot); }
                 }
@@ -265,7 +263,7 @@ namespace FsInfoCat.Util
             private void ValidateName(IEnumerable<string> enumerable, string name)
             {
                 if (enumerable.Contains(name, NameComparer))
-                    throw new ArgumentOutOfRangeException(ERROR_MESSAGE_ITEM_WITH_NAME_EXISTS);
+                    throw new ArgumentOutOfRangeException(nameof(name), ERROR_MESSAGE_ITEM_WITH_NAME_EXISTS);
             }
         }
     }

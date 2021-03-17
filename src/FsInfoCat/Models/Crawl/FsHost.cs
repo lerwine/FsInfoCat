@@ -82,7 +82,7 @@ namespace FsInfoCat.Models.Crawl
             message = Messages.OfType<PartialCrawlWarning>().Where(m => m.NotCrawled.Any(s => !string.IsNullOrWhiteSpace(s))).FirstOrDefault();
             if (null != message)
             {
-                segments = new IFsDirectory[0];
+                segments = System.Array.Empty<IFsDirectory>();
                 return true;
             }
             foreach (FsRoot root in Roots)
@@ -93,7 +93,7 @@ namespace FsInfoCat.Models.Crawl
                     return true;
                 }
             }
-            segments = new IFsDirectory[0];
+            segments = System.Array.Empty<IFsDirectory>();
             return false;
         }
     }
