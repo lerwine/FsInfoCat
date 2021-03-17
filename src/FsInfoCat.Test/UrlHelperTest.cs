@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Test
 {
@@ -46,42 +47,44 @@ namespace FsInfoCat.Test
 
         internal static string ToTestReturnValueXml(Match match, string rootElementName, bool base64Encoded, params string[] groupNames)
         {
-            XmlElement resultElement = XmlBuilder.NewDocument(rootElementName).WithAttribute("Success", match.Success);
+            XElement resultElement = new XElement(rootElementName, new XAttribute("Success", match.Success));
             if (match.Success)
             {
                 if (base64Encoded)
                 {
                     UTF8Encoding encoding = new UTF8Encoding(false, true);
                     if (groupNames is null || groupNames.Length == 0)
-                        return resultElement.WithInnerText((match.Length > 0) ? Convert.ToBase64String(encoding.GetBytes(match.Value)) : "").OuterXml;
+                    {
+                        resultElement.SetValue((match.Length > 0) ? Convert.ToBase64String(encoding.GetBytes(match.Value)) : "");
+                        return resultElement.ToString(SaveOptions.DisableFormatting);
+                    }
                     foreach (string n in groupNames)
                     {
                         Group g = match.Groups[n];
-                        resultElement.AppendElement("Group", groupElement =>
-                        {
-                            groupElement.WithAttribute("Name", n).WithAttribute("Success", g.Success);
-                            if (g.Success)
-                                groupElement.WithInnerText((g.Length > 0) ? Convert.ToBase64String(encoding.GetBytes(g.Value)) : "");
-                        });
+                        XElement e = new XElement("Group", new XAttribute("Name", n), new XAttribute("Success", g.Success));
+                        if (g.Success)
+                            e.SetValue((g.Length > 0) ? Convert.ToBase64String(encoding.GetBytes(g.Value)) : "");
+                        resultElement.Add(e);
                     }
                 }
                 else
                 {
                     if (groupNames is null || groupNames.Length == 0)
-                        return resultElement.WithInnerText(match.Value).OuterXml;
+                    {
+                        resultElement.SetValue(match.Value);
+                        return resultElement.ToString(SaveOptions.DisableFormatting);
+                    }
                     foreach (string n in groupNames)
                     {
                         Group g = match.Groups[n];
-                        resultElement.AppendElement("Group", groupElement =>
-                        {
-                            groupElement.WithAttribute("Name", n).WithAttribute("Success", g.Success);
-                            if (g.Success)
-                                groupElement.WithInnerText(g.Value);
-                        });
+                        XElement e = new XElement("Group", new XAttribute("Name", n), new XAttribute("Success", g.Success));
+                        if (g.Success)
+                            e.SetValue(g.Value);
+                        resultElement.Add(e);
                     }
                 }
             }
-            return resultElement.OuterXml;
+            return resultElement.ToString(SaveOptions.DisableFormatting);
         }
 
         public static IEnumerable<TestCaseData> GetAuthorityCaseInsensitiveEqualsTestCases()
@@ -804,7 +807,7 @@ namespace FsInfoCat.Test
             yield return new ValueAndExpectedResult<Uri, Uri>(
                 new Uri("file://192.168.1.1/my/folder", UriKind.Absolute),
                 new Uri("file://192.168.1.1/my/folder", UriKind.Absolute),
-                "IPV2 address");
+                "IPV4 address");
             yield return new ValueAndExpectedResult<Uri, Uri>(
                 new Uri("file://[fe80::1dee:91b0:4872:1f9]/my/folder", UriKind.Absolute),
                 new Uri("file://[fe80::1dee:91b0:4872:1f9]/my/folder", UriKind.Absolute),

@@ -1,0 +1,135 @@
+<HostTestData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./HostTestData.xsd">
+    <Invalid Address="" />
+    <Invalid Address=" " />
+    <Invalid Address="." />
+    <HostName Address="Y" HasOuterWS="false">Y</HostName>
+    <Invalid Address="_" />
+    <Invalid Address="_OYuhCG" />
+    <Invalid Address="iBLeqmV._" />
+    <HostName Address="LINximZ" HasOuterWS="false">LINximZ</HostName>
+    <HostName Address="OkFl_Mj.AXx" HasOuterWS="false">OkFl_Mj.AXx</HostName>
+    <HostName Address="2r8d8dp.9" HasOuterWS="false">2r8d8dp.9</HostName>
+    <HostName Address="Y.hV0" HasOuterWS="false">Y.hV0</HostName>
+    <HostName Address="JC_stCC." HasOuterWS="false">JC_stCC.</HostName>
+    <HostName Address="1eX.dc8conY.mx5" HasOuterWS="false">1eX.dc8conY.mx5</HostName>
+    <HostName Address="FXv.4WtBdYn." HasOuterWS="false">FXv.4WtBdYn.</HostName>
+    <IPV4 Address="0.0.0.0" HasOuterWS="false">0.0.0.0</IPV4>
+    <IPV4 Address="00.00.00.00" HasOuterWS="false">00.00.00.00</IPV4>
+    <IPV4 Address="000.000.000.000" HasOuterWS="false">000.000.000.000</IPV4>
+    <HostName Address="000.000.000.0000" HasOuterWS="false">000.000.000.0000</HostName>
+    <HostName Address="000.000.0000.000" HasOuterWS="false">000.000.0000.000</HostName>
+    <HostName Address="000.0000.000.000" HasOuterWS="false">000.0000.000.000</HostName>
+    <HostName Address="0000.000.000.000" HasOuterWS="false">0000.000.000.000</HostName>
+    <IPV4 Address="0.26.234.255" HasOuterWS="false">0.26.234.255</IPV4>
+    <IPV4 Address="000.026.234.255" HasOuterWS="false">000.026.234.255</IPV4>
+    <HostName Address="000.026.234.256" HasOuterWS="false">000.026.234.256</HostName>
+    <HostName Address="000.026.256.255" HasOuterWS="false">000.026.256.255</HostName>
+    <HostName Address="000.256.234.255" HasOuterWS="false">000.256.234.255</HostName>
+    <HostName Address="256.026.234.255" HasOuterWS="false">256.026.234.255</HostName>
+    <HostName Address="000.026.234.0255" HasOuterWS="false">000.026.234.0255</HostName>
+    <HostName Address="000.026.0234.255" HasOuterWS="false">000.026.0234.255</HostName>
+    <HostName Address="000.0026.234.255" HasOuterWS="false">000.0026.234.255</HostName>
+    <HostName Address="0000.026.234.255" HasOuterWS="false">0000.026.234.255</HostName>
+    <IPV4 Address="192.168.20.1" HasOuterWS="false">192.168.20.1</IPV4>
+    <Invalid Address=".168.20.1" />
+    <IPV4 Address="192.168.020.01" HasOuterWS="false">192.168.020.01</IPV4>
+    <IPV4 Address="192.168.020.001" HasOuterWS="false">192.168.020.001</IPV4>
+    <IPV6 Address="58ff:3b57:153e:e6d2:723e:bb94:9409:a14a" Type="Normal" IsDns="false" HasOuterWS="false">58ff:3b57:153e:e6d2:723e:bb94:9409:a14a</IPV6>
+    <Invalid Address="58ff:3b57:153e:e6d2:723e:bb94:9409-a14a" />
+    <Invalid Address="58ff:3b57:153e:e6d2-723e:bb94:9409:a14a" />
+    <Invalid Address="58ff-3b57:153e:e6d2:723e:bb94:9409:a14a" />
+    <Invalid Address=":f063:e6c0:a342:8adf:c0d6:7a21:a1b7" />
+    <IPV6 Address="::679b:8e41:6c11:add9:cd11:ec37" Type="Normal" IsDns="false" HasOuterWS="false">::679b:8e41:6c11:add9:cd11:ec37</IPV6>
+    <IPV6 Address="::40eb:389e:3c5c:4920:d60a" Type="Normal" IsDns="false" HasOuterWS="false">::40eb:389e:3c5c:4920:d60a</IPV6>
+    <IPV6 Address="::6175:522e:21c4:bfba" Type="Normal" IsDns="false" HasOuterWS="false">::6175:522e:21c4:bfba</IPV6>
+    <IPV6 Address="::afdb:4379:615d" Type="Normal" IsDns="false" HasOuterWS="false">::afdb:4379:615d</IPV6>
+    <IPV6 Address="::1f10:a0ef" Type="Normal" IsDns="false" HasOuterWS="false">::1f10:a0ef</IPV6>
+    <IPV6 Address="::16d9" Type="Normal" IsDns="false" HasOuterWS="false">::16d9</IPV6>
+    <Invalid Address=":-9367" />
+    <Invalid Address="::1e5d:baf3:91:b8c0:229f:464d:3b44:816f" />
+    <Invalid Address="f79e:3f96:f0cb:dae4:2e89:f47a:5aee:d8c3:65ab" />
+    <Invalid Address="21d1:4eff:5e8a:80e2:28e2:a80e::1f2b" />
+    <IPV6 Address="69ae:9ecc:86e9:8b1b:78dc::89c6" Type="Normal" IsDns="false" HasOuterWS="false">69ae:9ecc:86e9:8b1b:78dc::89c6</IPV6>
+    <IPV6 Address="803d:f5c1:a9fe:f3fc::d75f" Type="Normal" IsDns="false" HasOuterWS="false">803d:f5c1:a9fe:f3fc::d75f</IPV6>
+    <IPV6 Address="84d2:82fd:4e07::46a0" Type="Normal" IsDns="false" HasOuterWS="false">84d2:82fd:4e07::46a0</IPV6>
+    <IPV6 Address="dfc8:ee6f::2c5e" Type="Normal" IsDns="false" HasOuterWS="false">dfc8:ee6f::2c5e</IPV6>
+    <IPV6 Address="2451::6abd" Type="Normal" IsDns="false" HasOuterWS="false">2451::6abd</IPV6>
+    <Invalid Address="2451:-6abd" />
+    <Invalid Address="a7b9::" />
+    <HostName Address="4534" HasOuterWS="false">4534</HostName>
+    <Invalid Address="8b77:f5b4:f2f:576c:1076:7d8::" />
+    <Invalid Address="1519:d9d::" />
+    <Invalid Address="f5be:b921:f832:e136:cdaf:bee5:d129:1c78" />
+    <Invalid Address="beae:648f:1ac1:3972:d229:8e7f:82c1:2912" />
+    <Invalid Address="8:3d59:f8ce:3e41:cb3c:d139:b33:6528" />
+    <Invalid Address="6155:9:693f:137c:a640:5bad:63dd:31b9" />
+    <Invalid Address="1b89:b027:8ce5:bf54:6d4f:3be1:8:dcd5" />
+    <Invalid Address="ae2:5215:7e9c:82b3:15a8:e1e1:a64b:c" />
+    <IPV6 Address="[a09b:f16b:6081:7cfd:1e29:468e:492d:b0ac]" Type="Bracketed" IsDns="false" HasOuterWS="false">a09b:f16b:6081:7cfd:1e29:468e:492d:b0ac</IPV6>
+    <IPV6 Address="d9c9-6bad-c228-354f-9b14-4a83-a1a3-6368.ipv6-literal.net" Type="UNC" IsDns="true" HasOuterWS="false">d9c9-6bad-c228-354f-9b14-4a83-a1a3-6368.ipv6-literal.net</IPV6>
+    <Invalid Address="[d9c9-6bad-c228-354f-9b14-4a83-a1a3-6368.ipv6-literal.net]" />
+    <HostName Address="cc72-8b54-53f9-5c7-3539-f2c1-2459-7449" HasOuterWS="false">cc72-8b54-53f9-5c7-3539-f2c1-2459-7449</HostName>
+    <Invalid Address="[:49f6:4a3b:acf5:3d67:a7d2:d758:5183]" />
+    <Invalid Address="-40da-13c6-32ed-514b-b1d6-ebba-37ed.ipv6-literal.net" />
+    <Invalid Address="-a742-10b6-e7b-99b3-b1d6-1a5f-e6ea" />
+    <IPV6 Address="[::8c9a:3768:a34b:be4e:efd6:5fa8]" Type="Bracketed" IsDns="false" HasOuterWS="false">::8c9a:3768:a34b:be4e:efd6:5fa8</IPV6>
+    <IPV6 Address="--c9f5-7832-eb14-ee1f-d1c-f9d1.ipv6-literal.net" Type="UNC" IsDns="false" HasOuterWS="false">--c9f5-7832-eb14-ee1f-d1c-f9d1.ipv6-literal.net</IPV6>
+    <Invalid Address="[--c9f5-7832-eb14-ee1f-d1c-f9d1.ipv6-literal.net]" />
+    <Invalid Address="--8c10-7aef-4a7a-4033-d2da-e3ed" />
+    <IPV6 Address="[::94c6:f12b:eff:5fc1:bacd]" Type="Bracketed" IsDns="false" HasOuterWS="false">::94c6:f12b:eff:5fc1:bacd</IPV6>
+    <IPV6 Address="--e25b-bbf9-40e4-8f8e-dac0.ipv6-literal.net" Type="UNC" IsDns="false" HasOuterWS="false">--e25b-bbf9-40e4-8f8e-dac0.ipv6-literal.net</IPV6>
+    <Invalid Address="--eb20-c4e9-971-707a-749f" />
+    <IPV6 Address="[::bc2e:2297:15f:9fe2]" Type="Bracketed" IsDns="false" HasOuterWS="false">::bc2e:2297:15f:9fe2</IPV6>
+    <IPV6 Address="--25c6-9f70-9c6f-2768.ipv6-literal.net" Type="UNC" IsDns="false" HasOuterWS="false">--25c6-9f70-9c6f-2768.ipv6-literal.net</IPV6>
+    <Invalid Address="--bb67-8823-6cee-9473" />
+    <IPV6 Address="[::e84:cd22:e0d7]" Type="Bracketed" IsDns="false" HasOuterWS="false">::e84:cd22:e0d7</IPV6>
+    <IPV6 Address="--ffe7-f28-95d7.ipv6-literal.net" Type="UNC" IsDns="false" HasOuterWS="false">--ffe7-f28-95d7.ipv6-literal.net</IPV6>
+    <Invalid Address="--2f1a-ad3a-7d8e" />
+    <IPV6 Address="[::b605:4108]" Type="Bracketed" IsDns="false" HasOuterWS="false">::b605:4108</IPV6>
+    <IPV6 Address="--cfb8-5e3a.ipv6-literal.net" Type="UNC" IsDns="false" HasOuterWS="false">--cfb8-5e3a.ipv6-literal.net</IPV6>
+    <Invalid Address="--8278-eebc" />
+    <IPV6 Address="[::7ca1]" Type="Bracketed" IsDns="false" HasOuterWS="false">::7ca1</IPV6>
+    <IPV6 Address="--8cf1.ipv6-literal.net" Type="UNC" IsDns="false" HasOuterWS="false">--8cf1.ipv6-literal.net</IPV6>
+    <Invalid Address="[--8cf1.ipv6-literal.net]" />
+    <Invalid Address="--b373" />
+    <Invalid Address="[5148]" />
+    <HostName Address="e938.ipv6-literal.net" HasOuterWS="false">e938.ipv6-literal.net</HostName>
+    <Invalid Address="[::a813:61f6:a77c:809d:5246:129c:29e3:8d13]" />
+    <Invalid Address="--755c-83d1-80d2-84d6-e96a-5b67-57af-5d2d.ipv6-literal.net" />
+    <Invalid Address="--5ab-7e31-7d99-333a-b688-adea-7b1d-7bda" />
+    <Invalid Address="[3496:98f5:6dc2:b6bd:1da:9c76:43d:52bd:ffdd]" />
+    <HostName Address="3e17-f96-d076-6461-d6e5-c2f6-6343-a364-b315.ipv6-literal.net" HasOuterWS="false">3e17-f96-d076-6461-d6e5-c2f6-6343-a364-b315.ipv6-literal.net</HostName>
+    <HostName Address="a46e-c8b3-80a-cae7-fa29-e6d8-2ba2-88fe-12af" HasOuterWS="false">a46e-c8b3-80a-cae7-fa29-e6d8-2ba2-88fe-12af</HostName>
+    <Invalid Address="[b4d4:c271:e9ed:a66f:3d0:e1bb::795b]" />
+    <HostName Address="e07c-b6aa-6fd3-6b87-ab64-933d--68b1.ipv6-literal.net" HasOuterWS="false">e07c-b6aa-6fd3-6b87-ab64-933d--68b1.ipv6-literal.net</HostName>
+    <HostName Address="2dd4-77a0-8b25-4164-b680-100f--5da0" HasOuterWS="false">2dd4-77a0-8b25-4164-b680-100f--5da0</HostName>
+    <IPV6 Address="[e26b:3bd:a153:bd34:e6b4::2867]" Type="Bracketed" IsDns="false" HasOuterWS="false">e26b:3bd:a153:bd34:e6b4::2867</IPV6>
+    <IPV6 Address="4535-2210-84-7955-fcf4--af45.ipv6-literal.net" Type="UNC" IsDns="true" HasOuterWS="false">4535-2210-84-7955-fcf4--af45.ipv6-literal.net</IPV6>
+    <HostName Address="c2b2-4f58-278d-143c-8a56--7b51" HasOuterWS="false">c2b2-4f58-278d-143c-8a56--7b51</HostName>
+    <IPV6 Address="[d364:3f7d:7261:97fe::c18b]" Type="Bracketed" IsDns="false" HasOuterWS="false">d364:3f7d:7261:97fe::c18b</IPV6>
+    <IPV6 Address="4b26-23a5-6303-1b54--8af3.ipv6-literal.net" Type="UNC" IsDns="true" HasOuterWS="false">4b26-23a5-6303-1b54--8af3.ipv6-literal.net</IPV6>
+    <HostName Address="57f4-96ef-dcbe-1557--b29e" HasOuterWS="false">57f4-96ef-dcbe-1557--b29e</HostName>
+    <IPV6 Address="[2d4f:fe4a:8e30::921f]" Type="Bracketed" IsDns="false" HasOuterWS="false">2d4f:fe4a:8e30::921f</IPV6>
+    <IPV6 Address="f3cd-c0b7-3613--5571.ipv6-literal.net" Type="UNC" IsDns="true" HasOuterWS="false">f3cd-c0b7-3613--5571.ipv6-literal.net</IPV6>
+    <HostName Address="1476-b97-ade--831a" HasOuterWS="false">1476-b97-ade--831a</HostName>
+    <IPV6 Address="[cdee:7db6::7452]" Type="Bracketed" IsDns="false" HasOuterWS="false">cdee:7db6::7452</IPV6>
+    <IPV6 Address="9068-83aa--d6ea.ipv6-literal.net" Type="UNC" IsDns="true" HasOuterWS="false">9068-83aa--d6ea.ipv6-literal.net</IPV6>
+    <HostName Address="dcdf-1652--e1a0" HasOuterWS="false">dcdf-1652--e1a0</HostName>
+    <IPV6 Address="[b868::4ace]" Type="Bracketed" IsDns="false" HasOuterWS="false">b868::4ace</IPV6>
+    <IPV6 Address="fee5--d7b7.ipv6-literal.net" Type="UNC" IsDns="true" HasOuterWS="false">fee5--d7b7.ipv6-literal.net</IPV6>
+    <HostName Address="f67e--fd40" HasOuterWS="false">f67e--fd40</HostName>
+    <Invalid Address="[635d::]" />
+    <HostName Address="c6ac--.ipv6-literal.net" HasOuterWS="false">c6ac--.ipv6-literal.net</HostName>
+    <HostName Address="d914--" HasOuterWS="false">d914--</HostName>
+    <Invalid Address="[ad5e::]" />
+    <HostName Address="7e93--.ipv6-literal.net" HasOuterWS="false">7e93--.ipv6-literal.net</HostName>
+    <Invalid Address="[782c:a880:b060:4768:34e7:1080::]" />
+    <HostName Address="f294-ca5c-6fb5-5070-e7f8-ac90--.ipv6-literal.net" HasOuterWS="false">f294-ca5c-6fb5-5070-e7f8-ac90--.ipv6-literal.net</HostName>
+    <HostName Address="6dce-8910-84f-eb44-568c-3cbe--" HasOuterWS="false">6dce-8910-84f-eb44-568c-3cbe--</HostName>
+    <Invalid Address="[db60:7c6a::]" />
+    <HostName Address="27c2-534a--.ipv6-literal.net" HasOuterWS="false">27c2-534a--.ipv6-literal.net</HostName>
+    <HostName Address="88ba-d058--" HasOuterWS="false">88ba-d058--</HostName>
+    <Invalid Address="[f291:fe7:9a6e:b77d:a2d0:e5fe:aab:dd5d]" />
+    <HostName Address="f3a7-763b-f11b-98a3-3f90-f583-cef7-a033.ipv6-literal.net" HasOuterWS="false">f3a7-763b-f11b-98a3-3f90-f583-cef7-a033.ipv6-literal.net</HostName>
+    <HostName Address="9f27-d271-4253-2d8-2c77-fbc2-80be-5d15" HasOuterWS="false">9f27-d271-4253-2d8-2c77-fbc2-80be-5d15</HostName>
+</HostTestData>

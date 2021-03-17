@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="HostTestData" attributeFormDefault="unqualified" elementFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="NZString">
+        <xs:restriction base="xs:normalizedString">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="IPV6Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Normal" />
+            <xs:enumeration value="Bracketed" />
+            <xs:enumeration value="UNC" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="HostType">
+        <xs:simpleContent>
+            <xs:extension base="NZString">
+                <xs:attribute name="HasOuterWS" type="xs:boolean" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="HostTestData">
+        <xs:complexType>
+            <xs:choice minOccurs="128" maxOccurs="unbounded">
+                <xs:element name="Invalid">
+                    <xs:complexType>
+                        <xs:attribute name="Address" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="IPV4">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="HostType">
+                                <xs:attribute name="Address" type="xs:string" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="HostName">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="HostType">
+                                <xs:attribute name="Address" type="xs:string" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="IPV6">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="HostType">
+                                <xs:attribute name="Address" type="xs:string" use="required" />
+                                <xs:attribute name="Type" type="IPV6Type" use="required" />
+                                <xs:attribute name="IsDns" type="xs:boolean" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+        <xs:unique name="HostNameValue">
+            <xs:selector xpath="HostName|IPV4|IPV6" />
+            <xs:field xpath="@Address" />
+        </xs:unique>
+    </xs:element>
+</xs:schema>

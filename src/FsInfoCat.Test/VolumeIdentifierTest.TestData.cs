@@ -15,7 +15,7 @@ namespace FsInfoCat.Test
         private static readonly string _hostName;
         private static readonly string _systemDrivePath;
         private static readonly string _systemDriveUrl;
-        private static readonly string _ipV2Address;
+        private static readonly string _ipV4Address;
         private static readonly string _ipV6Address;
 
         static VolumeIdentifierTest()
@@ -24,7 +24,7 @@ namespace FsInfoCat.Test
             _systemDrivePath = Path.GetPathRoot(Environment.SystemDirectory);
             _systemDriveUrl = new Uri(_systemDrivePath, UriKind.Absolute).AbsoluteUri;
             IPAddress[] addressList = Dns.GetHostEntry(_hostName).AddressList;
-            _ipV2Address = addressList.Where(a => a.AddressFamily == AddressFamily.InterNetwork)
+            _ipV4Address = addressList.Where(a => a.AddressFamily == AddressFamily.InterNetwork)
                 .Select(a => a.ToString()).DefaultIfEmpty("127.0.0.1").First();
             _ipV6Address = addressList.Where(a => a.AddressFamily == AddressFamily.InterNetworkV6)
                 .Select(a => a.ToString()).DefaultIfEmpty("::1").First().Split('%')[0];
@@ -36,16 +36,16 @@ namespace FsInfoCat.Test
             .Select((t, i) => new TestCaseData(t.UUID)
                     .SetArgDisplayNames("guid")
                     .SetDescription($"{i}. {t.UUID} {t.Description}")
-                .Returns(t.StringValue.Substring(5)));
+                .Returns(t.StringValue[5..]));
 
         public static IEnumerable<TestCaseData> GetSerialNumberToIdentifierStringTestCases() => SerialNumberTestValues.GetTestValues(false)
             .Select((t, i) => new TestCaseData(t.SerialNumber, (byte?)null)
                 .SetDescription($"{i}. {t.SerialNumber} {t.Description}")
-                .Returns(t.StringValue.Substring(10)))
+                .Returns(t.StringValue[10..]))
             .Concat(SerialNumberOrdinalTestValues.GetTestValues()
                 .Select((t, i) => new TestCaseData(t.SerialNumber, t.Ordinal)
                     .SetDescription($"{i}. ({t.SerialNumber}, {t.Ordinal}) {t.Description}")
-                    .Returns(t.StringValue.Substring(10))));
+                    .Returns(t.StringValue[10..])));
 
         public static IEnumerable<TestCaseData> GetGuidToUrnTestCases() => UUIDTestValues.GetTestValues(false)
             .Select((t, i) => new TestCaseData(t.UUID)
@@ -124,19 +124,19 @@ namespace FsInfoCat.Test
                 .SetDescription($"\"{path}\"")
                 .Returns(new IdValues(expected, url));
 
-            path = $@"\\{_hostName}\Admin$\";
+            expected = $@"\\{_hostName}\Admin$\";
             yield return new TestCaseData(expected)
                 .SetDescription($"\"{expected}\"")
                 .Returns(new IdValues(expected, url));
 
-            path = $@"\\{_ipV2Address}\Us&Them";
+            path = $@"\\{_ipV4Address}\Us&Them";
             expected = $@"{path}\";
-            url = $"file://{_ipV2Address}/Us&Them/";
+            url = $"file://{_ipV4Address}/Us&Them/";
             yield return new TestCaseData(path)
                 .SetDescription($"\"{path}\"")
                 .Returns(new IdValues(expected, url));
 
-            path = $@"\\{_ipV2Address}\Us&Them\";
+            expected = $@"\\{_ipV4Address}\Us&Them\";
             yield return new TestCaseData(expected)
                 .SetDescription($"\"{expected}\"")
                 .Returns(new IdValues(expected, url));
@@ -148,7 +148,7 @@ namespace FsInfoCat.Test
                 .SetDescription($"\"{path}\"")
                 .Returns(new IdValues(expected, url));
 
-            path = $@"\\[{_ipV6Address}]\100% Done\";
+            expected = $@"\\[{_ipV6Address}]\100% Done\";
             yield return new TestCaseData(expected)
                 .SetDescription($"\"{expected}\"")
                 .Returns(new IdValues(expected, url));
@@ -209,9 +209,9 @@ namespace FsInfoCat.Test
                 .SetDescription($"\"{expected}\"")
                 .Returns(new IdValues(path, expected));
 
-            url = $"file://{_ipV2Address}/Us&Them";
+            url = $"file://{_ipV4Address}/Us&Them";
             expected = $"{url}/";
-            path = $@"\\{_ipV2Address}\Us&Them\";
+            path = $@"\\{_ipV4Address}\Us&Them\";
             yield return new TestCaseData(url)
                 .SetDescription($"\"{url}\"")
                 .Returns(new IdValues(path, expected));

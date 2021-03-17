@@ -34,19 +34,21 @@ namespace FsInfoCat.Util
         public const string MATCH_GROUP_NAME_HOST = "host";
         public const string MATCH_GROUP_NAME_PATH = "path";
         public const string MATCH_GROUP_NAME_FILE_NAME = "fileName";
-        public const string MATCH_GROUP_NAME_IPV2 = "ipv2";
+        public const string MATCH_GROUP_NAME_IPV4 = "ipv4";
         public const string MATCH_GROUP_NAME_IPV6 = "ipv6";
         public const string MATCH_GROUP_NAME_UNC = "unc";
         public const string MATCH_GROUP_NAME_DNS = "dns";
+        public const string MATCH_GROUP_NAME_DIR = "dir";
+        public const string MATCH_GROUP_NAME_ROOT = "root";
         public const string MATCH_GROUP_NAME_SCHEME = "scheme";
 
         /*
          * Patterns
          * Extended Non-Printable Ranges: [\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff]
-         * IPV2: (?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}
+         * IPV4: (?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}
          * IPV6 with host: (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)(?<d>\.ipv6-literal\.net)?\]?
          * IPV6: (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7})\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+)\]?
-         * DNS: (?=[^\s/]{1,255}(![\w-]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?
+         * DNS: (?=[^\s/]{1,255}(?![\w-]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?
          */
 
         /// <summary>
@@ -54,14 +56,14 @@ namespace FsInfoCat.Util
         /// </summary>
         public static readonly Regex URI_PATH_SEGMENT_REGEX = new Regex(@"(?:^|\G)(?:/|([^/]+)(?:/|$))", RegexOptions.Compiled);
 
-        public const string PATTERN_HOST_NAME = @"(?i)^\s*((?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}|(?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7})\[?([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+)\]?|(?=[^\s/]{1,255}(![\w-]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
+        public const string PATTERN_HOST_NAME = @"(?i)^\s*((?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}|(?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7})\[?([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+)\]?|(?=[^\s/]{1,255}(?![\w-]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
 
         /// <summary>
         /// Matches a host name.
         /// </summary>
         /// <remarks>
         /// <list type="bullet">
-        /// <item><term>ipv2</term> Matches IPV2 address (<see cref="MATCH_GROUP_NAME_IPV2"/>).</item>
+        /// <item><term>ipv4</term> Matches IPV4 address (<see cref="MATCH_GROUP_NAME_IPV4"/>).</item>
         /// <item><term>ipv6</term> Matches an IPV6 address without any surrounding brackets or the UNC domain text (<see cref="MATCH_GROUP_NAME_IPV6"/>).</item>
         /// <item><term>unc</term> Matches the <c>.ipv6-literal.net</c> domain name for IPV6 UNC notation (<see cref="MATCH_GROUP_NAME_UNC"/>).
         /// If this group matches, then hexidecimal groups for the IPV6 address are separated by dashes rather than colons.</item>
@@ -70,13 +72,9 @@ namespace FsInfoCat.Util
         public static readonly Regex HOST_NAME_W_UNC_REGEX = new Regex(@"^
 (
     (?=(\d+\.){3}\d+)
-    (?<ipv2>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+    (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
 |
-    (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)
-    \[?
-    (?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)
-    (?<d>\.ipv6-literal\.net)?
-    \]?
+    (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])(([:-][a-f\d]{1,4})+|[:-]))(\]|(?<unc>\.ipv6-literal\.net))?
 |
     (?=[^\s/]{1,255})
     (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
@@ -87,20 +85,16 @@ namespace FsInfoCat.Util
         /// </summary>
         /// <remarks>
         /// <list type="bullet">
-        /// <item><term>ipv2</term> Matches IPV2 address.</item>
-        /// <item><term>ipv6</term> Matches an IPV6 address without any surrounding brackets.</item>
-        /// If this group matches, then hexidecimal groups for the IPV6 address are separated by dashes rather than colons.</item>
-        /// <item><term>dns</term> Matches a DNS host name.</item>
+        /// <item><term>ipv4</term> Matches IPV4 address (<see cref="MATCH_GROUP_NAME_IPV4"/>).</item>
+        /// <item><term>ipv6</term> Matches an IPV6 address without any surrounding brackets (<see cref="MATCH_GROUP_NAME_IPV6"/>).</item>
+        /// <item><term>dns</term> Matches a DNS host name (<see cref="MATCH_GROUP_NAME_DNS"/>).</item>
         /// </list></remarks>
         public static readonly Regex HOST_NAME_REGEX = new Regex(@"^
 (
     (?=(\d+\.){3}\d+)
-    (?<ipv2>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+    (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
 |
-    (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7})
-    \[?
-    (?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)
-    \]?
+    (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$)\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)((:[a-f\d]{1,4})+|:))\]?
 |
     (?=[^\s/]{1,255})
     (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
@@ -113,73 +107,61 @@ namespace FsInfoCat.Util
         /// </summary>
         /// <remarks>
         /// <list type="bullet">
-        /// <item><term>ipv6</term> Matches the actual address without any surrounding brackets.</item>
+        /// <item><term>ipv6</term> Matches the actual address without any surrounding brackets (<see cref="MATCH_GROUP_NAME_DNS"/>).</item>
         /// </list></remarks>
-        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(@"^(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7})\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|:)(:[a-f\d]{1,4})+)\]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(@"^(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$)\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)((:[a-f\d]{1,4})+|:))\]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
-        public const string PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(((?<file>file)://|[\\/]{2})(?<host>(?=(\d+\.){3}\d+)(?<ipv2>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})|(?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)(?<d>\.ipv6-literal\.net)?\]?|(?=[^\s/]{1,255}(![\w-]))(?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?))|((?<file>file):///)?(?=[a-z]:|/))(?<path>([a-z]:)?([\\/](?=\s*$)|([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff\\/%]+|%((?![a-f\d]{2})|0[1-9a-f]|[1-9a-f]))+)*))[\\/]?\s*$";
+        public static readonly Regex ANY_FILE_URI_STRICT_REGEX = new Regex(@"^
+(
+    file://
+    (?i)
+    ([a-z\d][\w-.]*|[a-f\d:]+)?
+|
+    (?i)
+    (
+        [!$=&-.:;=@[\]\w]+
+    |
+        %(0[1-9a-f]|[1-9a-f][\da-f])
+    )*
+)
+(?i)
+(
+    /
+    (
+        [!$=&-.:;=@[\]\w]+
+    |
+        %(0[1-9a-f]|[1-9a-f][\da-f])
+    )+
+)
+*/?$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
+        public const string PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(((?<file>file)://|[\\/]{2})(?<host>(?=(\d+\.){3}\d+)(?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})|(?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)(?<d>\.ipv6-literal\.net)?\]?|(?=[^\s/]{1,255}(?![\w-]))(?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?))|((?<file>file):///)?(?=[a-z]:|/))(?<path>([a-z]:)?([\\/](?=\s*$)|([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff\\/%]+|%((?![a-f\d]{2})|0[1-9a-f]|[1-9a-f]))+)*))[\\/]?\s*$";
+
+        [Obsolete("This does not distinguish between a windows drive path and a linux path that might look like a windows drive path. file:///c:/dirname not parsed with root as c:/")]
         public static readonly Regex FILE_URI_COMPONENTS_LAX_REGEX = new Regex(@"^
 (?<file>
     file://
     (?<host>[^/?#]+)?
 )?
 (?<path>
-    /(?=$)
-    |
-    ((?=[^/]+/[^/])[^/]+)?
-    (
-        (?=/[^/]+/[^/])
-        /
-        [^/]+
-    )*
+    (?<dir>
+        /(?=([^/]+/?)$)
+        |
+        ((?=[^/]+/[^/])[^/]+)?
+        (
+            (?=/[^/]+/[^/])
+            /
+            [^/]+
+        )*
+    )
+    (?<fileName>[^/]+)?
 )
-(?<fileName>[^/]*)/?$");
+/?$");
 
         private static readonly char[] _INVALID_FILENAME_CHARS;
 
         public static readonly FileUriConverter CURRENT_FACTORY;
         public static readonly FileUriConverter ALT_FACTORY;
-
-        ///// <summary>
-        ///// Regular expression which can be used to detect the input string type.
-        ///// </summary>
-        ///// <remarks>Group names are as follows:
-        ///// <list type="bullet">
-        ///// <item><see cref="FORMAT_DETECT_MATCH_GROUP_FILE_URL">f</see> - Matches an absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URI string.</item>
-        ///// <item><see cref="FORMAT_DETECT_MATCH_GROUP_UNC">u</see> - Matches a UNC path string.</item>
-        ///// <item><see cref="PATH_MATCH_GROUP_NAME_HOST">h</see> - Matches the host name.</item>
-        ///// <item><see cref="PATH_MATCH_GROUP_NAME_PATH">p</see> - Matches the rooted path string.</item>
-        ///// <item><see cref="FORMAT_DETECT_MATCH_GROUP_NON_FILE">x</see> - Matches a URI string that is not a <seealso cref="Uri.UriSchemeFile">file</seealso> URI string.</item>
-        ///// </list></remarks>
-        //public abstract Regex FormatDetectionRegex { get; }
-
-        ///// <summary>
-        ///// Regular expression that matches a valid host name.
-        ///// </summary>
-        //public abstract Regex HostNameRegex { get; }
-
-        ///// <summary>
-        ///// Matches a well-formed URI that can be converted to a valid absolute or relative local path on the target filesystem type.
-        ///// </summary>
-        ///// <remarks>Group names are as follows:
-        ///// <list type="bullet">
-        ///// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
-        ///// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>1:2:3:4:5:6:7:8
-        ///// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-        ///// </list></remarks>
-        //public abstract Regex FileUriStrictRegex { get; }
-
-        ///// <summary>
-        ///// Matches a well-formed local path on the target filesystem type.
-        ///// </summary>
-        ///// <remarks>Group names are as follows:
-        ///// <list type="bullet">
-        ///// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_ABSOLUTE">a</seealso></term> Text is an absolute local path. If this group is not matched, then the text is a relative local path.</item>
-        ///// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This implies that the text is a URN.</item>
-        ///// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path minus the host name. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
-        ///// </list></remarks>
-        //public abstract Regex LocalFsPathRegex { get; }
 
         /// <summary>
         /// Character which separates path segments on the target filesystem.
@@ -195,30 +177,6 @@ namespace FsInfoCat.Util
         /// The target filesystem platform type.
         /// </summary>
         public abstract PlatformType FsPlatform { get; }
-
-        //public static bool IsAbsoluteGroupMatch(Match match) => match.Success && match.Groups[PATH_MATCH_GROUP_NAME_ABSOLUTE].Success;
-
-        //public static string GetPathGroupMatchValue(Match match)
-        //{
-        //    if (match.Success)
-        //    {
-        //        Group g = match.Groups[PATH_MATCH_GROUP_NAME_PATH];
-        //        if (g.Success)
-        //            return g.Value;
-        //    }
-        //    return "";
-        //}
-
-        //public static string GetHostGroupMatchValue(Match match)
-        //{
-        //    if (match.Success)
-        //    {
-        //        Group g = match.Groups[PATH_MATCH_GROUP_NAME_HOST];
-        //        if (g.Success)
-        //            return g.Value;
-        //    }
-        //    return "";
-        //}
 
         /// <summary>
         /// Determines whether a string is valid for use as a file name on the local file system.
@@ -510,43 +468,40 @@ namespace FsInfoCat.Util
         /// otherwise, <see langword="false"/>.</returns>
         protected abstract bool TryParseUriString(string uriString, out FileUri fileUri);
 
-        public static bool TrySplitFileUriString(string uriString, out string hostName, out string path, out string fileName, out bool isAbsolute)
+        public static bool TrySplitFileUriString(string uriString, PlatformType platform, bool includeAltPlatform, out string hostName, out string directory, out string fileName, out bool isAbsolute)
         {
-            Match match = FILE_URI_COMPONENTS_LAX_REGEX.Match(uriString);
-            if (match.Success)
+            if (includeAltPlatform)
             {
-                isAbsolute = match.Groups[MATCH_GROUP_NAME_FILE].Success;
-                if (isAbsolute)
-                    hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
-                else
-                    hostName = "";
-                path = match.GetGroupValue(MATCH_GROUP_NAME_PATH, "");
-                fileName = match.GetGroupValue(MATCH_GROUP_NAME_FILE_NAME, "");
-                return true;
+                FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
+                return currentFactory.TrySplitFileUriString(uriString, out hostName, out directory, out fileName, out isAbsolute) ||
+                        altFactory.TrySplitFileUriString(uriString, out hostName, out directory, out fileName, out isAbsolute);
             }
-            hostName = fileName = "";
-            path = uriString;
-            isAbsolute = false;
-            return false;
+            return GetFactory(platform).TrySplitFileUriString(uriString, out hostName, out directory, out fileName, out isAbsolute);
         }
 
-        public static int GetComponentIndexes(string fileUriString, out bool isAbsolute, out int hostIndex, out int leafIndex)
-        {
-            if (string.IsNullOrEmpty(fileUriString))
-            {
-                isAbsolute = false;
-                hostIndex = leafIndex = 0;
-                return 0;
-            }
-            Match match = FILE_URI_COMPONENTS_LAX_REGEX.Match(fileUriString);
-            isAbsolute = match.Groups["a"].Success;
-            leafIndex = (match.Groups["n"].Success) ? match.Groups["n"].Index : match.Groups["d"].Index;
-            if (isAbsolute)
-                hostIndex = (match.Groups["h"].Success) ? match.Groups["h"].Index : match.Groups["a"].Length;
-            else
-                hostIndex = 0;
-            return match.Groups["d"].Index;
-        }
+        public abstract bool TrySplitFileUriString(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute);
+
+        [Obsolete("Use instance method, instead.")]
+        public static bool TrySplitFileUriString_obsolete(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute) =>
+            TrySplitFileUriString(uriString, PlatformType.Unknown, false, out hostName, out directory, out fileName, out isAbsolute);
+
+        //public static int GetComponentIndexes(string fileUriString, out bool isAbsolute, out int hostIndex, out int leafIndex)
+        //{
+        //    if (string.IsNullOrEmpty(fileUriString))
+        //    {
+        //        isAbsolute = false;
+        //        hostIndex = leafIndex = 0;
+        //        return 0;
+        //    }
+        //    Match match = FILE_URI_COMPONENTS_LAX_REGEX.Match(fileUriString);
+        //    isAbsolute = match.Groups["a"].Success;
+        //    leafIndex = (match.Groups["n"].Success) ? match.Groups["n"].Index : match.Groups["d"].Index;
+        //    if (isAbsolute)
+        //        hostIndex = (match.Groups["h"].Success) ? match.Groups["h"].Index : match.Groups["a"].Length;
+        //    else
+        //        hostIndex = 0;
+        //    return match.Groups["d"].Index;
+        //}
 
         public static string EnsureWellFormedUri(string value, UriKind kind, PlatformType platform, bool allowAlt = false)
         {

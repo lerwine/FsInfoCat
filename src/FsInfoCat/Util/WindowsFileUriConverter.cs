@@ -30,7 +30,7 @@ namespace FsInfoCat.Util
 //        /// <list type="bullet">
 //        /// <item><term>host</term> Matches the host name. This implies that the text is a UNC path.
 //        /// <list type="bullet">
-//        /// <item><term>ipv2</term> Matches an IPV2 host name. This implies that the text is a UNC path.</item>
+//        /// <item><term>ipv4</term> Matches an IPV4 host name. This implies that the text is a UNC path.</item>
 //        /// <item><term>ipv6</term> Matches an IPV6 host name. This implies that the text is a UNC path.
 //        /// <list type="bullet">
 //        /// <item><term>d</term> Matches the domain of an IPV6 address. This implies that the text is a UNC path.</item>
@@ -49,7 +49,7 @@ namespace FsInfoCat.Util
 //    (//|\\\\)
 //    (?<host>
 //        (?=\d+(\.\d+){3})
-//        (?<ipv2>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+//        (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
 //    |
 //        (?=
 //            \[[a-f\d]*(:[a-f\d]*){2,7}\]
@@ -112,7 +112,7 @@ namespace FsInfoCat.Util
         /// <list type="bullet">
         /// <item><term>host</term> Matches the host name. This implies that the text is an absolute UNC path.
         /// <list type="bullet">
-        /// <item><term>ipv2</term> Matches an IPV2 host name. This implies that the text is an absolute UNC path.</item>
+        /// <item><term>ipv4</term> Matches an IPV4 host name. This implies that the text is an absolute UNC path.</item>
         /// <item><term>ipv6</term> Matches an IPV6 host name. This implies that the text is an absolute UNC path.
         /// <list type="bullet">
         /// <item><term>d</term> Matches the domain of an IPV6 address. This implies that the text is an absolute UNC path.</item>
@@ -132,7 +132,7 @@ namespace FsInfoCat.Util
     (//|\\\\)
     (?<host>
         (?=(\d+\.){3}\d+)
-        (?<ipv2>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+        (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
     |
         (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)
         \[?
@@ -140,7 +140,7 @@ namespace FsInfoCat.Util
         (?<d>\.ipv6-literal\.net)?
         \]?
     |
-        (?=[^\s/]{1,255}(![\w-]))
+        (?=[^\s/]{1,255}(?![\w-]))
         (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
     )
     (?=[/\\]|$)
@@ -166,16 +166,6 @@ namespace FsInfoCat.Util
 )
 [\\/]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
-        /// <summary>
-        /// Matches an IPV6 address
-        /// </summary>
-        /// <remarks>
-        /// <list type="bullet">
-        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_IPV6">ipv6</seealso></term> Matches the actual address without any surrounding brackets or the UNC domain text.</item>
-        /// <item><term><seealso cref="HOST_NAME_MATCH_GROUP_NAME_UNC">unc</seealso></term> Matches the <c>.ipv6-literal.net</c> domain name for UNC notation. If this group matches, then hexidecimal groups are separated by dashes rather than colons.</item>
-        /// </list></remarks>
-        public static readonly Regex LOCAL_IPV6_ADDRESS_REGEX = new Regex(@"^(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)(?<unc>\.ipv6-literal\.net)?\]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
         public const string PATTERN_ABSOLUTE_FILESYSTEM_OR_LAX_FILE_URI = @"(?i)^\s*(?=\S)(file://([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?|/[a-f]:)|[\\/]{2}([a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?|\[?(:(:[a-f\d]{1,4}){1,7}|(?=[a-f\d]{0,4}(:[a-f\d]{0,4}){2,7})([a-f\d]+:)+(:|(:[a-f\d]+)+))\]?)|[a-f]:)([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff/"" <>\\/|]+|%([^012357%]|2[^2af]|3[^acef]|[57][^c]|(?=%|$)))+)*[\\/]?\s*$";
 
         /// <summary>
@@ -188,7 +178,7 @@ namespace FsInfoCat.Util
     ((?<file>file)://|[\\/]{2})
     (?<host>
         (?=(\d+\.){3}\d+)
-        (?<ipv2>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+        (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
     |
         (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)
         \[?
@@ -196,7 +186,7 @@ namespace FsInfoCat.Util
         (?<d>\.ipv6-literal\.net)?
         \]?
     |
-        (?=[^\s/]{1,255}(![\w-]))
+        (?=[^\s/]{1,255}(?![\w-]))
         (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
     )
 |
@@ -271,9 +261,21 @@ namespace FsInfoCat.Util
         /// </summary>
         /// <remarks>Named group match meanings:
         /// <list type="bullet">
-        /// <item><term>file</term> Text is an absolute file URL. If this group is not matched, then the text is a relative URL that can be used as the path of a file URL.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_HOST">h</seealso></term> Matches the host name. This will never match when group <c>a</c> is not matched.</item>
-        /// <item><term><seealso cref="PATH_MATCH_GROUP_NAME_PATH">p</seealso></term> Matches the path. This match will always succeed when entire expression succeeds, even if the path is an empty string.</item>
+        /// <item><term>host</term> Matches the host name. This implies that the text is an absolute UNC path.
+        /// <list type="bullet">
+        /// <item><term>ipv4</term> Matches an IPV4 host name. This implies that the text is an absolute UNC path.</item>
+        /// <item><term>ipv6</term> Matches an IPV6 host name. This implies that the text is an absolute UNC path.
+        /// <list type="bullet">
+        /// <item><term>d</term> Matches the domain of an IPV6 address. This implies that the text is an absolute UNC path.</item>
+        /// </list></item>
+        /// <item><term>dns</term> Matches a DNS host name. This implies that the text is an absolute UNC path.</item>
+        /// </list></item>
+        /// <item><term>path</term> Matches the path string.
+        /// <list type="bullet">
+        /// <item><term>dir</term> Matches the parent directory path. This group will always succeed when the expression succeeds, even if it is empty.
+        /// The trailing directory separator will be omitted unless it is the root path.</item>
+        /// <item><term>fileName</term> Matches the file name. This group will only fail if the source path is the root path.</item>
+        /// </list></item>
         /// </list></remarks>
         public static readonly Regex FILE_URI_STRICT_REGEX = new Regex(@"^
 (?<file>
@@ -282,7 +284,7 @@ namespace FsInfoCat.Util
     (
         (?<host>
             (?=(\d+\.){3}\d+)
-            (?<ipv2>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+            (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
         |
             (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)
             \[?
@@ -290,7 +292,7 @@ namespace FsInfoCat.Util
             (?<d>\.ipv6-literal\.net)?
             \]?
         |
-            (?=[^\s/]{1,255}(![\w-]))
+            (?=[^\s/]{1,255}(?![\w-]))
             (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
         )
         (?=/|$)
@@ -308,7 +310,7 @@ namespace FsInfoCat.Util
             ([!$&-)+-.=@[\]\w]+|%(2[013-9b-e]|3[\dd]|[57][\dabdef]|[4689][\da-f]))+
         )?
         (
-            /(?=$)
+            /(?=([^/]+/?)?$)
             |
             (
                 (?=/[^/]+/[^/])
@@ -322,8 +324,7 @@ namespace FsInfoCat.Util
         (?<fileName>([!$&-)+-.=@[\]\w]+|%(2[013-9b-e]|3[\dd]|[57][\dabdef]|[4689][\da-f]))+)
     )?
 )
-/?
-", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
+/?$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
         private WindowsFileUriConverter() { }
 
@@ -386,7 +387,7 @@ namespace FsInfoCat.Util
             {
                 hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
                 path = match.GetGroupValue(MATCH_GROUP_NAME_PATH, "");
-                match = LOCAL_IPV6_ADDRESS_REGEX.Match(hostName);
+                match = IPV6_ADDRESS_REGEX.Match(hostName);
                 if (match.Success && match.Groups[MATCH_GROUP_NAME_UNC].Success)
                     hostName = match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace('-', ':');
             }
@@ -414,7 +415,7 @@ namespace FsInfoCat.Util
             {
                 hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
                 path = match.GetGroupValue(MATCH_GROUP_NAME_PATH, "");
-                match = LOCAL_IPV6_ADDRESS_REGEX.Match(hostName);
+                match = IPV6_ADDRESS_REGEX.Match(hostName);
                 if (match.Success && match.Groups[MATCH_GROUP_NAME_UNC].Success)
                     hostName = match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace('-', ':');
             }
@@ -487,6 +488,11 @@ namespace FsInfoCat.Util
         /// <returns><see langword="true"/> if the <paramref name="uriString"/> could be parsed as an absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL;
         /// otherwise, <see langword="false"/>.</returns>
         protected override bool TryParseUriString(string uriString, out FileUri fileUri)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool TrySplitFileUriString(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute)
         {
             throw new NotImplementedException();
         }

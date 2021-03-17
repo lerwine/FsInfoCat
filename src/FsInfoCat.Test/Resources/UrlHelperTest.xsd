@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="Windows-1252"?>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:complexType name="CaptureType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -23,9 +23,9 @@
     <xs:complexType name="OSType">
         <xs:sequence>
             <xs:element name="FsPathRegex" type="MatchType" />
-            <!--<xs:element name="FsPathPattern" type="CaptureType" />-->
             <xs:element name="FormatGuess" type="MatchType" />
             <xs:element name="FileUriStrict" type="MatchType" />
+            <xs:element name="TrySplitFileUriString" type="TrySplitFileUriStringType" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="AuthorityCaseInsensitiveEqualsType">
@@ -67,29 +67,25 @@
             <xs:enumeration value="Relative" />
         </xs:restriction>
     </xs:simpleType>
-    <!--<xs:complexType name="ParseUriOrPathType">
-        <xs:sequence>
-            <xs:element name="Expected">
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="FileStringFormat">
-                            <xs:attribute name="HostName" type="xs:string" use="required" />
-                            <xs:attribute name="Path" type="xs:string" use="required" />
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-        <xs:attribute name="PreferFsPath" type="xs:string" use="required" />
-    </xs:complexType>-->
-    <xs:complexType name="TryParseFileUriStringType">
+    <xs:complexType name="TrySplitFileUriStringType">
         <xs:simpleContent>
             <xs:extension base="xs:boolean">
                 <xs:attribute name="HostName" type="xs:string" use="optional" />
-                <xs:attribute name="AbsolutePath" type="xs:string" use="optional" />
-                <xs:attribute name="LeafIndex" type="xs:int" use="required" />
+                <xs:attribute name="Path" type="xs:string" use="optional" />
+                <xs:attribute name="FileName" type="xs:string" use="optional" />
+                <xs:attribute name="IsAbsolute" type="xs:boolean" use="optional" />
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="WindowsOrLinuxType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Windows" />
+            <xs:enumeration value="Linux" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="TrySplitFileUriStringStaticType">
+        <xs:attribute name="Platform" type="WindowsOrLinuxType" use="required" />
+        <xs:attribute name="IncludingAltPlatform" type="WindowsOrLinuxType" use="required" />
     </xs:complexType>
     <xs:complexType name="IsWellFormedFileUriStringType">
         <xs:simpleContent>
@@ -113,14 +109,13 @@
                 <xs:element name="Linux"  type="OSType" />
             </xs:sequence>
             <xs:element name="AuthorityCaseInsensitiveEquals" type="AuthorityCaseInsensitiveEqualsType" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="TryParseFileUriString" type="TryParseFileUriStringType" minOccurs="0" />
             <xs:element name="IsWellFormedFileUriString" type="IsWellFormedFileUriStringType" minOccurs="0" maxOccurs="3" />
-            <!--<xs:element name="ParseUriOrPath" type="ParseUriOrPathType" minOccurs="0" maxOccurs="2" />-->
             <xs:element name="AsNormalized" type="xs:string" minOccurs="0" />
             <xs:element name="SplitQueryAndFragment" type="SplitQueryAndFragmentType" minOccurs="0" />
             <xs:element name="AsRelativeUriString" type="xs:string" minOccurs="0" />
             <xs:element name="PatternAnyAbsFileUriOrLocalLax" type="CaptureType" />
             <xs:element name="FileUriComponentsLaxRegex" type="MatchType" />
+            <xs:element name="TrySplitFileUriString" type="TrySplitFileUriStringStaticType" minOccurs="0" maxOccurs="2" />
         </xs:sequence>
         <xs:attribute name="Value" type="xs:string" use="required" />
         <xs:attribute name="Description" type="xs:string" use="required" />
@@ -128,7 +123,7 @@
     </xs:complexType>
     <xs:complexType name="HostNameTestDataType">
         <xs:sequence>
-            <!--<xs:element name="Ipv2AddressRegex" type="CaptureType" />-->
+            <!--<xs:element name="Ipv4AddressRegex" type="CaptureType" />-->
             <xs:element name="Ipv6AddressRegex" type="MatchType" />
             <xs:element name="HostNameRegex" type="MatchType" />
             <xs:element name="PatternHostName" type="CaptureType" />

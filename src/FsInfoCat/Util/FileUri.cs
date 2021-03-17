@@ -29,19 +29,20 @@ namespace FsInfoCat.Util
         /// <remarks>The <seealso cref="Uri.IsWellFormedUriString(string, UriKind)"/> method is utilized to determine if <paramref name="fileUriString"/> is well-formed.
         /// <para><see cref="IsDirectory"/> will be set to <see langword="true"/> if <paramref name="fileUriString"/> ends with the <c>/</c> character, is a file URI with no path specified, or if <paramref name="fileUriString"/> is null or empty.</para>
         /// <para><seealso cref="UriHelper.AsNormalized(Uri)"/></para></remarks>
-        public FileUri(string fileUriString = "")
+        public FileUri(string fileUriString = "", PlatformType platform = PlatformType.Unknown)
         {
             if (string.IsNullOrEmpty(fileUriString))
             {
                 Host = Name = "";
                 Parent = null;
             }
-            else if (Uri.IsWellFormedUriString(fileUriString, UriKind.Absolute) && FileUriConverter.TrySplitFileUriString(fileUriString, out string hostName, out string absolutePath, out string fileName, out bool isAbsolute) && isAbsolute)
+#warning Need to add platform argument to TrySplitFileUriString
+            else if (Uri.IsWellFormedUriString(fileUriString, UriKind.Absolute) && FileUriConverter.TrySplitFileUriString_obsolete(fileUriString, out string hostName, out string directory, out string fileName, out bool isAbsolute) && isAbsolute)
             {
                 Host = hostName;
                 Name = fileName;
-                if (absolutePath.Length > 0)
-                    Parent = new FileUri(Host, absolutePath);
+                if (directory.Length > 0)
+                    Parent = new FileUri(Host, directory);
                 else
                     Parent = null;
             }

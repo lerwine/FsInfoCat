@@ -1,14 +1,24 @@
 <RunSettings>
     <RunConfiguration>
         <SolutionDirectory>C:\Users\lerwi\source\repos\FsInfoCat\src\</SolutionDirectory>
+        <!--<ResultsDirectory>.\TestResults</ResultsDirectory>-->
     </RunConfiguration>
+    <!--<LoggerRunSettings>
+        <Loggers>
+            <Logger friendlyName="trx" enabled="True">
+                <Configuration>
+                    <LogFileName>foo.trx</LogFileName>
+                </Configuration>
+            </Logger>
+        </Loggers>
+    </LoggerRunSettings>-->
     <NUnit>
         <UseNUnitIdforTestCaseId>true</UseNUnitIdforTestCaseId>
-        <ShowInternalProperties>true</ShowInternalProperties>
+        <!--<ShowInternalProperties>true</ShowInternalProperties>
         <Verbosity>3</Verbosity>
-        <WorkDirectory>C:\Users\lerwi\Git\FsInfoCat\src\TestResultData\</WorkDirectory>
-        <TestOutputXml>C:\Users\lerwi\Git\FsInfoCat\src\TestResultInfo\</TestOutputXml>
+        <TestOutputXml>C:\Users\lerwi\Git\FsInfoCat\src\TestResultInfo\</TestOutputXml>-->
         <!--
+        <WorkDirectory>C:\Users\lerwi\Git\FsInfoCat\src\TestResultData\</WorkDirectory>
         <CollectSourceInformation>True</CollectSourceInformation>
         <InternalTraceLevel>Debug</InternalTraceLevel>
         <DumpXmlTestDiscovery>true</DumpXmlTestDiscovery>-->

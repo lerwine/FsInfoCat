@@ -24,15 +24,15 @@ namespace FsInfoCat.Test
                 Assert.That(NormalizedUrl.Query, Is.Empty, $"Invalid test data: {url.OriginalString}");
                 Assert.That(NormalizedUrl.Fragment, Is.Empty, $"Invalid test data: {url.OriginalString}");
                 if (originalString.EndsWith("#"))
-                    originalString = originalString.Substring(0, originalString.Length - 1);
+                    originalString = originalString[0..^1];
                 if (originalString.EndsWith("?"))
-                    originalString = originalString.Substring(0, originalString.Length - 1);
+                    originalString = originalString[0..^1];
                 UrlParam = originalString;
                 Collection<UrlTestValues> variants = new Collection<UrlTestValues>();
                 _variants = new ReadOnlyCollection<UrlTestValues>(variants);
                 UrlTestValues pathVariant;
                 HasTrailingSlash = NormalizedUrl.AbsolutePath.EndsWith('/');
-                string noSlashUrl = (HasTrailingSlash) ? originalString.Substring(0, originalString.Length - 1) : $"{originalString}/";
+                string noSlashUrl = (HasTrailingSlash) ? originalString[0..^1] : $"{originalString}/";
                 if (originalString != NormalizedUrl.AbsoluteUri)
                 {
                     Description = $"Improper URL {description}";
@@ -52,7 +52,7 @@ namespace FsInfoCat.Test
                     Description = description;
                     variants.Add(this);
                 }
-                noSlashUrl = (HasTrailingSlash) ? NormalizedUrl.AbsolutePath.Substring(0, NormalizedUrl.AbsolutePath.Length - 1) : $"{NormalizedUrl.AbsolutePath}/";
+                noSlashUrl = (HasTrailingSlash) ? NormalizedUrl.AbsolutePath[0..^1] : $"{NormalizedUrl.AbsolutePath}/";
                 variants.Add(new UrlTestValues(this, $"{noSlashUrl}?", $"{description} with empty query", false));
                 variants.Add(new UrlTestValues(this, $"{noSlashUrl}#", $"{description} with empty fragment", false));
                 if (HasTrailingSlash)
@@ -76,7 +76,7 @@ namespace FsInfoCat.Test
             {
                 yield return new UrlTestValues(new Uri(@"\\servicenowdiag479.file.core.windows.net\testazureshare\", UriKind.Absolute), "File UNC with fqdn");
                 yield return new UrlTestValues(new Uri($@"\\{_hostName}\$Admin\", UriKind.Absolute), "File UNC");
-                yield return new UrlTestValues(new Uri($@"\\{_ipV2Address}\Us&Them\", UriKind.Absolute), "File with IPV2");
+                yield return new UrlTestValues(new Uri($@"\\{_ipV4Address}\Us&Them\", UriKind.Absolute), "File with IPV4");
                 yield return new UrlTestValues(new Uri($@"\\[{_ipV6Address}]\100% Done", UriKind.Absolute), "File with IPV6");
                 yield return new UrlTestValues(new Uri($"urn:uuid:{Guid.NewGuid().ToString("b").ToLower()}", UriKind.Absolute), "UUID urn");
             }
