@@ -157,6 +157,7 @@ namespace FsInfoCat.PS
             y = CreateKey(y, out _);
             if (ReferenceEquals(x, y))
                 return true;
+            // TODO: Implement Equals
             throw new NotImplementedException();
         }
 
@@ -169,6 +170,7 @@ namespace FsInfoCat.PS
 
         public int GetHashCode(FileUri obj)
         {
+            // TODO: Implement GetHashCode
             throw new NotImplementedException();
         }
 

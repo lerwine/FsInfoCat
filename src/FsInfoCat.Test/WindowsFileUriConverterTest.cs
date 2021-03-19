@@ -31,30 +31,10 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFsPathRegexTestCases))]
         public string FsPathRegexTest(string input, bool base64Encoded)
         {
-            Match match = WindowsFileUriConverter.FS_PATH_REGEX.Match(input);
+            Match match = WindowsFileUriConverter.FS_HOST_DIR_AND_FILE_REGEX.Match(input);
+#warning Test does not include all groups
             return UrlHelperTest.ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "root", "host", "path");
         }
-
-        //public static IEnumerable<TestCaseData> GetFsPathPatternTestCases()
-        //{
-        //    return UrlHelperTest.GetUriTestData().Select(element =>
-        //    {
-        //        XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FsPathPattern");
-        //        Console.WriteLine($"Emitting {expected}");
-        //        bool base64Encoded = element.GetAttribute("Base64") == "true";
-        //        return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
-        //            .SetDescription(element.GetAttribute("Description"))
-        //            .Returns(expected.OuterXml);
-        //    });
-        //}
-        //
-        //[Test, Property("Priority", 1)]
-        //[TestCaseSource(nameof(GetFsPathPatternTestCases))]
-        //public string FsPathPatternTest(string input, bool base64Encoded)
-        //{
-        //    Match match = Regex.Match(input, WindowsFileUriConverter.PATTERN_ABS_FS_PATH);
-        //    return UrlHelperTest.ToTestReturnValueXml(match, "FsPathPattern", base64Encoded);
-        //}
 
         public static IEnumerable<TestCaseData> GetFormatDetectionRegexTestCases()
         {
@@ -94,7 +74,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFileUriStrictTestCases))]
         public string FileUriStrictTest(string input, bool base64Encoded)
         {
-            Match match = WindowsFileUriConverter.FILE_URI_STRICT_REGEX.Match(input);
+            Match match = WindowsFileUriConverter.URI_HOST_DIR_AND_FILE_STRICT_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "file", "host", "ipv4", "ipv6", "d", "dns", "path", "dir", "fileName");
         }
 
@@ -164,7 +144,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetHostNameRegexTestCases))]
         public string HostNameRegexTest(string input)
         {
-            Match match = WindowsFileUriConverter.HOST_NAME_W_UNC_REGEX.Match(input);
+            Match match = WindowsFileUriConverter.HOST_NAME_OR_ADDRESS_FOR_FS_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "HostNameRegex", "ipv4", "ipv6", "d", "dns");
         }
 
@@ -262,6 +242,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
         {
+            // TODO: Implement GetToFileSystemPathTestCases
             throw new NotImplementedException();
         }
 
@@ -275,6 +256,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath3TestCases()
         {
+            // TODO: Implement GetFromFileSystemPath3TestCases
             throw new NotImplementedException();
         }
 
@@ -295,6 +277,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath2TestCases()
         {
+            // TODO: Implement GetFromFileSystemPath2TestCases
             throw new NotImplementedException();
         }
 

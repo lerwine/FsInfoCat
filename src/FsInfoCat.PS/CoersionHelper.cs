@@ -587,11 +587,13 @@ namespace FsInfoCat.PS
 
         public static bool TryGetErrorId(this ErrorCategory errorCategory, out MessageId errorId)
         {
+            // TODO: Implement TryGetErrorId
             throw new NotImplementedException();
         }
 
         public static bool TryGetTargetObject(this Exception exception, out string targetName, out object targetObject)
         {
+            // TODO: Implement TryGetTargetObject
             throw new NotImplementedException();
         }
 

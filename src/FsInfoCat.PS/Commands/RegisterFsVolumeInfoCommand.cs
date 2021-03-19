@@ -59,21 +59,25 @@ namespace FsInfoCat.PS.Commands
 
         protected override void OnItemNotFoundException(string path, ItemNotFoundException exc)
         {
+            // TODO: Implement OnPathIsFileError
             throw new NotImplementedException();
         }
 
         protected override void OnPathIsFileError(string providerPath)
         {
+            // TODO: Implement OnPathIsFileError
             throw new NotImplementedException();
         }
 
         protected override void OnProviderNotSupportedException(string path, Exception exc)
         {
+            // TODO: Implement OnPathIsFileError
             throw new NotImplementedException();
         }
 
         protected override void OnResolveError(string path, Exception exc)
         {
+            // TODO: Implement OnPathIsFileError
             throw new NotImplementedException();
         }
 

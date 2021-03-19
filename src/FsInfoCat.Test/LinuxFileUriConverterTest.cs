@@ -16,14 +16,49 @@ namespace FsInfoCat.Test
     {
         public static IEnumerable<TestCaseData> GetFsPathRegexTestCases()
         {
-            return UrlHelperTest.GetUriTestData().Select(element =>
+            return FileUriConverterTest.FilePathTestData.Root.Elements().Select(testDataElement =>
             {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("Linux/FsPathRegex");
-                Console.WriteLine($"Emitting {expected}");
-                bool base64Encoded = element.GetAttribute("Base64") == "true";
-                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.OuterXml);
+                XElement fileSystemElement = testDataElement.Elements("Linux").Elements("FileSystem").FirstOrDefault(); ;
+                if (fileSystemElement is null)
+                    return new TestCaseData(testDataElement.Attribute("InputString").Value)
+                        .Returns(new XElement("FsPathRegex", new XAttribute("Success", false)).ToString(SaveOptions.DisableFormatting));
+                bool base64Encoded = testDataElement.Attributes("Base64").Any(a => XmlConvert.ToBoolean(a.Value));
+                // TODO: Handle base-64
+                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(testDataElement.Attribute("InputString").Value)) :
+                        testDataElement.Attribute("InputString").Value, base64Encoded)
+                    .Returns(new XElement("FsPathRegex", new XAttribute("Success", true),
+                        fileSystemElement.Elements("Host").Attributes("Match").Select(a => new XElement("Group",
+                                new XAttribute("Name", "host"), new XAttribute("Success", true), a.Value))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "host"), new XAttribute("Success", false))).First(),
+                        fileSystemElement.Elements("Host").Where(e => e.Attribute("Type").Value == "IPV4")
+                            .Select(a => new XElement("Group",
+                                new XAttribute("Name", "ipv4"), new XAttribute("Success", true), a.Value))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "ipv4"), new XAttribute("Success", false))).First(),
+                        fileSystemElement.Elements("Host").Where(e => e.Attribute("Type").Value == "IPV6" || e.Attribute("Type").Value == "IPV6.UNC")
+                            .Select(a => new XElement("Group",
+                                new XAttribute("Name", "ipv6"), new XAttribute("Success", true), a.Value))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "ipv6"), new XAttribute("Success", false))).First(),
+                        fileSystemElement.Elements("Host").Where(e => e.Attribute("Type").Value == "IPV6.UNC").Attributes("Match")
+                            .Select(a => new XElement("Group",
+                                new XAttribute("Name", "unc"), new XAttribute("Success", true), a.Value.Substring(a.Value.IndexOf('.') + 1)))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "unc"), new XAttribute("Success", false))).First(),
+                        fileSystemElement.Elements("Host").Where(e => e.Attribute("Type").Value == "DNS")
+                            .Select(a => new XElement("Group",
+                                new XAttribute("Name", "dns"), new XAttribute("Success", true), a.Value))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "dns"), new XAttribute("Success", false))).First(),
+                        fileSystemElement.Elements("Path").Attributes("Match").Select(a => new XElement("Group",
+                                new XAttribute("Name", "path"), new XAttribute("Success", true), a.Value))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "path"), new XAttribute("Success", false))).First(),
+                        fileSystemElement.Elements("Path").Elements("Directory").Select(a => new XElement("Group",
+                                new XAttribute("Name", "dir"), new XAttribute("Success", true), a.Value))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "dir"), new XAttribute("Success", false))).First(),
+                        fileSystemElement.Elements("Path").Select(a => new XElement("Group",
+                                new XAttribute("Name", "root"), new XAttribute("Success", true)))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "root"), new XAttribute("Success", false))).First(),
+                        fileSystemElement.Elements("Path").Elements("FileName").Select(a => new XElement("Group",
+                                new XAttribute("Name", "fileName"), new XAttribute("Success", true)))
+                            .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "fileName"), new XAttribute("Success", false))).First()
+                    ).ToString(SaveOptions.DisableFormatting));
             });
         }
 
@@ -31,8 +66,8 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFsPathRegexTestCases))]
         public string FsPathRegexTest(string input, bool base64Encoded)
         {
-            Match match = LinuxFileUriConverter.FS_PATH_REGEX.Match(input);
-            return UrlHelperTest.ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "root", "host", "path");
+            Match match = LinuxFileUriConverter.FS_HOST_DIR_AND_FILE_REGEX.Match(input);
+            return UrlHelperTest.ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "host", "ipv4", "ipv6", "unc", "dns", "path", "dir", "root", "fileName");
         }
 
         public static IEnumerable<TestCaseData> GetFormatDetectionRegexTestCases()
@@ -73,7 +108,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFileUriStrictTestCases))]
         public string FileUriStrictTest(string input, bool base64Encoded)
         {
-            Match match = LinuxFileUriConverter.FILE_URI_STRICT_REGEX.Match(input);
+            Match match = LinuxFileUriConverter.URI_HOST_DIR_AND_FILE_STRICT_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "file", "host", "ipv4", "ipv6", "d", "dns", "path", "dir", "fileName");
         }
 
@@ -143,7 +178,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetHostNameRegexTestCases))]
         public string HostNameRegexTest(string input)
         {
-            Match match = LinuxFileUriConverter.HOST_NAME_REGEX.Match(input);
+            Match match = LinuxFileUriConverter.HOST_NAME_OR_ADDRESS_FOR_URI_REGEX.Match(input);
             return UrlHelperTest.ToTestReturnValueXml(match, "HostNameRegex", "ipv4", "ipv6", "d", "dns");
         }
 
@@ -209,6 +244,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
         {
+            // TODO: Implement GetToFileSystemPathTestCases
             throw new NotImplementedException();
         }
 
@@ -222,6 +258,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath3TestCases()
         {
+            // TODO: Implement GetFromFileSystemPath3TestCases
             throw new NotImplementedException();
         }
 
@@ -242,6 +279,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath2TestCases()
         {
+            // TODO: Implement GetFromFileSystemPath2TestCases
             throw new NotImplementedException();
         }
 

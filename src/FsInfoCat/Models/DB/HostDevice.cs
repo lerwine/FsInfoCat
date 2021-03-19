@@ -81,7 +81,7 @@ namespace FsInfoCat.Models.DB
         [MinLength(1)]
         [MaxLength(Max_Length_MachineName, ErrorMessage = Error_Message_MachineName_Length)]
         [Display(Name = DisplayName_MachineName)]
-        [RegularExpression(FileUriConverter.PATTERN_HOST_NAME, ErrorMessage = Error_Message_MachineName_Invalid)]
+        [RegularExpression(FileUriConverter.PATTERN_HOST_NAME_OR_ADDRESS, ErrorMessage = Error_Message_MachineName_Invalid)]
         public string MachineName
         {
             get { return _machineName; }
@@ -269,7 +269,7 @@ namespace FsInfoCat.Models.DB
                         result.Add(new ValidationResult(Error_Message_MachineName_Empty, new string[] { PropertyName_MachineName }));
                     else if (_machineName.Length > Max_Length_DisplayName)
                         result.Add(new ValidationResult(Error_Message_MachineName_Length, new string[] { PropertyName_MachineName }));
-                    else if (!FileUriConverter.HOST_NAME_REGEX.IsMatch(_machineName))
+                    else if (!FileUriConverter.HOST_NAME_OR_ADDRESS_FOR_URI_REGEX.IsMatch(_machineName))
                         result.Add(new ValidationResult(Error_Message_MachineName_Invalid, new string[] { PropertyName_MachineName }));
                     break;
             }

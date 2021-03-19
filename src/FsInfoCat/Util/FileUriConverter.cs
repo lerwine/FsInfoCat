@@ -9,12 +9,33 @@ using FsInfoCat.Models;
 
 namespace FsInfoCat.Util
 {
+    /// <summary>
+    /// Utility base class for filesystem-specific file URI conversion.
+    /// </summary>
+    /// <remarks>
+    /// Templates for regular expressions used by this class:
+    /// <list type="bullet">
+    /// <item><term>Unsupported Whitespace Ranges</term>
+    ///     <description>Matches control character and whitespace characters which are either not compatible with any filesystem or are not supported
+    ///         for using with form fields.
+    ///         <code>[\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff]</code></description></item>
+    /// <item><term>Basic and DNS Host Name</term>
+    ///     <description>Matches a valid basic host name or DNS host name.
+    ///         <code>(?i)(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?</code></description></item>
+    /// <item><term>IPV4 Address</term>
+    ///     <description>Matches a valid IPv4 internet address.
+    ///         <code>(?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}</code></description></item>
+    /// <item><term>IPV6 Address</term>
+    ///     <description>Matches a valid IPv6 internet address. The <c>ipv6</c> group matches the address string without surrounding brackets that might be present.
+    ///         <code>(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$)(?=[/:?#]|$))\[?(?&lt;ipv6&gt;[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?</code></description></item>
+    /// <item><term>IPV6 Address for UNC Host Name</term>
+    ///     <description>Matches a valid IPv6 internet address, including the format that is used in the UNC path format. The <c>ipv6</c> group matches the
+    ///         address string without surrounding brackets that might be present. The <c>unc</c> group matches the <c>.ipv6-literal.net</c> domain which is
+    ///         used for the UNC path format.
+    ///         <code>(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$)(?=[/:?#]|$)|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)\[?(?&lt;ipv6&gt;[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|(?&lt;unc&gt;\.ipv6-literal\.net))?</code></description></item>
+    /// </list></remarks>
     public abstract class FileUriConverter
     {
-        public const string URI_SCHEME_URN = UriHelper.URI_SCHEME_URN;
-        public const string URN_NAMESPACE_UUID = UriHelper.URN_NAMESPACE_UUID;
-        public const string URN_NAMESPACE_VOLUME = UriHelper.URN_NAMESPACE_VOLUME;
-        public const string URN_NAMESPACE_ID = UriHelper.URN_NAMESPACE_ID;
         public const char URI_QUERY_DELIMITER_CHAR = UriHelper.URI_QUERY_DELIMITER_CHAR;
         public const string URI_QUERY_DELIMITER_STRING = UriHelper.URI_QUERY_DELIMITER_STRING;
         public const string URI_QUERY_DELIMITER_ESCAPED = UriHelper.URI_QUERY_DELIMITER_ESCAPED;
@@ -30,6 +51,7 @@ namespace FsInfoCat.Util
         public const char URI_PATH_SEPARATOR_CHAR = UriHelper.URI_PATH_SEPARATOR_CHAR;
         public const string URI_PATH_SEPARATOR_STRING = UriHelper.URI_PATH_SEPARATOR_STRING;
         public const string URI_PATH_SEPARATOR_ESCAPED = UriHelper.URI_PATH_SEPARATOR_ESCAPED;
+        public const string FQDN_IPV6_UNC = ".ipv6-literal.net";
         public const string MATCH_GROUP_NAME_FILE = "file";
         public const string MATCH_GROUP_NAME_HOST = "host";
         public const string MATCH_GROUP_NAME_PATH = "path";
@@ -41,101 +63,149 @@ namespace FsInfoCat.Util
         public const string MATCH_GROUP_NAME_DIR = "dir";
         public const string MATCH_GROUP_NAME_ROOT = "root";
         public const string MATCH_GROUP_NAME_SCHEME = "scheme";
+        public const string MATCH_GROUP_NAME_ESC = "esc";
+        public const string MATCH_GROUP_NAME_HEX = "hex";
+        public const string MATCH_GROUP_NAME_CASE = "case";
 
-        /*
-         * Patterns
-         * Extended Non-Printable Ranges: [\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff]
-         * IPV4: (?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}
-         * IPV6 with host: (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)(?<d>\.ipv6-literal\.net)?\]?
-         * IPV6: (?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7})\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+)\]?
-         * DNS: (?=[^\s/]{1,255}(?![\w-]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?
-         */
+        private static readonly char[] _INVALID_FILENAME_CHARS;
+
+        /// <summary>
+        /// The <see cref="FileUriConverter"/> for the current host operating system.
+        /// </summary>
+        public static readonly FileUriConverter CURRENT_FACTORY;
+
+        /// <summary>
+        /// The <see cref="FileUriConverter"/> for the operating system type that is alternate to the current host operating system.
+        /// </summary>
+        public static readonly FileUriConverter ALT_FACTORY;
+
+        #region Regular Expressions
+
+        public const string PATTERN_BASIC_OR_DNS_NAME = @"(?i)^\s*(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?\s*";
+
+        /// <summary>
+        /// Matches a <seealso cref="UriHostNameType.Basic"/>, <seealso cref="UriHostNameType.Dns"/> or <seealso cref="UriHostNameType.IPv4"/> address.
+        /// </summary>
+        /// <remarks>This does not match addresses with surrounding brackets or the format used in UNC path strings.</remarks>
+        public static readonly Regex BASIC_DNS_OR_IPV4_NAME_REGEX = new Regex(@"
+^
+(?=[\w-.]{1,255}(?![\w-.]))
+[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?
+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+
+        /// <summary>
+        /// Matches an IPV6 address.
+        /// </summary>
+        /// <remarks>This does not match addresses with surrounding brackets or the format used in UNC path strings.</remarks>
+        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(@"
+^
+(?=[a-f\d]*(:[a-f\d]*){2,7}$)
+([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)
+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+
+        public const string PATTERN_HOST_NAME_OR_ADDRESS = @"(?i)^\s*((?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}|(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]" +
+            @"|[a-f\d]*(:[a-f\d]*){2,7}$|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)\[?([a-f\d]{1,4}([:-][a-f\d]{1,4}){7}" +
+            @"|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|\.ipv6-literal\.net)?|(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
+
+        /// <summary>
+        /// Matches a host name or address that can be used as the host component of a UNC path string.
+        /// </summary>
+        /// <remarks>Named group definitions:
+        /// <list type="bullet"><item><term>ipv4</term> Matches an <seealso cref="UriHostNameType.IPv4" /> host name. This implies that the input text is an absolute UNC path
+        ///             (<see cref="MATCH_GROUP_NAME_IPV4" />).</item><item><term>ipv6</term> Matches an IPV6 host name. This implies that the input text is an absolute UNC path
+        ///             (<see cref="MATCH_GROUP_NAME_IPV6" />).
+        ///         <list type="bullet"><item><term>unc</term> Matches the domain of an IPV6 address.
+        ///                 This implies that the input text is an absolute UNC path (<see cref="MATCH_GROUP_NAME_UNC" />).</item></list></item><item><term>dns</term> Matches a <seealso cref="UriHostNameType.Dns" /> or <seealso cref="UriHostNameType.Basic" /> host name.
+        ///         This implies that the input text is an absolute UNC path (<see cref="MATCH_GROUP_NAME_DNS" />).</item></list></remarks>
+        public static readonly Regex HOST_NAME_OR_ADDRESS_FOR_FS_REGEX = new Regex(@"
+^
+(
+    (?=(\d+\.){3}\d+)
+    (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+|
+    (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)
+    \[?
+    (?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)
+    (
+        \]
+    |
+        (?<unc>\.ipv6-literal\.net)
+    )?
+|
+    (?=[\w-.]{1,255}(?![\w-.]))
+    (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+
+        /// <summary>
+        /// Matches a host name or address that can be used as the host component of a URI string.
+        /// </summary>
+        /// <remarks>Named group definitions:
+        /// <list type="bullet"><item><term>ipv4</term> Matches an <seealso cref="UriHostNameType.IPv4" /> host name. This implies that the input text is an absolute UNC path
+        ///             (<see cref="MATCH_GROUP_NAME_IPV4" />).</item><item><term>ipv6</term> Matches an IPV6 host name. This implies that the input text is an absolute UNC path
+        ///             (<see cref="MATCH_GROUP_NAME_IPV6" />).</item><item><term>dns</term> Matches a <seealso cref="UriHostNameType.Dns" /> or <seealso cref="UriHostNameType.Basic" /> host name.
+        ///         This implies that the input text is an absolute UNC path (<see cref="MATCH_GROUP_NAME_DNS" />).</item></list></remarks>
+        public static readonly Regex HOST_NAME_OR_ADDRESS_FOR_URI_REGEX = new Regex(@"^
+(
+    (?=(\d+\.){3}\d+)
+    (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+|
+    (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$)\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?
+|
+    (?=[\w-.]{1,255}(?![\w-.]))
+    (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+
+        /// <summary>
+        /// Matches a URI escape sequence that is not upper-case or a <seealso cref="Uri.UriSchemeFile">file</seealso> scheme name that is not lower case.
+        /// </summary>
+        public static readonly Regex URI_ENCODE_NORMALIZE_REGEX = new Regex(@"(?<=^\s*)(?<file>(?!file:)(?i)FILE(?=:))|(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+");
 
         /// <summary>
         /// Matches a path segment including optional trailing slash.
         /// </summary>
         public static readonly Regex URI_PATH_SEGMENT_REGEX = new Regex(@"(?:^|\G)(?:/|([^/]+)(?:/|$))", RegexOptions.Compiled);
 
-        public const string PATTERN_HOST_NAME = @"(?i)^\s*((?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}|(?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7})\[?([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+)\]?|(?=[^\s/]{1,255}(?![\w-]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
+        /// <summary>
+        /// Matches consecutive URI path separators as well as leading and trailing whitespace and path separators.
+        /// </summary>
+        /// <remarks>This will also match relative self-reference sequences (<c>/./<c>). This does not match parent segment references (<c>/../</c>)
+        /// unless they are at the beginning of the string.</remarks>
+        public static readonly Regex URI_REL_PATH_SEPARATOR_NORMALIZE_REGEX = new Regex(@"^(\.\.?/+|[\s/]+)+|/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
 
         /// <summary>
-        /// Matches a host name.
+        /// Matches consecutive and trailing URI path separators, allowing up to 3 consecutive path separator characters following the scheme separator.
         /// </summary>
-        /// <remarks>
-        /// <list type="bullet">
-        /// <item><term>ipv4</term> Matches IPV4 address (<see cref="MATCH_GROUP_NAME_IPV4"/>).</item>
-        /// <item><term>ipv6</term> Matches an IPV6 address without any surrounding brackets or the UNC domain text (<see cref="MATCH_GROUP_NAME_IPV6"/>).</item>
-        /// <item><term>unc</term> Matches the <c>.ipv6-literal.net</c> domain name for IPV6 UNC notation (<see cref="MATCH_GROUP_NAME_UNC"/>).
-        /// If this group matches, then hexidecimal groups for the IPV6 address are separated by dashes rather than colons.</item>
-        /// <item><term>dns</term> Matches a DNS host name (<see cref="MATCH_GROUP_NAME_DNS"/>).</item>
-        /// </list></remarks>
-        public static readonly Regex HOST_NAME_W_UNC_REGEX = new Regex(@"^
-(
-    (?=(\d+\.){3}\d+)
-    (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
-|
-    (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])(([:-][a-f\d]{1,4})+|[:-]))(\]|(?<unc>\.ipv6-literal\.net))?
-|
-    (?=[^\s/]{1,255})
-    (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
-)$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+        /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
+        /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
+        public static readonly Regex URI_ABS_PATH_SEPARATOR_NORMALIZE_REGEX = new Regex(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
 
         /// <summary>
-        /// Matches a host name.
+        /// Matches incorrectly-cased URI escape sequences as well as consecutive URI path separators as well as leading and trailing whitespace and path separators.
         /// </summary>
         /// <remarks>
+        /// <remarks>Match group name definitions:
         /// <list type="bullet">
-        /// <item><term>ipv4</term> Matches IPV4 address (<see cref="MATCH_GROUP_NAME_IPV4"/>).</item>
-        /// <item><term>ipv6</term> Matches an IPV6 address without any surrounding brackets (<see cref="MATCH_GROUP_NAME_IPV6"/>).</item>
-        /// <item><term>dns</term> Matches a DNS host name (<see cref="MATCH_GROUP_NAME_DNS"/>).</item>
-        /// </list></remarks>
-        public static readonly Regex HOST_NAME_REGEX = new Regex(@"^
-(
-    (?=(\d+\.){3}\d+)
-    (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
-|
-    (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$)\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)((:[a-f\d]{1,4})+|:))\]?
-|
-    (?=[^\s/]{1,255})
-    (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
-)$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
-
-        public const string PATTERN_DNS_NAME = @"(?i)^\s*(?=\S{1,255})[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?\s*$";
+        /// <item><term>case</term> Escape sequence(s) not entirely upper-case (<seealso cref="MATCH_GROUP_NAME_CASE"/>).</item>
+        /// <item><term>(no named group matching)</term> Extraneous path separator and/or whitespace.</item>
+        /// </list>
+        /// <para>This will also match relative self-reference sequences (<c>/./<c>). This does not match parent segment references (<c>/../</c>)
+        /// unless they are at the beginning of the string.</para></remarks>
+        public static readonly Regex REL_URI_STRING_NORMALIZE_REGEX = new Regex(@"^(\.\.?/+|[\s/]+)+|(?<case>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
 
         /// <summary>
-        /// Matches an IPV6 address
+        /// Matches incorrectly-cased file scheme name and URI escape sequences as well as consecutive and trailing URI path separators, allowing up to 3 consecutive
+        /// path separator characters following the scheme separator.
         /// </summary>
-        /// <remarks>
+        /// <remarks>Match group name definitions:
         /// <list type="bullet">
-        /// <item><term>ipv6</term> Matches the actual address without any surrounding brackets (<see cref="MATCH_GROUP_NAME_DNS"/>).</item>
-        /// </list></remarks>
-        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(@"^(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$)\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)((:[a-f\d]{1,4})+|:))\]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
-
-        public static readonly Regex ANY_FILE_URI_STRICT_REGEX = new Regex(@"^
-(
-    file://
-    (?i)
-    ([a-z\d][\w-.]*|[a-f\d:]+)?
-|
-    (?i)
-    (
-        [!$=&-.:;=@[\]\w]+
-    |
-        %(0[1-9a-f]|[1-9a-f][\da-f])
-    )*
-)
-(?i)
-(
-    /
-    (
-        [!$=&-.:;=@[\]\w]+
-    |
-        %(0[1-9a-f]|[1-9a-f][\da-f])
-    )+
-)
-*/?$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
-
-        public const string PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*(((?<file>file)://|[\\/]{2})(?<host>(?=(\d+\.){3}\d+)(?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})|(?=\[[^:]*(:[^:]*){2,7}\]|[^:]*(:[^:]*){2,7}|[^-]*(-[^-]*){2,7}\.ipv6-literal\.net)\[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+)(?<d>\.ipv6-literal\.net)?\]?|(?=[^\s/]{1,255}(?![\w-]))(?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?))|((?<file>file):///)?(?=[a-z]:|/))(?<path>([a-z]:)?([\\/](?=\s*$)|([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff\\/%]+|%((?![a-f\d]{2})|0[1-9a-f]|[1-9a-f]))+)*))[\\/]?\s*$";
+        /// <item><term>scheme</term> <seealso cref="Uri.UriSchemeFile">file</seealso> scheme name is not entirely lower case.
+        ///     This will also include any leading whitespace (<seealso cref="MATCH_GROUP_NAME_SCHEME"/>).</item>
+        /// <item><term>case</term> Escape sequence(s) not entirely upper-case (<seealso cref="MATCH_GROUP_NAME_CASE"/>).</item>
+        /// <item><term>(no named group matching)</term> Extraneous path separator and/or whitespace.</item>
+        /// </list>
+        /// <para>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
+        /// references (<c>/../</c>) unless they are at the beginning of the string.</para></remarks>
+        public static readonly Regex ABS_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*((?<scheme>(?!file:)(?i)FILE(?=:))|(\.\.?/+|\s+)+)|(?<esc>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
 
         [Obsolete("This does not distinguish between a windows drive path and a linux path that might look like a windows drive path. file:///c:/dirname not parsed with root as c:/")]
         public static readonly Regex FILE_URI_COMPONENTS_LAX_REGEX = new Regex(@"^
@@ -158,20 +228,63 @@ namespace FsInfoCat.Util
 )
 /?$");
 
-        private static readonly char[] _INVALID_FILENAME_CHARS;
+        /// <summary>
+        /// Matches <seealso cref="Uri.UriSchemeFile">file</seealso> URI strings that is compatible with Windows and/or Linux platforms.
+        /// </summary>
+        public static readonly Regex ANY_FILE_URI_STRICT_REGEX = new Regex(@"
+^
+(
+    file://
+    ((?i)
+        (?=(\d+\.){3}\d+)
+        ((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}
+    |
+        (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$))
+        \[?([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?
+    |
+        (?=[\w-.]{1,255}(?![\w-.]))
+        [a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?
+    )?
+    (?=/|$)
+|
+    (?!\w+:/)
+    (
+        [!$=&-.:;=@[\]\w]+
+    |
+        %(0[1-9A-F]|[1-9A-F][\dA-F])
+    )*
+)
+(
+    /
+    (
+        [!$=&-.:;=@[\]\w]+
+    |
+        %(0[1-9A-F]|[1-9A-F][\dA-F])
+    )+
+)*
+/?
+$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
-        public static readonly FileUriConverter CURRENT_FACTORY;
-        public static readonly FileUriConverter ALT_FACTORY;
+        /// <summary>
+        /// Pattern which matches a string which can be normalized as <seealso cref="Uri.UriSchemeFile">file</seealso> URI or local path that is compatible with
+        /// Windows and/or Linux platforms. 
+        /// </summary>
+        public const string PATTERN_ANY_ABS_FILE_URI_OR_LOCAL_LAX = @"(?i)^\s*((file://|[\\/]{2})((?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}" +
+            @"|(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$)(?=[/:?#]|$))\[?([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?" +
+            @"|(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)|(file:///)?(?=[a-z]:|/))" +
+            @"(([a-z]:)?([\\/](?=\s*$)|([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff\\/%]+|%((?![A-F\d]{2})|0[1-9A-F]|[1-9A-F]))+)*))[\\/]?\s*$";
+
+        #endregion
 
         /// <summary>
         /// Character which separates path segments on the target filesystem.
         /// </summary>
-        public abstract char LocalDirectorySeparatorChar { get;  }
+        public abstract char LocalDirectorySeparatorChar { get; }
 
         /// <summary>
         /// Display name for the target filesystem type.
         /// </summary>
-        public abstract string FsDisplayName { get;  }
+        public abstract string FsDisplayName { get; }
 
         /// <summary>
         /// The target filesystem platform type.
@@ -179,10 +292,151 @@ namespace FsInfoCat.Util
         public abstract PlatformType FsPlatform { get; }
 
         /// <summary>
+        /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on the typical target filesystem type.
+        /// </summary>
+        /// <remarks>Named group definitions:
+        /// <list type="bullet">
+        ///     <item><term>file</term> Matches the <seealso cref="Uri.UriSchemeFile">file</seealso> uri scheme and URI authority.
+        ///         (<see cref="FileUriConverter.MATCH_GROUP_NAME_SCHEME"/>).</item>
+        ///     <item><term>host</term> Matches the host name. This implies that the input text is an absolute UNC path
+        ///             (<see cref="FileUriConverter.MATCH_GROUP_NAME_HOST"/>).
+        ///         <list type="bullet">
+        ///             <item><term>ipv4</term> Matches an <seealso cref="UriHostNameType.IPv4"/> host name. This implies that the input text is an absolute UNC path
+        ///                  (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV4"/>).</item>
+        ///             <item><term>ipv6</term> Matches an IPV6 host name. This implies that the input text is an absolute UNC path
+        ///                     (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV6"/>).</item>
+        ///             <item><term>dns</term> Matches a <seealso cref="UriHostNameType.Dns"/> or <seealso cref="UriHostNameType.Basic"/> host name.
+        ///                 This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_DNS"/>).</item>
+        ///         </list>
+        ///     </item>
+        ///     <item><term>path</term> Matches the path string (<see cref="FileUriConverter.MATCH_GROUP_NAME_PATH"/>).
+        ///         <list type="bullet">
+        ///             <item><term>root</term> Matches path root character. This implies that the input text is
+        ///                 an absolute local path (<see cref="FileUriConverter.MATCH_GROUP_NAME_ROOT"/>).</item>
+        ///         </list>
+        ///     </item>
+        /// </list></remarks>
+        public abstract Regex UriHostAndPathStrictRegex { get; }
+
+        /// <summary>
+        /// Matches a URI that can be converted to a valid absolute or relative local path on a typical target filesystem type.
+        /// </summary>
+        /// <remarks>Named group match definition:
+        /// <list type="bullet">
+        ///     <item><term>root</term> Matches the host name or path root character that indicates it is an absolute path.</item>
+        /// </list></remarks>
+        public abstract Regex UriValidationRegex { get; }
+
+        /// <summary>
+        /// Matches consecutive and trailing filesystem path separators, allowing up to 2 consecutive path separator characters at the beginning of the string.
+        /// </summary>
+        /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>\.\<c>). This does not match parent segment
+        /// references (<c>\..\</c>) if they are not at the beginning of the string.</remarks>
+        public abstract Regex FsFullPathNormalizeRegex { get; }
+
+        /// <summary>
+        /// Matches a well-formed relative or absolute local path on the typicaltypical target filesystem type.
+        /// </summary>
+        /// <remarks>Named group definitions:
+        /// <list type="bullet">
+        ///     <item><term>host</term> Matches the host name. This implies that the input text is an absolute UNC path
+        ///             (<see cref="FileUriConverter.MATCH_GROUP_NAME_HOST"/>).
+        ///         <list type="bullet">
+        ///             <item><term>ipv4</term> Matches an <seealso cref="UriHostNameType.IPv4"/> host name. This implies that the input text is an absolute UNC path
+        ///                  (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV4"/>).</item>
+        ///             <item><term>ipv6</term> Matches an IPV6 host name. This implies that the input text is an absolute UNC path
+        ///                     (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV6"/>).
+        ///                 <list type="bullet">
+        ///                     <item><term>unc</term> Matches the domain of an IPV6 address.
+        ///                         This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_UNC"/>).</item>
+        ///                 </list>
+        ///             </item>
+        ///             <item><term>dns</term> Matches a <seealso cref="UriHostNameType.Dns"/> or <seealso cref="UriHostNameType.Basic"/> host name.
+        ///                 This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_DNS"/>).</item>
+        ///         </list>
+        ///     </item>
+        ///     <item><term>path</term> Matches the path string (<see cref="FileUriConverter.MATCH_GROUP_NAME_PATH"/>).
+        ///         <list type="bullet">
+        ///             <item><term>root</term> Matches leading directory separator character. This implies that the input text is
+        ///                 an absolute local path (<see cref="FileUriConverter.MATCH_GROUP_NAME_ROOT"/>).</item>
+        ///         </list>
+        ///     </item>
+        /// </list></remarks>
+        public abstract Regex FsHostAndPathRegex { get; }
+
+        /// <summary>
+        /// Matches a well-formed relative or absolute local path on the typical typical target filesystem type.
+        /// </summary>
+        /// <remarks>Named group definitions:
+        /// <list type="bullet">
+        ///     <item><term>host</term> Matches the host name. This implies that the input text is an absolute UNC path
+        ///             (<see cref="FileUriConverter.MATCH_GROUP_NAME_HOST"/>).
+        ///         <list type="bullet">
+        ///             <item><term>ipv4</term> Matches an <seealso cref="UriHostNameType.IPv4"/> host name. This implies that the input text is an absolute UNC path
+        ///                  (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV4"/>).</item>
+        ///             <item><term>ipv6</term> Matches an IPV6 host name. This implies that the input text is an absolute UNC path
+        ///                     (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV6"/>).
+        ///                 <list type="bullet">
+        ///                     <item><term>unc</term> Matches the domain of an IPV6 address.
+        ///                         This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_UNC"/>).</item>
+        ///                 </list>
+        ///             </item>
+        ///             <item><term>dns</term> Matches a <seealso cref="UriHostNameType.Dns"/> or <seealso cref="UriHostNameType.Basic"/> host name.
+        ///                 This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_DNS"/>).</item>
+        ///         </list>
+        ///     </item>
+        ///     <item><term>path</term> Matches the path string (<see cref="FileUriConverter.MATCH_GROUP_NAME_PATH"/>).
+        ///         <list type="bullet">
+        ///             <item><term>dir</term> Matches the parent directory path. This group will always succeed when the expression succeeds,
+        ///                 even if it is empty. The trailing slash will be omitted unless it is the root path
+        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_DIR"/>).</item>
+        ///             <item><term>root</term> Matches leading directory separator character. This implies that the input text is
+        ///                 an absolute local path (<see cref="FileUriConverter.MATCH_GROUP_NAME_ROOT"/>).</item>
+        ///             <item><term>fileName</term> Matches the file name. This group will only fail if the source path is the root path
+        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_FILE_NAME"/>).</item>
+        ///         </list>
+        ///     </item>
+        /// </list></remarks>
+        public abstract Regex FsHostDirAndFileRegex { get; }
+
+        /// <summary>
+        /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical target filesystem type.
+        /// </summary>
+        /// <remarks>Named group definitions:
+        /// <list type="bullet">
+        ///     <item><term>file</term> Matches the <seealso cref="Uri.UriSchemeFile">file</seealso> uri scheme and URI authority.
+        ///         (<see cref="FileUriConverter.MATCH_GROUP_NAME_SCHEME"/>).</item>
+        ///     <item><term>host</term> Matches the host name. This implies that the input text is an absolute UNC path
+        ///             (<see cref="FileUriConverter.MATCH_GROUP_NAME_HOST"/>).
+        ///         <list type="bullet">
+        ///             <item><term>ipv4</term> Matches an <seealso cref="UriHostNameType.IPv4"/> host name. This implies that the input text is an absolute UNC path
+        ///                  (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV4"/>).</item>
+        ///             <item><term>ipv6</term> Matches an IPV6 host name. This implies that the input text is an absolute UNC path
+        ///                     (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV6"/>).</item>
+        ///             <item><term>dns</term> Matches a <seealso cref="UriHostNameType.Dns"/> or <seealso cref="UriHostNameType.Basic"/> host name.
+        ///                 This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_DNS"/>).</item>
+        ///         </list>
+        ///     </item>
+        ///     <item><term>path</term> Matches the path string (<see cref="FileUriConverter.MATCH_GROUP_NAME_PATH"/>).
+        ///         <list type="bullet">
+        ///             <item><term>dir</term> Matches the parent directory path. This group will always succeed when the expression succeeds,
+        ///                 even if it is empty. The trailing slash will be omitted unless it is the root path
+        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_DIR"/>).</item>
+        ///             <item><term>root</term> Matches leading directory separator character. This implies that the input text is
+        ///                 an absolute local path (<see cref="FileUriConverter.MATCH_GROUP_NAME_ROOT"/>).</item>
+        ///             <item><term>fileName</term> Matches the file name. This group will only fail if the source path is the root path
+        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_FILE_NAME"/>).</item>
+        ///         </list>
+        ///     </item>
+        /// </list></remarks>
+        public abstract Regex UriHostDirAndFileStrictRegex { get; }
+
+        /// <summary>
         /// Determines whether a string is valid for use as a file name on the local file system.
         /// </summary>
         /// <param name="name">The file name to test.</param>
-        /// <returns><see langword="true"/> if <paramref name="name"/> is not <see langword="null"/> or empty and contains only valid local file system characters.</returns>
+        /// <returns><see langword="true"/> if <paramref name="name"/> is not <see langword="null"/> or empty and contains only valid local file system
+        /// characters.</returns>
         public static bool IsValidLocalFileName(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -195,7 +449,8 @@ namespace FsInfoCat.Util
         static FileUriConverter()
         {
             char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
-            _INVALID_FILENAME_CHARS = invalidFileNameChars.Contains(Path.PathSeparator) ? invalidFileNameChars : invalidFileNameChars.Concat(new char[] { Path.PathSeparator }).ToArray();
+            _INVALID_FILENAME_CHARS = invalidFileNameChars.Contains(Path.PathSeparator) ? invalidFileNameChars :
+                invalidFileNameChars.Concat(new char[] { Path.PathSeparator }).ToArray();
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 CURRENT_FACTORY = WindowsFileUriConverter.INSTANCE;
@@ -209,27 +464,13 @@ namespace FsInfoCat.Util
         }
 
         /// <summary>
-        /// Encodes path characters are valid for the target OS type, are not encoded by <seealso cref="Uri.EscapeUriString(string)"/>, and must be encoded before attempting to parse a <seealso cref="Uri.UriSchemeFile">file</seealso> URI string.
-        /// </summary>
-        /// <param name="path">The URI-encoded path string.</param>
-        /// <returns>The URI-encoded path string with special path characters encoded as well.</returns>
-        protected abstract string EscapeSpecialPathChars(string path);
-
-        /// <summary>
-        /// Indicates whether a URI-encoded path string contains characters which are acceptable for the current OS type, but have not yet been URI-encoded.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        protected abstract bool ContainsSpecialPathChars(string path);
-
-        /// <summary>
         /// Converts a URI-compatible host name and URI-encoded absolute path string to a filesystem path string.
         /// </summary>
         /// <param name="host">The URI-compatible host name.</param>
         /// <param name="path">The URI-encoded path string.</param>
         /// <param name="platform">The target platform type that determines the format of the filesystem path string.</param>
-        /// <param name="allowAlt">If <see langword="true"/>, allows a valid filesystem path of the platform type which is alternate to the specified <seealso cref="PlatformType"/> to be used if <paramref name="path"/>
-        /// is not a valid path according to the <paramref name="platform"/>.</param>
+        /// <param name="allowAlt">If <see langword="true"/>, allows a valid filesystem path of the platform type which is alternate to the specified
+        /// <seealso cref="PlatformType"/> to be used if <paramref name="path"/> is not a valid path according to the <paramref name="platform"/>.</param>
         /// <returns>A filesystem path string.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="host"/> and/or <paramref name="path"/> is invalid.</exception>
@@ -238,7 +479,7 @@ namespace FsInfoCat.Util
             if (allowAlt)
             {
                 FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
-                if (!currentFactory.IsWellFormedFileSystemPath(path, true) && altFactory.IsWellFormedFileSystemPath(path, true))
+                if (!currentFactory.IsValidFileSystemPath(path, true) && altFactory.IsValidFileSystemPath(path, true))
                     return altFactory.ToFileSystemPath(host, path);
                 return currentFactory.ToFileSystemPath(host, path);
             }
@@ -248,185 +489,52 @@ namespace FsInfoCat.Util
         /// <summary>
         /// Converts a URI-compatible host name and URI-encoded path string to a filesystem path string.
         /// </summary>
-        /// <param name="host">The URI-compatible host name.</param>
-        /// <param name="path">The URI-encoded path string.</param>
+        /// <param name="host">The URI-compatible host name or <see langword="null"/> or empty if <paramref name="uriEncodedPath"/> is to be converted
+        /// to a filesystem-local path.</param>
+        /// <param name="uriEncodedPath">The URI-encoded relative path string.</param>
         /// <returns>A filesystem path string.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="host"/> and/or <paramref name="path"/> is invalid.</exception>
-        public abstract string ToFileSystemPath(string hostName, string path);
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="host"/> and/or <paramref name="uriEncodedPath"/> is invalid.</exception>
+        public abstract string ToFileSystemPath(string hostName, string uriEncodedPath);
+
+        /// <summary>
+        /// Converts a <seealso cref="Uri.UriSchemeFile">file</seealso> URL to a filesystem path string.
+        /// </summary>
+        /// <param name="fileUriString">An absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL string or a relative URI-encoded path string.</param>
+        /// <returns>A filesystem path string.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="fileUriString"/> is invalid.</exception>
+        public abstract string ToFileSystemPath(string fileUriString);
 
         /// <summary>
         /// Converts a local filesystem path string to an URI encoded file name, relative directory path string, and host name.
         /// </summary>
         /// <param name="path">The local filesystem path string to convert.</param>
-        /// <param name="hostName">Returns the URI-compatible host name that was referenced within the file system <paramref name="path"/> or <seealso cref="string.Empty"/> if it did not reference a host name.</param>
-        /// <param name="directoryName">Returns the URI-encoded relative directory path string. This will never end with a path separator (<c>/</c>) unless it represents the root subdirectory.</param>
-        /// <returns>The URI-encoded file name (leaf) portion of the path string or <seealso cref="string.Empty"/> if the file system <paramref name="path"/> referenced the root subdirectory.</returns>
+        /// <param name="hostName">Returns the URI-compatible host name that was referenced within the file system <paramref name="path"/>
+        /// or <seealso cref="string.Empty"/> if it did not reference a host name.</param>
+        /// <param name="directoryName">Returns the URI-encoded relative directory path string. This will never end with a path separator (<c>/</c>)
+        /// unless it represents the root subdirectory.</param>
+        /// <returns>The URI-encoded file name (leaf) portion of the path string or <seealso cref="string.Empty"/> if the file system <paramref name="path"/>
+        /// referenced the root subdirectory.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="path"/> is invalid.</exception>
         public abstract string FromFileSystemPath(string path, out string hostName, out string directoryName);
 
         /// <summary>
         /// Converts a local filesystem path string to an URI encoded relative path string and host name.
         /// </summary>
         /// <param name="path">The local filesystem path string to convert.</param>
-        /// <param name="hostName">Returns the URI-compatible host name that was referenced within the file system <paramref name="path"/> or <seealso cref="string.Empty"/> if it did not reference a host name.</param>
+        /// <param name="hostName">Returns the URI-compatible host name that was referenced within the file system <paramref name="path"/>
+        /// or <seealso cref="string.Empty"/> if it did not reference a host name.</param>
         /// <returns>The URI-encoded relative path string. This will never end with a path separator (<c>/</c>) unless it represents the root subdirectory.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="path"/> is invalid.</exception>
         public abstract string FromFileSystemPath(string path, out string hostName);
 
-        ///// <summary>
-        ///// Parses the components of a URI-encoded file path or a file system path string.
-        ///// </summary>
-        ///// <param name="input">The input string to parse.</param>
-        ///// <param name="preferFsPath">If <see langword="true"/>, attempts to parse the <paramref name="input"/> string as a URI-encoded string, first. Otherwise, this will parse the <paramref name="input"/> string as
-        ///// a URI string only if it is not a well-formed file system path string.</param>
-        ///// <param name="platform"></param>
-        ///// <param name="allowAlt"></param>
-        ///// <param name="hostName">Returns the host name component contained within the <paramref name="input"/> string or <seealso cref="string.Empty"/> if it did not reference a host name.</param>
-        ///// <param name="path">Returns the path component contained within the <paramref name="input"/> string or <seealso cref="string.Empty"/> if only contained the host name or if it was null or empty.</param>
-        ///// <returns>A <seealso cref="FileStringFormat"/> indicating the format that was used to parse the <paramref name="input"/> string.</returns>
-        //public static FileStringFormat ParseUriOrPath(string input, bool preferFsPath, PlatformType platform, bool allowAlt, out string hostName, out string path)
-        //{
-        //    if (input is null)
-        //    {
-        //        hostName = path = "";
-        //        if (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike())
-        //        {
-        //            if (preferFsPath)
-        //                return FileStringFormat.RelativeLocalPath;
-        //            return FileStringFormat.RelativeLocalUri;
-        //        }
-        //        if (preferFsPath)
-        //            return FileStringFormat.RelativeAltPath;
-        //        return FileStringFormat.RelativeAltUri;
-        //    }
-        //    if (input.Length == 1)
-        //    {
-        //        hostName = path = "";
-        //        if (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike())
-        //        {
-        //            if (preferFsPath)
-        //                return FileStringFormat.WellFormedRelativeLocalPath;
-        //            return FileStringFormat.WellformedRelativeLocalUri;
-        //        }
-        //        if (preferFsPath)
-        //            return FileStringFormat.WellFormedRelativeAltPath;
-        //        return FileStringFormat.WellformedRelativeAltUri;
-        //    }
-
-        //    FileUriConverter currentFactory;
-        //    if (allowAlt)
-        //    {
-        //        currentFactory = GetFactory(platform, out FileUriConverter altFactory);
-        //        if (preferFsPath)
-        //        {
-        //            #region Try to match well-formed strings
-
-        //            if (currentFactory.TrySplitFileSystemPath(input, true, out hostName, out path, out bool isAbsolute))
-        //            {
-        //                if (isAbsolute)
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellFormedAbsoluteLocalPath : FileStringFormat.WellFormedAbsoluteAltPath;
-        //                if (altFactory.TrySplitFileSystemPath(input, true, out hostName, out path, out isAbsolute) && isAbsolute)
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellFormedAbsoluteAltPath : FileStringFormat.WellFormedAbsoluteLocalPath;
-        //                if (currentFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteLocalUrl : FileStringFormat.WellformedAbsoluteAltUrl;
-        //                if (altFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteAltUrl : FileStringFormat.WellformedAbsoluteLocalUrl;
-        //                return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellFormedRelativeLocalPath : FileStringFormat.WellFormedRelativeAltPath;
-        //            }
-        //            if (altFactory.TrySplitFileSystemPath(input, true, out hostName, out path, out isAbsolute))
-        //            {
-        //                if (isAbsolute)
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellFormedAbsoluteAltPath : FileStringFormat.WellFormedAbsoluteLocalPath;
-        //                if (currentFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteLocalUrl : FileStringFormat.WellformedAbsoluteAltUrl;
-        //                if (altFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteAltUrl : FileStringFormat.WellformedAbsoluteLocalUrl;
-        //                return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellFormedRelativeAltPath : FileStringFormat.WellFormedRelativeLocalPath;
-        //            }
-        //            if (currentFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteLocalUrl : FileStringFormat.WellformedAbsoluteAltUrl;
-        //            if (altFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteAltUrl : FileStringFormat.WellformedAbsoluteLocalUrl;
-
-        //            #endregion
-
-        //            if (currentFactory.TrySplitFileSystemPath(input, false, out hostName, out path, out isAbsolute))
-        //            {
-        //                if (isAbsolute)
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.AbsoluteLocalPath : FileStringFormat.AbsoluteAltPath;
-        //                if (altFactory.TrySplitFileSystemPath(input, false, out hostName, out path, out isAbsolute) && isAbsolute)
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.AbsoluteAltPath : FileStringFormat.AbsoluteLocalPath;
-        //                if (currentFactory.TrySplitFileUriString(input, false, out hostName, out path))
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteLocalUrl : FileStringFormat.WellformedAbsoluteAltUrl;
-        //                if (altFactory.TrySplitFileUriString(input, false, out hostName, out path))
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteAltUrl : FileStringFormat.WellformedAbsoluteLocalUrl;
-        //                return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.RelativeLocalPath : FileStringFormat.RelativeAltPath;
-        //            }
-        //            if (altFactory.TrySplitFileSystemPath(input, true, out hostName, out path, out isAbsolute))
-        //            {
-        //                if (isAbsolute)
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.AbsoluteAltPath : FileStringFormat.AbsoluteLocalPath;
-        //                if (currentFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteLocalUrl : FileStringFormat.WellformedAbsoluteAltUrl;
-        //                if (altFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                    return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteAltUrl : FileStringFormat.WellformedAbsoluteLocalUrl;
-        //                return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.RelativeAltPath : FileStringFormat.RelativeLocalPath;
-        //            }
-        //            if (currentFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteLocalUrl : FileStringFormat.WellformedAbsoluteAltUrl;
-        //            if (altFactory.TrySplitFileUriString(input, true, out hostName, out path))
-        //                return (platform.IsUnixLike() == CURRENT_FACTORY.FsPlatform.IsUnixLike()) ? FileStringFormat.WellformedAbsoluteAltUrl : FileStringFormat.WellformedAbsoluteLocalUrl;
-        //            // TODO: Use detection regex
-        //        }
-        //        else
-        //        {
-        //        }
-        //    }
-        //    throw new NotImplementedException();
-        //}
-
         /// <summary>
-        /// Ensures that a string is a well-formed file URI.
+        /// Converts a local filesystem path string to an absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a URI encoded relative path string.
         /// </summary>
-        /// <param name="uriString">The input URI string.</param>
-        /// <param name="kind">The expected URI type.</param>
-        /// <returns>A well-formed file URI.</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="uriString"/> type does not match the specified <paramref name="kind"/>.</exception>
-        public abstract string EnsureWellFormedUriString(string uriString, UriKind kind);
-
-        /// <summary>
-        /// Determines if a <seealso cref="Uri.UriSchemeFile">file</seealso> URL is well-formed and compatible with the target filesystem type.
-        /// </summary>
-        /// <param name="uriString">The URI string to test.</param>
-        /// <param name="kind">The URI type to test for.</param>
-        /// <returns><see langword="true"/> if the <paramref name="uriString"/> is well-formed and the decoded string is compatible with the target filesystem type;
-        /// otherwise, <see langword="false"/>.</returns>
-        public abstract bool IsWellFormedUriString(string uriString, UriKind kind);
-
-        /// <summary>
-        /// Determines if a string can be used as a file name for the target file system type.
-        /// </summary>
-        /// <param name="fileName">The file name to test.</param>
-        /// <returns><see langword="true"/> if the <paramref name="fileName"/> is well-formed and compatible with the target filesystem type;
-        /// otherwise, <see langword="false"/>.</returns>
-        public bool IsValidFileSystemName(string fileName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Determines if a path string is well-formed and can be used as a path for the target filesystem type.
-        /// </summary>
-        /// <param name="fileSystemPath">The filesystem path to test.</param>
-        /// <param name="absoluteOnly"><see langword="true"/> if the <paramref name="fileSystemPath"/> must be an absolute path; otherwise <see langword="false"/> to
-        /// permit relative paths.</param>
-        /// <returns><see langword="true"/> if the <paramref name="fileSystemPath"/> is well-formed and compatible with the target filesystem type;
-        /// otherwise, <see langword="false"/>.</returns>
-        public abstract bool IsWellFormedFileSystemPath(string fileSystemPath, bool absoluteOnly);
-
-        public bool TrySplitFileSystemPath(string absolutePath, bool requireWellFormed, out string hostName, out string rootedPath, out bool isAbsolute)
-        {
-            throw new NotImplementedException();
-        }
+        /// <param name="path">The local filesystem path string to convert.</param>
+        /// <returns>An absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a URI encoded relative path string.
+        /// This will never end with a path separator (<c>/</c>) unless it represents the root subdirectory.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="path"/> is invalid.</exception>
+        public abstract string FromFileSystemPath(string path);
 
         /// <summary>
         /// Attempt to create a <seealso cref="FileUri"/> object from an absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a filesystem path string.
@@ -442,21 +550,21 @@ namespace FsInfoCat.Util
         {
             FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
             if (preferUri)
-                return currentFactory.TryParseUriString(inputString, out fileUri) || altFactory.TryParseUriString(inputString, out fileUri) ||
-                    currentFactory.TryParseFsPath(inputString, out fileUri) || altFactory.TryParseFsPath(inputString, out fileUri);
-            return currentFactory.TryParseFsPath(inputString, out fileUri) || altFactory.TryParseFsPath(inputString, out fileUri) ||
-                currentFactory.TryParseUriString(inputString, out fileUri) || altFactory.TryParseUriString(inputString, out fileUri);
+                return currentFactory.TryCreateFileUriFromUriString(inputString, out fileUri) || altFactory.TryCreateFileUriFromUriString(inputString, out fileUri) ||
+                    currentFactory.TryCreateFileUriFromFsPath(inputString, out fileUri) || altFactory.TryCreateFileUriFromFsPath(inputString, out fileUri);
+            return currentFactory.TryCreateFileUriFromFsPath(inputString, out fileUri) || altFactory.TryCreateFileUriFromFsPath(inputString, out fileUri) ||
+                currentFactory.TryCreateFileUriFromUriString(inputString, out fileUri) || altFactory.TryCreateFileUriFromUriString(inputString, out fileUri);
         }
 
         /// <summary>
         /// Attempt to create a <seealso cref="FileUri"/> object from an absolute filesystem path string.
         /// </summary>
-        /// <param name="path">The abolute filesystem path string.</param>
+        /// <param name="fileSystemPath">The abolute filesystem path string.</param>
         /// <param name="fileUri">Returns the constructed <seealso cref="FileUri"/> object or <see langword="null"/> if the <paramref name="inputString"/>
         /// could not be parsed.</param>
-        /// <returns><see langword="true"/> if the <paramref name="path"/> could be parsed as a filesystem path string;
+        /// <returns><see langword="true"/> if the <paramref name="fileSystemPath"/> could be parsed as a filesystem path string;
         /// otherwise, <see langword="false"/>.</returns>
-        protected abstract bool TryParseFsPath(string path, out FileUri fileUri);
+        public abstract bool TryCreateFileUriFromFsPath(string fileSystemPath, out FileUri fileUri);
 
         /// <summary>
         /// Attempt to create a <seealso cref="FileUri"/> object from an absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL string.
@@ -466,9 +574,67 @@ namespace FsInfoCat.Util
         /// could not be parsed.</param>
         /// <returns><see langword="true"/> if the <paramref name="uriString"/> could be parsed as an absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL;
         /// otherwise, <see langword="false"/>.</returns>
-        protected abstract bool TryParseUriString(string uriString, out FileUri fileUri);
+        public bool TryCreateFileUriFromUriString(string uriString, out FileUri fileUri)
+        {
+            if (string.IsNullOrEmpty(uriString))
+            {
+                fileUri = null;
+                return false;
+            }
+            Match match = UriHostAndPathStrictRegex.Match(uriString);
+            if (!match.Success)
+            {
+                bool wasChanged;
+                if ((match = UriValidationRegex.Match(uriString)).Success)
+                    uriString = match.Groups[MATCH_GROUP_NAME_ROOT].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
+                        NormalizeRelativeFileUri(uriString, out wasChanged);
+                else
+                {
+                    uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                    if (wasChanged)
+                    {
+                        if ((match = UriValidationRegex.Match(uriString)).Success)
+                        {
+                            if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                                uriString = NormalizeAbsoluteFileUrl(uriString);
+                            else
+                                uriString = NormalizeRelativeFileUri(uriString);
+                        }
+                        else
+                            wasChanged = false;
+                    }
+                }
+                if (!(wasChanged && (match = UriHostAndPathStrictRegex.Match(uriString)).Success))
+                {
+                    fileUri = null;
+                    return false;
+                }
+            }
+            if (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+            {
+                fileUri = new FileUri(uriString);
+                return true;
+            }
+            fileUri = null;
+            return false;
+        }
 
-        public static bool TrySplitFileUriString(string uriString, PlatformType platform, bool includeAltPlatform, out string hostName, out string directory, out string fileName, out bool isAbsolute)
+        /// <summary>
+        /// Attempt to parse components from a URI-encoded <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a relative path string.
+        /// </summary>
+        /// <param name="uriString">The URI-encoded string to parse.</param>
+        /// <param name="platform">The target platform type.</param>
+        /// <param name="includeAltPlatform">If <see langword="true"/> and the <paramref name="uriString"/> is not compatible with the target
+        /// <paramref name="platform"/> type, this will attempt to parse the <paramref name="uriString"/> targeting the alternative platform type.</param>
+        /// <param name="hostName">Returns the host name from the URI-encoded string or empty if it contained no host name.</param>
+        /// <param name="directory">Returns the parent directory path without the host name.</param>
+        /// <param name="fileName">Returns the file name (leaf) from the path string. This can be empty if the URI refers to the root directory.</param>
+        /// <param name="isAbsolute">Returns <see langword="true"/> if <paramref name="directory"/> is absolute; otherwise, <see langword="false"/>.
+        /// This will always return <see langword="true"/> when <paramref name="hostName"/> is not empty.</param>
+        /// <returns><see langword="true"/> if the <paramref name="uriString"/> is is compatible with the target OS type and is a
+        /// <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a relative path string.</returns>
+        public static bool TrySplitFileUriString(string uriString, PlatformType platform, bool includeAltPlatform, out string hostName, out string directory,
+            out string fileName, out bool isAbsolute)
         {
             if (includeAltPlatform)
             {
@@ -479,41 +645,124 @@ namespace FsInfoCat.Util
             return GetFactory(platform).TrySplitFileUriString(uriString, out hostName, out directory, out fileName, out isAbsolute);
         }
 
-        public abstract bool TrySplitFileUriString(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute);
+        /// <summary>
+        /// Attempt to parse components from a URI-encoded <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a relative path string.
+        /// </summary>
+        /// <param name="uriString">The URI-encoded string to parse.</param>
+        /// <param name="hostName">Returns the host name from the URI-encoded string or empty if it contained no host name.</param>
+        /// <param name="directory">Returns the parent directory path without the host name.</param>
+        /// <param name="fileName">Returns the file name (leaf) from the path string. This can be empty if the URI refers to the root directory.</param>
+        /// <param name="isAbsolute">Returns <see langword="true"/> if <paramref name="directory"/> is absolute; otherwise, <see langword="false"/>.
+        /// This will always return <see langword="true"/> when <paramref name="hostName"/> is not empty.</param>
+        /// <returns><see langword="true"/> if the <paramref name="uriString"/> is is compatible with the target OS type and is a
+        /// <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a relative path string.</returns>
+        public bool TrySplitFileUriString(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute)
+        {
+            if (string.IsNullOrEmpty(uriString))
+            {
+                hostName = directory = fileName = "";
+                isAbsolute = false;
+                return false;
+            }
+            
+            Match match = UriHostDirAndFileStrictRegex.Match(uriString);
+            if (!match.Success)
+            {
+                bool wasChanged;
+                if ((match = UriValidationRegex.Match(uriString)).Success)
+                    uriString = match.Groups[MATCH_GROUP_NAME_ROOT].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
+                        NormalizeRelativeFileUri(uriString, out wasChanged);
+                else
+                {
+                    uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                    if (wasChanged)
+                    {
+                        if ((match = UriValidationRegex.Match(uriString)).Success)
+                        {
+                            if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                                uriString = NormalizeAbsoluteFileUrl(uriString);
+                            else
+                                uriString = NormalizeRelativeFileUri(uriString);
+                        }
+                        else
+                            wasChanged = false;
+                    }
+                }
+                if (!(wasChanged && (match = UriHostDirAndFileStrictRegex.Match(uriString)).Success))
+                {
+                    directory = uriString;
+                    hostName = fileName = "";
+                    isAbsolute = false;
+                    return false;
+                }
+            }
+
+            hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
+            directory = match.GetGroupValue(MATCH_GROUP_NAME_DIR, "");
+            fileName = match.GetGroupValue(MATCH_GROUP_NAME_FILE_NAME, "");
+            isAbsolute = (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
+            return true;
+        }
+
+        /// <summary>
+        /// Attempt to parse components from a URI-encoded <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a relative path string.
+        /// </summary>
+        /// <param name="uriString">The URI-encoded string to parse.</param>
+        /// <param name="hostName">Returns the host name from the URI-encoded string or empty if it contained no host name.</param>
+        /// <param name="path">Returns the path string.</param>
+        /// <param name="isAbsolute">Returns <see langword="true"/> if <paramref name="path"/> is absolute; otherwise, <see langword="false"/>.
+        /// This will always return <see langword="true"/> when <paramref name="hostName"/> is not empty.</param>
+        /// <returns><see langword="true"/> if the <paramref name="uriString"/> is is compatible with the target OS type and is a
+        /// <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a relative path string.</returns>
+        public bool TrySplitFileUriString(string uriString, out string hostName, out string path, out bool isAbsolute)
+        {
+            if (string.IsNullOrEmpty(uriString))
+            {
+                hostName = path = "";
+                isAbsolute = false;
+                return false;
+            }
+            
+            Match match = UriHostAndPathStrictRegex.Match(uriString);
+            if (!match.Success)
+            {
+                bool wasChanged;
+                if ((match = UriValidationRegex.Match(uriString)).Success)
+                    uriString = match.Groups[MATCH_GROUP_NAME_ROOT].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
+                        NormalizeRelativeFileUri(uriString, out wasChanged);
+                else
+                {
+                    uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                    if (wasChanged)
+                    {
+                        if ((match = UriValidationRegex.Match(uriString)).Success)
+                        {
+                            if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                                uriString = NormalizeAbsoluteFileUrl(uriString);
+                            else
+                                uriString = NormalizeRelativeFileUri(uriString);
+                        }
+                        else
+                            wasChanged = false;
+                    }
+                }
+                if (!(wasChanged && (match = UriHostAndPathStrictRegex.Match(uriString)).Success))
+                {
+                    hostName = path = "";
+                    isAbsolute = false;
+                    return false;
+                }
+            }
+
+            hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
+            path = match.GetGroupValue(MATCH_GROUP_NAME_PATH, "");
+            isAbsolute = (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
+            return true;
+        }
 
         [Obsolete("Use instance method, instead.")]
         public static bool TrySplitFileUriString_obsolete(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute) =>
             TrySplitFileUriString(uriString, PlatformType.Unknown, false, out hostName, out directory, out fileName, out isAbsolute);
-
-        //public static int GetComponentIndexes(string fileUriString, out bool isAbsolute, out int hostIndex, out int leafIndex)
-        //{
-        //    if (string.IsNullOrEmpty(fileUriString))
-        //    {
-        //        isAbsolute = false;
-        //        hostIndex = leafIndex = 0;
-        //        return 0;
-        //    }
-        //    Match match = FILE_URI_COMPONENTS_LAX_REGEX.Match(fileUriString);
-        //    isAbsolute = match.Groups["a"].Success;
-        //    leafIndex = (match.Groups["n"].Success) ? match.Groups["n"].Index : match.Groups["d"].Index;
-        //    if (isAbsolute)
-        //        hostIndex = (match.Groups["h"].Success) ? match.Groups["h"].Index : match.Groups["a"].Length;
-        //    else
-        //        hostIndex = 0;
-        //    return match.Groups["d"].Index;
-        //}
-
-        public static string EnsureWellFormedUri(string value, UriKind kind, PlatformType platform, bool allowAlt = false)
-        {
-            if (allowAlt)
-            {
-                FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
-                if (currentFactory.IsWellFormedUriString(value, kind) || altFactory.IsWellFormedUriString(value, kind))
-                    return value;
-                return currentFactory.EnsureWellFormedUriString(value, kind);
-            }
-            return GetFactory(platform).EnsureWellFormedUriString(value, kind);
-        }
 
         public static string SplitUriPathFileName(string uriString, out string fileName)
         {
@@ -537,6 +786,467 @@ namespace FsInfoCat.Util
             fileName = uriString.Substring(dirLen + 1, endIndex - dirLen);
             return uriString.Substring(0, dirLen);
         }
+
+        /// <summary>
+        /// Removes extraneous path separators and whitespace, ensures the file scheme name is lower case and escape sequence characters are upper-case.
+        /// </summary>
+        /// <param name="uriString">Absolute URI string to normalize.</param>
+        /// <param name="wasChanged">Returns <see langword="true"/> if the <paramref name="uriString"/> was normalized or <see langword="false"/>
+        /// if <paramref name="uriString"/> did not need to be normalized.</param>
+        /// <returns>The normalized URI string.</returns>
+        public static string NormalizeAbsoluteFileUrl(string uriString, out bool wasChanged)
+        {
+            if (uriString is null)
+            {
+                wasChanged = true;
+                return "";
+            }
+
+            wasChanged = uriString.Length > 0 && ABS_URI_STRING_NORMALIZE_REGEX.IsMatch(uriString);
+            if (wasChanged)
+                return ABS_URI_STRING_NORMALIZE_REGEX.Replace(uriString, m =>
+                    (m.Groups[MATCH_GROUP_NAME_CASE].Success) ? m.Value.ToUpper() :
+                    ((m.Groups[MATCH_GROUP_NAME_SCHEME].Success) ? m.Groups[MATCH_GROUP_NAME_SCHEME].Value.ToLower() : ""));
+            return uriString;
+        }
+
+        /// <summary>
+        /// Removes extraneous path separators and whitespace, ensures the file scheme name is lower case and escape sequence characters are upper-case.
+        /// </summary>
+        /// <param name="uriString">Absolute URI string to normalize.</param>
+        /// <returns>The normalized URI string.</returns>
+        public static string NormalizeAbsoluteFileUrl(string uriString)
+        {
+            if (string.IsNullOrEmpty(uriString))
+                return "";
+            if (ABS_URI_STRING_NORMALIZE_REGEX.IsMatch(uriString))
+                return ABS_URI_STRING_NORMALIZE_REGEX.Replace(uriString, m =>
+                    (m.Groups[MATCH_GROUP_NAME_CASE].Success) ? m.Value.ToUpper() :
+                    ((m.Groups[MATCH_GROUP_NAME_SCHEME].Success) ? m.Groups[MATCH_GROUP_NAME_SCHEME].Value.ToLower() : ""));
+            return uriString;
+        }
+
+        /// <summary>
+        /// Removes extraneous path separators and whitespace and ensures escape sequence characters are upper-case.
+        /// </summary>
+        /// <param name="uriPathString">Encoded URI path string to normalize.</param>
+        /// <param name="wasChanged">Returns <see langword="true"/> if the <paramref name="uriPathString"/> was normalized or <see langword="false"/>
+        /// if <paramref name="uriPathString"/> did not need to be normalized.</param>
+        /// <returns>The normalized URI string.</returns>
+        public static string NormalizeRelativeFileUri(string uriPathString, out bool wasChanged)
+        {
+            if (uriPathString is null)
+            {
+                wasChanged = true;
+                return "";
+            }
+
+            wasChanged = uriPathString.Length > 0 && REL_URI_STRING_NORMALIZE_REGEX.IsMatch(uriPathString);
+            if (wasChanged)
+                return REL_URI_STRING_NORMALIZE_REGEX.Replace(uriPathString, m =>
+                    (m.Groups[MATCH_GROUP_NAME_CASE].Success) ? m.Value.ToUpper() :
+                    ((m.Groups[MATCH_GROUP_NAME_SCHEME].Success) ? m.Groups[MATCH_GROUP_NAME_SCHEME].Value.ToLower() : ""));
+            return uriPathString;
+        }
+
+        /// <summary>
+        /// Removes extraneous path separators and whitespace and ensures escape sequence characters are upper-case.
+        /// </summary>
+        /// <param name="uriString">Encoded URI path string to normalize.</param>
+        /// <returns>The normalized URI string.</returns>
+        public static string NormalizeRelativeFileUri(string uriPathString)
+        {
+            if (string.IsNullOrEmpty(uriPathString))
+                return "";
+            if (REL_URI_STRING_NORMALIZE_REGEX.IsMatch(uriPathString))
+                return REL_URI_STRING_NORMALIZE_REGEX.Replace(uriPathString, m =>
+                    (m.Groups[MATCH_GROUP_NAME_CASE].Success) ? m.Value.ToUpper() :
+                    ((m.Groups[MATCH_GROUP_NAME_SCHEME].Success) ? m.Groups[MATCH_GROUP_NAME_SCHEME].Value.ToLower() : ""));
+            return uriPathString;
+        }
+
+        /// <summary>
+        /// Converts path characters that are valid for the target OS type, but not for file URI path string, to their URI encoded form so the target string value
+        /// can be successfully parsed as a <seealso cref="Uri.UriSchemeFile">file</seealso> URI string.
+        /// </summary>
+        /// <param name="uriString">The URI-encoded path string. If a <see langword="null"/> value is provided, an empty string is returned.</param>
+        /// <param name="wasChanged">Returns <see langword="true"/> if any characters were encoded; otherwise <see langword="false"/> to indicate that the
+        /// string value is unchanged.</param>
+        /// <returns>The URI-encoded path string with special path characters encoded as well.</returns>
+        public abstract string EscapeSpecialPathChars(string uriString, out bool wasChanged);
+
+        /// <summary>
+        /// Converts path characters that are valid for the target OS type, but not for file URI path string, to their URI encoded form so the target string value
+        /// can be successfully parsed as a <seealso cref="Uri.UriSchemeFile">file</seealso> URI string.
+        /// </summary>
+        /// <param name="uriString">The URI-encoded path string. If a <see langword="null"/> value is provided, an empty string is returned.</param>
+        /// <returns>The URI-encoded path string with special path characters encoded as well.</returns>
+        public abstract string EscapeSpecialPathChars(string uriString);
+
+        /// <summary>
+        /// Indicates whether a URI-encoded path string contains characters which are acceptable for the current OS type but should be URI-encoded.
+        /// </summary>
+        /// <param name="uriString">The URI-encoded path string.</param>
+        /// <returns><see langword="true"/> if the <paramref name="uriString"/> contains one or more characters which need to be URI encoded,
+        /// but would not get encoded using <seealso cref="Uri.EscapeUriString(string)"/>; otherwise, <see langword="false"/>.</returns>
+        public abstract bool ContainsSpecialPathChars(string uriString);
+
+        /// <summary>
+        /// Ensures that a string is a well-formed file URI that is compatible with the specified platform type.
+        /// </summary>
+        /// <param name="uriString">The input URI string.</param>
+        /// <param name="kind">The expected URI type.</param>
+        /// <param name="platform">The target platform type.</param>
+        /// <param name="includeAltPlatformType">If <see langword="true"/> and the <paramref name="uriString"/> is not compatible with the target
+        /// <paramref name="platform"/> type, this will ensure the <paramref name="uriString"/> is compatible with the the alternative platform type.</param>
+        /// <returns>A well-formed file URI that is compatible with the specified platform type.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="uriString"/> type does not match the specified <paramref name="kind"/> or
+        /// is not compatible with the specified platform type.</exception>
+        public static string EnsureWellFormedUri(string uriString, UriKind kind, PlatformType platform, bool includeAltPlatformType = false)
+        {
+            if (includeAltPlatformType)
+            {
+                FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
+                if (currentFactory.IsWellFormedUriString(uriString, kind) || altFactory.IsWellFormedUriString(uriString, kind))
+                    return uriString;
+                return currentFactory.EnsureWellFormedUriString(uriString, kind);
+            }
+            return GetFactory(platform).EnsureWellFormedUriString(uriString, kind);
+        }
+
+        /// <summary>
+        /// Ensures that a string is a well-formed file URI that is compatible with the current platform type.
+        /// </summary>
+        /// <param name="uriString">The input URI string.</param>
+        /// <param name="kind">The expected URI type.</param>
+        /// <param name="wasChanged">Returns <see langword="true"/> if any characters were encoded or normalized; otherwise <see langword="false"/> to indicate that the
+        /// string value is unchanged.</param>
+        /// <returns>A well-formed file URI that is compatible with the specified platform type.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="uriString"/> type does not match the specified <paramref name="kind"/> or
+        /// is not compatible with the current platform type.</exception>
+        public string EnsureWellFormedUriString(string uriString, UriKind kind, out bool wasChanged)
+        {
+            if (uriString is null)
+            {
+                if (kind == UriKind.Absolute)
+                    throw new ArgumentOutOfRangeException(nameof(uriString));
+                wasChanged = true;
+                return "";
+            }
+            if (uriString.Length == 0)
+            {
+                if (kind == UriKind.Absolute)
+                    throw new ArgumentOutOfRangeException(nameof(uriString));
+                wasChanged = false;
+                return uriString;
+            }
+
+            Match match = UriHostAndPathStrictRegex.Match(uriString);
+            if (match.Success)
+                wasChanged = match.Length < uriString.Length;
+            else
+            {
+                if ((match = UriValidationRegex.Match(uriString)).Success)
+                {
+                    if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                        uriString = NormalizeAbsoluteFileUrl(uriString, out wasChanged);
+                    else
+                        uriString = NormalizeRelativeFileUri(uriString, out wasChanged);
+                }
+                else
+                {
+                    uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                    if (wasChanged && (match = UriValidationRegex.Match(uriString)).Success)
+                    {
+                        if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                            uriString = NormalizeAbsoluteFileUrl(uriString);
+                        else
+                            uriString = NormalizeRelativeFileUri(uriString);
+                    }
+                }
+                if (!(wasChanged && (match = UriHostAndPathStrictRegex.Match(uriString)).Success))
+                    throw new ArgumentOutOfRangeException(nameof(uriString));
+            }
+
+            switch (kind)
+            {
+                case UriKind.Absolute:
+                    if (!(match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success))
+                        throw new ArgumentOutOfRangeException(nameof(uriString));
+                    break;
+                case UriKind.Relative:
+                    if (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                        throw new ArgumentOutOfRangeException(nameof(uriString));
+                    break;
+            }
+            return match.Value;
+        }
+
+        /// <summary>
+        /// Ensures that a string is a well-formed file URI that is compatible with the current platform type.
+        /// </summary>
+        /// <param name="uriString">The input URI string.</param>
+        /// <param name="kind">The expected URI type.</param>
+        /// <returns>A well-formed file URI that is compatible with the specified platform type.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="uriString"/> type does not match the specified <paramref name="kind"/> or
+        /// is not compatible with the current platform type.</exception>
+        public string EnsureWellFormedUriString(string uriString, UriKind kind)
+        {
+            if (string.IsNullOrEmpty(uriString))
+            {
+                if (kind == UriKind.Absolute)
+                    throw new ArgumentOutOfRangeException(nameof(uriString));
+                return "";
+            }
+
+            Match match = UriHostAndPathStrictRegex.Match(uriString);
+            if (!match.Success)
+            {
+                bool wasChanged;
+                if ((match = UriValidationRegex.Match(uriString)).Success)
+                {
+                    if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                        uriString = NormalizeAbsoluteFileUrl(uriString, out wasChanged);
+                    else
+                        uriString = NormalizeRelativeFileUri(uriString, out wasChanged);
+                }
+                else
+                {
+                    uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                    if (wasChanged && (match = UriValidationRegex.Match(uriString)).Success)
+                    {
+                        if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                            uriString = NormalizeAbsoluteFileUrl(uriString);
+                        else
+                            uriString = NormalizeRelativeFileUri(uriString);
+                    }
+                }
+                if (!(wasChanged && (match = UriHostAndPathStrictRegex.Match(uriString)).Success))
+                    throw new ArgumentOutOfRangeException(nameof(uriString));
+            }
+
+            switch (kind)
+            {
+                case UriKind.Absolute:
+                    if (!(match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success))
+                        throw new ArgumentOutOfRangeException(nameof(uriString));
+                    break;
+                case UriKind.Relative:
+                    if (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                        throw new ArgumentOutOfRangeException(nameof(uriString));
+                    break;
+            }
+            return match.Value;
+        }
+
+        /// <summary>
+        /// Determines if a <seealso cref="Uri.UriSchemeFile">file</seealso> URL is well-formed and compatible with the target filesystem type.
+        /// </summary>
+        /// <param name="uriString">The URI string to test.</param>
+        /// <param name="kind">The URI type to test for.</param>
+        /// <returns><see langword="true"/> if the <paramref name="uriString"/> is well-formed and the decoded string is compatible with the target filesystem type;
+        /// otherwise, <see langword="false"/>.</returns>
+        public bool IsWellFormedUriString(string uriString, UriKind kind)
+        {
+            if (string.IsNullOrEmpty(uriString))
+                return kind != UriKind.Absolute;
+
+            Match match = UriHostAndPathStrictRegex.Match(uriString);
+            if (!match.Success)
+                return false;
+            switch (kind)
+            {
+                case UriKind.Absolute:
+                    return match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success;
+                case UriKind.Relative:
+                    return !(match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Determines if a path string is valid for the target filesystem type.
+        /// </summary>
+        /// <param name="fileSystemPath">The filesystem path to test.</param>
+        /// <param name="isAbsolute"><see langword="true"/> if the <paramref name="fileSystemPath"/> must be an absolute path (<seealso cref="FsPathType.Relative"/>
+        /// or <seealso cref="FsPathType.Local"/>); otherwise <see langword="false"/> to require <paramref name="fileSystemPath"/> to be a relative
+        /// path string (<seealso cref="FsPathType.Relative)"/>.</param>
+        /// <returns><see langword="true"/> if the <paramref name="fileSystemPath"/> is valid for the target filesystem and matches the specified type;
+        /// otherwise, <see langword="false"/>.</returns>
+        public bool IsValidFileSystemPath(string fileSystemPath, bool isAbsolute)
+        {
+            if (string.IsNullOrEmpty(fileSystemPath))
+                return false;
+            Match match = FsHostAndPathRegex.Match(fileSystemPath);
+            return match.Success && (match.Groups[MATCH_GROUP_NAME_ROOT].Success || match.Groups[MATCH_GROUP_NAME_HOST].Success) == isAbsolute;
+        }
+
+        /// <summary>
+        /// Determines if a path string is valid for the target filesystem type.
+        /// </summary>
+        /// <param name="fileSystemPath">The filesystem path to test.</param>
+        /// <param name="type">The path type to check for.</param>
+        /// <returns><see langword="true"/> if the <paramref name="fileSystemPath"/> is valid for the target filesystem and matches the
+        /// specified <paramref name="type"/>; otherwise, <see langword="false"/>.</returns>
+        public bool IsValidFileSystemPath(string fileSystemPath, FsPathType type)
+        {
+            if (string.IsNullOrEmpty(fileSystemPath))
+                return false;
+            Match match = FsHostAndPathRegex.Match(fileSystemPath);
+            if (match.Success)
+                switch (type)
+                {
+                    case FsPathType.Local:
+                        return match.Groups[MATCH_GROUP_NAME_ROOT].Success;
+                    case FsPathType.UNC:
+                        return match.Groups[MATCH_GROUP_NAME_HOST].Success;
+                    default:
+                        return !(match.Groups[MATCH_GROUP_NAME_ROOT].Success || match.Groups[MATCH_GROUP_NAME_HOST].Success);
+                }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if a path string is an absolute path string that is valid for the target filesystem type.
+        /// </summary>
+        /// <param name="fileSystemPath">The filesystem path to test.</param>
+        /// <returns><see langword="true"/> if the <paramref name="fileSystemPath"/> is valid for the target filesystem and is an absolute local or
+        /// UNC path string; otherwise, <see langword="false"/>.</returns>
+        public bool IsFileSystemPathAbsolute(string fileSystemPath)
+        {
+            if (string.IsNullOrEmpty(fileSystemPath))
+                return false;
+            Match match = FsHostAndPathRegex.Match(fileSystemPath);
+            return match.Success && (match.Groups[MATCH_GROUP_NAME_ROOT].Success || match.Groups[MATCH_GROUP_NAME_HOST].Success);
+        }
+
+        /// <summary>
+        /// Determines if a path string is an absolute local filesystem (not a UNC path) path string that is valid for the target filesystem type.
+        /// </summary>
+        /// <param name="fileSystemPath">The filesystem path to test.</param>
+        /// <returns><see langword="true"/> if the <paramref name="fileSystemPath"/> is valid for the target filesystem and is an absolute local path string;
+        /// otherwise, <see langword="false"/>.</returns>
+        public bool IsFileSystemPathLocal(string fileSystemPath)
+        {
+            if (string.IsNullOrEmpty(fileSystemPath))
+                return false;
+            Match match = FsHostAndPathRegex.Match(fileSystemPath);
+            return match.Success && match.Groups[MATCH_GROUP_NAME_ROOT].Success;
+        }
+
+        /// <summary>
+        /// Gets the filesystem path type.
+        /// </summary>
+        /// <param name="fileSystemPath">The filesystem path to validate.</param>
+        /// <param name="hostName">Returns the host name contained withing the path string or an empty string if no host name was found.</param>
+        /// <param name="directoryName">The directory name portion of the path string without the UNC host name.</param>
+        /// <param name="fileName">The file name portion of the path string.</param>
+        /// <returns></returns>
+        public FsPathType? CheckFileSytemPath(string fileSystemPath, out string hostName, out string directoryName, out string fileName)
+        {
+            Match m;
+            if (string.IsNullOrEmpty(fileSystemPath) || !(m = FsHostDirAndFileRegex.Match(fileSystemPath)).Success)
+            {
+                hostName = directoryName = fileName = "";
+                return null;
+            }
+            directoryName = m.Groups[MATCH_GROUP_NAME_DIR].Value;
+            fileName = m.Groups[MATCH_GROUP_NAME_FILE_NAME].Value;
+            if (m.Groups[MATCH_GROUP_NAME_UNC].Success)
+            {
+                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace("-", URI_SCHEME_SEPARATOR_STRING);
+                return FsPathType.UNC;
+            }
+            if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
+            {
+                hostName = m.Groups[MATCH_GROUP_NAME_HOST].Value;
+                return FsPathType.UNC;
+            }
+            hostName = "";
+            return (m.Groups[MATCH_GROUP_NAME_ROOT].Success) ? FsPathType.Local : FsPathType.Relative;
+        }
+
+        /// <summary>
+        /// Gets the filesystem path type.
+        /// </summary>
+        /// <param name="fileSystemPath">The filesystem path to validate.</param>
+        /// <param name="hostName">Returns the host name contained withing the path string or an empty string if no host name was found.</param>
+        /// <param name="path">Returns the path string without the UNC host name.</param>
+        /// <returns>The <seealso cref="FsPathType"/> indicating the path type or <see langword="null"/> if the <paramref name="fileSystemPath"/> is invalid.</returns>
+        public FsPathType? CheckFileSytemPath(string fileSystemPath, out string hostName, out string path)
+        {
+            if (string.IsNullOrEmpty(fileSystemPath))
+            {
+                hostName = path = "";
+                return null;
+            }
+            fileSystemPath = FsFullPathNormalizeRegex.Replace(fileSystemPath, "");
+            Match m;
+            if (string.IsNullOrEmpty(fileSystemPath) || !(m = FsHostAndPathRegex.Match(fileSystemPath)).Success)
+            {
+                hostName = path = "";
+                return null;
+            }
+            path = m.Groups[MATCH_GROUP_NAME_PATH].Value;
+            if (m.Groups[MATCH_GROUP_NAME_UNC].Success)
+            {
+                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace("-", URI_SCHEME_SEPARATOR_STRING);
+                return FsPathType.UNC;
+            }
+            if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
+            {
+                hostName = m.Groups[MATCH_GROUP_NAME_HOST].Value;
+                return FsPathType.UNC;
+            }
+            hostName = "";
+            return (m.Groups[MATCH_GROUP_NAME_ROOT].Success) ? FsPathType.Local : FsPathType.Relative;
+        }
+
+        /// <summary>
+        /// Gets the filesystem path type.
+        /// </summary>
+        /// <param name="fileSystemPath">The filesystem path to validate.</param>
+        /// <param name="hostName">Returns the host name contained withing the path string or an empty string if no host name was found.</param>
+        /// <returns>The <seealso cref="FsPathType"/> indicating the path type or <see langword="null"/> if the <paramref name="fileSystemPath"/> is invalid.</returns>
+        public FsPathType? CheckFileSytemPath(string fileSystemPath, out string hostName)
+        {
+            Match m;
+            if (string.IsNullOrEmpty(fileSystemPath) || !(m = FsHostAndPathRegex.Match(fileSystemPath)).Success)
+            {
+                hostName = "";
+                return null;
+            }
+            if (m.Groups[MATCH_GROUP_NAME_UNC].Success)
+            {
+                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace("-", URI_SCHEME_SEPARATOR_STRING);
+                return FsPathType.UNC;
+            }
+            if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
+            {
+                hostName = m.Groups[MATCH_GROUP_NAME_HOST].Value;
+                return FsPathType.UNC;
+            }
+            hostName = "";
+            return (m.Groups[MATCH_GROUP_NAME_ROOT].Success) ? FsPathType.Local : FsPathType.Relative;
+        }
+
+        /// <summary>
+        /// Gets the filesystem path type.
+        /// </summary>
+        /// <param name="fileSystemPath">The filesystem path to validate.</param>
+        /// <returns>The <seealso cref="FsPathType"/> indicating the path type or <see langword="null"/> if the <paramref name="fileSystemPath"/> is invalid.</returns>
+        public FsPathType? CheckFileSytemPath(string fileSystemPath)
+        {
+            Match m;
+            if (string.IsNullOrEmpty(fileSystemPath) || !(m = FsHostAndPathRegex.Match(fileSystemPath)).Success)
+                return null;
+            if (m.Groups[MATCH_GROUP_NAME_UNC].Success)
+                return FsPathType.UNC;
+            if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
+                return FsPathType.UNC;
+            return (m.Groups[MATCH_GROUP_NAME_ROOT].Success) ? FsPathType.Local : FsPathType.Relative;
+        }
+
         public static FileUriConverter GetFactory(PlatformType platform, out FileUriConverter altFactory)
         {
             switch (platform)

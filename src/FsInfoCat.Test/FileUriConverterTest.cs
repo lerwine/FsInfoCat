@@ -184,7 +184,7 @@ namespace FsInfoCat.Test
                 if (hostElement.Name.LocalName == "Invalid")
                     expected = new XElement("PatternHostName", new XAttribute("Success", false));
                 else
-                    expected = new XElement("PatternHostName", new XAttribute("Success", true), hostElement.Value);
+                    expected = new XElement("PatternHostName", new XAttribute("Success", true), hostElement.Attribute("Address").Value);
                 return new TestCaseData(hostElement.Attribute("Address").Value)
                     .Returns(expected.ToString(SaveOptions.DisableFormatting));
             });
@@ -194,7 +194,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetPatternHostNameTestCases))]
         public string PatternHostNameTest(string input)
         {
-            Match match = Regex.Match(input, FileUriConverter.PATTERN_HOST_NAME);
+            Match match = Regex.Match(input, FileUriConverter.PATTERN_HOST_NAME_OR_ADDRESS);
             return UrlHelperTest.ToTestReturnValueXml(match, "PatternHostName");
         }
 
@@ -203,9 +203,7 @@ namespace FsInfoCat.Test
             return HostTestData.Root.Elements().Select(hostElement =>
             {
                 XElement expected;
-                if (hostElement.Name.LocalName != "IPV6")
-                    expected = new XElement("Ipv6AddressRegex", new XAttribute("Success", false));
-                else
+                if (hostElement.Name.LocalName == "IPV6" && hostElement.Attribute("Type").Value == "Normal")
                     expected = new XElement("Ipv6AddressRegex",
                         new XAttribute("Success", true),
                         new XElement("Group",
@@ -214,6 +212,8 @@ namespace FsInfoCat.Test
                             hostElement.Value
                         )
                     );
+                else
+                    expected = new XElement("Ipv6AddressRegex", new XAttribute("Success", false));
                 return new TestCaseData(hostElement.Attribute("Address").Value)
                     .Returns(expected.ToString(SaveOptions.DisableFormatting));
             });
@@ -232,10 +232,11 @@ namespace FsInfoCat.Test
             return HostTestData.Root.Elements().Select(hostElement =>
             {
                 XElement expected;
-                if ((hostElement.Name.LocalName != "HostName" && hostElement.Name.LocalName != "IPV4") || !hostElement.Attributes("IsDns").Any(a => XmlConvert.ToBoolean(a.Value)))
-                    expected = new XElement("PatternDnsName", new XAttribute("Success", false));
-                else
+                if (hostElement.Name.LocalName == "HostName" || hostElement.Name.LocalName == "IPV4" ||
+                    hostElement.Attributes("IsDns").Any(a => XmlConvert.ToBoolean(a.Value)))
                     expected = new XElement("PatternDnsName", new XAttribute("Success", true), hostElement.Value);
+                else
+                    expected = new XElement("PatternDnsName", new XAttribute("Success", false));
                 return new TestCaseData(hostElement.Attribute("Address").Value)
                     .Returns(expected.ToString(SaveOptions.DisableFormatting));
             });
@@ -245,7 +246,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetPatternDnsNameTestCases))]
         public string PatternDnsNameTest(string input)
         {
-            Match match = Regex.Match(input, FileUriConverter.PATTERN_DNS_NAME);
+            Match match = Regex.Match(input, FileUriConverter.PATTERN_BASIC_OR_DNS_NAME);
             return UrlHelperTest.ToTestReturnValueXml(match, "PatternDnsName");
         }
 

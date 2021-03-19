@@ -6,6 +6,7 @@ using static FsInfoCat.Util.FileUriConverter;
 
 namespace FsInfoCat.Util
 {
+    // TODO: Rename to UriFactory and make instance class after extension methods moved to ExtensionMethods
     public static class UriHelper
     {
         public const string URI_SCHEME_URN = "urn";
@@ -51,12 +52,13 @@ namespace FsInfoCat.Util
         public const UriComponents BEFORE_FRAGMENT_COMPONENTS = UriComponents.Scheme | UriComponents.UserInfo | UriComponents.HostAndPort |
             UriComponents.PathAndQuery | UriComponents.KeepDelimiter;
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Normalizes a URL so it is compatible for searches and comparison.
         /// </summary>
         /// <remarks><seealso cref="Uri.Host"/> name and <seealso cref="Uri.Scheme"/> is converted to lower case. Default <seealso cref="Uri.Port"/> numbers
-        /// and empty <seealso cref="Uri.Query"/> strings and <seealso cref="Uri.Fragment"/>s are removed. If the <seealso cref="Uri.OriginalString"/> is not a well-formed URI,
-        /// a new <seealso cref="Uri"/> is returned where the <seealso cref="Uri.OriginalString"/> property is well-formed.
+        /// and empty <seealso cref="Uri.Query"/> strings and <seealso cref="Uri.Fragment"/>s are removed. If the <seealso cref="Uri.OriginalString"/>
+        /// is not a well-formed URI, a new <seealso cref="Uri"/> is returned where the <seealso cref="Uri.OriginalString"/> property is well-formed.
         /// Both absolute and relative URIs are supported by this extension method.</remarks>
         public static Uri AsNormalized(this Uri uri)
         {
@@ -134,30 +136,37 @@ namespace FsInfoCat.Util
         /// Ensures a string value is escaped for inclusion in a URI string as the username portion of the <seealso cref="UriComponents.UserInfo"/> component.
         /// </summary>
         /// <param name="value">The user name to escape.</param>
-        /// <returns>A string value that is propertly escaped for inclusion in a URI string as the username portion of the <seealso cref="UriComponents.UserInfo"/> component.</returns>
+        /// <returns>A string value that is propertly escaped for inclusion in a URI string as the username portion of the <seealso cref="UriComponents.UserInfo"/>
+        /// component.</returns>
         public static string AsUserNameComponentEncoded(string value)
         {
             if (string.IsNullOrEmpty(value))
                 return value;
 
             return (Uri.IsWellFormedUriString(value, UriKind.Relative) ? value : Uri.EscapeUriString(value))
-                .Replace(URI_PATH_SEPARATOR_STRING, URI_PATH_SEPARATOR_ESCAPED).Replace(URI_SCHEME_SEPARATOR_STRING, URI_SCHEME_DELIMITER_ESCAPED).Replace(URI_QUERY_DELIMITER_STRING, URI_QUERY_DELIMITER_ESCAPED)
-                .Replace(URI_FRAGMENT_DELIMITER_STRING, URI_FRAGMENT_DELIMITER_ESCAPED).Replace(URI_USERINFO_SEPARATOR_STRING, URI_USERINFO_DELIMITER_ESCAPED);
+                .Replace(URI_PATH_SEPARATOR_STRING, URI_PATH_SEPARATOR_ESCAPED)
+                .Replace(URI_SCHEME_SEPARATOR_STRING, URI_SCHEME_DELIMITER_ESCAPED)
+                .Replace(URI_QUERY_DELIMITER_STRING, URI_QUERY_DELIMITER_ESCAPED)
+                .Replace(URI_FRAGMENT_DELIMITER_STRING, URI_FRAGMENT_DELIMITER_ESCAPED)
+                .Replace(URI_USERINFO_SEPARATOR_STRING, URI_USERINFO_DELIMITER_ESCAPED);
         }
 
         /// <summary>
         /// Ensures a string value is escaped for inclusion in a URI string as the password portion of the <seealso cref="UriComponents.UserInfo"/> component.
         /// </summary>
         /// <param name="value">The password to escape.</param>
-        /// <returns>A string value that is propertly escaped for inclusion in a URI string as the password portion of the <seealso cref="UriComponents.UserInfo"/> component.</returns>
+        /// <returns>A string value that is propertly escaped for inclusion in a URI string as the password portion of the <seealso cref="UriComponents.UserInfo"/>
+        /// component.</returns>
         public static string AsPasswordComponentEncoded(string value)
         {
             if (string.IsNullOrEmpty(value))
                 return value;
 
             return (Uri.IsWellFormedUriString(value, UriKind.Relative) ? value : Uri.EscapeUriString(value))
-                .Replace(URI_PATH_SEPARATOR_STRING, URI_PATH_SEPARATOR_ESCAPED).Replace(URI_QUERY_DELIMITER_STRING, URI_QUERY_DELIMITER_ESCAPED)
-                .Replace(URI_FRAGMENT_DELIMITER_STRING, URI_FRAGMENT_DELIMITER_ESCAPED).Replace(URI_USERINFO_SEPARATOR_STRING, URI_USERINFO_DELIMITER_ESCAPED);
+                .Replace(URI_PATH_SEPARATOR_STRING, URI_PATH_SEPARATOR_ESCAPED)
+                .Replace(URI_QUERY_DELIMITER_STRING, URI_QUERY_DELIMITER_ESCAPED)
+                .Replace(URI_FRAGMENT_DELIMITER_STRING, URI_FRAGMENT_DELIMITER_ESCAPED)
+                .Replace(URI_USERINFO_SEPARATOR_STRING, URI_USERINFO_DELIMITER_ESCAPED);
         }
 
         public static string SplitQueryAndFragment(string uriString, bool keepDelimiters, out string query, out string fragment)
@@ -228,6 +237,7 @@ namespace FsInfoCat.Util
         public static string SplitQueryAndFragment(string uriString, out string queryAndFragment) =>
             SplitQueryAndFragment(uriString, false, out queryAndFragment);
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Splits the <seealso cref="Uri.Query"/> strings and <seealso cref="Uri.Fragment"/>, returning a new <seealso cref="Uri"/> without these components.
         /// </summary>
@@ -268,6 +278,7 @@ namespace FsInfoCat.Util
             return new Uri(SplitQueryAndFragment(uri.OriginalString, false, out query, out fragment), UriKind.Relative);
         }
 
+        // TODO: Move  to ExtensionMethods
         public static Uri SplitQueryAndFragment(this Uri uri, out string query, out string fragment) =>
             SplitQueryAndFragment(uri, false, out query, out fragment);
 
@@ -286,8 +297,10 @@ namespace FsInfoCat.Util
 
         public static string SplitFragment(string uriString, out string fragment) =>
             SplitFragment(uriString, false, out fragment);
-
-        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string schemeAndAuthority, out string queryAndFragment)
+        
+        // TODO: Move  to ExtensionMethods
+        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string schemeAndAuthority,
+            out string queryAndFragment)
         {
             if (uri is null)
             {
@@ -337,16 +350,21 @@ namespace FsInfoCat.Util
             return originalString;
         }
 
+        // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, UriFormat format, out string schemeAndAuthority, out string queryAndFragment) =>
             SplitUriComponents(uri, false, format, out schemeAndAuthority, out queryAndFragment);
 
+        // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string schemeAndAuthority, out string queryAndFragment) =>
             SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out schemeAndAuthority, out queryAndFragment);
 
+        // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, out string schemeAndAuthority, out string queryAndFragment) =>
             SplitUriComponents(uri, false, out schemeAndAuthority, out queryAndFragment);
 
-        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string schemeAndAuthority, out string query, out string fragment)
+        // TODO: Move  to ExtensionMethods
+        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string schemeAndAuthority, out string query,
+            out string fragment)
         {
             if (uri is null)
             {
@@ -356,7 +374,8 @@ namespace FsInfoCat.Util
 
             if (uri.IsAbsoluteUri)
             {
-                schemeAndAuthority = uri.GetComponents(UriComponents.Scheme | UriComponents.UserInfo | UriComponents.Host | UriComponents.Port | UriComponents.KeepDelimiter, format);
+                schemeAndAuthority = uri.GetComponents(UriComponents.Scheme | UriComponents.UserInfo | UriComponents.Host | UriComponents.Port |
+                    UriComponents.KeepDelimiter, format);
                 query = uri.GetComponents(UriComponents.Query | UriComponents.KeepDelimiter, format);
                 fragment = uri.GetComponents(UriComponents.Fragment | UriComponents.KeepDelimiter, format);
                 if (!keepQueryAndFragmentDelimiters)
@@ -402,15 +421,21 @@ namespace FsInfoCat.Util
             return originalString;
         }
 
+        // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, UriFormat format, out string schemeAndAuthority, out string query, out string fragment) =>
             SplitUriComponents(uri, false, format, out schemeAndAuthority, out query, out fragment);
 
-        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string schemeAndAuthority, out string query, out string fragment) => SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out schemeAndAuthority, out query, out fragment);
+        // TODO: Move  to ExtensionMethods
+        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string schemeAndAuthority, out string query,
+            out string fragment) => SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out schemeAndAuthority, out query, out fragment);
 
+        // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, out string schemeAndAuthority, out string query, out string fragment) =>
             SplitUriComponents(uri, false, out schemeAndAuthority, out query, out fragment);
 
-        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string scheme, out string authority, out string query, out string fragment)
+        // TODO: Move  to ExtensionMethods
+        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string scheme, out string authority,
+            out string query, out string fragment)
         {
             if (uri is null)
             {
@@ -467,16 +492,22 @@ namespace FsInfoCat.Util
             return originalString;
         }
 
+        // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, UriFormat format, out string scheme, out string authority, out string query, out string fragment) =>
             SplitUriComponents(uri, false, format, out scheme, out authority, out query, out fragment);
 
-        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string scheme, out string authority, out string query, out string fragment) =>
+        // TODO: Move  to ExtensionMethods
+        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string scheme, out string authority, out string query,
+                out string fragment) =>
             SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out scheme, out authority, out query, out fragment);
 
+        // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, out string scheme, out string authority, out string query, out string fragment) =>
             SplitUriComponents(uri, false, out scheme, out authority, out query, out fragment);
 
-        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string scheme, out string userInfo, out string hostAndPort, out string query, out string fragment)
+        // TODO: Move  to ExtensionMethods
+        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string scheme, out string userInfo,
+            out string hostAndPort, out string query, out string fragment)
         {
             if (uri is null)
             {
@@ -534,12 +565,16 @@ namespace FsInfoCat.Util
             return originalString;
         }
 
-        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string scheme, out string userInfo, out string hostAndPort, out string query,
-            out string fragment) => SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out scheme, out userInfo, out hostAndPort, out query, out fragment);
+        // TODO: Move  to ExtensionMethods
+        public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string scheme, out string userInfo, out string hostAndPort,
+                out string query, out string fragment) =>
+            SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out scheme, out userInfo, out hostAndPort, out query, out fragment);
 
+        // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, out string scheme, out string userInfo, out string hostAndPort, out string query, out string fragment) =>
             SplitUriComponents(uri, false, out scheme, out userInfo, out hostAndPort, out query, out fragment);
 
+        // TODO: Move  to ExtensionMethods
         public static string GetGroupValue(this Match match, string groupName, string defaultValue = null)
         {
             if (match.Success)
@@ -559,6 +594,7 @@ namespace FsInfoCat.Util
             return EnsureWellFormedUriString(value, UriKind.Relative);
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Test whether a <seealso cref="Uri"/> is equal to another <seealso cref="Uri"/> with authority component comparison being case-insensitive.
         /// </summary>
@@ -566,7 +602,8 @@ namespace FsInfoCat.Util
         /// <param name="other">The <seealso cref="Uri"/> to compare to.</param>
         /// <returns><c>true</c> if the authority components both <seealso cref="Uri"/>s are equivalent; otherwise, <c>false</c>.</returns>
         /// <remarks>The <seealso cref="UriComponents.Scheme"/>, <seealso cref="UriComponents.Scheme"/> and <seealso cref="UriComponents.Scheme"/> components
-        /// are tested using the <seealso cref="StringComparison.InvariantCultureIgnoreCase"/> comparison option. All other components will use exact comparison.</remarks>
+        /// are tested using the <seealso cref="StringComparison.InvariantCultureIgnoreCase"/> comparison option. All other components will use exact
+        /// comparison.</remarks>
         public static bool AuthorityCaseInsensitiveEquals(this Uri uri, Uri other)
         {
             if (null == uri)
@@ -587,12 +624,15 @@ namespace FsInfoCat.Util
             return !other.IsAbsoluteUri && uri.OriginalString.Equals(other.OriginalString);
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Gets the username and password from the <seealso cref="UriComponents.UserInfo"/> component of a <seealso cref="Uri"/>.
         /// </summary>
         /// <param name="uri">The source <seealso cref="Uri"/>.</param>
-        /// <param name="password">The password portion from the <seealso cref="UriComponents.UserInfo"/> component of the source <paramref name="uri"/> or <c>null</c> if it contained no password.</param>
-        /// <returns>The user name portion from the <seealso cref="UriComponents.UserInfo"/> component of the source <paramref name="uri"/> or <c>null</c> if it contained no <seealso cref="UriComponents.UserInfo"/> component.</returns>
+        /// <param name="password">The password portion from the <seealso cref="UriComponents.UserInfo"/> component of the source <paramref name="uri"/> or
+        /// <c>null</c> if it contained no password.</param>
+        /// <returns>The user name portion from the <seealso cref="UriComponents.UserInfo"/> component of the source <paramref name="uri"/> or <c>null</c>
+        /// if it contained no <seealso cref="UriComponents.UserInfo"/> component.</returns>
         public static string GetUserNameAndPassword(this Uri uri, out string password)
         {
             if (null != uri && uri.IsAbsoluteUri)
@@ -600,7 +640,7 @@ namespace FsInfoCat.Util
                 string userInfo = uri.GetComponents(UriComponents.UserInfo | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
                 if (userInfo.Length > 0)
                 {
-                    string[] upw = uri.GetComponents(UriComponents.UserInfo, UriFormat.UriEscaped).Split(':', 2);
+                    string[] upw = uri.GetComponents(UriComponents.UserInfo, UriFormat.UriEscaped).Split(URI_SCHEME_SEPARATOR_CHAR, 2);
                     password = (upw.Length > 1) ? upw[1] : null;
                     return upw[0];
                 }
@@ -609,6 +649,7 @@ namespace FsInfoCat.Util
             return null;
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.UserInfo"/> components applied.
         /// </summary>
@@ -676,15 +717,18 @@ namespace FsInfoCat.Util
             return true;
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.HostAndPort"/> components applied.
         /// </summary>
         /// <param name="uri">The original <seealso cref="Uri"/>.</param>
-        /// <param name="hostName">The new <seealso cref="UriComponents.Host"/> component or <c>null</c> to create a <seealso cref="Uri"/> without this component.</param>
+        /// <param name="hostName">The new <seealso cref="UriComponents.Host"/> component or <c>null</c> to create a <seealso cref="Uri"/> without this
+        /// component.</param>
         /// <param name="port">The new <seealso cref="UriComponents.Port"/> component or <c>null</c> to create a <seealso cref="Uri"/> without this component.</param>
         /// <param name="result">The new <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.HostAndPort"/> components applied.</param>
         /// <remarks>This can return <c>false</c> if the source <paramref name="uri"/> is <c>null</c>, if it not an absolute URI,
-        /// and in cases where the <seealso cref="Uri.Scheme"/> does not support the inclusion or omission of the <seealso cref="UriComponents.HostAndPort"/> components.</remarks>
+        /// and in cases where the <seealso cref="Uri.Scheme"/> does not support the inclusion or omission of the <seealso cref="UriComponents.HostAndPort"/>
+        /// components.</remarks>
         public static bool TrySetHostComponent(this Uri uri, string hostName, int? port, out Uri result)
         {
             if (!uri.IsAbsoluteUri)
@@ -750,6 +794,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Gets the <seealso cref="UriComponents.Path"/> component of a <seealso cref="Uri"/>.
         /// </summary>
@@ -771,16 +816,18 @@ namespace FsInfoCat.Util
             return (Uri.IsWellFormedUriString(originalString, UriKind.Relative)) ? Uri.UnescapeDataString(originalString) : originalString;
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Path"/> component applied.
         /// </summary>
         /// <param name="uri">The original <seealso cref="Uri"/>.</param>
-        /// <param name="newPath">The new <seealso cref="UriComponents.Path"/> component. This can be <c>null</c> to create a <seealso cref="Uri"/> without this component.</param>
+        /// <param name="newPath">The new <seealso cref="UriComponents.Path"/> component. This can be <c>null</c> to create a <seealso cref="Uri"/>
+        /// without this component.</param>
         /// <param name="result">The new <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Path"/> component applied.</param>
         /// <returns><c>true</c> if the new <paramref name="result"/> <seealso cref="Uri"/> was successfully created; otherwise, <c>false</c>.</returns>
-        /// <remarks>This can return <c>false</c> in circumstances where the change would create an invalid URI string as it pertains to the current <seealso cref="Uri.Scheme"/>.
-        /// If the specified <paramref name="newPath"/> contains a query (<c>?</c>) and/or fragment (<c>#</c>) separator, those components will be applied
-        /// to the <paramref name="result"/> <seealso cref="Uri"/> as well.</remarks>
+        /// <remarks>This can return <c>false</c> in circumstances where the change would create an invalid URI string as it pertains to the current
+        /// <seealso cref="Uri.Scheme"/>. If the specified <paramref name="newPath"/> contains a query (<c>?</c>) and/or fragment (<c>#</c>) separator,
+        /// those components will be aplied to the <paramref name="result"/> <seealso cref="Uri"/> as well.</remarks>
         public static bool TrySetPathComponent(this Uri uri, string newPath, out Uri result)
         {
             if (uri is null)
@@ -829,6 +876,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Gets the <seealso cref="UriComponents.Query"/> component of a <seealso cref="Uri"/>.
         /// </summary>
@@ -845,16 +893,18 @@ namespace FsInfoCat.Util
             return query;
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Query"/> component applied.
         /// </summary>
         /// <param name="uri">The original <seealso cref="Uri"/>.</param>
-        /// <param name="query">The new <seealso cref="UriComponents.Query"/> component. This can be <c>null</c> to create a <seealso cref="Uri"/> without this component.</param>
+        /// <param name="query">The new <seealso cref="UriComponents.Query"/> component. This can be <c>null</c> to create a <seealso cref="Uri"/>
+        /// without this component.</param>
         /// <param name="result">The new <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Query"/> component applied.</param>
         /// <returns><c>true</c> if the new <paramref name="result"/> <seealso cref="Uri"/> was successfully created; otherwise, <c>false</c>.</returns>
-        /// <remarks>This can return <c>false</c> in circumstances where the change would create an invalid URI string as it pertains to the current <seealso cref="Uri.Scheme"/>.
-        /// If the specified <paramref name="query"/> contains a fragment (<c>#</c>) separator, that component will be applied to the <paramref name="result"/>
-        /// <seealso cref="Uri"/> as well.</remarks>
+        /// <remarks>This can return <c>false</c> in circumstances where the change would create an invalid URI string as it pertains to the current
+        /// <seealso cref="Uri.Scheme"/>. If the specified <paramref name="query"/> contains a fragment (<c>#</c>) separator, that component will be applied to
+        /// the <paramref name="result"/> <seealso cref="Uri"/> as well.</remarks>
         public static bool TrySetQueryComponent(this Uri uri, string query, out Uri result)
         {
             if (uri is null)
@@ -949,6 +999,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Gets the <seealso cref="UriComponents.Fragment"/> component of a <seealso cref="Uri"/>.
         /// </summary>
@@ -966,14 +1017,17 @@ namespace FsInfoCat.Util
             return (index < 0) ? ((keepDelimiter) ? "" : null) : originalString.Substring((keepDelimiter) ? index : index + 1);
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Fragment"/> component applied.
         /// </summary>
         /// <param name="uri">The original <seealso cref="Uri"/>.</param>
-        /// <param name="fragment">The new <seealso cref="UriComponents.Fragment"/> component. This can be <c>null</c> to create a <seealso cref="Uri"/> without this component.</param>
+        /// <param name="fragment">The new <seealso cref="UriComponents.Fragment"/> component. This can be <c>null</c> to create a <seealso cref="Uri"/>
+        /// without this component.</param>
         /// <param name="result">The new <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Fragment"/> component applied.</param>
         /// <returns><c>true</c> if the new <paramref name="result"/> <seealso cref="Uri"/> was successfully created; otherwise, <c>false</c>.</returns>
-        /// <remarks>This can return <c>false</c> in circumstances where the change would create an invalid URI string as it pertains to the current <seealso cref="Uri.Scheme"/>.</remarks>
+        /// <remarks>This can return <c>false</c> in circumstances where the change would create an invalid URI string as it pertains to the current
+        /// <seealso cref="Uri.Scheme"/>.</remarks>
         public static bool TrySetFragmentComponent(this Uri uri, string fragment, out Uri result)
         {
             if (uri is null)
@@ -1056,6 +1110,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Gets the path segments of a relative or absolute <seealso cref="Uri"/>;
         /// </summary>
@@ -1074,6 +1129,7 @@ namespace FsInfoCat.Util
             return URI_PATH_SEGMENT_REGEX.Matches(u).Cast<Match>().Select(m => m.Value).ToArray();
         }
 
+        // TODO: Move  to ExtensionMethods
         /// <summary>
         /// Adds or removes a trailing slash (empty segment) to the <seealso cref="UriComponents.Path"/> component of a <seealso cref="Uri"/>.
         /// </summary>

@@ -304,7 +304,7 @@ namespace FsInfoCat.Models
 
         public static PlatformType GetPlatformType(this HostDevices.IHostDevice host) => (host is null) ? FileUriConverter.CURRENT_FACTORY.FsPlatform : host.Platform;
 
-        public static PlatformType GetPlatformType(this IVolume volume) => ((volume is null) ? null : volume.Host).GetPlatformType();
+        public static PlatformType GetPlatformType(this IVolume volume) => (volume?.Host).GetPlatformType();
 
         public static Accounts.UserRole ToUserRole(byte value)
         {

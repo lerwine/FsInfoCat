@@ -116,7 +116,7 @@ namespace FsInfoCat.Models.Volumes
 
             if (uri.Scheme.Equals(UriHelper.URI_SCHEME_URN))
             {
-                string[] segments = Uri.UnescapeDataString(uri.AbsolutePath).Split(':', 3);
+                string[] segments = Uri.UnescapeDataString(uri.AbsolutePath).Split(UriHelper.URI_SCHEME_SEPARATOR_CHAR, 3);
                 switch (segments[0].ToLower())
                 {
                     case UriHelper.URN_NAMESPACE_UUID:
@@ -211,8 +211,8 @@ namespace FsInfoCat.Models.Volumes
                         uri = new Uri(uri.AbsoluteUri, UriKind.Absolute);
                     if (uri.Host.ToLower() != uri.Host)
                         uri.TrySetHostComponent(uri.Host.ToLower(), null, out uri);
-                    if (!uri.AbsolutePath.EndsWith('/'))
-                        uri.TrySetPathComponent(uri.AbsolutePath + "/", out uri);
+                    if (!uri.AbsolutePath.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR))
+                        uri.TrySetPathComponent(uri.AbsolutePath + UriHelper.URI_PATH_SEPARATOR_STRING, out uri);
                     _location = uri;
                     _serialNumber = null;
                     _ordinal = null;
