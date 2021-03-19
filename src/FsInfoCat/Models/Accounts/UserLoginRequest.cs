@@ -1,6 +1,6 @@
+using FsInfoCat.Models.DB;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FsInfoCat.Models.DB;
 
 namespace FsInfoCat.Models.Accounts
 {

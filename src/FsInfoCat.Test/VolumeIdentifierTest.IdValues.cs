@@ -1,6 +1,6 @@
+using FsInfoCat.Util;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.Test
 {

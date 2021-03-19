@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using static FsInfoCat.Util.ExtensionMethods;
 

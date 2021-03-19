@@ -169,38 +169,6 @@ namespace FsInfoCat.Test
             return result;
         }
 
-        //public static IEnumerable<TestCaseData> GetParseUriOrPathTestCases()
-        //{
-        //    return UrlHelperTest.GetUriTestData().Where(e => !(e.SelectSingleNode("ParseUriOrPath") is null)).Select(element =>
-        //    {
-        //        XmlElement expected = (XmlElement)element.SelectSingleNode("ParseUriOrPath");
-        //        bool preferFsPath = XmlConvert.ToBoolean(expected.GetAttribute("PreferFsPath"));
-        //        bool base64Encoded = element.GetAttribute("Base64") == "true";
-        //        return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"),
-        //                preferFsPath, base64Encoded)
-        //            .SetDescription(element.GetAttribute("Description"))
-        //            .Returns(expected.SelectSingleNode("Expected").OuterXml);
-        //    });
-        //}
-
-        //[Test, Property("Priority", 1)]
-        //[TestCaseSource(nameof(GetParseUriOrPathTestCases))]
-        //public string ParseUriOrPathTest(string source, bool preferFsPath, bool base64Encoded)
-        //{
-        //    FileStringFormat result = WindowsFileUriConverter.INSTANCE.ParseUriOrPath(source, preferFsPath, out string hostName, out string path);
-        //    if (base64Encoded)
-        //    {
-        //        UTF8Encoding encoding = new UTF8Encoding(false, true);
-        //        return XmlBuilder.NewDocument("Expected")
-        //            .WithAttribute("HostName", (string.IsNullOrEmpty(hostName)) ? hostName : Convert.ToBase64String(encoding.GetBytes(hostName)))
-        //            .WithAttribute("Path", (string.IsNullOrEmpty(path)) ? path : Convert.ToBase64String(encoding.GetBytes(path)))
-        //            .WithInnerText(result.ToString("F")).OuterXml;
-        //    }
-        //    return XmlBuilder.NewDocument("Expected")
-        //        .WithAttribute("HostName", hostName)
-        //        .WithAttribute("Path", path)
-        //        .WithInnerText(result.ToString("F")).OuterXml;
-        //}
         public static IEnumerable<TestCaseData> GetTrySplitFileUriStringTestCases()
         {
             return UrlHelperTest.GetUriTestData().Select(element =>
@@ -242,8 +210,9 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
         {
-            // TODO: Implement GetToFileSystemPathTestCases
-            throw new NotImplementedException();
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("mysite", "My%20Documents")
+                .Returns("\\\\mysite\\My Documents");
         }
 
         [Test, Property("Priority", 1)]
@@ -256,8 +225,23 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath3TestCases()
         {
-            // TODO: Implement GetFromFileSystemPath3TestCases
-            throw new NotImplementedException();
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("\\\\mysite\\My Documents\\MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "MyFile%231.txt"),
+                        new XElement("HostName", "mysite"),
+                        new XElement("DirectoryName", "/My%20Documents")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
+            yield return new TestCaseData("C:\\My Documents\\MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "MyFile%231.txt"),
+                        new XElement("HostName", ""),
+                        new XElement("DirectoryName", "C:/My%20Documents")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
         }
 
         [Test, Property("Priority", 1)]
@@ -277,8 +261,21 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath2TestCases()
         {
-            // TODO: Implement GetFromFileSystemPath2TestCases
-            throw new NotImplementedException();
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("\\\\mysite\\My Documents\\MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "/My%20Documents/MyFile%231.txt"),
+                        new XElement("HostName", "mysite")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
+            yield return new TestCaseData("F:\\My Documents\\MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "F:/My%20Documents/MyFile%231.txt"),
+                        new XElement("HostName", "")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
         }
 
         [Test, Property("Priority", 1)]
@@ -291,6 +288,34 @@ namespace FsInfoCat.Test
                 xElement.Add(new XElement("Result", result));
             if (!(hostName is null))
                 xElement.Add(new XElement("HostName", hostName));
+            return xElement.ToString(SaveOptions.DisableFormatting);
+        }
+
+        public static IEnumerable<TestCaseData> GetFromFileSystemPath1TestCases()
+        {
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("\\\\mysite\\My Documents\\MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "//mysite/My%20Documents/MyFile%231.txt")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
+            yield return new TestCaseData("G:\\My Documents\\MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "G:/My%20Documents/MyFile%231.txt")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetFromFileSystemPath1TestCases))]
+        public string FromFileSystemPath1Test(string path)
+        {
+            string result = WindowsFileUriConverter.INSTANCE.FromFileSystemPath(path);
+            XElement xElement = new XElement("FromFileSystemPath");
+            if (!(result is null))
+                xElement.Add(new XElement("Result", result));
             return xElement.ToString(SaveOptions.DisableFormatting);
         }
     }

@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using FsInfoCat.Models.Accounts;
 using FsInfoCat.Models.DB;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Test
 {

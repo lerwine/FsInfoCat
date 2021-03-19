@@ -1,13 +1,13 @@
+using FsInfoCat.Models.Crawl;
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using FsInfoCat.Models.Crawl;
-using FsInfoCat.Models.Volumes;
-using FsInfoCat.Util;
-using NUnit.Framework;
 
 namespace FsInfoCat.Test
 {

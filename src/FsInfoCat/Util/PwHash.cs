@@ -131,7 +131,7 @@ namespace FsInfoCat.Util
                 data = hashAndSaltBytes.Skip(startIndex).Take(TOTAL_BYTES_LENGTH).ToArray();
                 startIndex = 0;
             }
-            if (data.Length < (TOTAL_BYTES_LENGTH +  startIndex))
+            if (data.Length < (TOTAL_BYTES_LENGTH + startIndex))
                 throw new ArgumentException("Array must contain at least" + TOTAL_BYTES_LENGTH.ToString() + " bytes after the start index.", "hashAndSaltBytes");
             _hashBits000_03f = BitConverter.ToUInt64(data, startIndex);
             _hashBits040_07f = BitConverter.ToUInt64(data, startIndex + FIELD_OFFSET_1);

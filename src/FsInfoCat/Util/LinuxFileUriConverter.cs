@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Util
@@ -223,15 +220,13 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <remarks>This will also match relative self-reference sequences (<c>/./<c>). This does not match parent segment references (<c>/../</c>)
         /// unless they are at the beginning of the string.</remarks>
         public static readonly Regex FS_RELATIVE_PATH_NORMALIZE_REGEX = new Regex(@"
-^
-\s*(\.\.?/+)+
+^(\s*(\.\.?/+)+|/+(?=[^/])|\s+)
 |
 (?<!^\s*/)/(?=/)
 |
 /\.(?=/|$)
 |
-[/\s]+
-$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
+((?<!^\s*)/+\s*|\s+)$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
         /// Matches character sequences which need to be encoded within a <seealso cref="Uri.UriSchemeFile">file</seealso> URI string.
@@ -509,6 +504,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         public static readonly Regex URI_DIR_AND_FILE_STRICT_REGEX = new Regex(@"
 ^
 (?<dir>
+    /?
     (
         (?=[^/]+/[^/])
         ([!$=&-.:;=@[\]\w]+|%(0[1-9A-F]|2[\dA-E]|[2-9A-F][\dA-F]))+
@@ -640,7 +636,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         {
             if (string.IsNullOrEmpty(fileUriString))
                 return "";
-            if (TrySplitFileUriString(fileUriString, out string hostName, out string path, out bool isAbsolute))
+            if (TrySplitFileUriString(fileUriString, out string hostName, out string path, out _))
                 return ToFileSystemPath(hostName, path);
             return ToFileSystemPath("", fileUriString);
         }

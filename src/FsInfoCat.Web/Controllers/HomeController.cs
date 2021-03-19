@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
+﻿using FsInfoCat.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using FsInfoCat.Web.Models;
+using System.Diagnostics;
 
 namespace FsInfoCat.Web.Controllers
 {

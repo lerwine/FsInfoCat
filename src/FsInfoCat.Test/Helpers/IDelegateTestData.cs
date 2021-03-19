@@ -41,7 +41,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TParam4">The type of the fourth input value or parameter.</typeparam>
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="Action{TParam1, TParam2, TParam3, TParam4}"/> delegate.</remarks>
     public interface IDelegateTestData<TParam1, TParam2, TParam3, TParam4> : IDelegateTestData<TParam1, TParam2, TParam3>,
-        ITestInputData<TParam1, TParam2, TParam3, TParam4> { }
+        ITestInputData<TParam1, TParam2, TParam3, TParam4>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 5 input values.
@@ -53,7 +54,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TParam5">The type of the fifth input value or parameter.</typeparam>
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="Action{TParam1, TParam2, TParam3, TParam4, TParam5}"/> delegate.</remarks>
     public interface IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5> : IDelegateTestData<TParam1, TParam2, TParam3, TParam4>,
-        ITestInputData<TParam1, TParam2, TParam3, TParam4, TParam5> { }
+        ITestInputData<TParam1, TParam2, TParam3, TParam4, TParam5>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 6 input values.
@@ -67,7 +69,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="Action{TParam1, TParam2, TParam3, TParam4, TParam5, TParam6}"/>
     /// delegate.</remarks>
     public interface IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6> : IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5>,
-        ITestInputData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6> { }
+        ITestInputData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 7 input values.
@@ -82,7 +85,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="Action{TParam1, TParam2, TParam3, TParam4, TParam5, TParam6, TParam7}"/>
     /// delegate.</remarks>
     public interface IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6, TParam7> :
-        IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6>, ITestInputData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6, TParam7> { }
+        IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6>, ITestInputData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6, TParam7>
+    { }
 
     /// <summary>
     /// Defines test data for operations that produce at least 1 output value.
@@ -129,7 +133,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TParam4, TOut}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TOut> : IDelegateTestDataOut1<TParam1, TParam2, TParam3, TOut>,
-        IDelegateTestData<TParam1, TParam2, TParam3, TParam4> { }
+        IDelegateTestData<TParam1, TParam2, TParam3, TParam4>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 5 input values and produce at least 1 output value.
@@ -143,7 +148,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TParam4, TParam5, TOut}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TParam5, TOut> : IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TOut>,
-        IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5> { }
+        IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 5 input values and produce at least 1 output value.
@@ -158,7 +164,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TParam4, TParam5, TParam6, TOut}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6, TOut> :
-        IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TParam5, TOut>, IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6> { }
+        IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TParam5, TOut>, IDelegateTestData<TParam1, TParam2, TParam3, TParam4, TParam5, TParam6>
+    { }
 
     /// <summary>
     /// Defines test data for operations that produce at least 2 output values.
@@ -197,7 +204,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TOut2">The type of the second output parameter or additional output value.</typeparam>
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TOut1, TOut2}"/> delegate.</remarks>
     public interface IDelegateTestDataOut2<TParam1, TParam2, TParam3, TOut1, TOut2> :
-        IDelegateTestDataOut2<TParam1, TParam2, TOut1, TOut2>, IDelegateTestDataOut1<TParam1, TParam2, TParam3, TOut1> { }
+        IDelegateTestDataOut2<TParam1, TParam2, TOut1, TOut2>, IDelegateTestDataOut1<TParam1, TParam2, TParam3, TOut1>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 4 input values and produce at least 2 output output values.
@@ -211,7 +219,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TParam4, TOut1, TOut2}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut2<TParam1, TParam2, TParam3, TParam4, TOut1, TOut2> : IDelegateTestDataOut2<TParam1, TParam2, TParam3, TOut1, TOut2>,
-        IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TOut1> { }
+        IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TOut1>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 5 input values and produce at least 2 output output values.
@@ -226,7 +235,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TParam4, TParam5, TOut1, TOut2}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut2<TParam1, TParam2, TParam3, TParam4, TParam5, TOut1, TOut2> :
-        IDelegateTestDataOut2<TParam1, TParam2, TParam3, TParam4, TOut1, TOut2>, IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TParam5, TOut1> { }
+        IDelegateTestDataOut2<TParam1, TParam2, TParam3, TParam4, TOut1, TOut2>, IDelegateTestDataOut1<TParam1, TParam2, TParam3, TParam4, TParam5, TOut1>
+    { }
 
     /// <summary>
     /// Defines test data for operations that produce at least 3 output values.
@@ -257,7 +267,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TOut3">The type of the third output parameter or additional output value.</typeparam>
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TOut1, TOut2, TOut3}"/> delegate.</remarks>
     public interface IDelegateTestDataOut3<TParam1, TParam2, TOut1, TOut2, TOut3> : IDelegateTestDataOut3<TParam1, TOut1, TOut2, TOut3>,
-        IDelegateTestDataOut2<TParam1, TParam2, TOut1, TOut2> { }
+        IDelegateTestDataOut2<TParam1, TParam2, TOut1, TOut2>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 3 input values and produce at least 3 output output values.
@@ -271,7 +282,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TOut1, TOut2, TOut3}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut3<TParam1, TParam2, TParam3, TOut1, TOut2, TOut3> : IDelegateTestDataOut3<TParam1, TParam2, TOut1, TOut2, TOut3>,
-        IDelegateTestDataOut2<TParam1, TParam2, TParam3, TOut1, TOut2> { }
+        IDelegateTestDataOut2<TParam1, TParam2, TParam3, TOut1, TOut2>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 4 input values and produce at least 3 output output values.
@@ -286,7 +298,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TParam4, TOut1, TOut2, TOut3}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut3<TParam1, TParam2, TParam3, TParam4, TOut1, TOut2, TOut3> : IDelegateTestDataOut3<TParam1, TParam2, TParam3, TOut1, TOut2, TOut3>,
-        IDelegateTestDataOut2<TParam1, TParam2, TParam3, TParam4, TOut1, TOut2> { }
+        IDelegateTestDataOut2<TParam1, TParam2, TParam3, TParam4, TOut1, TOut2>
+    { }
 
     /// <summary>
     /// Defines test data for operations that produce at least 4 output values.
@@ -308,7 +321,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TOut4">The type of the fourth output parameter or additional output value.</typeparam>
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam, TOut1, TOut2, TOut3, TOut44}"/> delegate.</remarks>
     public interface IDelegateTestDataOut4<TParam, TOut1, TOut2, TOut3, TOut4> : IDelegateTestDataOut4<TOut1, TOut2, TOut3, TOut4>,
-       IDelegateTestDataOut3<TParam, TOut1, TOut2, TOut3> { }
+       IDelegateTestDataOut3<TParam, TOut1, TOut2, TOut3>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 2 input values and produce at least 4 output output values.
@@ -322,7 +336,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TOut1, TOut2, TOut3, TOut4}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut4<TParam1, TParam2, TOut1, TOut2, TOut3, TOut4> : IDelegateTestDataOut4<TParam1, TOut1, TOut2, TOut3, TOut4>,
-        IDelegateTestDataOut3<TParam1, TParam2, TOut1, TOut2, TOut3> { }
+        IDelegateTestDataOut3<TParam1, TParam2, TOut1, TOut2, TOut3>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 3 input values and produce at least 4 output output values.
@@ -337,7 +352,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TParam3, TOut1, TOut2, TOut3, TOut4}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut4<TParam1, TParam2, TParam3, TOut1, TOut2, TOut3, TOut4> : IDelegateTestDataOut4<TParam1, TParam2, TOut1, TOut2, TOut3, TOut4>,
-        IDelegateTestDataOut3<TParam1, TParam2, TParam3, TOut1, TOut2, TOut3> { }
+        IDelegateTestDataOut3<TParam1, TParam2, TParam3, TOut1, TOut2, TOut3>
+    { }
 
     /// <summary>
     /// Defines test data for operations that produce at least 5 output values.
@@ -349,7 +365,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TOut5">The type of the fifth output parameter or additional output value.</typeparam>
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3, TOut4, TOut5}"/> delegate.</remarks>
     public interface IDelegateTestDataOut5<TOut1, TOut2, TOut3, TOut4, TOut5> : IDelegateTestDataOut4<TOut1, TOut2, TOut3, TOut4>,
-        ITestOutputData<TOut1, TOut2, TOut3, TOut4, TOut5> { }
+        ITestOutputData<TOut1, TOut2, TOut3, TOut4, TOut5>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 1 input value and produce at least 5 output output values.
@@ -362,7 +379,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TOut5">The type of the fifth output parameter or additional output value.</typeparam>
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3, TOut4}"/> delegate.</remarks>
     public interface IDelegateTestDataOut5<TParam, TOut1, TOut2, TOut3, TOut4, TOut5> : IDelegateTestDataOut5<TOut1, TOut2, TOut3, TOut4, TOut5>,
-        IDelegateTestDataOut4<TParam, TOut1, TOut2, TOut3, TOut4> { }
+        IDelegateTestDataOut4<TParam, TOut1, TOut2, TOut3, TOut4>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 2 input values and produce at least 5 output output values.
@@ -377,7 +395,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam1, TParam2, TOut1, TOut2, TOut3, TOut4, TOut5>}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut5<TParam1, TParam2, TOut1, TOut2, TOut3, TOut4, TOut5> : IDelegateTestDataOut5<TParam1, TOut1, TOut2, TOut3, TOut4, TOut5>,
-        IDelegateTestDataOut4<TParam1, TParam2, TOut1, TOut2, TOut3, TOut4> { }
+        IDelegateTestDataOut4<TParam1, TParam2, TOut1, TOut2, TOut3, TOut4>
+    { }
 
     /// <summary>
     /// Defines test data for operations that produce at least 6 output values.
@@ -390,7 +409,8 @@ namespace FsInfoCat.Test.Helpers
     /// <typeparam name="TOut6">The type of the sixth output parameter or additional output value.</typeparam>
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3, TOut4, TOut5, TOut6}"/> delegate.</remarks>
     public interface IDelegateTestDataOut6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> : IDelegateTestDataOut5<TOut1, TOut2, TOut3, TOut4, TOut5>,
-        ITestOutputData<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> { }
+        ITestOutputData<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>
+    { }
 
     /// <summary>
     /// Defines test data for operations that include at least 1 input value and produce at least 6 output output values.
@@ -405,7 +425,8 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the <seealso cref="ActionWithOutput{TParam, TOut1, TOut2, TOut3, TOut4, TOut5, TOut6}"/>
     /// delegate.</remarks>
     public interface IDelegateTestDataOut6<TParam, TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> : IDelegateTestDataOut6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>,
-        IDelegateTestDataOut5<TParam, TOut1, TOut2, TOut3, TOut4, TOut5> { }
+        IDelegateTestDataOut5<TParam, TOut1, TOut2, TOut3, TOut4, TOut5>
+    { }
 
     /// <summary>
     /// Defines test data for operations that produce at least 7 output values.
@@ -420,5 +441,6 @@ namespace FsInfoCat.Test.Helpers
     /// <remarks>Can be used with invocations that match the signature of the
     /// <seealso cref="ActionWithOutput{TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7}"/> delegate.</remarks>
     public interface IDelegateTestDataOut7<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7> : IDelegateTestDataOut6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>,
-        ITestOutputData<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7> { }
+        ITestOutputData<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7>
+    { }
 }

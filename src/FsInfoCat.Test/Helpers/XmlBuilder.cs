@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Test.Helpers
 {
@@ -12,6 +13,311 @@ namespace FsInfoCat.Test.Helpers
     /// </summary>
     public static class XmlBuilder
     {
+        public static bool? GetBooleanValue(this XAttribute source)
+        {
+            if (source is null)
+                return null;
+            try { return XmlConvert.ToBoolean(source.Value); }
+            catch { return (bool?)null; }
+        }
+
+        public static bool GetBooleanValue(this XAttribute source, bool defaultValue)
+        {
+            if (source is null)
+                return defaultValue;
+            try { return XmlConvert.ToBoolean(source.Value); }
+            catch { return defaultValue; }
+        }
+
+        public static int? GetIntegerValue(this XAttribute source)
+        {
+            if (source is null)
+                return null;
+            try { return XmlConvert.ToInt32(source.Value); }
+            catch { return (int?)null; }
+        }
+
+        public static int GetIntegerValue(this XAttribute source, int defaultValue)
+        {
+            if (source is null)
+                return defaultValue;
+            try { return XmlConvert.ToInt32(source.Value); }
+            catch { return defaultValue; }
+        }
+
+        public static string GetStringAttributeValue(this XElement source, XName name, string defaultValue = null)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return defaultValue;
+            return source.Attributes(name).Select(a => a.Value).DefaultIfEmpty(defaultValue).First();
+        }
+
+        public static bool? GetBooleanAttributeValue(this XElement source, XName name)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return null;
+            return source.Attributes(name).Select(a => a.GetBooleanValue()).Where(b => b.HasValue).FirstOrDefault();
+        }
+
+        public static bool GetBooleanAttributeValue(this XElement source, XName name, bool defaultValue)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return defaultValue;
+            return source.Attributes(name).Select(a => a.GetBooleanValue()).Where(b => b.HasValue).Select(b => b.Value).DefaultIfEmpty(defaultValue).First();
+        }
+
+        public static int? GetIntegerAttributeValue(this XElement source, XName name)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return null;
+            return source.Attributes(name).Select(a => a.GetIntegerValue()).Where(b => b.HasValue).FirstOrDefault();
+        }
+
+        public static int GetIntegerAttributeValue(this XElement source, XName name, int defaultValue)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return defaultValue;
+            return source.Attributes(name).Select(a => a.GetIntegerValue()).Where(b => b.HasValue).Select(b => b.Value).DefaultIfEmpty(defaultValue).First();
+        }
+
+        public static bool AttributeExists(this XElement source, XName name)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return false;
+            return source.Attributes(name).Any();
+        }
+
+        public static bool AttributeNotExists(this XElement source, XName name)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return false;
+            return !source.Attributes(name).Any();
+        }
+
+        public static bool AttributeEquals(this XElement source, XName name, string value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return false;
+
+            if (value is null)
+                return !source.Attributes(name).Any();
+            return source.Attributes(name).Select(a => a.Value).Contains(value);
+        }
+
+        public static bool AttributeNotEquals(this XElement source, XName name, string value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return false;
+
+            if (value is null)
+                return source.Attributes(name).Any();
+            return !source.Attributes(name).Select(a => a.Value).Contains(value);
+        }
+
+        public static bool AttributeEqualsAny(this XElement source, XName name, params string[] values)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null || values is null || values.Length == 0)
+                return false;
+            int nullCount = values.Count(v => v is null);
+            if (nullCount > 0)
+            {
+                if (!source.Attributes(name).Any())
+                    return true;
+                if (nullCount == values.Length)
+                    return false;
+                values = values.Where(v => !(v is null)).ToArray();
+            }
+            return source.Attributes(name).Any(a => values.Contains(a.Value));
+        }
+
+        public static bool AttributeNotEqualsAny(this XElement source, XName name, params string[] values)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return false;
+
+            if (values is null || values.Length == 0)
+                return false;
+            if (values.Any(v => v is null))
+                return source.Attributes(name).Any();
+            return source.Attributes(name).Any(a => !values.Contains(a.Value));
+        }
+
+        public static bool AttributeEquals(this XElement source, XName name, bool value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return false;
+
+            return source.Attributes(name).Select(a => a.GetBooleanValue()).Any(b => b.HasValue && b.Value == value);
+        }
+
+        public static bool AttributeNotEquals(this XElement source, XName name, bool value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return false;
+
+            return source.Attributes(name).Select(a => a.GetBooleanValue()).Any(b => b.HasValue && b.Value != value);
+        }
+
+        public static bool AttributeEqualsAny(this XElement source, XName name, params int[] values)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return false;
+
+            if (values is null || values.Length == 0)
+                return false;
+            return source.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && values.Contains(a.Value));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeExists(this IEnumerable<XElement> source, XName name)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return Array.Empty<XElement>();
+            return source.Where(e => e.Attributes(name).Any());
+        }
+
+        public static IEnumerable<XElement> WhereAttributeNotExists(this IEnumerable<XElement> source, XName name)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return Array.Empty<XElement>();
+            return source.Where(e => !e.Attributes(name).Any());
+        }
+
+        public static IEnumerable<XElement> WhereAttributeEquals(this IEnumerable<XElement> source, XName name, string value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return Array.Empty<XElement>();
+            if (value is null)
+                return source.Where(e => !e.Attributes(name).Any());
+            return source.Where(e => e.Attributes(name).Any(a => a.Value == value));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeNotEquals(this IEnumerable<XElement> source, XName name, string value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return Array.Empty<XElement>();
+            if (value is null)
+                return source.Where(e => e.Attributes(name).Any());
+            return source.Where(e => e.Attributes(name).Any(a => a.Value != value));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeEquals(this IEnumerable<XElement> source, XName name, bool value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return Array.Empty<XElement>();
+            return source.Where(e => e.Attributes(name).Select(a => a.GetBooleanValue()).Any(a => a.HasValue && a.Value == value));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeNotEquals(this IEnumerable<XElement> source, XName name, bool value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return Array.Empty<XElement>();
+            return source.Where(e => e.Attributes(name).Select(a => a.GetBooleanValue()).Any(a => a.HasValue && a.Value != value));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeEquals(this IEnumerable<XElement> source, XName name, int value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return Array.Empty<XElement>();
+            return source.Where(e => e.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && a.Value == value));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeNotEquals(this IEnumerable<XElement> source, XName name, int value)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null)
+                return Array.Empty<XElement>();
+            return source.Where(e => e.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && a.Value != value));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeEqualsAny(this IEnumerable<XElement> source, XName name, params string[] values)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null || values is null || values.Length == 0)
+                return Array.Empty<XElement>();
+            int nullCount = values.Count(v => v is null);
+            if (nullCount == values.Length)
+                return source.Where(e => !e.Attributes(name).Any());
+            if (nullCount > 0)
+            {
+                values = values.Where(v => !(v is null)).ToArray();
+                return source.Where(e => !e.Attributes(name).Any() || e.Attributes(name).Any(a => values.Contains(a.Value)));
+            }
+            return source.Where(e => e.Attributes(name).Any(a => values.Contains(a.Value)));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeNotEqualsAny(this IEnumerable<XElement> source, XName name, params string[] values)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null || values is null || values.Length == 0)
+                return Array.Empty<XElement>();
+            if (values.Any(v => v is null))
+                return source.Where(e => e.Attributes(name).Any());
+            return source.Where(e => e.Attributes(name).Any(a => values.Contains(a.Value)));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeEqualsAny(this IEnumerable<XElement> source, XName name, params int[] values)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null || values is null || values.Length == 0)
+                return Array.Empty<XElement>();
+            return source.Where(e => e.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && values.Contains(a.Value)));
+        }
+
+        public static IEnumerable<XElement> WhereAttributeNotEqualsAny(this IEnumerable<XElement> source, XName name, params int[] values)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (source is null || values is null || values.Length == 0)
+                return Array.Empty<XElement>();
+            return source.Where(e => e.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && !values.Contains(a.Value)));
+        }
+
         public static T NextOfType<T>(this XmlNode node)
             where T : XmlNode
         {

@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using FsInfoCat.Models;
 using FsInfoCat.Models.DB;
 using FsInfoCat.Models.HostDevices;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Web.Models
 {

@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using FsInfoCat.Models.DB;
+using Microsoft.EntityFrameworkCore;
 
 namespace FsInfoCat.Web.Data
 {

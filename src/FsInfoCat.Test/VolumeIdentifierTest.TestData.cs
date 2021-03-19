@@ -1,9 +1,9 @@
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using System.Net;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 
 namespace FsInfoCat.Test

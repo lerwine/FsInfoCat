@@ -1,10 +1,10 @@
+using FsInfoCat.Models.DB;
+using FsInfoCat.Web.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FsInfoCat.Models.DB;
-using FsInfoCat.Web.Data;
 
 namespace FsInfoCat.Web.Controllers
 {

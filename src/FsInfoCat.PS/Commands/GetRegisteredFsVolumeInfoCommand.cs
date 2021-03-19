@@ -1,4 +1,3 @@
-using FsInfoCat.Models.Crawl;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;

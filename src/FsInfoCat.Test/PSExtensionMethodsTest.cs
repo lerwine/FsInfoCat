@@ -1,8 +1,7 @@
-using System;
-using NUnit.Framework;
-using System.Management.Automation;
-using FsInfoCat.Test.Helpers;
 using FsInfoCat.PS;
+using FsInfoCat.Test.Helpers;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat.Test

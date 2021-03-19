@@ -1,11 +1,10 @@
+using FsInfoCat.Util;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using FsInfoCat.Util;
-using NUnit.Framework;
 
 namespace FsInfoCat.Test
 {
@@ -330,7 +329,7 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetConstructor8TestCases))]
         [Property("Priority", 2)]
         public void Constructor8Test(ulong hashBits000_03f, ulong hashBits040_07f, ulong hashBits080_0bf, ulong hashBits0c0_0ff, ulong hashBits100_13f,
-            ulong hashBits140_17f,ulong hashBits180_1bf, ulong hashBits1c0_1ff, ulong saltBits, HashResult expectedResult)
+            ulong hashBits140_17f, ulong hashBits180_1bf, ulong hashBits1c0_1ff, ulong saltBits, HashResult expectedResult)
         {
             PwHash target = new PwHash(hashBits000_03f, hashBits040_07f, hashBits080_0bf, hashBits0c0_0ff, hashBits100_13f, hashBits140_17f, hashBits180_1bf,
                 hashBits1c0_1ff, saltBits);

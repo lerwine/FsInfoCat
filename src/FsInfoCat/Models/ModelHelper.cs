@@ -15,7 +15,7 @@ namespace FsInfoCat.Models
         /// <summary>
         /// Zero flag byte value for <seealso cref="FileStringFormat"/> enumeration values.
         /// </summary>
-        public const byte FILE_STRING_FORMAT_FLAG_NONE =        0b000_0000;
+        public const byte FILE_STRING_FORMAT_FLAG_NONE = 0b000_0000;
 
         /// <summary>
         /// Flag bit value for <seealso cref="FileStringFormat"/> enumeration values representing well-formed strings.
@@ -30,28 +30,28 @@ namespace FsInfoCat.Models
         /// <summary>
         /// Flag bit value for <seealso cref="FileStringFormat"/> enumeration values representing absolute path/URI references.
         /// </summary>
-        public const byte FILE_STRING_FORMAT_FLAG_ABSOLUTE =    0b000_0100;
+        public const byte FILE_STRING_FORMAT_FLAG_ABSOLUTE = 0b000_0100;
 
         /// <summary>
         /// Flag bit value for <seealso cref="FileStringFormat"/> enumeration values representing absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URLs and relative URIs that can be used as the
         /// <seealso cref="Uri.AbsolutePath">path</seealso> component of a <seealso cref="Uri.UriSchemeFile">file</seealso> URL.
         /// </summary>
-        public const byte FILE_STRING_FORMAT_FLAG_FILE_URI =    0b000_1000;
+        public const byte FILE_STRING_FORMAT_FLAG_FILE_URI = 0b000_1000;
 
         /// <summary>
         /// Flag bit value for <seealso cref="FileStringFormat"/> enumeration values representing <c>UNC</c> (Universal Naming Convention) path strings.
         /// </summary>
-        public const byte FILE_STRING_FORMAT_FLAG_UNC =         0b001_0000;
+        public const byte FILE_STRING_FORMAT_FLAG_UNC = 0b001_0000;
 
         /// <summary>
         /// Flag bit value for <seealso cref="FileStringFormat"/> enumeration values representing non-file URI strings.
         /// </summary>
-        public const byte FILE_STRING_FORMAT_FLAG_NON_FILE =    0b010_0000;
+        public const byte FILE_STRING_FORMAT_FLAG_NON_FILE = 0b010_0000;
 
         /// <summary>
         /// Flag bit value for <seealso cref="FileStringFormat"/> enumeration values representing strings that contain characters or character sequences which cannot be used to reference file system locations.
         /// </summary>
-        public const byte FILE_STRING_FORMAT_FLAG_INVALID =     0b100_0000;
+        public const byte FILE_STRING_FORMAT_FLAG_INVALID = 0b100_0000;
         private const byte FILE_STRING_FORMAT_FLAGS_NON_FS_PATH = FILE_STRING_FORMAT_FLAG_FILE_URI | FILE_STRING_FORMAT_FLAG_UNC | FILE_STRING_FORMAT_FLAG_NON_FILE | FILE_STRING_FORMAT_FLAG_INVALID;
         private const byte FILE_STRING_FORMAT_FLAGS_WELL_FORMED_ABSOLUTE = FILE_STRING_FORMAT_FLAG_ABSOLUTE | FILE_STRING_FORMAT_FLAG_WELL_FORMED;
         private const byte FILE_STRING_FORMAT_FLAGS_URI = FILE_STRING_FORMAT_FLAG_FILE_URI | FILE_STRING_FORMAT_FLAG_NON_FILE;

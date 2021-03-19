@@ -1,8 +1,6 @@
 using FsInfoCat.Models.Crawl;
-using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -712,7 +710,7 @@ namespace FsInfoCat.PS
             //if (exception is FileNotFoundException fileNotFoundException)
             //    return new ErrorRecord(exception, errorId, ErrorCategory.ObjectNotFound, targetObject ?? fileNotFoundException.FileName).SetReason(reason);
         }
-        
+
         public static ErrorRecord ToErrorRecord(this MessageId errorId, Exception exception, ErrorCategory errorCategory, string targetName, object targetObject)
         {
             return ToErrorRecord(errorId, null, exception, errorCategory, targetName, targetObject);

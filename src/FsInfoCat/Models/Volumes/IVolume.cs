@@ -1,4 +1,3 @@
-using FsInfoCat.Models.DB;
 using FsInfoCat.Models.HostDevices;
 using System;
 
@@ -26,6 +25,6 @@ namespace FsInfoCat.Models.Volumes
     public interface IVolume<H> : IVolume
         where H : IHostDevice
     {
-        new H Host { get; set;  }
+        new H Host { get; set; }
     }
 }

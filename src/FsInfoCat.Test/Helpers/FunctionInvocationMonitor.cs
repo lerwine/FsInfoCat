@@ -1,4 +1,3 @@
-using FsInfoCat.PS;
 using System;
 
 namespace FsInfoCat.Test.Helpers
@@ -70,7 +69,7 @@ namespace FsInfoCat.Test.Helpers
             return (p1, p2, p3, p4, p5, p6, p7) => Invoke(func, p1, p2, p3, p4, p5, p6, p7);
         }
 
-        public TResult Invoke(Func< TResult> func)
+        public TResult Invoke(Func<TResult> func)
         {
             if (func is null)
                 throw new ArgumentNullException(nameof(func));

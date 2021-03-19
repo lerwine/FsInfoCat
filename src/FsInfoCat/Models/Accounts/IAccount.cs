@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using FsInfoCat.Models.Accounts;
 
 namespace FsInfoCat.Models.Accounts
 {

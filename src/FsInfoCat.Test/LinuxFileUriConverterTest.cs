@@ -40,7 +40,7 @@ namespace FsInfoCat.Test
                             .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "ipv6"), new XAttribute("Success", false))).First(),
                         fileSystemElement.Elements("Host").Where(e => e.Attribute("Type").Value == "IPV6.UNC").Attributes("Match")
                             .Select(a => new XElement("Group",
-                                new XAttribute("Name", "unc"), new XAttribute("Success", true), a.Value.Substring(a.Value.IndexOf('.') + 1)))
+                                new XAttribute("Name", "unc"), new XAttribute("Success", true), a.Value[(a.Value.IndexOf('.') + 1)..]))
                             .DefaultIfEmpty(new XElement("Group", new XAttribute("Name", "unc"), new XAttribute("Success", false))).First(),
                         fileSystemElement.Elements("Host").Where(e => e.Attribute("Type").Value == "DNS")
                             .Select(a => new XElement("Group",
@@ -244,8 +244,9 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
         {
-            // TODO: Implement GetToFileSystemPathTestCases
-            throw new NotImplementedException();
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("mysite", "My%20Documents")
+                .Returns("//mysite/My Documents");
         }
 
         [Test, Property("Priority", 1)]
@@ -258,8 +259,23 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath3TestCases()
         {
-            // TODO: Implement GetFromFileSystemPath3TestCases
-            throw new NotImplementedException();
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("//mysite/My Documents/MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "MyFile%231.txt"),
+                        new XElement("HostName", "mysite"),
+                        new XElement("DirectoryName", "/My%20Documents")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
+            yield return new TestCaseData("/My Documents/MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "MyFile%231.txt"),
+                        new XElement("HostName", ""),
+                        new XElement("DirectoryName", "/My%20Documents")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
         }
 
         [Test, Property("Priority", 1)]
@@ -279,8 +295,21 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath2TestCases()
         {
-            // TODO: Implement GetFromFileSystemPath2TestCases
-            throw new NotImplementedException();
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("//mysite/My Documents/MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "/My%20Documents/MyFile%231.txt"),
+                        new XElement("HostName", "mysite")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
+            yield return new TestCaseData("/My Documents/MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "/My%20Documents/MyFile%231.txt"),
+                        new XElement("HostName", "")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
         }
 
         [Test, Property("Priority", 1)]
@@ -293,6 +322,34 @@ namespace FsInfoCat.Test
                 xElement.Add(new XElement("Result", result));
             if (!(hostName is null))
                 xElement.Add(new XElement("HostName", hostName));
+            return xElement.ToString(SaveOptions.DisableFormatting);
+        }
+
+        public static IEnumerable<TestCaseData> GetFromFileSystemPath1TestCases()
+        {
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("//mysite/My Documents/MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "//mysite/My%20Documents/MyFile%231.txt")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
+            yield return new TestCaseData("/My Documents/MyFile#1.txt")
+                .Returns(
+                    new XElement("FromFileSystemPath",
+                        new XElement("Result", "/My%20Documents/MyFile%231.txt")
+                    ).ToString(SaveOptions.DisableFormatting)
+                );
+        }
+
+        [Test, Property("Priority", 1)]
+        [TestCaseSource(nameof(GetFromFileSystemPath1TestCases))]
+        public string FromFileSystemPath1Test(string path)
+        {
+            string result = LinuxFileUriConverter.INSTANCE.FromFileSystemPath(path);
+            XElement xElement = new XElement("FromFileSystemPath");
+            if (!(result is null))
+                xElement.Add(new XElement("Result", result));
             return xElement.ToString(SaveOptions.DisableFormatting);
         }
     }

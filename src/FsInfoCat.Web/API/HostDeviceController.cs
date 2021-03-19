@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using FsInfoCat.Models;
+using FsInfoCat.Models.DB;
+using FsInfoCat.Models.HostDevices;
+using FsInfoCat.Web.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using FsInfoCat.Models.DB;
-using FsInfoCat.Models;
-using FsInfoCat.Web.Data;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FsInfoCat.Models.HostDevices;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Web.API
 {
@@ -82,7 +82,8 @@ namespace FsInfoCat.Web.API
         [Authorize(Roles = ModelHelper.ROLE_NAME_APP_ADMIN)]
         public async Task<ActionResult<bool>> UnRegister(Guid id)
         {
-            return await _context.HostDevice.FindAsync(id).AsTask().ContinueWith<Boolean>(task => {
+            return await _context.HostDevice.FindAsync(id).AsTask().ContinueWith<Boolean>(task =>
+            {
                 if (task.Result is null)
                     return false;
                 _context.HostDevice.Remove(task.Result);

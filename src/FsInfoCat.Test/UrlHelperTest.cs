@@ -1,4 +1,3 @@
-using FsInfoCat.Test.Helpers;
 using FsInfoCat.Util;
 using NUnit.Framework;
 using System;

@@ -7,7 +7,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -177,7 +176,7 @@ namespace FsInfoCat.Test
         }
 
         public static IEnumerable<TestCaseData> GetPatternHostNameTestCases()
-        {   
+        {
             return HostTestData.Root.Elements().Select(hostElement =>
             {
                 XElement expected;
@@ -224,7 +223,7 @@ namespace FsInfoCat.Test
         public string Ipv6AddressRegexTest(string input)
         {
             Match match = FileUriConverter.IPV6_ADDRESS_REGEX.Match(input);
-            return UrlHelperTest.ToTestReturnValueXml(match, "Ipv6AddressRegex", "ipv6");
+            return UrlHelperTest.ToTestReturnValueXml(match, "Ipv6AddressRegex");
         }
 
         public static IEnumerable<TestCaseData> GetPatternDnsNameTestCases()
@@ -250,86 +249,54 @@ namespace FsInfoCat.Test
             return UrlHelperTest.ToTestReturnValueXml(match, "PatternDnsName");
         }
 
+        // TODO: Fix it so it's not generating hosts with port numbers
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
         {
-            var testDataItems = FilePathTestData.Root.Elements("TestData").Select(filePathElement => new
-            {
-                WindowsPath = filePathElement.Elements("Windows").Elements("FileSystem").Elements("Path").Attributes("Match").Select(a => a.Value).FirstOrDefault(),
-                LinuxPath = filePathElement.Elements("Linux").Elements("FileSystem").Elements("Path").Attributes("Match").Select(a => a.Value).FirstOrDefault(),
-                WindowsHost = filePathElement.Elements("Windows").Elements("FileSystem").Elements("Host").Select(e => e.Value).DefaultIfEmpty("").First(),
-                LinuxHost = filePathElement.Elements("Linux").Elements("FileSystem").Elements("Host").Select(e => e.Value).DefaultIfEmpty("").First(),
-                Element = filePathElement
-            });
-
-            return testDataItems.Select(a => new
-            {
-                Path = a.WindowsPath,
-                Host = a.WindowsHost,
-                Result = a.Element.Elements("Windows").Elements("FileSystem").Elements("Translated").Attributes("Value")
-                    .Concat(a.Element.Elements("Windows").Elements("FileSystem").Attributes("Match")).Select(a => a.Value).FirstOrDefault()
-            }).Where(a => !(a.Path is null || a.Result is null)).Select(testData =>
-                new TestCaseData(testData.Host, testData.Path, PlatformType.Windows, false)
-                    .Returns(testData.Result)
-            ).Concat(testDataItems.Select(a => new
-            {
-                Path = a.LinuxPath,
-                Host = a.LinuxHost,
-                Result = a.Element.Elements("Linux").Elements("FileSystem").Elements("Translated").Attributes("Value")
-                    .Concat(a.Element.Elements("Linux").Elements("FileSystem").Attributes("Match")).Select(a => a.Value).FirstOrDefault()
-            }).Where(a => !(a.Path is null || a.Result is null)).Select(testData =>
-                new TestCaseData(testData.Host, testData.Path, PlatformType.Linux, false)
-                    .Returns(testData.Result)
-            )).Concat(testDataItems.Select(a =>
-            {
-                string expected = a.Element.Elements("Windows").Elements("FileSystem").Elements("Translated").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value == "true"))
-                       .Concat(a.Element.Elements("Linux").Elements("FileSystem").Elements("Translated").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value == "true")))
-                       .Concat(a.Element.Elements("Windows").Elements("FileSystem").Elements("Translated").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value != "true")))
-                       .Concat(a.Element.Elements("Linux").Elements("FileSystem").Elements("Translated").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value != "true")))
-                       .Concat(a.Element.Elements("Windows").Elements("FileSystem").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value == "true")))
-                       .Concat(a.Element.Elements("Linux").Elements("FileSystem").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value == "true")))
-                       .Concat(a.Element.Elements("Windows").Elements("FileSystem").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value != "true")))
-                       .Concat(a.Element.Elements("Linux").Elements("FileSystem").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value != "true")))
-                       .Attributes("Match").Select(a => a.Value).FirstOrDefault();
-                return (string.IsNullOrEmpty(a.WindowsPath)) ? new
-                {
-                    Path = a.LinuxPath,
-                    Host = a.LinuxHost,
-                    Expected = expected
-                } : new
-                {
-                    Path = a.WindowsPath,
-                    Host = a.WindowsHost,
-                    Expected = expected
-                };
-            }).Where(a => !(a.Path is null || a.Expected is null)).Select(testData =>
-                new TestCaseData(testData.Host, testData.Path, PlatformType.Windows, true)
-                    .Returns(testData.Expected)
-            )).Concat(testDataItems.Select(a =>
-            {
-                string expected = a.Element.Elements("Linux").Elements("FileSystem").Elements("Translated").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value == "true"))
-                    .Concat(a.Element.Elements("Windows").Elements("FileSystem").Elements("Translated").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value == "true")))
-                    .Concat(a.Element.Elements("Linux").Elements("FileSystem").Elements("Translated").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value != "true")))
-                    .Concat(a.Element.Elements("Windows").Elements("FileSystem").Elements("Translated").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value != "true")))
-                    .Concat(a.Element.Elements("Linux").Elements("FileSystem").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value == "true")))
-                    .Concat(a.Element.Elements("Windows").Elements("FileSystem").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value == "true")))
-                    .Concat(a.Element.Elements("Linux").Elements("FileSystem").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value != "true")))
-                    .Concat(a.Element.Elements("Windows").Elements("FileSystem").Where(a => a.Attributes("IsAbsolute").Any(a => a.Value != "true")))
-                    .Attributes("Match").Select(a => a.Value).FirstOrDefault();
-                return (string.IsNullOrEmpty(a.LinuxPath)) ? new
-                {
-                    Path = a.WindowsPath,
-                    Host = a.WindowsHost,
-                    Expected = expected
-                } : new
-                {
-                    Path = a.LinuxPath,
-                    Host = a.LinuxHost,
-                    Expected = expected
-                };
-            }).Where(a => !(a.Path is null || a.Expected is null)).Select(testData =>
-                new TestCaseData(testData.Host, testData.Path, PlatformType.Linux, true)
-                    .Returns(testData.Expected)
-            ));
+            return FilePathTestData.Root.Elements("TestData").Elements("Windows").Elements("AbsoluteUrl").Where(e => e.AttributeEquals("IsWellFormed", true) &&
+                    e.Elements("Authority").Elements("Scheme").WhereAttributeEquals("Name", "file").Any())
+                .Select(absoluteUrlElement =>
+                    new TestCaseData(
+                        absoluteUrlElement.Elements("Authority").Elements("Host").Attributes("Match").Select(a => a.Value).DefaultIfEmpty("").First(),
+                        absoluteUrlElement.Elements("Path").Attributes("Match").Select(a => a.Value).DefaultIfEmpty("").First(),
+                        PlatformType.Windows,
+                        false
+                    ).Returns(absoluteUrlElement.Elements("LocalPath").Select(e => e.Value).DefaultIfEmpty("").First())
+                )
+                .Concat(
+                    FilePathTestData.Root.Elements("TestData").Elements("Windows").Where(e =>
+                        !e.Elements("AbsoluteUrl").WhereAttributeEquals("IsWellFormed", true).Any()).Elements("RelativeUrl").WhereAttributeEquals("IsWellFormed", true)
+                    .Select(e =>
+                        new TestCaseData(
+                            e.Elements("Authority").Elements("Host").Attributes("Match").Select(a => a.Value).DefaultIfEmpty("").First(),
+                            e.Elements("Path").Attributes("Match").Select(a => a.Value).DefaultIfEmpty("").First(),
+                            PlatformType.Windows,
+                            false
+                        ).Returns(e.Elements("LocalPath").Select(e => e.Value).DefaultIfEmpty("").First())
+                    )
+                )
+                .Concat(
+                    FilePathTestData.Root.Elements("TestData").Elements("Linux").Elements("AbsoluteUrl").WhereAttributeEquals("IsWellFormed", true)
+                    .Select(e =>
+                        new TestCaseData(
+                            e.Elements("Authority").Elements("Host").Attributes("Match").Select(a => a.Value).DefaultIfEmpty("").First(),
+                            e.Elements("Path").Attributes("Match").Select(a => a.Value).DefaultIfEmpty("").First(),
+                            PlatformType.Linux,
+                            false
+                        ).Returns(e.Elements("LocalPath").Select(e => e.Value).DefaultIfEmpty("").First())
+                    )
+                )
+                .Concat(
+                    FilePathTestData.Root.Elements("TestData").Elements("Linux").Where(e =>
+                        !e.Elements("AbsoluteUrl").WhereAttributeEquals("IsWellFormed", true).Any()).Elements("RelativeUrl").WhereAttributeEquals("IsWellFormed", true)
+                    .Select(e =>
+                        new TestCaseData(
+                            e.Elements("Authority").Elements("Host").Attributes("Match").Select(a => a.Value).DefaultIfEmpty("").First(),
+                            e.Elements("Path").Attributes("Match").Select(a => a.Value).DefaultIfEmpty("").First(),
+                            PlatformType.Windows,
+                            false
+                        ).Returns(e.Elements("LocalPath").Select(e => e.Value).DefaultIfEmpty("").First())
+                    )
+                );
         }
 
         [Test, Property("Priority", 1)]

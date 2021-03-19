@@ -327,7 +327,7 @@ namespace FsInfoCat.Test.Helpers
         {
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            return (TParam1 p1, TParam2 p2, TParam3 p3,out TOut1 o1, out TOut2 o2) => Invoke(action, p1, p2, p3, out o1, out o2);
+            return (TParam1 p1, TParam2 p2, TParam3 p3, out TOut1 o1, out TOut2 o2) => Invoke(action, p1, p2, p3, out o1, out o2);
         }
 
         public ActionWithOutput2<TParam1, TParam2, TParam3, TParam4, TOut1, TOut2> CreateProxy<TParam1, TParam2, TParam3, TParam4>(ActionWithOutput2<TParam1, TParam2, TParam3, TParam4,
@@ -514,7 +514,7 @@ namespace FsInfoCat.Test.Helpers
             Apply(o1, o2, o3);
         }
 
-        public IInvocationResult<TOut1, TOut2, TOut3> ToResult() => (WasInvoked) ? new InvocationResult<TOut1, TOut2, TOut3> (Output1, Output2, Output3) : new InvocationResult<TOut1, TOut2, TOut3> ();
+        public IInvocationResult<TOut1, TOut2, TOut3> ToResult() => (WasInvoked) ? new InvocationResult<TOut1, TOut2, TOut3>(Output1, Output2, Output3) : new InvocationResult<TOut1, TOut2, TOut3>();
     }
 
     public class InvocationMonitor<TOut1, TOut2, TOut3, TOut4>
@@ -726,7 +726,7 @@ namespace FsInfoCat.Test.Helpers
                 throw new ArgumentNullException(nameof(action));
             return (TOut1 o1, TOut2 o2, TOut3 o3, TOut4 o4, TOut5 o5, TOut6 o6) => Invoke(action, o1, o2, o3, o4, o5, o6);
         }
-        
+
         public ActionWithOutput6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> CreateProxy(ActionWithOutput6<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> action)
         {
             if (action is null)

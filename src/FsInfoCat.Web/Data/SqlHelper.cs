@@ -1,8 +1,8 @@
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 
 namespace FsInfoCat.Web.Data
 {
@@ -12,7 +12,8 @@ namespace FsInfoCat.Web.Data
         {
             IEnumerable<string> result;
             if (null != exception.InnerException && exception.InnerException is Win32Exception)
-                result = exception.Errors.OfType<SqlError>().Select(error => {
+                result = exception.Errors.OfType<SqlError>().Select(error =>
+                {
                     if (error.State == 0)
                     {
                         if (error.Number == -2 && ((Win32Exception)exception.InnerException).NativeErrorCode == 258)
@@ -24,7 +25,8 @@ namespace FsInfoCat.Web.Data
                     return "An unexpected error (" + error.Number.ToString() + ") occured while trying to access the database: " + error.Message.Trim();
                 });
             else
-                result = exception.Errors.OfType<SqlError>().Select(error => {
+                result = exception.Errors.OfType<SqlError>().Select(error =>
+                {
                     if (error.State == 0)
                     {
                         switch (error.Number)

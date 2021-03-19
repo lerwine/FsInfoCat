@@ -123,7 +123,7 @@ namespace FsInfoCat.Test.Helpers
         private static readonly IEqualityComparer<TOut7> _comparer = EqualityComparer<TOut7>.Default;
         public TOut7 Output7 { get; }
         public InvocationResult() { }
-        public InvocationResult(TOut1 o1, TOut2 o2, TOut3 o3, TOut4 o4, TOut5 o5, TOut6 o6, TOut7 o7) : base (o1, o2, o3, o4, o5, o6) { Output7 = o7; }
+        public InvocationResult(TOut1 o1, TOut2 o2, TOut3 o3, TOut4 o4, TOut5 o5, TOut6 o6, TOut7 o7) : base(o1, o2, o3, o4, o5, o6) { Output7 = o7; }
         public virtual bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6, TOut7> other) =>
             !(other is null) && (ReferenceEquals(this, other) || PropertiesAreEqual(other));
         public override bool Equals([AllowNull] InvocationResult<TOut1, TOut2, TOut3, TOut4, TOut5, TOut6> other) =>

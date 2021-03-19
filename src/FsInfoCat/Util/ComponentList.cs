@@ -25,7 +25,8 @@ namespace FsInfoCat.Util
                 {
                     int index = IndexOf(name);
                     return (index < 0) ? null : _sites[index].Component;
-                } finally { Monitor.Exit(_syncRoot); }
+                }
+                finally { Monitor.Exit(_syncRoot); }
             }
             set
             {
@@ -37,7 +38,8 @@ namespace FsInfoCat.Util
                         Add(value, name);
                     else
                         SetAt(index, value, name);
-                } finally { Monitor.Exit(_syncRoot); }
+                }
+                finally { Monitor.Exit(_syncRoot); }
             }
         }
 
@@ -118,7 +120,8 @@ namespace FsInfoCat.Util
                     if (ReferenceEquals(_sites[i].Component, component))
                         return i;
                 }
-            } finally { Monitor.Exit(_syncRoot); }
+            }
+            finally { Monitor.Exit(_syncRoot); }
             return -1;
         }
 
@@ -138,7 +141,8 @@ namespace FsInfoCat.Util
                     if (null != n && nameComparer.Equals(n, name))
                         return i;
                 }
-            } finally { Monitor.Exit(_syncRoot); }
+            }
+            finally { Monitor.Exit(_syncRoot); }
             return -1;
         }
         protected virtual void Insert(int index, IComponent value) => _container.InsertListItem(index, value, this);
@@ -160,7 +164,8 @@ namespace FsInfoCat.Util
                     RemoveAt(index);
                     return true;
                 }
-            } finally { Monitor.Exit(_syncRoot); }
+            }
+            finally { Monitor.Exit(_syncRoot); }
             return false;
         }
 

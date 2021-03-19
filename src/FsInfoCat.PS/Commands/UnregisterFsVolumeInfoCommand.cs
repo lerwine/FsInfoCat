@@ -1,12 +1,11 @@
+using FsInfoCat.Models.Crawl;
+using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
-using FsInfoCat.Models.Crawl;
-using FsInfoCat.Models.Volumes;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.PS.Commands
 {

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Util
@@ -119,6 +117,7 @@ namespace FsInfoCat.Util
         [/\\]?(?=$)
     )
 |
+    [^\u0000-\u0019""<>|:;*?\\/]*
     (
         [/\\]
         [^\u0000-\u0019""<>|:;*?\\/]+
@@ -226,20 +225,20 @@ namespace FsInfoCat.Util
 |
 ([/\\]+\s*|\s+)
 $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
-        
+
         /// <summary>
         /// Matches consecutive URI path separators as well as leading and trailing whitespace and path separators.
         /// </summary>
         /// <remarks>This will also match relative self-reference sequences (<c>\.\<c>). This does not match parent segment references (<c>\..\</c>)
         /// if they are not at the beginning of the string.</remarks>
-        public static readonly Regex FS_RELATIVE_PATH_NORMALIZE_REGEX = new Regex(@"^
-(\s*(\.\.?[/\\]+)+|\s+)
+        public static readonly Regex FS_RELATIVE_PATH_NORMALIZE_REGEX = new Regex(@"
+^(\s*(\.\.?[/\\]+)+|\s+)
 |
 (?<!^\s*[/\\])[/\\](?=[/\\])
 |
 [/\\]\.(?=[/\\]|$)
 |
-([/\\]+\s*|\s+)$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
+((?<!^\s*)[/\\]+\s*|\s+)$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
         /// Matches character sequences which need to be encoded within a URI string.
@@ -257,7 +256,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             @"\[?([a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|\.ipv6-literal\.net)?" +
             @"|(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)(?=/|\s*$)|(file://)?(?=/))" +
             @"([\\/]([^\u0000-\u0019\u007f-\u00a0\u1680\u2028\u2029\ud800-\udfff/"" <>\\/|]+|%([4689A-F][\dA-F]|2[^2AF]|3[^ACEF]|[57][^C]|(?![\dA-F]{2})))+)*[\\/]?\s*$";
-        
+
         /// <summary>
         /// Matches a string that can be parsed as an absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URI or an absolute filesystem path, and does not contain
         /// any characters which are not compatible with the Linux filesystem.
@@ -531,10 +530,14 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 ^
 (?<dir>
     (
-        [a-zA-Z]:
+        [a-zA-Z]:(?=/|$)
     |
-        (?=[^/]+/[^/])
-        ([!$&-)+-.=@[\]\w]+|%(2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689][\dA-F]))+
+        /?
+        (?![a-zA-Z]:)
+        (
+            (?=[^/]+/[^/])
+            ([!$&-)+-.=@[\]\w]+|%(2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689][\dA-F]))+
+        )?
     )
     (
         /(?=([^/]+/?)?$)

@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using FsInfoCat.Models;
 
 namespace FsInfoCat.Util
 {
@@ -664,7 +660,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 isAbsolute = false;
                 return false;
             }
-            
+
             Match match = UriHostDirAndFileStrictRegex.Match(uriString);
             if (!match.Success)
             {
@@ -722,7 +718,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 isAbsolute = false;
                 return false;
             }
-            
+
             Match match = UriHostAndPathStrictRegex.Match(uriString);
             if (!match.Success)
             {

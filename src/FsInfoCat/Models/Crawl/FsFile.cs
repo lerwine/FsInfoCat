@@ -1,6 +1,6 @@
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
-using FsInfoCat.Util;
 
 namespace FsInfoCat.Models.Crawl
 {
@@ -15,7 +15,7 @@ namespace FsInfoCat.Models.Crawl
             get => _name;
             set => _name = value ?? "";
         }
-    
+
         public ComponentList<CrawlMessage> Messages
         {
             get => _messagesList;

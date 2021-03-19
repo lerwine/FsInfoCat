@@ -1,9 +1,7 @@
-using System;
-using NUnit.Framework;
 using FsInfoCat.Util;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
-using System.Reflection;
-using FsInfoCat.Models.Crawl;
 using System.Linq;
 
 namespace FsInfoCat.Test

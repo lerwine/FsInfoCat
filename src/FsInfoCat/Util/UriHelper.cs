@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static FsInfoCat.Util.FileUriConverter;
@@ -297,7 +296,7 @@ namespace FsInfoCat.Util
 
         public static string SplitFragment(string uriString, out string fragment) =>
             SplitFragment(uriString, false, out fragment);
-        
+
         // TODO: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string schemeAndAuthority,
             out string queryAndFragment)
