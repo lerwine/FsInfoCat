@@ -15,25 +15,241 @@ $nameChars = -join @(&{
 });
 $WsChars = "`r`n`t ";
 $Random = [Random]::new();
+$SegmentsRegex = [System.Text.RegularExpressions.Regex]::new('(?:^|\G)(?:/(?<n>[^/]*)|(?<n>[^/]+))');
+$RecodeRegex = [System.Text.RegularExpressions.Regex]::new('(^|\G)((?<r>%([a-f][\dA-Fa-f]|[\dA-F][a-f]))|([^%]+|%(?![\dA-F]))+)');
+$WindowsRegex = [System.Text.RegularExpressions.Regex]::new(@"
+^
+(
+    (?<file>
+        (?i)
+        (?<scheme>file):[\\/]{2}
+        (
+            (?<host>[^\\/]+)
+            (?<path>[\\/].*)?
+        |
+            [\\/](?<path>[a-z]:([\\/].*)?)
+        )
+    )
+|
+    (?<unc>
+        [\\/]{2}
+        (?<host>[^\\/]+)
+        (?<path>([\\/](?![\\/]).*)?)
+    )
+|
+    (?<path>[a-z]:([\\/].*)?)
+|
+    (?!file:|((?i)FILE:/))
+    (?<scheme>[a-zA-Z][\w-.]+):
+    (//?)?
+    (?<host>
+        (
+            [^?#/@:]*
+            (:[^?#/@:]*)?
+            @
+        )?
+        [^?#/@:]+
+        (:\d+)?
+    )?
+    (?<path>([/:].*)?)
+)$
+"@, ([System.Text.RegularExpressions.RegexOptions]([System.Text.RegularExpressions.RegexOptions]::Compiled -bor [System.Text.RegularExpressions.RegexOptions]::IgnorePatternWhitespace)));
+$LinuxRegex = [System.Text.RegularExpressions.Regex]::new(@"
+^
+(
+    (?<file>
+        (?i)
+        (?<scheme>file):[\\/]{2}
+        (/(?<host>[^/]+))?
+        (?<path>/.*)?
+    )
+|
+    (?<unc>
+        //
+        (?<host>[^/]+)
+        (?<path>(/.*)?)
+    )
+|
+    (?<path>/(?!/).*)
+|
+    (?!file:|((?i)FILE:/))
+    (?<scheme>[a-zA-Z][\w-.]+):
+    (//?)?
+    (?<host>
+        (
+            [^?#/@:]*
+            (:[^?#/@:]*)?
+            @
+        )?
+        [^?#/@:]+
+        (:\d+)?
+    )?
+    (?<path>([/:].*)?)
+)$
+"@, ([System.Text.RegularExpressions.RegexOptions]([System.Text.RegularExpressions.RegexOptions]::Compiled -bor [System.Text.RegularExpressions.RegexOptions]::IgnorePatternWhitespace)));
+<#
+foreach ($TestDataElement in @($XmlDocument.SelectNodes('//WellFormed'))) {
+    $TestDataElement.ParentNode.RemoveChild($TestDataElement) | Out-Null;
+}#>
 
-foreach ($TestDataElement in $XmlDocument.SelectNodes('//FileSystem')) {
-    $OriginalString = '' + $TestDataElement.Match;
-    $uriString = ('' + $TestDataElement.Match).Replace('\', '/');
+class LocalPathType {
+}
+class PathSegmentsType {
+}
+class UriAuthorityType {
+}
+class BaseUri {
+    [bool]$IsWellFormed;
+    [PathSegmentsType]$Path;
+    [string]$Query;
+    [string]$Fragment;
+    [LocalPathType]$LocalPath;
+}
+class AbsoluteUrl : BaseUri {
+    [UriAuthorityType]$Authority;
+}
+class TranslatedAbsoluteUrl : AbsoluteUrl {
+}
+class WellformedAbsoluteUrl : AbsoluteUrl {
+}
+class AbsoluteOsPathUrl : AbsoluteUrl{
+    [string]$Match;
+    [TranslatedAbsoluteUrl]$Translated;
+    [WellformedAbsoluteUrl]$WellFormed;
+}
+class RelativeUri : BaseUri {
+}
+class TranslatedRelativeUri : RelativeUri {
+}
+class WellformedRelativeUri : RelativeUri {
+}
+class RelativeOsPathUrl : RelativeUri {
+    [string]$Match;
+    [TranslatedRelativeUri]$Translated;
+    [WellformedRelativeUri]$WellFormed;
+}
+class UncHostInfo {
+    [string]$Match;
+    [bool]$IsAbsolute;
+}
+class FileSystemPath {
+    [UncHostInfo]$Host;
+    [PathSegmentsType]$Path;
+    [Uri]$URI;
+}
+class TranslatedFileSystemPath : FileSystemPath {
+    [bool]$IsAbsolute;
+}
+class OSFileSystemPath : FileSystemPath {
+    [UncHostInfo]$Host;
+    [PathSegmentsType]$Path;
+    [Uri]$URI;
+    [FileSystemPath]$Translated;
+}
+class OSPathType {
+    hidden [AbsoluteOsPathUrl]$AbsoluteUrl;
+    hidden [RelativeOsPathUrl]$RelativeUrl;
+    hidden [FileSystemPath]$FileSystem;
+}    
+class TestDataItem {
+    [string]$InputString;
+    hidden [OSPathType]$Windows;
+    hidden [OSPathType]$Linux;
+}
+class FilePathTestData {
+    hidden [System.Collections.ObjectModel.Collection[TestDataItem]]$Items;
+    TestDataNode() {
+    }
+}
+foreach ($TestDataElement in $XmlDocument.SelectNodes('//TestData')) {
+    $TestData = [TestDataNode]::new($TestDataElement);
+    
+    $TestData.Linux.AbsoluteUrl = [AbsoluteUrlNode]@{
+        XmlElement = $TestData.Linux.XmlElement.SelectSingleNode('AbsoluteUrl');
+    };
+    $TestData.Linux.RelativeUrl = [RelativeUrlNode]@{
+        XmlElement = $TestData.Linux.XmlElement.SelectSingleNode('RelativeUrl');
+    };
+    $TestData.Linux.FileSystem = [FileSystemNode]@{
+        XmlElement = $TestData.Linux.XmlElement.SelectSingleNode('FileSystem');
+    };
+
+    $Match = $WindowsRegex.Match($InputString);
+    if ($Match.Groups["file"].Success) {
+        
+    }
+    if ($Match.Groups["host"].Success) {
+    }
+    if ($Match.Groups["unc"].Success) {
+    }
+    if ($Match.Groups["path"].Success) {
+    }
+    if ($Match.Groups["scheme"].Success) {
+    }
+    #$OriginalString = $WellFormedString = $OriginalString -replace '^([a-z]):', 'tMpX$1:';
+    $WellFormedString = $OriginalString;
     $Uri = $null;
-    if ([Uri]::TryCreate($uriString.Replace('#', '%23').Replace('#', '%23').Replace('?', '%3F'), [UriKind]::Absolute, [ref]$Uri)) {
-        $uriString = $Uri.AbsoluteUri;
-    } else {
-        if ($OriginalString.Contains('\') -and $uriString.StartsWith('/') -and [Uri]::TryCreate("file://$($uriString.Replace('#', '%23').Replace('#', '%23').Replace('?', '%3F'))", [UriKind]::Absolute, [ref]$Uri)) {
-            $uriString = $Uri.AbsoluteUri;
-        } else {
-            if (-not [uri]::IsWellFormedUriString($uriString, [UriKind]::Relative)) {
-                $uriString = [Uri]::EscapeUriString($uriString).Replace('#', '%23').Replace('#', '%23').Replace('?', '%3F');
+    $SchemeAuth = $Path = $Query = $Fragment = '';
+    if (-not [Uri]::IsWellFormedUriString($WellFormedString, [UriKind]::Relative)) {
+        $WellFormedString = $WellFormedString;
+        if (-not [Uri]::IsWellFormedUriString($WellFormedString, [UriKind]::Relative)) {
+            $WellFormedString = $RecodeRegex.Replace($WellFormedString, {
+                if ($args[0].Groups['r'].Success) {
+                    return $args[0].Value.ToUpper();
+                } else {
+                    return [Uri]::EscapeUriString($args[0].Value)
+                }
+            });
+            if (-not [Uri]::TryCreate($WellFormedString, [UriKind]::Relative, [ref]$Uri)) {
+                Write-Warning -Message "$OriginalString -> $WellFormedString";
+                $Uri = $null;
             }
         }
     }
-    $TestDataElement.AppendChild($XmlDocument.CreateElement('URI')).InnerText = $uriString;
+    Write-Information -Message "$OriginalString -> $WellFormedString" -InformationAction Continue;
+    $Segments = @();
+    $Path = $Query = $Fragment = '';
+    if ($WellFormedString.Contains('#') -or $WellFormedString.Contains('?')) {
+        $WellFormedString = $WellFormedString.Replace('#', [Uri]::HexEscape('#')).Replace('?', [Uri]::HexEscape('?'));
+    #if ($WellFormedString.Contains('#')) {
+    #    $WellFormedString = $WellFormedString.Replace('#', [Uri]::HexEscape('#'));
+    }
+    $Path  = $WellFormedString;
+    if ($WellFormedString -match '^(<p>[^#?]*)(<q>[^#]*)(<f>.*)') {
+        $Path = $Matches['p'];
+        $Query = $Matches['q'];
+        $Fragment = $Matches['f'];
+    }
+    $Segments = $SegmentsRegex.Matches($Path) | Select-Object -ExcludeProperty 'Value';
+    $XmlElement = $TestDataElement.AppendChild($XmlDocument.CreateElement('WellFormed'));
+    $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('Value')).Value = $WellFormedString;
+    $XmlElement = $XmlElement.AppendChild($XmlDocument.CreateElement('Path'));
+    if ($Uri.Segments.Length -lt $MinSegmentCount) {
+        $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('Match')).Value = $Path;
+        $XmlElement.AppendChild($XmlDocument.CreateElement('Directory')).InnerText = -join $Segments;
+        $XmlElement.AppendChild($XmlDocument.CreateElement('FileName')).Attributes.Append($XmlDocument.CreateAttribute('xsi', 'nil', 'http://www.w3.org/2001/XMLSchema-instance')).Value = 'true';
+    } else {
+        $FileName = ($Segments | Select-Object -Last 1) -replace '/$', '';
+        $Directory = -join ($Segments | Select-Object -SkipLast 1);
+        if ([string]::IsNullOrEmpty($FileName) -or [string]::IsNullOrEmpty($Directory) -or $Directory.EndsWith('/')) {
+            $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('Match')).Value = "$Directory$FileName";
+        } else {
+            $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('Match')).Value = "$Directory/$FileName";
+        }
+        if ($Uri.Segments.Count -gt 3) { $Directory = $Directory -replace '/$', '' }
+        $XmlElement.AppendChild($XmlDocument.CreateElement('Directory')).InnerText = $Directory;
+        $XmlElement.AppendChild($XmlDocument.CreateElement('FileName')).InnerText = $FileName;
+    }
 }
 <#
+        $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('Match')).Value = 
+        $Name = $Uri.Segments | ForEach-Object { $_.Replace('/', '') } | Where-Object { $_.Length -gt 0 } | Select-Object -Last 1;
+        if ($null -eq $Name) {
+            $XmlElement.Attributes.Append($XmlDocument.CreateAttribute('Value')).Value = 
+            
+        $Seg = $Uri.Segments | Select-Object -First 1;
+
+    $TestDataElement.AppendChild($XmlDocument.CreateElement('URI')).InnerText = $uriString;
 foreach ($TargetElement in @($XmlDocument.DocumentElement.SelectNodes('//Host[@IsIPV2="false" and @IsDns="false"]'))) {
 <#
     [System.Xml.XmlElement]$UriElement = $TargetElement.ParentNode;

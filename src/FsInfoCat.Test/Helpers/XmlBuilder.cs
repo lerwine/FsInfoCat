@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -13,188 +17,340 @@ namespace FsInfoCat.Test.Helpers
     /// </summary>
     public static class XmlBuilder
     {
-        public static bool? GetBooleanValue(this XAttribute source)
+        public static bool TryGetObjectStringValue(this XObject node, out string result)
         {
-            if (source is null)
-                return null;
-            try { return XmlConvert.ToBoolean(source.Value); }
-            catch { return (bool?)null; }
-        }
-
-        public static bool GetBooleanValue(this XAttribute source, bool defaultValue)
-        {
-            if (source is null)
-                return defaultValue;
-            try { return XmlConvert.ToBoolean(source.Value); }
-            catch { return defaultValue; }
-        }
-
-        public static int? GetIntegerValue(this XAttribute source)
-        {
-            if (source is null)
-                return null;
-            try { return XmlConvert.ToInt32(source.Value); }
-            catch { return (int?)null; }
-        }
-
-        public static int GetIntegerValue(this XAttribute source, int defaultValue)
-        {
-            if (source is null)
-                return defaultValue;
-            try { return XmlConvert.ToInt32(source.Value); }
-            catch { return defaultValue; }
-        }
-
-        public static string GetStringAttributeValue(this XElement source, XName name, string defaultValue = null)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return defaultValue;
-            return source.Attributes(name).Select(a => a.Value).DefaultIfEmpty(defaultValue).First();
-        }
-
-        public static bool? GetBooleanAttributeValue(this XElement source, XName name)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return null;
-            return source.Attributes(name).Select(a => a.GetBooleanValue()).Where(b => b.HasValue).FirstOrDefault();
-        }
-
-        public static bool GetBooleanAttributeValue(this XElement source, XName name, bool defaultValue)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return defaultValue;
-            return source.Attributes(name).Select(a => a.GetBooleanValue()).Where(b => b.HasValue).Select(b => b.Value).DefaultIfEmpty(defaultValue).First();
-        }
-
-        public static int? GetIntegerAttributeValue(this XElement source, XName name)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return null;
-            return source.Attributes(name).Select(a => a.GetIntegerValue()).Where(b => b.HasValue).FirstOrDefault();
-        }
-
-        public static int GetIntegerAttributeValue(this XElement source, XName name, int defaultValue)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return defaultValue;
-            return source.Attributes(name).Select(a => a.GetIntegerValue()).Where(b => b.HasValue).Select(b => b.Value).DefaultIfEmpty(defaultValue).First();
-        }
-
-        public static bool AttributeExists(this XElement source, XName name)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return false;
-            return source.Attributes(name).Any();
-        }
-
-        public static bool AttributeNotExists(this XElement source, XName name)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return false;
-            return !source.Attributes(name).Any();
-        }
-
-        public static bool AttributeEquals(this XElement source, XName name, string value)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return false;
-
-            if (value is null)
-                return !source.Attributes(name).Any();
-            return source.Attributes(name).Select(a => a.Value).Contains(value);
-        }
-
-        public static bool AttributeNotEquals(this XElement source, XName name, string value)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return false;
-
-            if (value is null)
-                return source.Attributes(name).Any();
-            return !source.Attributes(name).Select(a => a.Value).Contains(value);
-        }
-
-        public static bool AttributeEqualsAny(this XElement source, XName name, params string[] values)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null || values is null || values.Length == 0)
-                return false;
-            int nullCount = values.Count(v => v is null);
-            if (nullCount > 0)
+            if (node is null)
             {
-                if (!source.Attributes(name).Any())
-                    return true;
-                if (nullCount == values.Length)
+                result = null;
+                return false;
+            }    
+            try
+            {
+                if (node is XAttribute attribute)
+                    result = attribute.Value;
+                else if (node is XElement element)
+                    result = (element.IsEmpty) ? null : element.Value;
+                else
+                {
+                    result = null;
                     return false;
-                values = values.Where(v => !(v is null)).ToArray();
+                }
             }
-            return source.Attributes(name).Any(a => values.Contains(a.Value));
+            catch
+            {
+                result = null;
+                return false;
+            }
+            return TryGetObjectStringValue(node.Parent, out result);
         }
 
-        public static bool AttributeNotEqualsAny(this XElement source, XName name, params string[] values)
+        public static bool TryGetNamedObjectStringValue(this XObject node, XName name, out string result)
         {
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
-            if (source is null)
+            if (node is null)
+            {
+                result = null;
                 return false;
-
-            if (values is null || values.Length == 0)
+            }
+            try
+            {
+                if (node is XAttribute attribute)
+                {
+                    if (attribute.Name == name)
+                    {
+                        result = attribute.Value;
+                        return true;
+                    }
+                    if ((node = attribute.Parent) is null)
+                    {
+                        result = null;
+                        return false;
+                    }
+                }
+                if (node is XElement element)
+                {
+                    XAttribute a = element.Attribute(name);
+                    if (a is null)
+                    {
+                        XElement e = element.Element(name);
+                        if (e is null)
+                        {
+                            if (element.Name != name)
+                            {
+                                result = null;
+                                return false;
+                            }
+                            e = element;
+                        }
+                        result = (e.IsEmpty) ? null : e.Value;
+                        return true;
+                    }
+                    result = a.Value;
+                    return true;
+                }
+            }
+            catch
+            {
+                result = null;
                 return false;
-            if (values.Any(v => v is null))
-                return source.Attributes(name).Any();
-            return source.Attributes(name).Any(a => !values.Contains(a.Value));
+            }
+            return node.Parent.TryGetNamedObjectStringValue(name, out result);
         }
 
-        public static bool AttributeEquals(this XElement source, XName name, bool value)
+        private static bool TryInvoke<TIn, TOut>(TIn value, Func<TIn, TOut> parseFunc, out TOut result)
+        {
+            try
+            {
+                result = parseFunc(value);
+                return true;
+            }
+            catch { /* okay to ignore */ }
+            result = default;
+            return false;
+        }
+
+        public delegate bool TryParseValue<TIn, TOut>(TIn source, out TOut result);
+
+        public static IEnumerable<TObject> WhereValueOf<TValue, TObject>(IEnumerable<TObject> source, TryParseValue<string, TValue> parseFunc, TValue value, IEqualityComparer<TValue> comparer = null)
+            where TObject : XObject
+        {
+            if (source is null)
+                return Array.Empty<TObject>();
+            if (comparer is null)
+                comparer = EqualityComparer<TValue>.Default;
+            return source.Where(o =>
+            {
+                if (o is null)
+                    return false;
+                return TryGetObjectStringValue(o, out string rawValue) && parseFunc(rawValue, out TValue v) && comparer.Equals(v, value);
+            });
+        }
+
+        public static IEnumerable<TObject> WhereValueOf<TValue, TObject>(IEnumerable<TObject> source, Func<string, TValue> parseFunc, TValue value, IEqualityComparer<TValue> comparer = null)
+            where TObject : XObject
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            return WhereValueOf(source, (string value, out TValue result) => TryInvoke(value, parseFunc, out result), value, comparer);
+        }
+
+        public static bool TryGetParsedValue<T>(this XObject node, TryParseValue<string, T> parseFunc, out T result)
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            if (node.TryGetObjectStringValue(out string rawValue))
+                return parseFunc(rawValue, out result);
+            result = default;
+            return false;
+        }
+
+        public static bool TryGetParsedValue<T>(this XObject node, Func<string, T> parseFunc, out T result)
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            return node.TryGetParsedValue((string value, out T r) => TryInvoke(value, parseFunc, out r), out result);
+        }
+
+        public static bool TryGetParsedValue<T>(this XObject node, XName name, TryParseValue<string, T> parseFunc, out T result)
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            if (node.TryGetNamedObjectStringValue(name, out string rawValue))
+                return parseFunc(rawValue, out result);
+            result = default;
+            return false;
+        }
+
+        public static bool TryGetParsedValue<T>(this XObject node, XName name, Func<string, T> parseFunc, out T result)
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            return node.TryGetParsedValue(name, (string value, out T r) => TryInvoke(value, parseFunc, out r), out result);
+        }
+
+        public static bool TryGetParsedAttributeValue<T>(this XObject node, XName name, TryParseValue<string, T> parseFunc, out T result)
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            if (node.TryGetAttributeStringValue(name, out string rawValue))
+                return parseFunc(rawValue, out result);
+            result = default;
+            return false;
+        }
+
+        public static bool TryGetParsedAttributeValue<T>(this XObject node, XName name, Func<string, T> parseFunc, out T result)
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            return node.TryGetParsedAttributeValue(name, (string value, out T r) => TryInvoke(value, parseFunc, out r), out result);
+        }
+
+        public static bool TryGetParsedElementValue<T>(this XObject node, XName name, TryParseValue<string, T> parseFunc, out T result)
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            if (node.TryGetElementStringValue(name, out string rawValue))
+                return parseFunc(rawValue, out result);
+            result = default;
+            return false;
+        }
+
+        public static bool TryGetParsedElementValue<T>(this XObject node, XName name, Func<string, T> parseFunc, out T result)
+        {
+            if (parseFunc is null)
+                throw new ArgumentNullException(nameof(parseFunc));
+            return node.TryGetParsedElementValue(name, (string value, out T r) => TryInvoke(value, parseFunc, out r), out result);
+        }
+
+        public static bool TryGetAttributeStringValue(this XObject node, XName name, out string result)
         {
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
-            if (source is null)
+            if (node is null)
+            {
+                result = null;
                 return false;
-
-            return source.Attributes(name).Select(a => a.GetBooleanValue()).Any(b => b.HasValue && b.Value == value);
+            }
+            try
+            {
+                if (node is XAttribute attribute)
+                {
+                    if (attribute.Name == name)
+                    {
+                        result = attribute.Value;
+                        return true;
+                    }
+                    if ((node = attribute.Parent) is null)
+                    {
+                        result = null;
+                        return false;
+                    }
+                }
+                if (node is XElement element)
+                {
+                    XAttribute a = element.Attribute(name);
+                    if (a is null)
+                    {
+                        result = null;
+                        return false;
+                    }
+                    result = a.Value;
+                    return true;
+                }
+            }
+            catch
+            {
+                result = null;
+                return false;
+            }
+            return node.Parent.TryGetAttributeStringValue(name, out result);
         }
 
-        public static bool AttributeNotEquals(this XElement source, XName name, bool value)
+        public static bool TryGetElementStringValue(this XObject node, XName name, out string result)
         {
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
-            if (source is null)
+            if (node is null)
+            {
+                result = null;
                 return false;
-
-            return source.Attributes(name).Select(a => a.GetBooleanValue()).Any(b => b.HasValue && b.Value != value);
+            }
+            try
+            {
+                if (node is XAttribute attribute && (node = node.Parent) is null)
+                {
+                    result = null;
+                    return false;
+                }
+                if (node is XElement element)
+                {
+                    XElement e = element.Element(name);
+                    if (e is null)
+                    {
+                        if (element.Name != name)
+                        {
+                            result = null;
+                            return false;
+                        }
+                        e = element;
+                    }
+                    result = e.IsEmpty ? null : e.Value;
+                    return true;
+                }
+            }
+            catch
+            {
+                result = null;
+                return false;
+            }
+            return node.Parent.TryGetElementStringValue(name, out result);
         }
 
-        public static bool AttributeEqualsAny(this XElement source, XName name, params int[] values)
+        private static bool BooleanValueTryGet(string value, out bool result)
         {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-            if (source is null)
-                return false;
-
-            if (values is null || values.Length == 0)
-                return false;
-            return source.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && values.Contains(a.Value));
+            if (!string.IsNullOrWhiteSpace(value))
+                try
+                {
+                    result = XmlConvert.ToBoolean(value);
+                    return true;
+                }
+                catch { /* Okay to ignore */ }
+            result = default;
+            return false;
         }
+
+        private static bool IntegerValueTryGet(string value, out int result)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                try
+                {
+                    result = XmlConvert.ToInt32(value);
+                    return true;
+                }
+                catch { /* Okay to ignore */ }
+            result = default;
+            return false;
+        }
+
+        public static bool TryGetBooleanValue(this XAttribute attribute, out bool result) => attribute.TryGetParsedValue(BooleanValueTryGet, out result);
+
+        public static bool TryGetIntegerValue(this XAttribute attribute, out int result) => attribute.TryGetParsedValue(IntegerValueTryGet, out result);
+
+        public static bool TryGetAttributeBooleanValue(this XObject node, XName name, out bool result) =>
+            node.TryGetParsedAttributeValue(name, BooleanValueTryGet, out result);
+
+        public static bool TryGetAttributeIntegerValue(this XObject node, XName name, out int result) =>
+            node.TryGetParsedAttributeValue(name, IntegerValueTryGet, out result);
+
+        public static string StringAttributeValue(this XObject node, XName name, string defaultValue = null) =>
+            node.TryGetAttributeStringValue(name, out string value) ? value : defaultValue;
+
+        public static string StringElementValue(this XObject node, XName name, string defaultValue = null) =>
+            node.TryGetElementStringValue(name, out string value) ? value : defaultValue;
+
+        public static bool BooleanAttributeValue(this XObject node, XName name, bool defaultValue = false) =>
+            node.TryGetAttributeBooleanValue(name, out bool value) ? value : defaultValue;
+
+        public static int IntegerAttributeValue(this XObject node, XName name, int defaultValue = default) =>
+            node.TryGetAttributeIntegerValue(name, out int value) ? value : defaultValue;
+
+        public static bool AttributeEquals(this XElement source, XName name, string value) => source.TryGetAttributeStringValue(name, out string v) && value == v;
+
+        public static bool AttributeNotEquals(this XElement source, XName name, string value) => source.TryGetAttributeStringValue(name, out string v) && value != v;
+
+        public static bool AttributeEqualsAny(this XElement source, XName name, params string[] values) =>
+            !(values is null) && values.Length > 0 && source.TryGetAttributeStringValue(name, out string v) && values.Contains(v);
+
+        public static bool AttributeNotEqualsAny(this XElement source, XName name, params string[] values) =>
+            !(values is null) && values.Length > 0 && source.TryGetAttributeStringValue(name, out string v) && !values.Contains(v);
+
+        public static bool AttributeEquals(this XElement source, XName name, bool value) => source.TryGetAttributeBooleanValue(name, out bool v) && value == v;
+
+        public static bool AttributeNotEquals(this XElement source, XName name, bool value) => source.TryGetAttributeBooleanValue(name, out bool v) && value != v;
+
+        public static bool AttributeEqualsAny(this XElement source, XName name, params int[] values) =>
+            !(values is null) && values.Length > 0 && source.TryGetAttributeIntegerValue(name, out int v) && values.Contains(v);
 
         public static IEnumerable<XElement> WhereAttributeExists(this IEnumerable<XElement> source, XName name)
         {
@@ -242,7 +398,7 @@ namespace FsInfoCat.Test.Helpers
                 throw new ArgumentNullException(nameof(name));
             if (source is null)
                 return Array.Empty<XElement>();
-            return source.Where(e => e.Attributes(name).Select(a => a.GetBooleanValue()).Any(a => a.HasValue && a.Value == value));
+            return source.Attributes(name).Where(a => a.TryGetBooleanValue(out bool b) && b == value).Select(a => a.Parent);
         }
 
         public static IEnumerable<XElement> WhereAttributeNotEquals(this IEnumerable<XElement> source, XName name, bool value)
@@ -251,7 +407,7 @@ namespace FsInfoCat.Test.Helpers
                 throw new ArgumentNullException(nameof(name));
             if (source is null)
                 return Array.Empty<XElement>();
-            return source.Where(e => e.Attributes(name).Select(a => a.GetBooleanValue()).Any(a => a.HasValue && a.Value != value));
+            return source.Attributes(name).Where(a => a.TryGetBooleanValue(out bool b) && b != value).Select(a => a.Parent);
         }
 
         public static IEnumerable<XElement> WhereAttributeEquals(this IEnumerable<XElement> source, XName name, int value)
@@ -260,7 +416,7 @@ namespace FsInfoCat.Test.Helpers
                 throw new ArgumentNullException(nameof(name));
             if (source is null)
                 return Array.Empty<XElement>();
-            return source.Where(e => e.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && a.Value == value));
+            return source.Attributes(name).Where(a => a.TryGetIntegerValue(out int i) && i == value).Select(a => a.Parent);
         }
 
         public static IEnumerable<XElement> WhereAttributeNotEquals(this IEnumerable<XElement> source, XName name, int value)
@@ -269,7 +425,7 @@ namespace FsInfoCat.Test.Helpers
                 throw new ArgumentNullException(nameof(name));
             if (source is null)
                 return Array.Empty<XElement>();
-            return source.Where(e => e.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && a.Value != value));
+            return source.Attributes(name).Where(a => a.TryGetIntegerValue(out int i) && i != value).Select(a => a.Parent);
         }
 
         public static IEnumerable<XElement> WhereAttributeEqualsAny(this IEnumerable<XElement> source, XName name, params string[] values)
@@ -306,7 +462,7 @@ namespace FsInfoCat.Test.Helpers
                 throw new ArgumentNullException(nameof(name));
             if (source is null || values is null || values.Length == 0)
                 return Array.Empty<XElement>();
-            return source.Where(e => e.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && values.Contains(a.Value)));
+            return source.Attributes(name).Where(a => a.TryGetIntegerValue(out int i) && values.Contains(i)).Select(a => a.Parent);
         }
 
         public static IEnumerable<XElement> WhereAttributeNotEqualsAny(this IEnumerable<XElement> source, XName name, params int[] values)
@@ -315,7 +471,67 @@ namespace FsInfoCat.Test.Helpers
                 throw new ArgumentNullException(nameof(name));
             if (source is null || values is null || values.Length == 0)
                 return Array.Empty<XElement>();
-            return source.Where(e => e.Attributes(name).Select(a => a.GetIntegerValue()).Any(a => a.HasValue && !values.Contains(a.Value)));
+            return source.Attributes(name).Where(a => a.TryGetIntegerValue(out int i) && !values.Contains(i)).Select(a => a.Parent);
+        }
+
+        public static XElement ApplyValue(this XElement target, object value)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            target.SetValue(value);
+            return target;
+        }
+
+        public static XElement ApplyAttributeValue(this XElement target, XName name, object value)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            target.SetAttributeValue(name, value);
+            return target;
+        }
+
+        public static XElement ApplyElementValue(this XElement target, XName name, object value)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            target.SetElementValue(name, value);
+            return target;
+        }
+
+        public static XElement Append(this XElement target, object content)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            target.Add(content);
+            return target;
+        }
+
+        public static XElement Append(this XElement target, object[] content)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            target.Add(content);
+            return target;
+        }
+
+        public static XElement ApplyFirst(this XElement target, object[] content)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            target.AddFirst(content);
+            return target;
+        }
+
+        public static XElement ApplyFirst(this XElement target, object content)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            target.AddFirst(content);
+            return target;
         }
 
         public static T NextOfType<T>(this XmlNode node)

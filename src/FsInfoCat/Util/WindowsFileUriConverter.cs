@@ -27,6 +27,7 @@ namespace FsInfoCat.Util
         public const char DIRECTORY_SEPARATOR_CHAR = '\\';
         public const string DIRECTORY_SEPARATOR_STRING = "\\";
         public const string URI_ENCODED_DIRECTORY_SEPARATOR_STRING = "%5C";
+        private static readonly char[] FS_SEPARATORS = new char[] { DIRECTORY_SEPARATOR_CHAR, URI_PATH_SEPARATOR_CHAR };
 
         public static readonly WindowsFileUriConverter INSTANCE = new WindowsFileUriConverter();
 
@@ -65,8 +66,7 @@ namespace FsInfoCat.Util
 (
     (//|\\\\)
     (?<host>
-        (?=(\d+\.){3}\d+)
-        (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+        (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
     |
         (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$(?=[/:?#]|$)(?=[/:?#]|$)|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)
         \[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|(?<unc>\.ipv6-literal\.net))?
@@ -84,14 +84,21 @@ namespace FsInfoCat.Util
     )
 |
     (?<path>
-        ((?<root>[a-z]):(?=[/\\]|$))?
         (
-            [^\u0000-\u0019""<>|:;*?\\/]+
+            (?<root>[a-z]):
             (
                 [/\\]
-                [^\u0000-\u0019""<>|:;*?\\/]+
-            )*
+                ([^\u0000-\u0019""<>|:;*?\\/]+|$)
+            |
+                $
+            )
+        |
+            [^\u0000-\u0019""<>|:;*?\\/]+
         )?
+        (
+            [/\\]
+            [^\u0000-\u0019""<>|:;*?\\/]+
+        )*
     )
 )
 [\\/]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
@@ -124,91 +131,6 @@ namespace FsInfoCat.Util
     )*
 )
 (?=[\\/]?$)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
-
-        /// <summary>
-        /// Matches a well-formed relative or absolute local path on the typical Windows filesystem.
-        /// </summary>
-        /// <remarks>Named group definitions:
-        /// <list type="bullet">
-        ///     <item><term>host</term> Matches the host name. This implies that the input text is an absolute UNC path
-        ///             (<see cref="FileUriConverter.MATCH_GROUP_NAME_HOST"/>).
-        ///         <list type="bullet">
-        ///             <item><term>ipv4</term> Matches an <seealso cref="UriHostNameType.IPv4"/> host name. This implies that the input text is an absolute UNC path
-        ///                  (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV4"/>).</item>
-        ///             <item><term>ipv6</term> Matches an IPV6 host name. This implies that the input text is an absolute UNC path
-        ///                     (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV6"/>).
-        ///                 <list type="bullet">
-        ///                     <item><term>unc</term> Matches the domain of an IPV6 address.
-        ///                         This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_UNC"/>).</item>
-        ///                 </list>
-        ///             </item>
-        ///             <item><term>dns</term> Matches a <seealso cref="UriHostNameType.Dns"/> or <seealso cref="UriHostNameType.Basic"/> host name.
-        ///                 This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_DNS"/>).</item>
-        ///         </list>
-        ///     </item>
-        ///     <item><term>path</term> Matches the path string (<see cref="FileUriConverter.MATCH_GROUP_NAME_PATH"/>).
-        ///         <list type="bullet">
-        ///             <item><term>dir</term> Matches the parent directory path. This group will always succeed when the expression succeeds,
-        ///                 even if it is empty. The trailing slash will be omitted unless it is the root path
-        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_DIR"/>).</item>
-        ///             <item><term>root</term> Matches drive letter. This implies that the input text is an absolute local path
-        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_ROOT"/>).</item>
-        ///             <item><term>fileName</term> Matches the file name. This group will only fail if the source path is the root path
-        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_FILE_NAME"/>).</item>
-        ///         </list>
-        ///     </item>
-        /// </list></remarks>
-        public static readonly Regex FS_HOST_DIR_AND_FILE_REGEX = new Regex(@"
-^
-(
-    (//|\\\\)
-    (?<host>
-        (?=(\d+\.){3}\d+)
-        (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
-    |
-        (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$(?=[/:?#]|$)|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)
-        \[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|(?<unc>\.ipv6-literal\.net))?
-    |
-        (?=[\w-.]{1,255}(?![\w-.]))
-        (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
-    )
-    (?<path>
-        (?<dir>
-            [/\\]?(?=[^/\\]*$)
-        |
-            (
-                (?=[/\\][^/\\]+[/\\][^/\\])
-                [/\\]
-                [^\u0000-\u0019""<>|:;*?\\/]+
-            )*
-        )
-        (
-            [\\/]?
-            (?<fileName>[^\u0000-\u0019""<>|:;*?\\/]+)
-        )?
-    )
-|
-    (?<path>
-        (?<dir>
-            (?<root>[a-z]):
-            (
-                [\\/](?=([^/\\]+[\\/]?)?$)
-            |
-                ((?=[^\\/]+[\\/][^\\/])[^\u0000-\u0019""<>|:;*?\\/]+)?
-                (
-                    (?=[/\\][^/\\]+[/\\][^/\\])
-                    [/\\]
-                    [^\u0000-\u0019""<>|:;*?\\/]+
-                )*
-            )
-        )
-        (
-            [\\/]?
-            (?<fileName>[^\u0000-\u0019""<>|:;*?\\/]+)
-        )?
-    )
-)
-[\\/]?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
         /// Matches consecutive and trailing filesystem path separators, allowing up to 2 consecutive path separator characters at the beginning of the string.
@@ -251,7 +173,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// filesystem path, and does not contain any characters which are not compatible with a typical Windows filesystem.
         /// </summary>
         /// <remarks>Only the host name needs to be well-formed to match this expression.</remarks>
-        public const string PATTERN_ABSOLUTE_FILESYSTEM_OR_LAX_FILE_URI = @"^\s*((file:)?//((?i)(?=(\d+\.){3}\d+)((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}" +
+        public const string PATTERN_ABSOLUTE_FILESYSTEM_OR_LAX_FILE_URI = @"^\s*((file:)?//((?i)^\s*((file:)?//((?i)((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)" +
             @"|(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$)|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)" +
             @"\[?([a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|\.ipv6-literal\.net)?" +
             @"|(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)(?=/|\s*$)|(file://)?(?=/))" +
@@ -300,8 +222,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
     ((?<file>file)://|[\\/]{2})
     (?<host>
         (?i)
-        (?=(\d+\.){3}\d+)
-        (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+        (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
     |
         (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$)|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)
         \[?(?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|(?<unc>\.ipv6-literal\.net))?
@@ -326,9 +247,11 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 [\\/]?$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
-        /// <seealso cref="Regex"/> that can be used to guess the format of a string from the perspective of a typical Windows file system.
+        /// Pattern which indicates the probable format of a string. This is not intended to be used for relative path types.
         /// </summary>
-        /// <remarks>Named group definitions:
+        /// <remarks>This expression is intended to determine the most probable string format (ie. URI string, UNC path, etc) of the input string.
+        /// This will fail to match any character sequences that clearly do not represent an absolute path reference on a Windows system.
+        /// <para>Named group definitions:
         /// <list type="bullet">
         ///     <item><term>file</term> Matches the <seealso cref="Uri.UriSchemeFile">file</seealso> URI scheme name
         ///         (<see cref="FileUriConverter.MATCH_GROUP_NAME_FILE"/>).</item>
@@ -338,7 +261,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         ///             (<see cref="FileUriConverter.MATCH_GROUP_NAME_UNC"/>).</item>
         ///     <item><term>path</term> Matches the path string (<see cref="FileUriConverter.MATCH_GROUP_NAME_PATH"/>).</item>
         ///     <item><term>scheme</term> Matches non-file URI scheme (<see cref="FileUriConverter.MATCH_GROUP_NAME_SCHEME"/>).</item>
-        /// </list></remarks>
+        /// </list></para></remarks>
         public static readonly Regex FORMAT_DETECTION_REGEX = new Regex(@"
 ^
 (
@@ -408,8 +331,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
     (
         (?i)
         (?<host>
-            (?=(\d+\.){3}\d+)
-            (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
+            (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
         |
             (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$))\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?
         |
@@ -438,82 +360,6 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
     )?
 )
 (?=/?$)", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
-
-        /// <summary>
-        /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical Windows filesystem.
-        /// </summary>
-        /// <remarks>Named group definitions:
-        /// <list type="bullet">
-        ///     <item><term>file</term> Matches the <seealso cref="Uri.UriSchemeFile">file</seealso> uri scheme and URI authority.
-        ///         (<see cref="FileUriConverter.MATCH_GROUP_NAME_SCHEME"/>).</item>
-        ///     <item><term>host</term> Matches the host name. This implies that the input text is an absolute UNC path
-        ///             (<see cref="FileUriConverter.MATCH_GROUP_NAME_HOST"/>).
-        ///         <list type="bullet">
-        ///             <item><term>ipv4</term> Matches an <seealso cref="UriHostNameType.IPv4"/> host name. This implies that the input text is an absolute UNC path
-        ///                  (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV4"/>).</item>
-        ///             <item><term>ipv6</term> Matches an IPV6 host name. This implies that the input text is an absolute UNC path
-        ///                     (<see cref="FileUriConverter.MATCH_GROUP_NAME_IPV6"/>).</item>
-        ///             <item><term>dns</term> Matches a <seealso cref="UriHostNameType.Dns"/> or <seealso cref="UriHostNameType.Basic"/> host name.
-        ///                 This implies that the input text is an absolute UNC path (<see cref="FileUriConverter.MATCH_GROUP_NAME_DNS"/>).</item>
-        ///         </list>
-        ///     </item>
-        ///     <item><term>path</term> Matches the path string (<see cref="FileUriConverter.MATCH_GROUP_NAME_PATH"/>).
-        ///         <list type="bullet">
-        ///             <item><term>dir</term> Matches the parent directory path. This group will always succeed when the expression succeeds,
-        ///                 even if it is empty. The trailing slash will be omitted unless it is the root path
-        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_DIR"/>).</item>
-        ///             <item><term>root</term> Matches drive letter. This implies that the input text is
-        ///                 an absolute local path (<see cref="FileUriConverter.MATCH_GROUP_NAME_ROOT"/>).</item>
-        ///             <item><term>fileName</term> Matches the file name. This group will only fail if the source path is the root path
-        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_FILE_NAME"/>).</item>
-        ///         </list>
-        ///     </item>
-        /// </list></remarks>
-        public static readonly Regex URI_HOST_DIR_AND_FILE_STRICT_REGEX = new Regex(@"
-^
-(?<file>
-    file://
-    (
-        (?i)
-        (?<host>
-            (?=(\d+\.){3}\d+)
-            (?<ipv4>((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4})
-        |
-            (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$))\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?
-        |
-            (?=[\w-.]{1,255}(?![\w-.]))
-            (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
-        )
-        (?=/|$)
-        |
-        /(?=[a-z]:)
-    )
-)?
-(?<path>
-    (?<dir>
-        (
-            (?<root>[a-zA-Z]):(/|(?=$))
-        |
-            /
-        |
-            (?![a-zA-Z]:)
-        )
-        (
-            (?=[^/]+/[^/])
-            ([!$&-)+-.=@[\]\w]+|%(2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689][\dA-F]))+
-            (
-                (?=/[^/]+/[^/])
-                /
-                ([!$&-)+-.=@[\]\w]+|%(2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689][\dA-F]))+
-            )*
-        )?
-    )
-    (
-        /?
-        (?<fileName>([!$&-)+-.=@[\]\w]+|%(2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689][\dA-F]))+)
-    )?
-)
-/?$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
         /// Matches a well-formed URI that can be converted to a valid absolute or relative local path on a typical Windows filesystem.
@@ -567,8 +413,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 (
     file://
     (?<root>
-        (?=(\d+\.){3}\d+)
-        ((2(5[0-5|[0-4]?\d?)?|[01]?\d\d?)(\.|(?![.\d]))){4}
+        ((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)
     |
         (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$(?=[/:?#]|$)(?=[/:?#]|$))\[?([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?
     |
@@ -577,17 +422,11 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
     |
         /*[a-z]:
     )
-    (/|(?=\s*$))
+    (/+|(?=\s*$))
 |
-    (?=[^:]*$)
+    (?!file:)
 )
-(
-    ([^\u0000-\u0019""<>|:;*?\\/%]+|%((?![A-F\d]{2})|2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689]))+
-    (
-        /+
-        ([^\u0000-\u0019""<>|:;*?\\/%]+|%((?![A-F\d]{2})|2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689]))+
-    )*
-)?
+([^\u0000-\u0019""<>|:;*?\\%]+|%((?![A-F\d]{2})|2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689]))*
 (?=/*\s*$)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
         #endregion
@@ -602,15 +441,37 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
         public override Regex UriValidationRegex => URI_VALIDATION_REGEX;
 
-        public override Regex FsHostDirAndFileRegex => FS_HOST_DIR_AND_FILE_REGEX;
-
         public override Regex FsHostAndPathRegex => FS_HOST_AND_PATH_REGEX;
 
         public override Regex FsFullPathNormalizeRegex => FS_FULL_PATH_NORMALIZE_REGEX;
 
-        public override Regex UriHostDirAndFileStrictRegex => URI_HOST_DIR_AND_FILE_STRICT_REGEX;
-
         private WindowsFileUriConverter() { }
+
+        public override string SplitFsPathLeaf(string fsPath, out string leafSegment)
+        {
+            if (string.IsNullOrEmpty(fsPath))
+            {
+                leafSegment = "";
+                return "";
+            }
+            int e = fsPath.Length - 1;
+            int i = fsPath.LastIndexOfAny(FS_SEPARATORS);
+            while (i == e)
+            {
+                if (i == 0)
+                    break;
+                fsPath = fsPath.Substring(0, i);
+                e--;
+                i = fsPath.LastIndexOfAny(FS_SEPARATORS);
+            }
+            if (i++ < 0)
+            {
+                leafSegment = fsPath;
+                return "";
+            }
+            leafSegment = fsPath.Substring(i);
+            return fsPath.Substring(0, i);
+        }
 
         /// <summary>
         /// Converts a URI-compatible host name and URI-encoded path string to a filesystem path string.
@@ -678,7 +539,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <returns>The URI-encoded file name (leaf) portion of the path string or <seealso cref="string.Empty"/> if the file system <paramref name="path"/>
         /// referenced the root subdirectory.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="path"/> is invalid.</exception>
-        public override string FromFileSystemPath(string path, out string hostName, out string directoryName)
+        public override string  FromFileSystemPath(string path, out string hostName, out string directoryName)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -686,16 +547,20 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 return "";
             }
 
-            Match match = FS_HOST_DIR_AND_FILE_REGEX.Match(path);
+            Match match = FS_HOST_AND_PATH_REGEX.Match(path);
             if (match.Success)
             {
                 hostName = (match.Groups[MATCH_GROUP_NAME_UNC].Success) ?
                     match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace('-', URI_SCHEME_SEPARATOR_CHAR) :
                     match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
-                if ((directoryName = match.GetGroupValue(MATCH_GROUP_NAME_DIR, "")).Length > 0)
-                    directoryName = EscapeSpecialPathChars(Uri.EscapeUriString(directoryName.Contains(DIRECTORY_SEPARATOR_CHAR) ?
-                        directoryName.Replace(DIRECTORY_SEPARATOR_CHAR, URI_PATH_SEPARATOR_CHAR) : directoryName));
-                string fileName = match.GetGroupValue(MATCH_GROUP_NAME_FILE_NAME, "");
+                //if ((directoryName = match.GetGroupValue(MATCH_GROUP_NAME_DIR, "")).Length > 0)
+                //    directoryName = EscapeSpecialPathChars(Uri.EscapeUriString(directoryName.Contains(DIRECTORY_SEPARATOR_CHAR) ?
+                //        directoryName.Replace(DIRECTORY_SEPARATOR_CHAR, URI_PATH_SEPARATOR_CHAR) : directoryName));
+                //string fileName = match.GetGroupValue(MATCH_GROUP_NAME_FILE_NAME, "");
+                path = match.GetGroupValue(MATCH_GROUP_NAME_PATH);
+                directoryName = SplitFsPathLeaf(path, out string fileName).Replace(DIRECTORY_SEPARATOR_CHAR, URI_PATH_SEPARATOR_CHAR);
+                directoryName = EscapeSpecialPathChars(Uri.EscapeUriString((directoryName.Length > 1 && directoryName.EndsWith(URI_PATH_SEPARATOR_CHAR)) ?
+                    directoryName.Substring(0, directoryName.Length - 1) : directoryName));
                 return (fileName.Length > 0) ? EscapeSpecialPathChars(Uri.EscapeUriString(fileName)) : fileName;
             }
             throw new ArgumentOutOfRangeException(nameof(path));

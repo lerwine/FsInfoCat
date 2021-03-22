@@ -16,20 +16,20 @@
     <IPV4 Address="0.0.0.0" HasOuterWS="false">0.0.0.0</IPV4>
     <IPV4 Address="00.00.00.00" HasOuterWS="false">00.00.00.00</IPV4>
     <IPV4 Address="000.000.000.000" HasOuterWS="false">000.000.000.000</IPV4>
-    <HostName Address="000.000.000.0000" HasOuterWS="false">000.000.000.0000</HostName>
-    <HostName Address="000.000.0000.000" HasOuterWS="false">000.000.0000.000</HostName>
-    <HostName Address="000.0000.000.000" HasOuterWS="false">000.0000.000.000</HostName>
-    <HostName Address="0000.000.000.000" HasOuterWS="false">0000.000.000.000</HostName>
+    <IPV4 Address="000.000.000.0000" HasOuterWS="false">000.000.000.0000</IPV4>
+    <IPV4 Address="000.000.0000.000" HasOuterWS="false">000.000.0000.000</IPV4>
+    <IPV4 Address="000.0000.000.000" HasOuterWS="false">000.0000.000.000</IPV4>
+    <IPV4 Address="0000.000.000.000" HasOuterWS="false">0000.000.000.000</IPV4>
     <IPV4 Address="0.26.234.255" HasOuterWS="false">0.26.234.255</IPV4>
     <IPV4 Address="000.026.234.255" HasOuterWS="false">000.026.234.255</IPV4>
     <HostName Address="000.026.234.256" HasOuterWS="false">000.026.234.256</HostName>
     <HostName Address="000.026.256.255" HasOuterWS="false">000.026.256.255</HostName>
     <HostName Address="000.256.234.255" HasOuterWS="false">000.256.234.255</HostName>
     <HostName Address="256.026.234.255" HasOuterWS="false">256.026.234.255</HostName>
-    <HostName Address="000.026.234.0255" HasOuterWS="false">000.026.234.0255</HostName>
-    <HostName Address="000.026.0234.255" HasOuterWS="false">000.026.0234.255</HostName>
-    <HostName Address="000.0026.234.255" HasOuterWS="false">000.0026.234.255</HostName>
-    <HostName Address="0000.026.234.255" HasOuterWS="false">0000.026.234.255</HostName>
+    <IPV4 Address="000.026.234.0255" HasOuterWS="false">000.026.234.0255</IPV4>
+    <IPV4 Address="000.026.0234.255" HasOuterWS="false">000.026.0234.255</IPV4>
+    <IPV4 Address="000.0026.234.255" HasOuterWS="false">000.0026.234.255</IPV4>
+    <IPV4 Address="0000.026.234.255" HasOuterWS="false">0000.026.234.255</IPV4>
     <IPV4 Address="192.168.20.1" HasOuterWS="false">192.168.20.1</IPV4>
     <Invalid Address=".168.20.1" />
     <IPV4 Address="192.168.020.01" HasOuterWS="false">192.168.020.01</IPV4>
@@ -132,4 +132,6 @@
     <IPV6 Address="[f291:fe7:9a6e:b77d:a2d0:e5fe:aab:dd5d]" Type="Bracketed" IsDns="false" HasOuterWS="false">f291:fe7:9a6e:b77d:a2d0:e5fe:aab:dd5d</IPV6>
     <HostName Address="f3a7-763b-f11b-98a3-3f90-f583-cef7-a033.ipv6-literal.net" HasOuterWS="false">f3a7-763b-f11b-98a3-3f90-f583-cef7-a033.ipv6-literal.net</HostName>
     <HostName Address="9f27-d271-4253-2d8-2c77-fbc2-80be-5d15" HasOuterWS="false">9f27-d271-4253-2d8-2c77-fbc2-80be-5d15</HostName>
+
+
 </HostTestData>

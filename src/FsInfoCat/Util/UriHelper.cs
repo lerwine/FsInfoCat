@@ -193,25 +193,25 @@ namespace FsInfoCat.Util
             else if (keepDelimiters)
             {
                 query = uriString.Substring(index);
-                index = query.IndexOf(URI_FRAGMENT_DELIMITER_CHAR);
-                if (index < 0)
+                int i = query.IndexOf(URI_FRAGMENT_DELIMITER_CHAR);
+                if (i < 0)
                     fragment = "";
                 else
                 {
-                    fragment = query.Substring(index);
-                    query = query.Substring(0, index);
+                    fragment = query.Substring(i);
+                    query = query.Substring(0, i);
                 }
             }
             else
             {
                 query = uriString.Substring(index + 1);
-                index = query.IndexOf(URI_FRAGMENT_DELIMITER_CHAR);
-                if (index < 0)
+                int i = query.IndexOf(URI_FRAGMENT_DELIMITER_CHAR);
+                if (i < 0)
                     fragment = null;
                 else
                 {
-                    fragment = query.Substring(index + 1);
-                    query = query.Substring(0, index);
+                    fragment = query.Substring(i + 1);
+                    query = query.Substring(0, i);
                 }
             }
             return uriString.Substring(0, index);
@@ -980,6 +980,7 @@ namespace FsInfoCat.Util
                     result = uri;
                     return false;
                 }
+                return true;
             }
 
             query = $"{URI_QUERY_DELIMITER_STRING}{SplitFragment(query, true, out newFragment).Replace(URI_QUERY_DELIMITER_STRING, URI_QUERY_DELIMITER_ESCAPED)}";

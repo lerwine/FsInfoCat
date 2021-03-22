@@ -202,7 +202,7 @@ namespace FsInfoCat.Models.DB
         public Account(string loginName, string pwHash, UserRole role, Account creator)
         {
             if (creator is null)
-                throw new ArgumentNullException("creator");
+                throw new ArgumentNullException(nameof(creator));
             LoginName = loginName;
             Role = role;
             Creator = creator;
@@ -219,7 +219,7 @@ namespace FsInfoCat.Models.DB
         public Account(string loginName, UserRole role, Account creator)
         {
             if (creator is null)
-                throw new ArgumentNullException("creator");
+                throw new ArgumentNullException(nameof(creator));
             LoginName = loginName;
             Role = role;
             Creator = creator;
@@ -230,7 +230,7 @@ namespace FsInfoCat.Models.DB
         public Account(IAccount user)
         {
             if (user is null)
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             AccountID = user.AccountID;
             Creator = user.Creator;
             CreatedBy = user.CreatedBy;

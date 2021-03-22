@@ -1,4 +1,5 @@
 using FsInfoCat.Test.Helpers;
+using FsInfoCat.Test.FileUriConverterTestHelpers;
 using FsInfoCat.Util;
 using NUnit.Framework;
 using System;
@@ -14,151 +15,27 @@ namespace FsInfoCat.Test
     [TestFixture]
     public class WindowsFileUriConverterTest
     {
-        public static IEnumerable<TestCaseData> GetFsPathRegexTestCases()
-        {
-            return UrlHelperTest.GetUriTestData().Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FsPathRegex");
-                Console.WriteLine($"Emitting {expected}");
-                bool base64Encoded = element.GetAttribute("Base64") == "true";
-                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.OuterXml);
-            });
-        }
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetFsPathRegexTestCases))]
-        public string FsPathRegexTest(string input, bool base64Encoded)
-        {
-            Match match = WindowsFileUriConverter.FS_HOST_DIR_AND_FILE_REGEX.Match(input);
-#warning Test does not include all groups
-            return UrlHelperTest.ToTestReturnValueXml(match, "FsPathRegex", base64Encoded, "root", "host", "path");
-        }
-
-        public static IEnumerable<TestCaseData> GetFormatDetectionRegexTestCases()
-        {
-            return UrlHelperTest.GetUriTestData().Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FormatGuess");
-                Console.WriteLine($"Emitting {expected}");
-                bool base64Encoded = element.GetAttribute("Base64") == "true";
-                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.OuterXml);
-            });
-        }
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetFormatDetectionRegexTestCases))]
-        public string FormatDetectionRegexTest(string input, bool base64Encoded)
-        {
-            Match match = WindowsFileUriConverter.FORMAT_DETECTION_REGEX.Match(input);
-            return UrlHelperTest.ToTestReturnValueXml(match, "FormatGuess", base64Encoded, "file", "d", "host", "path");
-        }
-
-        public static IEnumerable<TestCaseData> GetFileUriStrictTestCases()
-        {
-            return UrlHelperTest.GetUriTestData().Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("Windows/FileUriStrict");
-                Console.WriteLine($"Emitting {expected}");
-                bool base64Encoded = element.GetAttribute("Base64") == "true";
-                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.OuterXml);
-            });
-        }
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetFileUriStrictTestCases))]
-        public string FileUriStrictTest(string input, bool base64Encoded)
-        {
-            Match match = WindowsFileUriConverter.URI_HOST_DIR_AND_FILE_STRICT_REGEX.Match(input);
-            return UrlHelperTest.ToTestReturnValueXml(match, "FileUriStrict", base64Encoded, "file", "host", "ipv4", "ipv6", "d", "dns", "path", "dir", "fileName");
-        }
-
-        public static IEnumerable<TestCaseData> GetHostNameRegexTestCases()
-        {
-            return FileUriConverterTest.HostTestData.Root.Elements().Select(testData =>
-            {
-                switch (testData.Name.LocalName)
-                {
-                    case "HostName":
-                        return new TestCaseData(testData.Attribute("Address").Value)
-                            .Returns(
-                                new XElement("HostNameRegex",
-                                    new XAttribute("Success", true),
-                                    new XElement("Group", new XAttribute("Name", "ipv4"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "ipv6"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "d"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "dns"), testData.Value, new XAttribute("Success", true))
-                                ).ToString(SaveOptions.DisableFormatting)
-                            );
-                    case "IPV4":
-                        return new TestCaseData(testData.Attribute("Address").Value)
-                            .Returns(
-                                new XElement("HostNameRegex",
-                                    new XAttribute("Success", true),
-                                    new XElement("Group", new XAttribute("Name", "ipv4"), testData.Value, new XAttribute("Success", true)),
-                                    new XElement("Group", new XAttribute("Name", "ipv6"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "d"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "dns"), new XAttribute("Success", false))
-                                ).ToString(SaveOptions.DisableFormatting)
-                            );
-                    case "IPV6":
-                        if (testData.Attribute("Type").Value == "UNC")
-                            return new TestCaseData(testData.Attribute("Address").Value)
-                                .Returns(
-                                    new XElement("HostNameRegex",
-                                        new XAttribute("Success", true),
-                                        new XElement("Group", new XAttribute("Name", "ipv4"), new XAttribute("Success", false)),
-                                        new XElement("Group", new XAttribute("Name", "ipv6"), testData.Value, new XAttribute("Success", true)),
-                                        new XElement("Group", new XAttribute("Name", "d"),
-                                            testData.Attribute("Address").Value[testData.Value.Length..], new XAttribute("Success", true)),
-                                        new XElement("Group", new XAttribute("Name", "dns"), new XAttribute("Success", false))
-                                    ).ToString(SaveOptions.DisableFormatting)
-                                );
-                        return new TestCaseData(testData.Attribute("Address").Value)
-                            .Returns(
-                                new XElement("HostNameRegex",
-                                    new XAttribute("Success", true),
-                                    new XElement("Group", new XAttribute("Name", "ipv4"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "ipv6"), testData.Value, new XAttribute("Success", true)),
-                                    new XElement("Group", new XAttribute("Name", "d"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "dns"), new XAttribute("Success", false))
-                                ).ToString(SaveOptions.DisableFormatting)
-                            );
-                    default:
-                        return new TestCaseData(testData.Attribute("Address").Value)
-                            .Returns(
-                                new XElement("HostNameRegex",
-                                    new XAttribute("Success", false)
-                                ).ToString(SaveOptions.DisableFormatting)
-                            );
-                }
-            });
-        }
-
-        [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetHostNameRegexTestCases))]
-        public string HostNameRegexTest(string input)
-        {
-            Match match = WindowsFileUriConverter.HOST_NAME_OR_ADDRESS_FOR_FS_REGEX.Match(input);
-            return UrlHelperTest.ToTestReturnValueXml(match, "HostNameRegex", "ipv4", "ipv6", "d", "dns");
-        }
-
         public static IEnumerable<TestCaseData> GetIsWellFormedFileUriStringTestCases()
         {
-            return UrlHelperTest.GetUriTestData().Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("IsWellFormedFileUriString");
-                bool base64Encoded = element.GetAttribute("Base64") == "true";
-                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"),
-                        Enum.Parse(typeof(UriKind), expected.GetAttribute("Kind")))
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(XmlConvert.ToBoolean(expected.InnerText));
-            });
+            return FileUriConverterTest.FilePathTestData.WindowsElements().AbsoluteUrlElements().Select(element =>
+                new TestCaseData(element.InputString(), UriKind.Absolute)
+                    .Returns(element.IsWellFormed())
+            ).Concat(
+                FileUriConverterTest.FilePathTestData.WindowsElements().AbsoluteUrlElements().Select(element =>
+                    new TestCaseData(element.InputString(), UriKind.Relative)
+                        .Returns(false)
+                )
+            ).Concat(
+                FileUriConverterTest.FilePathTestData.WindowsElements().RelativeUrlElements().Select(element =>
+                    new TestCaseData(element.InputString(), UriKind.Relative)
+                        .Returns(element.IsWellFormed())
+                )
+            ).Concat(
+                FileUriConverterTest.FilePathTestData.WindowsElements().RelativeUrlElements().Select(element =>
+                    new TestCaseData(element.InputString(), UriKind.Absolute)
+                        .Returns(false)
+                )
+            );
         }
 
         [Test, Property("Priority", 1)]
@@ -171,56 +48,56 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetTrySplitFileUriStringTestCases()
         {
-            return UrlHelperTest.GetUriTestData().Select(element =>
-            {
-                XmlElement expected = (XmlElement)element.SelectSingleNode("TrySplitFileUriString");
-                bool base64Encoded = element.GetAttribute("Base64") == "true";
-                return new TestCaseData((base64Encoded) ? Encoding.UTF8.GetString(Convert.FromBase64String(element.GetAttribute("Value"))) : element.GetAttribute("Value"), base64Encoded)
-                    .SetDescription(element.GetAttribute("Description"))
-                    .Returns(expected.OuterXml);
-            });
+            // TODO: Get test cases from XML
+            yield return new TestCaseData("file://mysite/My%20Documents/MyFile%231.txt")
+                .Returns(
+                    new XElement(nameof(LinuxFileUriConverter.TrySplitFileUriString))
+                        .AppendElement("mysite", "hostName")
+                        .AppendElement("/My%20Documents", "path")
+                        .AppendElement("MyFile%231.txt", "fileName")
+                        .AppendElement(true, "isAbsolute")
+                        .AppendElement(true, "returnValue").ToTestResultString()
+                );
+            yield return new TestCaseData("/My Documents/MyFile#1.txt")
+                .Returns(
+                    new XElement(nameof(LinuxFileUriConverter.TrySplitFileUriString))
+                        .AppendElement("", "hostName")
+                        .AppendElement("/My%20Documents", "path")
+                        .AppendElement("MyFile%231.txt", "fileName")
+                        .AppendElement(true, "isAbsolute")
+                        .AppendElement(true, "returnValue").ToTestResultString()
+                );
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetTrySplitFileUriStringTestCases))]
-        public string TrySplitFileUriStringTest(string uriString, bool base64Encoded)
+        public string TrySplitFileUriStringTest(string uriString)
         {
-            bool result = WindowsFileUriConverter.INSTANCE.TrySplitFileUriString(uriString, out string hostName, out string path, out string fileName, out bool isAbsolute);
-            if (result)
-            {
-                if (base64Encoded)
-                {
-                    UTF8Encoding encoding = new UTF8Encoding(false, true);
-                    return XmlBuilder.NewDocument("TrySplitFileUriString")
-                        .WithAttribute("HostName", (string.IsNullOrEmpty(hostName)) ? hostName : Convert.ToBase64String(encoding.GetBytes(hostName)))
-                        .WithAttribute("Path", (string.IsNullOrEmpty(path)) ? path : Convert.ToBase64String(encoding.GetBytes(path)))
-                        .WithAttribute("FileName", (string.IsNullOrEmpty(fileName)) ? fileName : Convert.ToBase64String(encoding.GetBytes(fileName)))
-                        .WithAttribute("IsAbsolute", isAbsolute)
-                        .WithInnerText(result).OuterXml;
-                }
-                return XmlBuilder.NewDocument("TrySplitFileUriString")
-                    .WithAttribute("HostName", hostName)
-                    .WithAttribute("Path", path)
-                    .WithAttribute("FileName", fileName)
-                    .WithAttribute("IsAbsolute", isAbsolute)
-                    .WithInnerText(result).OuterXml;
-            }
-            return XmlBuilder.NewDocument("TrySplitFileUriString").WithInnerText(result).OuterXml;
+            bool returnValue = WindowsFileUriConverter.INSTANCE.TrySplitFileUriString(uriString, out string hostName, out string path, out string fileName, out bool isAbsolute);
+            if (returnValue)
+                return new XElement(nameof(WindowsFileUriConverter.TrySplitFileUriString))
+                    .AppendElement(hostName, nameof(hostName))
+                    .AppendElement(path, nameof(path))
+                    .AppendElement(fileName, nameof(fileName))
+                    .AppendElement(isAbsolute, nameof(isAbsolute))
+                    .AppendElement(returnValue, nameof(returnValue)).ToTestResultString();
+            return new XElement(nameof(WindowsFileUriConverter.TrySplitFileUriString))
+                .AppendElement(returnValue, nameof(returnValue)).ToTestResultString();
         }
 
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
         {
             // TODO: Get test cases from XML
             yield return new TestCaseData("mysite", "My%20Documents")
-                .Returns("\\\\mysite\\My Documents");
+                .Returns(TestResultBuilder.CreateTestResult("\\\\mysite\\My Documents").ToTestResultString());
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetToFileSystemPathTestCases))]
         public string ToFileSystemPathTest(string hostName, string path)
         {
-            string result = WindowsFileUriConverter.INSTANCE.ToFileSystemPath(hostName, path);
-            return result;
+            string returnValue = WindowsFileUriConverter.INSTANCE.ToFileSystemPath(hostName, path);
+            return TestResultBuilder.CreateTestResult(returnValue).ToTestResultString();
         }
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath3TestCases()
@@ -228,19 +105,17 @@ namespace FsInfoCat.Test
             // TODO: Get test cases from XML
             yield return new TestCaseData("\\\\mysite\\My Documents\\MyFile#1.txt")
                 .Returns(
-                    new XElement("FromFileSystemPath",
-                        new XElement("Result", "MyFile%231.txt"),
-                        new XElement("HostName", "mysite"),
-                        new XElement("DirectoryName", "/My%20Documents")
-                    ).ToString(SaveOptions.DisableFormatting)
+                    new XElement(nameof(WindowsFileUriConverter.FromFileSystemPath))
+                        .AppendElement("MyFile%231.txt", "returnValue")
+                        .AppendElement("mysite", "hostName")
+                        .AppendElement("/My%20Documents", "directoryName").ToTestResultString()
                 );
             yield return new TestCaseData("C:\\My Documents\\MyFile#1.txt")
                 .Returns(
-                    new XElement("FromFileSystemPath",
-                        new XElement("Result", "MyFile%231.txt"),
-                        new XElement("HostName", ""),
-                        new XElement("DirectoryName", "C:/My%20Documents")
-                    ).ToString(SaveOptions.DisableFormatting)
+                    new XElement(nameof(WindowsFileUriConverter.FromFileSystemPath))
+                        .AppendElement("MyFile%231.txt", "returnValue")
+                        .AppendElement("", "hostName")
+                        .AppendElement("C:/My%20Documents", "directoryName").ToTestResultString()
                 );
         }
 
@@ -248,15 +123,11 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFromFileSystemPath3TestCases))]
         public string FromFileSystemPath3Test(string path)
         {
-            string result = WindowsFileUriConverter.INSTANCE.FromFileSystemPath(path, out string hostName, out string directoryName);
-            XElement xElement = new XElement("FromFileSystemPath");
-            if (!(result is null))
-                xElement.Add(new XElement("Result", result));
-            if (!(hostName is null))
-                xElement.Add(new XElement("HostName", hostName));
-            if (!(directoryName is null))
-                xElement.Add(new XElement("DirectoryName", directoryName));
-            return xElement.ToString(SaveOptions.DisableFormatting);
+            string returnValue = WindowsFileUriConverter.INSTANCE.FromFileSystemPath(path, out string hostName, out string directoryName);
+            return new XElement(nameof(WindowsFileUriConverter.FromFileSystemPath))
+                .AppendElement(returnValue, nameof(returnValue))
+                .AppendElement(hostName, nameof(hostName))
+                .AppendElement(directoryName, nameof(directoryName)).ToTestResultString();
         }
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath2TestCases()
@@ -264,17 +135,15 @@ namespace FsInfoCat.Test
             // TODO: Get test cases from XML
             yield return new TestCaseData("\\\\mysite\\My Documents\\MyFile#1.txt")
                 .Returns(
-                    new XElement("FromFileSystemPath",
-                        new XElement("Result", "/My%20Documents/MyFile%231.txt"),
-                        new XElement("HostName", "mysite")
-                    ).ToString(SaveOptions.DisableFormatting)
+                    new XElement(nameof(WindowsFileUriConverter.FromFileSystemPath))
+                        .AppendElement("/My%20Documents/MyFile%231.txt", "returnValue")
+                        .AppendElement("mysite", "hostName").ToTestResultString()
                 );
             yield return new TestCaseData("F:\\My Documents\\MyFile#1.txt")
                 .Returns(
-                    new XElement("FromFileSystemPath",
-                        new XElement("Result", "F:/My%20Documents/MyFile%231.txt"),
-                        new XElement("HostName", "")
-                    ).ToString(SaveOptions.DisableFormatting)
+                    new XElement(nameof(WindowsFileUriConverter.FromFileSystemPath))
+                        .AppendElement("F:/My%20Documents/MyFile%231.txt", "returnValue")
+                        .AppendElement("", "hostName").ToTestResultString()
                 );
         }
 
@@ -282,41 +151,33 @@ namespace FsInfoCat.Test
         [TestCaseSource(nameof(GetFromFileSystemPath2TestCases))]
         public string FromFileSystemPath2Test(string path)
         {
-            string result = WindowsFileUriConverter.INSTANCE.FromFileSystemPath(path, out string hostName);
-            XElement xElement = new XElement("FromFileSystemPath");
-            if (!(result is null))
-                xElement.Add(new XElement("Result", result));
-            if (!(hostName is null))
-                xElement.Add(new XElement("HostName", hostName));
-            return xElement.ToString(SaveOptions.DisableFormatting);
+            string returnValue = WindowsFileUriConverter.INSTANCE.FromFileSystemPath(path, out string hostName);
+            return new XElement(nameof(WindowsFileUriConverter.FromFileSystemPath))
+                .AppendElement(returnValue, nameof(returnValue))
+                .AppendElement(hostName, nameof(hostName)).ToTestResultString();
         }
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath1TestCases()
         {
             // TODO: Get test cases from XML
             yield return new TestCaseData("\\\\mysite\\My Documents\\MyFile#1.txt")
-                .Returns(
-                    new XElement("FromFileSystemPath",
-                        new XElement("Result", "//mysite/My%20Documents/MyFile%231.txt")
-                    ).ToString(SaveOptions.DisableFormatting)
-                );
+                .Returns(TestResultBuilder.CreateTestResult("file://mysite/My%20Documents/MyFile%231.txt").ToTestResultString());
+
             yield return new TestCaseData("G:\\My Documents\\MyFile#1.txt")
-                .Returns(
-                    new XElement("FromFileSystemPath",
-                        new XElement("Result", "G:/My%20Documents/MyFile%231.txt")
-                    ).ToString(SaveOptions.DisableFormatting)
-                );
+                .Returns(TestResultBuilder.CreateTestResult("file:///G:/My%20Documents/MyFile%231.txt").ToTestResultString());
         }
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetFromFileSystemPath1TestCases))]
         public string FromFileSystemPath1Test(string path)
         {
-            string result = WindowsFileUriConverter.INSTANCE.FromFileSystemPath(path);
-            XElement xElement = new XElement("FromFileSystemPath");
-            if (!(result is null))
-                xElement.Add(new XElement("Result", result));
-            return xElement.ToString(SaveOptions.DisableFormatting);
+            string returnValue;
+            try { returnValue = WindowsFileUriConverter.INSTANCE.FromFileSystemPath(path); }
+            catch (ArgumentOutOfRangeException exc)
+            {
+                return exc.CreateExceptionResult().ToTestResultString();
+            }
+            return TestResultBuilder.CreateTestResult(returnValue).ToTestResultString();
         }
     }
 }

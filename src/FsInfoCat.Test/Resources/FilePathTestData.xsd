@@ -17,14 +17,19 @@
             </xs:simpleType>
         </xs:union>
     </xs:simpleType>
-    <xs:complexType name="PathMatchType">
+    <xs:simpleType name="FileUriType">
+        <xs:restriction base="xs:anyURI">
+            <xs:pattern value="^(file://(?i)([a-z\d][\w-.]*|[a-f\d:]+)?|(?i)([!$=&amp;-.:;=@[\]\w]+|%(0[1-9a-f]|[1-9a-f][\da-f]))*)(?i)(/([!$=&amp;-.:;=@[\]\w]+|%(0[1-9a-f]|[1-9a-f][\da-f]))+)*/?$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="PathSegmentsType">
         <xs:sequence>
             <xs:element name="Directory" type="xs:string" />
             <xs:element name="FileName" type="xs:string" nillable="true" />
         </xs:sequence>
         <xs:attribute name="Match" type="xs:string" use="required" />
     </xs:complexType>
-    <xs:complexType name="HostMatchTypeEx">
+    <xs:complexType name="UncHostInfo">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="Match" type="xs:string" use="required" />
@@ -41,136 +46,144 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-    <xs:complexType name="AuthorityMatchType">
+    <xs:complexType name="UriUserInfoType">
+        <xs:attribute name="UserName" type="xs:string" use="required" />
+        <xs:attribute name="Password" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="UriSchemeType">
+        <xs:attribute name="Name" type="xs:string" use="required" />
+        <xs:attribute name="Delimiter" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="UriAuthorityType">
         <xs:sequence>
-            <xs:element name="Scheme">
-                <xs:complexType>
-                    <xs:attribute name="Name" type="xs:string" use="required" />
-                    <xs:attribute name="Delimiter" type="xs:string" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="UserInfo" minOccurs="0">
-                <xs:complexType>
-                    <xs:attribute name="Value" type="xs:string" use="required" />
-                    <xs:attribute name="Delimiter" type="xs:string" use="required" />
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="Scheme" type="UriSchemeType" />
+            <xs:element name="UserInfo" minOccurs="0" type="UriUserInfoType" />
             <xs:element name="Host" type="HostMatchType" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="FsPathType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="IsAbsolute" type="xs:boolean" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="FsPathDetailType">
+        <xs:sequence>
+            <xs:element name="Host" type="UncHostInfo" minOccurs="0" />
+            <xs:element name="Path" type="PathSegmentsType" />
+        </xs:sequence>
+        <xs:attribute name="IsAbsolute" type="xs:boolean" use="required" />
+    </xs:complexType>
+    <xs:complexType name="RelativeUrlType">
+        <xs:sequence>
+            <xs:element name="Path" type="PathSegmentsType" />
+            <xs:element name="Query" type="xs:string" minOccurs="0" />
+            <xs:element name="Fragment" type="xs:string" minOccurs="0" />
+            <xs:element name="LocalPath" minOccurs="0" type="FsPathType" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AbsoluteUrlType">
+        <xs:complexContent>
+            <xs:extension base="RelativeUrlType">
+                <xs:sequence>
+                    <xs:element name="Authority" type="UriAuthorityType" minOccurs="0" />
+                </xs:sequence>
+                <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DerivedAbsoluteUrlType">
+        <xs:complexContent>
+            <xs:extension base="AbsoluteUrlType">
+                <xs:attribute name="Value" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DerivedRelativeUrlType">
+        <xs:complexContent>
+            <xs:extension base="RelativeUrlType">
+                <xs:attribute name="Value" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AbsoluteMatchedUrlType">
+        <xs:complexContent>
+            <xs:extension base="AbsoluteUrlType">
+                <xs:sequence>
+                    <xs:element name="Translated" minOccurs="0">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="DerivedRelativeUrlType">
+                                    <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="WellFormed" minOccurs="0" type="DerivedAbsoluteUrlType" />
+                </xs:sequence>
+                <xs:attribute name="Match" type="xs:string" use="required" />
+                <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="RelativeMatchedUrlType">
+        <xs:complexContent>
+            <xs:extension base="RelativeUrlType">
+                <xs:sequence>
+                    <xs:element name="Translated" minOccurs="0">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="DerivedRelativeUrlType">
+                                    <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="WellFormed" minOccurs="0" type="DerivedRelativeUrlType" />
+                </xs:sequence>
+                <xs:attribute name="Match" type="xs:string" use="required" />
+                <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="MatchedFilesystemPathType">
+        <xs:complexContent>
+            <xs:extension base="FsPathDetailType">
+                <xs:sequence>
+                    <xs:element name="URI" type="FileUriType" />
+                    <xs:element name="Translated" minOccurs="0" nillable="true">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="FsPathDetailType">
+                <xs:attribute name="Value" type="xs:string" use="required" />
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Match" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="OSPathType">
         <xs:sequence>
-            <xs:element name="AbsoluteUrl" minOccurs="0">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="Authority" type="AuthorityMatchType" minOccurs="0" />
-                        <xs:element name="Path" type="PathMatchType" />
-                        <xs:element name="Query" type="xs:string" minOccurs="0" />
-                        <xs:element name="Fragment" type="xs:string" minOccurs="0" />
-                        <xs:element name="LocalPath" minOccurs="0">
-                            <xs:complexType>
-                                <xs:simpleContent>
-                                    <xs:extension base="xs:string">
-                                        <xs:attribute name="IsAbsolute" type="xs:boolean" use="required" />
-                                    </xs:extension>
-                                </xs:simpleContent>
-                            </xs:complexType>
-                        </xs:element>
-                        <xs:element name="Translated" minOccurs="0">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="Authority" type="AuthorityMatchType" minOccurs="0" />
-                                    <xs:element name="Path" type="PathMatchType" />
-                                </xs:sequence>
-                                <xs:attribute name="Value" type="xs:string" use="required" />
-                                <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
-                            </xs:complexType>
-                        </xs:element>
-                        <xs:element name="WellFormed" minOccurs="0">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="Authority" type="AuthorityMatchType" minOccurs="0" />
-                                    <xs:element name="Path" type="PathMatchType" />
-                                </xs:sequence>
-                                <xs:attribute name="Value" type="xs:string" use="required" />
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                    <xs:attribute name="Match" type="xs:string" use="required" />
-                    <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="RelativeUrl" minOccurs="0">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="Path" type="PathMatchType" />
-                        <xs:element name="Query" type="xs:string" minOccurs="0" />
-                        <xs:element name="Fragment" type="xs:string" minOccurs="0" />
-                        <xs:element name="LocalPath" type="xs:string" minOccurs="0" />
-                        <xs:element name="Translated" minOccurs="0">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="Path" type="PathMatchType" />
-                                    <xs:element name="LocalPath" type="xs:string" minOccurs="0" />
-                                </xs:sequence>
-                                <xs:attribute name="Value" type="xs:string" use="required" />
-                                <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
-                            </xs:complexType>
-                        </xs:element>
-                        <xs:element name="WellFormed" minOccurs="0">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="Path" type="PathMatchType" />
-                                </xs:sequence>
-                                <xs:attribute name="Value" type="xs:string" use="required" />
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                    <xs:attribute name="Match" type="xs:string" use="required" />
-                    <xs:attribute name="IsWellFormed" type="xs:boolean" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="FileSystem" minOccurs="0">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="Host" type="HostMatchTypeEx" minOccurs="0" />
-                        <xs:element name="Path" type="PathMatchType" />
-                        <xs:element name="URI">
-                            <xs:simpleType>
-                                <xs:restriction base="xs:anyURI">
-                                    <xs:pattern value="^(file://(?i)([a-z\d][\w-.]*|[a-f\d:]+)?|(?i)([!$=&amp;-.:;=@[\]\w]+|%(0[1-9a-f]|[1-9a-f][\da-f]))*)(?i)(/([!$=&amp;-.:;=@[\]\w]+|%(0[1-9a-f]|[1-9a-f][\da-f]))+)*/?$" />
-                                </xs:restriction>
-                            </xs:simpleType>
-                        </xs:element>
-                        <xs:element name="Translated" minOccurs="0" nillable="true">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="Host" type="HostMatchTypeEx" minOccurs="0" />
-                                    <xs:element name="Path" type="PathMatchType" />
-                                </xs:sequence>
-                                <xs:attribute name="Value" type="xs:string" use="required" />
-                                <xs:attribute name="IsAbsolute" type="xs:boolean" use="required" />
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                    <xs:attribute name="Match" type="xs:string" use="required" />
-                    <xs:attribute name="IsAbsolute" type="xs:boolean" use="required" />
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="AbsoluteUrl" minOccurs="0" type="AbsoluteMatchedUrlType" />
+            <xs:element name="RelativeUrl" minOccurs="0" type="RelativeMatchedUrlType" />
+            <xs:element name="FileSystem" minOccurs="0" type="MatchedFilesystemPathType" />
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PathStringTestDataType">
+        <xs:sequence>
+            <xs:element name="Windows" type="OSPathType" />
+            <xs:element name="Linux" type="OSPathType" />
+        </xs:sequence>
+        <xs:attribute name="InputString" type="xs:string" use="required" />
     </xs:complexType>
     <xs:element name="FilePathTestData">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="TestData" maxOccurs="unbounded">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="Windows" type="OSPathType" />
-                            <xs:element name="Linux" type="OSPathType" />
-                        </xs:sequence>
-                        <xs:attribute name="InputString" type="xs:string" use="required" />
-                    </xs:complexType>
-                </xs:element>
+                <xs:element name="TestData" maxOccurs="unbounded" type="PathStringTestDataType" />
             </xs:sequence>
         </xs:complexType>
         <xs:unique name="InputStringValue">

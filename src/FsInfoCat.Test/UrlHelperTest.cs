@@ -1,3 +1,4 @@
+using FsInfoCat.Test.Helpers;
 using FsInfoCat.Util;
 using NUnit.Framework;
 using System;
@@ -15,6 +16,7 @@ namespace FsInfoCat.Test
     {
         private static XmlDocument _urlHelperTestData;
 
+        [Obsolete]
         internal static IEnumerable<XmlElement> GetUriTestData()
         {
             if (_urlHelperTestData is null)
@@ -25,6 +27,7 @@ namespace FsInfoCat.Test
             return _urlHelperTestData.DocumentElement.SelectNodes("//URI").Cast<XmlElement>();
         }
 
+        [Obsolete]
         internal static IEnumerable<XmlElement> GetHostNameTestData()
         {
             if (_urlHelperTestData is null)
@@ -40,10 +43,13 @@ namespace FsInfoCat.Test
         {
         }
 
+        [Obsolete]
         internal static string ToTestReturnValueXml(Match match, params string[] groupNames) => ToTestReturnValueXml(match, "Match", groupNames);
 
+        [Obsolete]
         internal static string ToTestReturnValueXml(Match match, string rootElementName, params string[] groupNames) => ToTestReturnValueXml(match, rootElementName, false, groupNames);
 
+        [Obsolete]
         internal static string ToTestReturnValueXml(Match match, string rootElementName, bool base64Encoded, params string[] groupNames)
         {
             XElement resultElement = new XElement(rootElementName, new XAttribute("Success", match.Success));
@@ -55,7 +61,7 @@ namespace FsInfoCat.Test
                     if (groupNames is null || groupNames.Length == 0)
                     {
                         resultElement.SetValue((match.Length > 0) ? Convert.ToBase64String(encoding.GetBytes(match.Value)) : "");
-                        return resultElement.ToString(SaveOptions.DisableFormatting);
+                        return resultElement.ToTestResultString();
                     }
                     foreach (string n in groupNames)
                     {
@@ -71,7 +77,7 @@ namespace FsInfoCat.Test
                     if (groupNames is null || groupNames.Length == 0)
                     {
                         resultElement.SetValue(match.Value);
-                        return resultElement.ToString(SaveOptions.DisableFormatting);
+                        return resultElement.ToTestResultString();
                     }
                     foreach (string n in groupNames)
                     {
@@ -83,7 +89,7 @@ namespace FsInfoCat.Test
                     }
                 }
             }
-            return resultElement.ToString(SaveOptions.DisableFormatting);
+            return resultElement.ToTestResultString();
         }
 
         public static IEnumerable<TestCaseData> GetAuthorityCaseInsensitiveEqualsTestCases()
@@ -495,7 +501,7 @@ namespace FsInfoCat.Test
 
             yield return new TestCaseData(new Uri("\\", UriKind.Relative), true)
                 .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
-                .Returns(new Tuple<bool, Uri>(true, new Uri("/", UriKind.Relative)));
+                .Returns(new Tuple<bool, Uri>(true, new Uri("%5C/", UriKind.Relative)));
 
             yield return new TestCaseData(new Uri("Test", UriKind.Relative), true)
                 .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
@@ -507,7 +513,7 @@ namespace FsInfoCat.Test
 
             yield return new TestCaseData(new Uri("Test\\", UriKind.Relative), true)
                 .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
-                .Returns(new Tuple<bool, Uri>(true, new Uri("Test/", UriKind.Relative)));
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test%5C/", UriKind.Relative)));
 
             yield return new TestCaseData(new Uri("#", UriKind.Relative), true)
                 .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
@@ -585,7 +591,7 @@ namespace FsInfoCat.Test
 
             yield return new TestCaseData(new Uri("\\", UriKind.Relative), false)
                 .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
-                .Returns(new Tuple<bool, Uri>(true, new Uri("", UriKind.Relative)));
+                .Returns(new Tuple<bool, Uri>(true, new Uri("%5C", UriKind.Relative)));
 
             yield return new TestCaseData(new Uri("Test", UriKind.Relative), false)
                 .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
@@ -597,7 +603,7 @@ namespace FsInfoCat.Test
 
             yield return new TestCaseData(new Uri("Test\\", UriKind.Relative), false)
                 .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")
-                .Returns(new Tuple<bool, Uri>(true, new Uri("Test", UriKind.Relative)));
+                .Returns(new Tuple<bool, Uri>(true, new Uri("Test%5C", UriKind.Relative)));
 
             yield return new TestCaseData(new Uri("#", UriKind.Relative), false)
                 .SetDescription("uri: \"\", shouldHaveTrailingSlash: true")

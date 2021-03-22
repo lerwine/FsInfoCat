@@ -81,14 +81,14 @@ namespace FsInfoCat.Test
                     new Account { AccountID = Guid.Empty, DisplayName = "FS InfoCat Administrator", LoginName = "admin", Role = UserRole.Admin, Notes = "",
                         CreatedOn = new DateTime(2014, 2, 14, 13, 41, 25, 171, DateTimeKind.Local), CreatedBy = Guid.Empty,
                         ModifiedOn = new DateTime(2014, 2, 14, 13, 41, 25, 171, DateTimeKind.Local), ModifiedBy = Guid.Empty },
-                    new ValidationResult[0]
+                    Array.Empty<ValidationResult>()
                 },
                 new object[]
                 {
                     new Account { AccountID = new Guid("90b932df-3ab5-4299-a3f3-dd1655cbf93e"), DisplayName = "\n", LoginName = "erwinel", Role = UserRole.Admin, Notes = "",
                         CreatedOn = new DateTime(2014, 6, 5, 14, 50, 37, 729, DateTimeKind.Local), CreatedBy = Guid.Empty,
                         ModifiedOn = new DateTime(2014, 6, 5, 14, 50, 37, 729, DateTimeKind.Local), ModifiedBy = Guid.Empty },
-                    new ValidationResult[0]
+                    Array.Empty<ValidationResult>()
                 },
                 new object[]
                 {
@@ -178,7 +178,7 @@ namespace FsInfoCat.Test
                     new Account { AccountID = new Guid("7e2cd7b2-32de-420e-8ac2-6ab9a1c735c7"), DisplayName = "Woodrow Lindsay", LoginName = "lindsayw", Role = UserRole.User, Notes = "",
                         CreatedOn = new DateTime(2020, 1, 5, 16, 46, 22, 951, DateTimeKind.Local), CreatedBy = new Guid("b511096c-af4e-47e3-9de0-d3fb7aa7a09f"),
                         ModifiedOn = new DateTime(2020, 11, 18, 16, 14, 4, 945, DateTimeKind.Local), ModifiedBy = new Guid("7e2cd7b2-32de-420e-8ac2-6ab9a1c735c7") },
-                    new ValidationResult[0]
+                    Array.Empty<ValidationResult>()
                 }
             };
         }
@@ -228,19 +228,15 @@ namespace FsInfoCat.Test
                 Assert.NotNull(actual[i], "Item " + i.ToString() + " null check");
                 Assert.AreEqual(expected[i].ErrorMessage, actual[i].ErrorMessage, "Item " + i.ToString() + " ErrorMessage equality check");
                 Assert.NotNull(actual[i].MemberNames, "Item " + i.ToString() + " MemberNames null check");
-                using (IEnumerator<string> expEnumerator = expected[i].MemberNames.GetEnumerator())
+                using IEnumerator<string> expEnumerator = expected[i].MemberNames.GetEnumerator();
+                using IEnumerator<string> resultEnumerator = actual[i].MemberNames.GetEnumerator();
+                while (expEnumerator.MoveNext())
                 {
-                    using (IEnumerator<string> resultEnumerator = actual[i].MemberNames.GetEnumerator())
-                    {
-                        while (expEnumerator.MoveNext())
-                        {
-                            Assert.IsTrue(resultEnumerator.MoveNext());
-                            Assert.NotNull(resultEnumerator.Current);
-                            Assert.AreEqual(expEnumerator.Current, resultEnumerator.Current);
-                        }
-                        Assert.False(resultEnumerator.MoveNext());
-                    }
+                    Assert.IsTrue(resultEnumerator.MoveNext());
+                    Assert.NotNull(resultEnumerator.Current);
+                    Assert.AreEqual(expEnumerator.Current, resultEnumerator.Current);
                 }
+                Assert.False(resultEnumerator.MoveNext());
             }
         }
     }
