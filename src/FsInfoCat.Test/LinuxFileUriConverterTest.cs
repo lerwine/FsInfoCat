@@ -162,8 +162,8 @@ namespace FsInfoCat.Test
             // TODO: Get test cases from XML
             yield return new TestCaseData("//mysite/My Documents/MyFile#1.txt")
                 .Returns(TestResultBuilder.CreateTestResult("file://mysite/My%20Documents/MyFile%231.txt").ToTestResultString());
-            yield return new TestCaseData("file:///My%20Documents/MyFile%231.txt")
-                .Returns(TestResultBuilder.CreateTestResult("/My Documents/MyFile#1.txt").ToTestResultString());
+            yield return new TestCaseData("/My Documents/MyFile#1.txt")
+                .Returns(TestResultBuilder.CreateTestResult("file:///My%20Documents/MyFile%231.txt").ToTestResultString());
         }
 
         [Test, Property("Priority", 1)]

@@ -19,7 +19,7 @@ namespace FsInfoCat.Test
         {
             return FileUriConverterTest.FilePathTestData.WindowsElements().AbsoluteUrlElements().Select(element =>
                 new TestCaseData(element.InputString(), UriKind.Absolute)
-                    .Returns(element.IsWellFormed())
+                    .Returns(element.IsWellFormed() && element.IsFileScheme())
             ).Concat(
                 FileUriConverterTest.FilePathTestData.WindowsElements().AbsoluteUrlElements().Select(element =>
                     new TestCaseData(element.InputString(), UriKind.Relative)
@@ -28,7 +28,7 @@ namespace FsInfoCat.Test
             ).Concat(
                 FileUriConverterTest.FilePathTestData.WindowsElements().RelativeUrlElements().Select(element =>
                     new TestCaseData(element.InputString(), UriKind.Relative)
-                        .Returns(element.IsWellFormed())
+                        .Returns(element.IsWellFormed() && element.IsFileScheme())
                 )
             ).Concat(
                 FileUriConverterTest.FilePathTestData.WindowsElements().RelativeUrlElements().Select(element =>

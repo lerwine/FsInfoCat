@@ -232,6 +232,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
 )
 /?$");
 
+        public static readonly Regex NEEDS_ENCODING_REGEX = new Regex(@"([^!$=&-/:;=@[\]?#%\w]+|%(?![\dA-Z]{2}))*", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <summary>
         /// Matches <seealso cref="Uri.UriSchemeFile">file</seealso> URI strings that is compatible with Windows and/or Linux platforms.
         /// </summary>
@@ -645,6 +646,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a relative path string.</returns>
         public bool TrySplitFileUriString(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute)
         {
+#warning This is failing on "/My Documents/MyFile#1.txt" because encoding's not getting fixed.
             if (string.IsNullOrEmpty(uriString))
             {
                 hostName = directory = fileName = "";
@@ -657,11 +659,30 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             {
                 bool wasChanged;
                 if ((match = UriValidationRegex.Match(uriString)).Success)
+                {
                     uriString = match.Groups[MATCH_GROUP_NAME_ROOT].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
                         NormalizeRelativeFileUri(uriString, out wasChanged);
+                    if (wasChanged)
+                    {
+                        uriString = FixEncoding(uriString);
+                        uriString = EscapeSpecialPathChars(uriString);
+                    }
+                    else
+                    {
+                        uriString = FixEncoding(uriString, out wasChanged);
+                        if (wasChanged)
+                            uriString = EscapeSpecialPathChars(uriString);
+                        else
+                            uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                    }
+                }
                 else
                 {
                     uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                    if (wasChanged)
+                        uriString = FixEncoding(uriString);
+                    else
+                        uriString = FixEncoding(uriString, out wasChanged);
                     if (wasChanged)
                     {
                         if ((match = UriValidationRegex.Match(uriString)).Success)
@@ -691,6 +712,30 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             //fileName = match.GetGroupValue(MATCH_GROUP_NAME_FILE_NAME, "");
             isAbsolute = (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
             return true;
+        }
+
+        public static string FixEncoding(string uriString)
+        {
+            if (string.IsNullOrEmpty(uriString))
+                return "";
+
+            if (NEEDS_ENCODING_REGEX.IsMatch(uriString))
+                return NEEDS_ENCODING_REGEX.Replace(uriString, m => Uri.EscapeUriString(m.Value));
+            return uriString;
+        }
+
+        public static string FixEncoding(string uriString, out bool wasChanged)
+        {
+            if (uriString is null)
+            {
+                wasChanged = true;
+                return "";
+            }
+
+            wasChanged = uriString.Length > 0 && NEEDS_ENCODING_REGEX.IsMatch(uriString);
+            if (wasChanged)
+                return NEEDS_ENCODING_REGEX.Replace(uriString, m => Uri.EscapeUriString(m.Value));
+            return uriString;
         }
 
         /// <summary>
