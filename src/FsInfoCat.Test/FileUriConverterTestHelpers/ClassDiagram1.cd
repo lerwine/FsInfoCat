@@ -227,40 +227,50 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.HostType">
-    <Position X="4.75" Y="16.5" Width="1.5" />
+  <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.DnsOrBasicHostName">
+    <Position X="7.75" Y="16.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
-      <FileName>HostType.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAA=</HashCode>
+      <FileName>FileUriConverterTestHelpers\DnsOrBasicHostName.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="FsInfoCat.Test.InvalidHostAddress">
-    <Position X="5.75" Y="15" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
-      <FileName>InvalidHostAddress.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="FsInfoCat.Test.IPV4HostAddress">
-    <Position X="3.75" Y="14.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
-      <FileName>IPV4HostAddress.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="FsInfoCat.Test.DnsOrBasicHostName">
-    <Position X="6.75" Y="16.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
-      <FileName>DnsOrBasicHostName.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.IPV6HostAddress">
-    <Position X="2.75" Y="16.25" Width="1.5" />
+    <Position X="3.25" Y="17.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAACAQAAAAAAAAA=</HashCode>
-      <FileName>IPV6HostAddress.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAACAQAAAEAAAAA=</HashCode>
+      <FileName>FileUriConverterTestHelpers\IPV6HostAddress.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.IPV4HostAddress">
+    <Position X="3.25" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAA=</HashCode>
+      <FileName>FileUriConverterTestHelpers\IPV4HostAddress.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.InvalidHostAddress">
+    <Position X="7" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAA=</HashCode>
+      <FileName>FileUriConverterTestHelpers\InvalidHostAddress.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.HostNameType">
+    <Position X="5.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>FileUriConverterTestHelpers\HostNameType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.HostTestData">
+    <Position X="1" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileUriConverterTestHelpers\HostTestData.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="FsInfoCat.Test.FileUriConverterTestHelpers.IDerivedPathInfo">
@@ -337,7 +347,7 @@
     <Position X="0.5" Y="16.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACIAAAAACAAAAAAAAA=</HashCode>
-      <FileName>IPV6Type.cs</FileName>
+      <FileName>FileUriConverterTestHelpers\IPV6Type.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

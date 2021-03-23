@@ -9,30 +9,50 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace FsInfoCat.Test
 {
     [TestFixture]
     public class WindowsFileUriConverterTest
     {
+        private static ILogger<FileUriConverterTest> _logger;
+        private static FilePathTestData _testItems;
+
+        [SetUp()]
+        public static void Init()
+        {
+            _logger = TestLogger.Create<FileUriConverterTest>();
+
+            try
+            {
+                _testItems = FilePathTestData.Load();
+            }
+            catch (Exception exc)
+            {
+                _logger.LogCritical(exc, "Failed to load test items");
+                throw;
+            }
+        }
+
         public static IEnumerable<TestCaseData> GetIsWellFormedFileUriStringTestCases()
         {
-            return FileUriConverterTest.FilePathTestDataXML.WindowsElements().AbsoluteUrlElements().Select(element =>
-                new TestCaseData(element.InputString(), UriKind.Absolute)
-                    .Returns(element.IsWellFormed() && element.IsFileScheme())
+            return _testItems.Items.Select(i => i.Windows.AbsoluteUrl).Select(element =>
+                new TestCaseData(element.Owner.Owner.InputString, UriKind.Absolute)
+                    .Returns(element.IsWellFormed && element.IsFileScheme())
             ).Concat(
-                FileUriConverterTest.FilePathTestDataXML.WindowsElements().AbsoluteUrlElements().Select(element =>
-                    new TestCaseData(element.InputString(), UriKind.Relative)
+                _testItems.Items.Select(i => i.Windows.AbsoluteUrl).Select(element =>
+                    new TestCaseData(element.Owner.Owner.InputString, UriKind.Relative)
                         .Returns(false)
                 )
             ).Concat(
-                FileUriConverterTest.FilePathTestDataXML.WindowsElements().RelativeUrlElements().Select(element =>
-                    new TestCaseData(element.InputString(), UriKind.Relative)
-                        .Returns(element.IsWellFormed() && element.IsFileScheme())
+                _testItems.Items.Select(i => i.Windows.RelativeUrl).Select(element =>
+                    new TestCaseData(element.Owner.Owner.InputString, UriKind.Relative)
+                    .Returns(element.IsWellFormed)
                 )
             ).Concat(
-                FileUriConverterTest.FilePathTestDataXML.WindowsElements().RelativeUrlElements().Select(element =>
-                    new TestCaseData(element.InputString(), UriKind.Absolute)
+                _testItems.Items.Select(i => i.Windows.RelativeUrl).Select(element =>
+                    new TestCaseData(element.Owner.Owner.InputString, UriKind.Absolute)
                         .Returns(false)
                 )
             );

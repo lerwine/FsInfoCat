@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class InvalidHostAddress
+    public class InvalidHostAddress : IHostType
     {
+        private string _address = "";
+        [XmlAttribute]
         public string Address
         {
-            get => default;
-            set
-            {
-            }
+            get => _address;
+            set => _address = value ?? "";
         }
     }
 }

@@ -18,13 +18,15 @@ namespace FsInfoCat.Test
     [TestFixture()]
     public class FileUriConverterTest
     {
+        [Obsolete]
         internal static readonly XDocument HostTestData;
+        [Obsolete]
         internal static readonly XDocument FilePathTestDataXML;
-        private ILogger<FileUriConverterTest> _logger;
-        private FilePathTestData _testItems;
+        private static ILogger<FileUriConverterTest> _logger;
+        private static FilePathTestData _testItems;
 
         [SetUp()]
-        public void Init()
+        public static void Init()
         {
             _logger = TestLogger.Create<FileUriConverterTest>();
 
@@ -38,6 +40,7 @@ namespace FsInfoCat.Test
                 throw;
             }
         }
+
         static FileUriConverterTest()
         {
             HostTestData = XDocument.Parse(Properties.Resources.HostTestData);

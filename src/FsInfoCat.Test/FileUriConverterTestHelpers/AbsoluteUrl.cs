@@ -5,6 +5,14 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
     public abstract class AbsoluteUrl<TOwner> : RelativeUrl<TOwner>, IAbsoluteUrl where TOwner : ISynchronized
     {
+        public bool IsFileScheme()
+        {
+            UriAuthority authority = _authority;
+            if (authority is null)
+                return false;
+            UriScheme scheme = authority.Scheme;
+            return !(scheme is null) && scheme.Name == "file";
+        }
         [XmlAttribute]
         public bool IsWellFormed { get; set; }
 

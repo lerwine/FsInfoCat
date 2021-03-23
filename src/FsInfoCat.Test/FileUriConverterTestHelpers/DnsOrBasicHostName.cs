@@ -1,17 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FsInfoCat.Test
+namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class DnsOrBasicHostName : HostType
+    public class DnsOrBasicHostName : HostNameType, IHostType
     {
+        private string _address = "";
         public string Address
         {
-            get => default;
-            set
-            {
-            }
+            get => _address;
+            set => _address = value ?? "";
         }
     }
 }

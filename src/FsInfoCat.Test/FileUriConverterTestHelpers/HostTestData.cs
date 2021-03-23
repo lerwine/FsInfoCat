@@ -12,7 +12,10 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
     {
         private HostTestDataCollection _items;
 
-        [XmlElement("TestData", IsNullable = false)]
+        [XmlElement("IPV4", IsNullable = false, Type = typeof(IPV4HostAddress))]
+        [XmlElement("IPV6", IsNullable = false, Type = typeof(IPV6HostAddress))]
+        [XmlElement("HostName", IsNullable = false, Type = typeof(DnsOrBasicHostName))]
+        [XmlElement("Invalid", IsNullable = false, Type = typeof(InvalidHostAddress))]
         public HostTestDataCollection Items
         {
             get => _items;

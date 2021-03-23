@@ -9,14 +9,35 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace FsInfoCat.Test
 {
     [TestFixture]
     public class LinuxFileUriConverterTest
     {
+        private static ILogger<FileUriConverterTest> _logger;
+        private static FilePathTestData _testItems;
+
+        [SetUp()]
+        public static void Init()
+        {
+            _logger = TestLogger.Create<FileUriConverterTest>();
+
+            try
+            {
+                _testItems = FilePathTestData.Load();
+            }
+            catch (Exception exc)
+            {
+                _logger.LogCritical(exc, "Failed to load test items");
+                throw;
+            }
+        }
+
         public static IEnumerable<TestCaseData> GetIsWellFormedFileUriStringTestCases()
         {
+            _tes
             return FileUriConverterTest.FilePathTestDataXML.LinuxElements().AbsoluteUrlElements().Select(element =>
                 new TestCaseData(element.InputString(), UriKind.Absolute)
                     .Returns(element.IsWellFormed() && element.IsFileScheme())
