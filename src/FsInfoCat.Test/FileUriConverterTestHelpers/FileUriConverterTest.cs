@@ -15,20 +15,36 @@ using FsInfoCat.Test.FileUriConverterTestHelpers;
 
 namespace FsInfoCat.Test
 {
-    [TestFixture]
+    [TestFixture()]
     public class FileUriConverterTest
     {
         internal static readonly XDocument HostTestData;
-        internal static readonly XDocument FilePathTestData;
-        private static readonly ILogger<FileUriConverterTest> _logger;
+        internal static readonly XDocument FilePathTestDataXML;
+        private ILogger<FileUriConverterTest> _logger;
+        private FilePathTestData _testItems;
 
+        [SetUp()]
+        public void Init()
+        {
+            _logger = TestLogger.Create<FileUriConverterTest>();
+
+            try
+            {
+                _testItems = FilePathTestData.Load();
+            }
+            catch (Exception exc)
+            {
+                _logger.LogCritical(exc, "Failed to load test items");
+                throw;
+            }
+        }
         static FileUriConverterTest()
         {
             HostTestData = XDocument.Parse(Properties.Resources.HostTestData);
-            FilePathTestData = XDocument.Parse(Properties.Resources.FilePathTestData);
-            _logger = TestLogger.Create<FileUriConverterTest>();
+            FilePathTestDataXML = XDocument.Parse(Properties.Resources.FilePathTestData);
         }
 
+        
         [Test, Property("Priority", 1)]
         public void HostTestDataChecks()
         {
@@ -90,8 +106,8 @@ namespace FsInfoCat.Test
         [Test, Property("Priority", 1)]
         public void FilePathTestDataChecks()
         {
-            Assert.That(FilePathTestData, Is.Not.Null, "FilePathTestData is null");
-            Assert.That(FilePathTestData.Root, Is.Not.Null, "FilePathTestData.Root is null");
+            Assert.That(FilePathTestDataXML, Is.Not.Null, "FilePathTestData is null");
+            Assert.That(FilePathTestDataXML.Root, Is.Not.Null, "FilePathTestData.Root is null");
             XmlReaderSettings settings = new XmlReaderSettings
             {
                 CheckCharacters = true,
@@ -325,16 +341,16 @@ namespace FsInfoCat.Test
         }
 
         public static IEnumerable<XElement> GetWindowsAbsoluteToFileSystemPathTestElements() =>
-            FilePathTestData.WindowsElements().AbsoluteUrlElements(e => e.IsWellFormed() && e.IsFileScheme());
+            FilePathTestDataXML.WindowsElements().AbsoluteUrlElements(e => e.IsWellFormed() && e.IsFileScheme());
 
         public static IEnumerable<XElement> GetWindowsRelativeToFileSystemPathTestElements() =>
-            FilePathTestData.WindowsElements(w => !w.AbsoluteUrlElement().IsWellFormed()).RelativeUrlElements(e => e.IsWellFormed());
+            FilePathTestDataXML.WindowsElements(w => !w.AbsoluteUrlElement().IsWellFormed()).RelativeUrlElements(e => e.IsWellFormed());
 
         public static IEnumerable<XElement> GetLinuxAbsoluteToFileSystemPathTestElements() =>
-            FilePathTestData.LinuxElements().AbsoluteUrlElements(e => e.IsWellFormed() && e.IsFileScheme());
+            FilePathTestDataXML.LinuxElements().AbsoluteUrlElements(e => e.IsWellFormed() && e.IsFileScheme());
 
         public static IEnumerable<XElement> GetLinuxRelativeToFileSystemPathTestElements() =>
-            FilePathTestData.LinuxElements(w => !w.AbsoluteUrlElement().IsWellFormed()).RelativeUrlElements(e => e.IsWellFormed());
+            FilePathTestDataXML.LinuxElements(w => !w.AbsoluteUrlElement().IsWellFormed()).RelativeUrlElements(e => e.IsWellFormed());
 
         // TODO: Fix it so it's not generating hosts with port numbers
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()

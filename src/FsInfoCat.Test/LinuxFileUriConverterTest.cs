@@ -17,21 +17,21 @@ namespace FsInfoCat.Test
     {
         public static IEnumerable<TestCaseData> GetIsWellFormedFileUriStringTestCases()
         {
-            return FileUriConverterTest.FilePathTestData.LinuxElements().AbsoluteUrlElements().Select(element =>
+            return FileUriConverterTest.FilePathTestDataXML.LinuxElements().AbsoluteUrlElements().Select(element =>
                 new TestCaseData(element.InputString(), UriKind.Absolute)
                     .Returns(element.IsWellFormed() && element.IsFileScheme())
             ).Concat(
-                FileUriConverterTest.FilePathTestData.LinuxElements().AbsoluteUrlElements().Select(element =>
+                FileUriConverterTest.FilePathTestDataXML.LinuxElements().AbsoluteUrlElements().Select(element =>
                     new TestCaseData(element.InputString(), UriKind.Relative)
                         .Returns(false)
                 )
             ).Concat(
-                FileUriConverterTest.FilePathTestData.LinuxElements().RelativeUrlElements().Select(element =>
+                FileUriConverterTest.FilePathTestDataXML.LinuxElements().RelativeUrlElements().Select(element =>
                     new TestCaseData(element.InputString(), UriKind.Relative)
                         .Returns(element.IsWellFormed())
                 )
             ).Concat(
-                FileUriConverterTest.FilePathTestData.LinuxElements().RelativeUrlElements().Select(element =>
+                FileUriConverterTest.FilePathTestDataXML.LinuxElements().RelativeUrlElements().Select(element =>
                     new TestCaseData(element.InputString(), UriKind.Absolute)
                         .Returns(false)
                 )

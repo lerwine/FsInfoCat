@@ -1,9 +1,8 @@
+using FsInfoCat.Test.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
-using FsInfoCat.Test.Helpers;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
