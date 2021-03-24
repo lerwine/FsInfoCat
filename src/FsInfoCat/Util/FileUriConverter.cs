@@ -28,7 +28,7 @@ namespace FsInfoCat.Util
     ///     <description>Matches a valid IPv6 internet address, including the format that is used in the UNC path format. The <c>ipv6</c> group matches the
     ///         address string without surrounding brackets that might be present. The <c>unc</c> group matches the <c>.ipv6-literal.net</c> domain which is
     ///         used for the UNC path format.
-    ///         <code>(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$)(?=[/:?#]|$)|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)\[?(?&lt;ipv6&gt;[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|(?&lt;unc&gt;\.ipv6-literal\.net))?</code></description></item>
+    ///         <code>(?=(\[[^]]+\]|[a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)$)\[?(?<ipv6>([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)(\]|\.ipv6-literal\.net)?</code></description></item>
     /// </list></remarks>
     public abstract class FileUriConverter
     {
@@ -101,15 +101,14 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
         /// Matches an IPV6 address.
         /// </summary>
         /// <remarks>This does not match addresses with surrounding brackets or the format used in UNC path strings.</remarks>
-        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(@"
-^
-(?=[a-f\d]*(:[a-f\d]*){2,7}$)
-([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)
+        public static readonly Regex IPV6_ADDRESS_REGEX = new Regex(@"^
+(([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)
 $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
-        public const string PATTERN_HOST_NAME_OR_ADDRESS = @"(?i)^\s*(((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)|(?=\[[a-f\d]*(:[a-f\d]*){2,7}\]" +
-            @"|[a-f\d]*(:[a-f\d]*){2,7}$|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)\[?([a-f\d]{1,4}([:-][a-f\d]{1,4}){7}" +
-            @"|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)(\]|\.ipv6-literal\.net)?|(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
+        public const string PATTERN_HOST_NAME_OR_ADDRESS = @"(?i)^\s*(((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)" +
+            @"|(?=(\[[^]]+\]|[a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)$)\[?(?<ipv6>([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})" +
+            @"|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)(\]|\.ipv6-literal\.net)?" +
+            @"|(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
 
         /// <summary>
         /// Matches a host name or address that can be used as the host component of a UNC path string.
@@ -126,14 +125,10 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
 (
     (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
 |
-    (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$|[a-f\d]*(-[a-f\d]*){2,7}\.ipv6-literal\.net$)
+    (?=(\[[a-f\d:]+\]|[a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)$)
     \[?
-    (?<ipv6>[a-f\d]{1,4}([:-][a-f\d]{1,4}){7}|(([a-f\d]{1,4}[:-])+|[:-])([:-][a-f\d]{1,4})+|::)
-    (
-        \]
-    |
-        (?<unc>\.ipv6-literal\.net)
-    )?
+    (?<ipv6>([a-f\d]{1,4}[:-]){7}([:-]|[a-f\d]{1,4})|(?=(\w*[:-]){2,7}\w*$)(([a-f\d]{1,4}[:-])+|[:-])[:-]([a-f\d]{1,4}([:-][a-f\d]{1,4})*)?)
+    (\]|(?<unc>\.ipv6-literal\.net))?
 |
     (?=[\w-.]{1,255}(?![\w-.]))
     (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
@@ -151,7 +146,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
 (
     (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
 |
-    (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}$)\[?(?<ipv6>[a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?
+    (([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)
 |
     (?=[\w-.]{1,255}(?![\w-.]))
     (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
@@ -243,8 +238,10 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
     ((?i)
         ((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)
     |
-        (?=\[[a-f\d]*(:[a-f\d]*){2,7}\]|[a-f\d]*(:[a-f\d]*){2,7}(?=[/:?#]|$))
-        \[?([a-f\d]{1,4}(:[a-f\d]{1,4}){7}|(([a-f\d]{1,4}:)+|:)(:[a-f\d]{1,4})+|::)\]?
+        (?=(\[[a-f\d:]+\]|[a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)$)
+        \[?
+        (([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})(?=[/?#]|$)|(?=(\w*:){2,7}\w*[/?#]|$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)
+        \]?
     |
         (?=[\w-.]{1,255}(?![\w-.]))
         [a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?
