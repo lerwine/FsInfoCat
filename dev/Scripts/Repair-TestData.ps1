@@ -1,6 +1,7 @@
-﻿$Script:FilePathTestDataPath = 'c:\users\lerwi\git\fsinfocat\src\FsInfoCat.Test\Resources\FilePathTestData.xml';
+﻿<#$Script:FilePathTestDataPath = 'c:\users\lerwi\git\fsinfocat\src\FsInfoCat.Test\Resources\FilePathTestData.xml';
 $Script:FilePathTestDataDocument = [System.Xml.XmlDocument]::new();
 $Script:FilePathTestDataDocument.Load($Script:FilePathTestDataPath);
+#>
 
 Function Save-FilePathTestData {
     <#
@@ -807,15 +808,17 @@ Function Test-UriHostAndPathStrictRegex {
     }
 }
 
+<#
 foreach ($TestDataElement in @($Script:FilePathTestDataDocument.SelectNodes('//TestData'))) {
     Test-UriHostAndPathStrictRegex -Target Linux -TestDataElement $TestDataElement;
 }
 
-<#
 Repair-LinuxAbsoluteUrlNodes -ErrorAction Stop -InformationAction Continue;
 Repair-LinuxRelativeUrlNodes -ErrorAction Stop -InformationAction Continue;
 Repair-WindowsAbsoluteUrlNodes -ErrorAction Stop -InformationAction Continue;
 Repair-WindowsRelativeUrlNodes -ErrorAction Stop -InformationAction Continue;
 Save-FilePathTestData -ErrorAction Stop -InformationAction Continue;
-#>
 $Match = $Script:WindowsFormatDetectionRegex.Match('file:///')
+#>
+
+($PSScriptRoot | Join-Path -ChildPath '../../src/FsInfoCat.Test') | Resolve-Path

@@ -125,6 +125,8 @@ namespace FsInfoCat.Test
                 .Returns(new IdValues(expected, url));
 
             expected = $@"\\{_hostName}\Admin$\";
+            expected = $@"{path}\";
+            url = $"file://{_hostName}/Admin$/";
             yield return new TestCaseData(expected)
                 .SetDescription($"\"{expected}\"")
                 .Returns(new IdValues(expected, url));

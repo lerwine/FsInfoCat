@@ -194,7 +194,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
         /// </list>
         /// <para>This will also match relative self-reference sequences (<c>/./<c>). This does not match parent segment references (<c>/../</c>)
         /// unless they are at the beginning of the string.</para></remarks>
-        public static readonly Regex REL_URI_STRING_NORMALIZE_REGEX = new Regex(@"^(\.\.?/+|[\s/]+)+|(?<case>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
+        public static readonly Regex REL_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*(\.\.?/+)+}|(?<case>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
 
         /// <summary>
         /// Matches incorrectly-cased file scheme name and URI escape sequences as well as consecutive and trailing URI path separators, allowing up to 3 consecutive
@@ -404,23 +404,23 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// Converts a URI-compatible host name and URI-encoded absolute path string to a filesystem path string.
         /// </summary>
         /// <param name="host">The URI-compatible host name.</param>
-        /// <param name="path">The URI-encoded path string.</param>
+        /// <param name="uriEncodedPath">The URI-encoded path string.</param>
         /// <param name="platform">The target platform type that determines the format of the filesystem path string.</param>
         /// <param name="allowAlt">If <see langword="true"/>, allows a valid filesystem path of the platform type which is alternate to the specified
-        /// <seealso cref="PlatformType"/> to be used if <paramref name="path"/> is not a valid path according to the <paramref name="platform"/>.</param>
+        /// <seealso cref="PlatformType"/> to be used if <paramref name="uriEncodedPath"/> is not a valid path according to the <paramref name="platform"/>.</param>
         /// <returns>A filesystem path string.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="host"/> and/or <paramref name="path"/> is invalid.</exception>
-        public static string ToFileSystemPath(string host, string path, PlatformType platform, bool allowAlt = false)
+        /// <exception cref="ArgumentNullException"><paramref name="uriEncodedPath"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="host"/> and/or <paramref name="uriEncodedPath"/> is invalid.</exception>
+        public static string ToFileSystemPath(string host, string uriEncodedPath, PlatformType platform, bool allowAlt = false)
         {
             if (allowAlt)
             {
                 FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
-                if (!currentFactory.IsValidFileSystemPath(path, FsPathKind.Absolute) && altFactory.IsValidFileSystemPath(path, FsPathKind.Absolute))
-                    return altFactory.ToFileSystemPath(host, path);
-                return currentFactory.ToFileSystemPath(host, path);
+                if (!currentFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute) && altFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute))
+                    return altFactory.ToFileSystemPath(host, uriEncodedPath);
+                return currentFactory.ToFileSystemPath(host, uriEncodedPath);
             }
-            return GetFactory(platform).ToFileSystemPath(host, path);
+            return GetFactory(platform).ToFileSystemPath(host, uriEncodedPath);
         }
 
         /// <summary>
@@ -630,7 +630,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 return "";
             }
             leafSegment = uriString.Substring(i);
-            return uriString.Substring(0, i);
+            return uriString.Substring(0, (i > 1) ? i - 1 : i);
         }
 
         /// <summary>

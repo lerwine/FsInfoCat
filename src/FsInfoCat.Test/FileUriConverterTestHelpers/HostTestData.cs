@@ -26,14 +26,25 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
                 _items = value;
             }
         }
+
         public HostTestData()
         {
             _items = new HostTestDataCollection();
         }
 
+        public HostTestData(params BaseHostType[] items)
+        {
+            _items = new HostTestDataCollection(items);
+        }
+
+        public HostTestData(IList<BaseHostType> list)
+        {
+            _items = new HostTestDataCollection(list);
+        }
+
         public static HostTestData Load()
         {
-            using StringReader stringReader = new StringReader(Properties.Resources.FilePathTestData);
+            using StringReader stringReader = new StringReader(Properties.Resources.HostTestData);
             using XmlReader xmlReader = XmlReader.Create(stringReader);
             return Load(xmlReader);
         }

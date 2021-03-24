@@ -1,16 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class DnsOrBasicHostName : HostNameType, IHostType
+    [XmlRoot("HostName")]
+    public class DnsOrBasicHostName : HostNameType
     {
-        private string _address = "";
-        public string Address
+        public override UriHostInfo ToUriHostInfo(int? port = null) => new UriHostInfo
         {
-            get => _address;
-            set => _address = value ?? "";
-        }
+            Match = (port.HasValue) ? $"{Address}:{port.Value}" : Address,
+            Value = Address,
+            Port = port,
+            Type = HostType.DNS
+        };
     }
 }

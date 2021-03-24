@@ -3,7 +3,7 @@ using System;
 
 namespace FsInfoCat.Models.Crawl
 {
-    public abstract class CrawlMessage : ComponentBase
+    public abstract class CrawlMessage : ComponentBase, IEquatable<CrawlMessage>
     {
         private string _message = "";
         public string Message
@@ -31,5 +31,15 @@ namespace FsInfoCat.Models.Crawl
         }
 
         public CrawlMessage() { }
+
+        public bool Equals(CrawlMessage other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals([Microsoft.CodeAnalysis.Host] object obj)
+        {
+            return Equals(obj as CrawlMessage);
+        }
     }
 }

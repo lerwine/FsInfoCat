@@ -1,26 +1,22 @@
-using FsInfoCat.Test.Helpers;
 using FsInfoCat.Test.FileUriConverterTestHelpers;
+using FsInfoCat.Test.Helpers;
 using FsInfoCat.Util;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Linq;
-using Microsoft.Extensions.Logging;
 
 namespace FsInfoCat.Test
 {
     [TestFixture]
     public class WindowsFileUriConverterTest
     {
-        private static ILogger<FileUriConverterTest> _logger;
-        private static FilePathTestData _testItems;
+        private static readonly ILogger<FileUriConverterTest> _logger;
+        private static readonly FilePathTestData _testItems;
 
-        [SetUp()]
-        public static void Init()
+        static WindowsFileUriConverterTest()
         {
             _logger = TestLogger.Create<FileUriConverterTest>();
 
@@ -37,22 +33,22 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetIsWellFormedFileUriStringTestCases()
         {
-            return _testItems.Items.Select(i => i.Windows.AbsoluteUrl).Select(element =>
-                new TestCaseData(element.Owner.Owner.InputString, UriKind.Absolute)
-                    .Returns(element.IsWellFormed && element.IsFileScheme())
+            return _testItems.Items.Select(i => i.Windows.AbsoluteUrl).Where(u => !(u is null)).Select(u =>
+                new TestCaseData(u.Owner.Owner.InputString, UriKind.Absolute)
+                    .Returns(!(u.LocalPath is null) && u.LocalPath.IsAbsolute && u.IsWellFormed && u.IsFileScheme())
             ).Concat(
-                _testItems.Items.Select(i => i.Windows.AbsoluteUrl).Select(element =>
-                    new TestCaseData(element.Owner.Owner.InputString, UriKind.Relative)
+                _testItems.Items.Select(i => i.Windows.AbsoluteUrl).Where(u => !(u is null)).Select(u =>
+                    new TestCaseData(u.Owner.Owner.InputString, UriKind.Relative)
                         .Returns(false)
                 )
             ).Concat(
-                _testItems.Items.Select(i => i.Windows.RelativeUrl).Select(element =>
-                    new TestCaseData(element.Owner.Owner.InputString, UriKind.Relative)
-                    .Returns(element.IsWellFormed)
+                _testItems.Items.Select(i => i.Windows.RelativeUrl).Where(u => !(u is null)).Select(u =>
+                    new TestCaseData(u.Owner.Owner.InputString, UriKind.Relative)
+                    .Returns(!(u.LocalPath is null || u.LocalPath.IsAbsolute) && u.IsWellFormed)
                 )
             ).Concat(
-                _testItems.Items.Select(i => i.Windows.RelativeUrl).Select(element =>
-                    new TestCaseData(element.Owner.Owner.InputString, UriKind.Absolute)
+                _testItems.Items.Select(i => i.Windows.RelativeUrl).Where(u => !(u is null)).Select(u =>
+                    new TestCaseData(u.Owner.Owner.InputString, UriKind.Absolute)
                         .Returns(false)
                 )
             );
@@ -84,7 +80,7 @@ namespace FsInfoCat.Test
                         .AppendElement("", "hostName")
                         .AppendElement("/My%20Documents", "path")
                         .AppendElement("MyFile%231.txt", "fileName")
-                        .AppendElement(true, "isAbsolute")
+                        .AppendElement(false, "isAbsolute")
                         .AppendElement(true, "returnValue").ToTestResultString()
                 );
         }

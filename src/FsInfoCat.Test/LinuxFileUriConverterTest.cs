@@ -1,26 +1,22 @@
-using FsInfoCat.Test.Helpers;
 using FsInfoCat.Test.FileUriConverterTestHelpers;
+using FsInfoCat.Test.Helpers;
 using FsInfoCat.Util;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Linq;
-using Microsoft.Extensions.Logging;
 
 namespace FsInfoCat.Test
 {
     [TestFixture]
     public class LinuxFileUriConverterTest
     {
-        private static ILogger<FileUriConverterTest> _logger;
-        private static FilePathTestData _testItems;
+        private static readonly ILogger<FileUriConverterTest> _logger;
+        private static readonly FilePathTestData _testItems;
 
-        [SetUp()]
-        public static void Init()
+        static LinuxFileUriConverterTest()
         {
             _logger = TestLogger.Create<FileUriConverterTest>();
 
@@ -37,23 +33,22 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetIsWellFormedFileUriStringTestCases()
         {
-            _tes
-            return FileUriConverterTest.FilePathTestDataXML.LinuxElements().AbsoluteUrlElements().Select(element =>
-                new TestCaseData(element.InputString(), UriKind.Absolute)
-                    .Returns(element.IsWellFormed() && element.IsFileScheme())
+            return _testItems.Items.Select(i => i.Linux.AbsoluteUrl).Where(u => !(u is null)).Select(u =>
+                new TestCaseData(u.Owner.Owner.InputString, UriKind.Absolute)
+                    .Returns(!(u.LocalPath is null) && u.LocalPath.IsAbsolute && u.IsWellFormed && u.IsFileScheme())
             ).Concat(
-                FileUriConverterTest.FilePathTestDataXML.LinuxElements().AbsoluteUrlElements().Select(element =>
-                    new TestCaseData(element.InputString(), UriKind.Relative)
+                _testItems.Items.Select(i => i.Linux.AbsoluteUrl).Where(u => !(u is null)).Select(u =>
+                    new TestCaseData(u.Owner.Owner.InputString, UriKind.Relative)
                         .Returns(false)
                 )
             ).Concat(
-                FileUriConverterTest.FilePathTestDataXML.LinuxElements().RelativeUrlElements().Select(element =>
-                    new TestCaseData(element.InputString(), UriKind.Relative)
-                        .Returns(element.IsWellFormed())
+                _testItems.Items.Select(i => i.Linux.RelativeUrl).Where(u => !(u is null)).Select(u =>
+                    new TestCaseData(u.Owner.Owner.InputString, UriKind.Relative)
+                    .Returns(!(u.LocalPath is null || u.LocalPath.IsAbsolute) && u.IsWellFormed)
                 )
             ).Concat(
-                FileUriConverterTest.FilePathTestDataXML.LinuxElements().RelativeUrlElements().Select(element =>
-                    new TestCaseData(element.InputString(), UriKind.Absolute)
+                _testItems.Items.Select(i => i.Linux.RelativeUrl).Where(u => !(u is null)).Select(u =>
+                    new TestCaseData(u.Owner.Owner.InputString, UriKind.Absolute)
                         .Returns(false)
                 )
             );

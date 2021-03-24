@@ -468,7 +468,7 @@
                     <Directory>D:/</Directory>
                     <FileName>My%20Documents</FileName>
                 </Path>
-                <LocalPath IsAbsolute="false">D:\My Documents</LocalPath>
+                <LocalPath IsAbsolute="true">D:\My Documents</LocalPath>
                 <Authority>
                     <Scheme Name="file" Delimiter="://" />
                 </Authority>

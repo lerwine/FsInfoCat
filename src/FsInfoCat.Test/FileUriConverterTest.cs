@@ -1,3 +1,4 @@
+using FsInfoCat.Test.FileUriConverterTestHelpers;
 using FsInfoCat.Test.Helpers;
 using FsInfoCat.Util;
 using Microsoft.Extensions.Logging;
@@ -11,28 +12,24 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using FsInfoCat.Test.FileUriConverterTestHelpers;
 
 namespace FsInfoCat.Test
 {
     [TestFixture()]
     public class FileUriConverterTest
     {
-        [Obsolete]
-        internal static readonly XDocument HostTestData;
-        [Obsolete]
-        internal static readonly XDocument FilePathTestDataXML;
-        private static ILogger<FileUriConverterTest> _logger;
-        private static FilePathTestData _testItems;
+        private static readonly ILogger<FileUriConverterTest> _logger;
+        private static readonly FilePathTestData _testItems;
+        private static readonly HostTestData _hostTestData;
 
-        [SetUp()]
-        public static void Init()
+        static FileUriConverterTest()
         {
             _logger = TestLogger.Create<FileUriConverterTest>();
 
             try
             {
                 _testItems = FilePathTestData.Load();
+                _hostTestData = HostTestData.Load();
             }
             catch (Exception exc)
             {
@@ -41,18 +38,13 @@ namespace FsInfoCat.Test
             }
         }
 
-        static FileUriConverterTest()
-        {
-            HostTestData = XDocument.Parse(Properties.Resources.HostTestData);
-            FilePathTestDataXML = XDocument.Parse(Properties.Resources.FilePathTestData);
-        }
 
-        
-        [Test, Property("Priority", 1)]
+        [Test, Property("Priority", 1), Ignore("Not necessary to always test")]
         public void HostTestDataChecks()
         {
-            Assert.That(HostTestData, Is.Not.Null, "HostTestData is null");
-            Assert.That(HostTestData.Root, Is.Not.Null, "HostTestData.Root is null");
+            XDocument document = XDocument.Parse(Properties.Resources.HostTestData);
+            Assert.That(document, Is.Not.Null, "HostTestData is null");
+            Assert.That(document.Root, Is.Not.Null, "HostTestData.Root is null");
             XmlReaderSettings settings = new XmlReaderSettings
             {
                 CheckCharacters = true,
@@ -106,11 +98,12 @@ namespace FsInfoCat.Test
             Assert.That(validationErrors.IsEmpty, Is.True, () => string.Join($"{Environment.NewLine}", validationErrors.Select((s, i) => $"{i + 1}. {s}").ToArray()));
         }
 
-        [Test, Property("Priority", 1)]
+        [Test, Property("Priority", 1), Ignore("Not necessary to always test")]
         public void FilePathTestDataChecks()
         {
-            Assert.That(FilePathTestDataXML, Is.Not.Null, "FilePathTestData is null");
-            Assert.That(FilePathTestDataXML.Root, Is.Not.Null, "FilePathTestData.Root is null");
+            XDocument document = XDocument.Parse(Properties.Resources.FilePathTestData);
+            Assert.That(document, Is.Not.Null, "FilePathTestData is null");
+            Assert.That(document.Root, Is.Not.Null, "FilePathTestData.Root is null");
             XmlReaderSettings settings = new XmlReaderSettings
             {
                 CheckCharacters = true,
@@ -164,83 +157,31 @@ namespace FsInfoCat.Test
             Assert.That(validationErrors.IsEmpty, Is.True, () => string.Join($"{Environment.NewLine}", validationErrors.Select((s, i) => $"{i + 1}. {s}").ToArray()));
         }
 
-        public static IEnumerable<TestCaseData> GetHostNameRegexTestCases()
-        {
-            return HostTestData.Root.Elements().Select(testData =>
-            {
-                switch (testData.Name.LocalName)
-                {
-                    case "HostName":
-                        return new TestCaseData(testData.Attribute("Address").Value)
-                            .Returns(
-                                new XElement("HostNameRegex",
-                                    new XAttribute("Success", true),
-                                    new XElement("Group", new XAttribute("Name", "ipv4"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "ipv6"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "d"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "dns"), testData.Value, new XAttribute("Success", true))
-                                ).ToTestResultString()
-                            );
-                    case "IPV4":
-                        return new TestCaseData(testData.Attribute("Address").Value)
-                            .Returns(
-                                new XElement("HostNameRegex",
-                                    new XAttribute("Success", true),
-                                    new XElement("Group", new XAttribute("Name", "ipv4"), testData.Value, new XAttribute("Success", true)),
-                                    new XElement("Group", new XAttribute("Name", "ipv6"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "d"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "dns"), new XAttribute("Success", false))
-                                ).ToTestResultString()
-                            );
-                    case "IPV6":
-                        if (testData.Attribute("Type").Value == "UNC")
-                        {
-                            if (testData.Attribute("IsDns").Value == "true")
-                                return new TestCaseData(testData.Attribute("Address").Value)
-                                    .Returns(
-                                        new XElement("HostNameRegex",
-                                            new XAttribute("Success", true),
-                                            new XElement("Group", new XAttribute("Name", "ipv4"), new XAttribute("Success", false)),
-                                            new XElement("Group", new XAttribute("Name", "ipv6"), new XAttribute("Success", false)),
-                                            new XElement("Group", new XAttribute("Name", "d"), new XAttribute("Success", false)),
-                                            new XElement("Group", new XAttribute("Name", "dns"), testData.Value, new XAttribute("Success", true))
-                                        ).ToTestResultString()
-                                    );
-                            return new TestCaseData(testData.Attribute("Address").Value)
-                                .Returns(
-                                    new XElement("HostNameRegex",
-                                        new XAttribute("Success", false)
-                                    ).ToTestResultString()
-                                );
-
-                        }
-                        return new TestCaseData(testData.Attribute("Address").Value)
-                            .Returns(
-                                new XElement("HostNameRegex",
-                                    new XAttribute("Success", true),
-                                    new XElement("Group", new XAttribute("Name", "ipv4"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "ipv6"), testData.Value, new XAttribute("Success", true)),
-                                    new XElement("Group", new XAttribute("Name", "d"), new XAttribute("Success", false)),
-                                    new XElement("Group", new XAttribute("Name", "dns"), new XAttribute("Success", false))
-                                ).ToTestResultString()
-                            );
-                    default:
-                        return new TestCaseData(testData.Attribute("Address").Value)
-                            .Returns(
-                                new XElement("HostNameRegex",
-                                    new XAttribute("Success", false)
-                                ).ToTestResultString()
-                            );
-                }
-            });
-        }
+        public static IEnumerable<TestCaseData> GetHostNameRegexTestCases() => _hostTestData.Items.OfType<DnsOrBasicHostName>().Select(testData =>
+            new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(true)
+                    .AppendMatchGroupFailed("ipv4")
+                    .AppendMatchGroupFailed("ipv6")
+                    .AppendMatchGroupResult("dns", testData.Value).ToTestResultString()))
+            .Concat(_hostTestData.Items.OfType<IPV4HostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(true)
+                    .AppendMatchGroupResult("ipv4", testData.Value)
+                    .AppendMatchGroupFailed("ipv6")
+                    .AppendMatchGroupFailed("dns").ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<IPV6HostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(((testData.Type == IPV6Type.UNC) ? TestResultBuilder.CreateMatchResult(false) : TestResultBuilder.CreateMatchResult(true)
+                    .AppendMatchGroupFailed("ipv4")
+                    .AppendMatchGroupResult("ipv6", testData.Value)
+                    .AppendMatchGroupFailed("dns")).ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<InvalidHostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())));
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetHostNameRegexTestCases))]
         public string HostNameRegexTest(string input)
         {
             Match match = FileUriConverter.HOST_NAME_OR_ADDRESS_FOR_URI_REGEX.Match(input);
-            return UrlHelperTest.ToTestReturnValueXml(match, "HostNameRegex", "ipv4", "ipv6", "d", "dns");
+            return match.CreateTestResultWithGroups("ipv4", "ipv6", "dns").ToTestResultString();
         }
 
         public static IEnumerable<TestCaseData> GetUriPathSegmentRegexTestCases()
@@ -274,21 +215,15 @@ namespace FsInfoCat.Test
             return matches.Select(m => m.Value).ToArray();
         }
 
-        public static IEnumerable<TestCaseData> GetPatternHostNameTestCases()
-        {
-            return HostTestData.Root.Elements("Invalid").Select(element =>
-                new TestCaseData(element.Attribute("Address").Value)
-                    .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())
-            )
-            .Concat(
-                HostTestData.Root.Elements("HostName").Concat(HostTestData.Root.Elements("IPV4")).Concat(HostTestData.Root.Elements("IPV6"))
-                .Select(element =>
-                    new TestCaseData(element.StringAttributeValue("Address", ""))
-                        .Returns(TestResultBuilder.CreateMatchResult(element.StringAttributeValue("Address", ""))
-                        .ToTestResultString())
-                )
-            );
-        }
+        public static IEnumerable<TestCaseData> GetPatternHostNameTestCases() => _hostTestData.Items.OfType<DnsOrBasicHostName>().Select(testData =>
+            new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(testData.Value).ToTestResultString()))
+            .Concat(_hostTestData.Items.OfType<IPV4HostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(testData.Value).ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<IPV6HostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(testData.Value).ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<InvalidHostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())));
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetPatternHostNameTestCases))]
@@ -298,19 +233,16 @@ namespace FsInfoCat.Test
             return match.CreateTestResult().ToTestResultString();
         }
 
-        public static IEnumerable<TestCaseData> GetIpv6AddressRegexTestCases()
-        {
-            return HostTestData.Root.Elements().Select(hostElement =>
-            {
-                XElement expected;
-                if (hostElement.Name.LocalName == "IPV6" && hostElement.Attribute("Type").Value == "Normal")
-                    expected = TestResultBuilder.CreateMatchResult(hostElement.Value);
-                else
-                    expected = TestResultBuilder.CreateMatchResult(false);
-                return new TestCaseData(hostElement.Attribute("Address").Value)
-                    .Returns(expected.ToTestResultString());
-            });
-        }
+        public static IEnumerable<TestCaseData> GetIpv6AddressRegexTestCases() => _hostTestData.Items.OfType<DnsOrBasicHostName>().Select(testData =>
+            new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString()))
+            .Concat(_hostTestData.Items.OfType<IPV4HostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<IPV6HostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(((testData.Type == IPV6Type.Normal) ? TestResultBuilder.CreateMatchResult(testData.Value) :
+                    TestResultBuilder.CreateMatchResult(false)).ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<InvalidHostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())));
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetIpv6AddressRegexTestCases))]
@@ -320,20 +252,16 @@ namespace FsInfoCat.Test
             return match.CreateTestResult().ToTestResultString();
         }
 
-        public static IEnumerable<TestCaseData> GetPatternDnsNameTestCases()
-        {
-            return HostTestData.Root.Elements().Select(hostElement =>
-            {
-                XElement expected;
-                if (hostElement.Name.LocalName == "HostName" || hostElement.Name.LocalName == "IPV4" ||
-                    hostElement.Attributes("IsDns").Any(a => XmlConvert.ToBoolean(a.Value)))
-                    expected = TestResultBuilder.CreateMatchResult(hostElement.Value);
-                else
-                    expected = TestResultBuilder.CreateMatchResult(false);
-                return new TestCaseData(hostElement.Attribute("Address").Value)
-                    .Returns(expected.ToTestResultString());
-            });
-        }
+        public static IEnumerable<TestCaseData> GetPatternDnsNameTestCases() => _hostTestData.Items.OfType<DnsOrBasicHostName>().Select(testData =>
+            new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(testData.Value).ToTestResultString()))
+            .Concat(_hostTestData.Items.OfType<IPV4HostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(testData.Value).ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<IPV6HostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(((testData.IsDns) ? TestResultBuilder.CreateMatchResult(testData.Value) :
+                    TestResultBuilder.CreateMatchResult(false)).ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<InvalidHostAddress>().Select(testData => new TestCaseData(testData.Address)
+                .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())));
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetPatternDnsNameTestCases))]
@@ -343,70 +271,52 @@ namespace FsInfoCat.Test
             return match.CreateTestResult().ToTestResultString();
         }
 
-        public static IEnumerable<XElement> GetWindowsAbsoluteToFileSystemPathTestElements() =>
-            FilePathTestDataXML.WindowsElements().AbsoluteUrlElements(e => e.IsWellFormed() && e.IsFileScheme());
-
-        public static IEnumerable<XElement> GetWindowsRelativeToFileSystemPathTestElements() =>
-            FilePathTestDataXML.WindowsElements(w => !w.AbsoluteUrlElement().IsWellFormed()).RelativeUrlElements(e => e.IsWellFormed());
-
-        public static IEnumerable<XElement> GetLinuxAbsoluteToFileSystemPathTestElements() =>
-            FilePathTestDataXML.LinuxElements().AbsoluteUrlElements(e => e.IsWellFormed() && e.IsFileScheme());
-
-        public static IEnumerable<XElement> GetLinuxRelativeToFileSystemPathTestElements() =>
-            FilePathTestDataXML.LinuxElements(w => !w.AbsoluteUrlElement().IsWellFormed()).RelativeUrlElements(e => e.IsWellFormed());
-
-        // TODO: Fix it so it's not generating hosts with port numbers
-        public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
-        {
-            return GetWindowsAbsoluteToFileSystemPathTestElements()
-                .Select(e =>
-                    new TestCaseData(
-                        e.HostElement().StringAttributeValue(FilePathTestDataExtensions.AttributeNameMatch, ""),
-                        e.PathElement().StringAttributeValue(FilePathTestDataExtensions.AttributeNameMatch, ""),
-                        PlatformType.Windows,
-                        false
-                        ).Returns(e.StringElementValue(FilePathTestDataExtensions.LocalPathElementName, ""))
-                )
-                .Concat(
-                    GetWindowsRelativeToFileSystemPathTestElements()
-                    .Select(e =>
-                        new TestCaseData(
-                            "",
-                        e.PathElement().StringAttributeValue(FilePathTestDataExtensions.AttributeNameMatch, ""),
-                            PlatformType.Windows,
-                            false
-                        ).Returns(e.StringElementValue(FilePathTestDataExtensions.LocalPathElementName, ""))
-                    )
-                )
-                .Concat(
-                    GetLinuxAbsoluteToFileSystemPathTestElements()
-                    .Select(e =>
-                        new TestCaseData(
-                        e.HostElement().StringAttributeValue(FilePathTestDataExtensions.AttributeNameMatch, ""),
-                        e.PathElement().StringAttributeValue(FilePathTestDataExtensions.AttributeNameMatch, ""),
-                            PlatformType.Linux,
-                            false
-                        ).Returns(e.StringElementValue(FilePathTestDataExtensions.LocalPathElementName, ""))
-                    )
-                )
-                .Concat(
-                    GetLinuxRelativeToFileSystemPathTestElements()
-                    .Select(e =>
-                        new TestCaseData(
-                            "",
-                        e.PathElement().StringAttributeValue(FilePathTestDataExtensions.AttributeNameMatch, ""),
-                            PlatformType.Windows,
-                            false
-                        ).Returns(e.StringElementValue(FilePathTestDataExtensions.LocalPathElementName, ""))
-                    )
-                );
-        }
+        public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases() => _testItems.Items.Select(testDataItem => testDataItem.Windows.AbsoluteUrl)
+            .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme())
+            .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Windows, false)
+                .Returns(url.LocalPath.Path))
+            .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.AbsoluteUrl)
+                .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme())
+                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Linux, false)
+                    .Returns(url.LocalPath.Path)))
+            .Concat(_testItems.Items.Select(testDataItem => testDataItem.Windows.RelativeUrl)
+                .Where(u => !(u is null) && u.IsWellFormed && (u.Owner.AbsoluteUrl is null || !u.Owner.AbsoluteUrl.IsWellFormed))
+                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Windows, false)
+                    .Returns(url.LocalPath.Path)))
+            .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.RelativeUrl)
+                .Where(u => !(u is null) && u.IsWellFormed && (u.Owner.AbsoluteUrl is null || !u.Owner.AbsoluteUrl.IsWellFormed))
+                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Linux, false)
+                    .Returns(url.LocalPath.Path)))
+            .Concat(_testItems.Items.Select(testDataItem => testDataItem.Windows.AbsoluteUrl)
+                .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme() &&
+                    (u.Owner.Owner.Linux.AbsoluteUrl is null || !u.Owner.Owner.Linux.AbsoluteUrl.IsWellFormed) &&
+                    (u.Owner.Owner.Linux.RelativeUrl is null || !u.Owner.Owner.Linux.RelativeUrl.IsWellFormed))
+                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Linux, true)
+                    .Returns(url.LocalPath.Path)))
+            .Concat(_testItems.Items.Select(testDataItem => testDataItem.Windows.RelativeUrl)
+                .Where(u => !(u is null) && u.IsWellFormed &&
+                    (u.Owner.Owner.Linux.AbsoluteUrl is null || !u.Owner.Owner.Linux.AbsoluteUrl.IsWellFormed) &&
+                    (u.Owner.Owner.Linux.RelativeUrl is null || !u.Owner.Owner.Linux.RelativeUrl.IsWellFormed))
+                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Linux, true)
+                    .Returns(url.LocalPath.Path)))
+            .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.AbsoluteUrl)
+                .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme() &&
+                    (u.Owner.Owner.Windows.AbsoluteUrl is null || !u.Owner.Owner.Windows.AbsoluteUrl.IsWellFormed) &&
+                    (u.Owner.Owner.Windows.RelativeUrl is null || !u.Owner.Owner.Windows.RelativeUrl.IsWellFormed))
+                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Linux, true)
+                    .Returns(url.LocalPath.Path)))
+            .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.RelativeUrl)
+                .Where(u => !(u is null) && u.IsWellFormed &&
+                    (u.Owner.Owner.Windows.AbsoluteUrl is null || !u.Owner.Owner.Windows.AbsoluteUrl.IsWellFormed) &&
+                    (u.Owner.Owner.Windows.RelativeUrl is null || !u.Owner.Owner.Windows.RelativeUrl.IsWellFormed))
+                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Linux, true)
+                    .Returns(url.LocalPath.Path)));
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetToFileSystemPathTestCases))]
-        public string ToFileSystemPathTest(string host, string path, PlatformType platform, bool allowAlt)
+        public string ToFileSystemPathTest(string host, string uriEncodedPath, PlatformType platform, bool allowAlt)
         {
-            string result = FileUriConverter.ToFileSystemPath(host, path, platform, allowAlt);
+            string result = FileUriConverter.ToFileSystemPath(host, uriEncodedPath, platform, allowAlt);
             return result;
         }
     }

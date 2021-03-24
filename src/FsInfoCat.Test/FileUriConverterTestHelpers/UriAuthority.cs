@@ -155,6 +155,21 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             _scheme = new UriScheme { Owner = this };
         }
 
+        public string GetHostAndPort()
+        {
+            UriHostInfo host = _host;
+            if (host is null)
+                return "";
+            string p = host.PortString;
+            return (string.IsNullOrEmpty(p)) ? host.Value : $"{host.Value}:{p}";
+        }
+
+        public string GetHostName()
+        {
+            UriHostInfo host = _host;
+            return (host is null) ? "" : host.Value;
+        }
+
         public bool Equals([AllowNull] UriAuthority other)
         {
             if (other is null)

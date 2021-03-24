@@ -2,14 +2,15 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class IPV4HostAddress : HostNameType, IHostType
+    [XmlRoot("IPV6")]
+    public class IPV4HostAddress : HostNameType
     {
-        private string _address = "";
-        [XmlAttribute]
-        public string Address
+        public override UriHostInfo ToUriHostInfo(int? port = null) => new UriHostInfo
         {
-            get => _address;
-            set => _address = value ?? "";
-        }
+            Match = (port.HasValue) ? $"{Address}:{port.Value}" : Address,
+            Value = Address,
+            Port = port,
+            Type = HostType.IPV4
+        };
     }
 }

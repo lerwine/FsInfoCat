@@ -569,6 +569,9 @@ namespace FsInfoCat.Test.Helpers
         public static XElement AppendMatchGroupResult(this XElement target, string groupName, bool success) =>
             target.Append(CreateRegexResult(nameof(Group), groupName, success));
 
+        public static XElement AppendMatchGroupResult(this XElement target, string groupName, string value) =>
+            target.Append((value is null) ? CreateRegexResult(nameof(Group), groupName, false) : CreateRegexResult(nameof(Group), groupName, true).ApplyValue(value));
+
         public static XElement AppendMatchGroupResult(this XElement target, Group group, bool excludeValue = false, bool includePosition = false, XName elementName = null) =>
             target.Append((group is null) ? CreateNullResult(elementName ?? nameof(Group)) : (excludeValue ?
                 (includePosition ?
@@ -582,9 +585,6 @@ namespace FsInfoCat.Test.Helpers
             AppendMatchGroupResult(target, group, excludeValue, includePosition, null);
 
         public static XElement AppendMatchGroupFailed(this XElement target, string groupName) => target.AppendMatchGroupResult(groupName, false);
-
-        public static XElement AppendMatchGroupResult(this XElement target, string groupName, string value) => (value is null) ?
-            target.AppendMatchGroupFailed(groupName) : target.AppendMatchGroupResult(groupName, true).ApplyValue(value);
 
     }
 }

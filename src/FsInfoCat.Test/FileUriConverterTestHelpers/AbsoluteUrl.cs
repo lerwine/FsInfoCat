@@ -5,14 +5,6 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
     public abstract class AbsoluteUrl<TOwner> : RelativeUrl<TOwner>, IAbsoluteUrl where TOwner : ISynchronized
     {
-        public bool IsFileScheme()
-        {
-            UriAuthority authority = _authority;
-            if (authority is null)
-                return false;
-            UriScheme scheme = authority.Scheme;
-            return !(scheme is null) && scheme.Name == "file";
-        }
         [XmlAttribute]
         public bool IsWellFormed { get; set; }
 
@@ -56,6 +48,21 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             {
                 Owner = this
             };
+        }
+
+        public bool IsFileScheme()
+        {
+            UriAuthority authority = _authority;
+            if (authority is null)
+                return false;
+            UriScheme scheme = authority.Scheme;
+            return !(scheme is null) && scheme.Name == "file";
+        }
+
+        public string GetHostName()
+        {
+            UriAuthority authority = _authority;
+            return (authority is null) ? "" : authority.GetHostName();
         }
 
         protected bool Equals(AbsoluteUrl<TOwner> other) => IsWellFormed == other.IsWellFormed && _authority.Equals(other.Authority) && base.BaseEquals(other);
