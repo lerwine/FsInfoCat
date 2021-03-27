@@ -1,20 +1,32 @@
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace DevHelperGUI
 {
-    public class MatchResult : CaptureResult
+    public class MatchResult : MatchItem
     {
-        public int ItemNumber { get; }
-        public BindingList<GroupResult> Groups { get; }
+        public string InputText { get; }
 
-        public MatchResult(Match match, int itemNumber = 1)
-            : base(match)
+        [Obsolete]
+        public MatchResult(Match match, int itemNumber = 0) : base(match)
         {
-            ItemNumber = itemNumber;
-            Groups = new BindingList<GroupResult>(match.Groups.Cast<Group>().Select(g => new GroupResult(g)).ToList());
         }
 
+        public MatchResult(string inputText, Match match, int itemNumber = 0) : base(match, itemNumber)
+        {
+            InputText = inputText ?? throw new ArgumentNullException(nameof(inputText));
+        }
+
+        internal static MatchResult EvaluateMatch(Regex regex, string inputText, int itemNumber = 0)
+        {
+            if (regex is null)
+                throw new ArgumentNullException(nameof(regex));
+            if (inputText is null)
+                throw new ArgumentNullException(nameof(inputText));
+            return new MatchResult(inputText, regex.Match(inputText), itemNumber);
+        }
     }
 }
