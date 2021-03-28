@@ -48,8 +48,7 @@ namespace DevHelperGUI
         private const string ElementName_InputText = "InputText";
         private const string AttributeName_Mode = "Mode";
         private const string XmlContent_AsIs = "AsIs";
-        private RegexOptions _options = RegexOptions.None;
-        private bool _ignoreOptionChange = true;
+        private bool _handlePatternOptionChange = false;
         private bool _ignoreViewModeCheckChange = true;
         private readonly DataGridViewTextBoxColumn lineResultItemNumberDataGridViewColumn;
         private readonly DataGridViewTextBoxColumn lineResultNumberOfMatchesDataGridViewColumn;
@@ -87,16 +86,8 @@ namespace DevHelperGUI
         private readonly BindingList<MatchCollectionResult> _lineResults = new BindingList<MatchCollectionResult>();
         private readonly BindingList<MatchItem> _matchResults = new BindingList<MatchItem>();
         private readonly BindingList<GroupResult> _groupResults = new BindingList<GroupResult>();
-        private Regex _parsedRegex;
-        [Obsolete]
-        private Task<BinaryAlternate<Regex, string>> _parseRegexTask =
-            Task.FromResult(BinaryAlternate<Regex, string>.AsSecondary("Pattern not specified"));
-        [Obsolete]
-        private Task<BinaryAlternate<MatchResult[], string>> _evaluationTask =
-            Task.FromResult(BinaryAlternate<MatchResult[], string>.AsPrimary(Array.Empty<MatchResult>()));
-        private bool _patternParsePending = false;
-        private bool _evaluationPending = false;
-        private CaptureItem _selectedItem;
+        private MatchItem _selectedMatch;
+        private GroupResult _selectedGroup;
         private string _currentSessionFileName = null;
 
         public MatchAllRegexForm()
@@ -302,7 +293,10 @@ namespace DevHelperGUI
             lineResultsDataGridView.SelectionChanged += LineResultsDataGridView_SelectionChanged;
             matchesDataGridView.SelectionChanged += MatchesDataGridView_SelectionChanged;
             groupsDataGridView.SelectionChanged += GroupsDataGridView_SelectionChanged;
-            _ignoreOptionChange = false;
+            // TODO: Add handlers in designer
+            evaluationInputs.PatternOptionsChanged += EvaluationInputs_PatternOptionsChanged;
+            evaluationInputs.ParseLinesSeparatelyChanged += EvaluationInputs_ParseLinesSeparatelyChanged;
+            _handlePatternOptionChange = true;
             _ignoreViewModeCheckChange = false;
             openSessionFileDialog.InitialDirectory = importPatternFileDialog.InitialDirectory = importInputFileDialog.InitialDirectory =
                 saveSessionFileDialog.InitialDirectory = savePatternFileDialog.InitialDirectory = saveInputFileDialog.InitialDirectory =
@@ -314,7 +308,7 @@ namespace DevHelperGUI
 
         private void SetRawResultMode()
         {
-            valueTextBox.Text = (_selectedItem is null) ? "" : _selectedItem.RawValue;
+            valueTextBox.Text = (_selectedGroup is null) ? ((_selectedMatch is null) ? "" : _selectedMatch.RawValue) : _selectedGroup.RawValue;
             if (showMatchValueToolStripMenuItem.Checked)
             {
                 foreach (DataGridViewColumn col in _matchValueColumns)
@@ -331,7 +325,9 @@ namespace DevHelperGUI
 
         private void SetEscapedResultMode(bool escapeTabsAndNewLines)
         {
-            valueTextBox.Text = (_selectedItem is null) ? "" : (escapeTabsAndNewLines ? _selectedItem.EscapedValue : _selectedItem.EscapedValueLE);
+            valueTextBox.Text = (_selectedGroup is null) ? (_selectedMatch is null) ? "" :
+                (escapeTabsAndNewLines ? _selectedMatch.EscapedValue : _selectedMatch.EscapedValueLE) :
+                (escapeTabsAndNewLines ? _selectedGroup.EscapedValue : _selectedGroup.EscapedValueLE);
             if (showMatchValueToolStripMenuItem.Checked)
             {
                 foreach (DataGridViewColumn col in _matchValueColumns)
@@ -348,7 +344,9 @@ namespace DevHelperGUI
 
         private void SetQuotedResultMode(bool escapeTabsAndNewLines)
         {
-            valueTextBox.Text = (_selectedItem is null) ? "" : (escapeTabsAndNewLines ? _selectedItem.QuotedLines : _selectedItem.QuotedLinesLE);
+            valueTextBox.Text = (_selectedGroup is null) ? (_selectedMatch is null) ? "" :
+                (escapeTabsAndNewLines ? _selectedMatch.QuotedLines : _selectedMatch.QuotedLinesLE) :
+                (escapeTabsAndNewLines ? _selectedGroup.QuotedLines : _selectedGroup.QuotedLinesLE);
             if (showMatchValueToolStripMenuItem.Checked)
             {
                 foreach (DataGridViewColumn col in _matchValueColumns)
@@ -365,7 +363,9 @@ namespace DevHelperGUI
 
         private void SetUriEncodedResulMode(bool escapeTabsAndNewLines)
         {
-            valueTextBox.Text = (_selectedItem is null) ? "" : (escapeTabsAndNewLines ? _selectedItem.UriEncodedValue : _selectedItem.UriEncodedValueLE);
+            valueTextBox.Text = (_selectedGroup is null) ? (_selectedMatch is null) ? "" :
+                (escapeTabsAndNewLines ? _selectedMatch.UriEncodedValue : _selectedMatch.UriEncodedValueLE) :
+                (escapeTabsAndNewLines ? _selectedGroup.UriEncodedValue : _selectedGroup.UriEncodedValueLE);
             if (showMatchValueToolStripMenuItem.Checked)
             {
                 foreach (DataGridViewColumn col in _matchValueColumns)
@@ -382,7 +382,9 @@ namespace DevHelperGUI
 
         private void SetXmlEncodedResulMode(bool escapeTabsAndNewLines)
         {
-            valueTextBox.Text = (_selectedItem is null) ? "" : (escapeTabsAndNewLines ? _selectedItem.XmlEncodedValue : _selectedItem.XmlEncodedValueLE);
+            valueTextBox.Text = (_selectedGroup is null) ? (_selectedMatch is null) ? "" :
+                (escapeTabsAndNewLines ? _selectedMatch.XmlEncodedValue : _selectedMatch.XmlEncodedValueLE) :
+                (escapeTabsAndNewLines ? _selectedGroup.XmlEncodedValue : _selectedGroup.XmlEncodedValueLE);
             if (showMatchValueToolStripMenuItem.Checked)
             {
                 foreach (DataGridViewColumn col in _matchValueColumns)
@@ -399,7 +401,7 @@ namespace DevHelperGUI
 
         private void SetHexidecimalDisplayMode()
         {
-            valueTextBox.Text = (_selectedItem is null) ? "" : _selectedItem.HexEncoded;
+            valueTextBox.Text = (_selectedGroup is null) ? ((_selectedMatch is null) ? "" : _selectedMatch.HexEncoded) : _selectedGroup.HexEncoded;
             if (showMatchValueToolStripMenuItem.Checked)
             {
                 foreach (DataGridViewColumn col in _matchValueColumns)
@@ -414,115 +416,177 @@ namespace DevHelperGUI
             }
         }
 
-        private void UpdateCurrentItemDisplay()
-        {
-            if (displayMatchPropertiesToolStripMenuItem.Checked || (_selectedItem = groupsDataGridView.SelectedRows.Cast<DataGridViewRow>().Select(r => (GroupResult)r.DataBoundItem).FirstOrDefault()) is null)
-                _selectedItem = matchesDataGridView.SelectedRows.Cast<DataGridViewRow>().Select(r => (MatchResult)r.DataBoundItem).Concat(_matchResults).FirstOrDefault();
+        private MatchCollectionResult _selectedCollection;
 
-            if (_selectedItem is null)
+        private void OnListItemsChanged()
+        {
+            if (lineResultsDataGridView.TryGetSelectedOrFirstDataBoundItemOfType(out MatchCollectionResult item, out DataGridViewRow row))
             {
-                successLabel.Text = indexTextBox.Text = lengthTextBox.Text = valueTextBox.Text = "";
-                nameLabel.Visible = nameTextBox.Visible = false;
+                _selectedCollection = null;
+                if (!row.Selected)
+                    row.Selected = true;
+                if (_selectedCollection is null)
+                {
+                    _selectedCollection = item;
+                    OnSelectedCollectionChanged();
+                }
             }
-            else
+            else if (!(_selectedCollection is null))
             {
-                if (_selectedItem is GroupResult groupResult)
-                {
-                    nameLabel.Visible = nameTextBox.Visible = true;
-                    nameTextBox.Text = groupResult.Name;
-                }
-                else
-                    nameLabel.Visible = nameTextBox.Visible = false;
-                if (_selectedItem.Success)
-                {
-                    if (escapedValueNormalToolStripMenuItem.Checked)
-                        SetEscapedResultMode(false);
-                    else if (escapedValueTnlToolStripMenuItem.Checked)
-                        SetEscapedResultMode(true);
-                    else if (quotedLinesNormalToolStripMenuItem.Checked)
-                        SetQuotedResultMode(false);
-                    else if (quotedLinesTnlToolStripMenuItem.Checked)
-                        SetQuotedResultMode(true);
-                    else if (uriEncodedNormalToolStripMenuItem.Checked)
-                        SetUriEncodedResulMode(false);
-                    else if (uriEncodedNlToolStripMenuItem.Checked)
-                        SetUriEncodedResulMode(true);
-                    else if (xmlEncodedNormalToolStripMenuItem.Checked)
-                        SetXmlEncodedResulMode(false);
-                    else if (xmlEncodedTnlToolStripMenuItem.Checked)
-                        SetXmlEncodedResulMode(true);
-                    //else if (hexidecimalValuesToolStripMenuItem.Checked)
-                    //    SetHexidecimalDisplayMode();
-                    else
-                        SetRawResultMode();
-                    successLabel.Text = "True";
-                    successLabel.ForeColor = Color.Green;
-                    indexTextBox.Text = _selectedItem.Index.ToString();
-                    lengthTextBox.Text = _selectedItem.Length.ToString();
-                }
-                else
-                {
-                    successLabel.Text = "False";
-                    successLabel.ForeColor = Color.Red;
-                    indexTextBox.Text = lengthTextBox.Text = "";
-                }
+                _selectedCollection = null;
+                OnSelectedCollectionChanged();
             }
         }
 
-        private bool AnyFlagToolStripMenuItemsSet() => ignoreCaseToolStripMenuItem.Checked || multilineToolStripMenuItem.Checked || explicitCaptureToolStripMenuItem.Checked || compiledToolStripMenuItem.Checked ||
-            singleLineToolStripMenuItem.Checked || ignorePatternWhitespaceToolStripMenuItem.Checked || rightToLeftToolStripMenuItem.Checked || ecmaScriptToolStripMenuItem.Checked || cultureInvariantToolStripMenuItem.Checked;
-
-        private void ApplyOptionToolStripMenuItemChange(RegexOptions option, bool isSet)
+        private void OnSelectedCollectionChanged()
         {
-            if (_ignoreOptionChange)
-                return;
-            _ignoreOptionChange = true;
-            try
+            matchesDataGridView.ClearSelection();
+            _matchResults.Clear();
+            if (_selectedCollection is null)
+                _selectedMatch = null;
+            else
             {
-                if (isSet)
+                foreach (MatchItem item in _selectedCollection.Matches)
+                    _matchResults.Add(item);
+                if (matchesDataGridView.TryGetSelectedOrFirstDataBoundItemOfType(out MatchItem matchItem, out DataGridViewRow row))
                 {
-                    noneToolStripMenuItem.Enabled = true;
-                    noneToolStripMenuItem.Checked = false;
-                    if (_options.HasFlag(option))
+                    _selectedMatch = null;
+                    if (!row.Selected)
+                        row.Selected = true;
+                    if (!(_selectedMatch is null))
                         return;
-                    _options |= option;
-                }
-                else if (AnyFlagToolStripMenuItemsSet())
-                {
-                    if (!_options.HasFlag(option))
-                        return;
-                    _options ^= option;
+                    _selectedMatch = matchItem;
                 }
                 else
-                {
-                    noneToolStripMenuItem.Checked = true;
-                    if (_options == RegexOptions.None)
-                        return;
-                    _options = RegexOptions.None;
-                }
-
-                StartRegexParseAsync();
+                    _selectedMatch = null;
             }
-            finally { _ignoreOptionChange = false; }
+            OnSelectedMatchChanged();
+        }
+
+        private void OnSelectedMatchChanged()
+        {
+            groupsDataGridView.ClearSelection();
+            _groupResults.Clear();
+            _selectedGroup = null;
+            if (!(_selectedMatch is null))
+            {
+                foreach (GroupResult group in _selectedMatch.Groups)
+                    _groupResults.Add(group);
+                if (!(_selectedGroup is null))
+                {
+                    groupsDataGridView.ClearSelection();
+                    _selectedGroup = null;
+                }
+            }
+            OnSelectedGroupChanged();
+        }
+
+        private void OnSelectedGroupChanged()
+        {
+            CaptureItem selectedItem = _selectedGroup;
+            if (selectedItem is null)
+            {
+                displayMatchPropertiesToolStripMenuItem.Checked = false;
+                displayMatchPropertiesToolStripMenuItem.Enabled = true;
+                nameLabel.Visible = nameTextBox.Visible = false;
+                if ((selectedItem = _selectedMatch) is null)
+                {
+                    successLabel.Text = indexTextBox.Text = lengthTextBox.Text = valueTextBox.Text = "";
+                    return;
+                }
+            }
+            else
+            {
+                displayMatchPropertiesToolStripMenuItem.Checked = false;
+                displayMatchPropertiesToolStripMenuItem.Enabled = true;
+                nameTextBox.Text = _selectedGroup.Name;
+                nameLabel.Visible = nameTextBox.Visible = true;
+            }
+            if (selectedItem.Success)
+            {
+                if (escapedValueNormalToolStripMenuItem.Checked)
+                    SetEscapedResultMode(false);
+                else if (escapedValueTnlToolStripMenuItem.Checked)
+                    SetEscapedResultMode(true);
+                else if (quotedLinesNormalToolStripMenuItem.Checked)
+                    SetQuotedResultMode(false);
+                else if (quotedLinesTnlToolStripMenuItem.Checked)
+                    SetQuotedResultMode(true);
+                else if (uriEncodedNormalToolStripMenuItem.Checked)
+                    SetUriEncodedResulMode(false);
+                else if (uriEncodedNlToolStripMenuItem.Checked)
+                    SetUriEncodedResulMode(true);
+                else if (xmlEncodedNormalToolStripMenuItem.Checked)
+                    SetXmlEncodedResulMode(false);
+                else if (xmlEncodedTnlToolStripMenuItem.Checked)
+                    SetXmlEncodedResulMode(true);
+                else if (hexidecimalValuesToolStripMenuItem.Checked)
+                    SetHexidecimalDisplayMode();
+                else
+                    SetRawResultMode();
+                successLabel.Text = "True";
+                successLabel.ForeColor = Color.Green;
+                indexTextBox.Text = selectedItem.Index.ToString();
+                lengthTextBox.Text = selectedItem.Length.ToString();
+            }
+            else
+            {
+                successLabel.Text = "False";
+                successLabel.ForeColor = Color.Red;
+                indexTextBox.Text = lengthTextBox.Text = valueTextBox.Text = "";
+            }
         }
 
         private void LineResultsDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        private void GroupsDataGridView_SelectionChanged(object sender, EventArgs e)
-        {
-            displayMatchPropertiesToolStripMenuItem.Checked = false;
-            displayMatchPropertiesToolStripMenuItem.Enabled = true;
-            UpdateCurrentItemDisplay();
+            if (lineResultsDataGridView.SelectedRows.TryGetFirstDataBoundItemOfType(out MatchCollectionResult item))
+            {
+                if (ReferenceEquals(_selectedCollection, item))
+                    return;
+                _selectedCollection = item;
+            }
+            else
+            {
+                if (_selectedCollection is null)
+                    return;
+                _selectedCollection = null;
+            }
+            OnSelectedCollectionChanged();
         }
 
         private void MatchesDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            displayMatchPropertiesToolStripMenuItem.Checked = true;
-            displayMatchPropertiesToolStripMenuItem.Enabled = false;
-            UpdateCurrentItemDisplay();
+            if (matchesDataGridView.SelectedRows.TryGetFirstDataBoundItemOfType(out MatchItem item))
+            {
+                if (ReferenceEquals(item, _selectedMatch))
+                    return;
+                _groupResults.Clear();
+                _selectedMatch = item;
+            }
+            else
+            {
+                if (_selectedMatch is null)
+                    return;
+                _selectedMatch = null;
+            }
+            OnSelectedMatchChanged();
+        }
+
+        private void GroupsDataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (groupsDataGridView.SelectedRows.TryGetFirstDataBoundItemOfType(out GroupResult item))
+            {
+                if (ReferenceEquals(item, _selectedGroup))
+                    return;
+                _selectedGroup = item;
+            }
+            else
+            {
+                if (_selectedGroup is null)
+                    return;
+                _selectedGroup = null;
+            }
+            OnSelectedGroupChanged();
         }
 
         private void InputModeAsIsToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -532,11 +596,7 @@ namespace DevHelperGUI
                 inputModeBackslashedToolStripMenuItem.Checked = inputModeUriEncodedToolStripMenuItem.Checked = inputModeXmlEncodedToolStripMenuItem.Checked = false;
                 inputModeBackslashedToolStripMenuItem.Enabled = inputModeUriEncodedToolStripMenuItem.Enabled = inputModeXmlEncodedToolStripMenuItem.Enabled = false;
                 inputModeAsIsToolStripMenuItem.Enabled = false;
-                _evaluationPending = true;
-                if (evaluateOnChangeCheckBox.Checked)
-                    StartEvaluationAsync();
-                else
-                    evaluateButton.Enabled = true;
+                evaluationInputs.Mode = EvaluationInputsMode.PlainText;
             }
             else
                 inputModeAsIsToolStripMenuItem.Enabled = true;
@@ -549,11 +609,7 @@ namespace DevHelperGUI
                 inputModeAsIsToolStripMenuItem.Checked = inputModeUriEncodedToolStripMenuItem.Checked = inputModeXmlEncodedToolStripMenuItem.Checked = false;
                 inputModeAsIsToolStripMenuItem.Enabled = inputModeUriEncodedToolStripMenuItem.Enabled = inputModeXmlEncodedToolStripMenuItem.Enabled = false;
                 inputModeBackslashedToolStripMenuItem.Enabled = false;
-                _evaluationPending = true;
-                if (evaluateOnChangeCheckBox.Checked)
-                    StartEvaluationAsync();
-                else
-                    evaluateButton.Enabled = true;
+                evaluationInputs.Mode = EvaluationInputsMode.PlainText;
             }
             else
                 inputModeBackslashedToolStripMenuItem.Enabled = true;
@@ -566,11 +622,7 @@ namespace DevHelperGUI
                 inputModeAsIsToolStripMenuItem.Checked = inputModeBackslashedToolStripMenuItem.Checked = inputModeXmlEncodedToolStripMenuItem.Checked = false;
                 inputModeAsIsToolStripMenuItem.Enabled = inputModeBackslashedToolStripMenuItem.Enabled = inputModeXmlEncodedToolStripMenuItem.Enabled = false;
                 inputModeUriEncodedToolStripMenuItem.Enabled = false;
-                _evaluationPending = true;
-                if (evaluateOnChangeCheckBox.Checked)
-                    StartEvaluationAsync();
-                else
-                    evaluateButton.Enabled = true;
+                evaluationInputs.Mode = EvaluationInputsMode.PlainText;
             }
             else
                 inputModeUriEncodedToolStripMenuItem.Enabled = true;
@@ -583,11 +635,7 @@ namespace DevHelperGUI
                 inputModeAsIsToolStripMenuItem.Checked = inputModeBackslashedToolStripMenuItem.Checked = inputModeUriEncodedToolStripMenuItem.Checked = false;
                 inputModeAsIsToolStripMenuItem.Enabled = inputModeBackslashedToolStripMenuItem.Enabled = inputModeUriEncodedToolStripMenuItem.Enabled = true;
                 inputModeXmlEncodedToolStripMenuItem.Enabled = false;
-                _evaluationPending = true;
-                if (evaluateOnChangeCheckBox.Checked)
-                    StartEvaluationAsync();
-                else
-                    evaluateButton.Enabled = true;
+                evaluationInputs.Mode = EvaluationInputsMode.PlainText;
             }
             else
                 inputModeXmlEncodedToolStripMenuItem.Enabled = true;
@@ -595,70 +643,140 @@ namespace DevHelperGUI
 
         private void SeparateLinesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            separateLinesToolStripMenuItem.Enabled = !separateLinesToolStripMenuItem.Checked;
-            _evaluationPending = true;
-            if (evaluateOnChangeCheckBox.Checked)
-                StartEvaluationAsync();
-            else
-                evaluateButton.Enabled = true;
+            evaluationInputs.ParseLinesSeparately = separateLinesToolStripMenuItem.Checked;
         }
 
-        private void InputModeWordWrapToolStripMenuItem_CheckedChanged(object sender, EventArgs e) => inputTextBox.WordWrap = inputModeWordWrapToolStripMenuItem.Checked;
+        private void InputModeWordWrapToolStripMenuItem_CheckedChanged(object sender, EventArgs e) => evaluationInputs.WordWrap = inputModeWordWrapToolStripMenuItem.Checked;
+
+        private void EvaluationInputs_PatternOptionsChanged(object sender, PatternOptionsEventArgs e)
+        {
+            _handlePatternOptionChange = false;
+            try
+            {
+                RegexOptions options = e.PatternOptions;
+                noneToolStripMenuItem.Enabled = !(noneToolStripMenuItem.Checked = options == RegexOptions.None);
+                ignoreCaseToolStripMenuItem.Enabled = !(ignoreCaseToolStripMenuItem.Checked = options.HasFlag(RegexOptions.IgnoreCase));
+                multilineToolStripMenuItem.Enabled = !(multilineToolStripMenuItem.Checked = options.HasFlag(RegexOptions.Multiline));
+                explicitCaptureToolStripMenuItem.Enabled = !(explicitCaptureToolStripMenuItem.Checked = options.HasFlag(RegexOptions.ExplicitCapture));
+                compiledToolStripMenuItem.Enabled = !(compiledToolStripMenuItem.Checked = options.HasFlag(RegexOptions.Compiled));
+                singleLineToolStripMenuItem.Enabled = !(singleLineToolStripMenuItem.Checked = options.HasFlag(RegexOptions.Singleline));
+                ignorePatternWhitespaceToolStripMenuItem.Enabled = !(ignorePatternWhitespaceToolStripMenuItem.Checked = options.HasFlag(RegexOptions.IgnorePatternWhitespace));
+                rightToLeftToolStripMenuItem.Enabled = !(rightToLeftToolStripMenuItem.Checked = options.HasFlag(RegexOptions.RightToLeft));
+                ecmaScriptToolStripMenuItem.Enabled = !(ecmaScriptToolStripMenuItem.Checked = options.HasFlag(RegexOptions.ECMAScript));
+                cultureInvariantToolStripMenuItem.Enabled = !(cultureInvariantToolStripMenuItem.Checked = options.HasFlag(RegexOptions.CultureInvariant));
+            }
+            finally { _handlePatternOptionChange = true; }
+        }
+
+        private void EvaluationInputs_ParseLinesSeparatelyChanged(object sender, BooleanValueEventArgs e)
+        {
+            separateLinesToolStripMenuItem.Checked = e.Value;
+        }
 
         private void NoneToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            if (_ignoreOptionChange)
-                return;
-            _ignoreOptionChange = true;
-            try
-            {
-                if (noneToolStripMenuItem.Checked)
-                {
-                    ignoreCaseToolStripMenuItem.Checked = multilineToolStripMenuItem.Checked = explicitCaptureToolStripMenuItem.Checked =
-                        compiledToolStripMenuItem.Checked = singleLineToolStripMenuItem.Checked = ignorePatternWhitespaceToolStripMenuItem.Checked =
-                        rightToLeftToolStripMenuItem.Checked = ecmaScriptToolStripMenuItem.Checked = cultureInvariantToolStripMenuItem.Checked = false;
-                    ignoreCaseToolStripMenuItem.Enabled = multilineToolStripMenuItem.Enabled = explicitCaptureToolStripMenuItem.Enabled =
-                        compiledToolStripMenuItem.Enabled = singleLineToolStripMenuItem.Enabled = ignorePatternWhitespaceToolStripMenuItem.Enabled =
-                        rightToLeftToolStripMenuItem.Enabled = ecmaScriptToolStripMenuItem.Enabled = cultureInvariantToolStripMenuItem.Enabled = true;
-                    noneToolStripMenuItem.Enabled = false;
-                    if (_options != RegexOptions.None)
-                    {
-                        _options = RegexOptions.None;
-                        StartRegexParseAsync();
-                    }
-                }
-                else
-                    noneToolStripMenuItem.Enabled = true;
-            }
-            finally { _ignoreOptionChange = false; }
+            if (_handlePatternOptionChange && noneToolStripMenuItem.Checked)
+                evaluationInputs.PatternOptions = RegexOptions.None;
         }
 
-        private void IgnoreCaseToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.IgnoreCase, ignoreCaseToolStripMenuItem.Checked);
+        private void IgnoreCaseToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (ignoreCaseToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.IgnoreCase;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.IgnoreCase;
+            }
+        }
 
-        private void CultureInvariantToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.CultureInvariant, cultureInvariantToolStripMenuItem.Checked);
+        private void CultureInvariantToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (cultureInvariantToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.CultureInvariant;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.CultureInvariant;
+            }
+        }
 
-        private void MultilineToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.Multiline, multilineToolStripMenuItem.Checked);
+        private void MultilineToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (multilineToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.Multiline;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.Multiline;
+            }
+        }
 
-        private void SinglelineToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.Singleline, singleLineToolStripMenuItem.Checked);
+        private void SinglelineToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (singleLineToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.Singleline;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.Singleline;
+            }
+        }
 
-        private void ExplicitCaptureToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.ExplicitCapture, explicitCaptureToolStripMenuItem.Checked);
+        private void ExplicitCaptureToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (explicitCaptureToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.ExplicitCapture;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.ExplicitCapture;
+            }
+        }
 
-        private void IgnorePatternWhitespaceToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.IgnorePatternWhitespace, ignorePatternWhitespaceToolStripMenuItem.Checked);
+        private void IgnorePatternWhitespaceToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (ignorePatternWhitespaceToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.IgnorePatternWhitespace;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.IgnorePatternWhitespace;
+            }
+        }
 
-        private void RightToLeftToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.RightToLeft, rightToLeftToolStripMenuItem.Checked);
+        private void RightToLeftToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (rightToLeftToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.RightToLeft;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.RightToLeft;
+            }
+        }
 
-        private void ECMAScriptToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.ECMAScript, ecmaScriptToolStripMenuItem.Checked);
+        private void ECMAScriptToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (ecmaScriptToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.ECMAScript;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.ECMAScript;
+            }
+        }
 
-        private void CompiledToolStripMenuItem_CheckedChanged(object sender, EventArgs e) =>
-            ApplyOptionToolStripMenuItemChange(RegexOptions.Compiled, compiledToolStripMenuItem.Checked);
+        private void CompiledToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_handlePatternOptionChange)
+            {
+                if (compiledToolStripMenuItem.Checked)
+                    evaluationInputs.PatternOptions |= RegexOptions.Compiled;
+                else
+                    evaluationInputs.PatternOptions ^= RegexOptions.Compiled;
+            }
+        }
 
         private void RawValueToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
@@ -910,9 +1028,9 @@ namespace DevHelperGUI
             if (displayMatchPropertiesToolStripMenuItem.Checked)
             {
                 displayMatchPropertiesToolStripMenuItem.Enabled = false;
-                foreach (DataGridViewRow row in groupsDataGridView.SelectedRows.Cast<DataGridViewRow>().ToArray())
-                    row.Selected = false;
-                UpdateCurrentItemDisplay();
+                groupsDataGridView.ClearSelection();
+                _selectedGroup = null;
+                OnSelectedGroupChanged();
             }
             else
                 displayMatchPropertiesToolStripMenuItem.Enabled = true;
@@ -995,191 +1113,65 @@ namespace DevHelperGUI
                 groupRawValueDataGridViewColumn.Visible = true;
         }
 
-        private void PatternTextBox_TextChanged(object sender, EventArgs e) => StartRegexParseAsync();
-
-        private void InputTextBox_TextChanged(object sender, EventArgs e)
+        private void EvaluationInputs_EvaluateExpressionAsync(object sender, RegexEvaluatableEventArgs e)
         {
-            _evaluationPending = true;
-            if (evaluateOnChangeCheckBox.Checked)
-                StartEvaluationAsync();
+            if (e.IsSingleInput)
+                e.Result = e.GetMatchCollection().Map(mc => new MatchCollectionResult(e.PrimaryInput, mc));
             else
-                evaluateButton.Enabled = true;
+                e.Result = e.GetAllMatchCollections((itemNumber, input, mc) => new MatchCollectionResult(input, mc, itemNumber));
         }
 
-        private void EvaluateOnChangeCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void EvaluationInputs_ExpressionEvaluated(object sender, EvaluationFinishedEventArgs e)
         {
-            if (evaluateOnChangeCheckBox.Checked)
-            {
-                evaluateButton.Enabled = false;
-                if (_evaluationPending)
-                    StartEvaluationAsync();
-            }
-            else
-                evaluateButton.Enabled = true;
-        }
-
-        private void EvaluateButton_Click(object sender, EventArgs e)
-        {
-            evaluateButton.Enabled = false;
-            StartEvaluationAsync();
-        }
-
-        private void StartRegexParseAsync()
-        {
-            _patternParsePending = true;
-            _evaluationPending = evaluateOnChangeCheckBox.Checked;
-            if (parseRegexBackgroundWorker.IsBusy)
-                parseRegexBackgroundWorker.CancelAsync();
-            else
-                parseRegexBackgroundWorker.RunWorkerAsync(new object[] { patternTextBox.Text, _options });
-        }
-
-        private Func<string, string[]> GetEvaluationLinesFunc()
-        {
-            if (separateLinesToolStripMenuItem.Checked)
-            {
-                if (inputModeBackslashedToolStripMenuItem.Checked)
-                    return s => CaptureItem.FromEscapedTextLines(s);
-                if (inputModeUriEncodedToolStripMenuItem.Checked)
-                    return s => CaptureItem.FromUriEncodedLines(s);
-                if (inputModeXmlEncodedToolStripMenuItem.Checked)
-                    return s => CaptureItem.FromXmlEncodedLines(s);
-                return s => CaptureItem.FromRawTextLines(s);
-            }
-            if (inputModeBackslashedToolStripMenuItem.Checked)
-                return s => new string[] { CaptureItem.FromEscapedText(s) };
-            if (inputModeUriEncodedToolStripMenuItem.Checked)
-                return s => new string[] { CaptureItem.FromUriEncoded(s) };
-            if (inputModeXmlEncodedToolStripMenuItem.Checked)
-                return s => new string[] { CaptureItem.FromXmlEncoded(s) };
-            return s => new string[] { s };
-        }
-
-        private void StartEvaluationAsync()
-        {
-            Regex regex = _parsedRegex;
-            if (regex is null)
+            if (e.Cancelled)
                 return;
-            _evaluationPending = true;
-            if (evaluateExpressionBackgroundWorker.IsBusy)
-                evaluateExpressionBackgroundWorker.CancelAsync();
-            else
-                evaluateExpressionBackgroundWorker.RunWorkerAsync(new object[] { regex, inputTextBox.Text, GetEvaluationLinesFunc() });
-        }
-
-        private void ParseRegexBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (parseRegexBackgroundWorker.CancellationPending)
+            _lineResults.Clear();
+            _matchResults.Clear();
+            _groupResults.Clear();
+            if (e.Result is BinaryAlternate<IList<MatchCollectionResult>, Exception> multipleResult)
             {
-                e.Cancel = true;
-                return;
-            }
-            _patternParsePending = false;
-            object[] args = (object[])e.Argument;
-            e.Result = new Regex((string)args[0], (RegexOptions)args[1], TimeSpan.FromMilliseconds(500));
-        }
-
-        private void ParseRegexBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (_patternParsePending && !parseRegexBackgroundWorker.IsBusy)
-                evaluateExpressionBackgroundWorker.RunWorkerAsync(new object[] { _parsedRegex, inputTextBox.Text, GetEvaluationLinesFunc() });
-            else if (!e.Cancelled)
-            {
-                if (e.Error is null)
+                multipleResult.Apply(matchCollectionResults =>
                 {
-                    if (e.Result is string message)
-                        expressionErrorLabel.Text = message;
-                    else
-                    {
-                        expressionErrorLabel.Visible = false;
-                        _parsedRegex = e.Result as Regex;
-                        if (_evaluationPending)
-                            StartEvaluationAsync();
-                        else
-                            evaluateButton.Enabled = true;
-                        return;
-                    }
-                }
-                else
-                    expressionErrorLabel.Text = string.IsNullOrWhiteSpace(e.Error.Message) ? e.Error.ToString() : e.Error.Message;
-                _parsedRegex = null;
-                expressionErrorLabel.Visible = true;
-                evaluateButton.Enabled = false;
-            }
-        }
-
-        private void EvaluateExpressionBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (evaluateExpressionBackgroundWorker.CancellationPending)
-            {
-                e.Cancel = true;
-                return;
-            }
-            _evaluationPending = false;
-            object[] args = (object[])e.Argument;
-            string s = (string)args[1];
-            Regex regex = (Regex)args[0];
-            e.Result = (string.IsNullOrEmpty(s) ? new string[] { "" } : ((Func<string, string[]>)args[2]).Invoke(s)).Select((line, i) =>
-                MatchCollectionResult.EvaluateMatches(regex, line, i + 1)).ToArray();
-        }
-
-        private void EvaluateExpressionBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (_evaluationPending && !evaluateExpressionBackgroundWorker.IsBusy)
-                evaluateExpressionBackgroundWorker.RunWorkerAsync(new object[] { _parsedRegex, inputTextBox.Text, GetEvaluationLinesFunc() });
-            else if (!e.Cancelled)
-            {
-                displayMatchPropertiesToolStripMenuItem.Checked = true;
-                if (e.Error is null)
+                    indexTextBox.Visible = lengthTextBox.Visible = true;
+                    listingsSplitContainer.Panel1Collapsed = false;
+                    foreach (MatchCollectionResult listItem in matchCollectionResults)
+                        _lineResults.Add(listItem);
+                }, error =>
                 {
-                    if (e.Result is string errorMessage)
-                        evaluationErrorLabel.Text = errorMessage;
-                    else
-                    {
-                        evaluationErrorLabel.Visible = false;
-                        _lineResults.Clear();
-                        _matchResults.Clear();
-                        _groupResults.Clear();
-                        listingsSplitContainer.Panel1Collapsed = !separateLinesToolStripMenuItem.Checked;
-                        MatchCollectionResult[] matchCollectionResults = e.Result as MatchCollectionResult[];
-                        if (!(matchCollectionResults is null) && matchCollectionResults.Length > 0)
-                        {
-                            foreach (MatchCollectionResult listItem in matchCollectionResults)
-                                _lineResults.Add(listItem);
-                            MatchCollectionResult result = matchCollectionResults[0];
-                            if (!(result is null))
-                            {
-                                MatchItem match = result.Matches.FirstOrDefault();
-                                if (!(match is null) && match.Success)
-                                {
-                                    foreach (GroupResult groupResult in match.Groups)
-                                        _groupResults.Add(groupResult);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    UpdateCurrentItemDisplay();
-                }
-                else
-                {
-                    // TODO: Implement ParseRegexBackgroundWorker_RunWorkerCompleted Error
-                }
+                    listingsSplitContainer.Panel1Collapsed = true;
+                    successLabel.Text = "False";
+                    successLabel.ForeColor = Color.Red;
+                    indexTextBox.Visible = lengthTextBox.Visible = false;
+                    valueTextBox.Text = "";
+                });
             }
+            else if (e.Result is BinaryAlternate<MatchCollectionResult, Exception> singleResult)
+            {
+                listingsSplitContainer.Panel1Collapsed = true;
+                singleResult.Apply(matchCollection =>
+                {
+                    indexTextBox.Visible = lengthTextBox.Visible = true;
+                    _lineResults.Add(matchCollection);
+                }, error =>
+                {
+                    listingsSplitContainer.Panel1Collapsed = true;
+                    successLabel.Text = "False";
+                    successLabel.ForeColor = Color.Red;
+                    indexTextBox.Visible = lengthTextBox.Visible = false;
+                    valueTextBox.Text = "";
+                });
+            }
+            OnListItemsChanged();
         }
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _patternParsePending = _evaluationPending = false;
-            if (parseRegexBackgroundWorker.IsBusy)
-                parseRegexBackgroundWorker.CancelAsync();
-            if (evaluateExpressionBackgroundWorker.IsBusy)
-                evaluateExpressionBackgroundWorker.CancelAsync();
+            evaluationInputs.CancelWorkers();
             _lineResults.Clear();
             _matchResults.Clear();
             _groupResults.Clear();
-            patternTextBox.Text = inputTextBox.Text = valueTextBox.Text = indexTextBox.Text = lengthTextBox.Text = "";
-            nameLabel.Visible = nameTextBox.Visible = evaluationErrorLabel.Visible = false;
+            valueTextBox.Text = indexTextBox.Text = lengthTextBox.Text = "";
+            nameLabel.Visible = nameTextBox.Visible = false;
             listingsSplitContainer.Panel1Collapsed = true;
             _currentSessionFileName = null;
         }
@@ -1267,7 +1259,7 @@ namespace DevHelperGUI
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            evaluateOnChangeCheckBox.Checked = document.Root.Attributes(AttributeName_EvaluateOnChange).Any(a => a.Value == "true");
+            evaluationInputs.EvaluateOnChange = document.Root.Attributes(AttributeName_EvaluateOnChange).Any(a => a.Value == "true");
             XElement xElement = document.Root.Element(ElementName_ResultMode);
             if (xElement is null || xElement.IsEmpty)
                 MessageBox.Show(this, $"Result mode setting not found. Result mode not changed.", "Data not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1327,7 +1319,7 @@ namespace DevHelperGUI
                 rightToLeftToolStripMenuItem.Checked = xElement.Attributes(AttributeName_RightToLeft).Any(a => a.Value == "true");
                 ecmaScriptToolStripMenuItem.Checked = xElement.Attributes(AttributeName_ECMAScript).Any(a => a.Value == "true");
                 compiledToolStripMenuItem.Checked = xElement.Attributes(AttributeName_Compiled).Any(a => a.Value == "true");
-                patternTextBox.Text = (xElement.IsEmpty) ? "" : xElement.Value;
+                evaluationInputs.PatternText = (xElement.IsEmpty) ? "" : xElement.Value;
             }
             xElement = document.Root.Element(ElementName_InputText);
             if (xElement is null || xElement.IsEmpty)
@@ -1351,7 +1343,7 @@ namespace DevHelperGUI
                         inputModeAsIsToolStripMenuItem.Checked = true;
                         break;
                 }
-                inputTextBox.Text = (xElement.IsEmpty) ? "" : xElement.Value;
+                evaluationInputs.InputText = (xElement.IsEmpty) ? "" : xElement.Value;
             }
             _currentSessionFileName = sessionFileName;
         }
@@ -1363,7 +1355,7 @@ namespace DevHelperGUI
 
             #region Session Element settings
 
-            if (evaluateOnChangeCheckBox.Checked)
+            if (evaluationInputs.EvaluateOnChange)
                 sessionElement.SetAttributeValue(AttributeName_EvaluateOnChange, true);
             if (escapedValueNormalToolStripMenuItem.Checked)
                 sessionElement.Add(new XElement(ElementName_ResultMode, XmlContent_BackslashEscaped));
@@ -1406,7 +1398,7 @@ namespace DevHelperGUI
             #region Pattern Element settings
 
             XElement xElement = new XElement(ElementName_Pattern,
-                new XCData(patternTextBox.Text)
+                new XCData(evaluationInputs.PatternText)
             );
             if (patternAcceptsTabToolStripMenuItem.Checked)
                 xElement.SetAttributeValue(AttributeName_AcceptsTab, true);
@@ -1437,7 +1429,7 @@ namespace DevHelperGUI
 
             if (forSessionSave)
             {
-                xElement = new XElement(ElementName_InputText, new XCData(inputTextBox.Text));
+                xElement = new XElement(ElementName_InputText, new XCData(evaluationInputs.InputText));
                 if (inputAcceptsTabToolStripMenuItem.Checked)
                     xElement.SetAttributeValue(AttributeName_AcceptsTab, true);
                 if (separateLinesToolStripMenuItem.Checked)
@@ -1447,11 +1439,11 @@ namespace DevHelperGUI
             {
                 xElement = new XElement(ElementName_InputText);
                 int itemNumber = 0;
-                foreach (string line in CaptureItem.FromRawTextLines(inputTextBox.Text))
+                foreach (string line in CaptureItem.FromRawTextLines(evaluationInputs.InputText))
                     xElement.Add(new XElement("Input"), new XAttribute(nameof(MatchCollectionResult.ItemNumber), ++itemNumber), new XCData(line));
             }
             else
-                xElement = new XElement(ElementName_InputText, new XCData(inputTextBox.Text));
+                xElement = new XElement(ElementName_InputText, new XCData(evaluationInputs.InputText));
             if (inputAcceptsTabToolStripMenuItem.Checked)
                 xElement.SetAttributeValue(AttributeName_AcceptsTab, true);
             if (separateLinesToolStripMenuItem.Checked)
@@ -1510,7 +1502,7 @@ namespace DevHelperGUI
 
             try
             {
-                patternTextBox.Text = File.ReadAllText(importPatternFileDialog.FileName);
+                evaluationInputs.PatternText = File.ReadAllText(importPatternFileDialog.FileName);
             }
             catch (Exception exc)
             {
@@ -1526,7 +1518,7 @@ namespace DevHelperGUI
 
             try
             {
-                File.WriteAllText(savePatternFileDialog.FileName, patternTextBox.Text);
+                File.WriteAllText(savePatternFileDialog.FileName, evaluationInputs.PatternText);
             }
             catch (Exception exc)
             {
@@ -1542,7 +1534,7 @@ namespace DevHelperGUI
 
             try
             {
-                inputTextBox.Text = File.ReadAllText(importInputFileDialog.FileName);
+                evaluationInputs.InputText = File.ReadAllText(importInputFileDialog.FileName);
             }
             catch (Exception exc)
             {
@@ -1558,7 +1550,7 @@ namespace DevHelperGUI
 
             try
             {
-                File.WriteAllText(saveInputFileDialog.FileName, patternTextBox.Text);
+                File.WriteAllText(saveInputFileDialog.FileName, evaluationInputs.InputText);
             }
             catch (Exception exc)
             {

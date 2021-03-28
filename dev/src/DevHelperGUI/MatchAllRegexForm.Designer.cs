@@ -41,6 +41,7 @@ namespace DevHelperGUI
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savePatternToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveResultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -106,17 +107,7 @@ namespace DevHelperGUI
             this.showGroupLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGroupValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.inputSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.patternGroupBox = new System.Windows.Forms.GroupBox();
-            this.patternTextBox = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.expressionErrorLabel = new System.Windows.Forms.Label();
-            this.inputTextGroupBox = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.evaluationErrorLabel = new System.Windows.Forms.Label();
-            this.evaluateOnChangeCheckBox = new System.Windows.Forms.CheckBox();
-            this.evaluateButton = new System.Windows.Forms.Button();
-            this.inputTextBox = new System.Windows.Forms.TextBox();
+            this.evaluationInputs = new DevHelperGUI.EvaluationInputsControl();
             this.resultSplitContainer = new System.Windows.Forms.SplitContainer();
             this.listingsSplitContainer = new System.Windows.Forms.SplitContainer();
             this.lineResultsGroupBox = new System.Windows.Forms.GroupBox();
@@ -137,7 +128,6 @@ namespace DevHelperGUI
             this.lengthTextBox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.valueTextBox = new System.Windows.Forms.TextBox();
-            this.saveResultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSessionFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveSessionFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.importPatternFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -145,21 +135,11 @@ namespace DevHelperGUI
             this.importInputFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveInputFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.saveResultsFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.parseRegexBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.evaluateExpressionBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.mainMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.inputSplitContainer)).BeginInit();
-            this.inputSplitContainer.Panel1.SuspendLayout();
-            this.inputSplitContainer.Panel2.SuspendLayout();
-            this.inputSplitContainer.SuspendLayout();
-            this.patternGroupBox.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.inputTextGroupBox.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.resultSplitContainer)).BeginInit();
             this.resultSplitContainer.Panel1.SuspendLayout();
             this.resultSplitContainer.Panel2.SuspendLayout();
@@ -281,6 +261,13 @@ namespace DevHelperGUI
             this.saveInputToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.saveInputToolStripMenuItem.Text = "Save &Input As";
             this.saveInputToolStripMenuItem.Click += new System.EventHandler(this.SaveInputToolStripMenuItem_Click);
+            // 
+            // saveResultsToolStripMenuItem
+            // 
+            this.saveResultsToolStripMenuItem.Name = "saveResultsToolStripMenuItem";
+            this.saveResultsToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.saveResultsToolStripMenuItem.Text = "Save &Results";
+            this.saveResultsToolStripMenuItem.Click += new System.EventHandler(this.SaveResultsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -822,7 +809,7 @@ namespace DevHelperGUI
             // 
             // mainSplitContainer.Panel1
             // 
-            this.mainSplitContainer.Panel1.Controls.Add(this.inputSplitContainer);
+            this.mainSplitContainer.Panel1.Controls.Add(this.evaluationInputs);
             // 
             // mainSplitContainer.Panel2
             // 
@@ -831,150 +818,24 @@ namespace DevHelperGUI
             this.mainSplitContainer.SplitterDistance = 266;
             this.mainSplitContainer.TabIndex = 2;
             // 
-            // inputSplitContainer
+            // evaluationInputs
             // 
-            this.inputSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.inputSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.inputSplitContainer.Name = "inputSplitContainer";
-            this.inputSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // inputSplitContainer.Panel1
-            // 
-            this.inputSplitContainer.Panel1.Controls.Add(this.patternGroupBox);
-            // 
-            // inputSplitContainer.Panel2
-            // 
-            this.inputSplitContainer.Panel2.Controls.Add(this.tableLayoutPanel2);
-            this.inputSplitContainer.Size = new System.Drawing.Size(266, 426);
-            this.inputSplitContainer.SplitterDistance = 88;
-            this.inputSplitContainer.TabIndex = 0;
-            // 
-            // patternGroupBox
-            // 
-            this.patternGroupBox.AutoSize = true;
-            this.patternGroupBox.Controls.Add(this.patternTextBox);
-            this.patternGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patternGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.patternGroupBox.Name = "patternGroupBox";
-            this.patternGroupBox.Size = new System.Drawing.Size(266, 88);
-            this.patternGroupBox.TabIndex = 0;
-            this.patternGroupBox.TabStop = false;
-            this.patternGroupBox.Text = "Pattern";
-            // 
-            // patternTextBox
-            // 
-            this.patternTextBox.AcceptsReturn = true;
-            this.patternTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patternTextBox.Location = new System.Drawing.Point(3, 19);
-            this.patternTextBox.Multiline = true;
-            this.patternTextBox.Name = "patternTextBox";
-            this.patternTextBox.Size = new System.Drawing.Size(260, 66);
-            this.patternTextBox.TabIndex = 1;
-            this.patternTextBox.TextChanged += new System.EventHandler(this.PatternTextBox_TextChanged);
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.expressionErrorLabel, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.inputTextGroupBox, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(266, 334);
-            this.tableLayoutPanel2.TabIndex = 0;
-            // 
-            // expressionErrorLabel
-            // 
-            this.expressionErrorLabel.AutoSize = true;
-            this.expressionErrorLabel.ForeColor = System.Drawing.Color.Red;
-            this.expressionErrorLabel.Location = new System.Drawing.Point(3, 0);
-            this.expressionErrorLabel.Name = "expressionErrorLabel";
-            this.expressionErrorLabel.Size = new System.Drawing.Size(117, 15);
-            this.expressionErrorLabel.TabIndex = 2;
-            this.expressionErrorLabel.Text = "No pattern provided.";
-            // 
-            // inputTextGroupBox
-            // 
-            this.inputTextGroupBox.Controls.Add(this.tableLayoutPanel4);
-            this.inputTextGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.inputTextGroupBox.Location = new System.Drawing.Point(3, 18);
-            this.inputTextGroupBox.Name = "inputTextGroupBox";
-            this.inputTextGroupBox.Size = new System.Drawing.Size(260, 313);
-            this.inputTextGroupBox.TabIndex = 1;
-            this.inputTextGroupBox.TabStop = false;
-            this.inputTextGroupBox.Text = "Input Text";
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel4.ColumnCount = 2;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel4.Controls.Add(this.evaluationErrorLabel, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.evaluateOnChangeCheckBox, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.evaluateButton, 1, 1);
-            this.tableLayoutPanel4.Controls.Add(this.inputTextBox, 0, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 19);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 2;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(254, 291);
-            this.tableLayoutPanel4.TabIndex = 1;
-            // 
-            // evaluationErrorLabel
-            // 
-            this.evaluationErrorLabel.AutoSize = true;
-            this.tableLayoutPanel4.SetColumnSpan(this.evaluationErrorLabel, 2);
-            this.evaluationErrorLabel.ForeColor = System.Drawing.Color.Red;
-            this.evaluationErrorLabel.Location = new System.Drawing.Point(3, 247);
-            this.evaluationErrorLabel.Name = "evaluationErrorLabel";
-            this.evaluationErrorLabel.Size = new System.Drawing.Size(159, 15);
-            this.evaluationErrorLabel.TabIndex = 4;
-            this.evaluationErrorLabel.Text = "Unexpected evaluation error.";
-            this.evaluationErrorLabel.Visible = false;
-            // 
-            // evaluateOnChangeCheckBox
-            // 
-            this.evaluateOnChangeCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.evaluateOnChangeCheckBox.AutoSize = true;
-            this.evaluateOnChangeCheckBox.Location = new System.Drawing.Point(39, 265);
-            this.evaluateOnChangeCheckBox.Name = "evaluateOnChangeCheckBox";
-            this.evaluateOnChangeCheckBox.Size = new System.Drawing.Size(131, 19);
-            this.evaluateOnChangeCheckBox.TabIndex = 0;
-            this.evaluateOnChangeCheckBox.Text = "Evaluate on Change";
-            this.evaluateOnChangeCheckBox.UseVisualStyleBackColor = true;
-            this.evaluateOnChangeCheckBox.CheckedChanged += new System.EventHandler(this.EvaluateOnChangeCheckBox_CheckedChanged);
-            // 
-            // evaluateButton
-            // 
-            this.evaluateButton.Enabled = false;
-            this.evaluateButton.Location = new System.Drawing.Point(176, 265);
-            this.evaluateButton.Name = "evaluateButton";
-            this.evaluateButton.Size = new System.Drawing.Size(75, 23);
-            this.evaluateButton.TabIndex = 1;
-            this.evaluateButton.Text = "Evaluate";
-            this.evaluateButton.UseVisualStyleBackColor = true;
-            this.evaluateButton.Click += new System.EventHandler(this.EvaluateButton_Click);
-            // 
-            // inputTextBox
-            // 
-            this.tableLayoutPanel4.SetColumnSpan(this.inputTextBox, 2);
-            this.inputTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.inputTextBox.Location = new System.Drawing.Point(3, 3);
-            this.inputTextBox.Multiline = true;
-            this.inputTextBox.Name = "inputTextBox";
-            this.inputTextBox.Size = new System.Drawing.Size(248, 241);
-            this.inputTextBox.TabIndex = 2;
-            this.inputTextBox.TextChanged += new System.EventHandler(this.InputTextBox_TextChanged);
+            this.evaluationInputs.AutoSize = true;
+            this.evaluationInputs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.evaluationInputs.EvaluateOnChange = false;
+            this.evaluationInputs.InputText = "";
+            this.evaluationInputs.Location = new System.Drawing.Point(0, 0);
+            this.evaluationInputs.Mode = DevHelperGUI.EvaluationInputsMode.PlainText;
+            this.evaluationInputs.Name = "evaluationInputs";
+            this.evaluationInputs.ParseLinesSeparately = false;
+            this.evaluationInputs.PatternText = "";
+            this.evaluationInputs.Size = new System.Drawing.Size(266, 426);
+            this.evaluationInputs.State = DevHelperGUI.EvaluationState.NotEvaluated;
+            this.evaluationInputs.TabIndex = 0;
+            this.evaluationInputs.ParseLinesSeparatelyChanged += new System.EventHandler<DevHelperGUI.BooleanValueEventArgs>(this.EvaluationInputs_ParseLinesSeparatelyChanged);
+            this.evaluationInputs.PatternOptionsChanged += new System.EventHandler<DevHelperGUI.PatternOptionsEventArgs>(this.EvaluationInputs_PatternOptionsChanged);
+            this.evaluationInputs.EvaluateExpressionAsync += new System.EventHandler<DevHelperGUI.RegexEvaluatableEventArgs>(this.EvaluationInputs_EvaluateExpressionAsync);
+            this.evaluationInputs.ExpressionEvaluated += new System.EventHandler<DevHelperGUI.EvaluationFinishedEventArgs>(this.EvaluationInputs_ExpressionEvaluated);
             // 
             // resultSplitContainer
             // 
@@ -1253,13 +1114,6 @@ namespace DevHelperGUI
             this.valueTextBox.Size = new System.Drawing.Size(344, 227);
             this.valueTextBox.TabIndex = 10;
             // 
-            // saveResultsToolStripMenuItem
-            // 
-            this.saveResultsToolStripMenuItem.Name = "saveResultsToolStripMenuItem";
-            this.saveResultsToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.saveResultsToolStripMenuItem.Text = "Save &Results";
-            this.saveResultsToolStripMenuItem.Click += new System.EventHandler(this.SaveResultsToolStripMenuItem_Click);
-            // 
             // openSessionFileDialog
             // 
             this.openSessionFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
@@ -1303,14 +1157,6 @@ namespace DevHelperGUI
             this.saveResultsFileDialog.Title = "Save Results";
             this.saveResultsFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.SaveResultsFileDialog_FileOk);
             // 
-            // parseRegexBackgroundWorker
-            // 
-            this.parseRegexBackgroundWorker.WorkerSupportsCancellation = true;
-            // 
-            // evaluateExpressionBackgroundWorker
-            // 
-            this.evaluateExpressionBackgroundWorker.WorkerSupportsCancellation = true;
-            // 
             // MatchAllRegexForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1323,22 +1169,10 @@ namespace DevHelperGUI
             this.mainMenuStrip.ResumeLayout(false);
             this.mainMenuStrip.PerformLayout();
             this.mainSplitContainer.Panel1.ResumeLayout(false);
+            this.mainSplitContainer.Panel1.PerformLayout();
             this.mainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
             this.mainSplitContainer.ResumeLayout(false);
-            this.inputSplitContainer.Panel1.ResumeLayout(false);
-            this.inputSplitContainer.Panel1.PerformLayout();
-            this.inputSplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.inputSplitContainer)).EndInit();
-            this.inputSplitContainer.ResumeLayout(false);
-            this.patternGroupBox.ResumeLayout(false);
-            this.patternGroupBox.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.inputTextGroupBox.ResumeLayout(false);
-            this.inputTextGroupBox.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
             this.resultSplitContainer.Panel1.ResumeLayout(false);
             this.resultSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.resultSplitContainer)).EndInit();
@@ -1419,9 +1253,7 @@ namespace DevHelperGUI
         private System.Windows.Forms.ToolStripMenuItem showGroupLengthToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGroupValueToolStripMenuItem;
         private System.Windows.Forms.SplitContainer mainSplitContainer;
-        private System.Windows.Forms.SplitContainer inputSplitContainer;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox patternGroupBox;
         private System.Windows.Forms.SplitContainer resultSplitContainer;
         private System.Windows.Forms.SplitContainer listingsSplitContainer;
         private System.Windows.Forms.GroupBox lineResultsGroupBox;
@@ -1446,15 +1278,6 @@ namespace DevHelperGUI
         private System.Windows.Forms.ToolStripSeparator displayMatchPropertiesToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem displayMatchPropertiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hexidecimalValuesToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Label expressionErrorLabel;
-        private System.Windows.Forms.GroupBox inputTextGroupBox;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.CheckBox evaluateOnChangeCheckBox;
-        private System.Windows.Forms.Button evaluateButton;
-        private System.Windows.Forms.TextBox inputTextBox;
-        private System.Windows.Forms.TextBox patternTextBox;
-        private System.Windows.Forms.Label evaluationErrorLabel;
         private System.Windows.Forms.ToolStripSeparator tabKeyToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem patternAcceptsTabToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem inputAcceptsTabToolStripMenuItem;
@@ -1488,7 +1311,6 @@ namespace DevHelperGUI
         private System.Windows.Forms.OpenFileDialog importInputFileDialog;
         private System.Windows.Forms.SaveFileDialog saveInputFileDialog;
         private System.Windows.Forms.SaveFileDialog saveResultsFileDialog;
-        private System.ComponentModel.BackgroundWorker parseRegexBackgroundWorker;
-        private System.ComponentModel.BackgroundWorker evaluateExpressionBackgroundWorker;
+        private EvaluationInputsControl evaluationInputs;
     }
 }
