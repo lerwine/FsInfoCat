@@ -21,12 +21,12 @@ namespace FsInfoCat.Util
         UNC = 0b0010,
 
         /// <summary>
-        /// UNC format remote path string. Equivalent to  <seealso cref="UriKind.Absolute"/>.
+        /// Local absolute path string or UNC format remote path string. Equivalent to  <seealso cref="UriKind.Absolute"/>.
         /// </summary>
         Absolute = 0b0011,
 
         /// <summary>
-        /// UNC format remote path string. Equivalent to  <seealso cref="UriKind.RelativeOrAbsolute"/>.
+        /// Any valid relative or absolute path string. Equivalent to  <seealso cref="UriKind.RelativeOrAbsolute"/>.
         /// </summary>
         Any = 0b0111
     }

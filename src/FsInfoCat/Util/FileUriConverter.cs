@@ -28,7 +28,7 @@ namespace FsInfoCat.Util
     ///     <description>Matches a valid IPv6 internet address, including the format that is used in the UNC path format. The <c>ipv6</c> group matches the
     ///         address string without surrounding brackets that might be present. The <c>unc</c> group matches the <c>.ipv6-literal.net</c> domain which is
     ///         used for the UNC path format.
-    ///         <code>(?=(\[[^]]+\]|[a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)$)\[?(?<ipv6>([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)(\]|\.ipv6-literal\.net)?</code></description></item>
+    ///         <code>(?=(\[[^]]+\]|[a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)$)\[?(?<ipv6>([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)(\]|\.ipv6-literal\.net)?</code></description></item>
     /// </list></remarks>
     public abstract class FileUriConverter
     {
@@ -105,9 +105,13 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
 (([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)
 $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
+        public static readonly Regex TEMP_REGEX = new Regex(@"^
+(([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)
+$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+
         public const string PATTERN_HOST_NAME_OR_ADDRESS = @"(?i)^\s*(((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)" +
-            @"|(?=(\[[^]]+\]|[a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)$)\[?(?<ipv6>([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})" +
-            @"|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)(\]|\.ipv6-literal\.net)?" +
+            @"|(?=([a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net|\[([a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)\])$)\[?(([a-f\d]{1,4}[:-]){7}([:-]|[a-f\d]{1,4})" +
+            @"|(?=(\w*[:-]){2,7}\w*(\]|\.|$))(([a-f\d]{1,4}[:-])+|[:-])[:-]([a-f\d]{1,4}([:-][a-f\d]{1,4})*)?)(\.ipv6-literal\.net)?\]?" +
             @"|(?=[\w-.]{1,255}(?![\w-.]))[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)\s*$";
 
         /// <summary>
@@ -127,7 +131,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
 |
     (?=(\[[a-f\d:]+\]|[a-f\d:]+|[a-f\d-]+\.ipv6-literal\.net)$)
     \[?
-    (?<ipv6>([a-f\d]{1,4}[:-]){7}([:-]|[a-f\d]{1,4})|(?=(\w*[:-]){2,7}\w*$)(([a-f\d]{1,4}[:-])+|[:-])[:-]([a-f\d]{1,4}([:-][a-f\d]{1,4})*)?)
+    (?<ipv6>([a-f\d]{1,4}[:-]){7}([:-]|[a-f\d]{1,4})|(?=(\w*[:-]){2,7}\w*\]?$)(([a-f\d]{1,4}[:-])+|[:-])[:-]([a-f\d]{1,4}([:-][a-f\d]{1,4})*)?)
     (\]|(?<unc>\.ipv6-literal\.net))?
 |
     (?=[\w-.]{1,255}(?![\w-.]))
@@ -146,7 +150,8 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
 (
     (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
 |
-    (([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)
+    (?=(\[[a-f\d:]+\]|[a-f\d:]+)$)
+    \[?(?<ipv6>([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)\]?
 |
     (?=[\w-.]{1,255}(?![\w-.]))
     (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
@@ -413,7 +418,8 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             if (allowAlt)
             {
                 FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
-                if (!currentFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute) && altFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute))
+                //if (!currentFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute) && altFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute))
+                if (!currentFactory.IsWellFormedUriString(uriEncodedPath, UriKind.Absolute) && altFactory.IsWellFormedUriString(uriEncodedPath, UriKind.Absolute))
                     return altFactory.ToFileSystemPath(host, uriEncodedPath);
                 return currentFactory.ToFileSystemPath(host, uriEncodedPath);
             }
@@ -1067,7 +1073,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 case UriKind.Absolute:
                     return match.Groups[MATCH_GROUP_NAME_FILE].Success && (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
                 case UriKind.Relative:
-                    return !match.Groups[MATCH_GROUP_NAME_FILE].Success;
+                    return !(match.Groups[MATCH_GROUP_NAME_FILE].Success && (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success));
             }
             return true;
         }

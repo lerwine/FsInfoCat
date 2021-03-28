@@ -300,7 +300,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         public static readonly Regex URI_HOST_AND_PATH_STRICT_REGEX = new Regex(@"
 ^
 (
-    (?!file://)
+    (?![^:/]*:)
 |
     (?<file>
  

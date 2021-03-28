@@ -51,7 +51,7 @@ namespace FsInfoCat.Util
         public const UriComponents BEFORE_FRAGMENT_COMPONENTS = UriComponents.Scheme | UriComponents.UserInfo | UriComponents.HostAndPort |
             UriComponents.PathAndQuery | UriComponents.KeepDelimiter;
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Normalizes a URL so it is compatible for searches and comparison.
         /// </summary>
@@ -236,7 +236,7 @@ namespace FsInfoCat.Util
         public static string SplitQueryAndFragment(string uriString, out string queryAndFragment) =>
             SplitQueryAndFragment(uriString, false, out queryAndFragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Splits the <seealso cref="Uri.Query"/> strings and <seealso cref="Uri.Fragment"/>, returning a new <seealso cref="Uri"/> without these components.
         /// </summary>
@@ -277,7 +277,7 @@ namespace FsInfoCat.Util
             return new Uri(SplitQueryAndFragment(uri.OriginalString, false, out query, out fragment), UriKind.Relative);
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static Uri SplitQueryAndFragment(this Uri uri, out string query, out string fragment) =>
             SplitQueryAndFragment(uri, false, out query, out fragment);
 
@@ -297,7 +297,7 @@ namespace FsInfoCat.Util
         public static string SplitFragment(string uriString, out string fragment) =>
             SplitFragment(uriString, false, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string schemeAndAuthority,
             out string queryAndFragment)
         {
@@ -349,19 +349,19 @@ namespace FsInfoCat.Util
             return originalString;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, UriFormat format, out string schemeAndAuthority, out string queryAndFragment) =>
             SplitUriComponents(uri, false, format, out schemeAndAuthority, out queryAndFragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string schemeAndAuthority, out string queryAndFragment) =>
             SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out schemeAndAuthority, out queryAndFragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, out string schemeAndAuthority, out string queryAndFragment) =>
             SplitUriComponents(uri, false, out schemeAndAuthority, out queryAndFragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string schemeAndAuthority, out string query,
             out string fragment)
         {
@@ -420,19 +420,19 @@ namespace FsInfoCat.Util
             return originalString;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, UriFormat format, out string schemeAndAuthority, out string query, out string fragment) =>
             SplitUriComponents(uri, false, format, out schemeAndAuthority, out query, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string schemeAndAuthority, out string query,
             out string fragment) => SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out schemeAndAuthority, out query, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, out string schemeAndAuthority, out string query, out string fragment) =>
             SplitUriComponents(uri, false, out schemeAndAuthority, out query, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string scheme, out string authority,
             out string query, out string fragment)
         {
@@ -491,20 +491,20 @@ namespace FsInfoCat.Util
             return originalString;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, UriFormat format, out string scheme, out string authority, out string query, out string fragment) =>
             SplitUriComponents(uri, false, format, out scheme, out authority, out query, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string scheme, out string authority, out string query,
                 out string fragment) =>
             SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out scheme, out authority, out query, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, out string scheme, out string authority, out string query, out string fragment) =>
             SplitUriComponents(uri, false, out scheme, out authority, out query, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, UriFormat format, out string scheme, out string userInfo,
             out string hostAndPort, out string query, out string fragment)
         {
@@ -564,16 +564,16 @@ namespace FsInfoCat.Util
             return originalString;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, bool keepQueryAndFragmentDelimiters, out string scheme, out string userInfo, out string hostAndPort,
                 out string query, out string fragment) =>
             SplitUriComponents(uri, keepQueryAndFragmentDelimiters, UriFormat.UriEscaped, out scheme, out userInfo, out hostAndPort, out query, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string SplitUriComponents(this Uri uri, out string scheme, out string userInfo, out string hostAndPort, out string query, out string fragment) =>
             SplitUriComponents(uri, false, out scheme, out userInfo, out hostAndPort, out query, out fragment);
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         public static string GetGroupValue(this Match match, string groupName, string defaultValue = null)
         {
             if (match.Success)
@@ -593,7 +593,7 @@ namespace FsInfoCat.Util
             return EnsureWellFormedUriString(value, UriKind.Relative);
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Test whether a <seealso cref="Uri"/> is equal to another <seealso cref="Uri"/> with authority component comparison being case-insensitive.
         /// </summary>
@@ -623,7 +623,7 @@ namespace FsInfoCat.Util
             return !other.IsAbsoluteUri && uri.OriginalString.Equals(other.OriginalString);
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Gets the username and password from the <seealso cref="UriComponents.UserInfo"/> component of a <seealso cref="Uri"/>.
         /// </summary>
@@ -648,7 +648,7 @@ namespace FsInfoCat.Util
             return null;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.UserInfo"/> components applied.
         /// </summary>
@@ -716,7 +716,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.HostAndPort"/> components applied.
         /// </summary>
@@ -793,7 +793,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Gets the <seealso cref="UriComponents.Path"/> component of a <seealso cref="Uri"/>.
         /// </summary>
@@ -815,7 +815,7 @@ namespace FsInfoCat.Util
             return (Uri.IsWellFormedUriString(originalString, UriKind.Relative)) ? Uri.UnescapeDataString(originalString) : originalString;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Path"/> component applied.
         /// </summary>
@@ -875,7 +875,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Gets the <seealso cref="UriComponents.Query"/> component of a <seealso cref="Uri"/>.
         /// </summary>
@@ -892,7 +892,7 @@ namespace FsInfoCat.Util
             return query;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Query"/> component applied.
         /// </summary>
@@ -999,7 +999,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Gets the <seealso cref="UriComponents.Fragment"/> component of a <seealso cref="Uri"/>.
         /// </summary>
@@ -1017,7 +1017,7 @@ namespace FsInfoCat.Util
             return (index < 0) ? ((keepDelimiter) ? "" : null) : originalString.Substring((keepDelimiter) ? index : index + 1);
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Attempts to create a variant of a <seealso cref="Uri"/> with the specified <seealso cref="UriComponents.Fragment"/> component applied.
         /// </summary>
@@ -1110,7 +1110,7 @@ namespace FsInfoCat.Util
             return true;
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Gets the path segments of a relative or absolute <seealso cref="Uri"/>;
         /// </summary>
@@ -1129,7 +1129,7 @@ namespace FsInfoCat.Util
             return URI_PATH_SEGMENT_REGEX.Matches(u).Cast<Match>().Select(m => m.Value).ToArray();
         }
 
-        // TODO: Move  to ExtensionMethods
+        // DEFERRED: Move  to ExtensionMethods
         /// <summary>
         /// Adds or removes a trailing slash (empty segment) to the <seealso cref="UriComponents.Path"/> component of a <seealso cref="Uri"/>.
         /// </summary>
