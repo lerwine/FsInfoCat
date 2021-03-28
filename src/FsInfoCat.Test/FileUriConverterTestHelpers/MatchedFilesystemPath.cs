@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class MatchedFilesystemPath : FsPathDetail<PlatformPath>, IRegexMatch, IEquatable<MatchedFilesystemPath>
+    public sealed class MatchedFilesystemPath : FsPathDetail<PlatformPath>, IRegexMatch, IEquatable<MatchedFilesystemPath>
     {
         private string _match = "";
         private Uri _uri = new Uri("", UriKind.Relative);
@@ -40,7 +40,7 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
                         _uri = uri;
                     else
                         _uri = new Uri(Uri.EscapeDataString(e), UriKind.Relative);
-                }   
+                }
             }
         }
 
@@ -103,5 +103,11 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override bool Equals(object obj) => Equals(obj as MatchedFilesystemPath);
 
         public override int GetHashCode() => HashCode.Combine(IsAbsolute, Host, Path, _match, _uri, _translated);
+
+        public override string GetXPath()
+        {
+            PlatformPath owner = Owner;
+            return (owner is null) ? nameof(PlatformPath.FileSystem) : $"{Owner.GetXPath()}/{nameof(PlatformPath.FileSystem)}";
+        }
     }
 }

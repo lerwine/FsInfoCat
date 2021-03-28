@@ -124,5 +124,7 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             }
             return false;
         }
+
+        public abstract string GetXPath();
     }
 }

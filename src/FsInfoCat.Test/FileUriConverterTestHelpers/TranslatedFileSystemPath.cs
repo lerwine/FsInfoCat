@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class TranslatedFileSystemPath : FsPathDetail<MatchedFilesystemPath>, IDerivedPathInfo, IEquatable<TranslatedFileSystemPath>
+    public sealed class TranslatedFileSystemPath : FsPathDetail<MatchedFilesystemPath>, IDerivedPathInfo, IEquatable<TranslatedFileSystemPath>
     {
         private string _value = "";
         [XmlAttribute]
@@ -24,6 +24,12 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override int GetHashCode()
         {
             return HashCode.Combine(IsAbsolute, Host, Path, _value);
+        }
+
+        public override string GetXPath()
+        {
+            MatchedFilesystemPath owner = Owner;
+            return (owner is null) ? nameof(MatchedFilesystemPath.Translated) : $"{Owner.GetXPath()}/{nameof(MatchedFilesystemPath.Translated)}";
         }
     }
 }

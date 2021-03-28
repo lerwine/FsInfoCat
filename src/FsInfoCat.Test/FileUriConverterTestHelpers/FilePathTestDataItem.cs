@@ -1,11 +1,12 @@
+using FsInfoCat.Test.Helpers;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class FilePathTestDataItem : ISynchronized, IOwnable<FilePathTestData>, IEquatable<FilePathTestDataItem>
+    public sealed class FilePathTestDataItem : ISynchronized, IOwnable<FilePathTestData>, IEquatable<FilePathTestDataItem>
     {
         internal object SyncRoot => _syncRoot;
         private readonly object _syncRoot = new object();
@@ -123,5 +124,8 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override bool Equals(object obj) => Equals(obj as FilePathTestDataItem);
 
         public override int GetHashCode() => HashCode.Combine(_inputString, _windows, _linux);
+
+        public string GetXPath() => (Owner is null) ? FilePathTestData.XmlElementName_TestData :
+            $"/{FilePathTestData.XmlElementName_FilePathTestData}/{FilePathTestData.XmlElementName_TestData}[@{nameof(InputString)}={XmlBuilder.ToXPathString(InputString)}]";
     }
 }

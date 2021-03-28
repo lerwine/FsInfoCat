@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class DerivedAbsoluteUrl : AbsoluteUrl<AbsoluteMatchedUrl>, IDerivedPathInfo, IEquatable<DerivedAbsoluteUrl>
+    public sealed class DerivedAbsoluteUrl : AbsoluteUrl<AbsoluteMatchedUrl>, IDerivedPathInfo, IEquatable<DerivedAbsoluteUrl>
     {
         private string _value = "";
         [XmlAttribute]
@@ -24,6 +24,12 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override int GetHashCode()
         {
             return HashCode.Combine(Path, Query, Fragment, LocalPath, IsWellFormed, Authority, _value);
+        }
+
+        public override string GetXPath()
+        {
+            AbsoluteMatchedUrl owner = Owner;
+            return (owner is null) ? nameof(AbsoluteMatchedUrl.WellFormed) : $"{Owner.GetXPath()}/{nameof(AbsoluteMatchedUrl.WellFormed)}";
         }
     }
 }

@@ -44,7 +44,7 @@ namespace FsInfoCat.Test
             ).Concat(
                 _testItems.Items.Select(i => i.Linux.RelativeUrl).Where(u => !(u is null)).Select(u =>
                     new TestCaseData(u.Owner.Owner.InputString, UriKind.Relative)
-                    .Returns(!(u.LocalPath is null || u.LocalPath.IsAbsolute) && u.IsWellFormed)
+                    .Returns(!(u.LocalPath is null) && u.IsWellFormed)
                 )
             ).Concat(
                 _testItems.Items.Select(i => i.Linux.RelativeUrl).Where(u => !(u is null)).Select(u =>
@@ -64,7 +64,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetTrySplitFileUriStringTestCases()
         {
-            // TODO: Get test cases from XML
+            // DEFERRED: Get test cases from XML
             yield return new TestCaseData("file://mysite/My%20Documents/MyFile%231.txt")
                 .Returns(
                     new XElement(nameof(LinuxFileUriConverter.TrySplitFileUriString))
@@ -103,7 +103,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
         {
-            // TODO: Get test cases from XML
+            // DEFERRED: Get test cases from XML
             yield return new TestCaseData("mysite", "My%20Documents")
                 .Returns(TestResultBuilder.CreateTestResult("//mysite/My Documents").ToTestResultString());
         }
@@ -118,7 +118,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath3TestCases()
         {
-            // TODO: Get test cases from XML
+            // DEFERRED: Get test cases from XML
             yield return new TestCaseData("//mysite/My Documents/MyFile#1.txt")
                 .Returns(
                     new XElement(nameof(LinuxFileUriConverter.FromFileSystemPath))
@@ -148,7 +148,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath2TestCases()
         {
-            // TODO: Get test cases from XML
+            // DEFERRED: Get test cases from XML
             yield return new TestCaseData("//mysite/My Documents/MyFile#1.txt")
                 .Returns(
                     new XElement(nameof(LinuxFileUriConverter.FromFileSystemPath))
@@ -175,7 +175,7 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFromFileSystemPath1TestCases()
         {
-            // TODO: Get test cases from XML
+            // DEFERRED: Get test cases from XML
             yield return new TestCaseData("//mysite/My Documents/MyFile#1.txt")
                 .Returns(TestResultBuilder.CreateTestResult("file://mysite/My%20Documents/MyFile%231.txt").ToTestResultString());
             yield return new TestCaseData("/My Documents/MyFile#1.txt")

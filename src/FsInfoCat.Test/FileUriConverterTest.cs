@@ -157,7 +157,7 @@ namespace FsInfoCat.Test
             Assert.That(validationErrors.IsEmpty, Is.True, () => string.Join($"{Environment.NewLine}", validationErrors.Select((s, i) => $"{i + 1}. {s}").ToArray()));
         }
 
-        public static IEnumerable<TestCaseData> GetHostNameRegexTestCases() => _hostTestData.Items.OfType<DnsOrBasicHostName>().Select(testData =>
+        public static IEnumerable<TestCaseData> GetHostNameOrAddressForUriRegexTestCases() => _hostTestData.Items.OfType<DnsOrBasicHostName>().Select(testData =>
             new TestCaseData(testData.Address)
                 .Returns(TestResultBuilder.CreateMatchResult(true)
                     .AppendMatchGroupFailed("ipv4")
@@ -168,17 +168,33 @@ namespace FsInfoCat.Test
                     .AppendMatchGroupResult("ipv4", testData.Value)
                     .AppendMatchGroupFailed("ipv6")
                     .AppendMatchGroupFailed("dns").ToTestResultString())))
-            .Concat(_hostTestData.Items.OfType<IPV6HostAddress>().Select(testData => new TestCaseData(testData.Address)
-                .Returns(((testData.Type == IPV6Type.UNC) ? TestResultBuilder.CreateMatchResult(false) : TestResultBuilder.CreateMatchResult(true)
-                    .AppendMatchGroupFailed("ipv4")
-                    .AppendMatchGroupResult("ipv6", testData.Value)
-                    .AppendMatchGroupFailed("dns")).ToTestResultString())))
+            .Concat(_hostTestData.Items.OfType<IPV6HostAddress>()
+                .Select(testData =>
+                    new TestCaseData(testData.Address)
+                    .Returns(
+                        (
+                            (testData.IsUnc) ?
+                                (testData.IsDns ?
+                                    TestResultBuilder.CreateMatchResult(true)
+                                        .AppendMatchGroupFailed("ipv4")
+                                        .AppendMatchGroupFailed("ipv6")
+                                        .AppendMatchGroupResult("dns", testData.Value) :
+                                    TestResultBuilder.CreateMatchResult(false)
+                                ) :
+                                TestResultBuilder.CreateMatchResult(true)
+                                    .AppendMatchGroupFailed("ipv4")
+                                    .AppendMatchGroupResult("ipv6", testData.Value)
+                                    .AppendMatchGroupFailed("dns")
+                        ).ToTestResultString()
+                    )
+                )
+            )
             .Concat(_hostTestData.Items.OfType<InvalidHostAddress>().Select(testData => new TestCaseData(testData.Address)
                 .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())));
 
         [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetHostNameRegexTestCases))]
-        public string HostNameRegexTest(string input)
+        [TestCaseSource(nameof(GetHostNameOrAddressForUriRegexTestCases))]
+        public string HostNameOrAddressForUriRegexTest(string input)
         {
             Match match = FileUriConverter.HOST_NAME_OR_ADDRESS_FOR_URI_REGEX.Match(input);
             return match.CreateTestResultWithGroups("ipv4", "ipv6", "dns").ToTestResultString();
@@ -215,19 +231,19 @@ namespace FsInfoCat.Test
             return matches.Select(m => m.Value).ToArray();
         }
 
-        public static IEnumerable<TestCaseData> GetPatternHostNameTestCases() => _hostTestData.Items.OfType<DnsOrBasicHostName>().Select(testData =>
+        public static IEnumerable<TestCaseData> GetPatternHostNameOrAddressTestCases() => _hostTestData.Items.OfType<DnsOrBasicHostName>().Select(testData =>
             new TestCaseData(testData.Address)
-                .Returns(TestResultBuilder.CreateMatchResult(testData.Value).ToTestResultString()))
+                .Returns(TestResultBuilder.CreateMatchResult(testData.Address).ToTestResultString()))
             .Concat(_hostTestData.Items.OfType<IPV4HostAddress>().Select(testData => new TestCaseData(testData.Address)
-                .Returns(TestResultBuilder.CreateMatchResult(testData.Value).ToTestResultString())))
+                .Returns(TestResultBuilder.CreateMatchResult(testData.Address).ToTestResultString())))
             .Concat(_hostTestData.Items.OfType<IPV6HostAddress>().Select(testData => new TestCaseData(testData.Address)
-                .Returns(TestResultBuilder.CreateMatchResult(testData.Value).ToTestResultString())))
+                .Returns(TestResultBuilder.CreateMatchResult(testData.Address).ToTestResultString())))
             .Concat(_hostTestData.Items.OfType<InvalidHostAddress>().Select(testData => new TestCaseData(testData.Address)
                 .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())));
 
         [Test, Property("Priority", 1)]
-        [TestCaseSource(nameof(GetPatternHostNameTestCases))]
-        public string PatternHostNameTest(string input)
+        [TestCaseSource(nameof(GetPatternHostNameOrAddressTestCases))]
+        public string PatternHostNameOrAddressTest(string input)
         {
             Match match = Regex.Match(input, FileUriConverter.PATTERN_HOST_NAME_OR_ADDRESS);
             return match.CreateTestResult().ToTestResultString();
@@ -239,7 +255,7 @@ namespace FsInfoCat.Test
             .Concat(_hostTestData.Items.OfType<IPV4HostAddress>().Select(testData => new TestCaseData(testData.Address)
                 .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())))
             .Concat(_hostTestData.Items.OfType<IPV6HostAddress>().Select(testData => new TestCaseData(testData.Address)
-                .Returns(((testData.Type == IPV6Type.Normal) ? TestResultBuilder.CreateMatchResult(testData.Value) :
+                .Returns((!(testData.IsBracketed || testData.IsUnc) ? TestResultBuilder.CreateMatchResult(testData.Value) :
                     TestResultBuilder.CreateMatchResult(false)).ToTestResultString())))
             .Concat(_hostTestData.Items.OfType<InvalidHostAddress>().Select(testData => new TestCaseData(testData.Address)
                 .Returns(TestResultBuilder.CreateMatchResult(false).ToTestResultString())));

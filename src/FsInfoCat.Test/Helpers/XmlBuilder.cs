@@ -17,6 +17,86 @@ namespace FsInfoCat.Test.Helpers
     /// </summary>
     public static class XmlBuilder
     {
+        public static readonly Regex XPathEncodableS = new Regex(@"[&'<>\p{Zl}\p{Zp}\p{C}]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex XPathEncodableD = new Regex(@"[""&<>\p{Zl}\p{Zp}\p{C}]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public static string ToXPathString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return "";
+            if (text.Contains('\''))
+            {
+                if (text.Contains('"'))
+                    text = XPathEncodableS.Replace(text, match =>
+                    {
+                        char c = match.Value[0];
+                        switch (c)
+                        {
+                            case '&':
+                                return "&amp;";
+                            case '<':
+                                return "&lt;";
+                            case '>':
+                                return "&gt;";
+                            case '\'':
+                                return "&apos;";
+                            default:
+                                int n = c;
+                                if (n > 0xff)
+                                    return $@"&#x{n:x4};";
+                                return $@"&#x{n:x2};";
+                        }
+                    });
+                else
+                {
+                    if (XPathEncodableD.IsMatch(text))
+                        text = XPathEncodableD.Replace(text, match =>
+                        {
+                            char c = match.Value[0];
+                            switch (c)
+                            {
+                                case '&':
+                                    return "&amp;";
+                                case '<':
+                                    return "&lt;";
+                                case '>':
+                                    return "&gt;";
+                                case '"':
+                                    return "&quot;";
+                                default:
+                                    int n = c;
+                                    if (n > 0xff)
+                                        return $@"&#x{n:x4};";
+                                    return $@"&#x{n:x2};";
+                            }
+                        });
+                    return $"\"{text}\"";
+                }
+            }
+            else if (XPathEncodableS.IsMatch(text))
+                text = XPathEncodableS.Replace(text, match =>
+                {
+                    char c = match.Value[0];
+                    switch (c)
+                    {
+                        case '&':
+                            return "&amp;";
+                        case '<':
+                            return "&lt;";
+                        case '>':
+                            return "&gt;";
+                        case '\'':
+                            return "&apos;";
+                        default:
+                            int n = c;
+                            if (n > 0xff)
+                                return $@"&#x{n:x4};";
+                            return $@"&#x{n:x2};";
+                    }
+                });
+            return $"'{text}'";
+        }
+
         public static bool TryGetObjectStringValue(this XObject node, out string result)
         {
             if (node is null)

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class AbsoluteMatchedUrl : AbsoluteUrl<PlatformPath>, IRegexMatch, IEquatable<AbsoluteMatchedUrl>
+    public sealed class AbsoluteMatchedUrl : AbsoluteUrl<PlatformPath>, IRegexMatch, IEquatable<AbsoluteMatchedUrl>
     {
         private string _match = "";
         [XmlAttribute]
@@ -144,6 +144,12 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             hash.Add(_translated);
             hash.Add(_wellFormed);
             return hash.ToHashCode();
+        }
+
+        public override string GetXPath()
+        {
+            PlatformPath owner = Owner;
+            return (owner is null) ? nameof(PlatformPath.AbsoluteUrl) : $"{Owner.GetXPath()}/{nameof(PlatformPath.AbsoluteUrl)}";
         }
     }
 }

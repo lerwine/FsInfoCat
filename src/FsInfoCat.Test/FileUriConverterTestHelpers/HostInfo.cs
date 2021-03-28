@@ -38,5 +38,6 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         }
 
         protected bool Equals(HostInfo<TOwner> other) => _value.Equals(other._value) && _match.Equals(other._match);
+        public abstract string GetXPath();
     }
 }

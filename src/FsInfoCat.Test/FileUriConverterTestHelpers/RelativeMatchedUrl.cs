@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class RelativeMatchedUrl : RelativeUrl<PlatformPath>, IRegexMatch, IEquatable<RelativeMatchedUrl>
+    public sealed class RelativeMatchedUrl : RelativeUrl<PlatformPath>, IRegexMatch, IEquatable<RelativeMatchedUrl>
     {
         private string _match = "";
         [XmlAttribute]
@@ -137,6 +137,12 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override int GetHashCode()
         {
             return HashCode.Combine(Path, Query, Fragment, LocalPath, _match, _translated, _wellFormed);
+        }
+
+        public override string GetXPath()
+        {
+            PlatformPath owner = Owner;
+            return (owner is null) ? nameof(PlatformPath.RelativeUrl) : $"{Owner.GetXPath()}/{nameof(PlatformPath.RelativeUrl)}";
         }
     }
 }

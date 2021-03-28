@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Xml.Serialization;
 
@@ -54,8 +55,10 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         {
             UriAuthority authority = _authority;
             if (authority is null)
-                return false;
+                Assert.Inconclusive("Error in {GetTypePath()}: Absolute URI has no Authority");
             UriScheme scheme = authority.Scheme;
+            if (scheme is null)
+                Assert.Inconclusive("Error in {authority.GetTypePath()}: Absolute URI has no Authority");
             return !(scheme is null) && scheme.Name == "file";
         }
 

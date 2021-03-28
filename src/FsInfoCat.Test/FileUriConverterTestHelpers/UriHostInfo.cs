@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class UriHostInfo : HostInfo<UriAuthority>, IEquatable<UriHostInfo>
+    public sealed class UriHostInfo : HostInfo<UriAuthority>, IEquatable<UriHostInfo>
     {
         [XmlAttribute]
         public HostType Type { get; set; }
@@ -56,6 +56,12 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override int GetHashCode()
         {
             return HashCode.Combine(Match, Value, Type, Port);
+        }
+
+        public override string GetXPath()
+        {
+            UriAuthority owner = Owner;
+            return (owner is null) ? nameof(UriAuthority.Host) : $"{Owner.GetXPath()}/{nameof(UriAuthority.Host)}";
         }
     }
 }

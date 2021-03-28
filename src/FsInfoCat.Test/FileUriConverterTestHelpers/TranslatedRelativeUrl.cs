@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class TranslatedRelativeUrl : DerivedRelativeUrl<RelativeMatchedUrl>, IEquatable<TranslatedRelativeUrl>
+    public sealed class TranslatedRelativeUrl : DerivedRelativeUrl<RelativeMatchedUrl>, IEquatable<TranslatedRelativeUrl>
     {
         [XmlAttribute]
         public bool IsWellFormed { get; set; }
@@ -14,5 +14,11 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override bool Equals(object obj) => Equals(obj as TranslatedRelativeUrl);
 
         public override int GetHashCode() => HashCode.Combine(Path, Query, Fragment, LocalPath, Value, IsWellFormed);
+
+        public override string GetXPath()
+        {
+            RelativeMatchedUrl owner = Owner;
+            return (owner is null) ? nameof(RelativeMatchedUrl.Translated) : $"{Owner.GetXPath()}/{nameof(RelativeMatchedUrl.Translated)}";
+        }
     }
 }

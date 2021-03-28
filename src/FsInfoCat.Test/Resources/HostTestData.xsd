@@ -40,7 +40,8 @@
         <xs:complexContent>
             <xs:extension base="HostType">
                 <xs:attribute name="Address" type="xs:string" use="required" />
-                <xs:attribute name="Type" type="IPV6Type" use="required" />
+                <xs:attribute name="IsBracketed" type="xs:boolean" use="required" />
+                <xs:attribute name="IsUnc" type="xs:boolean" use="required" />
                 <xs:attribute name="IsDns" type="xs:boolean" use="required" />
             </xs:extension>
         </xs:complexContent>

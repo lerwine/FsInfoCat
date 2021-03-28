@@ -4,13 +4,19 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class DerivedRelativeUrl : DerivedRelativeUrl<RelativeMatchedUrl>, IEquatable<DerivedRelativeUrl>
+    public sealed class DerivedRelativeUrl : DerivedRelativeUrl<RelativeMatchedUrl>, IEquatable<DerivedRelativeUrl>
     {
-        public virtual bool Equals([AllowNull] DerivedRelativeUrl other) => !(other is null) && (ReferenceEquals(this, other) || BaseEquals(other));
+        public bool Equals([AllowNull] DerivedRelativeUrl other) => !(other is null) && (ReferenceEquals(this, other) || BaseEquals(other));
 
         public override bool Equals(object obj) => Equals(obj as DerivedRelativeUrl);
 
         public override int GetHashCode() => HashCode.Combine(Path, Query, Fragment, LocalPath, Value);
+
+        public override string GetXPath()
+        {
+            RelativeMatchedUrl owner = Owner;
+            return (owner is null) ? nameof(RelativeMatchedUrl.WellFormed) : $"{Owner.GetXPath()}/{nameof(RelativeMatchedUrl.WellFormed)}";
+        }
     }
 
     public abstract class DerivedRelativeUrl<TOwner> : RelativeUrl<TOwner>, IDerivedPathInfo

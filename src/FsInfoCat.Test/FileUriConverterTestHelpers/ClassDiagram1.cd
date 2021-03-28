@@ -222,34 +222,30 @@
   <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.DnsOrBasicHostName">
     <Position X="3.5" Y="19.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAA=</HashCode>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>FileUriConverterTestHelpers\DnsOrBasicHostName.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.IPV6HostAddress">
     <Position X="6.25" Y="17" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAgAAACAQAAAEAAAAA=</HashCode>
+      <HashCode>AQAAAAAAAAAAACAAAAAAAAAAAAAkAAAAAAAAAAAAAAA=</HashCode>
       <FileName>FileUriConverterTestHelpers\IPV6HostAddress.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.IPV4HostAddress">
     <Position X="3.5" Y="14.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAA=</HashCode>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>FileUriConverterTestHelpers\IPV4HostAddress.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.InvalidHostAddress">
     <Position X="6" Y="15" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>FileUriConverterTestHelpers\InvalidHostAddress.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.HostNameType">
     <Position X="3.5" Y="17" Width="1.5" />
@@ -261,7 +257,7 @@
   <Class Name="FsInfoCat.Test.FileUriConverterTestHelpers.HostTestData">
     <Position X="0.5" Y="18.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAIAAAAAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAgIAAAAAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>FileUriConverterTestHelpers\HostTestData.cs</FileName>
     </TypeIdentifier>
   </Class>

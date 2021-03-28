@@ -452,12 +452,12 @@
                     <Scheme Name="C" Delimiter=":/" />
                 </Authority>
             </AbsoluteUrl>
-            <FileSystem Match="C:/" IsAbsolute="true">
+            <FileSystem Match="C:/" IsAbsolute="false">
                 <Path Match="C:/">
-                    <Directory>C:/</Directory>
-                    <FileName xsi:nil="true" />
+                    <Directory></Directory>
+                    <FileName>C:</FileName>
                 </Path>
-                <URI>file:///C:/</URI>
+                <URI>C:</URI>
             </FileSystem>
         </Linux>
     </TestData>

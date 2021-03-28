@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class PlatformPath : IOwnable<FilePathTestDataItem>, IEquatable<PlatformPath>
+    public sealed class PlatformPath : IOwnable<FilePathTestDataItem>, IEquatable<PlatformPath>
     {
         internal object SyncRoot => _syncRoot;
         private readonly object _syncRoot = new object();
@@ -190,6 +190,18 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override int GetHashCode()
         {
             return HashCode.Combine(_absoluteUrl, _relativeUrl, _fileSystem);
+        }
+
+        public string GetXPath()
+        {
+            FilePathTestDataItem owner = Owner;
+            if (owner is null)
+                return nameof(PlatformPath);
+            if (ReferenceEquals(owner.Windows, this))
+                return $"{owner.GetXPath()}/{nameof(FilePathTestDataItem.Windows)}";
+            if (ReferenceEquals(owner.Linux, this))
+                return $"{owner.GetXPath()}/{nameof(FilePathTestDataItem.Linux)}";
+            return nameof(PlatformPath);
         }
     }
 }

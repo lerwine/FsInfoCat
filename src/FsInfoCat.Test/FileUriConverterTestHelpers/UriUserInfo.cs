@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class UriUserInfo : IOwnable<UriAuthority>, IEquatable<UriUserInfo>
+    public sealed class UriUserInfo : IOwnable<UriAuthority>, IEquatable<UriUserInfo>
     {
         internal object SyncRoot => _syncRoot;
         private readonly object _syncRoot = new object();
@@ -50,5 +50,11 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override bool Equals(object obj) => Equals(obj as UriUserInfo);
 
         public override int GetHashCode() => HashCode.Combine(_userName, Password);
+
+        public string GetXPath()
+        {
+            UriAuthority owner = Owner;
+            return (owner is null) ? nameof(UriAuthority.UserInfo) : $"{Owner.GetXPath()}/{nameof(UriAuthority.UserInfo)}";
+        }
     }
 }

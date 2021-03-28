@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class PathSegmentInfo : IOwnable<IHasPathSegmentInfo>, IRegexMatch, IEquatable<PathSegmentInfo>
+    public sealed class PathSegmentInfo : IOwnable<IHasPathSegmentInfo>, IRegexMatch, IEquatable<PathSegmentInfo>
     {
         internal object SyncRoot => _syncRoot;
         private readonly object _syncRoot = new object();
@@ -58,5 +58,11 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override bool Equals(object obj) => Equals(obj as PathSegmentInfo);
 
         public override int GetHashCode() => HashCode.Combine(_match, _directory, FileName);
+
+        public string GetXPath()
+        {
+            IHasPathSegmentInfo owner = Owner;
+            return (owner is null) ? nameof(IHasPathSegmentInfo.Path) : $"{Owner.GetXPath()}/{nameof(IHasPathSegmentInfo.Path)}";
+        }
     }
 }

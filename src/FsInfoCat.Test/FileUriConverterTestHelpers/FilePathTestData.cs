@@ -1,20 +1,21 @@
 using System;
 using System.IO;
-using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    [XmlRoot("FilePathTestData")]
+    [XmlRoot(XmlElementName_FilePathTestData)]
     public class FilePathTestData : ISynchronized
     {
+        public const string XmlElementName_FilePathTestData = "FilePathTestData";
+        public const string XmlElementName_TestData = "TestData";
         internal object SyncRoot => _syncRoot;
         private readonly object _syncRoot = new object();
         object ISynchronized.SyncRoot => _syncRoot;
         private FilePathTestDataCollection _items;
 
-        [XmlElement("TestData", IsNullable = false)]
+        [XmlElement(XmlElementName_TestData, IsNullable = false)]
         public FilePathTestDataCollection Items
         {
             get => _items;

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers
 {
-    public class FsPathInfo : IOwnable<IRelativeUrl>, IEquatable<FsPathInfo>
+    public sealed class FsPathInfo : IOwnable<IRelativeUrl>, IEquatable<FsPathInfo>
     {
         internal object SyncRoot => _syncRoot;
         private readonly object _syncRoot = new object();
@@ -38,5 +38,11 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         public override bool Equals(object obj) => Equals(obj as FsPathInfo);
 
         public override int GetHashCode() => HashCode.Combine(IsAbsolute, Path);
+
+        public string GetXPath()
+        {
+            IRelativeUrl owner = Owner;
+            return (owner is null) ? nameof(IRelativeUrl.LocalPath) : $"{Owner.GetXPath()}/{nameof(IRelativeUrl.LocalPath)}";
+        }
     }
 }

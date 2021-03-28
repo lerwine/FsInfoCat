@@ -6,19 +6,21 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
     public class IPV6HostAddress : HostNameType
     {
         [XmlAttribute]
-        public IPV6Type Type { get; set; }
+        public bool IsBracketed { get; set; }
+
+        [XmlAttribute]
+        public bool IsUnc { get; set; }
 
         [XmlAttribute]
         public bool IsDns { get; set; }
 
         public override UriHostInfo ToUriHostInfo(int? port = null)
         {
-            string name = Type switch
-            {
-                IPV6Type.UNC => Address.ToLower().Replace("-", ":").Replace(".ipv6-literal.net", ""),
-                IPV6Type.Bracketed => Address.Replace("[", "").Replace("]", ""),
-                _ => Address
-            };
+            string name = (IsUnc) ?
+                (
+                    IsBracketed ? Address.Replace("[", "").Replace("]", "") : Address
+                ).Replace("-", ":").Replace(".ipv6-literal.net", "") :
+                (IsBracketed ? Address.Replace("[", "").Replace("]", "") : Address);
             return new UriHostInfo
             {
                 Match = (port.HasValue) ? $"{name}:{port.Value}" : name,
