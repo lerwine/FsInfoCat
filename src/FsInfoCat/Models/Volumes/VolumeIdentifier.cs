@@ -12,6 +12,13 @@ namespace FsInfoCat.Models.Volumes
         public const string GROUP_NAME_VOLUME_NS = "n";
         public const string GROUP_NAME_ID_NS = "i";
         public const string GROUP_NAME_VALUE = "v";
+
+        /// <summary>
+        /// Matches consecutive and trailing URI path separators, allowing up to 3 consecutive path separator characters following the scheme separator.
+        /// </summary>
+        /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
+        /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
+        public static readonly Regex PathSeparatorNormalize = new Regex(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)", RegexOptions.Compiled);
         public static readonly Regex NsPathRegex = new Regex($@"^((?<{GROUP_NAME_UUID_NS}>uuid(:|$))|(?<{GROUP_NAME_VOLUME_NS}>volume(:(?<{GROUP_NAME_ID_NS}>id(:|$))?|$))?)(?<{GROUP_NAME_VALUE}>.+)?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         public static readonly Regex SerialNumberPathRegex = new Regex(@"^(?:(?=[a-f\d]{1,4}-[a-f\d])([a-f\d]{1,4})-([a-f\d]{1,4})|([a-f\d]{5,8})(?:-([a-f\d]{1,2}))?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -211,8 +218,11 @@ namespace FsInfoCat.Models.Volumes
                         uri = new Uri(uri.AbsoluteUri, UriKind.Absolute);
                     if (uri.Host.ToLower() != uri.Host)
                         uri.TrySetHostComponent(uri.Host.ToLower(), null, out uri);
-                    if (!uri.AbsolutePath.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR))
-                        uri.TrySetPathComponent(uri.AbsolutePath + UriHelper.URI_PATH_SEPARATOR_STRING, out uri);
+                    string path = PathSeparatorNormalize.Replace(uri.AbsolutePath, "");
+                    if (path != uri.AbsolutePath)
+                        uri.TrySetPathComponent(path.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR) ? path : $"{path}/", out uri);
+                    else if (!path.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR))
+                        uri.TrySetPathComponent($"{path}/", out uri);
                     _location = uri;
                     _serialNumber = null;
                     _ordinal = null;
