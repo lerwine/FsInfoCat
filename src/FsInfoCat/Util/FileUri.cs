@@ -103,15 +103,13 @@ namespace FsInfoCat.Util
 
         public static implicit operator FileUri(FileSystemInfo fsi) => (fsi is null) ? null : new FileUri(fsi);
 
-        public IEnumerable<string> GetPathComponents()
+        public Stack<string> GetPathComponents()
         {
-            FileUri fileUri = this;
-            if (!(Parent is null))
-                do
-                {
-                    yield return fileUri.Name;
-                } while (!((fileUri = fileUri.Parent) is null));
-            yield return (Name == UriHelper.URI_PATH_SEPARATOR_STRING) ? "" : Name;
+            Stack<string> result = new Stack<string>();
+            result.Push((Name == UriHelper.URI_PATH_SEPARATOR_STRING) ? "" : Name);
+            for (FileUri fileUri = Parent; !(fileUri is null); fileUri = fileUri.Parent)
+                result.Push(fileUri.Name);
+            return result;
         }
 
         public bool IsEmpty() => Name.Length == 0 && Host.Length == 0 && Parent is null;

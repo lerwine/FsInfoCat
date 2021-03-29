@@ -159,6 +159,36 @@ namespace FsInfoCat.PS
             return (ReferenceEquals(parentUri, fileUri.Parent)) ? fileUri : new FileUri(parentUri, fileUri.Name);
         }
 
+        public bool Equals(FileUri x, FileUri y, out RegisteredVolumeItem item)
+        {
+            if (x is null)
+            {
+                item = null;
+                return y is null;
+            }
+            if (y is null)
+            {
+                item = null;
+                return false;
+            }
+            if (ReferenceEquals(x, y))
+            {
+                GetUriKey(x, out item);
+                return true;
+            }
+            FileUri u1 = GetUriKey(x, out item);
+            FileUri u2 = GetUriKey(x, out RegisteredVolumeItem v2);
+            if (!(item is null))
+                return ReferenceEquals(u1, u2);
+            if (v2 is null && Equals(x.Parent, y.Parent, out item))
+            {
+                if (item is null)
+                    return x.Name == y.Name;
+                return ((RegisteredVolumeInfo)item.BaseObject).NameComparer.Equals(x.Name, y.Name);
+            }
+            return false;
+        }
+
         public bool Equals(FileUri x, FileUri y)
         {
             if (x is null)
@@ -167,12 +197,19 @@ namespace FsInfoCat.PS
                 return false;
             if (ReferenceEquals(x, y))
                 return true;
-            x = GetUriKey(x, out _);
-            y = GetUriKey(y, out _);
-            if (ReferenceEquals(x, y))
-                return true;
-            // TODO: Implement Equals
-            throw new NotImplementedException();
+            if (!CASE_IGNORED_NAME_COMPARER.Equals(x.Host, y.Host))
+                return false;
+            FileUri u1 = GetUriKey(x, out RegisteredVolumeItem v1);
+            FileUri u2 = GetUriKey(x, out RegisteredVolumeItem v2);
+            if (!(v1 is null))
+                return ReferenceEquals(u1, u2);
+            if (v2 is null && Equals(x.Parent, y.Parent, out v1))
+            {
+                if (v1 is null)
+                    return x.Name == y.Name;
+                return ((RegisteredVolumeInfo)v1.BaseObject).NameComparer.Equals(x.Name, y.Name);
+            }
+            return false;
         }
 
         public IEnumerator<RegisteredVolumeItem> GetEnumerator() => _backingCollection.GetEnumerator();
