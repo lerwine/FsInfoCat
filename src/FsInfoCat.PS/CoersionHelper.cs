@@ -583,17 +583,15 @@ namespace FsInfoCat.PS
 
         #endregion
 
-        public static bool TryGetErrorId(this ErrorCategory errorCategory, out MessageId errorId)
-        {
-            // TODO: Implement TryGetErrorId
-            throw new NotImplementedException();
-        }
+        //public static bool TryGetErrorId(this ErrorCategory errorCategory, out MessageId errorId)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public static bool TryGetTargetObject(this Exception exception, out string targetName, out object targetObject)
-        {
-            // TODO: Implement TryGetTargetObject
-            throw new NotImplementedException();
-        }
+        //public static bool TryGetTargetObject(this Exception exception, out string targetName, out object targetObject)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public static ErrorRecord ToArgumentOutOfRangeError(this MessageId messageId, string message, ErrorCategory errorCategory, string paramName, object actualValue)
         {
@@ -716,88 +714,88 @@ namespace FsInfoCat.PS
             return ToErrorRecord(errorId, null, exception, errorCategory, targetName, targetObject);
         }
 
-        public static ErrorRecord ToErrorRecord(this Exception exception, string message, ErrorCategory errorCategory, string targetName, object targetObject)
-        {
-            TryGetErrorId(errorCategory, out MessageId errorId);
-            return ToErrorRecord(errorId, message, exception, errorCategory, targetName, targetObject);
-        }
+        //public static ErrorRecord ToErrorRecord(this Exception exception, string message, ErrorCategory errorCategory, string targetName, object targetObject)
+        //{
+        //    TryGetErrorId(errorCategory, out MessageId errorId);
+        //    return ToErrorRecord(errorId, message, exception, errorCategory, targetName, targetObject);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this MessageId errorId, string message, Exception exception, ErrorCategory errorCategory)
-        {
-            TryGetTargetObject(exception, out string targetName, out object targetObject);
-            return ToErrorRecord(errorId, message, exception, errorCategory, targetName, targetObject);
-        }
+        //public static ErrorRecord ToErrorRecord(this MessageId errorId, string message, Exception exception, ErrorCategory errorCategory)
+        //{
+        //    TryGetTargetObject(exception, out string targetName, out object targetObject);
+        //    return ToErrorRecord(errorId, message, exception, errorCategory, targetName, targetObject);
+        //}
 
         public static ErrorRecord ToErrorRecord(this MessageId errorId, Exception exception, string targetName, object targetObject)
         {
             return ToErrorRecord(errorId, null, exception, targetName, targetObject);
         }
 
-        public static ErrorRecord ToErrorRecord(this Exception exception, string message, string targetName, object targetObject)
-        {
-            TryGetErrorCategory(exception, out ErrorCategory errorCategory);
-            return ToErrorRecord(exception, message, errorCategory, targetName, targetObject);
-        }
+        //public static ErrorRecord ToErrorRecord(this Exception exception, string message, string targetName, object targetObject)
+        //{
+        //    TryGetErrorCategory(exception, out ErrorCategory errorCategory);
+        //    return ToErrorRecord(exception, message, errorCategory, targetName, targetObject);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this Exception exception, ErrorCategory errorCategory, string targetName, object targetObject)
-        {
-            return ToErrorRecord(exception, null, errorCategory, targetName, targetObject);
-        }
+        //public static ErrorRecord ToErrorRecord(this Exception exception, ErrorCategory errorCategory, string targetName, object targetObject)
+        //{
+        //    return ToErrorRecord(exception, null, errorCategory, targetName, targetObject);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this MessageId errorId, string message, Exception exception)
-        {
-            if (!errorId.TryGetAmbientValue(out ErrorCategory errorCategory))
-                TryGetErrorCategory(exception, out errorCategory);
-            return ToErrorRecord(errorId, message, exception, errorCategory);
-        }
+        //public static ErrorRecord ToErrorRecord(this MessageId errorId, string message, Exception exception)
+        //{
+        //    if (!errorId.TryGetAmbientValue(out ErrorCategory errorCategory))
+        //        TryGetErrorCategory(exception, out errorCategory);
+        //    return ToErrorRecord(errorId, message, exception, errorCategory);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this MessageId errorId, Exception exception, ErrorCategory errorCategory)
-        {
-            return ToErrorRecord(errorId, null, exception, errorCategory);
-        }
+        //public static ErrorRecord ToErrorRecord(this MessageId errorId, Exception exception, ErrorCategory errorCategory)
+        //{
+        //    return ToErrorRecord(errorId, null, exception, errorCategory);
+        //}
 
         public static ErrorRecord ToErrorRecord(this MessageId errorId, string targetName, object targetObject)
         {
             return ToErrorRecord(errorId, null, targetName, targetObject);
         }
 
-        public static ErrorRecord ToErrorRecord(this Exception exception, string message, ErrorCategory errorCategory)
-        {
-            TryGetTargetObject(exception, out string targetName, out object targetObject);
-            return ToErrorRecord(exception, message, errorCategory, targetName, targetObject);
-        }
+        //public static ErrorRecord ToErrorRecord(this Exception exception, string message, ErrorCategory errorCategory)
+        //{
+        //    TryGetTargetObject(exception, out string targetName, out object targetObject);
+        //    return ToErrorRecord(exception, message, errorCategory, targetName, targetObject);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this Exception exception, string targetName, object targetObject)
-        {
-            TryGetErrorCategory(exception, out ErrorCategory errorCategory);
-            return ToErrorRecord(exception, errorCategory, targetName, targetObject);
-        }
+        //public static ErrorRecord ToErrorRecord(this Exception exception, string targetName, object targetObject)
+        //{
+        //    TryGetErrorCategory(exception, out ErrorCategory errorCategory);
+        //    return ToErrorRecord(exception, errorCategory, targetName, targetObject);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this MessageId errorId, Exception exception)
-        {
-            if (!errorId.TryGetAmbientValue(out ErrorCategory errorCategory))
-                TryGetErrorCategory(exception, out errorCategory);
-            return ToErrorRecord(errorId, exception, errorCategory);
-        }
+        //public static ErrorRecord ToErrorRecord(this MessageId errorId, Exception exception)
+        //{
+        //    if (!errorId.TryGetAmbientValue(out ErrorCategory errorCategory))
+        //        TryGetErrorCategory(exception, out errorCategory);
+        //    return ToErrorRecord(errorId, exception, errorCategory);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this Exception exception, string message)
-        {
-            TryGetErrorCategory(exception, out ErrorCategory errorCategory);
-            return ToErrorRecord(exception, message, errorCategory);
-        }
+        //public static ErrorRecord ToErrorRecord(this Exception exception, string message)
+        //{
+        //    TryGetErrorCategory(exception, out ErrorCategory errorCategory);
+        //    return ToErrorRecord(exception, message, errorCategory);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this Exception exception, ErrorCategory errorCategory)
-        {
-            TryGetErrorId(errorCategory, out MessageId errorId);
-            return ToErrorRecord(errorId, exception, errorCategory);
-        }
+        //public static ErrorRecord ToErrorRecord(this Exception exception, ErrorCategory errorCategory)
+        //{
+        //    TryGetErrorId(errorCategory, out MessageId errorId);
+        //    return ToErrorRecord(errorId, exception, errorCategory);
+        //}
 
-        public static ErrorRecord ToErrorRecord(this Exception exception, bool forceCreateNew = false)
-        {
-            if (!forceCreateNew && TryGetErrorRecord(exception, out ErrorRecord errorRecord))
-                return errorRecord;
-            return ToErrorRecord(exception, null);
-        }
+        //public static ErrorRecord ToErrorRecord(this Exception exception, bool forceCreateNew = false)
+        //{
+        //    if (!forceCreateNew && TryGetErrorRecord(exception, out ErrorRecord errorRecord))
+        //        return errorRecord;
+        //    return ToErrorRecord(exception, null);
+        //}
 
         /// <summary>
         /// Attempts to get a <seealso cref="ErrorRecord"/> from an input value.
