@@ -7,7 +7,7 @@
                     <Directory>/</Directory>
                     <FileName xsi:nil="true" />
                 </Path>
-                <LocalPath IsAbsolute="false">\</LocalPath>
+                <LocalPath IsAbsolute="false"></LocalPath>
                 <Authority>
                     <Scheme Name="file" Delimiter="://" />
                 </Authority>
@@ -30,18 +30,11 @@
         <Windows>
             <RelativeUrl Match="\" IsWellFormed="false">
                 <Path Match="\">
-                    <Directory>\</Directory>
+                    <Directory></Directory>
                     <FileName xsi:nil="true" />
                 </Path>
-                <LocalPath IsAbsolute="false">\</LocalPath>
+                <LocalPath IsAbsolute="false"></LocalPath>
             </RelativeUrl>
-            <FileSystem Match="\" IsAbsolute="false">
-                <Path Match="\">
-                    <Directory>\</Directory>
-                    <FileName xsi:nil="true" />
-                </Path>
-                <URI>file:///</URI>
-            </FileSystem>
         </Windows>
         <Linux>
             <RelativeUrl Match="\" IsWellFormed="false">
@@ -67,20 +60,14 @@
                     <Directory>/</Directory>
                     <FileName xsi:nil="true" />
                 </Path>
-                <LocalPath IsAbsolute="false">\</LocalPath>
+                <LocalPath IsAbsolute="false"></LocalPath>
             </RelativeUrl>
             <FileSystem Match="/" IsAbsolute="false">
                 <Path Match="/">
-                    <Directory>/</Directory>
+                    <Directory></Directory>
                     <FileName xsi:nil="true" />
                 </Path>
-                <URI>/</URI>
-                <Translated Value="\" IsAbsolute="false">
-                    <Path Match="\">
-                        <Directory>\</Directory>
-                        <FileName xsi:nil="true" />
-                    </Path>
-                </Translated>
+                <URI></URI>
             </FileSystem>
         </Windows>
         <Linux>
@@ -130,17 +117,17 @@
         <Windows>
             <RelativeUrl Match="\My Documents" IsWellFormed="false">
                 <Path Match="\My Documents">
-                    <Directory>\</Directory>
+                    <Directory></Directory>
                     <FileName>My Documents</FileName>
                 </Path>
-                <LocalPath IsAbsolute="false">\My Documents</LocalPath>
+                <LocalPath IsAbsolute="false">My Documents</LocalPath>
             </RelativeUrl>
-            <FileSystem Match="\My Documents" IsAbsolute="false">
-                <Path Match="\My Documents">
-                    <Directory>\</Directory>
+            <FileSystem Match="My Documents" IsAbsolute="false">
+                <Path Match="My Documents">
+                    <Directory></Directory>
                     <FileName>My Documents</FileName>
                 </Path>
-                <URI>file:///My%20Documents</URI>
+                <URI>My%20Documents</URI>
             </FileSystem>
         </Windows>
         <Linux>
@@ -390,7 +377,7 @@
                     <Directory>/</Directory>
                     <FileName>C:</FileName>
                 </Path>
-                <LocalPath IsAbsolute="true">/C:/</LocalPath>
+                <LocalPath IsAbsolute="true">/C:</LocalPath>
                 <Authority>
                     <Scheme Name="file" Delimiter="://" />
                 </Authority>

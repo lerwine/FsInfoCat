@@ -55,19 +55,21 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         {
             UriAuthority authority = _authority;
             if (authority is null)
-                Assert.Inconclusive("Error in {GetTypePath()}: Absolute URI has no Authority");
+                Assert.Inconclusive($"{GetXPath()}/{nameof(Authority)} is null");
             UriScheme scheme = authority.Scheme;
             if (scheme is null)
-                Assert.Inconclusive("Error in {authority.GetTypePath()}: Absolute URI has no Authority");
+                Assert.Inconclusive($"{authority.GetXPath()}/{nameof(UriAuthority.Scheme)} is null");
             return !(scheme is null) && scheme.Name == "file";
         }
 
         public string GetHostName()
         {
             UriAuthority authority = _authority;
-            return (authority is null) ? "" : authority.GetHostName();
+            if (authority is null)
+                Assert.Inconclusive($"{GetXPath()}/{nameof(Authority)} is null");
+            return authority.GetHostName();
         }
 
-        protected bool Equals(AbsoluteUrl<TOwner> other) => IsWellFormed == other.IsWellFormed && _authority.Equals(other.Authority) && base.BaseEquals(other);
+        protected bool Equals(AbsoluteUrl<TOwner> other) => IsWellFormed == other.IsWellFormed && _authority.Equals(other.Authority) && BaseEquals(other);
     }
 }

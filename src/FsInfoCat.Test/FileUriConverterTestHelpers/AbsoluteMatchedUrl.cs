@@ -108,6 +108,54 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             }
         }
 
+        internal RelativeUrl<PlatformPath> GetAltUrl(bool wellformedOnly = false)
+        {
+            PlatformPath platformPath = Owner;
+            if (platformPath is null || (platformPath = platformPath.GetAltPath()) is null)
+                return null;
+            AbsoluteMatchedUrl altAbsolute = platformPath.AbsoluteUrl;
+            RelativeMatchedUrl altRelative;
+            if (altAbsolute is null)
+            {
+                if (wellformedOnly)
+                    return ((altRelative = platformPath.RelativeUrl) is null || !altRelative.IsWellFormed) ? null : altRelative;
+                return platformPath.RelativeUrl;
+            }
+            if (altAbsolute.IsWellFormed)
+                return altAbsolute;
+            altRelative = platformPath.RelativeUrl;
+            if (wellformedOnly)
+                return (altRelative is null || altRelative.IsWellFormed) ? altRelative : null;
+            return (altRelative is null || !altRelative.IsWellFormed) ? (RelativeUrl<PlatformPath>)altAbsolute : altRelative;
+        }
+
+        internal RelativeMatchedUrl GetRelativeUrl(bool wellformedOnly = false)
+        {
+            PlatformPath platformPath = Owner;
+            if (platformPath is null)
+                return null;
+            RelativeMatchedUrl url = platformPath.RelativeUrl;
+            return (url is null || url.IsWellFormed || !wellformedOnly) ? url : null;
+        }
+
+        internal AbsoluteMatchedUrl GetAltAbsoluteUrl(bool wellformedOnly = false)
+        {
+            PlatformPath platformPath = Owner;
+            if (platformPath is null || (platformPath = platformPath.GetAltPath()) is null)
+                return null;
+            AbsoluteMatchedUrl altAbsolute = platformPath.AbsoluteUrl;
+            return (altAbsolute is null || altAbsolute.IsWellFormed || !wellformedOnly) ? altAbsolute : null;
+        }
+
+        internal RelativeMatchedUrl GetAltRelativeUrl(bool wellformedOnly = false)
+        {
+            PlatformPath platformPath = Owner;
+            if (platformPath is null || (platformPath = platformPath.GetAltPath()) is null)
+                return null;
+            RelativeMatchedUrl alt = platformPath.RelativeUrl;
+            return (alt is null || alt.IsWellFormed || !wellformedOnly) ? alt : null;
+        }
+
         public bool Equals([AllowNull] AbsoluteMatchedUrl other)
         {
             if (other is null)

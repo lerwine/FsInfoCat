@@ -1,7 +1,6 @@
 using FsInfoCat.Test.Helpers;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace FsInfoCat.Test.FileUriConverterTestHelpers

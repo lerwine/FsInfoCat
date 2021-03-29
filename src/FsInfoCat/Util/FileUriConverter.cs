@@ -174,14 +174,14 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
         /// </summary>
         /// <remarks>This will also match relative self-reference sequences (<c>/./<c>). This does not match parent segment references (<c>/../</c>)
         /// unless they are at the beginning of the string.</remarks>
-        public static readonly Regex URI_REL_PATH_SEPARATOR_NORMALIZE_REGEX = new Regex(@"^(\.\.?/+|[\s/]+)+|/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
+        public static readonly Regex URI_REL_PATH_SEPARATOR_NORMALIZE_REGEX = new Regex(@"^(\s*((\.\.?/+)+|/+)|\s+)|(/(?=/)|/\.(?=/|$))+|(/\s*|\s+)$", RegexOptions.Compiled);
 
         /// <summary>
         /// Matches consecutive and trailing URI path separators, allowing up to 3 consecutive path separator characters following the scheme separator.
         /// </summary>
         /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
-        public static readonly Regex URI_ABS_PATH_SEPARATOR_NORMALIZE_REGEX = new Regex(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
+        public static readonly Regex URI_ABS_PATH_SEPARATOR_NORMALIZE_REGEX = new Regex(@"^((\s*(\.\.?/+)+)|\s+)|((?<!^\s*file:/?)/(?=/)|/\.(?=/|$))+|((?<=.)/\s*|\s+)$", RegexOptions.Compiled);
 
         /// <summary>
         /// Matches incorrectly-cased URI escape sequences as well as consecutive URI path separators as well as leading and trailing whitespace and path separators.
@@ -194,7 +194,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
         /// </list>
         /// <para>This will also match relative self-reference sequences (<c>/./<c>). This does not match parent segment references (<c>/../</c>)
         /// unless they are at the beginning of the string.</para></remarks>
-        public static readonly Regex REL_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*(\.\.?/+)+}|(?<case>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
+        public static readonly Regex REL_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*((\.\.?/+)+|\s+)|(?<case>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|(/(?=/)|/\.(?=/|$))+|(/\s*|\s+)$", RegexOptions.Compiled);
 
         /// <summary>
         /// Matches incorrectly-cased file scheme name and URI escape sequences as well as consecutive and trailing URI path separators, allowing up to 3 consecutive
@@ -209,7 +209,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
         /// </list>
         /// <para>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</para></remarks>
-        public static readonly Regex ABS_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*((?<scheme>(?!file:)(?i)FILE(?=:))|(\.\.?/+|\s+)+)|(?<esc>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)|[/\s]+$", RegexOptions.Compiled);
+        public static readonly Regex ABS_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*((?<scheme>(?!file:)(?i)FILE(?=:))|(\.\.?/+)+|\s+)|(?<esc>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)|(/\s*|\s+)$", RegexOptions.Compiled);
 
         [Obsolete("This does not distinguish between a windows drive path and a linux path that might look like a windows drive path. file:///c:/dirname not parsed with root as c:/")]
         public static readonly Regex FILE_URI_COMPONENTS_LAX_REGEX = new Regex(@"^
@@ -419,7 +419,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             {
                 FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
                 //if (!currentFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute) && altFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute))
-                if (!currentFactory.IsWellFormedUriString(uriEncodedPath, UriKind.Absolute) && altFactory.IsWellFormedUriString(uriEncodedPath, UriKind.Absolute))
+                if (!currentFactory.IsWellFormedUriString(uriEncodedPath, UriKind.Relative) && altFactory.IsWellFormedUriString(uriEncodedPath, UriKind.Relative))
                     return altFactory.ToFileSystemPath(host, uriEncodedPath);
                 return currentFactory.ToFileSystemPath(host, uriEncodedPath);
             }
@@ -870,10 +870,11 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <returns>The normalized URI string.</returns>
         public static string NormalizeRelativeFileUri(string uriPathString)
         {
+            // BUG: This should not be removing leading slashes.
             if (string.IsNullOrEmpty(uriPathString))
                 return "";
-            if (REL_URI_STRING_NORMALIZE_REGEX.IsMatch(uriPathString))
-                return REL_URI_STRING_NORMALIZE_REGEX.Replace(uriPathString, m =>
+            if (URI_ABS_PATH_SEPARATOR_NORMALIZE_REGEX.IsMatch(uriPathString))
+                return URI_ABS_PATH_SEPARATOR_NORMALIZE_REGEX.Replace(uriPathString, m =>
                     (m.Groups[MATCH_GROUP_NAME_CASE].Success) ? m.Value.ToUpper() :
                     ((m.Groups[MATCH_GROUP_NAME_SCHEME].Success) ? m.Groups[MATCH_GROUP_NAME_SCHEME].Value.ToLower() : ""));
             return uriPathString;

@@ -114,7 +114,6 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             _path = new PathSegmentInfo { Owner = this };
         }
 
-
         protected bool BaseEquals(RelativeUrl<TOwner> other)
         {
             if (Query == other.Query && Fragment == other.Fragment && _path.Equals(other._path))

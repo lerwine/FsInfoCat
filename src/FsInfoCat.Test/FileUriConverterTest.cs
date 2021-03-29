@@ -289,43 +289,51 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases() => _testItems.Items.Select(testDataItem => testDataItem.Windows.AbsoluteUrl)
             .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme())
-            .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Windows, false)
+            .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Windows, false) // Windows.AbsoluteUrl => PlatformType.Windows
+                .SetArgDisplayNames($"host: {TestHelperExtensions.ToCsEscapedString(url.GetHostName())}",
+                    $"uriEncodedPath: {TestHelperExtensions.ToCsEscapedString(url.Path.Match)}", "platform: Windows", "allowAlt: false")
                 .Returns(url.LocalPath.Path))
             .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.AbsoluteUrl)
                 .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme())
-                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Linux, false)
+                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Linux, false) // Linux.AbsoluteUrl => PlatformType.Linux
+                    .SetArgDisplayNames($"host: {TestHelperExtensions.ToCsEscapedString(url.GetHostName())}",
+                        $"uriEncodedPath: {TestHelperExtensions.ToCsEscapedString(url.Path.Match)}", "platform: Linux", "allowAlt: false")
                     .Returns(url.LocalPath.Path)))
             .Concat(_testItems.Items.Select(testDataItem => testDataItem.Windows.RelativeUrl)
-                .Where(u => !(u is null) && u.IsWellFormed && (u.Owner.AbsoluteUrl is null || !u.Owner.AbsoluteUrl.IsWellFormed))
-                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Windows, false)
+                .Where(u => !(u is null) && u.IsWellFormed && u.GetAbsoluteUrl(true) is null)
+                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Windows, false) // Windows.RelativeUrl => PlatformType.Windows
+                    .SetArgDisplayNames("host: \"\"", $"uriEncodedPath: {TestHelperExtensions.ToCsEscapedString(url.Path.Match)}", "platform: Windows",
+                        "allowAlt: false")
                     .Returns(url.LocalPath.Path)))
             .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.RelativeUrl)
-                .Where(u => !(u is null) && u.IsWellFormed && (u.Owner.AbsoluteUrl is null || !u.Owner.AbsoluteUrl.IsWellFormed))
-                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Linux, false)
+                .Where(u => !(u is null) && u.IsWellFormed && u.GetAbsoluteUrl(true) is null)
+                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Linux, false) // Linux.RelativeUrl => PlatformType.Linux
+                    .SetArgDisplayNames("host: \"\"", $"uriEncodedPath: {TestHelperExtensions.ToCsEscapedString(url.Path.Match)}", "platform: Linux",
+                        "allowAlt: false")
                     .Returns(url.LocalPath.Path)))
             .Concat(_testItems.Items.Select(testDataItem => testDataItem.Windows.AbsoluteUrl)
-                .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme() &&
-                    (u.Owner.Owner.Linux.AbsoluteUrl is null || !u.Owner.Owner.Linux.AbsoluteUrl.IsWellFormed) &&
-                    (u.Owner.Owner.Linux.RelativeUrl is null || !u.Owner.Owner.Linux.RelativeUrl.IsWellFormed))
-                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Linux, true)
+                .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme() && u.GetAltUrl(true) is null)
+                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Linux, true) // Windows.AbsoluteUrl => PlatformType.Linux/Windows
+                    .SetArgDisplayNames($"host: {TestHelperExtensions.ToCsEscapedString(url.GetHostName())}",
+                        $"uriEncodedPath: {TestHelperExtensions.ToCsEscapedString(url.Path.Match)}", "platform: Linux", "allowAlt: true")
                     .Returns(url.LocalPath.Path)))
             .Concat(_testItems.Items.Select(testDataItem => testDataItem.Windows.RelativeUrl)
-                .Where(u => !(u is null) && u.IsWellFormed &&
-                    (u.Owner.Owner.Linux.AbsoluteUrl is null || !u.Owner.Owner.Linux.AbsoluteUrl.IsWellFormed) &&
-                    (u.Owner.Owner.Linux.RelativeUrl is null || !u.Owner.Owner.Linux.RelativeUrl.IsWellFormed))
-                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Linux, true)
+                .Where(u => !(u is null) && u.IsWellFormed && u.GetAltUrl(true) is null)
+                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Linux, true) // Windows.RelativeUrl => PlatformType.Linux/Windows
+                    .SetArgDisplayNames("host: \"\"", $"uriEncodedPath: {TestHelperExtensions.ToCsEscapedString(url.Path.Match)}", "platform: Linux",
+                        "allowAlt: true")
                     .Returns(url.LocalPath.Path)))
             .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.AbsoluteUrl)
-                .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme() &&
-                    (u.Owner.Owner.Windows.AbsoluteUrl is null || !u.Owner.Owner.Windows.AbsoluteUrl.IsWellFormed) &&
-                    (u.Owner.Owner.Windows.RelativeUrl is null || !u.Owner.Owner.Windows.RelativeUrl.IsWellFormed))
-                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Linux, true)
+                .Where(u => !(u is null) && u.IsWellFormed && u.IsFileScheme() && u.GetAltUrl(true) is null)
+                .Select(url => new TestCaseData(url.GetHostName(), url.Path.Match, PlatformType.Windows, true) // Linux.AbsoluteUrl => PlatformType.Windows/Linux
+                    .SetArgDisplayNames($"host: {TestHelperExtensions.ToCsEscapedString(url.GetHostName())}",
+                        $"uriEncodedPath: {TestHelperExtensions.ToCsEscapedString(url.Path.Match)}", "platform: Windows", "allowAlt: true")
                     .Returns(url.LocalPath.Path)))
             .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.RelativeUrl)
-                .Where(u => !(u is null) && u.IsWellFormed &&
-                    (u.Owner.Owner.Windows.AbsoluteUrl is null || !u.Owner.Owner.Windows.AbsoluteUrl.IsWellFormed) &&
-                    (u.Owner.Owner.Windows.RelativeUrl is null || !u.Owner.Owner.Windows.RelativeUrl.IsWellFormed))
-                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Linux, true)
+                .Where(u => !(u is null) && u.IsWellFormed && u.GetAltUrl(true) is null)
+                .Select(url => new TestCaseData("", url.Path.Match, PlatformType.Windows, true) // Linux.RelativeUrl => PlatformType.Windows/Linux
+                    .SetArgDisplayNames("host: \"\"", $"uriEncodedPath: {TestHelperExtensions.ToCsEscapedString(url.Path.Match)}", "platform: Windows",
+                        "allowAlt: true")
                     .Returns(url.LocalPath.Path)));
 
         [Test, Property("Priority", 1)]

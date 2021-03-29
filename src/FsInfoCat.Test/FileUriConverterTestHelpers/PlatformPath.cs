@@ -163,6 +163,16 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             }
         }
 
+        public PlatformPath GetAltPath()
+        {
+            FilePathTestDataItem owner = Owner;
+            if (owner is null)
+                return null;
+            if (ReferenceEquals(this, owner.Linux))
+                return owner.Windows;
+            return ReferenceEquals(this, owner.Windows) ? owner.Linux : null;
+        }
+
         public bool Equals([AllowNull] PlatformPath other)
         {
             if (other is null)

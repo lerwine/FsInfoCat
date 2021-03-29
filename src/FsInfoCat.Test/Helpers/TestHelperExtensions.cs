@@ -9,6 +9,54 @@ namespace FsInfoCat.Test.Helpers
 {
     public static class TestHelperExtensions
     {
+        private static readonly Regex EscapeCharRegex = new Regex(@"(?! )\s|[\p{C}\p{Z}\\""]", RegexOptions.Compiled);
+        private static readonly Regex VerbatimCompatibleRegex = new Regex(@"^[^\p{C}\p{Z}]*$", RegexOptions.Compiled);
+
+        public static string ToCsEscapedString(string value)
+        {
+            if (value is null)
+                return "null";
+
+            if (value.Length == 0)
+                return "\"\"";
+
+            if (EscapeCharRegex.IsMatch(value))
+            {
+                string esc = EscapeCharRegex.Replace(value, match =>
+                {
+                    char c = match.Value[0];
+                    switch (c)
+                    {
+                        case '\t':
+                            return @"\t";
+                        case '\r':
+                            return @"\r";
+                        case '\n':
+                            return @"\n";
+                        case '\a':
+                            return @"\a";
+                        case '\f':
+                            return @"\f";
+                        case '\v':
+                            return @"\v";
+                        case '"':
+                            return "\\\"";
+                        case '\\':
+                            return @"\\";
+                        default:
+                            int n = (int)c;
+                            if (n < 0x0100)
+                                return $@"\x{n:x2}";
+                            return $@"\u{n:x4}";
+                    }
+                });
+                if (VerbatimCompatibleRegex.IsMatch(value) || (value = value.Replace("\"", "\"\"")).Length < esc.Length)
+                    return $"@\"{value}\"";
+                return $"\"{esc}\"";
+            }
+            return $"\"{value}\"";
+        }
+
         public static string SerializesAsXml(Match match, params string[] groupNames)
         {
             XmlDocument xmlDocument = new XmlDocument();

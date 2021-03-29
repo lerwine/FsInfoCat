@@ -499,12 +499,12 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 if (match.Success)
                 {
                     if (string.IsNullOrEmpty(hostName))
-                        return match.Value;
+                        return (match.Groups[MATCH_GROUP_NAME_ROOT].Success && match.Length == 2) ? $"{match.Value}{DIRECTORY_SEPARATOR_CHAR}" : match.Value;
                     if (IPV6_ADDRESS_REGEX.IsMatch(hostName))
-                        return match.Groups[MATCH_GROUP_NAME_ROOT].Success ? $"\\\\{hostName.Replace(":", "-")}{FQDN_IPV6_UNC}{fsPath}" :
+                        return fsPath.StartsWith(DIRECTORY_SEPARATOR_CHAR) ? $"\\\\{hostName.Replace(":", "-")}{FQDN_IPV6_UNC}{fsPath}" :
                             $"\\\\{hostName.Replace(":", "-")}{FQDN_IPV6_UNC}\\{fsPath}";
                     if (BASIC_DNS_OR_IPV4_NAME_REGEX.IsMatch(hostName))
-                        return match.Groups[MATCH_GROUP_NAME_ROOT].Success ? $"\\\\{hostName}{fsPath}" : $"\\\\{hostName}\\{fsPath}";
+                        return fsPath.StartsWith(DIRECTORY_SEPARATOR_CHAR) ? $"\\\\{hostName}{fsPath}" : $"\\\\{hostName}\\{fsPath}";
                     throw new ArgumentOutOfRangeException(nameof(hostName));
                 }
             }

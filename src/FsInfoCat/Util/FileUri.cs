@@ -143,7 +143,8 @@ namespace FsInfoCat.Util
                 return "";
             if (Parent is null)
                 return FileUriConverter.ToFileSystemPath(Host, Name, platform);
-            return FileUriConverter.ToFileSystemPath(Host, (Parent.Name.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR) ? Parent.ToUriPath(new StringBuilder()).Append(Name) :
+            return FileUriConverter.ToFileSystemPath(Host, (Parent.Name.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR) ?
+                Parent.ToUriPath(new StringBuilder()).Append(Name) :
                 Parent.ToUriPath(new StringBuilder()).Append(UriHelper.URI_PATH_SEPARATOR_CHAR).Append(Name)).ToString(), platform);
         }
 
