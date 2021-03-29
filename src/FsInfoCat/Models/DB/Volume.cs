@@ -10,7 +10,7 @@ using System.Threading;
 namespace FsInfoCat.Models.DB
 {
     [DisplayColumn(PropertyName_VolumeID, PropertyName_DisplayName, false)]
-    public class Volume : IVolume
+    public class Volume : IVolumeRecord
     {
         public const int Max_Length_DisplayName = 128;
         public const string PropertyName_VolumeID = nameof(VolumeID);
@@ -703,7 +703,7 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-        public IEqualityComparer<string> GetPathComparer()
+        public IEqualityComparer<string> GetNameComparer()
         {
             StringComparer comparer = _segmentNameComparer;
             if (comparer is null)
@@ -711,7 +711,7 @@ namespace FsInfoCat.Models.DB
             return comparer;
         }
 
-        IHostDevice IVolume.Host { get => Host; set => Host = (HostDevice)value; }
+        IHostDevice IVolumeRecord.Host { get => Host; set => Host = (HostDevice)value; }
 
         #endregion
 

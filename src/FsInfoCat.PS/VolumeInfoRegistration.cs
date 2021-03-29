@@ -42,7 +42,7 @@ namespace FsInfoCat.PS
             Monitor.Enter(_syncRoot);
             try
             {
-                FileUri key = CreateKey(volumeInfo.RootUri, out RegisteredVolumeItem existing);
+                FileUri key = GetUriKey(volumeInfo.RootUri, out RegisteredVolumeItem existing);
                 if (!(existing is null))
                 {
                     if (!ReferenceEquals(existing, item))
@@ -87,11 +87,25 @@ namespace FsInfoCat.PS
 
         public bool ContainsKey(VolumeIdentifier key) => Keys.Contains(key);
 
+        public bool ContainsRootUri(FileUri uri)
+        {
+            Monitor.Enter(_syncRoot);
+            try { return !(GetUriKey(uri, out _) is null); }
+            finally { Monitor.Exit(_syncRoot); }
+        }
+
+        public bool ContainsVolumeName(string name)
+        {
+            if (name is null)
+                return false;
+            return _backingCollection.Any(v => CASE_IGNORED_NAME_COMPARER.Equals(((RegisteredVolumeInfo)v.BaseObject).VolumeName, name));
+        }
+
         public void CopyTo(RegisteredVolumeItem[] array, int arrayIndex) => _backingCollection.CopyTo(array, arrayIndex);
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)_backingCollection).CopyTo(array, index);
 
-        public FileUri CreateKey(FileUri fileUri, out RegisteredVolumeItem result)
+        public FileUri GetUriKey(FileUri fileUri, out RegisteredVolumeItem result)
         {
             if (fileUri is null)
             {
@@ -109,7 +123,7 @@ namespace FsInfoCat.PS
                 {
                     RegisteredVolumeInfo i = (RegisteredVolumeInfo)item.BaseObject;
                     FileUri f = i.RootUri;
-                    if (CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && i.PathComparer.Equals(path, f.ToString()))
+                    if (CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && i.NameComparer.Equals(path, f.ToString()))
                     {
                         result = item;
                         return f;
@@ -118,7 +132,7 @@ namespace FsInfoCat.PS
                 result = null;
                 return fileUri;
             }
-            FileUri parentUri = CreateKey(fileUri.Parent, out result);
+            FileUri parentUri = GetUriKey(fileUri.Parent, out result);
             if (result is null)
             {
                 string host = fileUri.Host;
@@ -127,7 +141,7 @@ namespace FsInfoCat.PS
                 {
                     RegisteredVolumeInfo rvi = (RegisteredVolumeInfo)v.BaseObject;
                     FileUri f = rvi.RootUri;
-                    return CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && rvi.PathComparer.Equals(path, f.ToString());
+                    return CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && rvi.NameComparer.Equals(path, f.ToString());
                 });
             }
             else
@@ -139,7 +153,7 @@ namespace FsInfoCat.PS
                 {
                     RegisteredVolumeInfo vi = (RegisteredVolumeInfo)v.BaseObject;
                     FileUri r = rvi.RootUri;
-                    return ReferenceEquals(r.Parent, parentRoot) && vi.PathComparer.Equals(childName, r.Name) && vi.PathComparer.Equals(childName, r.Name);
+                    return ReferenceEquals(r.Parent, parentRoot) && vi.NameComparer.Equals(childName, r.Name) && vi.NameComparer.Equals(childName, r.Name);
                 });
             }
             return (ReferenceEquals(parentUri, fileUri.Parent)) ? fileUri : new FileUri(parentUri, fileUri.Name);
@@ -153,8 +167,8 @@ namespace FsInfoCat.PS
                 return false;
             if (ReferenceEquals(x, y))
                 return true;
-            x = CreateKey(x, out _);
-            y = CreateKey(y, out _);
+            x = GetUriKey(x, out _);
+            y = GetUriKey(y, out _);
             if (ReferenceEquals(x, y))
                 return true;
             // TODO: Implement Equals
@@ -174,6 +188,11 @@ namespace FsInfoCat.PS
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Removes (unregisters) a <seealso cref="RegisteredVolumeItem"/>.
+        /// </summary>
+        /// <param name="item">The <seealso cref="RegisteredVolumeItem"/> to remove.</param>
+        /// <returns><see langword="true"/> if the this contained the referened <paramref name="item"/> and it was removed; otherwise, <see langword="false"/>.</returns>
         public bool Remove(RegisteredVolumeItem item)
         {
             Monitor.Enter(_syncRoot);
@@ -181,12 +200,18 @@ namespace FsInfoCat.PS
             finally { Monitor.Exit(_syncRoot); }
         }
 
+        /// <summary>
+        /// Looks for a <seealso cref="RegisteredVolumeItem"/> whose <seealso cref="IVolumeInfo.RootUri"/> is equal to or is a parent of the specified <seealso cref="FileUri"/>.
+        /// </summary>
+        /// <param name="uri">A <seealso cref="FileUri"/> that is a hierarchical member of a volume.</param>
+        /// <param name="value">Returns he matching <seealso cref="RegisteredVolumeItem"/>.</param>
+        /// <returns><see langword="true"/> if a matching <seealso cref="RegisteredVolumeItem"/> was found; otherwise, <see langword="false"/>.</returns>
         public bool TryFind(FileUri uri, out RegisteredVolumeItem value)
         {
             Monitor.Enter(_syncRoot);
             try
             {
-                FileUri key = CreateKey(uri, out value);
+                FileUri key = GetUriKey(uri, out value);
                 if (!(value is null))
                     return true;
                 if (ReferenceEquals(key, uri))
@@ -201,24 +226,56 @@ namespace FsInfoCat.PS
             return false;
         }
 
+        /// <summary>
+        /// Looks for a <seealso cref="IVolumeInfo"/> whose <seealso cref="IVolumeInfo.RootUri"/> is equal to or is a parent of the specified <seealso cref="FileUri"/>.
+        /// </summary>
+        /// <param name="uri">A <seealso cref="FileUri"/> that is a hierarchical member of a volume.</param>
+        /// <param name="value">Returns he matching <seealso cref="IVolumeInfo"/>.</param>
+        /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
         public bool TryFind(FileUri uri, out IVolumeInfo value) => TryFind(uri, out value);
 
+        /// <summary>
+        /// Looks for a <seealso cref="RegisteredVolumeItem"/> where the <seealso cref="IVolumeInfo.RootUri"/> is equal to the specified <seealso cref="FileUri"/>.
+        /// </summary>
+        /// <param name="uri">The <seealso cref="FileUri"/> which represents the volume root path.</param>
+        /// <param name="value">Returns he matching <seealso cref="RegisteredVolumeItem"/>.</param>
+        /// <returns><see langword="true"/> if a matching <seealso cref="RegisteredVolumeItem"/> was found; otherwise, <see langword="false"/>.</returns>
         public bool TryFindByRootURI(FileUri uri, out RegisteredVolumeItem value)
         {
             Monitor.Enter(_syncRoot);
-            try { CreateKey(uri, out value); }
+            try { GetUriKey(uri, out value); }
             finally { Monitor.Exit(_syncRoot); }
             return !(value is null);
         }
 
+        /// <summary>
+        /// Looks for a <seealso cref="IVolumeInfo"/> where the <seealso cref="IVolumeInfo.RootUri"/> is equal to the specified <seealso cref="FileUri"/>.
+        /// </summary>
+        /// <param name="uri">The <seealso cref="FileUri"/> which represents the volume root path.</param>
+        /// <param name="value">Returns he matching <seealso cref="IVolumeInfo"/>.</param>
+        /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
         public bool TryFindByRootURI(FileUri uri, out IVolumeInfo value) => TryFindByRootURI(uri, out value);
 
+        /// <summary>
+        /// Looks up a <seealso cref="RegisteredVolumeItem"/> by its <seealso cref="VolumeIdentifier"/>.
+        /// </summary>
+        /// <param name="key">The <seealso cref="VolumeIdentifier"/> to look for.</param>
+        /// <param name="value">Returns a <seealso cref="RegisteredVolumeItem"/> whose <seealso cref="IVolumeInfo.Identifier"/> matches given
+        /// <seealso cref="VolumeIdentifier"/> <paramref name="key"/>.</param>
+        /// <returns><see langword="true"/> if a matching <seealso cref="RegisteredVolumeItem"/> was found; otherwise, <see langword="false"/>.</returns>
         public bool TryGetValue(VolumeIdentifier key, out RegisteredVolumeItem value)
         {
             value = _backingCollection.FirstOrDefault(v => ((RegisteredVolumeInfo)v.BaseObject).Identifier.Equals(key));
             return !(value is null);
         }
 
+        /// <summary>
+        /// Looks up a <seealso cref="RegisteredVolumeItem"/> by its <seealso cref="IVolumeInfo.VolumeName"/>.
+        /// </summary>
+        /// <param name="volumeName">The case-insensitive volume name to look up.</param>
+        /// <param name="value">Returns a <seealso cref="RegisteredVolumeItem"/> whose <seealso cref="IVolumeInfo.VolumeName"/> matches given
+        /// <seealso cref="VolumeIdentifier"/> <paramref name="key"/>.</param>
+        /// <returns><see langword="true"/> if a matching <seealso cref="RegisteredVolumeItem"/> was found; otherwise, <see langword="false"/>.</returns>
         public bool TryFindByName(string volumeName, out RegisteredVolumeItem value)
         {
             if (volumeName is null)
@@ -230,7 +287,45 @@ namespace FsInfoCat.PS
             return !(value is null);
         }
 
+        /// <summary>
+        /// Looks up a <seealso cref="IVolumeInfo"/> by its <seealso cref="IVolumeInfo.VolumeName"/>.
+        /// </summary>
+        /// <param name="volumeName">The case-insensitive volume name to look up.</param>
+        /// <param name="value">Returns a <seealso cref="IVolumeInfo"/> whose <seealso cref="IVolumeInfo.VolumeName"/> matches given
+        /// <seealso cref="VolumeIdentifier"/> <paramref name="key"/>.</param>
+        /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
         public bool TryFindByName(string volumeName, out IVolumeInfo value) => TryFindByName(volumeName, out value);
+
+        public bool TryFindMatching(IVolumeInfo item, out RegisteredVolumeItem actual)
+        {
+            if (item is null || _backingCollection.Count == 0)
+            {
+                actual = null;
+                return false;
+            }
+
+            if ((item is RegisteredVolumeItem && !((actual = _backingCollection.FirstOrDefault(r => ReferenceEquals(r, item))) is null)) ||
+                (item is RegisteredVolumeInfo && !((actual = _backingCollection.FirstOrDefault(r => ReferenceEquals(r.BaseObject, item))) is null)))
+                return true;
+            if (TryGetValue(item.Identifier, out actual))
+            {
+                RegisteredVolumeInfo volumeInfo = (RegisteredVolumeInfo)actual.BaseObject;
+                return volumeInfo.CaseSensitive == item.CaseSensitive && CASE_IGNORED_NAME_COMPARER.Equals(volumeInfo.VolumeName, item.VolumeName) &&
+                    volumeInfo.RootUri.ToString() == item.RootUri.ToString() && volumeInfo.DriveFormat == item.DriveFormat;
+            }
+            return false;
+        }
+
+        public bool TryFindMatching(IVolumeInfo item, out IVolumeInfo actual)
+        {
+            if (TryFindMatching(item, out RegisteredVolumeItem result))
+            {
+                actual = result;
+                return true;
+            }
+            actual = null;
+            return false;
+        }
 
         /// <summary>
         /// Wrapper class to allow PowerShell scripts to associate additional custom properties.
@@ -244,7 +339,7 @@ namespace FsInfoCat.PS
             string IVolumeInfo.DriveFormat { get => ((RegisteredVolumeInfo)BaseObject).DriveFormat; set => throw new NotSupportedException(); }
             VolumeIdentifier IVolumeInfo.Identifier { get => ((RegisteredVolumeInfo)BaseObject).Identifier; set => throw new NotSupportedException(); }
             bool IVolumeInfo.CaseSensitive { get => ((RegisteredVolumeInfo)BaseObject).CaseSensitive; set => throw new NotSupportedException(); }
-            IEqualityComparer<string> IVolumeInfo.GetPathComparer() => ((RegisteredVolumeInfo)BaseObject).PathComparer;
+            IEqualityComparer<string> IVolumeInfo.GetNameComparer() => ((RegisteredVolumeInfo)BaseObject).NameComparer;
             event PropertyValueChangeEventHandler INotifyPropertyValueChanging.PropertyValueChanging
             {
                 add => ((RegisteredVolumeInfo)BaseObject).PropertyValueChanging += value;
@@ -302,8 +397,8 @@ namespace FsInfoCat.PS
             public string DriveFormat { get; }
             public VolumeIdentifier Identifier { get; }
             public bool CaseSensitive { get; }
-            public IEqualityComparer<string> GetPathComparer() => PathComparer;
-            public IEqualityComparer<string> PathComparer { get; }
+            public IEqualityComparer<string> GetNameComparer() => NameComparer;
+            public IEqualityComparer<string> NameComparer { get; }
             FileUri IVolumeInfo.RootUri { get => RootUri; set => throw new NotSupportedException(); }
             string IVolumeInfo.VolumeName { get => VolumeName; set => throw new NotSupportedException(); }
             string IVolumeInfo.DriveFormat { get => DriveFormat; set => throw new NotSupportedException(); }

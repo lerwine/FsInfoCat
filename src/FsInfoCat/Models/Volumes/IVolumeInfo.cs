@@ -42,6 +42,6 @@ namespace FsInfoCat.Models.Volumes
         /// </summary>
         bool CaseSensitive { get; set; }
 
-        IEqualityComparer<string> GetPathComparer();
+        IEqualityComparer<string> GetNameComparer();
     }
 }

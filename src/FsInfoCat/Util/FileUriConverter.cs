@@ -649,7 +649,6 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <seealso cref="Uri.UriSchemeFile">file</seealso> URL or a relative path string.</returns>
         public bool TrySplitFileUriString(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute)
         {
-#warning This is failing on "/My Documents/MyFile#1.txt" because encoding's not getting fixed.
             if (string.IsNullOrEmpty(uriString))
             {
                 hostName = directory = fileName = "";

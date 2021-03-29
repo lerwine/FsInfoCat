@@ -1,6 +1,6 @@
-using FsInfoCat.Models;
 using FsInfoCat.Models.Crawl;
 using FsInfoCat.Models.Volumes;
+using FsInfoCat.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,11 +41,11 @@ namespace FsInfoCat.PS
                 return true;
             }
             IFsDirectory parent;
-            if (job.FsRoots.TryFindVolume(directoryInfo, out FsRoot fsRoot))
+            if (job.FsRoots.TryFind(new FileUri(directoryInfo), out FsRoot fsRoot))
                 job.WriteDebug($"Using existing FsRoot({fsRoot.RootPathName})");
             else
             {
-                if (job.GetVolumes().TryFindVolume(directoryInfo, out IVolumeInfo volume))
+                if (job.RegisteredVolumes.TryFind(directoryInfo, out IVolumeInfo volume))
                 {
                     job.WriteDebug($"Adding new FsRoot({volume})");
                     fsRoot = new FsRoot(volume);
@@ -96,7 +96,7 @@ namespace FsInfoCat.PS
             }
             else
             {
-                result = childNodes.OfType<FsDirectory>().FirstOrDefault(d => fsRoot.GetPathComparer().Equals(d.Name, n));
+                result = childNodes.OfType<FsDirectory>().FirstOrDefault(d => fsRoot.GetNameComparer().Equals(d.Name, n));
                 if (!(result is null))
                     return result;
             }
@@ -148,7 +148,7 @@ namespace FsInfoCat.PS
             {
                 _job.WriteDebug($"Importing file #{i}");
                 FileInfo fileInfo = files[i];
-                // TODO: Need to do case-appropriate name lookups
+                // TODO: Need to do case-appropriate name lookups. Utilize FsInfoCat.Models.Volumes.IVolumeSetProvider?
                 FsFile fsFile = parent.ChildNodes.OfType<FsFile>().FirstOrDefault(f => f.Name.Equals(fileInfo.Name));
                 if (fsFile is null)
                 {
@@ -164,7 +164,7 @@ namespace FsInfoCat.PS
                     if (++_totalItems == _maxItems)
                     {
                         _job.WriteDebug("Reached item limit");
-                        // TODO: Need to do case-appropriate name lookups
+                        // TODO: Need to do case-appropriate name lookups. Utilize FsInfoCat.Models.Volumes.IVolumeSetProvider?
                         IEnumerable<string> skippedItems = files.Skip(i).Where(f => !parent.ChildNodes.OfType<FsFile>().Any(n => n.Name.Equals(f.Name))).Select(f => f.Name);
                         if (maxDepth > 0)
                             skippedItems = directories.Select(d => d.Name).Concat(skippedItems);
@@ -196,7 +196,7 @@ namespace FsInfoCat.PS
             {
                 _job.WriteDebug($"Importing subdirectory #{i}");
                 DirectoryInfo directoryInfo = directories[i];
-                // TODO: Need to do case-appropriate name lookups.
+                // TODO: Need to do case-appropriate name lookups. Utilize FsInfoCat.Models.Volumes.IVolumeSetProvider?
                 // TODO: Need to do check if subdirectory matches any existing registered volumes and do not crawl if so.
                 FsDirectory fsDirectory = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(f => f.Name.Equals(directoryInfo.Name));
                 if (fsDirectory is null)
@@ -232,7 +232,7 @@ namespace FsInfoCat.PS
                 if (!Crawl(fsDirectory, directoryInfo, maxDepth - 1))
                 {
                     _job.WriteDebug("Subdirectory crawl returned false.");
-                    // TODO: Need to do case-appropriate name lookups
+                    // TODO: Need to do case-appropriate name lookups. Utilize FsInfoCat.Models.Volumes.IVolumeSetProvider?
                     IEnumerable<string> skippedItems = directories.Skip(i).Where(f => !parent.ChildNodes.OfType<FsDirectory>().Any(n => n.Name.Equals(f.Name))).Select(f => f.Name);
                     if (!skippedItems.Any())
                         return true;

@@ -261,7 +261,7 @@ namespace FsInfoCat.Models.Crawl
             }
         }
 
-        public IEqualityComparer<string> GetPathComparer()
+        public IEqualityComparer<string> GetNameComparer()
         {
             StringComparer comparer = _segmentNameComparer;
             if (comparer is null)
@@ -319,14 +319,16 @@ namespace FsInfoCat.Models.Crawl
         [Obsolete("No good way to try determine equality when parent directory case sensitivity can be different. User IVolumeSetProvider, instead")]
         public bool Equals(FsRoot other)
         {
+#warning Need to utilize FsInfoCat.Models.Volumes.IVolumeSetProvider for RootUri comparisons
             return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType
                 && string.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase)
                 && string.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase)
-                && RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? GetPathComparer() : other.GetPathComparer())));
+                && RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? GetNameComparer() : other.GetNameComparer())));
         }
 
         public override bool Equals(object obj)
         {
+#warning Need to utilize FsInfoCat.Models.Volumes.IVolumeSetProvider for RootUri comparisons
             return null != obj && obj is FsRoot root && Equals(root);
         }
 

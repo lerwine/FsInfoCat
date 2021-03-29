@@ -2,7 +2,6 @@ using FsInfoCat.Models.Crawl;
 using FsInfoCat.Models.Volumes;
 using FsInfoCat.Util;
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -63,12 +62,11 @@ namespace FsInfoCat.PS.Commands
 
         protected override void ProcessRecord()
         {
-            Collection<PSObject> volumeRegistration = GetVolumeRegistration();
+            VolumeInfoRegistration volumeRegistration = GetVolumeRegistration(SessionState);
             switch (ParameterSetName)
             {
                 case PARAMETER_SET_NAME_ROOT_PATH:
-                    // TODO: Need to use GetUnresolvedProviderPathFromPSPath on values from RootPathName
-                    foreach (string path in RootPathName)
+                    foreach (string path in RootPathName.Select(p => GetUnresolvedProviderPathFromPSPath(p)))
                     {
                         FileUri fileUri;
                         try { fileUri = new FileUri(new DirectoryInfo(path)); }
@@ -77,15 +75,14 @@ namespace FsInfoCat.PS.Commands
                             WriteError(MessageId.UnexpectedError.ToErrorRecord(exc, ErrorCategory.ReadError, nameof(RootPathName), path));
                             continue;
                         }
-                        PSObject item = volumeRegistration.WhereBaseObjectOf<RegisteredVolumeInfo>(v => v.RootUri.Equals(fileUri, v.PathComparer)).FirstOrDefault();
-                        if (item is null)
-                            WriteWarning($"Root path '{path}' was not registered.");
-                        else
+                        if (volumeRegistration.TryFindByRootURI(fileUri, out VolumeInfoRegistration.RegisteredVolumeItem item))
                         {
                             volumeRegistration.Remove(item);
                             if (PassThru.IsPresent)
                                 WriteObject(item, false);
                         }
+                        else
+                            WriteWarning($"Root path '{path}' was not registered.");
                     }
                     break;
                 case PARAMETER_SET_NAME_VOLUME_IDENTIFIER:
@@ -93,15 +90,14 @@ namespace FsInfoCat.PS.Commands
                     {
                         if (VolumeIdentifier.TryCreate((id is PSObject psObj) ? psObj.BaseObject : Identifier, out VolumeIdentifier volumeIdentifer))
                         {
-                            PSObject item = volumeRegistration.WhereBaseObjectOf<RegisteredVolumeInfo>(v => v.Identifier.Equals(volumeIdentifer)).FirstOrDefault();
-                            if (item is null)
-                                WriteWarning($"Volume identifier '{volumeIdentifer}' was not registered.");
-                            else
+                            if (volumeRegistration.TryGetValue(volumeIdentifer, out VolumeInfoRegistration.RegisteredVolumeItem item))
                             {
                                 volumeRegistration.Remove(item);
                                 if (PassThru.IsPresent)
                                     WriteObject(item, false);
                             }
+                            else
+                                WriteWarning($"Volume identifier '{volumeIdentifer}' was not registered.");
                         }
                         else
                             WriteError(MessageId.InvalidIdentifier.ToArgumentOutOfRangeError(nameof(Identifier), Identifier));
@@ -110,15 +106,14 @@ namespace FsInfoCat.PS.Commands
                 default:
                     foreach (IVolumeInfo volume in VolumeInfo)
                     {
-                        PSObject item = volumeRegistration.WhereBaseObjectOf<RegisteredVolumeInfo>(v => v.Equals(volume)).FirstOrDefault();
-                        if (item is null)
-                            WriteWarning($"Volume '{volume}' was not registered.");
-                        else
+                        if (volumeRegistration.TryFindMatching(volume, out VolumeInfoRegistration.RegisteredVolumeItem item))
                         {
                             volumeRegistration.Remove(item);
                             if (PassThru.IsPresent)
                                 WriteObject(item, false);
                         }
+                        else
+                            WriteWarning($"Volume '{volume}' was not registered.");
                     }
                     break;
             }

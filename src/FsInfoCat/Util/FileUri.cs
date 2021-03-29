@@ -34,10 +34,10 @@ namespace FsInfoCat.Util
             if (string.IsNullOrEmpty(fileUriString))
             {
                 Host = Name = "";
-                Parent = null;
+                Parent = null; 
             }
-#warning Need to add platform argument to TrySplitFileUriString
-            else if (Uri.IsWellFormedUriString(fileUriString, UriKind.Absolute) && FileUriConverter.TrySplitFileUriString_obsolete(fileUriString, out string hostName, out string directory, out string fileName, out bool isAbsolute) && isAbsolute)
+            else if (Uri.IsWellFormedUriString(fileUriString, UriKind.Absolute) && FileUriConverter.GetFactory(platform).TrySplitFileUriString(fileUriString,
+                out string hostName, out string directory, out string fileName, out bool isAbsolute) && isAbsolute)
             {
                 Host = hostName;
                 Name = fileName;
@@ -116,7 +116,7 @@ namespace FsInfoCat.Util
 
         public bool IsEmpty() => Name.Length == 0 && Host.Length == 0 && Parent is null;
 
-        [Obsolete("This not logical due to posible case sensitivity differences with parent paths.")]
+        [Obsolete("Utilize FsInfoCat.Models.Volumes.IVolumeSetProvider for comparisons. This not logical due to posible case sensitivity differences with parent paths.")]
         public bool Equals(FileUri other, IEqualityComparer<string> comparer)
         {
             if (comparer is null)
@@ -148,7 +148,7 @@ namespace FsInfoCat.Util
                 Parent.ToUriPath(new StringBuilder()).Append(UriHelper.URI_PATH_SEPARATOR_CHAR).Append(Name)).ToString(), platform);
         }
 
-        [Obsolete("This not logical due to posible case sensitivity differences with parent paths.")]
+        [Obsolete("Utilize FsInfoCat.Models.Volumes.IVolumeSetProvider for comparisons. This not logical due to posible case sensitivity differences with parent paths.")]
         public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) || (Host.Equals(other.Host) && Name.Equals(other.Name) && ((Parent is null) ? other.Parent is null : Parent.Equals(other.Parent))));
 
         public override bool Equals(object obj) => obj is FileUri fileUri && Equals(fileUri);

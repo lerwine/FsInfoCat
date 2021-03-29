@@ -3,7 +3,7 @@ using System;
 
 namespace FsInfoCat.Models.Volumes
 {
-    public interface IVolume : IVolumeInfo, IModficationAuditable
+    public interface IVolumeRecord : IVolumeInfo, IModficationAuditable
     {
         Guid VolumeID { get; set; }
 
@@ -22,7 +22,7 @@ namespace FsInfoCat.Models.Volumes
         string Notes { get; set; }
     }
 
-    public interface IVolume<H> : IVolume
+    public interface IVolumeRecord<H> : IVolumeRecord
         where H : IHostDevice
     {
         new H Host { get; set; }

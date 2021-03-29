@@ -5,7 +5,7 @@ using static FsInfoCat.Util.FileUriConverter;
 
 namespace FsInfoCat.Util
 {
-    // TODO: Rename to UriFactory and make instance class after extension methods moved to ExtensionMethods
+    // DEFERRED: Rename to UriFactory and make instance class after extension methods moved to ExtensionMethods
     public static class UriHelper
     {
         public const string URI_SCHEME_URN = "urn";

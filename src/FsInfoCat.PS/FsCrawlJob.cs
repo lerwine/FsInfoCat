@@ -31,10 +31,13 @@ namespace FsInfoCat.PS
         private readonly long _maxItems;
         private readonly string _machineIdentifier;
 
-        internal Collection<FsRoot> FsRoots { get; }
+        internal IVolumeSetProvider<FsRoot> FsRoots { get; }
+
+        internal VolumeInfoRegistration RegisteredVolumes { get; }
 
         internal int MaxDepth { get; }
 
+        [Obsolete("Use RegisteredVolumes")]
         public Func<IEnumerable<IVolumeInfo>> GetVolumes { get; }
 
         internal Func<bool> IsExpired { get; }
@@ -53,6 +56,45 @@ namespace FsInfoCat.PS
         /// <param name="maxItems">Maximum number of items to crawl.</param>
         /// <param name="ttl">The number of milliseconds that the job can run or -1L for no limit.</param>
         /// <param name="friendlyName">The name of the job.</param>
+        internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, long ttl, string machineIdentifier,
+            VolumeInfoRegistration registeredVolumes, string friendlyName) : base(null, friendlyName)
+        {
+            MaxDepth = maxDepth;
+            RegisteredVolumes = registeredVolumes;
+            _maxItems = maxItems;
+            _token = _cancellationTokenSource.Token;
+            _machineIdentifier = machineIdentifier;
+            _startingDirectories = new Queue<string>((startingDirectories is null) ? new string[0] : startingDirectories.Where(p => !string.IsNullOrEmpty(p)).ToArray());
+            if (ttl < 0L)
+            {
+                _stopWatch = null;
+                IsExpired = new Func<bool>(() => _token.IsCancellationRequested);
+            }
+            else
+            {
+                _stopWatch = new Stopwatch();
+                IsExpired = new Func<bool>(() =>
+                {
+                    if (_token.IsCancellationRequested || _stopWatch.ElapsedMilliseconds >= ttl)
+                    {
+                        if (_stopWatch.IsRunning)
+                            _stopWatch.Stop();
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        }
+
+        /// <summary>
+        /// Create new CrawlJob
+        /// </summary>
+        /// <param name="startingDirectories">Paths to be crawled.</param>
+        /// <param name="maxDepth">Maximum recursion depth.</param>
+        /// <param name="maxItems">Maximum number of items to crawl.</param>
+        /// <param name="ttl">The number of milliseconds that the job can run or -1L for no limit.</param>
+        /// <param name="friendlyName">The name of the job.</param>
+        [Obsolete("Use FsCrawlJob(IEnumerable<string>, int, long, long, string, VolumeInfoRegistration, string)")]
         internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, long ttl, string machineIdentifier, Func<IEnumerable<IVolumeInfo>> getVolumes, string friendlyName) : base(null, friendlyName)
         {
             MaxDepth = maxDepth;
@@ -90,10 +132,32 @@ namespace FsInfoCat.PS
         /// <param name="maxItems">Maximum number of items to crawl.</param>
         /// <param name="stopAt">When to stop the job.</param>
         /// <param name="friendlyName">The name of the job.</param>
+        [Obsolete("Use FsCrawlJob(IEnumerable<string>, int, long, DateTime, string, VolumeInfoRegistration, string)")]
         internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, DateTime stopAt, string machineIdentifier, Func<IEnumerable<IVolumeInfo>> getVolumes, string friendlyName) : base(null, friendlyName)
         {
             MaxDepth = maxDepth;
             GetVolumes = getVolumes;
+            _maxItems = maxItems;
+            _machineIdentifier = machineIdentifier;
+            _startingDirectories = new Queue<string>((startingDirectories is null) ? new string[0] : startingDirectories.Where(p => null != p).ToArray());
+            _token = _cancellationTokenSource.Token;
+            IsExpired = new Func<bool>(() => _token.IsCancellationRequested || DateTime.Now >= stopAt);
+            _stopWatch = null;
+        }
+
+        /// <summary>
+        /// Create new CrawlJob
+        /// </summary>
+        /// <param name="startingDirectories">Paths to be crawled.</param>
+        /// <param name="maxDepth">Maximum recursion depth.</param>
+        /// <param name="maxItems">Maximum number of items to crawl.</param>
+        /// <param name="stopAt">When to stop the job.</param>
+        /// <param name="friendlyName">The name of the job.</param>
+        internal FsCrawlJob(IEnumerable<string> startingDirectories, int maxDepth, long maxItems, DateTime stopAt, string machineIdentifier,
+            VolumeInfoRegistration registeredVolumes, string friendlyName) : base(null, friendlyName)
+        {
+            MaxDepth = maxDepth;
+            RegisteredVolumes = registeredVolumes;
             _maxItems = maxItems;
             _machineIdentifier = machineIdentifier;
             _startingDirectories = new Queue<string>((startingDirectories is null) ? new string[0] : startingDirectories.Where(p => null != p).ToArray());
@@ -130,7 +194,7 @@ namespace FsInfoCat.PS
             {
                 WriteDebug("Background task was canceled.");
                 jobState = JobState.Stopped;
-                Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, "Aborted") { RecordType = ProgressRecordType.Completed });
+                Progress.Add(new ProgressRecord(ACTIVITY_ID, ACTIVITY, "Aborted") { RecordType = ProgressRecordType.Completed });
             }
             else
             {
@@ -144,7 +208,7 @@ namespace FsInfoCat.PS
                 }
                 WriteDebug("No more directories to be crawled.");
                 jobState = JobState.Completed;
-                Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, "Completed") { RecordType = ProgressRecordType.Completed });
+                Progress.Add(new ProgressRecord(ACTIVITY_ID, ACTIVITY, "Completed") { RecordType = ProgressRecordType.Completed });
             }
             WriteDebug($"Creating new FsHost {{ MachineIdentifier = \"{_machineIdentifier}\", MachineName = \"{Environment.MachineName}\" ... }}");
             Output.Add(PSObject.AsPSObject(new FsHost()
