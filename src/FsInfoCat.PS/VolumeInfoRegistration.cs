@@ -219,28 +219,31 @@ namespace FsInfoCat.PS
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_backingCollection).GetEnumerator();
 
-        private void GetSegmentHashCodes(FileUri fileUri, Stack<int> values)
+        private bool GetSegmentHashCodes(FileUri fileUri, Stack<int> values)
         {
             List<string> segments = new List<string>
             {
                 fileUri.Name
             };
             IVolumeInfo volume;
-            while (!TryFindByRootURI(fileUri, out volume))
+            FileUri u = fileUri;
+            while (!TryFindByRootURI(u, out volume))
             {
-                if ((fileUri = fileUri.Parent) is null)
-                {
-                    foreach (string n in segments)
-                        values.Push(DynamicStringComparer.IGNORE_CASE.GetHashCode(n ?? ""));
-                    return;
-                }
-                segments.Add(fileUri.Name);
+                if ((u = u.Parent) is null)
+                    return false;
+                segments.Add(u.Name);
             }
             IEqualityComparer<string> nameComparer = volume.GetNameComparer();
             foreach (string n in segments)
                 values.Push(nameComparer.GetHashCode(n));
-            if (!((fileUri = fileUri.Parent) is null))
-                GetSegmentHashCodes(fileUri, values);
+            if ((u = u.Parent) is null)
+                return true;
+            if (!GetSegmentHashCodes(u, values))
+                do
+                {
+                    values.Push(nameComparer.GetHashCode(u.Name));
+                } while (!((u = u.Parent) is null));
+            return true;
         }
 
         public int GetHashCode(FileUri obj)
@@ -248,8 +251,15 @@ namespace FsInfoCat.PS
             if (obj is null || obj.IsEmpty())
                 return 0;
             Stack<int> hashCodes = new Stack<int>();
-            GetSegmentHashCodes(obj, hashCodes);
-            hashCodes.Push(DynamicStringComparer.IGNORE_CASE.GetHashCode(obj.Name));
+            if (!GetSegmentHashCodes(obj, hashCodes))
+            {
+                FileUri u = obj;
+                do
+                {
+                    hashCodes.Push(DynamicStringComparer.IGNORE_CASE.GetHashCode(u.Name ?? ""));
+                } while (!((u = u.Parent) is null));
+            }
+            hashCodes.Push(DynamicStringComparer.IGNORE_CASE.GetHashCode(obj.Host));
             return hashCodes.Aggregate(0, (x, y) => x ^ y);
         }
 
