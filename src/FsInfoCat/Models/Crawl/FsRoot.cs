@@ -255,8 +255,11 @@ namespace FsInfoCat.Models.Crawl
             CaseSensitive = driveInfo.CaseSensitive;
         }
 
-        public FsRoot()
+        public FsRoot() : this(false) { }
+
+        public FsRoot(bool caseSensitive)
         {
+            _segmentNameComparer = new DynamicStringComparer(caseSensitive);
             _segmentNameComparer.PropertyValueChanging += SegmentNameComparer_PropertyValueChanging;
             _segmentNameComparer.PropertyValueChanged += SegmentNameComparer_PropertyValueChanged;
             _container = new ComponentList.AttachableContainer(this);

@@ -19,9 +19,8 @@ namespace FsInfoCat.Test
             Collection<Tuple<FsRoot, bool>> fsRoots = new Collection<Tuple<FsRoot, bool>>
             {
                 new Tuple<FsRoot, bool>(
-                new FsRoot()
+                new FsRoot(false)
                 {
-                    CaseSensitive = false,
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
                     RootUri = new FileUri(new DirectoryInfo("C:\\")),
@@ -39,9 +38,8 @@ namespace FsInfoCat.Test
                 .SetDescription("FsHostAddTest:Add same item twice")
                 .Returns(1);
             fsRoots[1] = new Tuple<FsRoot, bool>(
-                new FsRoot()
+                new FsRoot(false)
                 {
-                    CaseSensitive = false,
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
                     RootUri = new FileUri(new DirectoryInfo("D:\\")),
@@ -62,27 +60,24 @@ namespace FsInfoCat.Test
             {
                 List<FsRoot> list = new List<FsRoot>
                 {
-                    new FsRoot()
+                    new FsRoot(false)
                     {
-                        CaseSensitive = false,
                         DriveFormat = "MAFS",
                         DriveType = DriveType.Fixed,
                         RootUri = new FileUri(new DirectoryInfo("Z:\\")),
                         Identifier = new VolumeIdentifier(@"\\servicenowdiag479.file.core.windows.net\testazureshare"),
                         VolumeName = ""
                     },
-                    new FsRoot()
+                    new FsRoot(false)
                     {
-                        CaseSensitive = false,
                         DriveFormat = "FAT32",
                         DriveType = DriveType.Removable,
                         RootUri = new FileUri(new DirectoryInfo("F:\\")),
                         Identifier = new VolumeIdentifier("urn:volume:id:3B51-8D4B"),
                         VolumeName = "HP_TOOLS"
                     },
-                    new FsRoot()
+                    new FsRoot(true)
                     {
-                        CaseSensitive = true,
                         DriveFormat = "ext4",
                         DriveType = DriveType.Fixed,
                         RootUri = new FileUri(new DirectoryInfo("/")),
@@ -98,9 +93,8 @@ namespace FsInfoCat.Test
             {
                 new Tuple<FsRoot, int>(addList[0], 0),
                 new Tuple<FsRoot, int>(
-                new FsRoot()
+                new FsRoot(false)
                 {
-                    CaseSensitive = false,
                     DriveFormat = "NTFS",
                     DriveType = DriveType.Fixed,
                     RootUri = new FileUri(new DirectoryInfo("C:\\")),
@@ -166,10 +160,34 @@ namespace FsInfoCat.Test
         }
 
         [Test, Property("Priority", 1)]
-        public void FsRootConstructorTest()
+        public void FsRootConstructorTest0()
         {
             FsRoot target = new FsRoot();
             Assert.That(target.CaseSensitive, Is.False);
+            Assert.That(target.DriveFormat, Is.Empty);
+            Assert.That(target.DriveType, Is.EqualTo(DriveType.Unknown));
+            Assert.That(target.RootUri, Is.Not.Null);
+            Assert.That(target.RootUri.IsEmpty, Is.True);
+            Assert.That(target.Identifier, Is.EqualTo(VolumeIdentifier.Empty));
+            Assert.That(target.VolumeName, Is.Empty);
+            Assert.That(target.ChildNodes, Is.Not.Null.Or.Empty);
+        }
+
+        [Test, Property("Priority", 1)]
+        public void FsRootConstructorTest1()
+        {
+            FsRoot target = new FsRoot(false);
+            Assert.That(target.CaseSensitive, Is.False);
+            Assert.That(target.DriveFormat, Is.Empty);
+            Assert.That(target.DriveType, Is.EqualTo(DriveType.Unknown));
+            Assert.That(target.RootUri, Is.Not.Null);
+            Assert.That(target.RootUri.IsEmpty, Is.True);
+            Assert.That(target.Identifier, Is.EqualTo(VolumeIdentifier.Empty));
+            Assert.That(target.VolumeName, Is.Empty);
+            Assert.That(target.ChildNodes, Is.Not.Null.Or.Empty);
+
+            target = new FsRoot(true);
+            Assert.That(target.CaseSensitive, Is.True);
             Assert.That(target.DriveFormat, Is.Empty);
             Assert.That(target.DriveType, Is.EqualTo(DriveType.Unknown));
             Assert.That(target.RootUri, Is.Not.Null);
