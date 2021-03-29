@@ -10,7 +10,7 @@ namespace FsInfoCat.Util
     /// A culture-invariant <seealso cref="StringComparer"/> whereby the case-sensitivity may be changed dynamically.
     /// </summary>
     /// <remarks>Empty and null strings are considered to be equal as are empty and null enumerable string values.</remarks>
-    internal class DynamicStringComparer : StringComparer, IEqualityComparer<IEnumerable<string>>, INotifyPropertyValueChanging<bool>, INotifyPropertyValueChanged<bool>
+    public class DynamicStringComparer : StringComparer, IEqualityComparer<IEnumerable<string>>, INotifyPropertyValueChanging<bool>, INotifyPropertyValueChanged<bool>
     {
         public static readonly StringComparer CASE_SENSITIVE = InvariantCulture;
         public static readonly StringComparer IGNORE_CASE = InvariantCultureIgnoreCase;

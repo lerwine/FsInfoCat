@@ -219,10 +219,38 @@ namespace FsInfoCat.PS
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_backingCollection).GetEnumerator();
 
+        private void GetSegmentHashCodes(FileUri fileUri, Stack<int> values)
+        {
+            List<string> segments = new List<string>
+            {
+                fileUri.Name
+            };
+            IVolumeInfo volume;
+            while (!TryFindByRootURI(fileUri, out volume))
+            {
+                if ((fileUri = fileUri.Parent) is null)
+                {
+                    foreach (string n in segments)
+                        values.Push(DynamicStringComparer.IGNORE_CASE.GetHashCode(n ?? ""));
+                    return;
+                }
+                segments.Add(fileUri.Name);
+            }
+            IEqualityComparer<string> nameComparer = volume.GetNameComparer();
+            foreach (string n in segments)
+                values.Push(nameComparer.GetHashCode(n));
+            if (!((fileUri = fileUri.Parent) is null))
+                GetSegmentHashCodes(fileUri, values);
+        }
+
         public int GetHashCode(FileUri obj)
         {
-            // TODO: Implement GetHashCode
-            throw new NotImplementedException();
+            if (obj is null || obj.IsEmpty())
+                return 0;
+            Stack<int> hashCodes = new Stack<int>();
+            GetSegmentHashCodes(obj, hashCodes);
+            hashCodes.Push(DynamicStringComparer.IGNORE_CASE.GetHashCode(obj.Name));
+            return hashCodes.Aggregate(0, (x, y) => x ^ y);
         }
 
         /// <summary>
