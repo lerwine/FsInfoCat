@@ -10,7 +10,7 @@ using System.Threading;
 namespace FsInfoCat.Models.Crawl
 {
     // TODO: IEqualityComparer<IFsChildNode> may need to be replaced by using IVolumeSet provider due to nested case-sensitivity difference issues
-    public sealed class FsRoot : ComponentBase, IVolumeInfo, IFsDirectory, IEqualityComparer<IFsChildNode>
+    public sealed class FsRoot : ComponentBase, IVolumeInfo, IFsDirectory, IEqualityComparer<IFsChildNode>, IEquatable<FsRoot>
     {
         private FileUri _rootUri = new FileUri("");
         private string _driveFormat = "";
@@ -19,8 +19,7 @@ namespace FsInfoCat.Models.Crawl
         private readonly ComponentList.AttachableContainer _container;
         private ComponentList<CrawlMessage> _messagesList;
         private ComponentList<IFsChildNode> _childNodes;
-        private bool _caseSensitive;
-        private StringComparer _segmentNameComparer;
+        private readonly DynamicStringComparer _segmentNameComparer;
         private DriveType _driveType;
         private VolumeIdentifier _identifier;
 
@@ -231,43 +230,19 @@ namespace FsInfoCat.Models.Crawl
 
         public bool CaseSensitive
         {
-            get => _caseSensitive;
+            get => _segmentNameComparer.CaseSensitive;
             set
             {
                 Monitor.Enter(this);
                 try
                 {
-                    // TODO: Invoke change events
-                    if (_caseSensitive == value)
-                        return;
-                    RaisePropertyChanging(nameof(ChildNodes), _caseSensitive, value);
-                    _caseSensitive = value;
-                    _segmentNameComparer = null;
-                    RaisePropertyChanged(nameof(ChildNodes), !_caseSensitive, _caseSensitive);
+                    _segmentNameComparer.CaseSensitive = value;
                 }
                 finally { Monitor.Exit(this); }
             }
         }
 
-        [Obsolete("Use GetPathComparer()")]
-        public IEqualityComparer<string> PathComparer
-        {
-            get
-            {
-                StringComparer comparer = _segmentNameComparer;
-                if (comparer is null)
-                    _segmentNameComparer = comparer = (_caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
-                return comparer;
-            }
-        }
-
-        public IEqualityComparer<string> GetNameComparer()
-        {
-            StringComparer comparer = _segmentNameComparer;
-            if (comparer is null)
-                _segmentNameComparer = comparer = (_caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
-            return comparer;
-        }
+        public IEqualityComparer<string> GetNameComparer() => _segmentNameComparer;
 
         public FsRoot(IVolumeInfo driveInfo) : this()
         {
@@ -282,9 +257,21 @@ namespace FsInfoCat.Models.Crawl
 
         public FsRoot()
         {
+            _segmentNameComparer.PropertyValueChanging += SegmentNameComparer_PropertyValueChanging;
+            _segmentNameComparer.PropertyValueChanged += SegmentNameComparer_PropertyValueChanged;
             _container = new ComponentList.AttachableContainer(this);
             _messagesList = new ComponentList<CrawlMessage>(_container);
             _childNodes = new ComponentList<IFsChildNode>(_container);
+        }
+
+        private void SegmentNameComparer_PropertyValueChanging(object sender, IPropertyValueChangeEventArgs<bool> e)
+        {
+            RaisePropertyChanging(nameof(CaseSensitive), e.OldValue, e.NewValue);
+        }
+
+        private void SegmentNameComparer_PropertyValueChanged(object sender, IPropertyValueChangeEventArgs<bool> e)
+        {
+            RaisePropertyChanged(nameof(CaseSensitive), e.OldValue, e.NewValue);
         }
 
         private static string CalculateName(FileUri rootUri, string volumeName, VolumeIdentifier identifier) => (rootUri.IsEmpty()) ? ((string.IsNullOrWhiteSpace(volumeName)) ? identifier.ToString() : volumeName) : rootUri.ToLocalPath();
@@ -299,7 +286,7 @@ namespace FsInfoCat.Models.Crawl
         public bool TryFindPartialCrawl(out PartialCrawlWarning message, out IEnumerable<IFsDirectory> segments)
         {
             message = Messages.OfType<PartialCrawlWarning>().Where(m => m.NotCrawled.Any(s => !string.IsNullOrWhiteSpace(s))).FirstOrDefault();
-            if (null != message)
+            if (!(message is null))
             {
                 segments = Array.Empty<IFsDirectory>();
                 return true;
@@ -316,47 +303,16 @@ namespace FsInfoCat.Models.Crawl
             return false;
         }
 
-        [Obsolete("No good way to try determine equality when parent directory case sensitivity can be different. User IVolumeSetProvider, instead")]
-        public bool Equals(FsRoot other)
-        {
-#warning Need to utilize FsInfoCat.Models.Volumes.IVolumeSetProvider for RootUri comparisons
-            return null != other && (ReferenceEquals(this, other) || (DriveType == other.DriveType
-                && string.Equals(DriveFormat, other.DriveFormat, StringComparison.InvariantCultureIgnoreCase)
-                && string.Equals(VolumeName, other.VolumeName, StringComparison.InvariantCultureIgnoreCase)
-                && RootUri.Equals(other.RootUri, (CaseSensitive || !other.CaseSensitive) ? GetNameComparer() : other.GetNameComparer())));
-        }
-
-        public override bool Equals(object obj)
-        {
-#warning Need to utilize FsInfoCat.Models.Volumes.IVolumeSetProvider for RootUri comparisons
-            return null != obj && obj is FsRoot root && Equals(root);
-        }
-
-        public override int GetHashCode()
-        {
-            return ToString().GetHashCode();
-        }
-
-        public int GetHashCode(IFsChildNode obj)
-        {
-            string n;
-            return ComponentHelper.IGNORE_CASE_COMPARER.GetHashCode((obj is null || null == (n = obj.Name)) ? "" : n);
-        }
-
         public bool Equals(IFsChildNode x, IFsChildNode y)
         {
             if (x is null)
                 return y is null;
             if (y is null)
                 return false;
-            if (ReferenceEquals(x, y))
-                return true;
-            string a = x.Name;
-            string b = y.Name;
-            if (a is null)
-                return b is null;
-            return null != b && ComponentHelper.IGNORE_CASE_COMPARER.Equals(a, b);
+            return ReferenceEquals(x, y) || _segmentNameComparer.Equals(x.Name, y.Name);
         }
+
+        public int GetHashCode(IFsChildNode obj) => _segmentNameComparer.GetHashCode(obj?.Name);
 
         public override string ToString()
         {
@@ -380,5 +336,13 @@ namespace FsInfoCat.Models.Crawl
             try { PropertyValueChanged?.Invoke(this, args); }
             finally { PropertyChanged?.Invoke(this, args); }
         }
+
+        public bool Equals(FsRoot other) => !(other is null) && (ReferenceEquals(this, other) || _identifier.Equals(other._identifier) ||
+            DynamicStringComparer.IgnoreCaseEquals(_volumeName, other._volumeName) || (DynamicStringComparer.IgnoreCaseEquals(_rootUri.Host, other._rootUri.Host) &&
+            _segmentNameComparer.Equals(_rootUri.GetPathComponents(), other._rootUri.GetPathComponents())));
+
+        public override bool Equals(object obj) => Equals(obj as FsRoot);
+
+        public override int GetHashCode() => _identifier.GetHashCode();
     }
 }
