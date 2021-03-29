@@ -10,6 +10,7 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         private readonly object _syncRoot = new object();
         object ISynchronized.SyncRoot => _syncRoot;
         private TOwner _owner;
+
         internal TOwner Owner
         {
             get => _owner;
@@ -19,7 +20,9 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
                     _owner = value;
             }
         }
+
         TOwner IOwnable<TOwner>.Owner => _owner;
+
         ISynchronized IOwnable.Owner => _owner;
 
         private PathSegmentInfo _path;
@@ -109,10 +112,7 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             }
         }
 
-        protected RelativeUrl()
-        {
-            _path = new PathSegmentInfo { Owner = this };
-        }
+        protected RelativeUrl() => _path = new PathSegmentInfo { Owner = this };
 
         protected bool BaseEquals(RelativeUrl<TOwner> other)
         {

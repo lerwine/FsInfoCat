@@ -7,6 +7,9 @@ namespace FsInfoCat.Util
 {
     public static class ComponentHelper
     {
+        public static readonly StringComparer CASE_SENSITIVE_COMPARER = StringComparer.InvariantCulture;
+        public static readonly StringComparer IGNORE_CASE_COMPARER = StringComparer.InvariantCultureIgnoreCase;
+
         public static string GetComponentName(this IComponent component)
         {
             if (component is null)

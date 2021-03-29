@@ -28,7 +28,7 @@ namespace FsInfoCat.Util
                 if (oldContainer is null)
                 {
                     if (null != target._container)
-                        throw new ArgumentOutOfRangeException("List is already detached");
+                        throw new ArgumentOutOfRangeException(nameof(target), "List is already detached");
                     NameComparer = nameComparer ?? throw new ArgumentNullException(nameof(nameComparer));
                 }
                 else
@@ -39,8 +39,8 @@ namespace FsInfoCat.Util
                     return;
                 var items = target._sites.Select(s => new
                 {
-                    Component = s.Component,
-                    Name = s.Name
+                    s.Component,
+                    s.Name
                 }).ToArray();
                 target._sites.Clear();
                 foreach (var a in items)
@@ -155,7 +155,7 @@ namespace FsInfoCat.Util
                 finally { SetSitesNull(enumerator); }
             }
 
-            protected override IEnumerable<IComponent> GetComponents() => (null == _target) ? new IComponent[0] : _target.GetComponents();
+            protected override IEnumerable<IComponent> GetComponents() => (null == _target) ? Array.Empty<IComponent>() : _target.GetComponents();
 
             protected override void Insert(int index, IComponent item, string name, ComponentList componentList)
             {

@@ -16,8 +16,9 @@ namespace FsInfoCat.Test
     {
         public static IEnumerable<TestCaseData> GetFsHostAddTestCases()
         {
-            Collection<Tuple<FsRoot, bool>> fsRoots = new Collection<Tuple<FsRoot, bool>>();
-            fsRoots.Add(new Tuple<FsRoot, bool>(
+            Collection<Tuple<FsRoot, bool>> fsRoots = new Collection<Tuple<FsRoot, bool>>
+            {
+                new Tuple<FsRoot, bool>(
                 new FsRoot()
                 {
                     CaseSensitive = false,
@@ -28,7 +29,8 @@ namespace FsInfoCat.Test
                     VolumeName = "OS"
                 },
                 true
-            ));
+            )
+            };
             yield return new TestCaseData(new Collection<Tuple<FsRoot, bool>>(fsRoots.ToArray()))
                 .SetDescription("FsHostAddTest:Single item")
                 .Returns(1);
@@ -56,43 +58,46 @@ namespace FsInfoCat.Test
 
         public static IEnumerable<TestCaseData> GetFsHostRemoveTestCases()
         {
-            Func<List<FsRoot>> getAddList = () =>
+            static List<FsRoot> getAddList()
             {
-                List<FsRoot> list = new List<FsRoot>();
-                list.Add(new FsRoot()
+                List<FsRoot> list = new List<FsRoot>
                 {
-                    CaseSensitive = false,
-                    DriveFormat = "MAFS",
-                    DriveType = DriveType.Fixed,
-                    RootUri = new FileUri(new DirectoryInfo("Z:\\")),
-                    Identifier = new VolumeIdentifier(@"\\servicenowdiag479.file.core.windows.net\testazureshare"),
-                    VolumeName = ""
-                });
-                list.Add(new FsRoot()
-                {
-                    CaseSensitive = false,
-                    DriveFormat = "FAT32",
-                    DriveType = DriveType.Removable,
-                    RootUri = new FileUri(new DirectoryInfo("F:\\")),
-                    Identifier = new VolumeIdentifier("urn:volume:id:3B51-8D4B"),
-                    VolumeName = "HP_TOOLS"
-                });
-                list.Add(new FsRoot()
-                {
-                    CaseSensitive = true,
-                    DriveFormat = "ext4",
-                    DriveType = DriveType.Fixed,
-                    RootUri = new FileUri(new DirectoryInfo("/")),
-                    Identifier = new VolumeIdentifier("urn:uuid:3756934c-31d3-413c-8df9-5b7c7b1a4451"),
-                    VolumeName = "cloudimg-rootfs"
-                });
+                    new FsRoot()
+                    {
+                        CaseSensitive = false,
+                        DriveFormat = "MAFS",
+                        DriveType = DriveType.Fixed,
+                        RootUri = new FileUri(new DirectoryInfo("Z:\\")),
+                        Identifier = new VolumeIdentifier(@"\\servicenowdiag479.file.core.windows.net\testazureshare"),
+                        VolumeName = ""
+                    },
+                    new FsRoot()
+                    {
+                        CaseSensitive = false,
+                        DriveFormat = "FAT32",
+                        DriveType = DriveType.Removable,
+                        RootUri = new FileUri(new DirectoryInfo("F:\\")),
+                        Identifier = new VolumeIdentifier("urn:volume:id:3B51-8D4B"),
+                        VolumeName = "HP_TOOLS"
+                    },
+                    new FsRoot()
+                    {
+                        CaseSensitive = true,
+                        DriveFormat = "ext4",
+                        DriveType = DriveType.Fixed,
+                        RootUri = new FileUri(new DirectoryInfo("/")),
+                        Identifier = new VolumeIdentifier("urn:uuid:3756934c-31d3-413c-8df9-5b7c7b1a4451"),
+                        VolumeName = "cloudimg-rootfs"
+                    }
+                };
                 return list;
-            };
+            }
 
             List<FsRoot> addList = getAddList();
-            Collection<Tuple<FsRoot, int>> removeList = new Collection<Tuple<FsRoot, int>>();
-            removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
-            removeList.Add(new Tuple<FsRoot, int>(
+            Collection<Tuple<FsRoot, int>> removeList = new Collection<Tuple<FsRoot, int>>
+            {
+                new Tuple<FsRoot, int>(addList[0], 0),
+                new Tuple<FsRoot, int>(
                 new FsRoot()
                 {
                     CaseSensitive = false,
@@ -103,42 +108,53 @@ namespace FsInfoCat.Test
                     VolumeName = "OS"
                 },
                 -1
-            ));
+            )
+            };
             yield return new TestCaseData(addList, removeList)
                 .SetDescription("FsHostRemoveTest:Remove first and non-existent")
                 .Returns(2);
             addList = getAddList();
-            removeList = new Collection<Tuple<FsRoot, int>>();
-            removeList.Add(new Tuple<FsRoot, int>(addList[1], 1));
+            removeList = new Collection<Tuple<FsRoot, int>>
+            {
+                new Tuple<FsRoot, int>(addList[1], 1)
+            };
             yield return new TestCaseData(addList, removeList)
                 .SetDescription("FsHostRemoveTest:Remove second")
                 .Returns(2);
             addList = getAddList();
-            removeList = new Collection<Tuple<FsRoot, int>>();
-            removeList.Add(new Tuple<FsRoot, int>(addList[2], 2));
+            removeList = new Collection<Tuple<FsRoot, int>>
+            {
+                new Tuple<FsRoot, int>(addList[2], 2)
+            };
             yield return new TestCaseData(addList, removeList)
                 .SetDescription("FsHostRemoveTest:Remove last")
                 .Returns(2);
             addList = getAddList();
-            removeList = new Collection<Tuple<FsRoot, int>>();
-            removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
-            removeList.Add(new Tuple<FsRoot, int>(addList[2], 1));
+            removeList = new Collection<Tuple<FsRoot, int>>
+            {
+                new Tuple<FsRoot, int>(addList[0], 0),
+                new Tuple<FsRoot, int>(addList[2], 1)
+            };
             yield return new TestCaseData(addList, removeList)
                 .SetDescription("FsHostRemoveTest:Remove first then last")
                 .Returns(1);
             addList = getAddList();
-            removeList = new Collection<Tuple<FsRoot, int>>();
-            removeList.Add(new Tuple<FsRoot, int>(addList[2], 2));
-            removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
-            removeList.Add(new Tuple<FsRoot, int>(addList[2], -1));
+            removeList = new Collection<Tuple<FsRoot, int>>
+            {
+                new Tuple<FsRoot, int>(addList[2], 2),
+                new Tuple<FsRoot, int>(addList[0], 0),
+                new Tuple<FsRoot, int>(addList[2], -1)
+            };
             yield return new TestCaseData(addList, removeList)
                 .SetDescription("FsHostRemoveTest:Remove last then first, then last again")
                 .Returns(1);
             addList = getAddList();
-            removeList = new Collection<Tuple<FsRoot, int>>();
-            removeList.Add(new Tuple<FsRoot, int>(addList[2], 2));
-            removeList.Add(new Tuple<FsRoot, int>(addList[0], 0));
-            removeList.Add(new Tuple<FsRoot, int>(addList[1], 0));
+            removeList = new Collection<Tuple<FsRoot, int>>
+            {
+                new Tuple<FsRoot, int>(addList[2], 2),
+                new Tuple<FsRoot, int>(addList[0], 0),
+                new Tuple<FsRoot, int>(addList[1], 0)
+            };
             yield return new TestCaseData(addList, removeList)
                 .SetDescription("FsHostRemoveTest:Remove last, first, then second")
                 .Returns(0);
@@ -164,6 +180,7 @@ namespace FsInfoCat.Test
         }
 
         [Property("Priority", 1)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
         public void FsHostConstructorTest()
         {
             FsHost target = new FsHost();

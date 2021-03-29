@@ -72,7 +72,7 @@ namespace FsInfoCat.Models.Crawl
             message = Messages.OfType<PartialCrawlWarning>().Where(m => m.NotCrawled.Any(s => !string.IsNullOrWhiteSpace(s))).FirstOrDefault();
             if (null != message)
             {
-                segments = new IFsDirectory[0];
+                segments = Array.Empty<IFsDirectory>();
                 return true;
             }
             foreach (IFsDirectory root in ChildNodes.OfType<IFsDirectory>())
@@ -83,7 +83,7 @@ namespace FsInfoCat.Models.Crawl
                     return true;
                 }
             }
-            segments = new IFsDirectory[0];
+            segments = Array.Empty<IFsDirectory>();
             return false;
         }
 
@@ -94,7 +94,7 @@ namespace FsInfoCat.Models.Crawl
             if (ReferenceEquals(this, other))
                 return true;
             if (other is FsDirectory)
-                return ((this.GetContainer() is ComponentList.AttachableContainer container) ? container.NameComparer : StringComparer.InvariantCultureIgnoreCase).Equals(Name, other.Name);
+                return ((this.GetContainer() is ComponentList.AttachableContainer container) ? container.NameComparer : ComponentHelper.IGNORE_CASE_COMPARER).Equals(Name, other.Name);
             return false;
         }
 
@@ -105,7 +105,7 @@ namespace FsInfoCat.Models.Crawl
             if (ReferenceEquals(this, other))
                 return 0;
             if (other is FsDirectory)
-                return ((this.GetContainer() is ComponentList.AttachableContainer container) ? container.NameComparer : StringComparer.InvariantCultureIgnoreCase).Compare(Name, other.Name);
+                return ((this.GetContainer() is ComponentList.AttachableContainer container) ? container.NameComparer : ComponentHelper.IGNORE_CASE_COMPARER).Compare(Name, other.Name);
             return -1;
         }
 

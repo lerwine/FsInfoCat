@@ -256,7 +256,7 @@ namespace FsInfoCat.Models.Crawl
             {
                 StringComparer comparer = _segmentNameComparer;
                 if (comparer is null)
-                    _segmentNameComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                    _segmentNameComparer = comparer = (_caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
                 return comparer;
             }
         }
@@ -265,7 +265,7 @@ namespace FsInfoCat.Models.Crawl
         {
             StringComparer comparer = _segmentNameComparer;
             if (comparer is null)
-                _segmentNameComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                _segmentNameComparer = comparer = (_caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
             return comparer;
         }
 
@@ -338,7 +338,7 @@ namespace FsInfoCat.Models.Crawl
         public int GetHashCode(IFsChildNode obj)
         {
             string n;
-            return StringComparer.InvariantCultureIgnoreCase.GetHashCode((obj is null || null == (n = obj.Name)) ? "" : n);
+            return ComponentHelper.IGNORE_CASE_COMPARER.GetHashCode((obj is null || null == (n = obj.Name)) ? "" : n);
         }
 
         public bool Equals(IFsChildNode x, IFsChildNode y)
@@ -353,7 +353,7 @@ namespace FsInfoCat.Models.Crawl
             string b = y.Name;
             if (a is null)
                 return b is null;
-            return null != b && StringComparer.InvariantCultureIgnoreCase.Equals(a, b);
+            return null != b && ComponentHelper.IGNORE_CASE_COMPARER.Equals(a, b);
         }
 
         public override string ToString()

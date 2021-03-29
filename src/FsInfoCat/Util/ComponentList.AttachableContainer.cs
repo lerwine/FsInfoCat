@@ -21,7 +21,7 @@ namespace FsInfoCat.Util
             /// <exception cref="ArgumentNullException"><paramref name="owner"/> was <c>null</c>.</exception>
             public AttachableContainer(IComponent owner) : this(owner, false) { }
 
-            public AttachableContainer(IComponent owner, bool caseSensitive) : this(owner, (caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase) { }
+            public AttachableContainer(IComponent owner, bool caseSensitive) : this(owner, (caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER) { }
 
             public AttachableContainer(IComponent owner, StringComparer nameComparer) : base(owner)
             {

@@ -1,6 +1,5 @@
 using FsInfoCat.PS;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -60,7 +59,6 @@ namespace FsInfoCat.Test.Helpers
         public static string SerializesAsXml(Match match, params string[] groupNames)
         {
             XmlDocument xmlDocument = new XmlDocument();
-            IEnumerable<Group> groups = match.Groups.Cast<Group>();
             xmlDocument.AppendChild(xmlDocument.CreateElement("Match")).Attributes.Append(xmlDocument.CreateAttribute("Success")).Value = XmlConvert.ToString(match.Success);
             if (match.Success && !(groupNames is null || groupNames.Length == 0))
             {

@@ -537,7 +537,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <returns>The URI-encoded file name (leaf) portion of the path string or <seealso cref="string.Empty"/> if the file system <paramref name="path"/>
         /// referenced the root subdirectory.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="path"/> is invalid.</exception>
-        public override string  FromFileSystemPath(string path, out string hostName, out string directoryName)
+        public override string FromFileSystemPath(string path, out string hostName, out string directoryName)
         {
             if (string.IsNullOrEmpty(path))
             {

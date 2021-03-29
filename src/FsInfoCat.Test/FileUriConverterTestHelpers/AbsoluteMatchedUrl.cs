@@ -174,10 +174,7 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             return false;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as AbsoluteMatchedUrl);
-        }
+        public override bool Equals(object obj) => Equals(obj as AbsoluteMatchedUrl);
 
         public override int GetHashCode()
         {

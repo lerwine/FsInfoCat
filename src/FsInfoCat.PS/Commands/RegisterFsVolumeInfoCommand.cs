@@ -111,7 +111,7 @@ namespace FsInfoCat.PS.Commands
             Collection<PSObject> volumeRegistration = GetVolumeRegistration();
             IEnumerable<RegisteredVolumeInfo> registeredVolumes = volumeRegistration.Select(o => o.BaseObject as RegisteredVolumeInfo);
             RegisteredVolumeInfo volumeInfo = registeredVolumes.FirstOrDefault(v => v.Identifier.Equals(volumeIdentifer));
-            StringComparer ignoreCaseComparer = StringComparer.InvariantCultureIgnoreCase;
+            StringComparer ignoreCaseComparer = ComponentHelper.IGNORE_CASE_COMPARER;
             string uriString = fileUri.ToString();
             if (volumeInfo is null)
             {

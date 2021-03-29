@@ -120,8 +120,8 @@ namespace FsInfoCat.PS.Commands
                         matching = new PSObject[0];
                     break;
                 case PARAMETER_SET_NAME_BY_VOLUME_NAME:
-                    string[] names = VolumeName.Distinct(StringComparer.InvariantCultureIgnoreCase).ToArray();
-                    StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+                    string[] names = VolumeName.Distinct(ComponentHelper.IGNORE_CASE_COMPARER).ToArray();
+                    StringComparer comparer = ComponentHelper.IGNORE_CASE_COMPARER;
                     if (names.Length == 1)
                     {
                         string n = names[0];

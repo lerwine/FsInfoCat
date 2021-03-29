@@ -285,7 +285,7 @@ namespace FsInfoCat.Models
                 return Array.Empty<T>();
             if (string.IsNullOrEmpty(volumeName))
                 return source.Where(v => !(v is null) && string.IsNullOrEmpty(v.VolumeName));
-            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+            StringComparer comparer = ComponentHelper.IGNORE_CASE_COMPARER;
             return source.Where(v => !(v is null) && comparer.Equals(volumeName, v.VolumeName));
         }
 
@@ -298,7 +298,7 @@ namespace FsInfoCat.Models
                 return Array.Empty<TSource>();
             if (string.IsNullOrEmpty(volumeName))
                 return source.Where(v => !(v is null) && string.IsNullOrEmpty(mapper(v).VolumeName));
-            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+            StringComparer comparer = ComponentHelper.IGNORE_CASE_COMPARER;
             return source.Where(v => !(v is null) && comparer.Equals(volumeName, mapper(v).VolumeName));
         }
 

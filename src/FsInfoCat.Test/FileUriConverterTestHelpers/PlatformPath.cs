@@ -192,15 +192,9 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             return false;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as PlatformPath);
-        }
+        public override bool Equals(object obj) => Equals(obj as PlatformPath);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_absoluteUrl, _relativeUrl, _fileSystem);
-        }
+        public override int GetHashCode() => HashCode.Combine(_absoluteUrl, _relativeUrl, _fileSystem);
 
         public string GetXPath()
         {

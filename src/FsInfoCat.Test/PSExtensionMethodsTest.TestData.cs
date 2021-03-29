@@ -1415,7 +1415,7 @@ namespace FsInfoCat.Test
         public static IEnumerable<TestCaseData> GetTryGetErrorMessage1TestCases()
         {
 #warning GetTryGetErrorMessage1TestCases not implemented
-            return new TestCaseData[0];
+            return Array.Empty<TestCaseData>();
         }
 
         public class ErrorRecordComparable

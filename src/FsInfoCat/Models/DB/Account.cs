@@ -159,7 +159,7 @@ namespace FsInfoCat.Models.DB
 
         static Account()
         {
-            Dictionary<string, UserRole> fromRoleNameMap = new Dictionary<string, UserRole>(StringComparer.CurrentCultureIgnoreCase);
+            Dictionary<string, UserRole> fromRoleNameMap = new Dictionary<string, UserRole>(ComponentHelper.IGNORE_CASE_COMPARER);
             Dictionary<UserRole, string> toRoleNameMap = new Dictionary<UserRole, string>();
             foreach (var m in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Select(r =>
                 new

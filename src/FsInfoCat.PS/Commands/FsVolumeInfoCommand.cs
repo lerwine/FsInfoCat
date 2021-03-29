@@ -206,7 +206,7 @@ namespace FsInfoCat.PS.Commands
                 {
                     StringComparer comparer = _pathComparer;
                     if (comparer is null)
-                        _pathComparer = comparer = _caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                        _pathComparer = comparer = _caseSensitive ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
                     return comparer;
                 }
             }
@@ -215,7 +215,7 @@ namespace FsInfoCat.PS.Commands
             {
                 StringComparer comparer = _pathComparer;
                 if (comparer is null)
-                    _pathComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                    _pathComparer = comparer = (_caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
                 return comparer;
             }
 

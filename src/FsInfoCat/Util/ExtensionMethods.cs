@@ -110,9 +110,9 @@ namespace FsInfoCat.Util
 
         public static bool StartsWith(this string s, char c) => !string.IsNullOrEmpty(s) && s[0] == c;
 
-        public static string[] Split(this string s, char c) => (s is null) ? new string[0] : s.Split(new char[] { c });
+        public static string[] Split(this string s, char c) => (s is null) ? Array.Empty<string>() : s.Split(new char[] { c });
 
-        public static string[] Split(this string s, char c, int count) => (s is null) ? new string[0] : s.Split(new char[] { c }, count);
+        public static string[] Split(this string s, char c, int count) => (s is null) ? Array.Empty<string>() : s.Split(new char[] { c }, count);
 
         public static bool TryDequeue<T>(this Queue<T> source, out T result)
         {

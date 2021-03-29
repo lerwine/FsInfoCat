@@ -23,7 +23,7 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
                 base.InsertItem(index, item);
             }
         }
-            
+
         protected override void SetItem(int index, BaseHostType item)
         {
             if (item is null)

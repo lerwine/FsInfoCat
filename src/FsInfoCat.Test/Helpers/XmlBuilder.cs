@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -103,7 +99,7 @@ namespace FsInfoCat.Test.Helpers
             {
                 result = null;
                 return false;
-            }    
+            }
             try
             {
                 if (node is XAttribute attribute)

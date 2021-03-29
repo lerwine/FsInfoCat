@@ -162,7 +162,7 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
         internal FsPathInfo GetAltLocalPath()
         {
             RelativeUrl<PlatformPath> altUrl = GetAltUrl();
-            return (altUrl is null) ? null : altUrl.LocalPath;
+            return altUrl?.LocalPath;
         }
 
         public bool Equals([AllowNull] RelativeMatchedUrl other)
@@ -183,15 +183,9 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             return false;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as RelativeMatchedUrl);
-        }
+        public override bool Equals(object obj) => Equals(obj as RelativeMatchedUrl);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Path, Query, Fragment, LocalPath, _match, _translated, _wellFormed);
-        }
+        public override int GetHashCode() => HashCode.Combine(Path, Query, Fragment, LocalPath, _match, _translated, _wellFormed);
 
         public override string GetXPath()
         {

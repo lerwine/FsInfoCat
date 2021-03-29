@@ -698,7 +698,7 @@ namespace FsInfoCat.Models.DB
             {
                 StringComparer comparer = _segmentNameComparer;
                 if (comparer is null)
-                    _segmentNameComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                    _segmentNameComparer = comparer = (_caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
                 return comparer;
             }
         }
@@ -707,7 +707,7 @@ namespace FsInfoCat.Models.DB
         {
             StringComparer comparer = _segmentNameComparer;
             if (comparer is null)
-                _segmentNameComparer = comparer = (_caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase;
+                _segmentNameComparer = comparer = (_caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
             return comparer;
         }
 
