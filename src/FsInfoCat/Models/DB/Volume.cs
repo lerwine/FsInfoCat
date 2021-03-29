@@ -760,11 +760,11 @@ namespace FsInfoCat.Models.DB
             _notes = _notes.Trim();
             CreatedOn = CreatedOn.CoerceAsLocalTime();
             ModifiedOn = ModifiedOn.CoerceAsLocalTime();
-            if (null != Creator)
+            if (!(Creator is null))
                 CreatedBy = Creator.AccountID;
-            if (null != Modifier)
+            if (!(Modifier is null))
                 ModifiedBy = Modifier.AccountID;
-            if (null != Host)
+            if (!(Host is null))
                 HostDeviceID = Host.HostDeviceID;
         }
 

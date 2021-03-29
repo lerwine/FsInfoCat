@@ -400,7 +400,7 @@ namespace FsInfoCat.Util
                         return;
                     if (disposing)
                     {
-                        if (null != Owner)
+                        if (!(Owner is null))
                         {
                             Owner.Disposed -= OnOwnerDisposed;
                             Owner = null;

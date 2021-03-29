@@ -63,11 +63,11 @@ namespace FsInfoCat.Models.DB
         public void Normalize()
         {
             CreatedOn = CreatedOn.CoerceAsLocalTime();
-            if (null != Account)
+            if (!(Account is null))
                 AccountID = Account.AccountID;
-            if (null != Host)
+            if (!(Host is null))
                 HostDeviceID = Host.HostDeviceID;
-            if (null != Creator)
+            if (!(Creator is null))
                 CreatedBy = Creator.AccountID;
         }
     }

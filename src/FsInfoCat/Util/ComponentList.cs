@@ -65,7 +65,7 @@ namespace FsInfoCat.Util
 
         protected ComponentList(IEnumerable<IComponent> items) : this()
         {
-            if (null != items)
+            if (!(items is null))
             {
                 foreach (IComponent i in items)
                 {
@@ -93,7 +93,7 @@ namespace FsInfoCat.Util
             if (null == component)
                 return false;
             ContainerBase.SiteBase site = component.Site as ContainerBase.SiteBase;
-            return null != site && !site.IsOrphaned() && ReferenceEquals(site.Container, _container);
+            return !(site is null || site.IsOrphaned()) && ReferenceEquals(site.Container, _container);
         }
 
         bool IList.Contains(object value) => Contains(value as IComponent);
@@ -175,7 +175,7 @@ namespace FsInfoCat.Util
 
         protected virtual void SetAt(int index, IComponent value, string name) => _container.SetListItemAt(index, value, name, this);
 
-        public override bool Equals(object obj) => null != obj && ReferenceEquals(obj, this);
+        public override bool Equals(object obj) => !(obj is null) && ReferenceEquals(obj, this);
 
         public override int GetHashCode() => _sites.GetHashCode();
     }

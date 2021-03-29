@@ -72,7 +72,7 @@ namespace FsInfoCat.Web.API
 
         public static async Task<ActionResult<RequestResponse<bool>>> Logout(ClaimsPrincipal user, HttpContext httpContext, ILogger logger)
         {
-            if (null != user && null != user.Identity && user.Identity.IsAuthenticated)
+            if (!(user is null || user.Identity is null) && user.Identity.IsAuthenticated)
             {
                 await httpContext.SignOutAsync();
                 return new RequestResponse<bool>(true);

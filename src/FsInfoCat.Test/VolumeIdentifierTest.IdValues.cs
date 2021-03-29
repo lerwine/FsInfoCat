@@ -8,7 +8,7 @@ namespace FsInfoCat.Test
     {
         public class IdValues : IEquatable<IdValues>
         {
-            private Uri _absoluteUri;
+            private readonly Uri _absoluteUri;
             public string Value { get; }
 
             public string AbsoluteUri { get; }
@@ -17,7 +17,7 @@ namespace FsInfoCat.Test
             {
                 Value = value;
                 AbsoluteUri = absoluteUri;
-                if (null != absoluteUri && Uri.TryCreate(absoluteUri, UriKind.RelativeOrAbsolute, out Uri uri))
+                if (!(absoluteUri is null) && Uri.TryCreate(absoluteUri, UriKind.RelativeOrAbsolute, out Uri uri))
                     _absoluteUri = uri;
                 else
                     _absoluteUri = null;

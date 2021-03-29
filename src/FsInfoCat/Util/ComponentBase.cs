@@ -49,7 +49,7 @@ namespace FsInfoCat.Util
             finally { Monitor.Exit(_syncRoot); }
             try
             {
-                if (null != site)
+                if (!(site is null))
                     site.Container?.Remove(this);
             }
             finally { Disposed?.Invoke(this, EventArgs.Empty); }

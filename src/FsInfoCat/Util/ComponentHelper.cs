@@ -15,7 +15,7 @@ namespace FsInfoCat.Util
             if (component is null)
                 return null;
             ISite site = component.Site;
-            if (null != site)
+            if (!(site is null))
                 return site.Name;
             return (component is INamedComponent nc) ? nc.Name : null;
         }

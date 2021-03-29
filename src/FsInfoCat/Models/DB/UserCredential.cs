@@ -117,9 +117,9 @@ namespace FsInfoCat.Models.DB
         {
             CreatedOn = CreatedOn.CoerceAsLocalTime();
             ModifiedOn = ModifiedOn.CoerceAsLocalTime();
-            if (null != Creator)
+            if (!(Creator is null))
                 CreatedBy = Creator.AccountID;
-            if (null != Modifier)
+            if (!(Modifier is null))
                 ModifiedBy = Modifier.AccountID;
         }
 

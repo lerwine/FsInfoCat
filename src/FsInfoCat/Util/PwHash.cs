@@ -79,33 +79,27 @@ namespace FsInfoCat.Util
         public PwHash(IEnumerable<byte> sha512HashBytes, int hashStartIndex, IEnumerable<byte> saltBytes, int saltStartIndex)
         {
             if (sha512HashBytes is null)
-                throw new ArgumentNullException("sha512HashBytes");
+                throw new ArgumentNullException(nameof(sha512HashBytes));
             if (saltBytes is null)
-                throw new ArgumentNullException("saltBytes");
+                throw new ArgumentNullException(nameof(saltBytes));
             if (hashStartIndex < 0)
-                throw new ArgumentOutOfRangeException("hashStartIndex");
+                throw new ArgumentOutOfRangeException(nameof(hashStartIndex));
             if (saltStartIndex < 0)
-                throw new ArgumentOutOfRangeException("saltStartIndex");
-            byte[] hash;
-            if (sha512HashBytes is byte[])
-                hash = (byte[])sha512HashBytes;
-            else
+                throw new ArgumentOutOfRangeException(nameof(saltStartIndex));
+            if (!(sha512HashBytes is byte[] hash))
             {
                 hash = sha512HashBytes.Skip(hashStartIndex).Take(HASH_BYTES_LENGTH).ToArray();
                 hashStartIndex = 0;
             }
             if (hash.Length < (HASH_BYTES_LENGTH + hashStartIndex))
-                throw new ArgumentException("SHA512 hash array must contain at least" + HASH_BYTES_LENGTH.ToString() + " bytes after the start index.", "sha512HashBytes");
-            byte[] salt;
-            if (saltBytes is byte[])
-                salt = (byte[])saltBytes;
-            else
+                throw new ArgumentException("SHA512 hash array must contain at least" + HASH_BYTES_LENGTH.ToString() + " bytes after the start index.", nameof(sha512HashBytes));
+            if (!(saltBytes is byte[] salt))
             {
                 salt = saltBytes.Skip(saltStartIndex).Take(SALT_BYTES_LENGTH).ToArray();
                 saltStartIndex = 0;
             }
             if (salt.Length < (SALT_BYTES_LENGTH + saltStartIndex))
-                throw new ArgumentException("Salt array must contain at least" + SALT_BYTES_LENGTH.ToString() + " bytes after the start index.", "saltBytes");
+                throw new ArgumentException("Salt array must contain at least" + SALT_BYTES_LENGTH.ToString() + " bytes after the start index.", nameof(saltBytes));
             _hashBits000_03f = BitConverter.ToUInt64(hash, hashStartIndex);
             _hashBits040_07f = BitConverter.ToUInt64(hash, hashStartIndex + FIELD_OFFSET_1);
             _hashBits080_0bf = BitConverter.ToUInt64(hash, hashStartIndex + FIELD_OFFSET_2);
@@ -120,19 +114,16 @@ namespace FsInfoCat.Util
         public PwHash(IEnumerable<byte> hashAndSaltBytes, int startIndex)
         {
             if (hashAndSaltBytes is null)
-                throw new ArgumentNullException("hashAndSaltBytes");
+                throw new ArgumentNullException(nameof(hashAndSaltBytes));
             if (startIndex < 0)
-                throw new ArgumentOutOfRangeException("startIndex");
-            byte[] data;
-            if (hashAndSaltBytes is byte[])
-                data = (byte[])hashAndSaltBytes;
-            else
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if (!(hashAndSaltBytes is byte[] data))
             {
                 data = hashAndSaltBytes.Skip(startIndex).Take(TOTAL_BYTES_LENGTH).ToArray();
                 startIndex = 0;
             }
             if (data.Length < (TOTAL_BYTES_LENGTH + startIndex))
-                throw new ArgumentException("Array must contain at least" + TOTAL_BYTES_LENGTH.ToString() + " bytes after the start index.", "hashAndSaltBytes");
+                throw new ArgumentException("Array must contain at least" + TOTAL_BYTES_LENGTH.ToString() + " bytes after the start index.", nameof(hashAndSaltBytes));
             _hashBits000_03f = BitConverter.ToUInt64(data, startIndex);
             _hashBits040_07f = BitConverter.ToUInt64(data, startIndex + FIELD_OFFSET_1);
             _hashBits080_0bf = BitConverter.ToUInt64(data, startIndex + FIELD_OFFSET_2);
@@ -200,9 +191,9 @@ namespace FsInfoCat.Util
                 return null;
             byte[] data;
             try { data = Convert.FromBase64String(base64EncodedHash); }
-            catch (Exception exc) { throw new ArgumentException("Invalid base-64 string", "base64EncodedHash", exc); }
+            catch (Exception exc) { throw new ArgumentException("Invalid base-64 string", nameof(base64EncodedHash), exc); }
             if (data.Length != TOTAL_BYTES_LENGTH)
-                throw new ArgumentException("Invalid data length", "base64EncodedHash");
+                throw new ArgumentException("Invalid data length", nameof(base64EncodedHash));
             return new PwHash(data);
         }
 
@@ -235,9 +226,9 @@ namespace FsInfoCat.Util
                 return string.IsNullOrEmpty(rawPw);
             byte[] data;
             try { data = Convert.FromBase64String(base64EncodedHash); }
-            catch (Exception exc) { throw new ArgumentException("Invalid base-64 string", "base64EncodedHash", exc); }
+            catch (Exception exc) { throw new ArgumentException("Invalid base-64 string", nameof(base64EncodedHash), exc); }
             if (data.Length != TOTAL_BYTES_LENGTH)
-                throw new ArgumentException("Invalid data length", "base64EncodedHash");
+                throw new ArgumentException("Invalid data length", nameof(base64EncodedHash));
             if (string.IsNullOrEmpty(rawPw))
                 return false;
             byte[] salt = new byte[SALT_BYTES_LENGTH];
@@ -286,7 +277,7 @@ namespace FsInfoCat.Util
                     return false;
             }
             catch { return false; }
-            return null != data && data.Length == TOTAL_BYTES_LENGTH && BitConverter.ToUInt64(data, 0) == _hashBits000_03f &&
+            return !(data is null) && data.Length == TOTAL_BYTES_LENGTH && BitConverter.ToUInt64(data, 0) == _hashBits000_03f &&
                 BitConverter.ToUInt64(data, FIELD_OFFSET_1) == _hashBits040_07f && BitConverter.ToUInt64(data, FIELD_OFFSET_2) == _hashBits080_0bf &&
                 BitConverter.ToUInt64(data, FIELD_OFFSET_3) == _hashBits0c0_0ff && BitConverter.ToUInt64(data, FIELD_OFFSET_4) == _hashBits100_13f &&
                 BitConverter.ToUInt64(data, FIELD_OFFSET_5) == _hashBits140_17f && BitConverter.ToUInt64(data, FIELD_OFFSET_6) == _hashBits180_1bf &&
@@ -297,9 +288,9 @@ namespace FsInfoCat.Util
         {
             if (obj is null)
                 return false;
-            if (obj is PwHash)
-                return Equals((PwHash)obj);
-            return obj is string && Equals((string)obj);
+            if (obj is PwHash hash)
+                return Equals(hash);
+            return obj is string s && Equals(s);
         }
 
         public override int GetHashCode()
@@ -324,5 +315,9 @@ namespace FsInfoCat.Util
                 (_hashBits1c0_1ff.GetHashCode() & 0x1e000000) |
                 (int)(_saltBits.GetHashCode() & 0xe0000000);
         }
+
+        public static bool operator ==(PwHash left, PwHash right) => left.Equals(right);
+
+        public static bool operator !=(PwHash left, PwHash right) => !left.Equals(right);
     }
 }

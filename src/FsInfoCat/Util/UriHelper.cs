@@ -634,7 +634,7 @@ namespace FsInfoCat.Util
         /// if it contained no <seealso cref="UriComponents.UserInfo"/> component.</returns>
         public static string GetUserNameAndPassword(this Uri uri, out string password)
         {
-            if (null != uri && uri.IsAbsoluteUri)
+            if (!(uri is null) && uri.IsAbsoluteUri)
             {
                 string userInfo = uri.GetComponents(UriComponents.UserInfo | UriComponents.KeepDelimiter, UriFormat.UriEscaped);
                 if (userInfo.Length > 0)
@@ -670,10 +670,10 @@ namespace FsInfoCat.Util
             }
 
             string oldUserInfo = uri.GetComponents(UriComponents.UserInfo, UriFormat.UriEscaped);
-            if (null != userName)
+            if (!(userName is null))
             {
                 string newUserInfo = AsUserNameComponentEncoded(userName);
-                if (null != password && (newUserInfo.Length > 0 || password.Length > 0))
+                if (!(password is null) && (newUserInfo.Length > 0 || password.Length > 0))
                     newUserInfo = $"{newUserInfo}:{AsPasswordComponentEncoded(password)}";
                 if (newUserInfo.Length > 0)
                 {

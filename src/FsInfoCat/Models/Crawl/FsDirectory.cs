@@ -70,7 +70,7 @@ namespace FsInfoCat.Models.Crawl
         public bool TryFindPartialCrawl(out PartialCrawlWarning message, out IEnumerable<IFsDirectory> segments)
         {
             message = Messages.OfType<PartialCrawlWarning>().Where(m => m.NotCrawled.Any(s => !string.IsNullOrWhiteSpace(s))).FirstOrDefault();
-            if (null != message)
+            if (!(message is null))
             {
                 segments = Array.Empty<IFsDirectory>();
                 return true;

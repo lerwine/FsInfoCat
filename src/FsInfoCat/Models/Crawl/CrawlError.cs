@@ -73,7 +73,7 @@ namespace FsInfoCat.Models.Crawl
             else
             {
                 innerErrors = new List<CrawlError>();
-                if (null != exception.InnerException)
+                if (!(exception.InnerException is null))
                     innerErrors.Add(new CrawlError(exception.InnerException, id));
             }
             InnerErrors = new Collection<CrawlError>(innerErrors);

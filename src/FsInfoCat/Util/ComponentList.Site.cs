@@ -24,7 +24,7 @@ namespace FsInfoCat.Util
                             if (!(IsOrphaned() || Container._isDisposed))
                             {
                                 ISite site = Container.Owner.Site;
-                                if (null != site)
+                                if (!(site is null))
                                 {
                                     if (site is INestedSite nestedSite)
                                     {
@@ -65,7 +65,7 @@ namespace FsInfoCat.Util
                     get => _name;
                     set
                     {
-                        if (value is null || IsOrphaned() || (null != _name && Container.NameComparer.Equals(value, _name)))
+                        if (value is null || IsOrphaned() || (!(_name is null) && Container.NameComparer.Equals(value, _name)))
                             _name = value;
                         else if (_name != value)
                         {
@@ -118,7 +118,7 @@ namespace FsInfoCat.Util
 
             private IEnumerable<ComponentList> GetAttachedLists()
             {
-                for (ComponentList list = _firstAttached; null != list; list = list._next)
+                for (ComponentList list = _firstAttached; !(list is null); list = list._next)
                     yield return list;
             }
 
@@ -134,7 +134,7 @@ namespace FsInfoCat.Util
 
                 internal static IEnumerable<Site> GetSites(AttachableContainer container)
                 {
-                    for (Site site = container._firstSite; null != site; site = site._next)
+                    for (Site site = container._firstSite; !(site is null); site = site._next)
                         yield return site;
                 }
 
@@ -181,19 +181,19 @@ namespace FsInfoCat.Util
                     {
                         if (ReferenceEquals(oldContainer, container))
                             return;
-                        throw new ArgumentOutOfRangeException("List is attached to another container");
+                        throw new ArgumentOutOfRangeException(nameof(list), "List is attached to another container");
                     }
                     var items = list._sites.Select(s => new
                     {
-                        Component = s.Component,
-                        Name = s.Name
+                        s.Component,
+                        s.Name
                     }).ToArray();
                     if (items.Where(i => !container.GetComponents().Any(c => ReferenceEquals(i.Component, c)))
                             .Select(s => s.Name).Where(n => null != n)
                             .Concat(container.GetNames()).GroupBy(n => n, container.NameComparer).Any(g => g.Count() > 1))
-                        throw new ArgumentOutOfRangeException(ERROR_MESSAGE_ITEM_WITH_NAME_EXISTS);
+                        throw new ArgumentOutOfRangeException(nameof(list), ERROR_MESSAGE_ITEM_WITH_NAME_EXISTS);
                     list._sites.Clear();
-                    if (null != oldContainer)
+                    if (!(oldContainer is null))
                     {
                         foreach (var a in items)
                             oldContainer.Remove(a.Component);
@@ -211,9 +211,7 @@ namespace FsInfoCat.Util
                 {
                     if (!(list._container is AttachableContainer container))
                         return;
-                    PlaceHolderContainer newContainer = new PlaceHolderContainer(list, container.NameComparer);
-                    if (list._container is AttachableContainer)
-                        return;
+                    list._container = new PlaceHolderContainer(list, container.NameComparer);
                     if (list._previous is null)
                     {
                         if (ReferenceEquals(container._firstAttached, list))
@@ -256,7 +254,7 @@ namespace FsInfoCat.Util
                     Monitor.Enter(containerSyncRoot);
                     try
                     {
-                        if (null != listSyncRoot)
+                        if (!(listSyncRoot is null))
                             Monitor.Enter(listSyncRoot);
                         try
                         {
@@ -265,7 +263,7 @@ namespace FsInfoCat.Util
                             {
                                 if (index > -1)
                                     list._sites.RemoveAt(index);
-                                if (null != name)
+                                if (!(name is null))
                                     container.ValidateName(container.GetNames(), name);
                                 return new Site(component, container, name).Add(list, index);
                             }
@@ -294,7 +292,7 @@ namespace FsInfoCat.Util
                         }
                         finally
                         {
-                            if (null != listSyncRoot)
+                            if (!(listSyncRoot is null))
                                 Monitor.Exit(listSyncRoot);
                         }
                     }
@@ -323,7 +321,7 @@ namespace FsInfoCat.Util
                 private Site Add(bool skipSetSiteToThis = false)
                 {
                     ISite site = Component.Site;
-                    if (null != site && !ReferenceEquals(site.Container, Container))
+                    if (!(site is null) && !ReferenceEquals(site.Container, Container))
                         site.Container.Remove(Component);
                     if ((_previous = Container._lastSite) is null)
                         Container._firstSite = Container._lastSite = this;
@@ -436,7 +434,7 @@ namespace FsInfoCat.Util
                             Site site = GetSite(item, container, list, out int currentIndex);
                             if (site is null)
                             {
-                                if (null != name)
+                                if (!(name is null))
                                     container.ValidateName(container.GetNames(), name);
                                 if (currentIndex > -1)
                                     list._sites.RemoveAt(currentIndex);
@@ -490,7 +488,7 @@ namespace FsInfoCat.Util
                     Monitor.Enter(containerSyncRoot);
                     try
                     {
-                        if (null != listSyncRoot)
+                        if (!(listSyncRoot is null))
                             Monitor.Enter(listSyncRoot);
                         try
                         {
@@ -504,7 +502,7 @@ namespace FsInfoCat.Util
                         }
                         finally
                         {
-                            if (null != listSyncRoot)
+                            if (!(listSyncRoot is null))
                                 Monitor.Exit(listSyncRoot);
                         }
                     }
@@ -538,7 +536,7 @@ namespace FsInfoCat.Util
                             IComponent item = list._sites[index].Component;
                             list._sites.RemoveAt(index);
                             Site site = GetSite(item, container, list, out index);
-                            if (null != site)
+                            if (!(site is null))
                                 site.Unlink();
                         }
                         finally { Monitor.Exit(listSyncRoot); }
@@ -582,7 +580,7 @@ namespace FsInfoCat.Util
                             Site currentSite = GetSite(item, container, list, out currentIndex);
                             if (oldSite is null)
                             {
-                                if (null != name)
+                                if (!(name is null))
                                     container.ValidateName(container.GetNames(item), name);
                                 if (currentIndex > index)
                                     list._sites.RemoveAt(currentIndex);
@@ -600,7 +598,7 @@ namespace FsInfoCat.Util
                             }
                             else if (currentSite == null)
                             {
-                                if (null != name)
+                                if (!(name is null))
                                     container.ValidateName(container.GetNames(oldSite.Component), name);
                                 if (currentIndex > -1)
                                 {
@@ -631,7 +629,7 @@ namespace FsInfoCat.Util
                                 }
                                 else
                                 {
-                                    if (null != name)
+                                    if (!(name is null))
                                         container.ValidateName(container.GetNames(oldSite.Component, item), name);
                                     if (ReferenceEquals(oldSite.Component.Site, oldSite))
                                         oldSite.Component.Site = null;

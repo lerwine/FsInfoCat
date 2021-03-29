@@ -278,7 +278,7 @@ namespace FsInfoCat.Models.Accounts
         public EditAccount(IAccount user)
         {
             if (user is null)
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             AccountID = user.AccountID;
             Creator = user.Creator;
             CreatedBy = user.CreatedBy;
@@ -336,9 +336,9 @@ namespace FsInfoCat.Models.Accounts
             _notes = _notes.Trim();
             CreatedOn = CreatedOn.CoerceAsLocalTime();
             ModifiedOn = ModifiedOn.CoerceAsLocalTime();
-            if (null != Creator)
+            if (!(Creator is null))
                 CreatedBy = Creator.AccountID;
-            if (null != Modifier)
+            if (!(Modifier is null))
                 ModifiedBy = Modifier.AccountID;
         }
         public IList<ValidationResult> ValidateAll()

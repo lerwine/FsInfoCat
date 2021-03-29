@@ -18,7 +18,7 @@ namespace FsInfoCat.Test
                 Ordinal = ordinal;
             }
 
-            public bool Equals([AllowNull] ParseResultValues other) => null != other && (ReferenceEquals(this, other) ||
+            public bool Equals([AllowNull] ParseResultValues other) => !(other is null) && (ReferenceEquals(this, other) ||
                 (UUID == other.UUID && SerialNumber == other.SerialNumber && Ordinal == other.Ordinal));
 
             public override bool Equals(object obj) => Equals(obj as ParseResultValues);
@@ -30,20 +30,20 @@ namespace FsInfoCat.Test
                 return (UUID.HasValue) ?
                     (SerialNumber.HasValue) ?
                         ((Ordinal.HasValue) ?
-                            $"{{ UUID = {UUID.Value.ToString("d")}, SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = {Ordinal.Value.ToString("x2")} }}"
-                            : $"{{ UUID = {UUID.Value.ToString("d")}, SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = null }}"
+                            $"{{ UUID = {UUID.Value:d}, SerialNumber = {SerialNumber.Value:x4}, Ordinal = {Ordinal.Value:x2} }}"
+                            : $"{{ UUID = {UUID.Value:d}, SerialNumber = {SerialNumber.Value:x4}, Ordinal = null }}"
                         )
                         : ((Ordinal.HasValue) ?
-                            $"{{ UUID = {UUID.Value.ToString("d")}, SerialNumber = null, Ordinal = {Ordinal.Value.ToString("x2")} }}"
-                            : $"{{ UUID = {UUID.Value.ToString("d")}, SerialNumber = null, Ordinal = null }}"
+                            $"{{ UUID = {UUID.Value:d}, SerialNumber = null, Ordinal = {Ordinal.Value:x2} }}"
+                            : $"{{ UUID = {UUID.Value:d}, SerialNumber = null, Ordinal = null }}"
                         )
                     : (SerialNumber.HasValue) ?
                         ((Ordinal.HasValue) ?
-                            $"{{ UUID = null, SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = {Ordinal.Value.ToString("x2")} }}"
-                            : $"{{ UUID = null, SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = null }}"
+                            $"{{ UUID = null, SerialNumber = {SerialNumber.Value:x4}, Ordinal = {Ordinal.Value:x2} }}"
+                            : $"{{ UUID = null, SerialNumber = {SerialNumber.Value:x4}, Ordinal = null }}"
                         )
                         : ((Ordinal.HasValue) ?
-                            $"{{ UUID = null, SerialNumber = null, Ordinal = {Ordinal.Value.ToString("x2")} }}"
+                            $"{{ UUID = null, SerialNumber = null, Ordinal = {Ordinal.Value:x2} }}"
                             : "{ UUID = null, SerialNumber = null, Ordinal = null }"
                         );
             }

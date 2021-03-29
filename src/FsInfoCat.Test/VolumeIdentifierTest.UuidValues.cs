@@ -14,7 +14,7 @@ namespace FsInfoCat.Test
                 UUID = uuid;
             }
 
-            public bool Equals([AllowNull] UuidValues other) => null != other && (ReferenceEquals(this, other) ||
+            public bool Equals([AllowNull] UuidValues other) => !(other is null) && (ReferenceEquals(this, other) ||
                 (base.Equals(this) && UUID == other.UUID));
 
             public override bool Equals(object obj) => Equals(obj as SnIdValues);

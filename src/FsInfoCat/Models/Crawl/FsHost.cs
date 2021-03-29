@@ -80,14 +80,14 @@ namespace FsInfoCat.Models.Crawl
         public bool TryFindPartialCrawl(out PartialCrawlWarning message, out IEnumerable<IFsDirectory> segments)
         {
             message = Messages.OfType<PartialCrawlWarning>().Where(m => m.NotCrawled.Any(s => !string.IsNullOrWhiteSpace(s))).FirstOrDefault();
-            if (null != message)
+            if (!(message is null))
             {
                 segments = System.Array.Empty<IFsDirectory>();
                 return true;
             }
             foreach (FsRoot root in Roots)
             {
-                if (null != root && root.TryFindPartialCrawl(out message, out segments))
+                if (!(root is null) && root.TryFindPartialCrawl(out message, out segments))
                 {
                     segments = (new IFsDirectory[] { root }).Concat(segments);
                     return true;

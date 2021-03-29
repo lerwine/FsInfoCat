@@ -16,7 +16,7 @@ namespace FsInfoCat.Test
                 Ordinal = ordinal;
             }
 
-            public bool Equals([AllowNull] SnIdValues other) => null != other && (ReferenceEquals(this, other) ||
+            public bool Equals([AllowNull] SnIdValues other) => !(other is null) && (ReferenceEquals(this, other) ||
                 (base.Equals(this) && SerialNumber == other.SerialNumber && Ordinal == other.Ordinal));
 
             public override bool Equals(object obj) => Equals(obj as SnIdValues);
@@ -25,14 +25,14 @@ namespace FsInfoCat.Test
 
             public override string ToString()
             {
-                return (SerialNumber.HasValue) ?
-                    ((Ordinal.HasValue) ?
-                        $"{{ SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = {Ordinal.Value.ToString("x2")},{base.ToString().Substring(1)}"
-                        : $"{{ SerialNumber = {SerialNumber.Value.ToString("x4")}, Ordinal = null,{base.ToString().Substring(1)}"
+                return SerialNumber.HasValue ?
+                    (Ordinal.HasValue ?
+                        $"{{ SerialNumber = {SerialNumber.Value:x4}, Ordinal = {Ordinal.Value:x2},{base.ToString()[1..]}"
+                        : $"{{ SerialNumber = {SerialNumber.Value:x4}, Ordinal = null,{base.ToString()[1..]}"
                     )
-                    : ((Ordinal.HasValue) ?
-                        $"{{ SerialNumber = null, Ordinal = {Ordinal.Value.ToString("x2")},{base.ToString().Substring(1)}"
-                        : $"{{ SerialNumber = null, Ordinal = null,{base.ToString().Substring(1)}"
+                    : (Ordinal.HasValue ?
+                        $"{{ SerialNumber = null, Ordinal = {Ordinal.Value:x2},{base.ToString()[1..]}"
+                        : $"{{ SerialNumber = null, Ordinal = null,{base.ToString()[1..]}"
                     );
             }
         }

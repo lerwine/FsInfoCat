@@ -159,7 +159,7 @@ namespace FsInfoCat.Util
             else
             {
                 if (buffer.Length != MD5ByteSize)
-                    throw new ArgumentOutOfRangeException("buffer", "Buffer length must be 16 bytes");
+                    throw new ArgumentOutOfRangeException(nameof(buffer), "Buffer length must be 16 bytes");
                 _b0 = buffer[0];
                 _b1 = buffer[1];
                 _b2 = buffer[2];

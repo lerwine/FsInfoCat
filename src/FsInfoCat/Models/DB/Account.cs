@@ -281,9 +281,9 @@ namespace FsInfoCat.Models.DB
             _notes = _notes.Trim();
             CreatedOn = CreatedOn.CoerceAsLocalTime();
             ModifiedOn = ModifiedOn.CoerceAsLocalTime();
-            if (null != Creator)
+            if (!(Creator is null))
                 CreatedBy = Creator.AccountID;
-            if (null != Modifier)
+            if (!(Modifier is null))
                 ModifiedBy = Modifier.AccountID;
         }
         public IList<ValidationResult> ValidateAll()
@@ -317,7 +317,7 @@ namespace FsInfoCat.Models.DB
 
         public static UserRole FromRoleName(string roleName)
         {
-            return (null != roleName && _FromRoleNameMap.ContainsKey(roleName)) ? _FromRoleNameMap[roleName] : UserRole.None;
+            return (!(roleName is null) && _FromRoleNameMap.ContainsKey(roleName)) ? _FromRoleNameMap[roleName] : UserRole.None;
         }
     }
 }

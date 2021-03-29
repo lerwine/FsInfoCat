@@ -13,9 +13,9 @@ namespace FsInfoCat.Util
 
         public static string CoerceAsWsNormalizedString(object baseValue) => CoerceAsWsNormalized((baseValue is null || baseValue is string) ? baseValue as string : baseValue.ToString());
 
-        public static Guid CoerceAsGuid(object baseValue) => (null != baseValue && baseValue is Guid g) ? g : Guid.Empty;
+        public static Guid CoerceAsGuid(object baseValue) => (!(baseValue is null) && baseValue is Guid g) ? g : Guid.Empty;
 
-        public static bool CoerceAsBoolean(object baseValue) => null != baseValue && baseValue is bool b && b;
+        public static bool CoerceAsBoolean(object baseValue) => !(baseValue is null) && baseValue is bool b && b;
 
         public static string CoerceAsNonNull(this string value) => (value is null) ? "" : value;
 

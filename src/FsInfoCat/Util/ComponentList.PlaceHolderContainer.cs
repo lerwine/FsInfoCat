@@ -107,7 +107,7 @@ namespace FsInfoCat.Util
                     if (index < 0)
                     {
                         IContainer oldContainer = item.GetContainer();
-                        if (null != oldContainer && !ReferenceEquals(oldContainer, this))
+                        if (!(oldContainer is null || ReferenceEquals(oldContainer, this)))
                             oldContainer.Remove(item);
                         index = _target._sites.Count;
                         _target._sites.Add(site);
@@ -115,7 +115,7 @@ namespace FsInfoCat.Util
                     else if (index < _target._sites.Count)
                     {
                         IContainer oldContainer = item.GetContainer();
-                        if (null != oldContainer && !ReferenceEquals(oldContainer, this))
+                        if (!(oldContainer is null || ReferenceEquals(oldContainer, this)))
                             oldContainer.Remove(item);
                         _target._sites.Insert(index, site);
                     }
