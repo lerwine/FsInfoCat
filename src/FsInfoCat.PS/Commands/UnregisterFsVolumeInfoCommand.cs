@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
+using static FsInfoCat.PS.VolumeInfoRegistration;
 
 namespace FsInfoCat.PS.Commands
 {
@@ -36,28 +37,52 @@ namespace FsInfoCat.PS.Commands
         [Parameter(HelpMessage = HELP_MESSAGE_PASSTHRU, ParameterSetName = PARAMETER_SET_NAME_ROOT_PATH)]
         public SwitchParameter PassThru { get; set; }
 
+        /// <summary>
+        /// This gets called whenever a non-existent-path is encountered.
+        /// </summary>
+        /// <param name="path">the non-existent filesystem path.</param>
+        /// <param name="exc">The exception that was thrown or <see langword="null"/> if existence validation failed without an exception being thrown.</param>
+        /// <remarks>This gets called by <see cref="FsVolumeInfoCommand.ResolveDirectoryFromLiteralPath(System.Collections.Generic.IEnumerable{string})"/>, <see cref="FsVolumeInfoCommand.ResolveDirectoryFromWcPath(string)"/>
+        /// and <see cref="FsVolumeInfoCommand.TryResolveDirectoryFromLiteralPath(string, out string)"/> when trying to resolve a path that does not exist.</remarks>
         protected override void OnItemNotFoundException(string path, ItemNotFoundException exc)
         {
-            // TODO: Implement OnItemNotFoundException
-            throw new NotImplementedException();
+            WriteError(MessageId.PathNotFound.ToErrorRecord(new DirectoryNotFoundException("Subdirectory not found"), ErrorCategory.ObjectNotFound,
+                nameof(RootPathName), path));
         }
 
-        protected override void OnPathIsFileError(string providerPath)
+        /// <summary>
+        /// This gets called whenever a path is encountered with refers to a file rather than a subdirectory.
+        /// </summary>
+        /// <param name="path">The path to a file.</param>
+        /// <remarks>This gets called by <see cref="FsVolumeInfoCommand.ResolveDirectoryFromLiteralPath(System.Collections.Generic.IEnumerable{string})"/>, <see cref="FsVolumeInfoCommand.ResolveDirectoryFromWcPath(string)"/>
+        /// and <see cref="FsVolumeInfoCommand.TryResolveDirectoryFromLiteralPath(string, out string)"/> when a path was successfully resolved, but it did not refer to a subdirectory.</remarks>
+        protected override void OnPathIsFileError(string path)
         {
-            // TODO: Implement OnPathIsFileError
-            throw new NotImplementedException();
+            WriteError(MessageId.PathNotFound.ToErrorRecord(new DirectoryNotFoundException("Path refers does not refer to a subdirectory"),
+                ErrorCategory.ObjectNotFound, nameof(RootPathName), path));
         }
 
+        /// <summary>
+        /// This gets called whenever an invalid path string is enountered.
+        /// </summary>
+        /// <param name="path">The path string that could not be resolved.</param>
+        /// <param name="exc">The exeption that was thrown.</param>
+        /// <remarks>This gets called by <see cref="FsVolumeInfoCommand.ResolveDirectoryFromLiteralPath(System.Collections.Generic.IEnumerable{string})"/>, <see cref="FsVolumeInfoCommand.ResolveDirectoryFromWcPath(string)"/>
+        /// and <see cref="FsVolumeInfoCommand.TryResolveDirectoryFromLiteralPath(string, out string)"/> when trying to resolve a path that is not supported by the local filesystem.</remarks>
         protected override void OnProviderNotSupportedException(string path, Exception exc)
         {
-            // TODO: Implement OnProviderNotSupportedException
-            throw new NotImplementedException();
+            WriteError(MessageId.InvalidPath.ToErrorRecord("Path references an unsupported provider type", exc, ErrorCategory.InvalidArgument, nameof(RootPathName), path));
         }
 
+        /// <summary>
+        /// This gets called when an unexpected exception is thrown while trying to resolve a wildcard-supported path string.
+        /// </summary>
+        /// <param name="path">The path string that could not be resolved.</param>
+        /// <param name="exc">The exeption that was thrown.</param>
+        /// <remarks>This gets called by <see cref="FsVolumeInfoCommand.ResolveDirectoryFromWcPath(string)"/> when an unexpected exception is thrown while trying to resolve a wildcard-supported path string.</remarks>
         protected override void OnResolveError(string path, Exception exc)
         {
-            // TODO: Implement OnResolveError
-            throw new NotImplementedException();
+            WriteError(MessageId.InvalidPath.ToErrorRecord(exc, nameof(RootPathName), path));
         }
 
         protected override void ProcessRecord()
@@ -75,7 +100,7 @@ namespace FsInfoCat.PS.Commands
                             WriteError(MessageId.UnexpectedError.ToErrorRecord(exc, ErrorCategory.ReadError, nameof(RootPathName), path));
                             continue;
                         }
-                        if (volumeRegistration.TryFindByRootURI(fileUri, out VolumeInfoRegistration.RegisteredVolumeItem item))
+                        if (volumeRegistration.TryFindByRootURI(fileUri, out RegisteredVolumeItem item))
                         {
                             volumeRegistration.Remove(item);
                             if (PassThru.IsPresent)
@@ -90,7 +115,7 @@ namespace FsInfoCat.PS.Commands
                     {
                         if (VolumeIdentifier.TryCreate((id is PSObject psObj) ? psObj.BaseObject : Identifier, out VolumeIdentifier volumeIdentifer))
                         {
-                            if (volumeRegistration.TryGetValue(volumeIdentifer, out VolumeInfoRegistration.RegisteredVolumeItem item))
+                            if (volumeRegistration.TryGetValue(volumeIdentifer, out RegisteredVolumeItem item))
                             {
                                 volumeRegistration.Remove(item);
                                 if (PassThru.IsPresent)
@@ -106,7 +131,7 @@ namespace FsInfoCat.PS.Commands
                 default:
                     foreach (IVolumeInfo volume in VolumeInfo)
                     {
-                        if (volumeRegistration.TryFindMatching(volume, out VolumeInfoRegistration.RegisteredVolumeItem item))
+                        if (volumeRegistration.TryFindMatching(volume, out RegisteredVolumeItem item))
                         {
                             volumeRegistration.Remove(item);
                             if (PassThru.IsPresent)

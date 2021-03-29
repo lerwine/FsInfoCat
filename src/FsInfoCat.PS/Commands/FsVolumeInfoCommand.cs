@@ -143,12 +143,38 @@ namespace FsInfoCat.PS.Commands
             }
         }
 
+        /// <summary>
+        /// This gets called whenever an invalid path string is enountered.
+        /// </summary>
+        /// <param name="path">The path string that could not be resolved.</param>
+        /// <param name="exc">The exeption that was thrown.</param>
+        /// <remarks>This gets called by <see cref="ResolveDirectoryFromLiteralPath(IEnumerable{string})"/>, <see cref="ResolveDirectoryFromWcPath(string)"/> and <see cref="TryResolveDirectoryFromLiteralPath(string, out string)"/>
+        /// when trying to resolve a path that is not supported by the local filesystem.</remarks>
         protected abstract void OnProviderNotSupportedException(string path, Exception exc);
 
+        /// <summary>
+        /// This gets called whenever a non-existent-path is encountered.
+        /// </summary>
+        /// <param name="path">the non-existent filesystem path.</param>
+        /// <param name="exc">The exception that was thrown or <see langword="null"/> if existence validation failed without an exception being thrown.</param>
+        /// <remarks>This gets called by <see cref="ResolveDirectoryFromLiteralPath(IEnumerable{string})"/>, <see cref="ResolveDirectoryFromWcPath(string)"/> and <see cref="TryResolveDirectoryFromLiteralPath(string, out string)"/>
+        /// when trying to resolve a path that does not exist.</remarks>
         protected abstract void OnItemNotFoundException(string path, ItemNotFoundException exc);
 
+        /// <summary>
+        /// This gets called when an unexpected exception is thrown while trying to resolve a wildcard-supported path string.
+        /// </summary>
+        /// <param name="path">The path string that could not be resolved.</param>
+        /// <param name="exc">The exeption that was thrown.</param>
+        /// <remarks>This gets called by <see cref="ResolveDirectoryFromWcPath(string)"/> when an unexpected exception is thrown while trying to resolve a wildcard-supported path string.</remarks>
         protected abstract void OnResolveError(string path, Exception exc);
 
+        /// <summary>
+        /// This gets called whenever a path is encountered with refers to a file rather than a subdirectory.
+        /// </summary>
+        /// <param name="path">The path to a file.</param>
+        /// <remarks>This gets called by <see cref="ResolveDirectoryFromLiteralPath(IEnumerable{string})"/>, <see cref="ResolveDirectoryFromWcPath(string)"/> and <see cref="TryResolveDirectoryFromLiteralPath(string, out string)"/>
+        /// when a path was successfully resolved, but it did not refer to a subdirectory.</remarks>
         protected abstract void OnPathIsFileError(string providerPath);
     }
 }
