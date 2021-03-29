@@ -32,6 +32,7 @@ namespace FsInfoCat.Models.Volumes
             InvalidVolumeID,
             InvalidUrnNamespace,
             InvalidUriScheme,
+            InvalidPath,
             ValidationSucceeded
         }
 
@@ -105,20 +106,22 @@ namespace FsInfoCat.Models.Volumes
                 _query = null;
                 return;
             }
-            if (uri.Host.ToLower() != uri.Host || uri.Scheme.ToLower() != uri.Scheme)
-            {
-                UriBuilder uriBuilder = new UriBuilder(uri)
+            if (uri.Scheme.ToLower() != uri.Scheme)
+                try
                 {
-                    Scheme = uri.Scheme.ToLower(),
-                    Host = uri.Host.ToLower()
-                };
-                uri = uriBuilder.Uri;
-            }
+                    UriBuilder uriBuilder = new UriBuilder(uri)
+                    {
+                        Scheme = uri.Scheme.ToLower(),
+                        Host = uri.Host.ToLower()
+                    };
+                    uri = uriBuilder.Uri;
+                }
+                catch { /* intentionally ignored - assuming it's just an invalid scheme/format, anyway */ }
             _fragment = uri.GetFragmentComponent();
-            if (null != _fragment)
+            if (!(_fragment is null))
                 uri.TrySetFragmentComponent(null, out uri);
             _query = uri.GetQueryComponent();
-            if (null != _query)
+            if (!(_query is null))
                 uri.TrySetQueryComponent(null, out uri);
 
             if (uri.Scheme.Equals(UriHelper.URI_SCHEME_URN))
@@ -212,10 +215,10 @@ namespace FsInfoCat.Models.Volumes
             }
             else if (uri.Scheme.Equals(Uri.UriSchemeFile))
             {
-                if (uri.IsDefaultPort)
+                if (uri.OriginalString != uri.AbsoluteUri)
+                    uri = new Uri(uri.AbsoluteUri, UriKind.Absolute);
+                if (uri.IsDefaultPort && uri.Host.Length > 0)
                 {
-                    if (uri.OriginalString != uri.AbsoluteUri)
-                        uri = new Uri(uri.AbsoluteUri, UriKind.Absolute);
                     if (uri.Host.ToLower() != uri.Host)
                         uri.TrySetHostComponent(uri.Host.ToLower(), null, out uri);
                     string path = PathSeparatorNormalize.Replace(uri.AbsolutePath, "");
@@ -223,14 +226,16 @@ namespace FsInfoCat.Models.Volumes
                         uri.TrySetPathComponent(path.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR) ? path : $"{path}/", out uri);
                     else if (!path.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR))
                         uri.TrySetPathComponent($"{path}/", out uri);
-                    _location = uri;
-                    _serialNumber = null;
-                    _ordinal = null;
-                    _uuid = null;
-                    _validation = ValidationCode.ValidationSucceeded;
-                    return;
+                    if (uri.Segments.Length == 2 && uri.Segments[1] != "/")
+                    {
+                        _location = uri;
+                        _validation = ValidationCode.ValidationSucceeded;
+                    }
+                    else
+                        _validation = ValidationCode.InvalidPath;
                 }
-                _validation = ValidationCode.InvalidUriScheme;
+                else
+                    _validation = ValidationCode.InvalidPath;
             }
             else
                 _validation = ValidationCode.InvalidUriScheme;
@@ -409,5 +414,9 @@ namespace FsInfoCat.Models.Volumes
         public static string ToUrn(uint serialNumber, byte ordinal) => $"urn:volume:id:{ToIdentifierString(serialNumber, ordinal)}";
 
         public static string ToUrn(uint serialNumber) => $"urn:volume:id:{ToIdentifierString(serialNumber)}";
+
+        public static bool operator ==(VolumeIdentifier left, VolumeIdentifier right) => left.Equals(right);
+
+        public static bool operator !=(VolumeIdentifier left, VolumeIdentifier right) => !left.Equals(right);
     }
 }
