@@ -61,7 +61,7 @@ namespace FsInfoCat.Util
         /// Both absolute and relative URIs are supported by this extension method.</remarks>
         public static Uri AsNormalized(this Uri uri)
         {
-            if (null == uri)
+            if (uri is null)
                 return uri;
             string originalString;
             if (uri.IsAbsoluteUri)
@@ -266,7 +266,7 @@ namespace FsInfoCat.Util
                 {
                     fragment = (uri.Fragment.Length > 0) ? uri.Fragment.Substring(1) : null;
                     query = (uri.Fragment.Length > 0) ? uri.Fragment.Substring(1) : null;
-                    if (null == query && null == fragment)
+                    if (query is null && fragment is null)
                         return uri;
                 }
                 UriBuilder uriBuilder = new UriBuilder(uri);
@@ -605,9 +605,9 @@ namespace FsInfoCat.Util
         /// comparison.</remarks>
         public static bool AuthorityCaseInsensitiveEquals(this Uri uri, Uri other)
         {
-            if (null == uri)
-                return null == other;
-            if (null == other)
+            if (uri is null)
+                return other is null;
+            if (other is null)
                 return false;
             if (ReferenceEquals(uri, other))
                 return true;

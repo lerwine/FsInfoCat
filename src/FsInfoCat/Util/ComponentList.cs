@@ -90,10 +90,9 @@ namespace FsInfoCat.Util
 
         protected bool Contains(IComponent component)
         {
-            if (null == component)
+            if (component is null)
                 return false;
-            ContainerBase.SiteBase site = component.Site as ContainerBase.SiteBase;
-            return !(site is null || site.IsOrphaned()) && ReferenceEquals(site.Container, _container);
+            return !(!(component.Site is ContainerBase.SiteBase site) || site.IsOrphaned()) && ReferenceEquals(site.Container, _container);
         }
 
         bool IList.Contains(object value) => Contains(value as IComponent);

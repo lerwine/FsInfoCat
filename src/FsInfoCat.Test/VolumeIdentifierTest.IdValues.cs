@@ -29,14 +29,14 @@ namespace FsInfoCat.Test
                     return false;
                 if (ReferenceEquals(this, other))
                     return true;
-                if (null == _absoluteUri)
+                if (_absoluteUri is null)
                 {
                     if (null != other._absoluteUri)
                         return false;
                 }
                 else
                 {
-                    if (null == other._absoluteUri || !_absoluteUri.AuthorityCaseInsensitiveEquals(other._absoluteUri))
+                    if (other._absoluteUri is null || !_absoluteUri.AuthorityCaseInsensitiveEquals(other._absoluteUri))
                         return false;
                 }
                 return Value == other.Value;

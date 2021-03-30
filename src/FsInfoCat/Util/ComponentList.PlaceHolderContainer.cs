@@ -155,7 +155,7 @@ namespace FsInfoCat.Util
                 finally { SetSitesNull(enumerator); }
             }
 
-            protected override IEnumerable<IComponent> GetComponents() => (null == _target) ? Array.Empty<IComponent>() : _target.GetComponents();
+            protected override IEnumerable<IComponent> GetComponents() => (_target is null) ? Array.Empty<IComponent>() : _target.GetComponents();
 
             protected override void Insert(int index, IComponent item, string name, ComponentList componentList)
             {

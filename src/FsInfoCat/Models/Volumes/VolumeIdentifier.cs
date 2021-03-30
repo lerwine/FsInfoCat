@@ -248,7 +248,7 @@ namespace FsInfoCat.Models.Volumes
 
         public static bool TryCreate(object obj, out VolumeIdentifier volumeIdentifer)
         {
-            if (null == obj)
+            if (obj is null)
             {
                 volumeIdentifer = Empty;
                 return false;

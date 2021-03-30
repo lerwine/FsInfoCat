@@ -919,7 +919,6 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <returns>The normalized URI string.</returns>
         public static string NormalizeRelativeFileUri(string uriPathString)
         {
-            // BUG: This should not be removing leading slashes.
             if (string.IsNullOrEmpty(uriPathString))
                 return "";
             if (URI_ABS_PATH_SEPARATOR_NORMALIZE_REGEX.IsMatch(uriPathString))

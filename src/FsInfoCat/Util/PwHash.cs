@@ -273,7 +273,7 @@ namespace FsInfoCat.Util
             byte[] data;
             try
             {
-                if (null == (data = Convert.FromBase64String(other)) || data.Length != TOTAL_BYTES_LENGTH)
+                if ((data = Convert.FromBase64String(other)) is null || data.Length != TOTAL_BYTES_LENGTH)
                     return false;
             }
             catch { return false; }

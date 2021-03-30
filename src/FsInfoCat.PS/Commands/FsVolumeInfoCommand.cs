@@ -33,7 +33,7 @@ namespace FsInfoCat.PS.Commands
                 object obj = psVariable.Value;
                 if (obj is null)
                     throw new PSInvalidOperationException(EXCEPTION_MESSAGE_REGISTRATION_VAR_ERROR + ": Existing variable is null.");
-                if (null == (volumeRegistration = ((obj is PSObject psObj) ? psObj.BaseObject : obj) as VolumeInfoRegistration))
+                if ((volumeRegistration = ((obj is PSObject psObj) ? psObj.BaseObject : obj) as VolumeInfoRegistration) is null)
                     throw new PSInvalidOperationException(EXCEPTION_MESSAGE_REGISTRATION_VAR_ERROR + ": Existing variable is incorrect type.");
             }
             return volumeRegistration;
