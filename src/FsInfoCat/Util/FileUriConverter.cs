@@ -47,6 +47,8 @@ namespace FsInfoCat.Util
         public const char URI_PATH_SEPARATOR_CHAR = UriHelper.URI_PATH_SEPARATOR_CHAR;
         public const string URI_PATH_SEPARATOR_STRING = UriHelper.URI_PATH_SEPARATOR_STRING;
         public const string URI_PATH_SEPARATOR_ESCAPED = UriHelper.URI_PATH_SEPARATOR_ESCAPED;
+        public const char UNC_HEX_SEPARATOR_CHAR = '-';
+        public const string UNC_HEX_SEPARATOR_STRING = "-";
         public const string FQDN_IPV6_UNC = ".ipv6-literal.net";
         public const string MATCH_GROUP_NAME_FILE = "file";
         public const string MATCH_GROUP_NAME_HOST = "host";
@@ -209,7 +211,38 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
         /// </list>
         /// <para>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</para></remarks>
-        public static readonly Regex ABS_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*((?<scheme>(?!file:)(?i)FILE(?=:))|(\.\.?/+)+|\s+)|(?<esc>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|(?<!file:///)(/(?=/))+|/\.(?=/|$)|(/\s*|\s+)$", RegexOptions.Compiled);
+        public static readonly Regex ABS_URI_STRING_NORMALIZE_REGEX = new Regex(@"
+^
+    \s*
+    (
+        (?<scheme>(?!file:)(?i)FILE(?=:))
+    |
+        (\.\.?/+)+
+    |
+        \s+
+    )
+|
+    (?<esc>
+        (
+            %
+            (
+                a-f[\dA-Fa-f]
+            |
+                [\dA-F][a-f]
+            )
+        )+
+    )
+|
+    (?<=file:///)
+    /+
+|
+    (?<!file:/*)
+    (/(?=/))+
+|
+    /\.(?=/|$)
+|
+    (/\s*|\s+)
+$", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
         [Obsolete("This does not distinguish between a windows drive path and a linux path that might look like a windows drive path. file:///c:/dirname not parsed with root as c:/")]
         public static readonly Regex FILE_URI_COMPONENTS_LAX_REGEX = new Regex(@"^
@@ -1199,7 +1232,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             //fileName = m.Groups[MATCH_GROUP_NAME_FILE_NAME].Value;
             if (m.Groups[MATCH_GROUP_NAME_UNC].Success)
             {
-                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace("-", URI_SCHEME_SEPARATOR_STRING);
+                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace(UNC_HEX_SEPARATOR_STRING, URI_SCHEME_SEPARATOR_STRING);
                 return FsPathType.UNC;
             }
             if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
@@ -1235,7 +1268,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             path = m.Groups[MATCH_GROUP_NAME_PATH].Value;
             if (m.Groups[MATCH_GROUP_NAME_UNC].Success)
             {
-                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace("-", URI_SCHEME_SEPARATOR_STRING);
+                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace(UNC_HEX_SEPARATOR_STRING, URI_SCHEME_SEPARATOR_STRING);
                 return FsPathType.UNC;
             }
             if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
@@ -1263,7 +1296,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             }
             if (m.Groups[MATCH_GROUP_NAME_UNC].Success)
             {
-                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace("-", URI_SCHEME_SEPARATOR_STRING);
+                hostName = m.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace(UNC_HEX_SEPARATOR_STRING, URI_SCHEME_SEPARATOR_STRING);
                 return FsPathType.UNC;
             }
             if (m.Groups[MATCH_GROUP_NAME_HOST].Success)

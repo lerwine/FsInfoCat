@@ -228,7 +228,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
     ((?<file>file):///)?(?=[a-zA-Z]:)
 )
 (?<path>
-    ([a-zA-Z]:)?
+    ((?<root>[a-zA-Z]):)?
     (
         [\\/](?=$)
     |
@@ -428,7 +428,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
     (?!file:)
 )
 (?<p>
-([^\u0000-\u0019""<>|:;*?\\%]+|%((?![A-F\d]{2})|2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689]))*
+([^\u0000-\u0019""<>|:;*?%]+|%((?![A-F\d]{2})|2[013-9B-E]|3[\dD]|[57][\dABDEF]|[4689]))*
 )(?=/*\s*$)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
         #endregion
@@ -493,7 +493,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 if (string.IsNullOrEmpty(hostName))
                     return "";
                 if (IPV6_ADDRESS_REGEX.IsMatch(hostName))
-                    return $"\\\\{hostName.Replace(":", "-")}{FQDN_IPV6_UNC}";
+                    return $"\\\\{hostName.Replace(URI_SCHEME_SEPARATOR_STRING, UNC_HEX_SEPARATOR_STRING)}{FQDN_IPV6_UNC}";
                 if (BASIC_DNS_OR_IPV4_NAME_REGEX.IsMatch(hostName))
                     return $"\\\\{hostName}";
             }
@@ -506,8 +506,8 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                     if (string.IsNullOrEmpty(hostName))
                         return (match.Groups[MATCH_GROUP_NAME_ROOT].Success && match.Length == 2) ? $"{match.Value}{DIRECTORY_SEPARATOR_CHAR}" : match.Value;
                     if (IPV6_ADDRESS_REGEX.IsMatch(hostName))
-                        return fsPath.StartsWith(DIRECTORY_SEPARATOR_CHAR) ? $"\\\\{hostName.Replace(":", "-")}{FQDN_IPV6_UNC}{fsPath}" :
-                            $"\\\\{hostName.Replace(":", "-")}{FQDN_IPV6_UNC}\\{fsPath}";
+                        return fsPath.StartsWith(DIRECTORY_SEPARATOR_CHAR) ? $"\\\\{hostName.Replace(URI_SCHEME_SEPARATOR_STRING, UNC_HEX_SEPARATOR_STRING)}{FQDN_IPV6_UNC}{fsPath}" :
+                            $"\\\\{hostName.Replace(URI_SCHEME_SEPARATOR_STRING, UNC_HEX_SEPARATOR_STRING)}{FQDN_IPV6_UNC}\\{fsPath}";
                     if (BASIC_DNS_OR_IPV4_NAME_REGEX.IsMatch(hostName))
                         return fsPath.StartsWith(DIRECTORY_SEPARATOR_CHAR) ? $"\\\\{hostName}{fsPath}" : $"\\\\{hostName}\\{fsPath}";
                 }
@@ -538,7 +538,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             if (match.Success)
             {
                 hostName = (match.Groups[MATCH_GROUP_NAME_UNC].Success) ?
-                    match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace('-', URI_SCHEME_SEPARATOR_CHAR) :
+                    match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace(UNC_HEX_SEPARATOR_CHAR, URI_SCHEME_SEPARATOR_CHAR) :
                     match.GetGroupValue(match.Groups[MATCH_GROUP_NAME_IPV6].Success ? MATCH_GROUP_NAME_IPV6 : MATCH_GROUP_NAME_HOST, "");
                 //if ((directoryName = match.GetGroupValue(MATCH_GROUP_NAME_DIR, "")).Length > 0)
                 //    directoryName = EscapeSpecialPathChars(Uri.EscapeUriString(directoryName.Contains(DIRECTORY_SEPARATOR_CHAR) ?
@@ -573,7 +573,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             if (match.Success)
             {
                 hostName = (match.Groups[MATCH_GROUP_NAME_UNC].Success) ?
-                    match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace('-', URI_SCHEME_SEPARATOR_CHAR) :
+                    match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace(UNC_HEX_SEPARATOR_CHAR, URI_SCHEME_SEPARATOR_CHAR) :
                     match.GetGroupValue(match.Groups[MATCH_GROUP_NAME_IPV6].Success ? MATCH_GROUP_NAME_IPV6 : MATCH_GROUP_NAME_HOST, "");
                 return ((path = match.GetGroupValue(MATCH_GROUP_NAME_PATH, "")).Length > 0) ?
                     EscapeSpecialPathChars(Uri.EscapeUriString(path.Contains(DIRECTORY_SEPARATOR_CHAR) ?
@@ -603,7 +603,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 string hostName;
                 if (match.Groups[MATCH_GROUP_NAME_IPV6].Success)
                     hostName = (match.Groups[MATCH_GROUP_NAME_UNC].Success) ?
-                        match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace('-', URI_SCHEME_SEPARATOR_CHAR) :
+                        match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace(UNC_HEX_SEPARATOR_CHAR, URI_SCHEME_SEPARATOR_CHAR) :
                         match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "");
                 else if (match.Groups[MATCH_GROUP_NAME_HOST].Success)
                     hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
@@ -632,7 +632,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 if (match.Groups[MATCH_GROUP_NAME_HOST].Success)
                 {
                     string hostName = (match.Groups[MATCH_GROUP_NAME_UNC].Success) ?
-                        match.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace("-", URI_SCHEME_SEPARATOR_STRING) :
+                        match.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace(UNC_HEX_SEPARATOR_STRING, URI_SCHEME_SEPARATOR_STRING) :
                         match.Groups[match.Groups[MATCH_GROUP_NAME_IPV6].Success ? MATCH_GROUP_NAME_IPV6 : MATCH_GROUP_NAME_HOST].Value;
                     string path = EscapeSpecialPathChars(Uri.EscapeUriString(match.Groups[MATCH_GROUP_NAME_PATH].Value
                         .Replace(DIRECTORY_SEPARATOR_CHAR, URI_PATH_SEPARATOR_CHAR)));
@@ -659,7 +659,10 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 return "";
             }
             wasChanged = uriString.Length > 0 && uriString.Contains(URI_FRAGMENT_DELIMITER_CHAR);
-            return wasChanged ? uriString.Replace(URI_FRAGMENT_DELIMITER_STRING, URI_FRAGMENT_DELIMITER_ESCAPED) : uriString;
+            if (wasChanged)
+                return uriString.Replace(URI_FRAGMENT_DELIMITER_STRING, URI_FRAGMENT_DELIMITER_ESCAPED).Replace(DIRECTORY_SEPARATOR_CHAR, URI_PATH_SEPARATOR_CHAR);
+            wasChanged = uriString.Length > 0 && uriString.Contains(DIRECTORY_SEPARATOR_CHAR);
+            return wasChanged ? uriString.Replace(DIRECTORY_SEPARATOR_CHAR, URI_PATH_SEPARATOR_CHAR) : uriString;
         }
 
         /// <summary>

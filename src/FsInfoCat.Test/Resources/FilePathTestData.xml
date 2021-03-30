@@ -30,11 +30,18 @@
         <Windows>
             <RelativeUrl Match="\" IsWellFormed="false">
                 <Path Match="\">
-                    <Directory></Directory>
+                    <Directory>\</Directory>
                     <FileName xsi:nil="true" />
                 </Path>
                 <LocalPath IsAbsolute="false"></LocalPath>
             </RelativeUrl>
+            <FileSystem Match="\" IsAbsolute="false">
+                <Path Match="\">
+                    <Directory></Directory>
+                    <FileName></FileName>
+                </Path>
+                <URI>file:///</URI>
+            </FileSystem>
         </Windows>
         <Linux>
             <RelativeUrl Match="\" IsWellFormed="false">
@@ -62,8 +69,8 @@
                 </Path>
                 <LocalPath IsAbsolute="false"></LocalPath>
             </RelativeUrl>
-            <FileSystem Match="/" IsAbsolute="false">
-                <Path Match="/">
+            <FileSystem Match="\" IsAbsolute="false">
+                <Path Match="\">
                     <Directory></Directory>
                     <FileName xsi:nil="true" />
                 </Path>
@@ -117,17 +124,17 @@
         <Windows>
             <RelativeUrl Match="\My Documents" IsWellFormed="false">
                 <Path Match="\My Documents">
-                    <Directory></Directory>
+                    <Directory>\</Directory>
                     <FileName>My Documents</FileName>
                 </Path>
-                <LocalPath IsAbsolute="false">My Documents</LocalPath>
+                <LocalPath IsAbsolute="false">\My Documents</LocalPath>
             </RelativeUrl>
             <FileSystem Match="My Documents" IsAbsolute="false">
                 <Path Match="My Documents">
-                    <Directory></Directory>
+                    <Directory>/</Directory>
                     <FileName>My Documents</FileName>
                 </Path>
-                <URI>My%20Documents</URI>
+                <URI>/My%20Documents</URI>
             </FileSystem>
         </Windows>
         <Linux>

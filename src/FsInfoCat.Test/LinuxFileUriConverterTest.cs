@@ -80,7 +80,7 @@ namespace FsInfoCat.Test
                         .AppendElement("", "hostName")
                         .AppendElement("/My%20Documents", "path")
                         .AppendElement("MyFile%231.txt", "fileName")
-                        .AppendElement(true, "isAbsolute")
+                        .AppendElement(false, "isAbsolute")
                         .AppendElement(true, "returnValue").ToTestResultString()
                 );
         }
