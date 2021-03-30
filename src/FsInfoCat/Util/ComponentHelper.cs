@@ -1,3 +1,4 @@
+using FsInfoCat.Models.Crawl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,46 @@ namespace FsInfoCat.Util
         public static readonly StringComparer CASE_SENSITIVE_COMPARER = StringComparer.InvariantCulture;
         public static readonly StringComparer IGNORE_CASE_COMPARER = StringComparer.InvariantCultureIgnoreCase;
 
+        public static bool TryGetFileUri(this IFsChildNode childNode, out FileUri result)
+        {
+            IComponent owner = childNode?.GetOwner();
+            if (owner is null)
+            {
+                result = null;
+                return false;
+            }
+            if (owner is FsRoot root)
+                result = new FileUri(root.RootUri, childNode.Name);
+            else if (owner is IFsChildNode parent && parent.TryGetFileUri(out FileUri fileUri))
+                result = new FileUri(fileUri, childNode.Name);
+            else
+            {
+                result = null;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryFindByName<TResult>(this IEnumerable<TResult> source, string name, IEqualityComparer<string> comparer, out TResult result)
+            where TResult : class, INamedComponent
+        {
+            if (source is null)
+            {
+                result = null;
+                return false;
+            }
+            foreach (TResult item in source)
+            {
+                if (!(item is null) && comparer.Equals(item.Name, name))
+                {
+                    result = item;
+                    return true;
+                }
+            }
+            result = default;
+            return false;
+        }
+
         public static string GetComponentName(this IComponent component)
         {
             if (component is null)
@@ -20,19 +61,9 @@ namespace FsInfoCat.Util
             return (component is INamedComponent nc) ? nc.Name : null;
         }
 
-        public static IComponent GetOwner(this ISite site)
-        {
-            if (site is null)
-                return null;
-            INestedContainer container = site.Container as INestedContainer;
-            return container?.Owner;
-        }
+        public static IComponent GetOwner(this ISite site) => (site?.Container is INestedContainer container) ? container.Owner : null;
 
-        public static IComponent GetOwner(this IComponent component)
-        {
-            INestedContainer container = component.GetContainer() as INestedContainer;
-            return container?.Owner;
-        }
+        public static IComponent GetOwner(this IComponent component) => ((component?.Site)?.Container is INestedContainer container) ? container.Owner : null;
 
         public static T FindOwner<T>(this IComponent component)
             where T : IComponent
@@ -45,13 +76,7 @@ namespace FsInfoCat.Util
             return default;
         }
 
-        public static IContainer GetContainer(this IComponent component)
-        {
-            if (component is null)
-                return null;
-            ISite site = component.Site;
-            return site?.Container;
-        }
+        public static IContainer GetContainer(this IComponent component) => (component?.Site)?.Container;
 
         private class Site : ISite
         {
@@ -91,7 +116,7 @@ namespace FsInfoCat.Util
             if (includeCurrent)
                 segments.Push((ReferenceEquals(site.Component, component)) ? site : new Site(component, site.Container, site.Name));
 
-            while (null != (component = site.GetOwner()))
+            while (!((component = site.GetOwner()) is null))
             {
                 if (segments.Any(s => ReferenceEquals(s.Component, component)))
                 {
@@ -99,7 +124,7 @@ namespace FsInfoCat.Util
                         throw new InvalidOperationException("Circular nested component reference");
                     break;
                 }
-                if (null == (site = component.Site))
+                if ((site = component.Site) is null)
                 {
                     segments.Push(new Site(component, null, null));
                     break;

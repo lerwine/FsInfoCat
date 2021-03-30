@@ -60,7 +60,7 @@ namespace FsInfoCat.PS
                 totalItems = 0L;
                 return false;
             }
-            parent = ImportDirectory(fsRoot, new DirectoryInfo(fsRoot.RootUri.ToLocalPath()).GetSegmentCount(), directoryInfo);
+            parent = ImportDirectory(fsRoot, new DirectoryInfo(fsRoot.RootUri.ToLocalPath()).GetSegmentCount(), directoryInfo, out FileUri fileUri);
             if (parent is null)
             {
                 job.WriteDebug("Failed to import parent directory");
@@ -69,7 +69,7 @@ namespace FsInfoCat.PS
             }
             job.WriteDebug("Crawling subdirectories");
             CrawlWorker crawler = new CrawlWorker(maxItems, job);
-            bool result = crawler.Crawl(parent, directoryInfo, job.MaxDepth, fsRoot.GetNameComparer());
+            bool result = crawler.Crawl(parent, directoryInfo, fileUri, job.MaxDepth, fsRoot.GetNameComparer());
             totalItems = crawler._totalItems;
             return result;
         }
@@ -81,13 +81,19 @@ namespace FsInfoCat.PS
         /// <param name="rootDir"></param>
         /// <param name="directoryInfo"></param>
         /// <returns></returns>
-        private static IFsDirectory ImportDirectory(FsRoot fsRoot, int minSegmentCount, DirectoryInfo directoryInfo)
+        private static IFsDirectory ImportDirectory(FsRoot fsRoot, int minSegmentCount, DirectoryInfo directoryInfo, out FileUri fileUri)
         {
             if (directoryInfo is null)
+            {
+                fileUri = null;
                 return null;
+            }
             if (directoryInfo.GetSegmentCount() == minSegmentCount)
+            {
+                fileUri = fsRoot.RootUri;
                 return fsRoot;
-            IFsDirectory parent = ImportDirectory(fsRoot, minSegmentCount, directoryInfo.Parent);
+            }
+            IFsDirectory parent = ImportDirectory(fsRoot, minSegmentCount, directoryInfo.Parent, out fileUri);
             if (parent is null)
                 return null;
             string n = directoryInfo.Name;
@@ -113,10 +119,11 @@ namespace FsInfoCat.PS
                 Name = directoryInfo.Name
             };
             childNodes.Add(result);
+            fileUri = new FileUri(fileUri, result.Name);
             return result;
         }
 
-        private bool Crawl(IFsDirectory parent, DirectoryInfo parentDirectoryInfo, int maxDepth, IEqualityComparer<string> nameComparer)
+        private bool Crawl(IFsDirectory parent, DirectoryInfo parentDirectoryInfo, FileUri parentUri, int maxDepth, IEqualityComparer<string> nameComparer)
         {
             _job.Progress.Add(new ProgressRecord(FsCrawlJob.ACTIVITY_ID, FsCrawlJob.ACTIVITY, "Reading directory contents") { CurrentOperation = parentDirectoryInfo.FullName });
             FileInfo[] files;
@@ -200,9 +207,20 @@ namespace FsInfoCat.PS
             {
                 _job.WriteDebug($"Importing subdirectory #{i}");
                 DirectoryInfo directoryInfo = directories[i];
-                // TODO: Need to do check if subdirectory matches any existing registered volumes and do not crawl if so.
-                FsDirectory fsDirectory = parent.ChildNodes.OfType<FsDirectory>().FirstOrDefault(f => nameComparer.Equals(f.Name, directoryInfo.Name));
-                if (fsDirectory is null)
+                FileUri childUri = new FileUri(parentUri, directoryInfo.Name);
+                if (_job.FsRoots.TryGetValue(childUri, out FsRoot v))
+                {
+                    _job.WriteDebug($"Skipping subdirectory #{i} because it is the root of volume {v.VolumeName} ({v.Identifier}).");
+                    continue;
+                }
+                if (parent.ChildNodes.OfType<FsDirectory>().TryFindByName(directoryInfo.Name, nameComparer, out FsDirectory fsDirectory))
+                {
+                    _job.WriteDebug($"Updating existing FsDirectory {{ Name = \"{fsDirectory.Name}\", CreationTime = {directoryInfo.CreationTimeUtc}, LastWriteTime = {directoryInfo.LastWriteTimeUtc}, Attributes = {(int)directoryInfo.Attributes} }}");
+                    fsDirectory.CreationTime = directoryInfo.CreationTimeUtc;
+                    fsDirectory.LastWriteTime = directoryInfo.LastWriteTimeUtc;
+                    fsDirectory.Attributes = (int)directoryInfo.Attributes;
+                }
+                else
                 {
                     ++_totalItems;
                     _job.WriteDebug($"Adding new FsDirectory {{ Name = \"{directoryInfo.Name}\", CreationTime = {directoryInfo.CreationTimeUtc}, LastWriteTime = {directoryInfo.LastWriteTimeUtc}, Attributes = {(int)directoryInfo.Attributes} }}");
@@ -215,13 +233,6 @@ namespace FsInfoCat.PS
                     };
                     parent.ChildNodes.Add(fsDirectory);
                 }
-                else
-                {
-                    _job.WriteDebug($"Updating existing FsDirectory {{ Name = \"{fsDirectory.Name}\", CreationTime = {directoryInfo.CreationTimeUtc}, LastWriteTime = {directoryInfo.LastWriteTimeUtc}, Attributes = {(int)directoryInfo.Attributes} }}");
-                    fsDirectory.CreationTime = directoryInfo.CreationTimeUtc;
-                    fsDirectory.LastWriteTime = directoryInfo.LastWriteTimeUtc;
-                    fsDirectory.Attributes = (int)directoryInfo.Attributes;
-                }
                 if (_totalItems == _maxItems)
                 {
                     _job.WriteDebug("Reached item limit");
@@ -232,7 +243,7 @@ namespace FsInfoCat.PS
                     _job.WriteDebug("Job has reached time limit.");
                     return false;
                 }
-                if (!Crawl(fsDirectory, directoryInfo, maxDepth - 1, nameComparer))
+                if (!Crawl(fsDirectory, directoryInfo, childUri, maxDepth - 1, nameComparer))
                 {
                     _job.WriteDebug("Subdirectory crawl returned false.");
                     IEnumerable<string> skippedItems = directories.Skip(i).Where(f => !parent.ChildNodes.OfType<FsDirectory>().Any(n => nameComparer.Equals(n.Name, f.Name)))
