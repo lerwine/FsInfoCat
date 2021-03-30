@@ -583,16 +583,6 @@ namespace FsInfoCat.PS
 
         #endregion
 
-        //public static bool TryGetErrorId(this ErrorCategory errorCategory, out MessageId errorId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public static bool TryGetTargetObject(this Exception exception, out string targetName, out object targetObject)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public static ErrorRecord ToArgumentOutOfRangeError(this MessageId messageId, string message, ErrorCategory errorCategory, string paramName, object actualValue)
         {
             if (string.IsNullOrWhiteSpace(message))
@@ -641,7 +631,7 @@ namespace FsInfoCat.PS
         {
             if (TryGetErrorRecord(exception, out ErrorRecord errorRecord))
                 errorCategory = errorRecord.CategoryInfo.Category;
-            else if (exception is System.IndexOutOfRangeException || exception is ArgumentException)
+            else if (exception is IndexOutOfRangeException || exception is ArgumentException)
                 errorCategory = ErrorCategory.InvalidArgument;
             else if (exception is InvalidOperationException)
                 errorCategory = ErrorCategory.InvalidOperation;

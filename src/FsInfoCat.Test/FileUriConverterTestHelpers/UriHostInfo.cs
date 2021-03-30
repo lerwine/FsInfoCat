@@ -39,7 +39,7 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            if (Type == other.Type)
+            if (Type == other.Type && Match == other.Match)
             {
                 int? p = Port;
                 int? v = other.Port;
@@ -48,15 +48,9 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             return false;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as UriHostInfo);
-        }
+        public override bool Equals(object obj) => Equals(obj as UriHostInfo);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Match, Value, Type, Port);
-        }
+        public override int GetHashCode() => HashCode.Combine(Match, Value, Type, Port);
 
         public override string GetXPath()
         {
