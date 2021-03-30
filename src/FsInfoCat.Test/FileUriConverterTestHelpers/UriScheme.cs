@@ -38,20 +38,11 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
             set => _delimiter = value ?? "";
         }
 
-        public bool Equals([AllowNull] UriScheme other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals([AllowNull] UriScheme other) => !(other is null) && (ReferenceEquals(this, other) || (Name == other.Name && Delimiter == other.Delimiter));
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as UriScheme);
-        }
+        public override bool Equals(object obj) => Equals(obj as UriScheme);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_name, _delimiter);
-        }
+        public override int GetHashCode() => HashCode.Combine(_name, _delimiter);
 
         public string GetXPath()
         {

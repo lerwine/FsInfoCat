@@ -11,18 +11,16 @@ namespace FsInfoCat.Test.FileUriConverterTestHelpers
 
         public bool Equals([AllowNull] UncHostInfo other)
         {
-            throw new NotImplementedException();
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            return Type == other.Type && Match == other.Match;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as UncHostInfo);
-        }
+        public override bool Equals(object obj) => Equals(obj as UncHostInfo);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Match, Value, Type);
-        }
+        public override int GetHashCode() => HashCode.Combine(Match, Value, Type);
 
         public override string GetXPath()
         {
