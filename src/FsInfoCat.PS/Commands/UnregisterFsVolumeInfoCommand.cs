@@ -100,7 +100,7 @@ namespace FsInfoCat.PS.Commands
                             WriteError(MessageId.UnexpectedError.ToErrorRecord(exc, ErrorCategory.ReadError, nameof(RootPathName), path));
                             continue;
                         }
-                        if (volumeRegistration.TryFindByRootURI(fileUri, out RegisteredVolumeItem item))
+                        if (volumeRegistration.TryGetValue(fileUri, out RegisteredVolumeItem item))
                         {
                             volumeRegistration.Remove(item);
                             if (PassThru.IsPresent)

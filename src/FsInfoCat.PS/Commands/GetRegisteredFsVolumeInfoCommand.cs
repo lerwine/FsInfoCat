@@ -167,7 +167,7 @@ namespace FsInfoCat.PS.Commands
                 case PARAMETER_SET_NAME_BY_PATH:
                     foreach (DirectoryInfo directoryInfo in Path.SelectMany(p => ResolveDirectoryFromWcPath(p)).Select(p => new DirectoryInfo(p)).Distinct())
                     {
-                        if (_volumeInfos.TryFind(new FileUri(directoryInfo), out RegisteredVolumeItem volumeItem) && !_yieldedIdentifiers.Contains(((IVolumeInfo)volumeItem).Identifier))
+                        if (_volumeInfos.TryGetByChildURI(directoryInfo, out RegisteredVolumeItem volumeItem) && !_yieldedIdentifiers.Contains(((IVolumeInfo)volumeItem).Identifier))
                         {
                             _yieldedIdentifiers.Add(((IVolumeInfo)volumeItem).Identifier);
                             WriteObject(volumeItem);
@@ -177,7 +177,7 @@ namespace FsInfoCat.PS.Commands
                 case PARAMETER_SET_NAME_BY_LITERAL_PATH:
                     foreach (DirectoryInfo directoryInfo in ResolveDirectoryFromLiteralPath(RootPathName).Select(p => new DirectoryInfo(p)).Distinct())
                     {
-                        if (_volumeInfos.TryFind(new FileUri(directoryInfo), out RegisteredVolumeItem volumeItem) && !_yieldedIdentifiers.Contains(((IVolumeInfo)volumeItem).Identifier))
+                        if (_volumeInfos.TryGetByChildURI(directoryInfo, out RegisteredVolumeItem volumeItem) && !_yieldedIdentifiers.Contains(((IVolumeInfo)volumeItem).Identifier))
                         {
                             _yieldedIdentifiers.Add(((IVolumeInfo)volumeItem).Identifier);
                             WriteObject(volumeItem);
@@ -188,7 +188,7 @@ namespace FsInfoCat.PS.Commands
                     FileUri[] uris = ResolveDirectoryFromLiteralPath(RootPathName).Select(p => new FileUri(new DirectoryInfo(p))).Distinct().ToArray();
                     foreach (DirectoryInfo directoryInfo in ResolveDirectoryFromLiteralPath(RootPathName).Select(p => new DirectoryInfo(p)).Distinct())
                     {
-                        if (_volumeInfos.TryFindByRootURI(new FileUri(directoryInfo), out RegisteredVolumeItem volumeItem) && !_yieldedIdentifiers.Contains(((IVolumeInfo)volumeItem).Identifier))
+                        if (_volumeInfos.TryGetValue(directoryInfo, out RegisteredVolumeItem volumeItem) && !_yieldedIdentifiers.Contains(((IVolumeInfo)volumeItem).Identifier))
                         {
                             _yieldedIdentifiers.Add(((IVolumeInfo)volumeItem).Identifier);
                             WriteObject(volumeItem);
@@ -198,7 +198,7 @@ namespace FsInfoCat.PS.Commands
                 case PARAMETER_SET_NAME_BY_VOLUME_NAME:
                     foreach (string name in VolumeName.Distinct(ComponentHelper.IGNORE_CASE_COMPARER))
                     {
-                        if (_volumeInfos.TryFindByName(name, out RegisteredVolumeItem volumeItem) && !_yieldedIdentifiers.Contains(((IVolumeInfo)volumeItem).Identifier))
+                        if (_volumeInfos.TryGetValue(name, out RegisteredVolumeItem volumeItem) && !_yieldedIdentifiers.Contains(((IVolumeInfo)volumeItem).Identifier))
                         {
                             _yieldedIdentifiers.Add(((IVolumeInfo)volumeItem).Identifier);
                             WriteObject(volumeItem);

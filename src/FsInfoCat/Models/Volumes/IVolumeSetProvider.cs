@@ -20,7 +20,7 @@ namespace FsInfoCat.Models.Volumes
         /// <param name="uri">A <seealso cref="FileUri"/> that is a hierarchical member of a volume.</param>
         /// <param name="value">Returns he matching <seealso cref="IVolumeInfo"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
-        bool TryFind(FileUri uri, out IVolumeInfo value);
+        bool TryGetByChildURI(FileUri uri, out IVolumeInfo value);
 
         /// <summary>
         /// Looks for a <seealso cref="IVolumeInfo"/> where the <seealso cref="IVolumeInfo.RootUri"/> is equal to the specified <seealso cref="FileUri"/>.
@@ -28,7 +28,7 @@ namespace FsInfoCat.Models.Volumes
         /// <param name="uri">The <seealso cref="FileUri"/> which represents the volume root path.</param>
         /// <param name="value">Returns he matching <seealso cref="IVolumeInfo"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
-        bool TryFindByRootURI(FileUri uri, out IVolumeInfo value);
+        bool TryGetValue(FileUri uri, out IVolumeInfo value);
 
         /// <summary>
         /// Looks up a <seealso cref="IVolumeInfo"/> by its <seealso cref="IVolumeInfo.VolumeName"/>.
@@ -37,7 +37,7 @@ namespace FsInfoCat.Models.Volumes
         /// <param name="value">Returns a <seealso cref="IVolumeInfo"/> whose <seealso cref="IVolumeInfo.VolumeName"/> matches given
         /// <seealso cref="VolumeIdentifier"/> <paramref name="key"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
-        bool TryFindByName(string volumeName, out IVolumeInfo value);
+        bool TryGetValue(string volumeName, out IVolumeInfo value);
 
         bool TryFindMatching(IVolumeInfo item, out IVolumeInfo actual);
     }
@@ -45,15 +45,9 @@ namespace FsInfoCat.Models.Volumes
     public interface IVolumeSetProvider<V> : IVolumeSetProvider, ICollection<V>, IReadOnlyDictionary<VolumeIdentifier, V>
         where V : IVolumeInfo
     {
-        bool TryFind(FileUri uri, out V value);
-        bool TryFindByRootURI(FileUri uri, out V value);
-        bool TryFindByName(string volumeName, out V value);
+        bool TryGetByChildURI(FileUri uri, out V value);
+        bool TryGetValue(FileUri uri, out V value);
+        bool TryGetValue(string volumeName, out V value);
         bool TryFindMatching(IVolumeInfo item, out V actual);
-    }
-
-    public interface IVolumeSetProvider<V, H> : IVolumeSetProvider<V>
-        where H : IHostDevice
-        where V : IVolumeRecord<H>
-    {
     }
 }

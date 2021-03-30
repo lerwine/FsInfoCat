@@ -39,7 +39,7 @@ namespace FsInfoCat.Test
             ).Concat(
                 _testItems.Items.Select(i => i.Linux.AbsoluteUrl).Where(u => !(u is null)).Select(u =>
                     new TestCaseData(u.Owner.Owner.InputString, UriKind.Relative)
-                        .Returns(false)
+                        .Returns(!(u.LocalPath is null || u.LocalPath.IsAbsolute) && u.IsWellFormed && u.IsFileScheme())
                 )
             ).Concat(
                 _testItems.Items.Select(i => i.Linux.RelativeUrl).Where(u => !(u is null)).Select(u =>
@@ -101,18 +101,17 @@ namespace FsInfoCat.Test
                 .AppendElement(returnValue, nameof(returnValue)).ToTestResultString();
         }
 
-        public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases()
-        {
-            // DEFERRED: Get test cases from XML
-            yield return new TestCaseData("mysite", "My%20Documents")
-                .Returns(TestResultBuilder.CreateTestResult("//mysite/My Documents").ToTestResultString());
-        }
+        public static IEnumerable<TestCaseData> GetToFileSystemPathTestCases() => _testItems.Items.Select(testDataItem => testDataItem.Linux.AbsoluteUrl)
+            .Where(u => !(u is null || u.LocalPath is null) && u.IsFileScheme()).Select(u =>
+                new TestCaseData(u.Owner.Owner.InputString).Returns(TestResultBuilder.CreateTestResult(u.LocalPath.Path).ToTestResultString()))
+                .Concat(_testItems.Items.Select(testDataItem => testDataItem.Linux.RelativeUrl).Where(u => !(u is null || u.LocalPath is null)).Select(u =>
+                new TestCaseData(u.Owner.Owner.InputString).Returns(TestResultBuilder.CreateTestResult(u.LocalPath.Path).ToTestResultString())));
 
         [Test, Property("Priority", 1)]
         [TestCaseSource(nameof(GetToFileSystemPathTestCases))]
-        public string ToFileSystemPathTest(string hostName, string path)
+        public string ToFileSystemPathTest(string fileUriString)
         {
-            string returnValue = LinuxFileUriConverter.INSTANCE.ToFileSystemPath(hostName, path);
+            string returnValue = LinuxFileUriConverter.INSTANCE.ToFileSystemPath(fileUriString);
             return TestResultBuilder.CreateTestResult(returnValue).ToTestResultString();
         }
 

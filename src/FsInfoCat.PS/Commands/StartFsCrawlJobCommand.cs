@@ -121,16 +121,16 @@ namespace FsInfoCat.PS.Commands
                     case PARAMETER_SET_NAME_BY_AGE_TRUE:
                     case PARAMETER_SET_NAME_BY_AGE_FALSE:
                         WriteDebug($"Creating new FsCrawlJob(startingDirectories: {{ \"{string.Join("\", \"", allPaths.ToArray())}\" }}, maxDepth: {MaxDepth}, maxItems: {MaxItems}, ttl: {Ttl}, machineIdentifier: \"{MachineIdentifier}\", getVolumes: GetVolumeInfos, friendlyName=\"{Name}\")");
-                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumeInfos, Name);
+                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, Ttl, MachineIdentifier, GetVolumeRegistration(SessionState), Name);
                         break;
                     case PARAMETER_SET_NAME_DATE_TIME_TRUE:
                     case PARAMETER_SET_NAME_DATE_TIME_FALSE:
                         WriteDebug($"Creating new FsCrawlJob(startingDirectories: {{ \"{string.Join("\", \"", allPaths.ToArray())}\" }}, maxDepth: {MaxDepth}, maxItems: {MaxItems}, stopAt: {StopAt}, machineIdentifier: \"{MachineIdentifier}\", getVolumes: GetVolumeInfos, friendlyName=\"{Name}\")");
-                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, StopAt, MachineIdentifier, GetVolumeInfos, Name);
+                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, StopAt, MachineIdentifier, GetVolumeRegistration(SessionState), Name);
                         break;
                     default:
                         WriteDebug($"Creating new FsCrawlJob(startingDirectories: {{ \"{string.Join("\", \"", allPaths.ToArray())}\" }}, maxDepth: {MaxDepth}, maxItems: {MaxItems}, ttl: -1L, machineIdentifier: \"{MachineIdentifier}\", getVolumes: GetVolumeInfos, friendlyName=\"{Name}\")");
-                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, -1L, MachineIdentifier, GetVolumeInfos, Name);
+                        crawlJob = new FsCrawlJob(allPaths, MaxDepth, MaxItems, -1L, MachineIdentifier, GetVolumeRegistration(SessionState), Name);
                         break;
                 }
                 JobRepository.Add(crawlJob);

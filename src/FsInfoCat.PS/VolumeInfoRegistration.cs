@@ -14,8 +14,10 @@ namespace FsInfoCat.PS
 {
     public sealed class VolumeInfoRegistration : IVolumeSetProvider<VolumeInfoRegistration.RegisteredVolumeItem>
     {
-        public static readonly StringComparer CASE_IGNORED_NAME_COMPARER = StringComparer.InvariantCultureIgnoreCase;
-        public static readonly StringComparer CASE_SENSITIVE_NAME_COMPARER = StringComparer.InvariantCulture;
+        [Obsolete("Use DynamicStringComparer.IGNORE_CASE, instead")]
+        public static readonly StringComparer CASE_IGNORED_NAME_COMPARER = DynamicStringComparer.IGNORE_CASE;
+        [Obsolete("Use DynamicStringComparer.CASE_SENSITIVE, instead")]
+        public static readonly StringComparer CASE_SENSITIVE_NAME_COMPARER = DynamicStringComparer.CASE_SENSITIVE;
 
         private readonly object _syncRoot = new object();
         private readonly Collection<RegisteredVolumeItem> _backingCollection = new Collection<RegisteredVolumeItem>();
@@ -46,17 +48,17 @@ namespace FsInfoCat.PS
                 if (!(existing is null))
                 {
                     if (!ReferenceEquals(existing, item))
-                        throw new ArgumentOutOfRangeException(nameof(volumeInfo), $"Another volume with the same root URI ({volumeInfo.RootUri}) has already been added");
+                        throw new ArgumentOutOfRangeException(nameof(item), $"Another volume with the same root URI ({volumeInfo.RootUri}) has already been added");
                 }
                 else if (TryGetValue(volumeInfo.Identifier, out existing))
                 {
                     if (!ReferenceEquals(existing, item))
-                        throw new ArgumentOutOfRangeException(nameof(volumeInfo), $"Another volume with the same identifier ({volumeInfo.Identifier}) has already been added");
+                        throw new ArgumentOutOfRangeException(nameof(item), $"Another volume with the same identifier ({volumeInfo.Identifier}) has already been added");
                 }
-                else if (TryFindByName(volumeInfo.VolumeName, out existing))
+                else if (TryGetValue(volumeInfo.VolumeName, out existing))
                 {
                     if (!ReferenceEquals(existing, item))
-                        throw new ArgumentOutOfRangeException(nameof(volumeInfo), $"Another volume with the same volume name ({volumeInfo.VolumeName}) has already been added");
+                        throw new ArgumentOutOfRangeException(nameof(item), $"Another volume with the same volume name ({volumeInfo.VolumeName}) has already been added");
                 }
                 else
                 {
@@ -98,7 +100,7 @@ namespace FsInfoCat.PS
         {
             if (name is null)
                 return false;
-            return _backingCollection.Any(v => CASE_IGNORED_NAME_COMPARER.Equals(((RegisteredVolumeInfo)v.BaseObject).VolumeName, name));
+            return _backingCollection.Any(v => DynamicStringComparer.IgnoreCaseEquals(((RegisteredVolumeInfo)v.BaseObject).VolumeName, name));
         }
 
         public void CopyTo(RegisteredVolumeItem[] array, int arrayIndex) => _backingCollection.CopyTo(array, arrayIndex);
@@ -112,51 +114,56 @@ namespace FsInfoCat.PS
                 result = null;
                 return null;
             }
-            result = _backingCollection.FirstOrDefault(v => ReferenceEquals(((RegisteredVolumeInfo)v.BaseObject).RootUri, fileUri));
-            if (!(result is null))
-                return fileUri;
-            if (fileUri.Parent is null)
+            Monitor.Enter(_syncRoot);
+            try
             {
-                string host = fileUri.Host;
-                string path = fileUri.ToString();
-                foreach (RegisteredVolumeItem item in _backingCollection)
+                result = _backingCollection.FirstOrDefault(v => ReferenceEquals(((RegisteredVolumeInfo)v.BaseObject).RootUri, fileUri));
+                if (!(result is null))
+                    return fileUri;
+                if (fileUri.Parent is null)
                 {
-                    RegisteredVolumeInfo i = (RegisteredVolumeInfo)item.BaseObject;
-                    FileUri f = i.RootUri;
-                    if (CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && i.NameComparer.Equals(path, f.ToString()))
+                    string host = fileUri.Host;
+                    string path = fileUri.ToString();
+                    foreach (RegisteredVolumeItem item in _backingCollection)
                     {
-                        result = item;
-                        return f;
+                        RegisteredVolumeInfo i = (RegisteredVolumeInfo)item.BaseObject;
+                        FileUri f = i.RootUri;
+                        if (DynamicStringComparer.IgnoreCaseEquals(f.Host, host) && i.NameComparer.Equals(path, f.ToString()))
+                        {
+                            result = item;
+                            return f;
+                        }
                     }
+                    result = null;
+                    return fileUri;
                 }
-                result = null;
-                return fileUri;
-            }
-            FileUri parentUri = GetUriKey(fileUri.Parent, out result);
-            if (result is null)
-            {
-                string host = fileUri.Host;
-                string path = fileUri.ToString();
-                result = _backingCollection.FirstOrDefault(v =>
+                FileUri parentUri = GetUriKey(fileUri.Parent, out result);
+                if (result is null)
                 {
-                    RegisteredVolumeInfo rvi = (RegisteredVolumeInfo)v.BaseObject;
-                    FileUri f = rvi.RootUri;
-                    return CASE_IGNORED_NAME_COMPARER.Equals(f.Host, host) && rvi.NameComparer.Equals(path, f.ToString());
-                });
-            }
-            else
-            {
-                RegisteredVolumeInfo rvi = (RegisteredVolumeInfo)result.BaseObject;
-                FileUri parentRoot = rvi.RootUri;
-                string childName = fileUri.Name;
-                result = _backingCollection.FirstOrDefault(v =>
+                    string host = fileUri.Host;
+                    string path = fileUri.ToString();
+                    result = _backingCollection.FirstOrDefault(v =>
+                    {
+                        RegisteredVolumeInfo rvi = (RegisteredVolumeInfo)v.BaseObject;
+                        FileUri f = rvi.RootUri;
+                        return DynamicStringComparer.IgnoreCaseEquals(f.Host, host) && rvi.NameComparer.Equals(path, f.ToString());
+                    });
+                }
+                else
                 {
-                    RegisteredVolumeInfo vi = (RegisteredVolumeInfo)v.BaseObject;
-                    FileUri r = rvi.RootUri;
-                    return ReferenceEquals(r.Parent, parentRoot) && vi.NameComparer.Equals(childName, r.Name) && vi.NameComparer.Equals(childName, r.Name);
-                });
+                    RegisteredVolumeInfo rvi = (RegisteredVolumeInfo)result.BaseObject;
+                    FileUri parentRoot = rvi.RootUri;
+                    string childName = fileUri.Name;
+                    result = _backingCollection.FirstOrDefault(v =>
+                    {
+                        RegisteredVolumeInfo vi = (RegisteredVolumeInfo)v.BaseObject;
+                        FileUri r = rvi.RootUri;
+                        return ReferenceEquals(r.Parent, parentRoot) && vi.NameComparer.Equals(childName, r.Name) && vi.NameComparer.Equals(childName, r.Name);
+                    });
+                }
+                return (ReferenceEquals(parentUri, fileUri.Parent)) ? fileUri : new FileUri(parentUri, fileUri.Name);
             }
-            return (ReferenceEquals(parentUri, fileUri.Parent)) ? fileUri : new FileUri(parentUri, fileUri.Name);
+            finally { Monitor.Exit(_syncRoot); }
         }
 
         public bool Equals(FileUri x, FileUri y, out RegisteredVolumeItem item)
@@ -197,7 +204,7 @@ namespace FsInfoCat.PS
                 return false;
             if (ReferenceEquals(x, y))
                 return true;
-            if (!CASE_IGNORED_NAME_COMPARER.Equals(x.Host, y.Host))
+            if (!DynamicStringComparer.IgnoreCaseEquals(x.Host, y.Host))
                 return false;
             FileUri u1 = GetUriKey(x, out RegisteredVolumeItem v1);
             FileUri u2 = GetUriKey(x, out RegisteredVolumeItem v2);
@@ -227,7 +234,7 @@ namespace FsInfoCat.PS
             };
             IVolumeInfo volume;
             FileUri u = fileUri;
-            while (!TryFindByRootURI(u, out volume))
+            while (!TryGetValue(u, out volume))
             {
                 if ((u = u.Parent) is null)
                     return false;
@@ -281,7 +288,7 @@ namespace FsInfoCat.PS
         /// <param name="uri">A <seealso cref="FileUri"/> that is a hierarchical member of a volume.</param>
         /// <param name="value">Returns he matching <seealso cref="RegisteredVolumeItem"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="RegisteredVolumeItem"/> was found; otherwise, <see langword="false"/>.</returns>
-        public bool TryFind(FileUri uri, out RegisteredVolumeItem value)
+        public bool TryGetByChildURI(FileUri uri, out RegisteredVolumeItem value)
         {
             Monitor.Enter(_syncRoot);
             try
@@ -307,7 +314,7 @@ namespace FsInfoCat.PS
         /// <param name="uri">A <seealso cref="FileUri"/> that is a hierarchical member of a volume.</param>
         /// <param name="value">Returns he matching <seealso cref="IVolumeInfo"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
-        public bool TryFind(FileUri uri, out IVolumeInfo value) => TryFind(uri, out value);
+        public bool TryGetByChildURI(FileUri uri, out IVolumeInfo value) => TryGetByChildURI(uri, out value);
 
         /// <summary>
         /// Looks for a <seealso cref="RegisteredVolumeItem"/> where the <seealso cref="IVolumeInfo.RootUri"/> is equal to the specified <seealso cref="FileUri"/>.
@@ -315,7 +322,7 @@ namespace FsInfoCat.PS
         /// <param name="uri">The <seealso cref="FileUri"/> which represents the volume root path.</param>
         /// <param name="value">Returns he matching <seealso cref="RegisteredVolumeItem"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="RegisteredVolumeItem"/> was found; otherwise, <see langword="false"/>.</returns>
-        public bool TryFindByRootURI(FileUri uri, out RegisteredVolumeItem value)
+        public bool TryGetValue(FileUri uri, out RegisteredVolumeItem value)
         {
             Monitor.Enter(_syncRoot);
             try { GetUriKey(uri, out value); }
@@ -329,7 +336,7 @@ namespace FsInfoCat.PS
         /// <param name="uri">The <seealso cref="FileUri"/> which represents the volume root path.</param>
         /// <param name="value">Returns he matching <seealso cref="IVolumeInfo"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
-        public bool TryFindByRootURI(FileUri uri, out IVolumeInfo value) => TryFindByRootURI(uri, out value);
+        public bool TryGetValue(FileUri uri, out IVolumeInfo value) => TryGetValue(uri, out value);
 
         /// <summary>
         /// Looks up a <seealso cref="RegisteredVolumeItem"/> by its <seealso cref="VolumeIdentifier"/>.
@@ -351,14 +358,14 @@ namespace FsInfoCat.PS
         /// <param name="value">Returns a <seealso cref="RegisteredVolumeItem"/> whose <seealso cref="IVolumeInfo.VolumeName"/> matches given
         /// <seealso cref="VolumeIdentifier"/> <paramref name="key"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="RegisteredVolumeItem"/> was found; otherwise, <see langword="false"/>.</returns>
-        public bool TryFindByName(string volumeName, out RegisteredVolumeItem value)
+        public bool TryGetValue(string volumeName, out RegisteredVolumeItem value)
         {
             if (volumeName is null)
             {
                 value = null;
                 return false;
             }
-            value = _backingCollection.FirstOrDefault(v => CASE_IGNORED_NAME_COMPARER.Equals(((RegisteredVolumeInfo)v.BaseObject).VolumeName, volumeName));
+            value = _backingCollection.FirstOrDefault(v => DynamicStringComparer.IgnoreCaseEquals(((RegisteredVolumeInfo)v.BaseObject).VolumeName, volumeName));
             return !(value is null);
         }
 
@@ -369,7 +376,7 @@ namespace FsInfoCat.PS
         /// <param name="value">Returns a <seealso cref="IVolumeInfo"/> whose <seealso cref="IVolumeInfo.VolumeName"/> matches given
         /// <seealso cref="VolumeIdentifier"/> <paramref name="key"/>.</param>
         /// <returns><see langword="true"/> if a matching <seealso cref="IVolumeInfo"/> was found; otherwise, <see langword="false"/>.</returns>
-        public bool TryFindByName(string volumeName, out IVolumeInfo value) => TryFindByName(volumeName, out value);
+        public bool TryGetValue(string volumeName, out IVolumeInfo value) => TryGetValue(volumeName, out value);
 
         public bool TryFindMatching(IVolumeInfo item, out RegisteredVolumeItem actual)
         {
@@ -385,7 +392,7 @@ namespace FsInfoCat.PS
             if (TryGetValue(item.Identifier, out actual))
             {
                 RegisteredVolumeInfo volumeInfo = (RegisteredVolumeInfo)actual.BaseObject;
-                return volumeInfo.CaseSensitive == item.CaseSensitive && CASE_IGNORED_NAME_COMPARER.Equals(volumeInfo.VolumeName, item.VolumeName) &&
+                return volumeInfo.CaseSensitive == item.CaseSensitive && DynamicStringComparer.IgnoreCaseEquals(volumeInfo.VolumeName, item.VolumeName) &&
                     volumeInfo.RootUri.ToString() == item.RootUri.ToString() && volumeInfo.DriveFormat == item.DriveFormat;
             }
             return false;

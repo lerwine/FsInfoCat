@@ -209,7 +209,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
         /// </list>
         /// <para>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</para></remarks>
-        public static readonly Regex ABS_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*((?<scheme>(?!file:)(?i)FILE(?=:))|(\.\.?/+)+|\s+)|(?<esc>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)|(/\s*|\s+)$", RegexOptions.Compiled);
+        public static readonly Regex ABS_URI_STRING_NORMALIZE_REGEX = new Regex(@"^\s*((?<scheme>(?!file:)(?i)FILE(?=:))|(\.\.?/+)+|\s+)|(?<esc>(%(a-f[\dA-Fa-f]|[\dA-F][a-f]))+)|(?<!file:///)(/(?=/))+|/\.(?=/|$)|(/\s*|\s+)$", RegexOptions.Compiled);
 
         [Obsolete("This does not distinguish between a windows drive path and a linux path that might look like a windows drive path. file:///c:/dirname not parsed with root as c:/")]
         public static readonly Regex FILE_URI_COMPONENTS_LAX_REGEX = new Regex(@"^
@@ -405,36 +405,23 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <summary>
         /// Converts a URI-compatible host name and URI-encoded absolute path string to a filesystem path string.
         /// </summary>
-        /// <param name="host">The URI-compatible host name.</param>
-        /// <param name="uriEncodedPath">The URI-encoded path string.</param>
+        /// <param name="fileUriString">An absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL string or a relative URI-encoded path string.</param>
         /// <param name="platform">The target platform type that determines the format of the filesystem path string.</param>
         /// <param name="allowAlt">If <see langword="true"/>, allows a valid filesystem path of the platform type which is alternate to the specified
-        /// <seealso cref="PlatformType"/> to be used if <paramref name="uriEncodedPath"/> is not a valid path according to the <paramref name="platform"/>.</param>
+        /// <seealso cref="PlatformType"/> to be used if <paramref name="fileUriString"/> does not not represent a valid path according to the <paramref name="platform"/>.</param>
         /// <returns>A filesystem path string.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="uriEncodedPath"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="host"/> and/or <paramref name="uriEncodedPath"/> is invalid.</exception>
-        public static string ToFileSystemPath(string host, string uriEncodedPath, PlatformType platform, bool allowAlt = false)
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="fileUriString"/> is invalid.</exception>
+        public static string ToFileSystemPath(string fileUriString, PlatformType platform, bool allowAlt = false)
         {
             if (allowAlt)
             {
                 FileUriConverter currentFactory = GetFactory(platform, out FileUriConverter altFactory);
-                //if (!currentFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute) && altFactory.IsValidFileSystemPath(uriEncodedPath, FsPathKind.Absolute))
-                if (!currentFactory.IsWellFormedUriString(uriEncodedPath, UriKind.Relative) && altFactory.IsWellFormedUriString(uriEncodedPath, UriKind.Relative))
-                    return altFactory.ToFileSystemPath(host, uriEncodedPath);
-                return currentFactory.ToFileSystemPath(host, uriEncodedPath);
+                if (!currentFactory.IsWellFormedUriString(fileUriString, UriKind.Absolute) && altFactory.IsWellFormedUriString(fileUriString, UriKind.Absolute))
+                    return altFactory.ToFileSystemPath(fileUriString);
+                return currentFactory.ToFileSystemPath(fileUriString);
             }
-            return GetFactory(platform).ToFileSystemPath(host, uriEncodedPath);
+            return GetFactory(platform).ToFileSystemPath(fileUriString);
         }
-
-        /// <summary>
-        /// Converts a URI-compatible host name and URI-encoded path string to a filesystem path string.
-        /// </summary>
-        /// <param name="host">The URI-compatible host name or <see langword="null"/> or empty if <paramref name="uriEncodedPath"/> is to be converted
-        /// to a filesystem-local path.</param>
-        /// <param name="uriEncodedPath">The URI-encoded relative path string.</param>
-        /// <returns>A filesystem path string.</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="host"/> and/or <paramref name="uriEncodedPath"/> is invalid.</exception>
-        public abstract string ToFileSystemPath(string hostName, string uriEncodedPath);
 
         /// <summary>
         /// Converts a <seealso cref="Uri.UriSchemeFile">file</seealso> URL to a filesystem path string.
@@ -526,7 +513,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             {
                 bool wasChanged;
                 if ((match = UriValidationRegex.Match(uriString)).Success)
-                    uriString = match.Groups[MATCH_GROUP_NAME_ROOT].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
+                    uriString = match.Groups[MATCH_GROUP_NAME_FILE].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
                         NormalizeRelativeFileUri(uriString, out wasChanged);
                 else
                 {
@@ -535,7 +522,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                     {
                         if ((match = UriValidationRegex.Match(uriString)).Success)
                         {
-                            if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                            if (match.Groups[MATCH_GROUP_NAME_FILE].Success)
                                 uriString = NormalizeAbsoluteFileUrl(uriString);
                             else
                                 uriString = NormalizeRelativeFileUri(uriString);
@@ -662,20 +649,20 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 bool wasChanged;
                 if ((match = UriValidationRegex.Match(uriString)).Success)
                 {
-                    uriString = match.Groups[MATCH_GROUP_NAME_ROOT].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
+                    uriString = match.Groups[MATCH_GROUP_NAME_FILE].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
                         NormalizeRelativeFileUri(uriString, out wasChanged);
                     if (wasChanged)
                     {
-                        uriString = FixEncoding(uriString);
                         uriString = EscapeSpecialPathChars(uriString);
+                        uriString = FixEncoding(uriString);
                     }
                     else
                     {
-                        uriString = FixEncoding(uriString, out wasChanged);
+                        uriString = EscapeSpecialPathChars(uriString, out wasChanged);
                         if (wasChanged)
-                            uriString = EscapeSpecialPathChars(uriString);
+                            uriString = FixEncoding(uriString);
                         else
-                            uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                            uriString = FixEncoding(uriString, out wasChanged);
                     }
                 }
                 else
@@ -689,7 +676,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                     {
                         if ((match = UriValidationRegex.Match(uriString)).Success)
                         {
-                            if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                            if (match.Groups[MATCH_GROUP_NAME_FILE].Success)
                                 uriString = NormalizeAbsoluteFileUrl(uriString);
                             else
                                 uriString = NormalizeRelativeFileUri(uriString);
@@ -707,12 +694,19 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 }
             }
 
-            hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
+            Group group = match.Groups[MATCH_GROUP_NAME_IPV6];
+            isAbsolute = group.Success;
+            if (isAbsolute)
+                hostName = group.Value;
+            else
+            {
+                hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
+                isAbsolute = (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
+            }
             string path = match.GetGroupValue(MATCH_GROUP_NAME_PATH, "");
             directory = SplitUriPathLeaf(path, out fileName);
             //directory = match.GetGroupValue(MATCH_GROUP_NAME_DIR, "");
             //fileName = match.GetGroupValue(MATCH_GROUP_NAME_FILE_NAME, "");
-            isAbsolute = (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
             return true;
         }
 
@@ -763,17 +757,37 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             if (!match.Success)
             {
                 bool wasChanged;
+
                 if ((match = UriValidationRegex.Match(uriString)).Success)
-                    uriString = match.Groups[MATCH_GROUP_NAME_ROOT].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
+                {
+                    uriString = match.Groups[MATCH_GROUP_NAME_FILE].Success ? NormalizeAbsoluteFileUrl(uriString, out wasChanged) :
                         NormalizeRelativeFileUri(uriString, out wasChanged);
+                    if (wasChanged)
+                    {
+                        uriString = EscapeSpecialPathChars(uriString);
+                        uriString = FixEncoding(uriString);
+                    }
+                    else
+                    {
+                        uriString = EscapeSpecialPathChars(uriString, out wasChanged);
+                        if (wasChanged)
+                            uriString = FixEncoding(uriString);
+                        else
+                            uriString = FixEncoding(uriString, out wasChanged);
+                    }
+                }
                 else
                 {
                     uriString = EscapeSpecialPathChars(uriString, out wasChanged);
                     if (wasChanged)
+                        uriString = FixEncoding(uriString);
+                    else
+                        uriString = FixEncoding(uriString, out wasChanged);
+                    if (wasChanged)
                     {
                         if ((match = UriValidationRegex.Match(uriString)).Success)
                         {
-                            if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                            if (match.Groups[MATCH_GROUP_NAME_FILE].Success)
                                 uriString = NormalizeAbsoluteFileUrl(uriString);
                             else
                                 uriString = NormalizeRelativeFileUri(uriString);
@@ -790,15 +804,18 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 }
             }
 
-            hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
+            Group group = match.Groups[MATCH_GROUP_NAME_IPV6];
+            isAbsolute = group.Success;
+            if (isAbsolute)
+                hostName = group.Value;
+            else
+            {
+                hostName = match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
+                isAbsolute = (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
+            }
             path = match.GetGroupValue(MATCH_GROUP_NAME_PATH, "");
-            isAbsolute = (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
             return true;
         }
-
-        [Obsolete("Use instance method, instead.")]
-        public static bool TrySplitFileUriString_obsolete(string uriString, out string hostName, out string directory, out string fileName, out bool isAbsolute) =>
-            TrySplitFileUriString(uriString, PlatformType.Unknown, false, out hostName, out directory, out fileName, out isAbsolute);
 
         /// <summary>
         /// Removes extraneous path separators and whitespace, ensures the file scheme name is lower case and escape sequence characters are upper-case.
@@ -962,7 +979,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             {
                 if ((match = UriValidationRegex.Match(uriString)).Success)
                 {
-                    if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                    if (match.Groups[MATCH_GROUP_NAME_FILE].Success)
                         uriString = NormalizeAbsoluteFileUrl(uriString, out wasChanged);
                     else
                         uriString = NormalizeRelativeFileUri(uriString, out wasChanged);
@@ -972,7 +989,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                     uriString = EscapeSpecialPathChars(uriString, out wasChanged);
                     if (wasChanged && (match = UriValidationRegex.Match(uriString)).Success)
                     {
-                        if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                        if (match.Groups[MATCH_GROUP_NAME_FILE].Success)
                             uriString = NormalizeAbsoluteFileUrl(uriString);
                         else
                             uriString = NormalizeRelativeFileUri(uriString);
@@ -1019,7 +1036,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 bool wasChanged;
                 if ((match = UriValidationRegex.Match(uriString)).Success)
                 {
-                    if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                    if (match.Groups[MATCH_GROUP_NAME_FILE].Success)
                         uriString = NormalizeAbsoluteFileUrl(uriString, out wasChanged);
                     else
                         uriString = NormalizeRelativeFileUri(uriString, out wasChanged);
@@ -1029,7 +1046,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                     uriString = EscapeSpecialPathChars(uriString, out wasChanged);
                     if (wasChanged && (match = UriValidationRegex.Match(uriString)).Success)
                     {
-                        if (match.Groups[MATCH_GROUP_NAME_ROOT].Success)
+                        if (match.Groups[MATCH_GROUP_NAME_FILE].Success)
                             uriString = NormalizeAbsoluteFileUrl(uriString);
                         else
                             uriString = NormalizeRelativeFileUri(uriString);
@@ -1071,9 +1088,9 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             switch (kind)
             {
                 case UriKind.Absolute:
-                    return match.Groups[MATCH_GROUP_NAME_FILE].Success && (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
+                    return match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success;
                 case UriKind.Relative:
-                    return !(match.Groups[MATCH_GROUP_NAME_FILE].Success && (match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success));
+                    return !(match.Groups[MATCH_GROUP_NAME_HOST].Success || match.Groups[MATCH_GROUP_NAME_ROOT].Success);
             }
             return true;
         }
@@ -1187,7 +1204,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             }
             if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
             {
-                hostName = m.Groups[MATCH_GROUP_NAME_HOST].Value;
+                hostName = (m.Groups[MATCH_GROUP_NAME_IPV6].Success ? m.Groups[MATCH_GROUP_NAME_IPV6] : m.Groups[MATCH_GROUP_NAME_HOST]).Value;
                 return FsPathType.UNC;
             }
             hostName = "";
@@ -1223,7 +1240,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             }
             if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
             {
-                hostName = m.Groups[MATCH_GROUP_NAME_HOST].Value;
+                hostName = (m.Groups[MATCH_GROUP_NAME_IPV6].Success ? m.Groups[MATCH_GROUP_NAME_IPV6] : m.Groups[MATCH_GROUP_NAME_HOST]).Value;
                 return FsPathType.UNC;
             }
             hostName = "";
@@ -1251,7 +1268,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             }
             if (m.Groups[MATCH_GROUP_NAME_HOST].Success)
             {
-                hostName = m.Groups[MATCH_GROUP_NAME_HOST].Value;
+                hostName = (m.Groups[MATCH_GROUP_NAME_IPV6].Success ? m.Groups[MATCH_GROUP_NAME_IPV6] : m.Groups[MATCH_GROUP_NAME_HOST]).Value;
                 return FsPathType.UNC;
             }
             hostName = "";

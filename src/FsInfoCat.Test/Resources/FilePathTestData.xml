@@ -2,7 +2,7 @@
 <FilePathTestData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./FilePathTestData.xsd">
     <TestData InputString="file:///">
         <Windows>
-            <AbsoluteUrl Match="file:///" IsWellFormed="false">
+            <AbsoluteUrl Match="file:///" IsWellFormed="true">
                 <Path Match="/">
                     <Directory>/</Directory>
                     <FileName xsi:nil="true" />

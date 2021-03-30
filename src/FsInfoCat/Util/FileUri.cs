@@ -1,3 +1,4 @@
+using FsInfoCat.Models.Volumes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,7 @@ namespace FsInfoCat.Util
     /// <summary>
     /// Represents a file URI that can be sorted and compared.
     /// </summary>
-    public class FileUri : IEquatable<FileUri>
+    public class FileUri
     {
         /// <summary>
         /// URI encode host name.
@@ -19,6 +20,8 @@ namespace FsInfoCat.Util
         public string Name { get; }
 
         public FileUri Parent { get; }
+
+        public int PathSegmentCount { get; }
 
         /// <summary>
         /// Creates a new <c>FileUri</c> object.
@@ -34,7 +37,8 @@ namespace FsInfoCat.Util
             if (string.IsNullOrEmpty(fileUriString))
             {
                 Host = Name = "";
-                Parent = null; 
+                Parent = null;
+                PathSegmentCount = 0;
             }
             else if (Uri.IsWellFormedUriString(fileUriString, UriKind.Absolute) && FileUriConverter.GetFactory(platform).TrySplitFileUriString(fileUriString,
                 out string hostName, out string directory, out string fileName, out bool isAbsolute) && isAbsolute)
@@ -42,9 +46,12 @@ namespace FsInfoCat.Util
                 Host = hostName;
                 Name = fileName;
                 if (directory.Length > 0)
-                    Parent = new FileUri(Host, directory);
+                    PathSegmentCount = (Parent = new FileUri(Host, directory)).PathSegmentCount + 1;
                 else
+                {
+                    PathSegmentCount = 1;
                     Parent = null;
+                }
             }
             else
                 throw new ArgumentOutOfRangeException(nameof(fileUriString));
@@ -52,14 +59,12 @@ namespace FsInfoCat.Util
 
         public FileUri(FileUri parent, string name)
         {
-            if (parent is null)
-                throw new ArgumentNullException(nameof(parent));
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
             if (name.Length == 0 || (name = FileUriConverter.CURRENT_FACTORY.EnsureWellFormedUriString(name, UriKind.Relative)).Contains(UriHelper.URI_PATH_SEPARATOR_CHAR))
                 throw new ArgumentOutOfRangeException(nameof(name));
             Name = name;
-            Parent = parent;
+            PathSegmentCount = ((Parent = parent) is null) ? 1 : parent.PathSegmentCount + 1;
         }
 
         /// <summary>
@@ -69,7 +74,10 @@ namespace FsInfoCat.Util
         public FileUri(FileSystemInfo fileSystemInfo)
         {
             if (fileSystemInfo is null)
+            {
                 Host = Name = "";
+                PathSegmentCount = 0;
+            }
             else
             {
                 string fileName = FileUriConverter.CURRENT_FACTORY.FromFileSystemPath(fileSystemInfo.FullName, out string hostName, out string directoryName);
@@ -77,9 +85,10 @@ namespace FsInfoCat.Util
                 if (fileName.Length > 0)
                 {
                     Name = fileName;
-                    Parent = new FileUri(Host, directoryName);
+                    PathSegmentCount = (Parent = new FileUri(Host, directoryName)).PathSegmentCount + 1;
                     return;
                 }
+                PathSegmentCount = 1;
                 Name = directoryName;
             }
             Parent = null;
@@ -93,34 +102,45 @@ namespace FsInfoCat.Util
             {
                 Name = absolutePath;
                 Parent = null;
+                PathSegmentCount = 1;
             }
             else
             {
                 Name = absolutePath.Substring(leafIndex + 1);
-                Parent = new FileUri(host, absolutePath.Substring(0, leafIndex - 1));
+                PathSegmentCount = (Parent = new FileUri(host, absolutePath.Substring(0, leafIndex - 1))).PathSegmentCount;
             }
         }
 
         public static implicit operator FileUri(FileSystemInfo fsi) => (fsi is null) ? null : new FileUri(fsi);
 
-        public Stack<string> GetPathComponents()
+        public IEnumerable<string> GetPathSegments()
         {
+            if (PathSegmentCount == 0)
+                return Array.Empty<string>();
             Stack<string> result = new Stack<string>();
             result.Push((Name == UriHelper.URI_PATH_SEPARATOR_STRING) ? "" : Name);
             for (FileUri fileUri = Parent; !(fileUri is null); fileUri = fileUri.Parent)
                 result.Push(fileUri.Name);
-            return result;
+            return result.AsEnumerable();
         }
 
-        public bool IsEmpty() => Name.Length == 0 && Host.Length == 0 && Parent is null;
-
-        [Obsolete("Utilize FsInfoCat.Models.Volumes.IVolumeSetProvider for comparisons. This not logical due to posible case sensitivity differences with parent paths.")]
-        public bool Equals(FileUri other, IEqualityComparer<string> comparer)
+        public IEnumerable<FileUri> GetAncestors()
         {
-            if (comparer is null)
-                throw new ArgumentNullException(nameof(comparer));
-            return !(other is null) && Host.Equals(other.Host) && comparer.Equals(Name, other.Name) && ((Parent is null) ? other.Parent is null : Parent.Equals(other.Parent, comparer));
+            for (FileUri parent = Parent; !(parent is null); parent = parent.Parent)
+                yield return parent;
         }
+
+        public IEnumerable<FileUri> GetAncestorsAndSelf()
+        {
+            if (!IsEmpty())
+            {
+                yield return this;
+                for (FileUri parent = Parent; !(parent is null); parent = parent.Parent)
+                    yield return parent;
+            }
+        }
+
+        public bool IsEmpty() => PathSegmentCount == 0;
 
         private StringBuilder ToUriPath(StringBuilder stringBuilder)
         {
@@ -139,19 +159,8 @@ namespace FsInfoCat.Util
         {
             if (IsEmpty())
                 return "";
-            if (Parent is null)
-                return FileUriConverter.ToFileSystemPath(Host, Name, platform);
-            return FileUriConverter.ToFileSystemPath(Host, (Parent.Name.EndsWith(UriHelper.URI_PATH_SEPARATOR_CHAR) ?
-                Parent.ToUriPath(new StringBuilder()).Append(Name) :
-                Parent.ToUriPath(new StringBuilder()).Append(UriHelper.URI_PATH_SEPARATOR_CHAR).Append(Name)).ToString(), platform);
+            return FileUriConverter.ToFileSystemPath(ToString(), platform);
         }
-
-        [Obsolete("Utilize FsInfoCat.Models.Volumes.IVolumeSetProvider for comparisons. This not logical due to posible case sensitivity differences with parent paths.")]
-        public bool Equals(FileUri other) => !(other is null) && (ReferenceEquals(this, other) || (Host.Equals(other.Host) && Name.Equals(other.Name) && ((Parent is null) ? other.Parent is null : Parent.Equals(other.Parent))));
-
-        public override bool Equals(object obj) => obj is FileUri fileUri && Equals(fileUri);
-
-        public override int GetHashCode() => ToString().GetHashCode();
 
         private StringBuilder ToString(StringBuilder stringBuilder)
         {
@@ -165,6 +174,137 @@ namespace FsInfoCat.Util
             if (Parent is null)
                 return (IsEmpty()) ? "" : ((Name.StartsWith(UriHelper.URI_PATH_SEPARATOR_STRING)) ? $"file://{Host}{Name}" : $"file://{Host}/{Name}");
             return Parent.ToString((Host.Length == 0) ? new StringBuilder("file://") : new StringBuilder("file://").Append(Host)).Append(Name).ToString();
+        }
+
+        public bool IsUriOf(IVolumeSetItem volume)
+        {
+            if (volume is null || IsEmpty())
+                return false;
+            FileUri rootUri = volume.RootUri;
+            if (rootUri is null || rootUri.IsEmpty())
+                return false;
+            if (ReferenceEquals(this, rootUri))
+                return true;
+            if (!DynamicStringComparer.IgnoreCaseEquals(Host, rootUri.Host))
+                return false;
+            int rc = rootUri.PathSegmentCount;
+            int sc = PathSegmentCount;
+            if (rc > sc)
+                return false;
+            FileUri target = this;
+            while (sc > rc--)
+                target = target.Parent;
+            if (ReferenceEquals(target, rootUri))
+                return true;
+            IFileUriKey mountPointParentUri = volume.MountPointParentUri;
+            IVolumeSetItem parentVol;
+            if (mountPointParentUri is null || (parentVol = mountPointParentUri.Volume) is null)
+            {
+                IEqualityComparer<string> nameComparer = volume.GetNameComparer();
+                while (nameComparer.Equals(rootUri.Name, target.Name))
+                {
+                    if ((rootUri = rootUri.Parent) is null)
+                        return true;
+                    target = target.Parent;
+                }
+                return false;
+            }
+            return parentVol.GetNameComparer().Equals(target.Name, rootUri.Name) && target.IsUriOf(mountPointParentUri.Volume);
+        }
+
+        public static bool IsNullOrEmpty(FileUri fileUri) => fileUri is null || fileUri.IsEmpty();
+
+        public bool IsSameHost(FileUri other) => !(other is null) && (ReferenceEquals(this, other) ||
+            (DynamicStringComparer.IgnoreCaseEquals(Host, other.Host) && IsEmpty() == other.IsEmpty()));
+
+        public static bool AreSegmentsEqual(FileUri x, FileUri y, int startIndex, IEqualityComparer<string> comparer)
+        {
+            if (comparer is null)
+                throw new ArgumentNullException(nameof(comparer));
+            if (startIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if (x is null || x.IsEmpty())
+                return y is null || y.IsEmpty();
+            if (y is null || y.IsEmpty())
+                return false;
+            if (ReferenceEquals(x, y))
+                return true;
+            int endIndex = x.PathSegmentCount;
+            if (startIndex >= endIndex)
+                return startIndex >= y.PathSegmentCount;
+            if (startIndex >= y.PathSegmentCount || endIndex != y.PathSegmentCount)
+                return false;
+            do
+            {
+                if (!comparer.Equals(x.Name, y.Name))
+                    return false;
+                x = x.Parent;
+                y = y.Parent;
+            } while (endIndex > ++startIndex);
+            return true;
+        }
+
+        public static bool AreSegmentsEqual(FileUri x, FileUri y, int startIndex, int endIndex, IEqualityComparer<string> comparer)
+        {
+            if (comparer is null)
+                throw new ArgumentNullException(nameof(comparer));
+            if (startIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if (startIndex > endIndex)
+                throw new ArgumentOutOfRangeException(nameof(endIndex));
+            if (x is null || x.IsEmpty())
+                return y is null || y.IsEmpty();
+            if (y is null || y.IsEmpty())
+                return false;
+            if (ReferenceEquals(x, y))
+                return true;
+            if (startIndex >= x.PathSegmentCount)
+                return startIndex >= y.PathSegmentCount;
+            if (startIndex >= y.PathSegmentCount)
+                return false;
+            if (startIndex == endIndex)
+                return true;
+            if (x.PathSegmentCount < endIndex)
+            {
+                if (y.PathSegmentCount != x.PathSegmentCount)
+                    return false;
+                endIndex = x.PathSegmentCount;
+            }
+            else
+            {
+                if (y.PathSegmentCount < endIndex)
+                    return false;
+                while (x.PathSegmentCount > endIndex)
+                    x = x.Parent;
+                while (y.PathSegmentCount > endIndex)
+                    y = y.Parent;
+            }
+            do
+            {
+                if (!comparer.Equals(x.Name, y.Name))
+                    return false;
+                x = x.Parent;
+                y = y.Parent;
+            } while (--endIndex > startIndex);
+            return true;
+        }
+
+        public bool TryGetAtSegmentCount(int segmentCount, out FileUri fileUri)
+        {
+            if (segmentCount == PathSegmentCount)
+                fileUri = this;
+            else if (segmentCount > 0 && PathSegmentCount > 0 && segmentCount < PathSegmentCount)
+            {
+                fileUri = Parent;
+                while (segmentCount < fileUri.PathSegmentCount)
+                    fileUri = fileUri.Parent;
+            }
+            else
+            {
+                fileUri = null;
+                return false;
+            }
+            return true;
         }
     }
 }

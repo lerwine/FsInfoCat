@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -27,6 +28,34 @@ namespace FsInfoCat.Util
         public const string MESSAGE_MAX_DEPTH_REACHED = "Maximum crawl depth has been reached.";
         public const string MESSAGE_MAX_ITEMS_REACHED = "Maximum crawl item count has been reached.";
         public const string MESSAGE_UNEXPECTED_ERROR = "An unexpected error has occurred.";
+
+        public static int GetSegmentCount(this DirectoryInfo directoryInfo)
+        {
+            if (directoryInfo is null)
+                return 0;
+            int result = 1;
+            while (!((directoryInfo = directoryInfo.Parent) is null))
+                result++;
+            return result;
+        }
+
+        public static int GetSegmentCount(this FileInfo fileInfo) => (fileInfo is null) ? 0 : GetSegmentCount(fileInfo.Directory) + 1;
+
+        public static bool TryGetAtSegmentCount(this DirectoryInfo directoryInfo, int segmentCount, out DirectoryInfo result)
+        {
+            if (segmentCount < 1)
+                throw new ArgumentOutOfRangeException(nameof(segmentCount));
+            int currentCount;
+            if (directoryInfo is null || (currentCount = directoryInfo.GetSegmentCount()) < segmentCount)
+            {
+                result = null;
+                return false;
+            }
+            result = directoryInfo;
+            while (currentCount > segmentCount)
+                result = result.Parent;
+            return true;
+        }
 
         public static bool IsEqualTo(this string s, char c) => null != s && s.Length == 1 && s[0] == c;
 

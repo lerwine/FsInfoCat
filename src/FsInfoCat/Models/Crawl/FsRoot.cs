@@ -9,7 +9,6 @@ using System.Threading;
 
 namespace FsInfoCat.Models.Crawl
 {
-    // TODO: IEqualityComparer<IFsChildNode> may need to be replaced by using IVolumeSet provider due to nested case-sensitivity difference issues
     public sealed class FsRoot : ComponentBase, IVolumeInfo, IFsDirectory, IEqualityComparer<IFsChildNode>, IEquatable<FsRoot>
     {
         private FileUri _rootUri = new FileUri("");
@@ -342,10 +341,21 @@ namespace FsInfoCat.Models.Crawl
 
         public bool Equals(FsRoot other) => !(other is null) && (ReferenceEquals(this, other) || _identifier.Equals(other._identifier) ||
             DynamicStringComparer.IgnoreCaseEquals(_volumeName, other._volumeName) || (DynamicStringComparer.IgnoreCaseEquals(_rootUri.Host, other._rootUri.Host) &&
-            _segmentNameComparer.Equals(_rootUri.GetPathComponents(), other._rootUri.GetPathComponents())));
+            _segmentNameComparer.Equals(_rootUri.GetPathSegments(), other._rootUri.GetPathSegments())));
 
         public override bool Equals(object obj) => Equals(obj as FsRoot);
 
         public override int GetHashCode() => _identifier.GetHashCode();
+
+        public bool IsEqualTo(IVolumeInfo other)
+        {
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            return _identifier.Equals(other.Identifier) && DynamicStringComparer.IgnoreCaseEquals(_volumeName, other.VolumeName) &&
+                DynamicStringComparer.IgnoreCaseEquals(_rootUri.Host, other.RootUri.Host) &&
+                    _segmentNameComparer.Equals(_rootUri.GetPathSegments(), other.RootUri.GetPathSegments());
+        }
     }
 }

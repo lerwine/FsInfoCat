@@ -303,7 +303,6 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
     (?![^:/]*:)
 |
     (?<file>
- 
         file://
         (
             (?i)
@@ -315,14 +314,16 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 (?=[\w-.]{1,255}(?![\w-.]))
                 (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
             )
-            (?=/|$)
-            |
-            (?=/)
-        )
+        )?
+        (?=/|$)
     )
 )
 (?<path>
-    (?<root>/)?
+    (
+        (?<=file://[^/]*)(?<root>/)
+    |
+        /
+    )?
     (
         ([!$=&-.:;=@[\]\w]+|%(0[1-9A-F]|2[\dA-E]|[2-9A-F][\dA-F]))+
         (
@@ -373,12 +374,13 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// </summary>
         /// <remarks>Named group match definition:
         /// <list type="bullet">
+        ///     <item><term>file</term> Matches the file schema name, indicating it is an absolute file URI.</item>
         ///     <item><term>root</term> Matches the host name or drive path that indicates it is an absolute path.</item>
         /// </list></remarks>
         public static readonly Regex URI_VALIDATION_REGEX = new Regex(@"
 (?<=^\s*)
 (
-    file://
+    (?<file>file)://
     (?<root>
         (
             ((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)
@@ -389,7 +391,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             [a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?
         )
         (/|(?=\s*$))
-    )
+    )?
 |
     (?!file:)
 )
@@ -415,17 +417,19 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         private LinuxFileUriConverter() { }
 
         /// <summary>
-        /// Converts a URI-compatible host name and URI-encoded path string to a filesystem path string.
+        /// Converts a <seealso cref="Uri.UriSchemeFile">file</seealso> URL to a filesystem path string.
         /// </summary>
-        /// <param name="host">The URI-compatible host name or <see langword="null"/> or empty if <paramref name="uriEncodedPath"/> is to be converted
-        /// to a filesystem-local path.</param>
-        /// <param name="uriEncodedPath">The URI-encoded relative path string.</param>
+        /// <param name="fileUriString">An absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL string or a relative URI-encoded path string.</param>
         /// <returns>A filesystem path string.</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="host"/> and/or <paramref name="uriEncodedPath"/> is invalid.</exception>
-        public override string ToFileSystemPath(string hostName, string uriEncodedPath)
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="fileUriString"/> is invalid.</exception>
+        public override string ToFileSystemPath(string fileUriString)
         {
+            if (string.IsNullOrEmpty(fileUriString))
+                return "";
+            if (!TrySplitFileUriString(fileUriString, out string hostName, out string path, out _))
+                throw new ArgumentOutOfRangeException(nameof(fileUriString));
             Match match;
-            if (string.IsNullOrEmpty(uriEncodedPath) || (uriEncodedPath = NormalizeRelativeFileUri(uriEncodedPath)).Length == 0)
+            if (path.Length == 0)
             {
                 if (string.IsNullOrEmpty(hostName))
                     return "";
@@ -433,9 +437,8 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                     return $"//{hostName.Replace(":", "-")}{FQDN_IPV6_UNC}";
                 if (BASIC_DNS_OR_IPV4_NAME_REGEX.IsMatch(hostName))
                     return $"//{hostName}";
-                throw new ArgumentOutOfRangeException(nameof(hostName));
             }
-            if ((match = URI_DIR_AND_FILE_STRICT_REGEX.Match(uriEncodedPath)).Success)
+            else if ((match = URI_DIR_AND_FILE_STRICT_REGEX.Match(path)).Success)
             {
                 string fsPath = Uri.UnescapeDataString(match.Value);
                 match = FS_LOCAL_PATH_REGEX.Match(fsPath);
@@ -448,25 +451,9 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                             $"//{hostName.Replace(":", "-")}{FQDN_IPV6_UNC}/{fsPath}";
                     if (BASIC_DNS_OR_IPV4_NAME_REGEX.IsMatch(hostName))
                         return match.Groups[MATCH_GROUP_NAME_ROOT].Success ? $"//{hostName}{fsPath}" : $"//{hostName}/{fsPath}";
-                    throw new ArgumentOutOfRangeException(nameof(hostName));
                 }
             }
-            throw new ArgumentOutOfRangeException(nameof(uriEncodedPath));
-        }
-
-        /// <summary>
-        /// Converts a <seealso cref="Uri.UriSchemeFile">file</seealso> URL to a filesystem path string.
-        /// </summary>
-        /// <param name="fileUriString">An absolute <seealso cref="Uri.UriSchemeFile">file</seealso> URL string or a relative URI-encoded path string.</param>
-        /// <returns>A filesystem path string.</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="fileUriString"/> is invalid.</exception>
-        public override string ToFileSystemPath(string fileUriString)
-        {
-            if (string.IsNullOrEmpty(fileUriString))
-                return "";
-            if (TrySplitFileUriString(fileUriString, out string hostName, out string path, out _))
-                return ToFileSystemPath(hostName, path);
-            return ToFileSystemPath("", fileUriString);
+            throw new ArgumentOutOfRangeException(nameof(fileUriString));
         }
 
         /// <summary>
@@ -493,7 +480,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             {
                 hostName = (match.Groups[MATCH_GROUP_NAME_UNC].Success) ?
                     match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace('-', URI_SCHEME_SEPARATOR_CHAR) :
-                    match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
+                    match.GetGroupValue(match.Groups[MATCH_GROUP_NAME_IPV6].Success ? MATCH_GROUP_NAME_IPV6 : MATCH_GROUP_NAME_HOST, "");
                 //if ((directoryName = match.GetGroupValue(MATCH_GROUP_NAME_DIR, "")).Length > 0)
                 //    directoryName = EscapeSpecialPathChars(Uri.EscapeUriString(directoryName));
                 //string fileName = match.GetGroupValue(MATCH_GROUP_NAME_FILE_NAME, "");
@@ -553,7 +540,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             {
                 hostName = (match.Groups[MATCH_GROUP_NAME_UNC].Success) ?
                     match.GetGroupValue(MATCH_GROUP_NAME_IPV6, "").Replace('-', URI_SCHEME_SEPARATOR_CHAR) :
-                    match.GetGroupValue(MATCH_GROUP_NAME_HOST, "");
+                    match.GetGroupValue(match.Groups[MATCH_GROUP_NAME_IPV6].Success ? MATCH_GROUP_NAME_IPV6 : MATCH_GROUP_NAME_HOST, "");
                 return ((path = match.GetGroupValue(MATCH_GROUP_NAME_PATH, "")).Length > 0) ?
                     EscapeSpecialPathChars(Uri.EscapeUriString(path)) : path;
             }
@@ -610,7 +597,7 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
                 {
                     string hostName = (match.Groups[MATCH_GROUP_NAME_UNC].Success) ?
                         match.Groups[MATCH_GROUP_NAME_IPV6].Value.Replace("-", URI_SCHEME_SEPARATOR_STRING) :
-                        match.Groups[MATCH_GROUP_NAME_HOST].Value;
+                        match.Groups[match.Groups[MATCH_GROUP_NAME_IPV6].Success ? MATCH_GROUP_NAME_IPV6 : MATCH_GROUP_NAME_HOST].Value;
                     string path = EscapeSpecialPathChars(Uri.EscapeUriString(match.Groups[MATCH_GROUP_NAME_PATH].Value));
                     fileUri = new FileUri((path.Length > 0 && path[0] != URI_PATH_SEPARATOR_CHAR) ? $"file://{hostName}/{path}" : $"file://{hostName}{path}");
                     return true;

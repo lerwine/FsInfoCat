@@ -143,13 +143,13 @@ namespace FsInfoCat.PS.Commands
                 if (!(inputUriString == actualUriString && CaseSensitive == volumeInfo.CaseSensitive && VolumeName == volumeInfo.VolumeName &&
                     DriveFormat == volumeInfo.DriveFormat))
                 {
-                    if (inputUriString != actualUriString && volumeRegistration.TryFindByRootURI(fileUri, out RegisteredVolumeItem matching) &&
+                    if (inputUriString != actualUriString && volumeRegistration.TryGetValue(fileUri, out RegisteredVolumeItem matching) &&
                         !ReferenceEquals(matching, volumeInfo))
                     {
                         WriteError(MessageId.DirectoryRootAlreadyRegistered.ToArgumentOutOfRangeError(nameof(RootPathName), RootPathName));
                         return;
                     }
-                    if (VolumeName != volumeInfo.VolumeName && volumeRegistration.TryFindByName(VolumeName, out matching) && !ReferenceEquals(matching, volumeInfo))
+                    if (VolumeName != volumeInfo.VolumeName && volumeRegistration.TryGetValue(VolumeName, out matching) && !ReferenceEquals(matching, volumeInfo))
                     {
                         WriteError(MessageId.VolumeNameAlreadyRegistered.ToArgumentOutOfRangeError(nameof(VolumeName), VolumeName));
                         return;
