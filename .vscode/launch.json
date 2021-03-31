@@ -18,9 +18,9 @@
             "preLaunchTask": "Build PS Module",
             "program": "powershell_ise",
             "args": [
-                "Start-Debug.ps1"
+                "Start-InteractiveDebug.ps1"
             ],
-            "cwd": "${workspaceFolder}/dev/Scripts",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.Test",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },
@@ -31,9 +31,9 @@
             "preLaunchTask": "Build PS Module",
             "program": "pwsh",
             "args": [
-                "Start-Debug.ps1"
+                "Start-InteractiveDebug.ps1"
             ],
-            "cwd": "${workspaceFolder}/dev/Scripts",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.Test",
             "stopAtEntry": true,
             "console": "integratedTerminal"
         },
@@ -46,7 +46,7 @@
                 "Invoke-FsInfoCatTests.ps1"
             ],
             "preLaunchTask": "Build PS Module",
-            "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.Test/Pester",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },
@@ -59,7 +59,7 @@
             "args": [
                 "Invoke-FsInfoCatTests.ps1"
             ],
-            "cwd": "${workspaceFolder}/src/FsInfoCat.PS/Test",
+            "cwd": "${workspaceFolder}/src/FsInfoCat.Test/Pester",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },
