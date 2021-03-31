@@ -531,7 +531,7 @@ Function Register-FsLogicalVolume {
         [Parameter(Mandatory = $true, ParameterSetName = 'ForceCaseSensitive')]
         [switch]$CaseSensitive,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'IgnoreCaseOpt')]
+        [Parameter(ParameterSetName = 'IgnoreCaseOpt')]
         [switch]$IgnoreCase,
 
         [switch]$Force,
@@ -568,13 +568,13 @@ Function Register-FsLogicalVolume {
                 $m = $Script:__Register_FsLogicalVolume_IdRegex.Match($LogicalVolume.VolumeId);
                 if ($m.Success) {
                     if ($m.Groups['ord'].Success) {
-                        $Splat['Identifier'] = [VolumeIdentifier]::new([System.UInt32]::Parse($m.Groups['vid'].Value, [System.Globalization.NumberStyles]::HexNumber),
+                        $Splat['Identifier'] = [FsInfoCat.Models.Volumes.VolumeIdentifier]::new([System.UInt32]::Parse($m.Groups['vid'].Value, [System.Globalization.NumberStyles]::HexNumber),
                             [System.UInt32]::Parse($m.Groups['ord'].Value, [System.Globalization.NumberStyles]::HexNumber));
                     } else {
                         if ($m.Groups['vid'].Success) {
-                            $Splat['Identifier'] = [VolumeIdentifier]::new([System.UInt32]::Parse($m.Groups['vid'].Value, [System.Globalization.NumberStyles]::HexNumber));
+                            $Splat['Identifier'] = [FsInfoCat.Models.Volumes.VolumeIdentifier]::new([System.UInt32]::Parse($m.Groups['vid'].Value, [System.Globalization.NumberStyles]::HexNumber));
                         } else {
-                            $Splat['Identifier'] = [VolumeIdentifier]::new(((
+                            $Splat['Identifier'] = [FsInfoCat.Models.Volumes.VolumeIdentifier]::new(((
                                 [System.UInt32]::Parse($m.Groups['vh'].Value, [System.Globalization.NumberStyles]::HexNumber) -shl 8
                             ) -bor [System.UInt32]::Parse($m.Groups['vl'].Value, [System.Globalization.NumberStyles]::HexNumber)));
                         }
@@ -684,7 +684,6 @@ Function Start-FileSystemCrawl {
     )
     
     [FsLogicalVolume[]]$LogicalVolumes = Get-FsLogicalVolume;
-
 }
 
 Function Get-LocalMachineIdentifier {
