@@ -1,4 +1,4 @@
-<Contents xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocationNoLocation="ContentInfo.xsd">
+<Contents xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ContentInfo.xsd">
   <Templates>
     <Template FileName="SingleFile.zip" MaxDepth="0" ID="0">
       <Files>

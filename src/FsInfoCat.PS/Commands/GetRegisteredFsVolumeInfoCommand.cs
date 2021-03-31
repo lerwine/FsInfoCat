@@ -10,7 +10,7 @@ using static FsInfoCat.PS.VolumeInfoRegistration;
 
 namespace FsInfoCat.PS.Commands
 {
-    // Register-FsVolumeInfo
+    // Get-RegisteredFsVolumeInfo
     [Cmdlet(VerbsCommon.Get, "RegisteredFsVolumeInfo", DefaultParameterSetName = PARAMETER_SET_NAME_GET_ALL)]
     [OutputType(typeof(IVolumeInfo))]
     public class GetRegisteredFsVolumeInfoCommand : FsVolumeInfoCommand

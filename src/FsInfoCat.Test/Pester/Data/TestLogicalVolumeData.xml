@@ -1,0 +1,26 @@
+<TestData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="TestLogicalVolumeData.xsd">
+    <FsLogicalVolume RootPath="C:\" VolumeName="OS" VolumeId="9E497DE8" FsName="NTFS" RemotePath=""
+                     IsReadOnly="false" IsFixed="true" IsNetwork="false" CaseSensitive="false">
+        <Registered VolumeIdentifier="urn:volume:id:9e49-7de8" RootUri="file:///C:/" CaseSensitive="false" />
+    </FsLogicalVolume>
+    <FsLogicalVolume RootPath="D:\" VolumeName="DATA" VolumeId="7643DFE0" FsName="FAT32" RemotePath=""
+                     IsReadOnly="false" IsFixed="true" IsNetwork="false" CaseSensitive="false">
+        <Registered VolumeIdentifier="urn:volume:id:7643-dfe0" RootUri="file:///D:/" OptionalSwitch="IgnoreCase" CaseSensitive="false" />
+    </FsLogicalVolume>
+    <FsLogicalVolume RootPath="E:\" VolumeName="BAK" VolumeId="3A1174B8" FsName="NTFS" RemotePath=""
+                     IsReadOnly="false" IsFixed="true" IsNetwork="false" CaseSensitive="false">
+        <Registered VolumeIdentifier="urn:volume:id:3a11-74b8" RootUri="file:///E:/" OptionalSwitch="CaseSensitive" CaseSensitive="true" />
+    </FsLogicalVolume>
+    <FsLogicalVolume RootPath="X:\" VolumeName="file://servicenowdiag479.file.core.windows.net/testazureshare" VolumeId="file://servicenowdiag479.file.core.windows.net/testazureshare" FsName="MAFS" RemotePath="\\servicenowdiag479.file.core.windows.net\testazureshare"
+                     IsReadOnly="false" IsFixed="false" IsNetwork="true" CaseSensitive="true">
+        <Registered VolumeIdentifier="file://servicenowdiag479.file.core.windows.net/testazureshare/" RootUri="file:///X:/" CaseSensitive="true" />
+    </FsLogicalVolume>
+    <FsLogicalVolume RootPath="Y\" VolumeName="file://servicenowdiag479.file.core.windows.net/altShare/" VolumeId="file://servicenowdiag479.file.core.windows.net/altShare" FsName="MAFS" RemotePath="\\servicenowdiag479.file.core.windows.net\altShare"
+                     IsReadOnly="false" IsFixed="false" IsNetwork="true" CaseSensitive="true">
+        <Registered VolumeIdentifier="file://servicenowdiag479.file.core.windows.net/altShare/" RootUri="file:///Y:/" OptionalSwitch="IgnoreCase" CaseSensitive="false" />
+    </FsLogicalVolume>
+    <FsLogicalVolume RootPath="Z:\" VolumeName="file://mysrv/pub" VolumeId="file://mysrv/pub" FsName="MAFS" RemotePath="\\mysrv\pub"
+                     IsReadOnly="false" IsFixed="false" IsNetwork="true" CaseSensitive="true">
+        <Registered VolumeIdentifier="file://mysrv/pub" RootUri="file:///Z:/" OptionalSwitch="CaseSensitive" CaseSensitive="true" />
+    </FsLogicalVolume>
+</TestData>
