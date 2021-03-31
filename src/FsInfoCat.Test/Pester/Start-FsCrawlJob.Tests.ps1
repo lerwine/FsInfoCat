@@ -13,7 +13,6 @@ BeforeAll {
     Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../../Setup/bin/FsInfoCat') -ErrorAction Stop;
 }
 
-Describe ""
 Describe "<Description>" -ForEach @(
         @($TestContentInfo.SelectNodes('/Contents/InputSets/InputSet')) | ForEach-Object {
             # Emit hash that will become variables
