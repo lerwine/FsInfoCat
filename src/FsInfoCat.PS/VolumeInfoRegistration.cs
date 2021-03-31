@@ -92,7 +92,10 @@ namespace FsInfoCat.PS
         public bool ContainsRootUri(FileUri uri)
         {
             Monitor.Enter(_syncRoot);
-            try { return !(GetUriKey(uri, out _) is null); }
+            try
+            {
+                GetUriKey(uri, out RegisteredVolumeItem item);
+                return !(item is null); }
             finally { Monitor.Exit(_syncRoot); }
         }
 
@@ -458,6 +461,7 @@ namespace FsInfoCat.PS
                 VolumeName = volumeName ?? "";
                 DriveFormat = driveFormat ?? "";
                 CaseSensitive = caseSensitive;
+                NameComparer = caseSensitive ? DynamicStringComparer.CASE_SENSITIVE : DynamicStringComparer.IGNORE_CASE;
             }
             public FileUri RootUri
             {
