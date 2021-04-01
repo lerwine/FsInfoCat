@@ -4,24 +4,48 @@ Param(
     [ValidateSet("Production", "Testing", "Development", "Prod", "Test", "Dev")]
     [string]$Stage = "Production",
 
-    [string]$DbConnectionString = 'Server=tcp:c868dbserver.database.windows.net,1433;Initial Catalog=FsInfoCat;Persist Security Info=False;User ID=fsinfocatadmin;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
-)
+    [string]$DataSource = 'tcp:c868dbserver.database.windows.net,1433',
+    
+    [string]$InitialCatalog = 'FsInfoCat',
+    
+    [bool]$PersistSecurityInfo = $false,
+    
+    [string]$UserID = 'fsinfocatadmin',
+    
+    [bool]$MultipleActiveResultSets = $false,
+    
+    [bool]$Encrypt = $true,
 
+    [bool]$TrustServerCertificate = $false,
+
+    [int]$ConnectionTimeout = 30,
+
+    [string]$ApplicationName = 'FsInfoCat'
+)
+$InformationPreference = [System.Management.Automation.ActionPreference]::Continue;
+$ErrorActionPreference = [System.Management.Automation.ActionPreference]::Continue;
+$WarningPreference = [System.Management.Automation.ActionPreference]::Continue;
+$DebugPreference = [System.Management.Automation.ActionPreference]::SilentlyContinue;
+$VerbosePreference = [System.Management.Automation.ActionPreference]::Continue;
+$PSModuleAutoLoadingPreference = [System.Management.Automation.ActionPreference]::Continue;
+$ProgressPreference = [System.Management.Automation.ActionPreference]::Continue;
 &{
     $VarNames = @(Get-Variable | Select-Object -ExpandProperty 'Name');
     if (@(@('SetupScriptsFolder', 'FsInfoCatModuleName', 'FsInfoCatModulePath', 'SetupDistroFolder', 'FsInfoCatModuleDistroFile', 'WebProjectDirectory', 'ProdAppSettingsFile',
     'TestAppSettingsFile', 'DevAppSettingsFile', 'RepositoryRootPath') | Where-Object { $VarNames -inotcontains $_ }).Count -eq 0) { return }
     try {
-        Set-Variable -Name 'SetupScriptsFolder' -Value ('Setup' | Join-Path -ChildPath 'Scripts') -Scope Global -Option Constant;
-        Set-Variable -Name 'FsInfoCatModuleName' -Value 'FsInfoCat' -Scope Global -Option Constant;
-        Set-Variable -Name 'FsInfoCatModulePath' -Value (('Setup' | Join-Path -ChildPath 'bin') | Join-Path -ChildPath $FsInfoCatModuleName) -Scope Global -Option Constant;
-        Set-Variable -Name 'SetupDistroFolder' -Value ('Setup' | Join-Path -ChildPath 'Distro') -Scope Global -Option Constant;
-        Set-Variable -Name 'FsInfoCatModuleDistroFile' -Value ($SetupDistroFolder | Join-Path -ChildPath "$FsInfoCatModuleName.zip") -Scope Global -Option Constant;
-        Set-Variable -Name 'WebProjectDirectory' -Value ('src' | Join-Path -ChildPath 'FsInfoCat.Web') -Scope Script -Option Constant;
-        Set-Variable -Name 'ProdAppSettingsFile' -Value ($WebProjectDirectory | Join-Path -ChildPath 'appsettings.json') -Scope Script -Option Constant;
-        Set-Variable -Name 'TestAppSettingsFile' -Value ($WebProjectDirectory | Join-Path -ChildPath 'appsettings.Testing.json') -Scope Script -Option Constant;
-        Set-Variable -Name 'DevAppSettingsFile' -Value ($WebProjectDirectory | Join-Path -ChildPath 'appsettings.Testing.json') -Scope Script -Option Constant;
         Set-Variable -Name 'RepositoryRootPath' -Value (($PSScriptRoot | Join-Path -ChildPath '../..') | Resolve-Path -ErrorAction Continue).ProviderPath -Scope Global -Option Constant;
+        if ($null -ne $RepositoryRootPath) {
+            Set-Variable -Name 'SetupScriptsFolder' -Value (($RepositoryRootPath | Join-Path -ChildPath 'Setup') | Join-Path -ChildPath 'Scripts') -Scope Global -Option Constant;
+            Set-Variable -Name 'FsInfoCatModuleName' -Value 'FsInfoCat' -Scope Global -Option Constant;
+            Set-Variable -Name 'FsInfoCatModulePath' -Value ((($RepositoryRootPath | Join-Path -ChildPath 'Setup') | Join-Path -ChildPath 'bin') | Join-Path -ChildPath $FsInfoCatModuleName) -Scope Global -Option Constant;
+            Set-Variable -Name 'SetupDistroFolder' -Value (($RepositoryRootPath | Join-Path -ChildPath 'Setup') | Join-Path -ChildPath 'Distro') -Scope Global -Option Constant;
+            Set-Variable -Name 'FsInfoCatModuleDistroFile' -Value ($SetupDistroFolder | Join-Path -ChildPath "$FsInfoCatModuleName.zip") -Scope Global -Option Constant;
+            Set-Variable -Name 'WebProjectDirectory' -Value (($RepositoryRootPath | Join-Path -ChildPath 'src') | Join-Path -ChildPath 'FsInfoCat.Web') -Scope Script -Option Constant;
+            Set-Variable -Name 'ProdAppSettingsFile' -Value ($WebProjectDirectory | Join-Path -ChildPath 'appsettings.json') -Scope Script -Option Constant;
+            Set-Variable -Name 'TestAppSettingsFile' -Value ($WebProjectDirectory | Join-Path -ChildPath 'appsettings.Testing.json') -Scope Script -Option Constant;
+            Set-Variable -Name 'DevAppSettingsFile' -Value ($WebProjectDirectory | Join-Path -ChildPath 'appsettings.Testing.json') -Scope Script -Option Constant;
+        }
     } catch {
         Write-Error -ErrorRecord $Error[0] -CategoryReason "Failure setting up constant variables" `
             -RecommendedAction "Execute script from a new session and/or ensure there are no profile scripts which create conflicting variable names." -ErrorAction Continue;
@@ -41,6 +65,293 @@ catch {
     Exit 2;
 }
 
+enum LogLevelValue {
+    Critical;
+    Error;
+    Warning;
+    Information;
+    Trace;
+    Debug;
+    None;
+}
+
+class LogLevelSettingsData {
+    [LogLevelValue]$Default;
+    [LogLevelValue]$Microsoft;
+    [LogLevelValue]$MicrosoftHostingLifetime;
+    [PSCustomObject]$OriginalValues;
+    
+    LogLevelSettingsData() {
+        $this.OriginalValues = [PSCustomObject]::new();
+        $this.Default = [LogLevelValue]::Information;
+        $this.Microsoft = [LogLevelValue]::Information;
+        $this.MicrosoftHostingLifetime = [LogLevelValue]::Information;
+    }
+    LogLevelSettingsData([LogLevelSettingsData]$Source, [PSCustomObject]$OriginalValues) {
+        if ($null -ne $Originalvalues) {
+            $this.OriginalValues = $Originalvalues;
+        } else {
+            $this.OriginalValues = [PSCustomObject]::new();
+        }
+        if ($null -eq $Source) {
+            [LogLevelValue]$Value = [LogLevelValue]::Information;
+            if ($this.OriginalValues.Default -is [string] -and [Enum]::TryParse($this.OriginalValues.Default, [ref]$Value)) {
+                $this.Default = $Value;
+            } else {
+                $this.Default = [LogLevelValue]::Information;
+            }
+            if ($this.OriginalValues.Microsoft -is [string] -and [Enum]::TryParse($this.OriginalValues.Microsoft, [ref]$Value)) {
+                $this.Microsoft = $Value;
+            } else {
+                $this.Microsoft = $this.Default;
+            }
+            if ($this.OriginalValues.('Microsoft.Hosting.Lifetime') -is [string] -and [Enum]::TryParse($this.OriginalValues.('Microsoft.Hosting.Lifetime'), [ref]$Value)) {
+                $this.MicrosoftHostingLifetime = $Value;
+            } else {
+                $this.MicrosoftHostingLifetime = $this.Microsoft;
+            }
+        } else {
+            $this.Default = $Source.Default;
+            $this.Microsoft = $Source.Microsoft;
+            $this.MicrosoftHostingLifetime = $Source.MicrosoftHostingLifetime;
+        }
+    }
+    [bool] IsChanged() {
+        [LogLevelValue]$Value = [LogLevelValue]::Information;
+        return -not ($this.OriginalValues.Default -is [string] -and [Enum]::TryParse($this.OriginalValues.Default, [ref]$Value) -and $Value -eq $this.Default `
+            -and $this.OriginalValues.Microsoft -is [string] -and [Enum]::TryParse($this.OriginalValues.Microsoft, [ref]$Value) -and $Value -eq $this.Microsoft `
+            -and $this.OriginalValues.('Microsoft.Hosting.Lifetime') -is [string] `
+            -and [Enum]::TryParse($this.OriginalValues.('Microsoft.Hosting.Lifetime'), [ref]$Value) -and $Value -eq $this.MicrosoftHostingLifetime);
+    }
+    [void] ApplyChanges([PSCustomObject]$NewOriginal) {
+        $NewOriginal | Add-Member -MemberType NoteProperty -Name 'Default' -Value ([Enum]::GetName([LogLevelValue], $this.Default));
+        $NewOriginal | Add-Member -MemberType NoteProperty -Name 'Microsoft' -Value ([Enum]::GetName([LogLevelValue], $this.Microsoft));
+        $NewOriginal | Add-Member -MemberType NoteProperty -Name 'Microsoft.Hosting.Lifetime' -Value ([Enum]::GetName([LogLevelValue], $this.MicrosoftHostingLifetime));
+        $this.OriginalValues.PSObject.Properties | ForEach-Object {
+            $n = $_.Name;
+            switch ($n) {
+                'Default' { break; }
+                'Microsoft' { break; }
+                'Microsoft.Hosting.Lifetime' { break; }
+                default {
+                    $NewOriginal | Add-Member -MemberType NoteProperty -Name $n -Value $_.Value;
+                    break;
+                }
+            }
+        }
+        $this.OriginalValues = $NewOriginal;
+    }
+}
+
+class LoggingSettingsData {
+    [LogLevelSettingsData]$LogLevel;
+    hidden [PSCustomObject]$OriginalValues;
+    LoggingSettingsData() {
+        $this.OriginalValues = [PSCustomObject]::new();
+        $this.LogLevel = [LogLevelSettingsData]::new();
+    }
+    LoggingSettingsData([LoggingSettingsData]$Source, [PSCustomObject]$OriginalValues) {
+        if ($null -ne $Originalvalues) {
+            $this.OriginalValues = $Originalvalues;
+        } else {
+            $this.OriginalValues = [PSCustomObject]::new();
+        }
+        if ($null -eq $Source) {
+            $this.LogLevel = [LogLevelSettingsData]::new($null, $this.OriginalValues.LogLevel);
+        } else {
+            if ($null -eq $Source.LogLevel) {
+                $this.LogLevel = $null;
+            } else {
+                $this.LogLevel = [LogLevelSettingsData]::new($Source.LogLevel, $this.OriginalValues.LogLevel);
+            }
+        }
+    }
+    [bool] IsChanged() {
+        if ($null -eq $this.LogLevel) { return $null -ne $this.OriginalValues.LogLevel }
+        return $null -eq $this.OriginalValues.LogLevel -or $this.LogLevel.IsChanged();
+    }
+    [void] ApplyChanges([PSCustomObject]$NewOriginal) {
+        $s = '';
+        if ($null -ne $this.FsInfoCat) {
+            try { $s = $this.FsInfoCat.ConnectionString }
+            catch { $s = '' }
+        }
+        if ($null -ne $this.LogLevel) {
+            $obj = [PSCustomObject]::new();
+            $this.ConnectionStrings.ApplyChanges($obj);
+            $NewOriginal | Add-Member -MemberType NoteProperty -Name 'LogLevel' -Value $obj;
+        }
+        $this.OriginalValues.PSObject.Properties | ForEach-Object {
+            $n = $_.Name;
+            if ($n -ne 'LogLevel') {
+                $NewOriginal | Add-Member -MemberType NoteProperty -Name $n -Value $_.Value;
+            }
+        }
+        $this.OriginalValues = $NewOriginal;
+    }
+}
+
+class ConnectionStringsSettingsData {
+    [System.Data.SqlClient.SqlConnectionStringBuilder]$FsInfoCat;
+    hidden [PSCustomObject]$OriginalValues;
+    
+    ConnectionStringsSettingsData() {
+        $this.OriginalValues = [PSCustomObject]::new();
+        $this.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
+    }
+    ConnectionStringsSettingsData([ConnectionStringsSettingsData]$Source, [PSCustomObject]$OriginalValues) {
+        if ($null -ne $Originalvalues) {
+            $this.OriginalValues = $Originalvalues;
+        } else {
+            $this.OriginalValues = [PSCustomObject]::new();
+        }
+        if ($null -eq $Source) {
+            if ($this.OriginalValues.FsInfoCat -is [string] -and $this.OriginalValues.FsInfoCat.Trim().Length -gt 0) {
+                try {
+                    $this.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new($this.OriginalValues.FsInfoCat);
+                } catch {
+                    $this.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
+                }
+            }
+        } else {
+            $this.FsInfoCat = $Source.FsInfoCat;
+        }
+    }
+    [bool] IsChanged() {
+        if ($null -eq $this.FsInfoCat) { return $null -ne $this.OriginalValues.FsInfoCat }
+        $s = '';
+        try { $s = $this.FsInfoCat.ConnectionString }
+        catch { $s = '' }
+        if ([string]::IsNullOrWhiteSpace($s)) { return $this.OriginalValues.FsInfoCat -isnot [string] -or [string]::IsNullOrWhiteSpace($this.OriginalValues.FsInfoCat) }
+        return $s -ieq $this.OriginalValues.FsInfoCat;
+    }
+    [void] ApplyChanges([PSCustomObject]$NewOriginal) {
+        $s = '';
+        if ($null -ne $this.FsInfoCat) {
+            try { $s = $this.FsInfoCat.ConnectionString }
+            catch { $s = '' }
+        }
+        if (-not [string]::IsNullOrWhiteSpace($s)) {
+            $NewOriginal | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $s;
+        }
+        $this.OriginalValues.PSObject.Properties | ForEach-Object {
+            $n = $_.Name;
+            if ($n -ne 'FsInfoCat') {
+                $NewOriginal | Add-Member -MemberType NoteProperty -Name $n -Value $_.Value;
+            }
+        }
+        $this.OriginalValues = $NewOriginal;
+    }
+}
+
+class AppSettingsData {
+    hidden [string]$Path;
+    [LoggingSettingsData]$Logging;
+    [string]$AllowedHosts;
+    [ConnectionStringsSettingsData]$ConnectionStrings;
+    hidden [PSCustomObject]$OriginalValues;
+    AppSettingsData([PSCustomObject]$Source) {
+        if ($null -eq $Source) {
+            $this.AllowedHosts = $null;
+            $this.OriginalValues = [PSCustomObject]::new();
+        } else {
+            if ($Source.AllowedHosts -is [string]) {
+                $this.AllowedHosts = $Source.AllowedHosts;
+            }
+            $this.OriginalValues = $Source;
+            $this.Logging = [LoggingSettingsData]::new($null, $this.OriginalValues.Logging);
+            $this.ConnectionStrings = [ConnectionStringsSettingsData]::new($null, $this.OriginalValues.ConnectionStrings);
+        }
+    }
+
+    [AppSettingsData] Clone() {
+        $Result = [AppSettingsData]::new((($this.OriginalValues | ConvertTo-Json) | ConvertFrom-Json));
+        $Result.Path = $this.Path;
+        $Result.Logging = [LoggingSettingsData]::new($this.Logging, $this.OriginalValues.Logging);
+        $Result.ConnectionStrings = [ConnectionStringsSettingsData]::new($this.ConnectionStrings, $this.OriginalValues.ConnectionStrings);
+        $Result.AllowedHosts = $this.AllowedHosts;
+        return $Result;
+    }
+    
+    [bool] IsChanged() {
+        if ([string]::IsNullOrWhiteSpace($this.Path)) { return $true }
+        if ($null -eq $this.Logging) {
+            if ($null -ne $this.OriginalValues.Logging) { return $true }
+        } else {
+            if ($null -eq $this.OriginalValues.Logging -or $this.Logging.IsChanged()) { return $true }
+        }
+        if ($null -eq $this.ConnectionStrings) {
+            if ($null -ne $this.OriginalValues.ConnectionStrings) { return $true }
+        } else {
+            if ($null -eq $this.OriginalValues.ConnectionStrings -or $this.ConnectionStrings.IsChanged()) { return $true }
+        }
+        $s = $null;
+        if ($this.OriginalValues.AllowedHosts -is [string]) { $s = $this.OriginalValues.AllowedHosts }
+        if ([string]::IsNullOrWhiteSpace($s)) { return [string]::IsNullOrWhiteSpace($this.AllowedHosts) }
+        return $this.AllowedHosts -eq $s;
+    }
+
+    [string] GetPath() { return $this.Path }
+    
+    [void] Save() { $this.Save($null); }
+
+    [void] Save([string]$SaveAs) {
+        if ([string]::IsNullOrWhiteSpace($SaveAs)) {
+            if ([string]::IsNullOrWhiteSpace($this.Path)) {
+                Write-Error -Message 'Path must be specified for settings that have never been saved or loaded.' -Category InvalidOperation -ErrorId 'NoSavePath' -TargetObject $this;
+                return;
+            }
+            $SaveAs = $this.Path;
+        }
+        $NewOriginal = [PSCustomObject]::new();
+        if ($null -ne $this.Logging) {
+            $obj = [PSCustomObject]::new();
+            $this.ConnectionStrings.ApplyChanges($obj);
+            $NewOriginal | Add-Member -MemberType NoteProperty -Name 'Logging' -Value $obj;
+        }
+        if (-not [string]::IsNullOrWhiteSpace($this.AllowedHosts)) {
+            $NewOriginal | Add-Member -MemberType NoteProperty -Name 'AllowedHosts' -Value $this.AllowedHosts;
+        }
+        if ($null -ne $this.ConnectionStrings) {
+            $obj = [PSCustomObject]::new();
+            $this.Logging.ApplyChanges($obj);
+            $NewOriginal | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value $obj;
+        }
+        $this.OriginalValues.PSObject.Properties | ForEach-Object {
+            $n = $_.Name;
+            switch ($n) {
+                'ConnectionStrings' { break; }
+                'Logging' { break; }
+                'AllowedHosts' { break; }
+                default {
+                    $NewOriginal | Add-Member -MemberType NoteProperty -Name $n -Value $_.Value;
+                    break;
+                }
+            }
+        }
+        [System.IO.File]::WriteAllText($SaveAs, ($NewOriginal | ConvertTo-Json), [System.Text.UTF8Encoding]::new($true, $false));
+        $this.OriginalValues = $NewOriginal;
+    }
+
+    static [AppSettingsData] Load([string]$Path) {
+        if ($Path | Test-Path) {
+            $o = [System.IO.File]::ReadAllText($Path) | ConvertFrom-Json;
+            $Result = $null;
+            if ($null -ne $o) {
+                $Result = [AppSettingsData]::new($o);
+                if ($null -ne $Result) {
+                    $Result.Path = $Path;
+                }
+            }
+        } else {
+            $Result = [AppSettingsData]::new($null);
+            $Result.Path = $Path;
+        }
+        return $Result; 
+    }
+}
+
+$FsInfoCatModulePath
 # Load FsInfoCat PowerShell module.
 if ($null -eq (Get-Module -Name $FsInfoCatModuleName)) {
     if (-not ($FsInfoCatModulePath | Test-Path -PathType Container)) {
@@ -79,10 +390,8 @@ if ($null -eq (Get-Module -Name $FsInfoCatModuleName)) {
     }
     try { Import-Module -Name $FsInfoCatModulePath -ErrorAction Stop }
     catch {
-        Write-Error -ErrorRecord $Error[0] -Category ResourceUnavailable -ErrorId 'UnexpectedSubdirectory' `
-            -TargetObject ($RepositoryRootPath | Join-Path -ChildPath $FsInfoCatModuleDistroFile) `
-            -RecommendedAction "Manually import module '$FsInfoCatModulePath' before executing this script" `
-            -CategoryReason "Unable import module '$FsInfoCatModulePath'." -ErrorAction Continue;
+        Write-Error -ErrorRecord $Error[0] -CategoryReason "Unable import module '$FsInfoCatModulePath'." `
+            -RecommendedAction "Manually import module '$FsInfoCatModulePath' before executing this script" -ErrorAction Continue;
         Exit 1;
     }
 }
@@ -160,256 +469,125 @@ Function Find-MsBuildBinFolder {
     } | Where-Object { $_.Version.Major -ge 4 } | Sort-Object -Property 'Level', 'Version' -Descending) | Select-Object -First 1 -ExpandProperty 'Path';
 }
 
-function Read-AppSettingsFile {
-    [CmdletBinding(DefaultParameterSetName = 'Read')]
-    param (
-        [Parameter(ParameterSetName = 'Read')]
-        [string]$Path,
+$ProdAppSettings = $TestAppSettings = $DevAppSettings = $null;
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'Clone')]
-        [PSCustomObject]$Clone
-    )
-
-    $AppSettings = $null;
-    if ($PSBoundParameters.ContainsKey('Clone')) {
-        $AppSettings = (($Clone | ConvertTo-Json) | ConvertFrom-Json);
+if ($ProdAppSettingsFile | Test-Path) {
+    $ProdAppSettings = [AppSettingsData]::Load($ProdAppSettingsFile);
+    if ($TestAppSettingsFile | Test-Path) {
+        $TestAppSettings = [AppSettingsData]::Load($TestAppSettingsFile);
     } else {
-        if ($PSBoundParameters.ContainsKey('Path')) {
-            if ($Path | Test-Path) {
-                try { $AppSettings = [System.IO.File]::ReadAllText($Path) | ConvertFrom-Json -ErrorAction Stop }
-                catch {
-                    Write-Error -ErrorRecord $Error[0] -CategoryReason "Failure reading from website app settings file '$Path'" `
-                        -RecommendedAction "Ensure '$Path' contains valid JSON and that security settings allow read/write access.";
-                    return;
-                }
-            }
-        } else {
-            return [PSCustomObject]@{
-                Logging = [PSCustomObject]@{
-                    LogLevel = [PSCustomObject]@{
-                        Default = 'Warning';
-                        Microsoft = 'Warning';
-                        'Microsoft.Hosting.Lifetime' = 'Warning';
-                    };
-                };
-                AllowedHosts = '*'
-            };
-        }
+        $TestAppSettings = $ProdAppSettings.Clone();
     }
-    if ($null -ne ($AppSettings | Get-Member -Name 'ConnectionStrings')) {
-        $ConnectionStrings = $AppSettings.ConnectionStrings;
-        if ($null -eq $ConnectionStrings) {
-            Write-Error -Message 'Invalid ConnectionStrings Setting' -Category InvalidData  -ErrorId 'InvalidConnectionStringsSetting' -CategoryTargetName 'ConnectionStrings';
-        } else {
-            if ($ConnectionStrings -isnot [PSCustomObject]) {
-                Write-Error -Message 'Invalid ConnectionStrings Setting' -Category InvalidData  -ErrorId 'InvalidConnectionStringsSetting' -TargetObject $ConnectionStrings -CategoryTargetName 'ConnectionStrings';
-            } else {
-                if ($null -ne ($ConnectionStrings | Get-Member -Name 'FsInfoCat')) {
-                    $FsInfoCatConnectionString = $ConnectionStrings.FsInfoCat;
-                    if ($null -eq $FsInfoCatConnectionString) {
-                        Write-Error -Message 'Invalid ConnectionString Value' -Category InvalidData  -ErrorId 'InvalidConnectionStringValue' -CategoryTargetName 'FsInfoCat';
-                    } else {
-                        if ($FsInfoCatConnectionString -isnot [string] -or [string]::IsNullOrWhiteSpace($FsInfoCatConnectionString)) {
-                            Write-Error -Message 'Invalid ConnectionString Value' -Category InvalidData  -ErrorId 'InvalidConnectionStringValue' -TargetObject $FsInfoCatConnectionString -CategoryTargetName 'ConnectionStrings';
-                        }
-                    }
-                }
-            }
-        }
-    }
-    if ($null -ne ($AppSettings | Get-Member -Name 'Logging')) {
-        $LoggingSetting = $AppSettings.Logging;
-        if ($null -eq $LoggingSetting) {
-            Write-Error -Message 'Invalid Logging Setting' -Category InvalidData  -ErrorId 'InvalidLoggingSetting' -CategoryTargetName 'Logging';
-        } else {
-            if ($LoggingSetting -isnot [PSCustomObject]) {
-                Write-Error -Message 'Invalid Logging Setting' -Category InvalidData  -ErrorId 'InvalidLoggingSetting' -TargetObject $LoggingSetting -CategoryTargetName 'Logging';
-            } else {
-                if ($null -ne ($LoggingSetting | Get-Member -Name 'LogLevel')) {
-                    $LogLevelSetting = $LoggingSetting.LogLevel;
-                    if ($null -eq $LogLevelSetting) {
-                        Write-Error -Message 'Invalid Log Level Setting' -Category InvalidData  -ErrorId 'InvalidLogLevelSetting' -CategoryTargetName 'LogLevel';
-                    } else {
-                        if ($LogLevelSetting -isnot [PSCustomObject]) {
-                            Write-Error -Message 'Invalid Log Level Setting' -Category InvalidData  -ErrorId 'InvalidLogLevelSetting' -TargetObject $LogLevelSetting -CategoryTargetName 'LogLevel';
-                        } else {
-                            foreach ($PropertyName in @('Default', 'Microsoft', 'Microsoft.Hosting.Lifetime')) {
-                                if ($null -ne ($LogLevelSetting | Get-Member -Name $PropertyName)) {
-                                    $Value = $LogLevelSetting.($PropertyName);
-                                    if ($null -eq $Value) {
-                                        Write-Error -Message 'Invalid Log Level Value' -Category InvalidData  -ErrorId 'InvalidLogLevelValue' -CategoryTargetName 'Default';
-                                    } else {
-                                        if ($FsInfoCatConnectionString -isnot [string] -or [string]::IsNullOrWhiteSpace($Value) -or @('Critical', 'Error', 'Warning', 'Information', 'Trace', 'Debug', 'None') -inotcontains $Value) {
-                                            Write-Error -Message 'Invalid Log Level Value' -Category InvalidData  -ErrorId 'InvalidLogLevelValue' -TargetObject $FsInfoCatConnectionString -CategoryTargetName 'Default';
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    AppSettings | Write-Output;
-}
-
-$ProdAppSettings = $OriginalProdAppSettings = Read-AppSettingsFile -Path $ProdAppSettingsFile;
-$TestAppSettings = $OriginalTestAppSettings = Read-AppSettingsFile -Path $TestAppSettingsFile;
-$DevAppSettings = $OriginalDevAppSettings = Read-AppSettingsFile -Path $DevAppSettingsFile;
-
-if ($null -eq $ProdAppSettings) {
-    if ($null -eq $TestAppSettings) {
-        if ($null -eq $DevAppSettings) { $DevAppSettings = Read-AppSettingsFile }
-        $TestAppSettings = Read-AppSettingsFile -Clone $DevAppSettings;
+    if ($DevAppSettingsFile | Test-Path) {
+        $DevAppSettings = [AppSettingsData]::Load($DevAppSettingsFile);
     } else {
-        if ($null -eq $DevAppSettings) { $DevAppSettings = Read-AppSettingsFile -Clone $TestAppSettings }
-    }
-    $ProdAppSettings = Read-AppSettingsFile -Clone $TestAppSettings;
-} else {
-    if ($null -eq $TestAppSettings) {
-        if ($null -eq $DevAppSettings) { $DevAppSettings = Read-AppSettingsFile -Clone $ProdAppSettings }
-        $TestAppSettings = Read-AppSettingsFile -Clone $DevAppSettings;
-    } else {
-        if ($null -eq $DevAppSettings) { $DevAppSettings = Read-AppSettingsFile -Clone $TestAppSettings }
-    }
-}
-
-$ProdConnectionStrings = $ProdAppSettings.ConnectionStrings;
-$TestConnectionStrings = $TestAppSettings.ConnectionStrings;
-$DevConnectionStrings = $DevAppSettings.ConnectionStrings;
-if ($null -eq $ProdConnectionStrings) {
-    if ($null -eq $TestConnectionStrings) {
-        if ($null -eq $DevConnectionStrings) {
-            $DevConnectionStrings = [PSCustomObject]@{ FsInfoCat = $DbConnectionString }
-            $DevAppSettings | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value $DevConnectionStrings;
-        }
-        $TestConnectionStrings = ($DevConnectionStrings | ConvertTo-Json) | ConvertFrom-Json;
-        $TestAppSettings | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value $TestConnectionStrings;
-    } else {
-        if ($null -eq $DevConnectionStrings) {
-            $DevConnectionStrings = ($TestConnectionStrings | ConvertTo-Json) | ConvertFrom-Json;
-            $DevAppSettings | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value $DevConnectionStrings;
-        }
-    }
-    $ProdConnectionStrings = ($TestConnectionStrings | ConvertTo-Json) | ConvertFrom-Json;
-    $ProdAppSettings | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value $ProdConnectionStrings;
-} else {
-    if ($null -eq $TestConnectionStrings) {
-        if ($null -eq $DevConnectionStrings) {
-            $DevConnectionStrings = ($ProdConnectionStrings | ConvertTo-Json) | ConvertFrom-Json;
-            $DevAppSettings | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value $DevConnectionStrings;
-        }
-        $TestConnectionStrings = ($DevConnectionStrings | ConvertTo-Json) | ConvertFrom-Json;
-        $TestAppSettings | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value $TestConnectionStrings;
-    } else {
-        if ($null -eq $DevConnectionStrings) {
-            $DevConnectionStrings = ($TestConnectionStrings | ConvertTo-Json) | ConvertFrom-Json;
-            $DevAppSettings | Add-Member -MemberType NoteProperty -Name 'ConnectionStrings' -Value $DevConnectionStrings;
-        }
-    }
-}
-
-$TargetConnectionString = $DbConnectionString;
-if ($PSBoundParameters.ContainsKey('DbConnectionString')) {
-    switch ($Stage) {
-        { $_ -ieq 'Testing' -or $_ -ieq 'Test' } {
-            if ($TestConnectionStrings.FsInfoCat -ine $DbConnectionString) {
-                $TestConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString -Force;
-            }
-            if ($null -eq $ProdConnectionStrings.FsInfoCat) {
-                $ProdConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            if ($null -eq $DevConnectionStrings.FsInfoCat) {
-                $DevConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            break;
-        }
-        { $_ -ieq 'Development' -or $_ -ieq 'Dev' } {
-            if ($DevConnectionStrings.FsInfoCat -cne $DbConnectionString) {
-                $DevConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            if ($null -eq $ProdConnectionStrings.FsInfoCat) {
-                $ProdConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            if ($null -eq $TestConnectionStrings.FsInfoCat) {
-                $TestConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            break;
-        }
-        default {
-            if ($ProdConnectionStrings.FsInfoCat -cne $DbConnectionString) {
-                $ProdConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            if ($null -eq $TestConnectionStrings.FsInfoCat) {
-                $TestConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            if ($null -eq $DevConnectionStrings.FsInfoCat) {
-                $DevConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            break;
-        }
+        $DevAppSettings = $TestAppSettings.Clone();
     }
 } else {
-    if ($null -eq $ProdConnectionStrings.FsInfoCat) {
-        if ($null -eq $TestConnectionStrings.FsInfoCat) {
-            if ($null -eq $DevConnectionStrings.FsInfoCat) {
-                $DevConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DbConnectionString;
-            }
-            $TestConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DevConnectionStrings.FsInfoCat;
+    if ($TestAppSettingsFile | Test-Path) {
+        $TestAppSettings = [AppSettingsData]::Load($TestAppSettingsFile);
+        if ($DevAppSettingsFile | Test-Path) {
+            $DevAppSettings = [AppSettingsData]::Load($DevAppSettingsFile);
         } else {
-            if ($null -eq $DevConnectionStrings.FsInfoCat) {
-                $DevConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $TestConnectionStrings.FsInfoCat;
-            }
+            $DevAppSettings = $TestAppSettings.Clone();
         }
-        $ProdConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $TestConnectionStrings.FsInfoCat;
     } else {
-        if ($null -eq $TestConnectionStrings.FsInfoCat) {
-            if ($null -eq $DevConnectionStrings.FsInfoCat) {
-                $DevConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $ProdConnectionStrings.FsInfoCat;
-            }
-            $TestConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $DevConnectionStrings.FsInfoCat;
-        } else {
-            if ($null -eq $DevConnectionStrings.FsInfoCat) {
-                $DevConnectionStrings | Add-Member -MemberType NoteProperty -Name 'FsInfoCat' -Value $TestConnectionStrings.FsInfoCat;
-            }
-        }
+        $DevAppSettings = [AppSettingsData]::Load($DevAppSettingsFile);
+        $TestAppSettings = $DevAppSettings.Clone();
     }
-    switch ($Stage) {
-        { $_ -ieq 'Testing' -or $_ -ieq 'Test' } {
-            $TargetConnectionString = $TestConnectionStrings.FsInfoCat;
-            break;
-        }
-        { $_ -ieq 'Development' -or $_ -ieq 'Dev' } {
-            $TargetConnectionString = $DevConnectionStrings.FsInfoCat;
-            break;
-        }
-        default {
-            $TargetConnectionString = $ProdConnectionStrings.FsInfoCat;
-            break;
-        }
+    $ProdAppSettings = $TestAppSettings.Clone();
+}
+
+if ($null -eq $DevAppSettings.ConnectionStrings) {
+    if ($null -eq $TestAppSettings.ConnectionStrings) {
+        if ($null -eq $ProdAppSettings.ConnectionStrings) { $ProdAppSettings.ConnectionStrings = [ConnectionStringsSettingsData]::new() }
+        $TestAppSettings.ConnectionStrings = [ConnectionStringsSettingsData]::new($ProdAppSettings.ConnectionStrings, $null);
+    } else {
+        if ($null -eq $ProdAppSettings.ConnectionStrings) { $ProdAppSettings.ConnectionStrings = [ConnectionStringsSettingsData]::new($TestAppSettings.ConnectionStrings, $null) }
+    }
+    $DevAppSettings.ConnectionStrings = [ConnectionStringsSettingsData]::new($TestAppSettings.ConnectionStrings, $null);
+} else {
+    if ($null -eq $TestAppSettings.ConnectionStrings) {
+        if ($null -eq $ProdAppSettings.ConnectionStrings) { $ProdAppSettings.ConnectionStrings = [ConnectionStringsSettingsData]::new($DevAppSettings.ConnectionStrings, $null) }
+        $TestAppSettings.ConnectionStrings = [ConnectionStringsSettingsData]::new($ProdAppSettings.ConnectionStrings, $null);
+    } else {
+        if ($null -eq $ProdAppSettings.ConnectionStrings) { $ProdAppSettings.ConnectionStrings = [ConnectionStringsSettingsData]::new($TestAppSettings.ConnectionStrings, $null) }
     }
 }
 
-$SqlConnectionStringBuilderHashTable = @{};
-foreach ($cs in @($ProdConnectionStrings.FsInfoCat, $TestConnectionStrings.FsInfoCat, $DevConnectionStrings.FsInfoCat)) {
-    if (-not $SqlConnectionStringBuilderHashTable.ContainsKey($cs)) {
-        $csb = $null;
-        try { $csb = New-Object -TypeName 'System.Data.SqlClient.SqlConnectionStringBuilder' -cs $DbConnectionString -ErrorAction Stop }
-        catch {
-            Write-Error -ErrorRecord $Error[0] -CategoryReason "Unable parse connection string '$cs'";
+$csb = $DevAppSettings.ConnectionStrings.FsInfoCat;
+if ($null -eq $csb) {
+    $csb = $TestAppSettings.ConnectionStrings.FsInfoCat;
+    if ($null -eq $csb) {
+        $csb = $ProdAppSettings.ConnectionStrings.FsInfoCat;
+        if ($null -eq $csb) {
+            $ProdAppSettings.ConnectionStrings.FsInfoCat = $csb = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
         }
-        $SqlConnectionStringBuilderHashTable[$cs] = $csb;
+        $TestAppSettings.ConnectionStrings.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
+        foreach ($k in $csb.Keys) { if ($csb.ContainsKey($_)) { $TestAppSettings.ConnectionStrings.FsInfoCat[$k] = $csb[$k] } }
+    } else {
+        if ($null -eq $ProdAppSettings.ConnectionStrings) {
+            $ProdAppSettings.ConnectionStrings.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
+            foreach ($k in $csb.Keys) { if ($csb.ContainsKey($_)) { $ProdAppSettings.ConnectionStrings.FsInfoCat[$k] = $csb[$k] } }
+        }
+    }
+    $DevAppSettings.ConnectionStrings.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
+    foreach ($k in $csb.Keys) { if ($csb.ContainsKey($_)) { $DevAppSettings.ConnectionStrings.FsInfoCat[$k] = $csb[$k] } }
+} else {
+    if ($null -eq $TestAppSettings.ConnectionStrings.FsInfoCat) {
+        if ($null -eq $ProdAppSettings.ConnectionStrings) {
+            $ProdAppSettings.ConnectionStrings.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
+            foreach ($k in $csb.Keys) { if ($csb.ContainsKey($_)) { $ProdAppSettings.ConnectionStrings.FsInfoCat[$k] = $csb[$k] } }
+        } else {
+            $csb = $ProdAppSettings.ConnectionStrings.FsInfoCat;
+        }
+        $TestAppSettings.ConnectionStrings.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
+        foreach ($k in $csb.Keys) { if ($csb.ContainsKey($_)) { $TestAppSettings.ConnectionStrings.FsInfoCat[$k] = $csb[$k] } }
+    } else {
+        if ($null -eq $ProdAppSettings.ConnectionStrings) {
+            $ProdAppSettings.ConnectionStrings.FsInfoCat = [System.Data.SqlClient.SqlConnectionStringBuilder]::new();
+            foreach ($k in $csb.Keys) { if ($csb.ContainsKey($_)) { $ProdAppSettings.ConnectionStrings.FsInfoCat[$k] = $csb[$k] } }
+        }
     }
 }
 
 $SqlConnectionStringBuilder = $null;
-New-Object -TypeName 'System.Data.SqlClient.SqlConnectionStringBuilder' -ArgumentList $ProdAppSettingsJson.ConnectionStrings.FsInfoCat -ErrorAction Continue;
-if (-not $SqlConnectionStringBuilderHashTable.ContainsKey($TargetConnectionString)) {
-    Write-Warning -Message "Failed to parse $Stage connection string";
-    return;
+switch ($Stage) {
+    { $_ -ieq 'Testing' -or $_ -ieq 'Test' } {
+        $SqlConnectionStringBuilder = $TestAppSettings.ConnectionStrings.FsInfoCat;
+        break;
+    }
+    { $_ -ieq 'Development' -or $_ -ieq 'Dev' } {
+        $SqlConnectionStringBuilder = $DevAppSettings.ConnectionStrings.FsInfoCat;
+        break;
+    }
+    default {
+        $SqlConnectionStringBuilder = $ProdAppSettings.ConnectionStrings.FsInfoCat;
+        break;
+    }
 }
-$SqlConnectionStringBuilder = $SqlConnectionStringBuilderHashTable[$TargetConnectionString];
+
+if ($SqlConnectionStringBuilder.Count -eq 0) {
+    $SqlConnectionStringBuilder.DataSource = $DataSource;
+    $SqlConnectionStringBuilder.InitialCatalog = $InitialCatalog;
+    $SqlConnectionStringBuilder.PersistSecurityInfo = $PersistSecurityInfo;
+    $SqlConnectionStringBuilder.UserID = $UserID;
+    $SqlConnectionStringBuilder.MultipleActiveResultSets = $MultipleActiveResultSets;
+    $SqlConnectionStringBuilder.Encrypt = $Encrypt;
+    $SqlConnectionStringBuilder.TrustServerCertificate = $TrustServerCertificate;
+    $SqlConnectionStringBuilder.ConnectionTimeout = $ConnectionTimeout;
+    $SqlConnectionStringBuilder.ApplicationName = $ApplicationName;
+} else {
+    if ($PSBoundParameters.ContainsKey('DataSource')) { $SqlConnectionStringBuilder.DataSource = $DataSource }
+    if ($PSBoundParameters.ContainsKey('InitialCatalog')) { $SqlConnectionStringBuilder.InitialCatalog = $InitialCatalog }
+    if ($PSBoundParameters.ContainsKey('PersistSecurityInfo')) { $SqlConnectionStringBuilder.PersistSecurityInfo = $PersistSecurityInfo }
+    if ($PSBoundParameters.ContainsKey('UserID')) { $SqlConnectionStringBuilder.UserID = $UserID }
+    if ($PSBoundParameters.ContainsKey('MultipleActiveResultSets')) { $SqlConnectionStringBuilder.MultipleActiveResultSets = $MultipleActiveResultSets }
+    if ($PSBoundParameters.ContainsKey('Encrypt')) { $SqlConnectionStringBuilder.Encrypt = $Encrypt }
+    if ($PSBoundParameters.ContainsKey('TrustServerCertificate')) { $SqlConnectionStringBuilder.TrustServerCertificate = $TrustServerCertificate }
+    if ($PSBoundParameters.ContainsKey('ConnectionTimeout')) { $SqlConnectionStringBuilder.ConnectionTimeout = $ConnectionTimeout }
+    if ($PSBoundParameters.ContainsKey('ApplicationName')) { $SqlConnectionStringBuilder.ApplicationName = $ApplicationName }
+}
 
 Write-Information -MessageData @"
 Current SQL connection properties:
@@ -446,59 +624,51 @@ Current SQL connection properties:
     WorkstationID = '$($SqlConnectionStringBuilder.WorkstationID)';
 "@
 
-if (-not $PSBoundParameters.ContainsKey('DbConnectionString')) {
-    $SqlConnectionStringBuilder.PSBase.DataSource = ([string](Read-Host -Prompt 'Database server name'))
-    if ([string]::IsNullOrWhiteSpace($SqlConnectionStringBuilder.PSBase.DataSource)) { return }
-    $SqlConnectionStringBuilder.PSBase.InitialCatalog = Read-Host -Prompt 'Initial Catalog (db name)';
-    if ([string]::IsNullOrWhiteSpace($SqlConnectionStringBuilder.PSBase.InitialCatalog)) { return }
-    $DbCredentials = Get-Credential -Message 'Enter database login credentials';
-    if ($null -eq $DbCredentials) { return }
-    [System.Management.Automation.PSCredential]$AppCredentials = $null;
-    $BaseMessage = $Message = "Please provide the login and password that will be used to log into the application for administrative purposes.`nNote: Login name and password is case-sensitive";
-    do {
-        $AppCredentials = Get-Credential -UserName 'fsinfocatadmin' -Message $Message;
-        if ($null -eq $AppCredentials) { return }
-        if ([string]::IsNullOrWhiteSpace($AppCredentials.UserName)) {
-            $Message = "ERROR: User name cannot be empty!`n`n$BaseMessage";
-            Write-Warning -Message 'User name cannot be empty!' -WarningAction Continue;
+[System.Management.Automation.PSCredential]$AppCredentials = $null;
+$BaseMessage = $Message = "Please provide the login and password that will be used to log into the application for administrative purposes.`nNote: Login name and password is case-sensitive";
+do {
+    $AppCredentials = Get-Credential -UserName $SqlConnectionStringBuilder.UserID -Message $Message;
+    if ($null -eq $AppCredentials) { return }
+    if ([string]::IsNullOrWhiteSpace($AppCredentials.UserName)) {
+        $Message = "ERROR: User name cannot be empty!`n`n$BaseMessage";
+        Write-Warning -Message 'User name cannot be empty!' -WarningAction Continue;
+        $AppCredentials = $null;
+    } else {
+        if ($AppCredentials.UserName.Trim() -notmatch '^[a-zA-Z][a-zA-Z\d]*$') {
+            $Message = "ERROR: User name must start with a letter and can only be followed by letters and numbers!`n`n$BaseMessage";
+            Write-Warning -Message 'User name must start with a letter and can only be followed by letters and numbers!' -WarningAction Continue;
             $AppCredentials = $null;
         } else {
-            if ($AppCredentials.UserName.Trim() -notmatch '^[a-zA-Z][a-zA-Z\d]*$') {
-                $Message = "ERROR: User name must start with a letter and can only be followed by letters and numbers!`n`n$BaseMessage";
-                Write-Warning -Message 'User name must start with a letter and can only be followed by letters and numbers!' -WarningAction Continue;
-                $AppCredentials = $null;
-            } else {
-                if ([FsInfoCat.Util.PwHash]::PasswordValidationRegex.IsMatch($AppCredentials.GetNetworkCredential().Password)) {
-                    $ConfirmCredentials = Get-Credential -UserName $AppCredentials.UserName -Message 'Please Re-enter the application administrative password.';
-                    if ($null -eq $ConfirmCredentials) { return }
-                    if ($AppCredentials.GetNetworkCredential().Password -cne $ConfirmCredentials.GetNetworkCredential().Password) {
-                        $Message = "ERROR: Password and confirmation do not match!`n`n$BaseMessage";
-                        Write-Warning -Message 'Password and confirmation do not match!' -WarningAction Continue;
-                        $AppCredentials = $null;
-                    } else {
-                        if ($AppCredentials.UserName -cne $ConfirmCredentials.UserName) {
-                            $Message = "ERROR: User name in confirmation does not match the original user name!`n`n$BaseMessage";
-                            Write-Warning -Message 'User name in confirmation does not match the original user name!' -WarningAction Continue;
-                            $AppCredentials = $null;
-                        }
-                    }
-                } else {
-                    $Message = "ERROR: $([FsInfoCat.Util.PwHash]::PASSWORD_VALIDATION_MESSAGE)`n`n$BaseMessage";
-                    Write-Warning -Message ([FsInfoCat.Util.PwHash]::PASSWORD_VALIDATION_MESSAGE) -WarningAction Continue;
+            if ([FsInfoCat.Util.PwHash]::PasswordValidationRegex.IsMatch($AppCredentials.GetNetworkCredential().Password)) {
+                $ConfirmCredentials = Get-Credential -UserName $AppCredentials.UserName -Message 'Please Re-enter the application administrative password.';
+                if ($null -eq $ConfirmCredentials) { return }
+                if ($AppCredentials.GetNetworkCredential().Password -cne $ConfirmCredentials.GetNetworkCredential().Password) {
+                    $Message = "ERROR: Password and confirmation do not match!`n`n$BaseMessage";
+                    Write-Warning -Message 'Password and confirmation do not match!' -WarningAction Continue;
                     $AppCredentials = $null;
+                } else {
+                    if ($AppCredentials.UserName -cne $ConfirmCredentials.UserName) {
+                        $Message = "ERROR: User name in confirmation does not match the original user name!`n`n$BaseMessage";
+                        Write-Warning -Message 'User name in confirmation does not match the original user name!' -WarningAction Continue;
+                        $AppCredentials = $null;
+                    }
                 }
+            } else {
+                $Message = "ERROR: $([FsInfoCat.Util.PwHash]::PASSWORD_VALIDATION_MESSAGE)`n`n$BaseMessage";
+                Write-Warning -Message ([FsInfoCat.Util.PwHash]::PASSWORD_VALIDATION_MESSAGE) -WarningAction Continue;
+                $AppCredentials = $null;
             }
         }
-    } while ($null -eq $AppCredentials);
-}
+    }
+} while ($null -eq $AppCredentials);
 
-$HostDeviceRegRequest = [FsInfoCat.Models.HostDevices.HostDeviceRegRequest]::CreateForLocal();
-if ($null -eq $HostDeviceRegRequest) { return }
 $PwHash = [FsInfoCat.Util.PwHash]::Create($AppCredentials.GetNetworkCredential().Password);
 $DbCredentials.Password.MakeReadOnly();
 $SqlCredential = New-Object -TypeName 'System.Data.SqlClient.SqlCredential' -ArgumentList $DbCredentials.UserName, $DbCredentials.Password -ErrorAction Stop;
-$DbCommands = Import-Clixml -Path ($PSScriptRoot | Join-Path -ChildPath 'CreateDb.xml') -ErrorAction Stop;
-
+$DbCommands = [System.IO.File]::ReadAllText(($PSScriptRoot | Join-Path -ChildPath 'CreateDb.json')) | ConvertFrom-Json;
+#<#
+if ($SqlConnectionStringBuilder.ContainsKey('UserID')) { $SqlConnectionStringBuilder.Remove('UserID') }
+if ($SqlConnectionStringBuilder.ContainsKey('User ID')) { $SqlConnectionStringBuilder.Remove('User ID') }
 $SqlConnection = New-Object -TypeName 'System.Data.SqlClient.SqlConnection' -ArgumentList $SqlConnectionStringBuilder.ConnectionString, $SqlCredential -ErrorAction Stop;
 $SqlConnection.Open();
 if ($SqlConnection.State -ne [System.Data.ConnectionState]::Open) {
@@ -538,15 +708,15 @@ try {
                                 break;
                             }
                             'MachineIdentifer' {
-                                ([System.Data.SqlClient.SqlCommand]$SqlCommand).Parameters.Add('MachineIdentifer', [System.Data.SqlDbType]::NVarChar).Value = $HostDeviceRegRequest.MachineIdentifer;
+                                ([System.Data.SqlClient.SqlCommand]$SqlCommand).Parameters.Add('MachineIdentifer', [System.Data.SqlDbType]::NVarChar).Value = Get-LocalMachineIdentifier;
                                 break;
                             }
                             'MachineName' {
-                                ([System.Data.SqlClient.SqlCommand]$SqlCommand).Parameters.Add('MachineName', [System.Data.SqlDbType]::NVarChar).Value = $HostDeviceRegRequest.MachineName;
+                                ([System.Data.SqlClient.SqlCommand]$SqlCommand).Parameters.Add('MachineName', [System.Data.SqlDbType]::NVarChar).Value = [Environment]::MachineName;
                                 break;
                             }
                             'IsWindows' {
-                                ([System.Data.SqlClient.SqlCommand]$SqlCommand).Parameters.Add('IsWindows', [System.Data.SqlDbType]::Bit).Value = $HostDeviceRegRequest.IsWindows;
+                                ([System.Data.SqlClient.SqlCommand]$SqlCommand).Parameters.Add('IsWindows', [System.Data.SqlDbType]::Bit).Value = [Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT;
                                 break;
                             }
                         }

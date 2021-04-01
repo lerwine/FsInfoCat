@@ -178,45 +178,6 @@
       </En>
     </DCT>
   </Obj>
-  <Obj RefId="10">
-    <TNRef RefId="0" />
-    <DCT>
-      <En>
-        <S N="Key">Message</S>
-        <S N="Value">Creating HostContributor table</S>
-      </En>
-      <En>
-        <S N="Key">Commands</S>
-        <Obj N="Value" RefId="11">
-          <TNRef RefId="1" />
-          <LST>
-            <S><![CDATA[CREATE TABLE dbo.HostContributor
-(
-    HostDeviceID UNIQUEIDENTIFIER NOT NULL, -- primary key column
-    AccountID UNIQUEIDENTIFIER NOT NULL, -- primary key column
-    CreatedOn DATETIME NOT NULL,
-    CreatedBy UNIQUEIDENTIFIER NOT NULL,
-    CONSTRAINT PK_HostContributor PRIMARY KEY CLUSTERED (HostDeviceID ASC, AccountID)
-        WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
-    CONSTRAINT AK_HostContributor UNIQUE(HostDeviceID, AccountID)
-) ON [PRIMARY]]]></S>
-            <S><![CDATA[ALTER TABLE dbo.HostContributor WITH CHECK ADD CONSTRAINT FK_HostContributor_Host FOREIGN KEY(HostDeviceID)
-    REFERENCES dbo.HostDevice (HostDeviceID)
-    ON DELETE CASCADE]]></S>
-            <S>ALTER TABLE dbo.HostContributor CHECK CONSTRAINT FK_HostContributor_Host</S>
-            <S><![CDATA[ALTER TABLE dbo.HostContributor WITH CHECK ADD CONSTRAINT FK_HostContributor_Account FOREIGN KEY(AccountID)
-    REFERENCES dbo.Account (AccountID)
-    ON DELETE CASCADE]]></S>
-            <S>ALTER TABLE dbo.HostContributor CHECK CONSTRAINT FK_HostContributor_Account</S>
-            <S><![CDATA[ALTER TABLE dbo.HostContributor WITH CHECK ADD CONSTRAINT FK_HostContributor_CreatedBy FOREIGN KEY(CreatedBy)
-    REFERENCES dbo.Account (AccountID)
-    ON DELETE NO ACTION]]></S>
-            <S>ALTER TABLE dbo.HostContributor CHECK CONSTRAINT FK_HostContributor_CreatedBy</S>
-          </LST>
-        </Obj>
-      </En>
-    </DCT>
-  </Obj>
   <Obj RefId="12">
     <TNRef RefId="0" />
     <DCT>
@@ -240,9 +201,9 @@
     ModifiedBy UNIQUEIDENTIFIER NOT NULL,
     DisplayName NVARCHAR(128) NOT NULL DEFAULT '',
     RootPathName NVARCHAR(1024) NOT NULL,
-    FileSystemName NVARCHAR(256) NOT NULL,
+    DriveFormat NVARCHAR(256) NOT NULL,
     VolumeName NVARCHAR(128) NOT NULL,
-    SerialNumber BIGINT NOT NULL,
+    Identifier NVARCHAR(1024) NOT NULL,
     MaxNameLength BIGINT NOT NULL,
     CaseSensitive BIT NOT NULL,
     IsInactive BIT NOT NULL DEFAULT 0,
