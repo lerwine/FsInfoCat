@@ -32,6 +32,7 @@ namespace FsInfoCat.Util
     /// </list></remarks>
     public abstract class FileUriConverter
     {
+        // BUG: Need to conform to https://www.ietf.org/rfc/rfc2396.txt
         public const char URI_QUERY_DELIMITER_CHAR = UriHelper.URI_QUERY_DELIMITER_CHAR;
         public const string URI_QUERY_DELIMITER_STRING = UriHelper.URI_QUERY_DELIMITER_STRING;
         public const string URI_QUERY_DELIMITER_ESCAPED = UriHelper.URI_QUERY_DELIMITER_ESCAPED;
