@@ -90,6 +90,11 @@ namespace FsInfoCat.PS.Commands
             return true;
         }
 
+        /// <summary>
+        /// Resolves FileSystem provider path from a path string that may include wildcard characters.
+        /// </summary>
+        /// <param name="path">Path string that may contain wildcard characters.</param>
+        /// <returns>FileSystem provider path strings that match the specified <paramref name="path"/>.</returns>
         protected IEnumerable<string> ResolveDirectoryFromWcPath(string path)
         {
             WriteDebug($"Resolving Path: \"{path}\"");
