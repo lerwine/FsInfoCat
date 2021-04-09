@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.UriParsing.AnyURIBase" BaseTypeListCollapsed="true">
+    <Position X="13.25" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAEABAAAAAAAAAAAAAABAI=</HashCode>
+      <FileName>UriParsing\AnyURIBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Authority" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.Authority" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAACEAACBAAAAAAABAABAA=</HashCode>
+      <FileName>UriParsing\Authority.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UserInfo" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.AnyURI" BaseTypeListCollapsed="true">
+    <Position X="17" Y="7" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQBAAAAACAAAAAAAACAAAAgAAEAAAACABAA=</HashCode>
+      <FileName>UriParsing\AnyURI.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AbsoluteBase" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Query" />
+      <Property Name="Segments" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.SegmentParameterComponentList&lt;TParameter&gt;">
+    <Position X="6.25" Y="9.25" Width="3.5" />
+    <NestedTypes>
+      <Class Name="FsInfoCat.UriParsing.SegmentParameterComponentList&lt;TParameter&gt;.GenericWrapper" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UriParsing\SegmentParameterComponentList.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAEAAEAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\SegmentParameterComponentList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.UriComponentList&lt;TComponent&gt;">
+    <Position X="7.25" Y="6.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>UriParsing\UriComponentList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.FileURIBase" BaseTypeListCollapsed="true">
+    <Position X="20.5" Y="16.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAACAAABQAAAAAAAAI=</HashCode>
+      <FileName>UriParsing\FileURIBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Host" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.FileUriHost" BaseTypeListCollapsed="true">
+    <Position X="20" Y="13.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAACAAAAAAAAAABAAAAEAACAAAAQAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\FileUriHost.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.FileUriSegment" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="20.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAggAAACAAAAAQAAQAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\FileUriSegment.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.FileURI" BaseTypeListCollapsed="true">
+    <Position X="17" Y="17" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAADAAAAAAAACAAAAAAAUAAAACAAAA=</HashCode>
+      <FileName>UriParsing\FileURI.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AbsoluteBase" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Segments" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.PathSegment" BaseTypeListCollapsed="true">
+    <Position X="16.25" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAggAAAAAAAAAAAAQAQAAAAAAAAAAIAAAAAABAA=</HashCode>
+      <FileName>UriParsing\PathSegment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Parameters" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.PathSegmentList&lt;TSegment&gt;">
+    <Position X="3" Y="9.25" Width="2.5" />
+    <NestedTypes>
+      <Class Name="FsInfoCat.UriParsing.PathSegmentList&lt;TSegment&gt;.GenericWrapper" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UriParsing\PathSegmentList.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAEAAEAAAAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\PathSegmentList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.PathSegmentParameter" BaseTypeListCollapsed="true">
+    <Position X="16" Y="12.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAABAA=</HashCode>
+      <FileName>UriParsing\PathSegmentParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.QueryParameter" BaseTypeListCollapsed="true">
+    <Position X="20.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAABAA=</HashCode>
+      <FileName>UriParsing\QueryParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.QueryParameterComponentList&lt;TParameter&gt;">
+    <Position X="10.5" Y="9.25" Width="3.25" />
+    <NestedTypes>
+      <Class Name="FsInfoCat.UriParsing.QueryParameterComponentList&lt;TParameter&gt;.GenericWrapper" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UriParsing\QueryParameterComponentList.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAEAAEAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\QueryParameterComponentList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.WellFormedAuthority" BaseTypeListCollapsed="true">
+    <Position X="4" Y="18.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAACAAAABAAACEAACBACAQAAABAAAAA=</HashCode>
+      <FileName>UriParsing\WellFormedAuthority.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UserInfo" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.WellFormedPathSegment" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="14.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAEAggAAAAAAACAAAAQAQAAAAAAAAAAYAAAQAAAAA=</HashCode>
+      <FileName>UriParsing\WellFormedPathSegment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Parameters" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.WellFormedQueryParameter" BaseTypeListCollapsed="true">
+    <Position X="11.5" Y="14.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAQCAAAAAAAAAAIAAAAAAQBgAAAAAAA=</HashCode>
+      <FileName>UriParsing\WellFormedQueryParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.WellFormedSegmentParameter" BaseTypeListCollapsed="true">
+    <Position X="1" Y="14.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAgAAAAAAA=</HashCode>
+      <FileName>UriParsing\WellFormedSegmentParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.WellFormedUri" BaseTypeListCollapsed="true">
+    <Position X="8" Y="14.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>EIAAAAAAAQBAAAACCAAAAAAAACAAAAgAAUAAAACAAAA=</HashCode>
+      <FileName>UriParsing\WellFormedUri.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AbsoluteBase" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Query" />
+      <Property Name="Segments" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.UserInfo" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAAAABAA=</HashCode>
+      <FileName>UriParsing\UserInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.WellFormedUriBase" BaseTypeListCollapsed="true">
+    <Position X="7.5" Y="18.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAEEAAAAAAAAAACAAAAAAAEABAAAAAAAQAAAAAAAAI=</HashCode>
+      <FileName>UriParsing\WellFormedUriBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Authority" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.WellFormedUserInfo" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="19" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAIAAQACAQAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\WellFormedUserInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UriParsing.ExtensionMethods" Collapsed="true">
+    <Position X="23.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\ExtensionMethods.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="FsInfoCat.UriParsing.IAbsoluteURIBase">
+    <Position X="9" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAEABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\IAbsoluteURIBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Authority" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.UriParsing.IAnyURI">
+    <Position X="13.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAACAAAAgAAAAAAACAAAA=</HashCode>
+      <FileName>UriParsing\IAnyURI.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AbsoluteBase" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Query" />
+      <Property Name="Segments" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.UriParsing.IAuthority">
+    <Position X="18.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACEAACBAAAAAAABAAAAA=</HashCode>
+      <FileName>UriParsing\IAuthority.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UserInfo" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.UriParsing.IPathSegmentList&lt;TSegment&gt;">
+    <Position X="5.75" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\IPathSegmentList.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.UriParsing.IUriComponent">
+    <Position X="10.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>UriParsing\IUriComponent.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.UriParsing.IUriComponentList&lt;TComponent&gt;">
+    <Position X="5.75" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\IUriComponentList.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.UriParsing.IUriParameterElement">
+    <Position X="11.25" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>UriParsing\IUriParameterElement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.UriParsing.IUriPathSegment">
+    <Position X="16" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAQAQAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\IUriPathSegment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Parameters" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.UriParsing.IUserInfo">
+    <Position X="3.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAAAAAAA=</HashCode>
+      <FileName>UriParsing\IUserInfo.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
