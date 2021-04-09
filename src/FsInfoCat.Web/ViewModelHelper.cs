@@ -9,12 +9,6 @@ namespace FsInfoCat.Web
 {
     public static class ViewModelHelper
     {
-        public static async Task<HostContributor> Lookup(DbSet<HostContributor> dbSet, Guid accountID, Guid HostDeviceID)
-        {
-            IQueryable<HostContributor> contributors = from c in dbSet select c;
-            return (await contributors.Where(c => c.AccountID == accountID && c.HostDeviceID == HostDeviceID).AsNoTracking().ToListAsync()).FirstOrDefault();
-        }
-
         public static async Task<HostDevice> LookUp(DbSet<HostDevice> dbSet, string machineName, string machineIdentifer)
         {
             if (string.IsNullOrWhiteSpace(machineName))

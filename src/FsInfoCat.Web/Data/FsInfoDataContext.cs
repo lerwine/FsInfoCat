@@ -53,23 +53,6 @@ namespace FsInfoCat.Web.Data
                 .HasOne(p => p.Host)
                 .WithMany()
                 .HasForeignKey(p => p.HostDeviceID);
-            modelBuilder.Entity<HostContributor>()
-                .HasKey(c => new { c.AccountID, c.HostDeviceID });
-            modelBuilder.Entity<HostContributor>()
-                .HasOne(p => p.Creator)
-                .WithMany()
-                .HasForeignKey(p => p.CreatedBy)
-                .IsRequired();
-            modelBuilder.Entity<HostContributor>()
-                .HasOne(p => p.Host)
-                .WithMany()
-                .HasForeignKey(p => p.HostDeviceID)
-                .IsRequired();
-            modelBuilder.Entity<HostContributor>()
-                .HasOne(p => p.Account)
-                .WithMany()
-                .HasForeignKey(p => p.AccountID)
-                .IsRequired();
         }
 
         public DbSet<UserCredential> UserCredential { get; set; }
@@ -77,8 +60,6 @@ namespace FsInfoCat.Web.Data
         public DbSet<Account> Account { get; set; }
 
         public DbSet<HostDevice> HostDevice { get; set; }
-
-        public DbSet<HostContributor> HostContributor { get; set; }
 
         public DbSet<Volume> Volume { get; set; }
 
