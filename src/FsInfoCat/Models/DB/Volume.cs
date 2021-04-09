@@ -691,18 +691,6 @@ namespace FsInfoCat.Models.DB
             }
         }
 
-        [Obsolete("Use GetPathComparer()")]
-        public IEqualityComparer<string> PathComparer
-        {
-            get
-            {
-                StringComparer comparer = _segmentNameComparer;
-                if (comparer is null)
-                    _segmentNameComparer = comparer = (_caseSensitive) ? ComponentHelper.CASE_SENSITIVE_COMPARER : ComponentHelper.IGNORE_CASE_COMPARER;
-                return comparer;
-            }
-        }
-
         public IEqualityComparer<string> GetNameComparer()
         {
             StringComparer comparer = _segmentNameComparer;

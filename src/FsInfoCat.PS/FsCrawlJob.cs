@@ -17,6 +17,7 @@ namespace FsInfoCat.PS
 
         public const string ACTIVITY = "Crawl Subdirectory";
 
+        // TODO: Ensure field access is syncrhonized.
         private readonly object _syncRoot = new object();
         private bool _isRunning = false;
         private Task<bool> _task;
@@ -33,9 +34,6 @@ namespace FsInfoCat.PS
         internal FsRootProvider FsRoots { get; }
 
         internal int MaxDepth { get; }
-
-        [Obsolete("Use RegisteredVolumes")]
-        public Func<IEnumerable<IVolumeInfo>> GetVolumes { get; }
 
         internal Func<bool> IsExpired { get; }
 

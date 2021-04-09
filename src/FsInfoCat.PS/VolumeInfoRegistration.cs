@@ -12,13 +12,9 @@ using System.Threading;
 
 namespace FsInfoCat.PS
 {
+    // TODO: Need to create base VolumeSetProvider class so it may be tested in NUnit tests
     public sealed class VolumeInfoRegistration : IVolumeSetProvider<VolumeInfoRegistration.RegisteredVolumeItem>
     {
-        [Obsolete("Use DynamicStringComparer.IGNORE_CASE, instead")]
-        public static readonly StringComparer CASE_IGNORED_NAME_COMPARER = DynamicStringComparer.IGNORE_CASE;
-        [Obsolete("Use DynamicStringComparer.CASE_SENSITIVE, instead")]
-        public static readonly StringComparer CASE_SENSITIVE_NAME_COMPARER = DynamicStringComparer.CASE_SENSITIVE;
-
         private readonly object _syncRoot = new object();
         private readonly Collection<RegisteredVolumeItem> _backingCollection = new Collection<RegisteredVolumeItem>();
 

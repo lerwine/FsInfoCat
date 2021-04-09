@@ -54,13 +54,11 @@ namespace FsInfoCat.Util
         public const string MATCH_GROUP_NAME_FILE = "file";
         public const string MATCH_GROUP_NAME_HOST = "host";
         public const string MATCH_GROUP_NAME_PATH = "path";
-        [Obsolete("Not doing this anymore")]
         public const string MATCH_GROUP_NAME_FILE_NAME = "fileName";
         public const string MATCH_GROUP_NAME_IPV4 = "ipv4";
         public const string MATCH_GROUP_NAME_IPV6 = "ipv6";
         public const string MATCH_GROUP_NAME_UNC = "unc";
         public const string MATCH_GROUP_NAME_DNS = "dns";
-        [Obsolete("Not doing this anymore")]
         public const string MATCH_GROUP_NAME_DIR = "dir";
         public const string MATCH_GROUP_NAME_ROOT = "root";
         public const string MATCH_GROUP_NAME_SCHEME = "scheme";
@@ -244,27 +242,6 @@ $", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePattern
 |
     (/\s*|\s+)
 $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
-
-        [Obsolete("This does not distinguish between a windows drive path and a linux path that might look like a windows drive path. file:///c:/dirname not parsed with root as c:/")]
-        public static readonly Regex FILE_URI_COMPONENTS_LAX_REGEX = new Regex(@"^
-(?<file>
-    file://
-    (?<host>[^/?#]+)?
-)?
-(?<path>
-    (?<dir>
-        /(?=([^/]+/?)$)
-        |
-        ((?=[^/]+/[^/])[^/]+)?
-        (
-            (?=/[^/]+/[^/])
-            /
-            [^/]+
-        )*
-    )
-    (?<fileName>[^/]+)?
-)
-/?$");
 
         public static readonly Regex NEEDS_ENCODING_REGEX = new Regex(@"([^!$=&-/:;=@[\]?#%\w]+|%(?![\dA-Z]{2}))*", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         /// <summary>

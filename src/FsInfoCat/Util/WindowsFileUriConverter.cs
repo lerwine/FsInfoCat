@@ -200,13 +200,8 @@ $", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         ///     </item>
         ///     <item><term>path</term> Matches the path string (<see cref="FileUriConverter.MATCH_GROUP_NAME_PATH"/>).
         ///         <list type="bullet">
-        ///             <item><term>dir</term> Matches the parent directory path. This group will always succeed when the expression succeeds,
-        ///                 even if it is empty. The trailing slash will be omitted unless it is the root path
-        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_DIR"/>).</item>
         ///             <item><term>root</term> Matches leading directory separator character. This implies that the input text is an absolute local path
         ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_ROOT"/>).</item>
-        ///             <item><term>fileName</term> Matches the file name. This group will only fail if the source path is the root path
-        ///                 (<see cref="FileUriConverter.MATCH_GROUP_NAME_FILE_NAME"/>).</item>
         ///         </list>
         ///     </item>
         /// </list></para></remarks>
