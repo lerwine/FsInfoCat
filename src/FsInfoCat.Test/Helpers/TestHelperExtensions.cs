@@ -1,4 +1,3 @@
-using FsInfoCat.PS;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -92,18 +91,6 @@ namespace FsInfoCat.Test.Helpers
             return monitor.CreateProxy(target);
         }
 
-
-        public static TryCoerceHandler<T, TOut> Monitor<T, TOut>(this TryCoerceHandler<T, TOut> target, out Func<IFuncInvocationResult<TOut, bool>> getResult)
-        {
-            FunctionInvocationMonitor<TOut, bool> monitor = new FunctionInvocationMonitor<TOut, bool>();
-            getResult = monitor.ToResult;
-            return (T t, out TOut o) =>
-            {
-                bool result = target(t, out o);
-                monitor.Apply(result, o);
-                return result;
-            };
-        }
 
         public static Func<T1, T2, TResult> Monitor<T1, T2, TResult>(this Func<T1, T2, TResult> target, out Func<IFuncInvocationResult<TResult>> getResult)
         {

@@ -18,8 +18,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
-    <ProjectReference Include="..\FsInfoCat.PS\FsInfoCat.PS.csproj" />
-    <ProjectReference Include="..\FsInfoCat.Web\FsInfoCat.Web.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

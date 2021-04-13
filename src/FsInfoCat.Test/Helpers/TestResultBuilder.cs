@@ -239,8 +239,8 @@ namespace FsInfoCat.Test.Helpers
             {
                 if (exception is System.Data.Common.DbException)
                 {
-                    if (exception is System.Data.SqlClient.SqlException)
-                        return System.Xml.XmlConvert.EncodeLocalName(typeof(System.Data.SqlClient.SqlException).FullName);
+                    //if (exception is System.Data.SqlClient.SqlException)
+                    //    return System.Xml.XmlConvert.EncodeLocalName(typeof(System.Data.SqlClient.SqlException).FullName);
                     return System.Xml.XmlConvert.EncodeLocalName(typeof(System.Data.Common.DbException).FullName);
                 }
                 return System.Xml.XmlConvert.EncodeLocalName(typeof(System.Runtime.InteropServices.ExternalException).FullName);
@@ -294,8 +294,8 @@ namespace FsInfoCat.Test.Helpers
             {
                 if (exception is System.Data.Common.DbException)
                 {
-                    if (exception is System.Data.SqlClient.SqlException)
-                        return nameof(System.Data.SqlClient.SqlException);
+                    //if (exception is System.Data.SqlClient.SqlException)
+                    //    return nameof(System.Data.SqlClient.SqlException);
                     return nameof(System.Data.Common.DbException);
                 }
                 return nameof(System.Runtime.InteropServices.ExternalException);
@@ -333,66 +333,66 @@ namespace FsInfoCat.Test.Helpers
             return nameof(Exception);
         }
 
-        /// <summary>
-        /// Create result information for unit testing.
-        /// </summary>
-        /// <param name="exception">The target exception</param>
-        /// <param name="detailLevel">Determines which properties to add to the response element.</param>
-        /// <param name="elementName">The result element name. Can be <see langword="null"/> to use the default name.</param>
-        /// <param name="includeMessage">Where to include the exception message.</param>
-        /// <param name="innerExceptionDepth">Recursion level for inner exceptions to include.</param>
-        /// <returns>The <seealso cref="XElement"/> representing the specified <paramref name="exception"/>.</returns>
-        /// <remarks>Values for <paramref name="detailLevel"/>:
-        /// <list type="bullet">
-        /// <item><term>0</term> Adds attributes only for <seealso cref="SqlException.State"/> and <seealso cref="SqlException.Number"/>.</item>
-        /// <item><term>1</term> Includes attributes for <seealso cref="SqlException.Class"/> and <seealso cref="ExternalException.ErrorCode"/>.</item>
-        /// <item><term>2</term> Includes element for <seealso cref="SqlException.Procedure"/>.</item>
-        /// <item><term>3</term> Includes attribute for <seealso cref="SqlException.LineNumber"/> and element for <seealso cref="SqlException.Source"/>.</item>
-        /// <item><term>4 (or greater)</term> Includes attribute for <seealso cref="SqlException.ClientConnectionId"/> and elements for
-        /// <seealso cref="SqlException.Server"/>.</item>
-        /// </list></remarks>
-        public static XElement CreateExceptionResult(this System.Data.SqlClient.SqlException exception, int detailLevel = 0, XName elementName = null, bool includeMessage = false, int innerExceptionDepth = 0)
-        {
-            if (detailLevel == 0)
-                return CreateExceptionResult(exception, ApplyExceptionProperties, elementName, includeMessage, innerExceptionDepth);
-            return CreateExceptionResult(exception, (x, e) => ApplyExceptionProperties(x, e, detailLevel), elementName, includeMessage, innerExceptionDepth);
-        }
+        ///// <summary>
+        ///// Create result information for unit testing.
+        ///// </summary>
+        ///// <param name="exception">The target exception</param>
+        ///// <param name="detailLevel">Determines which properties to add to the response element.</param>
+        ///// <param name="elementName">The result element name. Can be <see langword="null"/> to use the default name.</param>
+        ///// <param name="includeMessage">Where to include the exception message.</param>
+        ///// <param name="innerExceptionDepth">Recursion level for inner exceptions to include.</param>
+        ///// <returns>The <seealso cref="XElement"/> representing the specified <paramref name="exception"/>.</returns>
+        ///// <remarks>Values for <paramref name="detailLevel"/>:
+        ///// <list type="bullet">
+        ///// <item><term>0</term> Adds attributes only for <seealso cref="SqlException.State"/> and <seealso cref="SqlException.Number"/>.</item>
+        ///// <item><term>1</term> Includes attributes for <seealso cref="SqlException.Class"/> and <seealso cref="ExternalException.ErrorCode"/>.</item>
+        ///// <item><term>2</term> Includes element for <seealso cref="SqlException.Procedure"/>.</item>
+        ///// <item><term>3</term> Includes attribute for <seealso cref="SqlException.LineNumber"/> and element for <seealso cref="SqlException.Source"/>.</item>
+        ///// <item><term>4 (or greater)</term> Includes attribute for <seealso cref="SqlException.ClientConnectionId"/> and elements for
+        ///// <seealso cref="SqlException.Server"/>.</item>
+        ///// </list></remarks>
+        //public static XElement CreateExceptionResult(this System.Data.SqlClient.SqlException exception, int detailLevel = 0, XName elementName = null, bool includeMessage = false, int innerExceptionDepth = 0)
+        //{
+        //    if (detailLevel == 0)
+        //        return CreateExceptionResult(exception, ApplyExceptionProperties, elementName, includeMessage, innerExceptionDepth);
+        //    return CreateExceptionResult(exception, (x, e) => ApplyExceptionProperties(x, e, detailLevel), elementName, includeMessage, innerExceptionDepth);
+        //}
 
-        /// <summary>
-        /// Adds test result information to a response xml element.
-        /// </summary>
-        /// <param name="element">The target response xml element.</param>
-        /// <param name="sqlException">The exception to apply.</param>
-        /// <param name="detailLevel">Determines which properties to add to the response <paramref name="element"/>.</param>
-        /// <remarks>Values for <paramref name="detailLevel"/>:
-        /// <list type="bullet">
-        /// <item><term>0 (or less)</term> Adds attributes only for <seealso cref="SqlException.State"/> and <seealso cref="SqlException.Number"/>.</item>
-        /// <item><term>1</term> Includes attributes for <seealso cref="SqlException.Class"/> and <seealso cref="ExternalException.ErrorCode"/>.</item>
-        /// <item><term>2</term> Includes element for <seealso cref="SqlException.Procedure"/>.</item>
-        /// <item><term>3</term> Includes attribute for <seealso cref="SqlException.LineNumber"/> and element for <seealso cref="SqlException.Source"/>.</item>
-        /// <item><term>4 (or greater)</term> Includes attribute for <seealso cref="SqlException.ClientConnectionId"/> and element for
-        /// <seealso cref="SqlException.Server"/>.</item>
-        /// </list></remarks>
-        public static void ApplyExceptionProperties(XElement element, System.Data.SqlClient.SqlException sqlException, int detailLevel = 0)
-        {
-            element.SetAttributeValue(nameof(sqlException.State), sqlException.State);
-            element.SetAttributeValue(nameof(sqlException.Number), sqlException.Number);
-            if (detailLevel > 0)
-            {
-                element.SetAttributeValue(nameof(sqlException.Class), sqlException.Class);
-                ApplyExceptionProperties(element, (System.Runtime.InteropServices.ExternalException)sqlException);
-            }
-            if (detailLevel > 2)
-                element.SetAttributeValue(nameof(sqlException.LineNumber), sqlException.LineNumber);
-            if (detailLevel > 3)
-                element.SetAttributeValue(nameof(sqlException.ClientConnectionId), sqlException.ClientConnectionId);
-            if (detailLevel > 2)
-                element.Add(CreateTestResult(sqlException.Source, nameof(sqlException.Source)));
-            if (detailLevel > 1)
-                element.Add(CreateTestResult(sqlException.Procedure, nameof(sqlException.Procedure)));
-            if (detailLevel > 3)
-                element.Add(CreateTestResult(sqlException.Server, nameof(sqlException.Server)));
-        }
+        ///// <summary>
+        ///// Adds test result information to a response xml element.
+        ///// </summary>
+        ///// <param name="element">The target response xml element.</param>
+        ///// <param name="sqlException">The exception to apply.</param>
+        ///// <param name="detailLevel">Determines which properties to add to the response <paramref name="element"/>.</param>
+        ///// <remarks>Values for <paramref name="detailLevel"/>:
+        ///// <list type="bullet">
+        ///// <item><term>0 (or less)</term> Adds attributes only for <seealso cref="SqlException.State"/> and <seealso cref="SqlException.Number"/>.</item>
+        ///// <item><term>1</term> Includes attributes for <seealso cref="SqlException.Class"/> and <seealso cref="ExternalException.ErrorCode"/>.</item>
+        ///// <item><term>2</term> Includes element for <seealso cref="SqlException.Procedure"/>.</item>
+        ///// <item><term>3</term> Includes attribute for <seealso cref="SqlException.LineNumber"/> and element for <seealso cref="SqlException.Source"/>.</item>
+        ///// <item><term>4 (or greater)</term> Includes attribute for <seealso cref="SqlException.ClientConnectionId"/> and element for
+        ///// <seealso cref="SqlException.Server"/>.</item>
+        ///// </list></remarks>
+        //public static void ApplyExceptionProperties(XElement element, System.Data.SqlClient.SqlException sqlException, int detailLevel = 0)
+        //{
+        //    element.SetAttributeValue(nameof(sqlException.State), sqlException.State);
+        //    element.SetAttributeValue(nameof(sqlException.Number), sqlException.Number);
+        //    if (detailLevel > 0)
+        //    {
+        //        element.SetAttributeValue(nameof(sqlException.Class), sqlException.Class);
+        //        ApplyExceptionProperties(element, (System.Runtime.InteropServices.ExternalException)sqlException);
+        //    }
+        //    if (detailLevel > 2)
+        //        element.SetAttributeValue(nameof(sqlException.LineNumber), sqlException.LineNumber);
+        //    if (detailLevel > 3)
+        //        element.SetAttributeValue(nameof(sqlException.ClientConnectionId), sqlException.ClientConnectionId);
+        //    if (detailLevel > 2)
+        //        element.Add(CreateTestResult(sqlException.Source, nameof(sqlException.Source)));
+        //    if (detailLevel > 1)
+        //        element.Add(CreateTestResult(sqlException.Procedure, nameof(sqlException.Procedure)));
+        //    if (detailLevel > 3)
+        //        element.Add(CreateTestResult(sqlException.Server, nameof(sqlException.Server)));
+        //}
 
         public static XElement CreateExceptionResult(this System.Runtime.InteropServices.ExternalException exception, XName elementName = null, bool includeMessage = false, int innerExceptionDepth = 0)
         {
@@ -490,8 +490,8 @@ namespace FsInfoCat.Test.Helpers
                     return CreateExceptionResult(fileNotFoundException, ApplyExceptionProperties, elementName, includeMessage, innerExceptionDepth);
                 else if (exception is System.Xml.XmlException xmlException)
                     return CreateExceptionResult(xmlException, ApplyExceptionProperties, elementName, includeMessage, innerExceptionDepth);
-                else if (exception is System.Data.SqlClient.SqlException sqlException)
-                    return CreateExceptionResult(sqlException, ApplyExceptionProperties, elementName, includeMessage, innerExceptionDepth);
+                //else if (exception is System.Data.SqlClient.SqlException sqlException)
+                //    return CreateExceptionResult(sqlException, ApplyExceptionProperties, elementName, includeMessage, innerExceptionDepth);
                 else if (exception is System.Runtime.InteropServices.ExternalException externalException)
                     return CreateExceptionResult(externalException, ApplyExceptionProperties, elementName, includeMessage, innerExceptionDepth);
             }
