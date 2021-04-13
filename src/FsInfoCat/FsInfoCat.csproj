@@ -23,7 +23,4 @@
     <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
   </ItemGroup>
-  <Target Name="PreBuild" AfterTargets="PreBuildEvent">
-    <CallTarget Targets="CheckCustomVars" />
-  </Target>
 </Project>
