@@ -1,0 +1,554 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FsInfoCat.Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="LoginName" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Role" Type="tinyint" Nullable="false" />
+          <Property Name="Notes" Type="ntext" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HostDevice">
+          <Key>
+            <PropertyRef Name="HostDeviceID" />
+          </Key>
+          <Property Name="HostDeviceID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MachineIdentifer" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MachineName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Platform" Type="tinyint" Nullable="false" />
+          <Property Name="AllowCrawl" Type="bit" Nullable="false" />
+          <Property Name="IsInactive" Type="bit" Nullable="false" />
+          <Property Name="Notes" Type="ntext" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserCredential">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PwHash" Type="nchar" MaxLength="96" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Volume">
+          <Key>
+            <PropertyRef Name="VolumeID" />
+          </Key>
+          <Property Name="VolumeID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="HostDeviceID" Type="uniqueidentifier" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RootPathName" Type="nvarchar" MaxLength="1024" Nullable="false" />
+          <Property Name="DriveFormat" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="VolumeName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Identifier" Type="nvarchar" MaxLength="1024" Nullable="false" />
+          <Property Name="MaxNameLength" Type="bigint" Nullable="false" />
+          <Property Name="CaseSensitive" Type="bit" Nullable="false" />
+          <Property Name="IsInactive" Type="bit" Nullable="false" />
+          <Property Name="Notes" Type="ntext" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Account_CreatedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Account1" Type="Self.Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Account1">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Account_ModifiedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Account1" Type="Self.Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Account1">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HostDevice_CreatedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="HostDevice" Type="Self.HostDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="HostDevice">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HostDevice_ModifiedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="HostDevice" Type="Self.HostDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="HostDevice">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCredential_CreatedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="UserCredential" Type="Self.UserCredential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="UserCredential">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCredential_ModifiedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="UserCredential" Type="Self.UserCredential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="UserCredential">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Volume_CreatedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Volume" Type="Self.Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Volume_Host">
+          <End Role="HostDevice" Type="Self.HostDevice" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Volume" Type="Self.Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HostDevice">
+              <PropertyRef Name="HostDeviceID" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="HostDeviceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Volume_ModifiedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Volume" Type="Self.Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FsInfoCatModelStoreContainer">
+          <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HostDevice" EntityType="Self.HostDevice" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserCredential" EntityType="Self.UserCredential" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Volume" EntityType="Self.Volume" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Account_CreatedBy" Association="Self.FK_Account_CreatedBy">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Account1" EntitySet="Account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Account_ModifiedBy" Association="Self.FK_Account_ModifiedBy">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Account1" EntitySet="Account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HostDevice_CreatedBy" Association="Self.FK_HostDevice_CreatedBy">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="HostDevice" EntitySet="HostDevice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HostDevice_ModifiedBy" Association="Self.FK_HostDevice_ModifiedBy">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="HostDevice" EntitySet="HostDevice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCredential_CreatedBy" Association="Self.FK_UserCredential_CreatedBy">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="UserCredential" EntitySet="UserCredential" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCredential_ModifiedBy" Association="Self.FK_UserCredential_ModifiedBy">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="UserCredential" EntitySet="UserCredential" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Volume_CreatedBy" Association="Self.FK_Volume_CreatedBy">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Volume" EntitySet="Volume" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Volume_Host" Association="Self.FK_Volume_Host">
+            <End Role="HostDevice" EntitySet="HostDevice" />
+            <End Role="Volume" EntitySet="Volume" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Volume_ModifiedBy" Association="Self.FK_Volume_ModifiedBy">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Volume" EntitySet="Volume" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FsInfoCat.Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="Guid" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LoginName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role" Type="Byte" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Account1" Relationship="Self.FK_Account_CreatedBy" FromRole="Account" ToRole="Account1" />
+          <NavigationProperty Name="Account2" Relationship="Self.FK_Account_CreatedBy" FromRole="Account1" ToRole="Account" />
+          <NavigationProperty Name="Account11" Relationship="Self.FK_Account_ModifiedBy" FromRole="Account" ToRole="Account1" />
+          <NavigationProperty Name="Account3" Relationship="Self.FK_Account_ModifiedBy" FromRole="Account1" ToRole="Account" />
+          <NavigationProperty Name="HostDevices" Relationship="Self.FK_HostDevice_CreatedBy" FromRole="Account" ToRole="HostDevice" />
+          <NavigationProperty Name="HostDevices1" Relationship="Self.FK_HostDevice_ModifiedBy" FromRole="Account" ToRole="HostDevice" />
+          <NavigationProperty Name="UserCredentials" Relationship="Self.FK_UserCredential_CreatedBy" FromRole="Account" ToRole="UserCredential" />
+          <NavigationProperty Name="UserCredentials1" Relationship="Self.FK_UserCredential_ModifiedBy" FromRole="Account" ToRole="UserCredential" />
+          <NavigationProperty Name="Volumes" Relationship="Self.FK_Volume_CreatedBy" FromRole="Account" ToRole="Volume" />
+          <NavigationProperty Name="Volumes1" Relationship="Self.FK_Volume_ModifiedBy" FromRole="Account" ToRole="Volume" />
+        </EntityType>
+        <EntityType Name="HostDevice">
+          <Key>
+            <PropertyRef Name="HostDeviceID" />
+          </Key>
+          <Property Name="HostDeviceID" Type="Guid" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MachineIdentifer" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MachineName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Platform" Type="Byte" Nullable="false" />
+          <Property Name="AllowCrawl" Type="Boolean" Nullable="false" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="Self.FK_HostDevice_CreatedBy" FromRole="HostDevice" ToRole="Account" />
+          <NavigationProperty Name="Account1" Relationship="Self.FK_HostDevice_ModifiedBy" FromRole="HostDevice" ToRole="Account" />
+          <NavigationProperty Name="Volumes" Relationship="Self.FK_Volume_Host" FromRole="HostDevice" ToRole="Volume" />
+        </EntityType>
+        <EntityType Name="UserCredential">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="Guid" Nullable="false" />
+          <Property Name="PwHash" Type="String" MaxLength="96" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="Self.FK_UserCredential_CreatedBy" FromRole="UserCredential" ToRole="Account" />
+          <NavigationProperty Name="Account1" Relationship="Self.FK_UserCredential_ModifiedBy" FromRole="UserCredential" ToRole="Account" />
+        </EntityType>
+        <EntityType Name="Volume">
+          <Key>
+            <PropertyRef Name="VolumeID" />
+          </Key>
+          <Property Name="VolumeID" Type="Guid" Nullable="false" />
+          <Property Name="HostDeviceID" Type="Guid" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RootPathName" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DriveFormat" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="VolumeName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Identifier" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MaxNameLength" Type="Int64" Nullable="false" />
+          <Property Name="CaseSensitive" Type="Boolean" Nullable="false" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="Self.FK_Volume_CreatedBy" FromRole="Volume" ToRole="Account" />
+          <NavigationProperty Name="Account1" Relationship="Self.FK_Volume_ModifiedBy" FromRole="Volume" ToRole="Account" />
+          <NavigationProperty Name="HostDevice" Relationship="Self.FK_Volume_Host" FromRole="Volume" ToRole="HostDevice" />
+        </EntityType>
+        <Association Name="FK_Account_CreatedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Account1" Type="Self.Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Account1">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Account_ModifiedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Account1" Type="Self.Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Account1">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HostDevice_CreatedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="HostDevice" Type="Self.HostDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="HostDevice">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HostDevice_ModifiedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="HostDevice" Type="Self.HostDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="HostDevice">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCredential_CreatedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="UserCredential" Type="Self.UserCredential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="UserCredential">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCredential_ModifiedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="UserCredential" Type="Self.UserCredential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="UserCredential">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Volume_CreatedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Volume" Type="Self.Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Volume_ModifiedBy">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Volume" Type="Self.Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Volume_Host">
+          <End Role="HostDevice" Type="Self.HostDevice" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Volume" Type="Self.Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HostDevice">
+              <PropertyRef Name="HostDeviceID" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="HostDeviceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FsInfoCatEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accounts" EntityType="Self.Account" />
+          <EntitySet Name="HostDevices" EntityType="Self.HostDevice" />
+          <EntitySet Name="UserCredentials" EntityType="Self.UserCredential" />
+          <EntitySet Name="Volumes" EntityType="Self.Volume" />
+          <AssociationSet Name="FK_Account_CreatedBy" Association="Self.FK_Account_CreatedBy">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Account1" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Account_ModifiedBy" Association="Self.FK_Account_ModifiedBy">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Account1" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HostDevice_CreatedBy" Association="Self.FK_HostDevice_CreatedBy">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="HostDevice" EntitySet="HostDevices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HostDevice_ModifiedBy" Association="Self.FK_HostDevice_ModifiedBy">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="HostDevice" EntitySet="HostDevices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCredential_CreatedBy" Association="Self.FK_UserCredential_CreatedBy">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="UserCredential" EntitySet="UserCredentials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCredential_ModifiedBy" Association="Self.FK_UserCredential_ModifiedBy">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="UserCredential" EntitySet="UserCredentials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Volume_CreatedBy" Association="Self.FK_Volume_CreatedBy">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Volume" EntitySet="Volumes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Volume_ModifiedBy" Association="Self.FK_Volume_ModifiedBy">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Volume" EntitySet="Volumes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Volume_Host" Association="Self.FK_Volume_Host">
+            <End Role="HostDevice" EntitySet="HostDevices" />
+            <End Role="Volume" EntitySet="Volumes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FsInfoCatModelStoreContainer" CdmEntityContainer="FsInfoCatEntities">
+          <EntitySetMapping Name="Accounts">
+            <EntityTypeMapping TypeName="FsInfoCat.Model.Account">
+              <MappingFragment StoreEntitySet="Account">
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="LoginName" ColumnName="LoginName" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HostDevices">
+            <EntityTypeMapping TypeName="FsInfoCat.Model.HostDevice">
+              <MappingFragment StoreEntitySet="HostDevice">
+                <ScalarProperty Name="HostDeviceID" ColumnName="HostDeviceID" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="MachineIdentifer" ColumnName="MachineIdentifer" />
+                <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+                <ScalarProperty Name="Platform" ColumnName="Platform" />
+                <ScalarProperty Name="AllowCrawl" ColumnName="AllowCrawl" />
+                <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCredentials">
+            <EntityTypeMapping TypeName="FsInfoCat.Model.UserCredential">
+              <MappingFragment StoreEntitySet="UserCredential">
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="PwHash" ColumnName="PwHash" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Volumes">
+            <EntityTypeMapping TypeName="FsInfoCat.Model.Volume">
+              <MappingFragment StoreEntitySet="Volume">
+                <ScalarProperty Name="VolumeID" ColumnName="VolumeID" />
+                <ScalarProperty Name="HostDeviceID" ColumnName="HostDeviceID" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="RootPathName" ColumnName="RootPathName" />
+                <ScalarProperty Name="DriveFormat" ColumnName="DriveFormat" />
+                <ScalarProperty Name="VolumeName" ColumnName="VolumeName" />
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="MaxNameLength" ColumnName="MaxNameLength" />
+                <ScalarProperty Name="CaseSensitive" ColumnName="CaseSensitive" />
+                <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
