@@ -8,6 +8,12 @@
     <Description>Supporting CLR Library for FS InfoCat</Description>
     <Product>FS InfoCat Common Library</Product>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <Platform Condition=" '$(Platform)' == '' Or '$(Platform)' == 'Any CPU' ">AnyCPU</Platform>
+    <Configuration Condition=" '$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release' ">Debug</Configuration>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Company>Leonard T. Erwine</Company>
+    <Copyright>Copyright © Leonard Thomas Erwine 2021</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.3.1" />

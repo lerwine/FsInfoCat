@@ -1,9 +1,0 @@
-{
-    "[powershell]": {
-        "files.trimTrailingWhitespace": true
-    },
-    "[csharp]": {
-        "files.trimTrailingWhitespace": true
-    },
-    "powershell.codeFormatting.addWhitespaceAroundPipe": true
-}
