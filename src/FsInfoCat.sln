@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.Test", "FsInfoCat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Desktop", "FsInfoCat.Desktop\FsInfoCat.Desktop.csproj", "{AA1B5BAA-DA72-430D-A8E9-FD7546413915}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "FsInfoCatDb", "FsInfoCatDb\FsInfoCatDb.sqlproj", "{E49CC653-786D-41FB-80AB-945474AEB01D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU
@@ -55,6 +57,24 @@ Global
 		{AA1B5BAA-DA72-430D-A8E9-FD7546413915}.Release|x64.Build.0 = Release|Any CPU
 		{AA1B5BAA-DA72-430D-A8E9-FD7546413915}.Release|x86.ActiveCfg = Release|Any CPU
 		{AA1B5BAA-DA72-430D-A8E9-FD7546413915}.Release|x86.Build.0 = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|AnyCPU.Deploy.0 = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|x64.Build.0 = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|x86.Build.0 = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|AnyCPU.Build.0 = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|AnyCPU.Deploy.0 = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|x64.ActiveCfg = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|x64.Build.0 = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|x64.Deploy.0 = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|x86.ActiveCfg = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|x86.Build.0 = Release|Any CPU
+		{E49CC653-786D-41FB-80AB-945474AEB01D}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
