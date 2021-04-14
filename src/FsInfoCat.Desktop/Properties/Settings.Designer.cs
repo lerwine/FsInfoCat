@@ -33,5 +33,14 @@ namespace FsInfoCat.Desktop.Properties {
                 return ((string)(this["FsInfoCatConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCatEntities")]
+        public string EdmConnectionStringSettingName {
+            get {
+                return ((string)(this["EdmConnectionStringSettingName"]));
+            }
+        }
     }
 }

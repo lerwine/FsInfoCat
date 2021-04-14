@@ -138,6 +138,7 @@
     <Compile Include="Account.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Converters\SqlAuthenticationMethodToBooleanConverter.cs" />
     <Compile Include="DataModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -159,14 +160,21 @@
     <Compile Include="UserCredential.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\DbConnectionViewModel.cs" />
+    <Compile Include="ViewModel\DbConnectionSettingsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="View\DbConnectionSettingsWindow.xaml.cs">
+      <DependentUpon>DbConnectionSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Volume.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Page Include="View\DbConnectionSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

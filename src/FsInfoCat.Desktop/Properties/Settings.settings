@@ -10,5 +10,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=c868dbserver.database.windows.net;Initial Catalog=FsInfoCat;Persist Security Info=True;User ID=fsinfocatadmin;Connect Timeout=30;Encrypt=True</Value>
     </Setting>
+    <Setting Name="EdmConnectionStringSettingName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">FsInfoCatEntities</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
