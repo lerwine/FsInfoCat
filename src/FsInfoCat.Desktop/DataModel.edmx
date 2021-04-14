@@ -417,7 +417,6 @@
         <EntityContainer Name="FsInfoCatEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Accounts" EntityType="Self.Account" />
           <EntitySet Name="HostDevices" EntityType="Self.HostDevice" />
-          <EntitySet Name="UserCredentials" EntityType="Self.UserCredential" />
           <EntitySet Name="Volumes" EntityType="Self.Volume" />
           <AssociationSet Name="FK_Account_CreatedBy" Association="Self.FK_Account_CreatedBy">
             <End Role="Account" EntitySet="Accounts" />
@@ -455,6 +454,7 @@
             <End Role="HostDevice" EntitySet="HostDevices" />
             <End Role="Volume" EntitySet="Volumes" />
           </AssociationSet>
+          <EntitySet Name="UserCredentials" EntityType="FsInfoCat.Model.UserCredential" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -463,17 +463,17 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="FsInfoCatModelStoreContainer" CdmEntityContainer="FsInfoCatEntities">
           <EntitySetMapping Name="Accounts">
-            <EntityTypeMapping TypeName="FsInfoCat.Model.Account">
+            <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.Account)">
               <MappingFragment StoreEntitySet="Account">
                 <ScalarProperty Name="AccountID" ColumnName="AccountID" />
-                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
-                <ScalarProperty Name="LoginName" ColumnName="LoginName" />
-                <ScalarProperty Name="Role" ColumnName="Role" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="LoginName" ColumnName="LoginName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -488,18 +488,6 @@
                 <ScalarProperty Name="AllowCrawl" ColumnName="AllowCrawl" />
                 <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserCredentials">
-            <EntityTypeMapping TypeName="FsInfoCat.Model.UserCredential">
-              <MappingFragment StoreEntitySet="UserCredential">
-                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
-                <ScalarProperty Name="PwHash" ColumnName="PwHash" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
@@ -525,6 +513,13 @@
                 <ScalarProperty Name="CaseSensitive" ColumnName="CaseSensitive" />
                 <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCredentials">
+            <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.UserCredential)" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+              <MappingFragment StoreEntitySet="UserCredential">
+                <ScalarProperty Name="PwHash" ColumnName="PwHash" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

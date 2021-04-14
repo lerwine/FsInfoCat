@@ -26,8 +26,8 @@
         <Label Content="Password:" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0" Padding="5,5,5,0"/>
         <PasswordBox x:Name="PasswordTextBox" Grid.Row="3" Height="23" Grid.ColumnSpan="2" Margin="0,0,0,5"/>
         <TextBlock x:Name="ErrorMessageTextBlock" Grid.Row="4" TextWrapping="Wrap" Text="User name is required." Grid.ColumnSpan="2" Foreground="Red" Margin="0,5"/>
-        <Button Content="Login" HorizontalAlignment="Right" Grid.Row="5" VerticalAlignment="Bottom" Width="75" Click="LoginButton_Click" Margin="0,5,5,5"/>
-        <Button Content="Cancel" Grid.Column="1" Grid.Row="5" VerticalAlignment="Bottom" Width="75" Click="CancelButton_Click" Margin="0.5,5,0,5"/>
+        <Button x:Name="LoginButton" Content="Login" HorizontalAlignment="Right" Grid.Row="5" VerticalAlignment="Bottom" Width="75" Click="LoginButton_Click" Margin="0,5,5,5"/>
+        <Button x:Name="CancelButton" Content="Cancel" Grid.Column="1" Grid.Row="5" VerticalAlignment="Bottom" Width="75" Click="CancelButton_Click" Margin="0.5,5,0,5"/>
         <StatusBar Grid.Row="6" Grid.ColumnSpan="2">
             <StatusBarItem>
                 <ProgressBar Width="200"/>

@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="FS InfoCat" Height="768" Width="1024" DataContext="{Binding Mode=OneWay, Source={StaticResource MainVM}}">
     <Window.Resources>
-        <converters:AccountToStringConverter x:Key="AccountConverter"/>
+        <converters:AccountToStringConverter x:Key="AccountConverter" NullSource="(not logged in)"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>
     <Grid>
@@ -20,8 +20,7 @@
         <Menu>
             <MenuItem Header="File">
                 <Separator/>
-                <MenuItem Header="Login" IsEnabled="{Binding IsLoggedIn, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"/>
-                <MenuItem Header="Logout" IsEnabled="{Binding IsLoggedIn, Mode=OneWay}"/>
+                <MenuItem Header="Exit" />
             </MenuItem>
             <MenuItem Header="Options"/>
             <Separator/>

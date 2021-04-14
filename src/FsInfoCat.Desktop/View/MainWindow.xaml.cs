@@ -23,19 +23,24 @@ namespace FsInfoCat.Desktop.View
         public MainWindow()
         {
             InitializeComponent();
-            ViewModel.MainViewModel mainViewModel = (ViewModel.MainViewModel)DataContext;
-            mainViewModel.Login += MainViewModel_Login;
-            mainViewModel.LogOut += MainViewModel_LogOut;
         }
 
-        private void MainViewModel_LogOut(object sender, EventArgs e)
+        protected override void OnActivated(EventArgs e)
         {
-            // TODO: Implement MainViewModel_LogOut
-        }
-
-        private void MainViewModel_Login(object sender, EventArgs e)
-        {
-            // TODO: Implement MainViewModel_Login
+            base.OnActivated(e);
+            ViewModel.SettingsViewModel settingsViewModel = App.GetSettingsVM();
+            if (settingsViewModel.User is null)
+            {
+                if (string.IsNullOrWhiteSpace(settingsViewModel.MachineSID) || string.IsNullOrWhiteSpace(settingsViewModel.MachineName))
+                {
+                    MessageBox.Show("Failed to detect machine identifier", "Initialization failure", MessageBoxButton.OK, MessageBoxImage.Error);
+                    DialogResult = false;
+                    Close();
+                }
+                (new LoginWindow { Owner = this }).ShowDialog();
+                if (settingsViewModel.User is null)
+                    Close();
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ namespace FsInfoCat.Desktop
     
         public DbSet<Account> Accounts { get; set; }
         public DbSet<HostDevice> HostDevices { get; set; }
-        public DbSet<UserCredential> UserCredentials { get; set; }
         public DbSet<Volume> Volumes { get; set; }
+        public DbSet<UserCredential> UserCredentials { get; set; }
     }
 }

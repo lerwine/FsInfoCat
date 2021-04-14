@@ -68,25 +68,39 @@ namespace FsInfoCat.Desktop.ViewModel
         public SettingsViewModel()
         {
             _logger = App.LoggerFactory.CreateLogger<SettingsViewModel>();
-            MachineName = Environment.MachineName;
-            try
-            {
-                SelectQuery selectQuery = new SelectQuery("SELECT * from Win32_UserAccount WHERE Name=\"Administrator\"");
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery))
+        }
+
+        private Task<SecurityIdentifier> _task = null;
+
+        internal Task<SecurityIdentifier> GetMachineIdentifierAsync()
+        {
+            Task<SecurityIdentifier> task;
+            lock (this)
+                if ((task = _task) is null)
                 {
-                    ManagementObjectCollection managementObjectCollection = searcher.Get();
-                    if (managementObjectCollection.Count > 0)
+                    MachineName = Environment.MachineName;
+                    _task = task = Task.Factory.StartNew(() =>
                     {
-                        ManagementObject item = managementObjectCollection.OfType<ManagementObject>().First();
-                        SecurityIdentifier sid = new SecurityIdentifier(item["SID"] as string);
-                        MachineSID = sid.AccountDomainSid.ToString();
-                    }
+                        SelectQuery selectQuery = new SelectQuery("SELECT * from Win32_UserAccount WHERE Name=\"Administrator\"");
+                        using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery))
+                        {
+                            ManagementObjectCollection managementObjectCollection = searcher.Get();
+                            if (managementObjectCollection.Count > 0)
+                            {
+                                ManagementObject item = managementObjectCollection.OfType<ManagementObject>().First();
+                                SecurityIdentifier sid = new SecurityIdentifier(item["SID"] as string).AccountDomainSid;
+                                if (!(sid is null))
+                                    return Dispatcher.Invoke(() =>
+                                    {
+                                        MachineSID = sid.ToString();
+                                        return sid;
+                                    });
+                            }
+                        }
+                        return null;
+                    });
                 }
-            }
-            catch (Exception exception)
-            {
-                _logger.LogCritical(exception, "Unable to get machine SID");
-            }
+            return task;
         }
     }
 }
