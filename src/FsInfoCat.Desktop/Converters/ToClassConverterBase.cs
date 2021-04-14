@@ -8,30 +8,10 @@ namespace FsInfoCat.Desktop.Converters
     public abstract class ToClassConverterBase<TSource, TTarget> : DependencyObject, IValueConverter
         where TTarget : class
     {
-        #region NullSource Property Members
-
         /// <summary>
-        /// Defines the name for the <see cref="NullSource"/> dependency property.
+        /// <see cref="TTarget"/> value to represent a null source value.
         /// </summary>
-        public const string DependencyPropertyName_NullSource = "NullSource";
-
-        // BUG: This can't be bound to. Need to make this a protected, with derived classes doing the implementation
-        /// <summary>
-        /// Identifies the <see cref="NullSource"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(DependencyPropertyName_NullSource, typeof(TTarget),
-            typeof(ToClassConverterBase<TSource, TTarget>), new PropertyMetadata(null));
-
-        /// <summary>
-        /// <typeparamref name="TTarget"/> to return when the binding source produces a null value.
-        /// </summary>
-        public TTarget NullSource
-        {
-            get { return (TTarget)(GetValue(NullSourceProperty)); }
-            set { SetValue(NullSourceProperty, value); }
-        }
-
-        #endregion
+        public abstract TTarget NullSource { get; set; }
 
         /// <summary>
         /// Converts a <typeparamref name="TSource"/> value to a <typeparamref name="TTarget"/> value.
