@@ -23,6 +23,19 @@ namespace FsInfoCat.Desktop.View
         public MainWindow()
         {
             InitializeComponent();
+            ViewModel.MainViewModel mainViewModel = (ViewModel.MainViewModel)DataContext;
+            mainViewModel.Login += MainViewModel_Login;
+            mainViewModel.LogOut += MainViewModel_LogOut;
+        }
+
+        private void MainViewModel_LogOut(object sender, EventArgs e)
+        {
+            // TODO: Implement MainViewModel_LogOut
+        }
+
+        private void MainViewModel_Login(object sender, EventArgs e)
+        {
+            // TODO: Implement MainViewModel_Login
         }
     }
 }

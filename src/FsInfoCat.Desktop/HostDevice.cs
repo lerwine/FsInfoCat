@@ -32,8 +32,8 @@ namespace FsInfoCat.Desktop
         public System.DateTime ModifiedOn { get; set; }
         public System.Guid ModifiedBy { get; set; }
     
-        public virtual Account Account { get; set; }
-        public virtual Account Account1 { get; set; }
+        public virtual Account CreatedBy_Account { get; set; }
+        public virtual Account ModifiedBy_Account { get; set; }
         public virtual ICollection<Volume> Volumes { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace FsInfoCat.Desktop.Converters
         /// </summary>
         public const string DependencyPropertyName_NullSource = "NullSource";
 
+        // BUG: This can't be bound to. Need to make this a protected, with derived classes doing the implementation
         /// <summary>
         /// Identifies the <see cref="NullSource"/> dependency property.
         /// </summary>

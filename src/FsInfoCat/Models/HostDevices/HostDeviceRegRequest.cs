@@ -13,16 +13,16 @@ namespace FsInfoCat.Models.HostDevices
         private string _machineName = "";
         private PlatformType _platform;
 
-        [MaxLength(DB.HostDevice.Max_Length_DisplayName, ErrorMessage = DB.HostDevice.Error_Message_DisplayName)]
-        [Display(Name = DB.HostDevice.DisplayName_DisplayName)]
+        [MaxLength(HostDevice.Max_Length_DisplayName, ErrorMessage = HostDevice.Error_Message_DisplayName)]
+        [Display(Name = HostDevice.DisplayName_DisplayName)]
         public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = (value is null) ? "" : value; }
         }
 
-        [MaxLength(DB.HostDevice.Max_Length_MachineIdentifer, ErrorMessage = DB.HostDevice.Error_Message_MachineIdentifer)]
-        [Display(Name = DB.HostDevice.DisplayName_MachineIdentifer)]
+        [MaxLength(HostDevice.Max_Length_MachineIdentifer, ErrorMessage = HostDevice.Error_Message_MachineIdentifer)]
+        [Display(Name = HostDevice.DisplayName_MachineIdentifer)]
         public string MachineIdentifer
         {
             get { return _machineIdentifer; }
@@ -31,9 +31,9 @@ namespace FsInfoCat.Models.HostDevices
 
         [Required()]
         [MinLength(1)]
-        [MaxLength(DB.HostDevice.Max_Length_MachineName, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Length)]
-        [Display(Name = DB.HostDevice.DisplayName_MachineName)]
-        [RegularExpression(FileUriConverter.PATTERN_BASIC_OR_DNS_NAME, ErrorMessage = DB.HostDevice.Error_Message_MachineName_Invalid)]
+        [MaxLength(HostDevice.Max_Length_MachineName, ErrorMessage = HostDevice.Error_Message_MachineName_Length)]
+        [Display(Name = HostDevice.DisplayName_MachineName)]
+        [RegularExpression(FileUriConverter.PATTERN_BASIC_OR_DNS_NAME, ErrorMessage = HostDevice.Error_Message_MachineName_Invalid)]
         public string MachineName
         {
             get { return _machineName; }

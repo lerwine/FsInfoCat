@@ -16,14 +16,14 @@ namespace FsInfoCat.Desktop
     {
         public Account()
         {
-            this.Account1 = new HashSet<Account>();
-            this.Account11 = new HashSet<Account>();
-            this.HostDevices = new HashSet<HostDevice>();
-            this.HostDevices1 = new HashSet<HostDevice>();
-            this.UserCredentials = new HashSet<UserCredential>();
-            this.UserCredentials1 = new HashSet<UserCredential>();
-            this.Volumes = new HashSet<Volume>();
-            this.Volumes1 = new HashSet<Volume>();
+            this.CreatedBy_Account = new HashSet<Account>();
+            this.Modified_Accounts = new HashSet<Account>();
+            this.Created_HostDevices = new HashSet<HostDevice>();
+            this.Modified_HostDevices = new HashSet<HostDevice>();
+            this.Created_UserCredentials = new HashSet<UserCredential>();
+            this.CreatedBy_UserCredentials = new HashSet<UserCredential>();
+            this.Created_Volumes = new HashSet<Volume>();
+            this.Modified_Volumes = new HashSet<Volume>();
         }
     
         public System.Guid AccountID { get; set; }
@@ -36,15 +36,15 @@ namespace FsInfoCat.Desktop
         public System.DateTime ModifiedOn { get; set; }
         public System.Guid ModifiedBy { get; set; }
     
-        public virtual ICollection<Account> Account1 { get; set; }
-        public virtual Account Account2 { get; set; }
-        public virtual ICollection<Account> Account11 { get; set; }
-        public virtual Account Account3 { get; set; }
-        public virtual ICollection<HostDevice> HostDevices { get; set; }
-        public virtual ICollection<HostDevice> HostDevices1 { get; set; }
-        public virtual ICollection<UserCredential> UserCredentials { get; set; }
-        public virtual ICollection<UserCredential> UserCredentials1 { get; set; }
-        public virtual ICollection<Volume> Volumes { get; set; }
-        public virtual ICollection<Volume> Volumes1 { get; set; }
+        public virtual ICollection<Account> CreatedBy_Account { get; set; }
+        public virtual Account Created_Accounts { get; set; }
+        public virtual ICollection<Account> Modified_Accounts { get; set; }
+        public virtual Account ModifiedBy_Account { get; set; }
+        public virtual ICollection<HostDevice> Created_HostDevices { get; set; }
+        public virtual ICollection<HostDevice> Modified_HostDevices { get; set; }
+        public virtual ICollection<UserCredential> Created_UserCredentials { get; set; }
+        public virtual ICollection<UserCredential> CreatedBy_UserCredentials { get; set; }
+        public virtual ICollection<Volume> Created_Volumes { get; set; }
+        public virtual ICollection<Volume> Modified_Volumes { get; set; }
     }
 }

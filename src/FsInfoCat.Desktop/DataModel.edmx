@@ -237,16 +237,16 @@
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedBy" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Account1" Relationship="Self.FK_Account_CreatedBy" FromRole="Account" ToRole="Account1" />
-          <NavigationProperty Name="Account2" Relationship="Self.FK_Account_CreatedBy" FromRole="Account1" ToRole="Account" />
-          <NavigationProperty Name="Account11" Relationship="Self.FK_Account_ModifiedBy" FromRole="Account" ToRole="Account1" />
-          <NavigationProperty Name="Account3" Relationship="Self.FK_Account_ModifiedBy" FromRole="Account1" ToRole="Account" />
-          <NavigationProperty Name="HostDevices" Relationship="Self.FK_HostDevice_CreatedBy" FromRole="Account" ToRole="HostDevice" />
-          <NavigationProperty Name="HostDevices1" Relationship="Self.FK_HostDevice_ModifiedBy" FromRole="Account" ToRole="HostDevice" />
-          <NavigationProperty Name="UserCredentials" Relationship="Self.FK_UserCredential_CreatedBy" FromRole="Account" ToRole="UserCredential" />
-          <NavigationProperty Name="UserCredentials1" Relationship="Self.FK_UserCredential_ModifiedBy" FromRole="Account" ToRole="UserCredential" />
-          <NavigationProperty Name="Volumes" Relationship="Self.FK_Volume_CreatedBy" FromRole="Account" ToRole="Volume" />
-          <NavigationProperty Name="Volumes1" Relationship="Self.FK_Volume_ModifiedBy" FromRole="Account" ToRole="Volume" />
+          <NavigationProperty Name="CreatedBy_Account" Relationship="Self.FK_Account_CreatedBy" FromRole="Account" ToRole="Account1" />
+          <NavigationProperty Name="Created_Accounts" Relationship="Self.FK_Account_CreatedBy" FromRole="Account1" ToRole="Account" />
+          <NavigationProperty Name="Modified_Accounts" Relationship="Self.FK_Account_ModifiedBy" FromRole="Account" ToRole="Account1" />
+          <NavigationProperty Name="ModifiedBy_Account" Relationship="Self.FK_Account_ModifiedBy" FromRole="Account1" ToRole="Account" />
+          <NavigationProperty Name="Created_HostDevices" Relationship="Self.FK_HostDevice_CreatedBy" FromRole="Account" ToRole="HostDevice" />
+          <NavigationProperty Name="Modified_HostDevices" Relationship="Self.FK_HostDevice_ModifiedBy" FromRole="Account" ToRole="HostDevice" />
+          <NavigationProperty Name="Created_UserCredentials" Relationship="Self.FK_UserCredential_CreatedBy" FromRole="Account" ToRole="UserCredential" />
+          <NavigationProperty Name="CreatedBy_UserCredentials" Relationship="Self.FK_UserCredential_ModifiedBy" FromRole="Account" ToRole="UserCredential" />
+          <NavigationProperty Name="Created_Volumes" Relationship="Self.FK_Volume_CreatedBy" FromRole="Account" ToRole="Volume" />
+          <NavigationProperty Name="Modified_Volumes" Relationship="Self.FK_Volume_ModifiedBy" FromRole="Account" ToRole="Volume" />
         </EntityType>
         <EntityType Name="HostDevice">
           <Key>
@@ -264,8 +264,8 @@
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedBy" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Account" Relationship="Self.FK_HostDevice_CreatedBy" FromRole="HostDevice" ToRole="Account" />
-          <NavigationProperty Name="Account1" Relationship="Self.FK_HostDevice_ModifiedBy" FromRole="HostDevice" ToRole="Account" />
+          <NavigationProperty Name="CreatedBy_Account" Relationship="Self.FK_HostDevice_CreatedBy" FromRole="HostDevice" ToRole="Account" />
+          <NavigationProperty Name="ModifiedBy_Account" Relationship="Self.FK_HostDevice_ModifiedBy" FromRole="HostDevice" ToRole="Account" />
           <NavigationProperty Name="Volumes" Relationship="Self.FK_Volume_Host" FromRole="HostDevice" ToRole="Volume" />
         </EntityType>
         <EntityType Name="UserCredential">
@@ -278,8 +278,8 @@
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedBy" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Account" Relationship="Self.FK_UserCredential_CreatedBy" FromRole="UserCredential" ToRole="Account" />
-          <NavigationProperty Name="Account1" Relationship="Self.FK_UserCredential_ModifiedBy" FromRole="UserCredential" ToRole="Account" />
+          <NavigationProperty Name="CreatedBy_Account" Relationship="Self.FK_UserCredential_CreatedBy" FromRole="UserCredential" ToRole="Account" />
+          <NavigationProperty Name="ModifiedBy_Account" Relationship="Self.FK_UserCredential_ModifiedBy" FromRole="UserCredential" ToRole="Account" />
         </EntityType>
         <EntityType Name="Volume">
           <Key>
@@ -300,8 +300,8 @@
           <Property Name="CaseSensitive" Type="Boolean" Nullable="false" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
           <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Account" Relationship="Self.FK_Volume_CreatedBy" FromRole="Volume" ToRole="Account" />
-          <NavigationProperty Name="Account1" Relationship="Self.FK_Volume_ModifiedBy" FromRole="Volume" ToRole="Account" />
+          <NavigationProperty Name="CreatedBy_Account" Relationship="Self.FK_Volume_CreatedBy" FromRole="Volume" ToRole="Account" />
+          <NavigationProperty Name="ModifiedBy_Account" Relationship="Self.FK_Volume_ModifiedBy" FromRole="Volume" ToRole="Account" />
           <NavigationProperty Name="HostDevice" Relationship="Self.FK_Volume_Host" FromRole="Volume" ToRole="HostDevice" />
         </EntityType>
         <Association Name="FK_Account_CreatedBy">

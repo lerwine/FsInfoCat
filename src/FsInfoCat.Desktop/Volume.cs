@@ -30,8 +30,8 @@ namespace FsInfoCat.Desktop
         public bool IsInactive { get; set; }
         public string Notes { get; set; }
     
-        public virtual Account Account { get; set; }
-        public virtual Account Account1 { get; set; }
+        public virtual Account CreatedBy_Account { get; set; }
+        public virtual Account ModifiedBy_Account { get; set; }
         public virtual HostDevice HostDevice { get; set; }
     }
 }

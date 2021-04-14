@@ -1,9 +1,11 @@
-﻿<Application x:Class="FsInfoCat.Desktop.App"
+<Application x:Class="FsInfoCat.Desktop.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:FsInfoCat.Desktop"
+             xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
              StartupUri="View\MainWindow.xaml">
     <Application.Resources>
-
+        <vm:MainViewModel x:Key="MainVM" />
+        <vm:SettingsViewModel x:Key="SettingsVM" />
     </Application.Resources>
 </Application>

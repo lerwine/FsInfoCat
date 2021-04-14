@@ -4,13 +4,50 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
-        xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
+        xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters"
         mc:Ignorable="d"
-        Title="FS InfoCat" Height="768" Width="1024">
-    <Window.DataContext>
-        <vm:MainViewModel/>
-    </Window.DataContext>
+        Title="FS InfoCat" Height="768" Width="1024" DataContext="{Binding Mode=OneWay, Source={StaticResource MainVM}}">
+    <Window.Resources>
+        <converters:AccountToStringConverter x:Key="AccountConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </Window.Resources>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="File">
+                <Separator/>
+                <MenuItem Header="Login" IsEnabled="{Binding IsLoggedIn, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"/>
+                <MenuItem Header="Logout" IsEnabled="{Binding IsLoggedIn, Mode=OneWay}"/>
+            </MenuItem>
+            <MenuItem Header="Options"/>
+            <Separator/>
+            <MenuItem Header="Help"/>
+        </Menu>
+        <StatusBar Grid.Row="2" DataContext="{DynamicResource SettingsVM}">
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="User Name: " />
+                    <TextBlock Text="{Binding User, Converter={StaticResource AccountConverter}, Mode=OneWay}" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Machine ID: " />
+                    <TextBlock Text="{Binding MachineSID, Mode=OneWay}"/>
+                    <TextBlock Text=" ("/>
+                    <TextBlock Text="{Binding MachineName, Mode=OneWay}"/>
+                    <TextBlock Text=")"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <ProgressBar/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
