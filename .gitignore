@@ -36,3 +36,5 @@ Thumbs.db
 /Debug
 /src/packages/EntityFramework.5.0.0
 /src/packages
+/src/FsInfoCatDb/FsInfoCatDb.jfm
+/src/FsInfoCatDb/FsInfoCatDb.dbmdl
