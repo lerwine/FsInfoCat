@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:r="http://git.erwinefamily.net/FsInfoCat/V1/References.xsd"
                 xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns:msxsl="urn:schemas-microsoft-com:xslt"
                 xmlns="" extension-element-prefixes="msxsl">
+
     <xsl:output encoding="utf-8" omit-xml-declaration="yes" method="xml" />
+    
     <!-- Semicolon-separated list of values from /b:Sources/b:Source/b:Tag elements of the sources to be included in the reference listing. Empty string emits all references -->
     <xsl:param name="tagNames" select="''"/>
     <xsl:variable name="UcLetters" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
@@ -17,7 +19,7 @@
                 <xsl:attribute name="type">
                     <xsl:text>bullet</xsl:text>
                 </xsl:attribute>
-                <xsl:apply-templates select="b:Sources/b:Source" mode="Reference" />
+                <xsl:apply-templates select="r:References/b:Sources/b:Source" mode="Reference" />
         <xsl:text>
     /// </xsl:text>
             </xsl:element>

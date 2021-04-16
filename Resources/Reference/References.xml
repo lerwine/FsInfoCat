@@ -1,241 +1,157 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<b:Bibliography xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography"
-    xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" SelectedStyle="\APASixthEditionOfficeOnline.xsl" StyleName="APA" Version="6">
-    <b:Source>
-        <b:Tag>rfc6068</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{F32E32FE-9EB7-47D1-BE71-136674931E79}</b:Guid>
-        <b:Title>The 'mailto' URI Scheme</b:Title>
-        <b:Year>2010</b:Year>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>April</b:MonthAccessed>
-        <b:DayAccessed>07</b:DayAccessed>
-        <b:URL>https://tools.ietf.org/html/rfc6068</b:URL>
-        <b:DOI>10.17487/RFC6068</b:DOI>
-        <b:Author>
-            <b:Author>
-                <b:NameList>
-                    <b:Person>
-                        <b:Last>Duerst</b:Last>
-                        <b:First>Martin</b:First>
-                    </b:Person>
-                    <b:Person>
-                        <b:Last>Masinter</b:Last>
-                        <b:First>Larry</b:First>
-                    </b:Person>
-                    <b:Person>
-                        <b:Last>Zawinski</b:Last>
-                        <b:First>Jamie</b:First>
-                    </b:Person>
-                </b:NameList>
-            </b:Author>
-        </b:Author>
-        <b:InternetSiteTitle>IETF Tools</b:InternetSiteTitle>
-        <b:Month>October</b:Month>
-        <b:ProductionCompany>Internet Engineering Task Force (IETF)</b:ProductionCompany>
-        <b:RefOrder>1</b:RefOrder>
-    </b:Source>
-    <b:Source>
-        <b:Tag>RFC6874</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{DC2FF8F4-B312-4AFD-A50E-82C5D3BE9BF4}</b:Guid>
-        <b:Title>Representing IPv6 Zone Identifiers in Address Literals and Uniform Resource Identifiers</b:Title>
-        <b:InternetSiteTitle>IETF Tools</b:InternetSiteTitle>
-        <b:Year>2013</b:Year>
-        <b:Month>February</b:Month>
-        <b:URL>https://tools.ietf.org/html/rfc6874</b:URL>
-        <b:ProductionCompany>Internet Engineering Task Force (IETF)</b:ProductionCompany>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>04</b:MonthAccessed>
-        <b:DayAccessed>07</b:DayAccessed>
-        <b:Author>
-            <b:Author>
-                <b:NameList>
-                    <b:Person>
-                        <b:Last>Carpenter</b:Last>
-                        <b:First>Brian</b:First>
-                    </b:Person>
-                    <b:Person>
-                        <b:Last>Hinden</b:Last>
-                        <b:First>Robert</b:First>
-                    </b:Person>
-                    <b:Person>
-                        <b:Last>Cheshire</b:Last>
-                        <b:First>Stuart</b:First>
-                    </b:Person>
-                </b:NameList>
-            </b:Author>
-        </b:Author>
-        <b:DOI>10.17487/RFC6874</b:DOI>
-        <b:RefOrder>2</b:RefOrder>
-    </b:Source>
-    <b:Source>
-        <b:Tag>RFC3986</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{363582AF-B1B8-4A17-8E8C-14127B1DFF40}</b:Guid>
-        <b:Title>Uniform Resource Identifier (URI): Generic Syntax</b:Title>
-        <b:InternetSiteTitle>IETF Tools</b:InternetSiteTitle>
-        <b:Year>2005</b:Year>
-        <b:Month>January</b:Month>
-        <b:URL>https://tools.ietf.org/html/rfc3986</b:URL>
-        <b:ProductionCompany>Internet Engineering Task Force (IETF)</b:ProductionCompany>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>04</b:MonthAccessed>
-        <b:DayAccessed>10</b:DayAccessed>
-        <b:StandardNumber>STD66</b:StandardNumber>
-        <b:Author>
-            <b:Author>
-                <b:NameList>
-                    <b:Person>
-                        <b:Last>Berners-Lee</b:Last>
-                        <b:First>Tim</b:First>
-                    </b:Person>
-                    <b:Person>
-                        <b:Last>Masinter</b:Last>
-                        <b:First>Larry</b:First>
-                    </b:Person>
-                    <b:Person>
-                        <b:Last>Fielding</b:Last>
-                        <b:Middle>T</b:Middle>
-                        <b:First>Roy</b:First>
-                    </b:Person>
-                </b:NameList>
-            </b:Author>
-        </b:Author>
-        <b:DOI>10.17487/RFC3986</b:DOI>
-        <b:RefOrder>3</b:RefOrder>
-    </b:Source>
-    <b:Source>
-        <b:Tag>RFC8089</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{88AF8F75-866B-446F-949F-D80821C9F8A2}</b:Guid>
-        <b:Title>The "file" URI Scheme</b:Title>
-        <b:InternetSiteTitle>IETF Tools</b:InternetSiteTitle>
-        <b:Year>2017</b:Year>
-        <b:Month>February</b:Month>
-        <b:URL>https://tools.ietf.org/html/rfc8089</b:URL>
-        <b:Author>
-            <b:Author>
-                <b:NameList>
-                    <b:Person>
-                        <b:Last>Kerwin</b:Last>
-                        <b:First>Matthew</b:First>
-                    </b:Person>
-                </b:NameList>
-            </b:Author>
-        </b:Author>
-        <b:ProductionCompany>Internet Engineering Task Force (IETF)</b:ProductionCompany>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>04</b:MonthAccessed>
-        <b:DayAccessed>07</b:DayAccessed>
-        <b:DOI>10.17487/RFC8089</b:DOI>
-        <b:RefOrder>4</b:RefOrder>
-    </b:Source>
-    <b:Source>
-        <b:Tag>MDNXSLT</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{183F1D16-869C-4575-9003-60EF175C1E26}</b:Guid>
-        <b:Author>
-            <b:Author>
-                <b:Corporate>MDN contributors</b:Corporate>
-            </b:Author>
-        </b:Author>
-        <b:Title>The Netscape XSLT/XPath Reference</b:Title>
-        <b:InternetSiteTitle>MDN Web Docs</b:InternetSiteTitle>
-        <b:Year>2021</b:Year>
-        <b:Month>03</b:Month>
-        <b:Day>23</b:Day>
-        <b:URL>https://developer.mozilla.org/en-US/docs/Web/XSLT/Transforming_XML_with_XSLT/The_Netscape_XSLT_XPath_Reference</b:URL>
-        <b:ProductionCompany>Mozilla</b:ProductionCompany>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>04</b:MonthAccessed>
-        <b:DayAccessed>11</b:DayAccessed>
-        <b:RefOrder>5</b:RefOrder>
-    </b:Source>
-    <b:Source>
-        <b:Tag>MDNJsStr</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{B1E3D836-6964-48D4-A921-ACB73B4C1E92}</b:Guid>
-        <b:Title>String - JavaScript</b:Title>
-        <b:InternetSiteTitle>MDN Web Docs</b:InternetSiteTitle>
-        <b:Year>2021</b:Year>
-        <b:Month>04</b:Month>
-        <b:Day>08</b:Day>
-        <b:URL>https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#string_primitives_and_string_objects</b:URL>
-        <b:Author>
-            <b:Author>
-                <b:Corporate>MDN contributors</b:Corporate>
-            </b:Author>
-        </b:Author>
-        <b:ProductionCompany>Mozilla</b:ProductionCompany>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>04</b:MonthAccessed>
-        <b:DayAccessed>08</b:DayAccessed>
-        <b:RefOrder>6</b:RefOrder>
-    </b:Source>
-    <b:Source>
-        <b:Tag>WHATWGURL</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{56CB277C-CE83-40C7-BFE1-4A31480ABDD6}</b:Guid>
-        <b:Title>URLs</b:Title>
-        <b:InternetSiteTitle>URL - Living Standard</b:InternetSiteTitle>
-        <b:Year>2021</b:Year>
-        <b:Month>March</b:Month>
-        <b:Day>23</b:Day>
-        <b:URL>https://url.spec.whatwg.org/</b:URL>
-        <b:ProductionCompany>WHATWG (Apple, Google, Mozilla, Microsoft)</b:ProductionCompany>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>April</b:MonthAccessed>
-        <b:DayAccessed>10</b:DayAccessed>
-        <b:RefOrder>7</b:RefOrder>
-    </b:Source>
-    <b:Source>
-        <b:Tag>WHATWGURL2</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{73F6B065-EE99-44EB-8579-7B5BAEB51875}</b:Guid>
-        <b:Title>URLs and Fetching Resources</b:Title>
-        <b:InternetSiteTitle>HTML Living Standard</b:InternetSiteTitle>
-        <b:Year>2020</b:Year>
-        <b:Month>April</b:Month>
-        <b:URL>https://html.spec.whatwg.org/multipage/urls-and-fetching.html#urls</b:URL>
-        <b:ProductionCompany>WHATWG (Apple, Google, Mozilla, Microsoft)</b:ProductionCompany>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>April</b:MonthAccessed>
-        <b:DayAccessed>07</b:DayAccessed>
-        <b:RefOrder>8</b:RefOrder>
-    </b:Source>
-    <b:Source>
-        <b:Tag>ECMAScript</b:Tag>
-        <b:SourceType>InternetSite</b:SourceType>
-        <b:Guid>{96504678-0FD3-4C2A-ABC5-EFD15E89B7FB}</b:Guid>
-        <b:Title>ECMAScript® 2022 Language Specification</b:Title>
-        <b:InternetSiteTitle>TC39</b:InternetSiteTitle>
-        <b:Year>2021</b:Year>
-        <b:Month>04</b:Month>
-        <b:Day>06</b:Day>
-        <b:URL>https://tc39.es/ecma262/#sec-ecmascript-language-lexical-grammar-literals</b:URL>
-        <b:ProductionCompany>ECMA International</b:ProductionCompany>
-        <b:YearAccessed>2021</b:YearAccessed>
-        <b:MonthAccessed>04</b:MonthAccessed>
-        <b:DayAccessed>10</b:DayAccessed>
-        <b:Author>
-            <b:Editor>
-                <b:NameList>
-                    <b:Person>
-                        <b:Last>Guo</b:Last>
-                        <b:First>Shu-yu</b:First>
-                    </b:Person>
-                    <b:Person>
-                        <b:Last>Michael</b:Last>
-                        <b:First>Ficarra</b:First>
-                    </b:Person>
-                    <b:Person>
-                        <b:Last>Gibbons</b:Last>
-                        <b:First>Kevin</b:First>
-                    </b:Person>
-                </b:NameList>
-            </b:Editor>
-        </b:Author>
-        <b:RefOrder>9</b:RefOrder>
-    </b:Source>
-</b:Bibliography>
+<References xmlns="http://git.erwinefamily.net/FsInfoCat/V1/References.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://git.erwinefamily.net/FsInfoCat/V1/References.xsd ./References.xsd">
+  <Categories>
+    <Category Name="General">
+      <Link Tag="GDIPlus" />
+      <Link Tag="CfgMgrWmi" />
+      <Link Tag="VsCode" />
+      <Link Tag="RefSrc" />
+      <Link Tag="SpellChecking" />
+    </Category>
+    <Category Name="Library Repositories">
+      <Link Tag="NuGet" />
+      <Link Tag="PsGallery" />
+      <Link Tag="CdnJs" />
+    </Category>
+    <Category Name="Linux Refrerences">
+      <Link Tag="LinuxUuid" />
+    </Category>
+    <Category Name="Languages, Formats and Markup">
+      <Link Tag="MdSyntax" />
+      <Link Tag="T4Tpl" />
+      <Link Tag="HTML5" />
+      <Link Tag="WHATWGURL2" />
+      <Link Tag="MDNJsStr" />
+      <Link Tag="ECMAScript" />
+      <Categories>
+        <Category Name="URI">
+          <Link Tag="RFC3986" />
+          <Link Tag="rfc6068" />
+          <Link Tag="RFC6874" />
+          <Link Tag="RFC8089" />
+          <Link Tag="WHATWGURL" />
+        </Category>
+        <Category Name="XML">
+          <Link Tag="W3XML" />
+          <Link Tag="W3XMLNS" />
+          <Link Tag="W3XPath" />
+          <Link Tag="W3XSLT" />
+          <Link Tag="MDNXSLT" />
+          <Link Tag="MSXSLT1" />
+          <Link Tag="MSXSLT2" />
+          <Link Tag="XSD1" />
+          <Link Tag="XSD2" />
+        </Category>
+      </Categories>
+    </Category>
+    <Category Name="Client Side APIs">
+      <Link Tag="ClientAPI" />
+    </Category>
+    <Category Name=".NET Core API">
+      <Link Tag="CoreAPI" />
+      <Link Tag="NetCLI" />
+      <Categories>
+        <Category Name="ASP.NET">
+          <Link Tag="AspNet" />
+          <Link Tag="Rt2Ctrl" />
+          <Link Tag="JsWebApiCall" />
+          <Link Tag="EfCoreRzr" />
+          <Link Tag="CtrlTestNetCore" />
+          <Link Tag="CplxDmEFCore" />
+          <Link Tag="MvcEfCore" />
+          <Categories>
+            <Category Name="Client Side">
+              <Link Tag="MvcSubmitAjax" />
+              <Link Tag="MvcFileUpload" />
+              <Link Tag="JsResultMvc" />
+              <Link Tag="MvcResources" />
+              <Link Tag="PassingDataToJs" />
+              <Link Tag="MvcViewBag" />
+              <Link Tag="AjaxMvc" />
+              <Link Tag="AjaxRzr" />
+              <Link Tag="MvcRtrData" />
+              <Link Tag="AngularJsMvc" />
+              <Link Tag="MvcPostDatda" />
+            </Category>
+          </Categories>
+        </Category>
+        <Category Name="Entity Framework">
+          <Link Tag="EfCodeFirst" />
+          <Link Tag="EfCoreCreate" />
+          <Link Tag="EFCoreOverview" />
+          <Link Tag="IValidatableObject" />
+        </Category>
+        <Category Name="Testing">
+          <Link Tag="NUnitCore" />
+          <Link Tag="CoreTest" />
+          <Link Tag="CoreLogging" />
+          <Link Tag="NUnit" />
+          <Link Tag="NetTrace" />
+        </Category>
+        <Category Name="WPF">
+          <Link Tag="WPFSamples" />
+          <Link Tag="WhatWpf" />
+          <Link Tag="WpfCore" />
+          <Link Tag="WpfAnnotations" />
+        </Category>
+      </Categories>
+    </Category>
+    <Category Name="PowerShell">
+      <Link Tag="Pester" />
+      <Link Tag="PsMmodule" />
+      <Link Tag="CmdletHelp" />
+      <Link Tag="PsModuleHelp" />
+      <Link Tag="CimCmdletsModule" />
+      <Link Tag="HttpClient" />
+      <Link Tag="HttpWebRequest" />
+      <Link Tag="JsonContent" />
+      <Link Tag="WebJsSerializer" />
+      <Link Tag="TextJsSerializer" />
+      <Link Tag="PsArchive" />
+      <Link Tag="PSRemotingJob" />
+      <Link Tag="PsTeam" />
+      <Link Tag="ApachePsm" />
+      <Link Tag="CrontabDemo" />
+      <Link Tag="RestPs1" />
+      <Link Tag="PsRestSamples" />
+      <Link Tag="VsCodePsDev" />
+      <Link Tag="PortablePsMod" />
+      <Link Tag="PsClasses" />
+      <Link Tag="VsCodePsLaunch" />
+      <Categories>
+        <Category Name="Jobs">
+          <Link Tag="PsJobs" />
+          <Link Tag="PsJobDetails" />
+          <Link Tag="PsAboutJobs" />
+          <Link Tag="PsThreadJobs" />
+        </Category>
+        <Category Name="Security">
+          <Link Tag="PsPasswordCredential" />
+          <Link Tag="PsCertPin" />
+          <Link Tag="PsLoggingWin" />
+          <Link Tag="PsLoggingNonWin" />
+          <Link Tag="PsSigning" />
+        </Category>
+      </Categories>
+    </Category>
+    <Category Name="Gists">
+      <Link Tag="VolumeInfo" />
+      <Link Tag="BitHashStruct" />
+    </Category>
+    <Category Name="Old Projects">
+      <Link Tag="FsDedunderator" />
+      <Link Tag="RIMSS" />
+      <Link Tag="FileDataView" />
+      <Link Tag="PsModulesPrj" />
+      <Link Tag="DotNetProgrammersToolbox" />
+      <Link Tag="LErwineExample" />
+      <Link Tag="LTEControls" />
+      <Link Tag="WebConfigTool" />
+      <Link Tag="JsTypeCommander" />
+      <Link Tag="JSCookbook" />
+      <Link Tag="PsSolutionManager" />
+      <Link Tag="VsCodeToolKit" />
+      <Link Tag="WguSw2" />
+    </Category>
+  </Categories>
+</References>
