@@ -2,9 +2,18 @@
 - [Library Repositories](#library-repositories)
 - [Linux Refrerences](#linux-refrerences)
 - [Languages, Formats and Markup](#languages-formats-and-markup)
+  - [URI](#uri)
+  - [XML](#xml)
 - [Client Side APIs](#client-side-apis)
 - [.NET Core API](#-net-core-api)
+  - [ASP.NET](#asp-net)
+    - [Client Side](#client-side)
+  - [Entity Framework](#entity-framework)
+  - [Testing](#testing)
+  - [WPF](#wpf)
 - [PowerShell](#powershell)
+  - [Jobs](#jobs)
+  - [Security](#security)
 - [Gists](#gists)
 - [Old Projects](#old-projects)
 
@@ -36,6 +45,26 @@
 - [String - JavaScript | MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#string_primitives_and_string_objects)
 - [ECMAScript® 2022 Language Specification | TC39](https://tc39.es/ecma262/#sec-ecmascript-language-lexical-grammar-literals)
 
+### URI
+
+- [Uniform Resource Identifier (URI): Generic Syntax | IETF Tools](https://tools.ietf.org/html/rfc3986)
+- [The 'mailto' URI Scheme | IETF Tools](https://tools.ietf.org/html/rfc6068)
+- [Representing IPv6 Zone Identifiers in Address Literals and Uniform Resource Identifiers | IETF Tools](https://tools.ietf.org/html/rfc6874)
+- [The "file" URI Scheme | IETF Tools](https://tools.ietf.org/html/rfc8089)
+- [URLs | URL - Living Standard](https://url.spec.whatwg.org/)
+
+### XML
+
+- [XML](http://www.w3.org/TR/xml/)
+- [Namespaces in XML](http://www.w3.org/TR/xml-names/)
+- [XPath](https://www.w3.org/TR/xpath-31/)
+- [XSLT (W3)](https://www.w3.org/TR/xslt-30/)
+- [The Netscape XSLT/XPath Reference | MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/XSLT/Transforming_XML_with_XSLT/The_Netscape_XSLT_XPath_Reference)
+- [XSLT Reference | Microsoft Docs](https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/ms256069(v=vs.100)
+- [XSLT Transformations | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/standard/data/xml/xslt-transformations)
+- [XSD Part 1: Structures](https://www.w3.org/TR/xmlschema11-1)
+- [XSD Part 2: Datatypes](https://www.w3.org/TR/xmlschema11-2)
+
 ## Client Side APIs
 
 - [Introduction | Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
@@ -46,6 +75,75 @@
 - [.NET API browser | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/api/?view=netcore-3.1)
 - [.NET CLI | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/tools/)
  An overview of the .NET CLI and its features.
+
+### ASP.NET
+
+- [ASP.NET documentation | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1)
+ Learn to use ASP.NET Core to create web apps and services that are fast, secure, cross-platform, and cloud-based. Browse tutorials, sample code, fundamentals, API reference and more.
+- [Routing to controller actions in ASP.NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-5.0)
+- [Tutorial: Call an ASP.NET Core web API with JavaScript | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-javascript?view=aspnetcore-5.0)
+- [Part 5, Razor Pages with EF Core in ASP.NET Core - Data Model | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/data/ef-rp/complex-data-model?view=aspnetcore-5.0&tabs=visual-studio)
+ Part 5 of Razor Pages and Entity Framework tutorial series.
+- [Test controller logic in ASP.NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-5.0)
+ Learn how to test controller logic in ASP.NET Core with Moq and xUnit.
+- [Tutorial: Create a complex data model - ASP.NET MVC with EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model?view=aspnetcore-5.0)
+ In this tutorial, add more entities and relationships and customize the data model by specifying formatting, validation, and mapping rules.
+- [Tutorial: Implement inheritance - ASP.NET MVC with EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/inheritance?view=aspnetcore-5.0)
+ This tutorial will show you how to implement inheritance in the data model, using Entity Framework Core in an ASP.NET Core application.
+
+#### Client Side
+
+- [ASP.NET MVC: Show Busy Indicator on Form Submit using JQuery and Ajax | Atten, John](http://johnatten.com/2013/12/22/asp-net-mvc-show-busy-indicator-on-form-submit-using-jquery-and-ajax/)
+ Image by Martin Abegglen | Some Rights Reserved As we all know, users are impatient. We also know that if we don’t tell them our application is “doing something” they tend to do silly things like click the mouse repeatedly, seeking some sign that the requested action is indeed being performed. For this reason, it is a good idea to throw up some sort of “busy” indicator when a user-initiated action may invoke a long-running process which requires them to wait. In this article we are going to demonstrate a very basic way to achieve this which will be effective…
+- [Async File Uploads in MVC 4 | Sampica, Bryan](https://weblogs.asp.net/bryansampica/AsyncMVCFileUpload)
+- [Create a JavascriptResult for ASP.NET MVC | Ugo Lattanzi's tech world](http://tostring.it/2014/01/14/create-a-javascriptresult-for-asp-net-mvc/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+override%2Ftostring%2Fit+%28override.tostring.it%29)
+ Ugo Lattanzi's tech world
+- [MVC Recommended Resources | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/recommended-resources-for-mvc)
+ This topic provides links to documentation resources about ASP.NET MVC 5. If you know a great blog post, stackoverflow thread or any other link that would be...
+- [Passing .NET Server-Side Data to JavaScript | Schulz, Marius](https://mariusschulz.com/blog/passing-net-server-side-data-to-javascript)
+ This post lists various methodologies to pass server-side C# data from an ASP.NET back-end to a JavaScript front-end.
+- [Set ViewBag using JavaScript or jQuery in ASP.Net MVC](https://www.aspsnippets.com/Articles/Set-ViewBag-using-JavaScript-or-jQuery-in-ASPNet-MVC.aspx)
+ Here Mudassar Ahmed Khan has explained with an example, how to set ViewBag using JavaScript or jQuery in ASP.Net MVC Razor. ViewBag is created on Server Side of the Web application and hence it is not possible to directly set it on Client Side using JavaScript or jQuery. Thus, only possible way is to set it by making an AJAX call to the Controller’s Action method using jQuery AJAX function in ASP.Net MVC Razor. TAGs: ASP.Net, JavaScript, AJAX, jQuery, MVC
+- [Unobtrusive AJAX client side validation Remote method calls to check uniqueness of value | The ASP.NET Forums](https://forums.asp.net/t/1851343.aspx?Unobtrusive+AJAX+client+side+validation+Remote+method+calls+to+check+uniqueness+of+value)
+ Hey there. I am trying to add some client side validation to my asp.net MVC 4 application (I wish I just could add the appropriate jquery libraries and just code the requisite jquery script on the...
+- [Using JavaScript with Ajax and Razor partial views | Pluralsight](https://www.pluralsight.com/guides/asp-net-mvc-using-javascript-with-ajax-and-razor-partial-views)
+ This guide shows how to effectively implement JavaScript functionality when creating a web page from Razor partial views, including form elements created using the Ajax.BeginForm helper method. Check it out!
+- [Retrieving Data with a JavaScript MVC Framework](https://blog.learningtree.com/retrieving-data-with-a-javascript-mvc-framework/)
+- [Bootstrapping AngularJS Applications with Server-Side Data from ASP.NET MVC & Razor — Marius Schulz | Schulz, Marius](https://mariusschulz.com/blog/bootstrapping-angularjs-applications-with-server-side-data-from-asp-net-mvc-and-razor)
+ Many AngularJS applications require initial data on startup. Here's how you can pass server-side C# data from ASP.NET to HTML.
+- [Post data using the \$resource Service in an ASP.NET MVC app | AngularJS](https://www.devcurry.com/2013/07/angularjs-post-data-using-resource.html)
+ See how to use a $resource service in AngularJS to post data to an ASP.NET MVC Controller.
+
+### Entity Framework
+
+- [Code First DataAnnotations | Entity Framework Tutorial](https://entity-framework.programmingpedia.net/en/tutorial/4161/code-first-dataannotations)
+ Code First DataAnnotations | Entity Framework Tutorial
+- [Creating and configuring a model - EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/ef/core/modeling/)
+ Overview of creating and configuring a model with Entity Framework Core
+- [Overview of Entity Framework Core - EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/ef/core/)
+ General introductory overview of Entity Framework Core
+- [c# - How do I use IValidatableObject? | Stack Overflow](https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject)
+
+### Testing
+
+- [Unit testing C# with NUnit and .NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-nunit)
+- [Integration tests in ASP.NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0#test-app-prerequisites)
+ Learn how integration tests ensure that an app's components function correctly at the infrastructure level, including the database, file system, and network.
+- [Logging and tracing - .NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/logging-tracing)
+ An introduction to .NET Core logging and tracing.
+- [NUnit Documentation | NUnit Docs](https://docs.nunit.org/articles/nunit/intro.html)
+- [dotnet-trace diagnostic tool - .NET CLI | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace)
+ Learn how to install and use the dotnet-trace CLI tool to collect .NET traces of a running process without the native profiler, by using the .NET EventPipe.
+
+### WPF
+
+- [GitHub - microsoft/WPF-Samples: Repository for WPF related samples](https://github.com/Microsoft/WPF-Samples)
+ Repository for WPF related samples. Contribute to microsoft/WPF-Samples development by creating an account on GitHub.
+- [What is Windows Presentation Foundation - WPF .NET | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-5.0)
+ This article gives an overview about what Windows Presentation Foundation (WPF) is as it relates to .NET and what features are provided.
+- [Windows Presentation Foundation (WPF) for .NET Core documentation | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-5.0&preserve-view=true)
+ Learn about using Windows Presentation Foundation, an open-source, graphical user interface for Windows, on .NET Core.
+- [c# - How to use System.ComponentModel.DataAnnotations in WPF or Winforms application | Stack Overflow](https://stackoverflow.com/questions/6854759/how-to-use-system-componentmodel-dataannotations-in-wpf-or-winforms-application)
 
 ## PowerShell
 
@@ -80,6 +178,28 @@
  Describes how you can use classes to create your own custom types.
 - [vscode-powershell/launch.json at master | PowerShell/vscode-powershell](https://github.com/PowerShell/vscode-powershell/blob/master/examples/.vscode/launch.json)
  Provides PowerShell language and debugging support for Visual Studio Code - PowerShell/vscode-powershell
+
+### Jobs
+
+- [How to Support Jobs | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/how-to-support-jobs?view=powershell-7.1)
+- [about_Job_Details - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_job_details?view=powershell-7.1)
+ Provides details about background jobs on local and remote computers.
+- [about_Jobs - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_jobs?view=powershell-7.1)
+ Provides information about how PowerShell background jobs run a command or expression in the background without interacting with the current session.
+- [about_Thread_Jobs - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_thread_jobs?view=powershell-7.1)
+ Provides information about PowerShell thread-based jobs. A thread job is a type of background job that runs a command or expression in a separate thread within the current session process.
+
+### Security
+
+- [PasswordCredential Class (Windows.Security.Credentials) - Windows UWP applications | Microsoft Docs](https://docs.microsoft.com/en-us/uwp/api/Windows.Security.Credentials.PasswordCredential?view=winrt-19041)
+ Represents the password credential store.
+- [PowerShell Certificate Pinning | PowerShell Magazine](https://www.powershellmagazine.com/2013/12/17/powershell-certificate-pinning/)
+- [about_Logging-Windows - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows?view=powershell-7.1)
+ PowerShell logs internal operations from the engine, providers, and cmdlets to the Windows event log.
+- [about_Logging_Non-Windows - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_non-windows?view=powershell-7.1)
+ PowerShell logs internal operations from the engine, providers, and cmdlets.
+- [about_Signing - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.1)
+ Explains how to sign scripts so that they comply with the PowerShell execution policies.
 
 ## Gists
 

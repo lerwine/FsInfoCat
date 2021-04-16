@@ -49,7 +49,7 @@
     <xsl:template match="r:Category" mode="Index">
         <xsl:param name="indent" select="''" />
         <xsl:value-of select="concat($indent, '- [', @Name, '](#', cs:ToIdentifier(@Name), ')', $NewLine)"/>
-        <xsl:apply-templates select="r:Categories/r:Category" mode="Index">
+        <xsl:apply-templates select="r:Category" mode="Index">
             <xsl:with-param name="indent" select="concat('  ', $indent)"/>
         </xsl:apply-templates>
     </xsl:template>
@@ -57,7 +57,7 @@
         <xsl:param name="heading" select="'##'" />
         <xsl:value-of select="concat($NewLine, $heading, ' ', @Name, $NewLine, $NewLine)"/>
         <xsl:apply-templates select="b:Source[b:SourceType='InternetSite']" mode="Links" />
-        <xsl:apply-templates select="r:Categories/r:Category" mode="Links">
+        <xsl:apply-templates select="r:Category" mode="Links">
             <xsl:with-param name="heading" select="concat('#', $heading)"/>
         </xsl:apply-templates>
     </xsl:template>
