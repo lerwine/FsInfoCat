@@ -223,7 +223,7 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="FsInfoCat.Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="FsInfoCat.Desktop.Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="AccountID" />
@@ -454,7 +454,7 @@
             <End Role="HostDevice" EntitySet="HostDevices" />
             <End Role="Volume" EntitySet="Volumes" />
           </AssociationSet>
-          <EntitySet Name="UserCredentials" EntityType="FsInfoCat.Model.UserCredential" />
+          <EntitySet Name="UserCredentials" EntityType="FsInfoCat.Desktop.Model.UserCredential" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -463,7 +463,7 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="FsInfoCatModelStoreContainer" CdmEntityContainer="FsInfoCatEntities">
           <EntitySetMapping Name="Accounts">
-            <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.Account)">
+            <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Desktop.Model.Account)">
               <MappingFragment StoreEntitySet="Account">
                 <ScalarProperty Name="AccountID" ColumnName="AccountID" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
@@ -478,7 +478,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="HostDevices">
-            <EntityTypeMapping TypeName="FsInfoCat.Model.HostDevice">
+            <EntityTypeMapping TypeName="FsInfoCat.Desktop.Model.HostDevice">
               <MappingFragment StoreEntitySet="HostDevice">
                 <ScalarProperty Name="HostDeviceID" ColumnName="HostDeviceID" />
                 <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
@@ -496,7 +496,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Volumes">
-            <EntityTypeMapping TypeName="FsInfoCat.Model.Volume">
+            <EntityTypeMapping TypeName="FsInfoCat.Desktop.Model.Volume">
               <MappingFragment StoreEntitySet="Volume">
                 <ScalarProperty Name="VolumeID" ColumnName="VolumeID" />
                 <ScalarProperty Name="HostDeviceID" ColumnName="HostDeviceID" />
@@ -517,7 +517,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserCredentials">
-            <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.UserCredential)" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+            <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Desktop.Model.UserCredential)" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
               <MappingFragment StoreEntitySet="UserCredential">
                 <ScalarProperty Name="PwHash" ColumnName="PwHash" />
               </MappingFragment>

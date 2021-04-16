@@ -22,7 +22,11 @@
                 <Separator/>
                 <MenuItem Header="Exit" />
             </MenuItem>
-            <MenuItem Header="Options"/>
+            <MenuItem Header="Host Devices">
+                <MenuItem Header="View Host Devices" Click="ViewHostDevicesMenuItem_Click" />
+                <Separator />
+                <MenuItem Header="Register Local Machine"/>
+            </MenuItem>
             <Separator/>
             <MenuItem Header="Help"/>
         </Menu>

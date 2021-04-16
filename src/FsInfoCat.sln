@@ -11,6 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Desktop", "FsInfo
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "FsInfoCatDb", "FsInfoCatDb\FsInfoCatDb.sqlproj", "{E49CC653-786D-41FB-80AB-945474AEB01D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8BB66A53-65FA-4C08-A43E-877C7088BA26}"
+	ProjectSection(SolutionItems) = preProject
+		..\Resources\Reference\References.xml = ..\Resources\Reference\References.xml
+		..\Resources\Reference\References.xsd = ..\Resources\Reference\References.xsd
+		..\Resources\Reference\References.xslt = ..\Resources\Reference\References.xslt
+		..\Resources\Reference\ToMarkdown.xslt = ..\Resources\Reference\ToMarkdown.xslt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU

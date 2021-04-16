@@ -1,9 +1,11 @@
+using FsInfoCat.Desktop.Model;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management;
+using System.Security;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +13,29 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class SettingsViewModel : DependencyObject
+    public sealed class SettingsViewModel : DependencyObject
     {
-        private readonly ILogger<SettingsViewModel> _logger;
+        private static readonly ILogger<SettingsViewModel> _logger = App.LoggerFactory.CreateLogger<SettingsViewModel>();
+        private Task<HostDevice> _localMachineRegistrationTask = null;
+        private Commands.RelayCommand _registerLocalMachineCommand = null;
+        private const string RegisterLocalMachine_MenuItem_Text = "Register Local Machine";
+        private const string UnregisterLocalMachine_MenuItem_Text = "Un-Register Local Machine";
+
+        public event EventHandler<AsyncResultEventArgs<HostDevice>> LocalMachineRegistrationChanged;
+
+        public event DependencyPropertyChangedEventHandler UserPropertyChanged;
+
+        public event DependencyPropertyChangedEventHandler HostDeviceRegistrationPropertyChanged;
+
+        public static readonly RoutedEvent ButtonColorChangedEvent = EventManager.RegisterRoutedEvent(nameof(ButtonColorChanged), RoutingStrategy.Bubble, typeof(DependencyPropertyChangedEventHandler),
+            typeof(SettingsViewModel));
+
+        public event RoutedEventHandler ButtonColorChanged
+        {
+            add { ButtonColorChangedEvent.AddHandler(ButtonColorChangedEvent, value); }
+            remove { RemoveHandler(ButtonColorChangedEvent, value); }
+        }
+        #region Properties
 
         public static readonly DependencyPropertyKey MachineSIDPropertyKey =
             DependencyProperty.RegisterReadOnly(nameof(MachineSID), typeof(string), typeof(SettingsViewModel),
@@ -39,8 +61,6 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(MachineNamePropertyKey, value); }
         }
 
-        public event DependencyPropertyChangedEventHandler UserPropertyChanged;
-
         public static readonly DependencyPropertyKey UserPropertyKey =
             DependencyProperty.RegisterReadOnly(nameof(User), typeof(UserCredential), typeof(SettingsViewModel),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -54,32 +74,72 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(UserPropertyKey, value); }
         }
 
-        protected virtual void OnUserPropertyChanged(DependencyPropertyChangedEventArgs args)
+        public static readonly DependencyPropertyKey HostDeviceRegistrationPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(HostDeviceRegistration), typeof(HostDevice), typeof(SettingsViewModel),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as SettingsViewModel).OnHostDeviceRegistrationPropertyChanged(e)));
+
+        public static readonly DependencyProperty HostDeviceRegistrationProperty = HostDeviceRegistrationPropertyKey.DependencyProperty;
+
+        public HostDevice HostDeviceRegistration
         {
-            try { OnUserPropertyChanged((Account)args.OldValue, (Account)args.NewValue); }
-            finally { UserPropertyChanged?.Invoke(this, args); }
+            get { return (HostDevice)GetValue(HostDeviceRegistrationProperty); }
+            private set { SetValue(HostDeviceRegistrationPropertyKey, value); }
         }
 
-        protected virtual void OnUserPropertyChanged(Account oldValue, Account newValue)
+        public Commands.RelayCommand RegisterLocalMachineCommand
         {
-            // TODO: Implement OnUserPropertyChanged Logic
+            get
+            {
+                if (_registerLocalMachineCommand == null)
+                    _registerLocalMachineCommand = new Commands.RelayCommand(parameter =>
+                    {
+                        try
+                        {
+                            if (HostDeviceRegistration is null)
+                                StartRegisterLocalMachineAsync(MachineSID, MachineName);
+                            else
+                                StartUnregisterLocalMachineAsync(HostDeviceRegistration);
+                        }
+                        finally { RegisterLocalMachine?.Invoke(this, EventArgs.Empty); }
+                    });
+                return _registerLocalMachineCommand;
+            }
         }
 
-        public SettingsViewModel()
+        public static readonly DependencyPropertyKey RegisterLocalMachineMenuItemTextPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(RegisterLocalMachineMenuItemText), typeof(string), typeof(MainViewModel),
+                new PropertyMetadata(RegisterLocalMachine_MenuItem_Text));
+
+        public static readonly DependencyProperty RegisterLocalMachineMenuItemTextProperty = RegisterLocalMachineMenuItemTextPropertyKey.DependencyProperty;
+
+        public string RegisterLocalMachineMenuItemText
         {
-            _logger = App.LoggerFactory.CreateLogger<SettingsViewModel>();
+            get { return GetValue(RegisterLocalMachineMenuItemTextProperty) as string; }
+            private set { SetValue(RegisterLocalMachineMenuItemTextPropertyKey, value); }
         }
 
-        private Task<SecurityIdentifier> _task = null;
+        #endregion
 
-        internal Task<SecurityIdentifier> GetMachineIdentifierAsync()
+        private void OnUserPropertyChanged(DependencyPropertyChangedEventArgs args) => UserPropertyChanged?.Invoke(this, args);
+
+        private void OnHostDeviceRegistrationPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            Task<SecurityIdentifier> task;
+            try { RegisterLocalMachineMenuItemText = (args.NewValue is null) ? RegisterLocalMachine_MenuItem_Text : UnregisterLocalMachine_MenuItem_Text; }
+            finally { HostDeviceRegistrationPropertyChanged?.Invoke(this, args); }
+        }
+
+        internal Task<HostDevice> CheckHostDeviceRegistrationAsync(bool forceRecheck)
+        {
+            VerifyAccess();
+            Task<HostDevice> task;
             lock (this)
-                if ((task = _task) is null)
+            {
+                if ((task = _localMachineRegistrationTask) is null || (forceRecheck && task.IsCompleted))
                 {
-                    MachineName = Environment.MachineName;
-                    _task = task = Task.Factory.StartNew(() =>
+                    string machineName = Environment.MachineName.ToLower();
+                    Dispatcher.BeginInvoke(new Action(() => MachineName = machineName));
+                    _localMachineRegistrationTask = task = Task.Factory.StartNew(() =>
                     {
                         SelectQuery selectQuery = new SelectQuery("SELECT * from Win32_UserAccount WHERE Name=\"Administrator\"");
                         using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery))
@@ -90,16 +150,108 @@ namespace FsInfoCat.Desktop.ViewModel
                                 ManagementObject item = managementObjectCollection.OfType<ManagementObject>().First();
                                 SecurityIdentifier sid = new SecurityIdentifier(item["SID"] as string).AccountDomainSid;
                                 if (!(sid is null))
-                                    return Dispatcher.Invoke(() =>
-                                    {
-                                        MachineSID = sid.ToString();
-                                        return sid;
-                                    });
+                                {
+                                    string sidString = sid.ToString();
+                                    Dispatcher.BeginInvoke(new Action(() => MachineSID = sidString));
+                                    using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
+                                        return (from h in dbContext.HostDevices where h.MachineIdentifer == sidString && h.MachineName == machineName select h)
+                                            .FirstOrDefault();
+                                }
                             }
                         }
                         return null;
                     });
                 }
+            }
+
+            return task;
+        }
+
+        internal Task<Account> AuthenticateUserAsync(string userName, SecureString securePassword)
+        {
+            VerifyAccess();
+            return Task.Factory.StartNew(() =>
+            {
+                using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
+                {
+                    Account account = (from c in dbContext.Accounts where c.LoginName == userName select c).FirstOrDefault();
+                    if (!(account is null))
+                    {
+                        UserCredential userCredential = (from u in dbContext.UserCredentials where u.AccountID == account.AccountID select u).FirstOrDefault();
+                        if (!(userCredential is null || string.IsNullOrWhiteSpace(userCredential.PwHash)) &&
+                            PwHash.TryCreate(userCredential.PwHash, out PwHash? result) && result.HasValue && result.Value.Test(securePassword))
+                        {
+                            Dispatcher.BeginInvoke(new Action(() => User = account));
+                            return account;
+                        }
+                    }
+                }
+                return null;
+            });
+        }
+
+        private Task<HostDevice> StartRegisterLocalMachineAsync(string sidString, string machineName)
+        {
+            AsyncResultEventArgs<HostDevice> result;
+            VerifyAccess();
+            Task<HostDevice> task = _localMachineRegistrationTask;
+            if (task is null || task.IsCompleted)
+            {
+                _registerLocalMachineCommand.IsEnabled = false;
+                _localMachineRegistrationTask = task = Task.Factory.StartNew(() =>
+                {
+                    using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
+                        return (from h in dbContext.HostDevices where h.MachineIdentifer == sidString && h.MachineName == machineName select h)
+                            .FirstOrDefault();
+                });
+                task.ContinueWith(t =>
+                {
+                    Dispatcher.BeginInvoke(new Action(() => _registerLocalMachineCommand.IsEnabled = true));
+                    if (t.IsCanceled)
+                        _logger.LogWarning("{CommandName} for registration canceled", nameof(RegisterLocalMachineCommand));
+                    else if (t.IsFaulted)
+                        _logger.LogError(t.Exception, "{CommandName} for registration threw an exception: {Message}", nameof(RegisterLocalMachineCommand), t.Exception.Message);
+                    else
+                    {
+                        _logger.LogInformation("{CommandName} for registration succeeded", nameof(RegisterLocalMachineCommand));
+                        Dispatcher.BeginInvoke(new Action(() => HostDeviceRegistration = task.Result));
+                    }
+                });
+            }
+            return task;
+        }
+
+        private Task<HostDevice> StartUnregisterLocalMachineAsync(HostDevice hostDeviceRegistration)
+        {
+            VerifyAccess();
+            Task<HostDevice> task = _localMachineRegistrationTask;
+            if (task is null || task.IsCompleted)
+            {
+                _registerLocalMachineCommand.IsEnabled = false;
+                _localMachineRegistrationTask = task = Task.Factory.StartNew<HostDevice>(() =>
+                {
+                    using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
+                    {
+                        dbContext.HostDevices.Attach(hostDeviceRegistration);
+                        dbContext.HostDevices.Remove(hostDeviceRegistration);
+                        dbContext.SaveChanges();
+                        return null;
+                    }
+                });
+                task.ContinueWith((Task<HostDevice> t) =>
+                {
+                    Dispatcher.BeginInvoke(new Action(() => _registerLocalMachineCommand.IsEnabled = true));
+                    if (t.IsCanceled)
+                        _logger.LogWarning("{CommandName} for un-registration canceled", nameof(RegisterLocalMachineCommand));
+                    else if (t.IsFaulted)
+                        _logger.LogError(t.Exception, "{CommandName} for un-registration threw an exception: {Message}", nameof(RegisterLocalMachineCommand), t.Exception.Message);
+                    else
+                    {
+                        _logger.LogInformation("{CommandName} for un-registration succeeded", nameof(RegisterLocalMachineCommand));
+                        Dispatcher.BeginInvoke(new Action(() => HostDeviceRegistration = null));
+                    }
+                });
+            }
             return task;
         }
     }

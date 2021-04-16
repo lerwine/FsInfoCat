@@ -1,17 +1,8 @@
+using FsInfoCat.Desktop.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace FsInfoCat.Desktop.View
 {
@@ -27,53 +18,39 @@ namespace FsInfoCat.Desktop.View
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
+            UserNameTextBox.IsEnabled = PasswordTextBox.IsEnabled = LoginButton.IsEnabled = CancelButton.IsEnabled = false;
             ViewModel.SettingsViewModel settingsViewModel = App.GetSettingsVM();
-            settingsViewModel.GetMachineIdentifierAsync().ContinueWith(OnGetMachineIdentifierFinished);
+            App.GetSettingsVM().AuthenticateUserAsync(UserNameTextBox.Text, PasswordTextBox.SecurePassword).ContinueWith(t =>
+            {
+                if (t.IsCanceled)
+                    OnLoginFailed(null);
+                else if (t.IsFaulted)
+                    OnLoginFailed(t.Exception);
+                else
+                    OnLoginCompleted(t.Result);
+            });
         }
 
-        private void OnGetMachineIdentifierFinished(Task<SecurityIdentifier> task)
+        private void OnLoginCompleted(Account result)
         {
-            if (task.IsCanceled)
-                Dispatcher.Invoke(() => OnGetMachineIdentifierFailed(null));
-            else if (task.IsFaulted)
-                Dispatcher.Invoke(() => OnGetMachineIdentifierFailed(task.Exception));
+            if (result is null)
+            {
+                ErrorMessageTextBlock.Text = "Invalid user name or password";
+                ErrorMessageTextBlock.Visibility = Visibility.Visible;
+                UserNameTextBox.IsEnabled = PasswordTextBox.IsEnabled = LoginButton.IsEnabled = CancelButton.IsEnabled = true;
+            }
             else
             {
-                SecurityIdentifier sid = task.Result;
-                if (sid is null)
-                    Dispatcher.Invoke(() => OnGetMachineIdentifierFailed(null));
-                else
-                {
-                    string userName = Dispatcher.Invoke(() => UserNameTextBox.Text);
-                    using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
-                    {
-                        Account account = (from c in dbContext.Accounts where c.LoginName == userName select c).FirstOrDefault();
-                        if (account is null)
-                            Dispatcher.Invoke(OnLoginFailed);
-                        else
-                        {
-                            UserCredential userCredential = (from u in dbContext.UserCredentials where u.AccountID == account.AccountID select u).FirstOrDefault();
-                            if (userCredential is null || string.IsNullOrWhiteSpace(userCredential.PwHash))
-                                Dispatcher.Invoke(OnLoginFailed);
-                            else
-                            {
-                                // TODO: Compare hashes                                
-                            }
-                        }
-                    }
-                }
+                DialogResult = true;
+                Close();
             }
-            throw new NotImplementedException();
         }
 
-        private void OnLoginFailed()
+        private void OnLoginFailed(AggregateException exception)
         {
-            throw new NotImplementedException();
-        }
-
-        private void OnGetMachineIdentifierFailed(AggregateException exception)
-        {
-            throw new NotImplementedException();
+            ErrorMessageTextBlock.Text = $"Error validating user name or password: {(string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message)}";
+            ErrorMessageTextBlock.Visibility = Visibility.Visible;
+            UserNameTextBox.IsEnabled = PasswordTextBox.IsEnabled = LoginButton.IsEnabled = CancelButton.IsEnabled = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

@@ -7,33 +7,31 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class HostDevice
+    public partial class Volume
     {
-        public HostDevice()
-        {
-            this.Volumes = new HashSet<Volume>();
-        }
-    
-        public System.Guid HostDeviceID { get; set; }
-        public string DisplayName { get; set; }
-        public string MachineIdentifer { get; set; }
-        public string MachineName { get; set; }
-        public byte Platform { get; set; }
-        public bool AllowCrawl { get; set; }
-        public bool IsInactive { get; set; }
-        public string Notes { get; set; }
+        public System.Guid VolumeID { get; set; }
+        public Nullable<System.Guid> HostDeviceID { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public System.Guid CreatedBy { get; set; }
         public System.DateTime ModifiedOn { get; set; }
         public System.Guid ModifiedBy { get; set; }
+        public string DisplayName { get; set; }
+        public string RootPathName { get; set; }
+        public string DriveFormat { get; set; }
+        public string VolumeName { get; set; }
+        public string Identifier { get; set; }
+        public long MaxNameLength { get; set; }
+        public bool CaseSensitive { get; set; }
+        public bool IsInactive { get; set; }
+        public string Notes { get; set; }
     
         public virtual Account CreatedBy_Account { get; set; }
         public virtual Account ModifiedBy_Account { get; set; }
-        public virtual ICollection<Volume> Volumes { get; set; }
+        public virtual HostDevice HostDevice { get; set; }
     }
 }

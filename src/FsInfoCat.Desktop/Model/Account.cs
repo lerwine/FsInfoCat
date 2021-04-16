@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop.Model
 {
     using System;
     using System.Collections.Generic;
