@@ -31,7 +31,7 @@ namespace FsInfoCat.Desktop.View
             });
         }
 
-        private void OnLoginCompleted(Account result)
+        private void OnLoginCompleted(UserAccount result)
         {
             if (result is null)
             {

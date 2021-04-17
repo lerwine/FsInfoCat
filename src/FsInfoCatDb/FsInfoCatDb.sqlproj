@@ -63,9 +63,14 @@
     <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\Account.sql" />
-    <Build Include="dbo\Tables\HostDevice.sql" />
-    <Build Include="dbo\Tables\Volume.sql" />
-    <Build Include="dbo\Tables\UserCredential.sql" />
+    <Build Include="dbo\Tables\UserAccounts.sql" />
+    <Build Include="dbo\Tables\HostDevices.sql" />
+    <Build Include="dbo\Tables\Volumes.sql" />
+    <Build Include="dbo\Tables\BasicLogins.sql" />
+    <Build Include="dbo\Tables\WindowsIdentityLogins.sql" />
+    <Build Include="dbo\Tables\WindowsAuthDomains.sql" />
+    <Build Include="dbo\Tables\UserGroups.sql" />
+    <Build Include="dbo\Tables\GroupMembers.sql" />
+    <Build Include="dbo\Tables\WindowsGroupIdentities.sql" />
   </ItemGroup>
 </Project>

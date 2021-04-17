@@ -48,14 +48,14 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(MachineNamePropertyKey, value); }
         }
 
-        private static readonly DependencyPropertyKey UserPropertyKey = DependencyProperty.RegisterReadOnly(nameof(User), typeof(UserCredential), typeof(SettingsViewModel),
+        private static readonly DependencyPropertyKey UserPropertyKey = DependencyProperty.RegisterReadOnly(nameof(User), typeof(UserAccount), typeof(SettingsViewModel),
             new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnUserPropertyChanged(e)));
 
         public static readonly DependencyProperty UserProperty = UserPropertyKey.DependencyProperty;
 
-        public Account User
+        public UserAccount User
         {
-            get { return (Account)GetValue(UserProperty); }
+            get { return (UserAccount)GetValue(UserProperty); }
             private set { SetValue(UserPropertyKey, value); }
         }
 
@@ -131,7 +131,7 @@ namespace FsInfoCat.Desktop.ViewModel
                                 {
                                     string sidString = sid.ToString();
                                     Dispatcher.BeginInvoke(new Action(() => MachineSID = sidString));
-                                    using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
+                                    using (DbModel dbContext = new DbModel())
                                         return (from h in dbContext.HostDevices where h.MachineIdentifer == sidString && h.MachineName == machineName select h)
                                             .FirstOrDefault();
                                 }
@@ -145,19 +145,19 @@ namespace FsInfoCat.Desktop.ViewModel
             return task;
         }
 
-        internal Task<Account> AuthenticateUserAsync(string userName, SecureString securePassword)
+        internal Task<UserAccount> AuthenticateUserAsync(string userName, SecureString securePassword)
         {
             VerifyAccess();
             return Task.Factory.StartNew(() =>
             {
-                using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
+                using (DbModel dbContext = new DbModel())
                 {
-                    Account account = (from c in dbContext.Accounts where c.LoginName == userName select c).FirstOrDefault();
-                    if (!(account is null))
-                    {
-                        UserCredential userCredential = (from u in dbContext.UserCredentials where u.AccountID == account.AccountID select u).FirstOrDefault();
-                        if (!(userCredential is null || string.IsNullOrWhiteSpace(userCredential.PwHash)) &&
+                    BasicLogin userCredential = (from c in dbContext.BasicLogins where c.LoginName == userName select c).FirstOrDefault();
+                    if (!(userCredential is null || string.IsNullOrWhiteSpace(userCredential.PwHash)) &&
                             PwHash.TryCreate(userCredential.PwHash, out PwHash? result) && result.HasValue && result.Value.Test(securePassword))
+                    {
+                        UserAccount account = (from u in dbContext.UserAccounts where u.Id == userCredential.Id select u).FirstOrDefault();
+                        if (!(account is null))
                         {
                             Dispatcher.BeginInvoke(new Action(() => User = account));
                             return account;
@@ -177,7 +177,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 RegisterLocalMachineCommand.IsEnabled = false;
                 _localMachineRegistrationTask = task = Task.Factory.StartNew(() =>
                 {
-                    using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
+                    using (DbModel dbContext = new DbModel())
                         return (from h in dbContext.HostDevices where h.MachineIdentifer == sidString && h.MachineName == machineName select h)
                             .FirstOrDefault();
                 });
@@ -207,7 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 RegisterLocalMachineCommand.IsEnabled = false;
                 _localMachineRegistrationTask = task = Task.Factory.StartNew<HostDevice>(() =>
                 {
-                    using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
+                    using (DbModel dbContext = new DbModel())
                     {
                         dbContext.HostDevices.Attach(hostDeviceRegistration);
                         dbContext.HostDevices.Remove(hostDeviceRegistration);

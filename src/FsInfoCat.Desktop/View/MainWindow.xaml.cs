@@ -20,7 +20,7 @@ namespace FsInfoCat.Desktop.View
             ViewModel.SettingsViewModel settingsViewModel = App.GetSettingsVM();
             if (settingsViewModel.User is null)
             {
-                System.Threading.Tasks.Task<Model.HostDevice> task = settingsViewModel.CheckHostDeviceRegistrationAsync(false);
+                System.Threading.Tasks.Task<HostDevice> task = settingsViewModel.CheckHostDeviceRegistrationAsync(false);
                 bool? result = (new LoginWindow { Owner = this }).ShowDialog();
                 if (settingsViewModel.User is null)
                 {

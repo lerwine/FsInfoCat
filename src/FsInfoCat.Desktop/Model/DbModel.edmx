@@ -1,0 +1,1542 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FsInfoCat.Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="FsInfoCatModelStoreContainer">
+    <EntitySet Name="UserAccounts" EntityType="FsInfoCat.Model.Store.UserAccounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="HostDevices" EntityType="FsInfoCat.Model.Store.HostDevices" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Volumes" EntityType="FsInfoCat.Model.Store.Volumes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BasicLogins" EntityType="FsInfoCat.Model.Store.BasicLogins" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="WindowsIdentityLogins" EntityType="FsInfoCat.Model.Store.WindowsIdentityLogins" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="WindowsAuthDomains" EntityType="FsInfoCat.Model.Store.WindowsAuthDomains" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserGroups" EntityType="FsInfoCat.Model.Store.UserGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GroupMembers" EntityType="FsInfoCat.Model.Store.GroupMembers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="WindowsGroupIdentities" EntityType="FsInfoCat.Model.Store.WindowsGroupIdentities" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="CreatedByHostDevice" Association="FsInfoCat.Model.Store.CreatedByHostDevice">
+      <End Role="Creator" EntitySet="UserAccounts" />
+      <End Role="HostDevice" EntitySet="HostDevices" />
+    </AssociationSet>
+    <AssociationSet Name="ModifiedByHostDevice" Association="FsInfoCat.Model.Store.ModifiedByHostDevice">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="HostDevice" EntitySet="HostDevices" />
+    </AssociationSet>
+    <AssociationSet Name="CreatedByUserAccount" Association="FsInfoCat.Model.Store.CreatedByUserAccount">
+      <End Role="Creator" EntitySet="UserAccounts" />
+      <End Role="UserAccount" EntitySet="UserAccounts" />
+    </AssociationSet>
+    <AssociationSet Name="ModifiedByUserAccount" Association="FsInfoCat.Model.Store.ModifiedByUserAccount">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="UserAccount" EntitySet="UserAccounts" />
+    </AssociationSet>
+    <AssociationSet Name="CreatedByVolume" Association="FsInfoCat.Model.Store.CreatedByVolume">
+      <End Role="Creator" EntitySet="UserAccounts" />
+      <End Role="Volume" EntitySet="Volumes" />
+    </AssociationSet>
+    <AssociationSet Name="ModifiedByVolume" Association="FsInfoCat.Model.Store.ModifiedByVolume">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="Volume" EntitySet="Volumes" />
+    </AssociationSet>
+    <AssociationSet Name="HostDeviceVolume" Association="FsInfoCat.Model.Store.HostDeviceVolume">
+      <End Role="HostDevice" EntitySet="HostDevices" />
+      <End Role="Volume" EntitySet="Volumes" />
+    </AssociationSet>
+    <AssociationSet Name="UserAccountBasicLogin" Association="FsInfoCat.Model.Store.UserAccountBasicLogin">
+      <End Role="UserAccount" EntitySet="UserAccounts" />
+      <End Role="BasicLogin" EntitySet="BasicLogins" />
+    </AssociationSet>
+    <AssociationSet Name="CreatedByBasicLogin" Association="FsInfoCat.Model.Store.CreatedByBasicLogin">
+      <End Role="Creator" EntitySet="UserAccounts" />
+      <End Role="BasicLogin" EntitySet="BasicLogins" />
+    </AssociationSet>
+    <AssociationSet Name="ModifiedByBasicLogin" Association="FsInfoCat.Model.Store.ModifiedByBasicLogin">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="BasicLogin" EntitySet="BasicLogins" />
+    </AssociationSet>
+    <AssociationSet Name="WindowsAuthDomainWindowsIdentityLogin" Association="FsInfoCat.Model.Store.WindowsAuthDomainWindowsIdentityLogin">
+      <End Role="WindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+      <End Role="WindowsIdentityLogin" EntitySet="WindowsIdentityLogins" />
+    </AssociationSet>
+    <AssociationSet Name="UserAccountWindowsIdentityLogin" Association="FsInfoCat.Model.Store.UserAccountWindowsIdentityLogin">
+      <End Role="UserAccount" EntitySet="UserAccounts" />
+      <End Role="WindowsIdentityLogin" EntitySet="WindowsIdentityLogins" />
+    </AssociationSet>
+    <AssociationSet Name="CreatedByWindowsIdentityLogin" Association="FsInfoCat.Model.Store.CreatedByWindowsIdentityLogin">
+      <End Role="Creator" EntitySet="UserAccounts" />
+      <End Role="CreatedWindowsIdentityLogin" EntitySet="WindowsIdentityLogins" />
+    </AssociationSet>
+    <AssociationSet Name="ModifiedByWindowsIdentityLogin" Association="FsInfoCat.Model.Store.ModifiedByWindowsIdentityLogin">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="ModifiedWindowsIdentityLogin" EntitySet="WindowsIdentityLogins" />
+    </AssociationSet>
+    <AssociationSet Name="CreatedByWindowsAuthDomain" Association="FsInfoCat.Model.Store.CreatedByWindowsAuthDomain">
+      <End Role="Creator" EntitySet="UserAccounts" />
+      <End Role="CreatedWindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+    </AssociationSet>
+    <AssociationSet Name="ModifiedByWindowsAuthDomain" Association="FsInfoCat.Model.Store.ModifiedByWindowsAuthDomain">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="ModifiedWindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+    </AssociationSet>
+    <AssociationSet Name="UserGroupGroupMember" Association="FsInfoCat.Model.Store.UserGroupGroupMember">
+      <End Role="UserGroup" EntitySet="UserGroups" />
+      <End Role="GroupMember" EntitySet="GroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="UserAccountGroupMember" Association="FsInfoCat.Model.Store.UserAccountGroupMember">
+      <End Role="UserAccount" EntitySet="UserAccounts" />
+      <End Role="GroupMember" EntitySet="GroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="AddedByGroupMember" Association="FsInfoCat.Model.Store.AddedByGroupMember">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="GroupMember" EntitySet="GroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="UserGroupWindowsGroupIdentity" Association="FsInfoCat.Model.Store.UserGroupWindowsGroupIdentity">
+      <End Role="UserGroup" EntitySet="UserGroups" />
+      <End Role="WindowsGroupIdentity" EntitySet="WindowsGroupIdentities" />
+    </AssociationSet>
+    <AssociationSet Name="WindowsAuthDomainWindowsGroupIdentity" Association="FsInfoCat.Model.Store.WindowsAuthDomainWindowsGroupIdentity">
+      <End Role="WindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+      <End Role="WindowsGroupIdentity" EntitySet="WindowsGroupIdentities" />
+    </AssociationSet>
+    <AssociationSet Name="CreatedByWindowsGroupIdentity" Association="FsInfoCat.Model.Store.CreatedByUserAccountWindowsGroupIdentity">
+      <End Role="Creator" EntitySet="UserAccounts" />
+      <End Role="CreatedWindowsGroupIdentity" EntitySet="WindowsGroupIdentities" />
+    </AssociationSet>
+    <AssociationSet Name="ModifiedByWindowsGroupIdentity" Association="FsInfoCat.Model.Store.ModifiedByWindowsGroupIdentity">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="ModifiedWindowsGroupIdentity" EntitySet="WindowsGroupIdentities" />
+    </AssociationSet>
+    <AssociationSet Name="CreatedByUserGroup" Association="FsInfoCat.Model.Store.CreatedByUserGroup">
+      <End Role="Creator" EntitySet="UserAccounts" />
+      <End Role="CreatedUserGroup" EntitySet="UserGroups" />
+    </AssociationSet>
+    <AssociationSet Name="ModifiedByUserGroup" Association="FsInfoCat.Model.Store.ModifiedByUserGroup">
+      <End Role="Modifier" EntitySet="UserAccounts" />
+      <End Role="ModifiedUserGroup" EntitySet="UserGroups" />
+    </AssociationSet>
+    <AssociationSet Name="DefaultNewUserGroupWindowsAuthDomain" Association="FsInfoCat.Model.Store.DefaultNewUserGroupWindowsAuthDomain">
+      <End Role="UserGroup" EntitySet="UserGroups" />
+      <End Role="WindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="UserAccounts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DisplayName" Type="nvarchar" Nullable="false" MaxLength="128" />
+    <Property Name="FirstName" Type="nvarchar" Nullable="false" MaxLength="32" />
+    <Property Name="LastName" Type="nvarchar" Nullable="false" MaxLength="64" />
+    <Property Name="MI" Type="nchar" Nullable="true" MaxLength="1" />
+    <Property Name="Suffix" Type="nvarchar" Nullable="true" MaxLength="32" />
+    <Property Name="Title" Type="nvarchar" Nullable="true" MaxLength="32" />
+    <Property Name="IsInactive" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ExplicitRoles" Type="tinyint" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="HostDevices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DisplayName" Type="nvarchar" Nullable="false" MaxLength="128" />
+    <Property Name="MachineIdentifer" Type="nvarchar" Nullable="false" MaxLength="128" />
+    <Property Name="MachineName" Type="nvarchar" Nullable="false" MaxLength="128" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Platform" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Volumes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="HostDeviceId" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="DisplayName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="RootPathName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DriveFormat" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="VolumeName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Identifier" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="MaxNameLength" Type="bigint" Nullable="false" />
+    <Property Name="CaseSensitive" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="IsInactive" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BasicLogins">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="LoginName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PwHash" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FailCount" Type="tinyint" Nullable="false" DefaultValue="0" />
+    <Property Name="LockedOut" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="IsInactive" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WindowsIdentityLogins">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="SID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DomainId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="AccountName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsInactive" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WindowsAuthDomains">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="SID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsInactive" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AutoAddUsers" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="DefaultNewUserGroupId" Type="uniqueidentifier" Nullable="true" />
+  </EntityType>
+  <EntityType Name="UserGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DisplayName" Type="nvarchar" Nullable="false" MaxLength="128" />
+    <Property Name="IsInactive" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Roles" Type="tinyint" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GroupMembers">
+    <Key>
+      <PropertyRef Name="GroupId" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="GroupId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="AddedOn" Type="datetime" Nullable="false" />
+    <Property Name="AddedById" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WindowsGroupIdentities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="SID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DomainId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsInactive" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="GroupId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AutoAddMembers" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="CreatedByHostDevice">
+    <End Role="Creator" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="HostDevice" Type="FsInfoCat.Model.Store.HostDevices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Creator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="HostDevice">
+        <PropertyRef Name="CreatedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ModifiedByHostDevice">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="HostDevice" Type="FsInfoCat.Model.Store.HostDevices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="HostDevice">
+        <PropertyRef Name="ModifiedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CreatedByUserAccount">
+    <End Role="Creator" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="UserAccount" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Creator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserAccount">
+        <PropertyRef Name="CreatedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ModifiedByUserAccount">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="UserAccount" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserAccount">
+        <PropertyRef Name="ModifiedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CreatedByVolume">
+    <End Role="Creator" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="Volume" Type="FsInfoCat.Model.Store.Volumes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Creator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Volume">
+        <PropertyRef Name="CreatedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ModifiedByVolume">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="Volume" Type="FsInfoCat.Model.Store.Volumes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Volume">
+        <PropertyRef Name="ModifiedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="HostDeviceVolume">
+    <End Role="HostDevice" Type="FsInfoCat.Model.Store.HostDevices" Multiplicity="0..1" />
+    <End Role="Volume" Type="FsInfoCat.Model.Store.Volumes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HostDevice">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Volume">
+        <PropertyRef Name="HostDeviceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserAccountBasicLogin">
+    <End Role="UserAccount" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="BasicLogin" Type="FsInfoCat.Model.Store.BasicLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BasicLogin">
+        <PropertyRef Name="CreatedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CreatedByBasicLogin">
+    <End Role="Creator" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="BasicLogin" Type="FsInfoCat.Model.Store.BasicLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Creator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BasicLogin">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ModifiedByBasicLogin">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="BasicLogin" Type="FsInfoCat.Model.Store.BasicLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BasicLogin">
+        <PropertyRef Name="ModifiedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="WindowsAuthDomainWindowsIdentityLogin">
+    <End Role="WindowsAuthDomain" Type="FsInfoCat.Model.Store.WindowsAuthDomains" Multiplicity="1" />
+    <End Role="WindowsIdentityLogin" Type="FsInfoCat.Model.Store.WindowsIdentityLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="WindowsAuthDomain">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="WindowsIdentityLogin">
+        <PropertyRef Name="DomainId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserAccountWindowsIdentityLogin">
+    <End Role="UserAccount" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="WindowsIdentityLogin" Type="FsInfoCat.Model.Store.WindowsIdentityLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="WindowsIdentityLogin">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CreatedByWindowsIdentityLogin">
+    <End Role="Creator" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="CreatedWindowsIdentityLogin" Type="FsInfoCat.Model.Store.WindowsIdentityLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Creator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CreatedWindowsIdentityLogin">
+        <PropertyRef Name="CreatedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ModifiedByWindowsIdentityLogin">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="ModifiedWindowsIdentityLogin" Type="FsInfoCat.Model.Store.WindowsIdentityLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ModifiedWindowsIdentityLogin">
+        <PropertyRef Name="ModifiedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CreatedByWindowsAuthDomain">
+    <End Role="Creator" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="CreatedWindowsAuthDomain" Type="FsInfoCat.Model.Store.WindowsAuthDomains" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Creator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CreatedWindowsAuthDomain">
+        <PropertyRef Name="CreatedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ModifiedByWindowsAuthDomain">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="ModifiedWindowsAuthDomain" Type="FsInfoCat.Model.Store.WindowsAuthDomains" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ModifiedWindowsAuthDomain">
+        <PropertyRef Name="ModifiedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserGroupGroupMember">
+    <End Role="UserGroup" Type="FsInfoCat.Model.Store.UserGroups" Multiplicity="1" />
+    <End Role="GroupMember" Type="FsInfoCat.Model.Store.GroupMembers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GroupMember">
+        <PropertyRef Name="GroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserAccountGroupMember">
+    <End Role="UserAccount" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="GroupMember" Type="FsInfoCat.Model.Store.GroupMembers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GroupMember">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AddedByGroupMember">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="GroupMember" Type="FsInfoCat.Model.Store.GroupMembers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GroupMember">
+        <PropertyRef Name="AddedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserGroupWindowsGroupIdentity">
+    <End Role="UserGroup" Type="FsInfoCat.Model.Store.UserGroups" Multiplicity="1" />
+    <End Role="WindowsGroupIdentity" Type="FsInfoCat.Model.Store.WindowsGroupIdentities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="WindowsGroupIdentity">
+        <PropertyRef Name="GroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="WindowsAuthDomainWindowsGroupIdentity">
+    <End Role="WindowsAuthDomain" Type="FsInfoCat.Model.Store.WindowsAuthDomains" Multiplicity="1" />
+    <End Role="WindowsGroupIdentity" Type="FsInfoCat.Model.Store.WindowsGroupIdentities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="WindowsAuthDomain">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="WindowsGroupIdentity">
+        <PropertyRef Name="DomainId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CreatedByUserAccountWindowsGroupIdentity">
+    <End Role="Creator" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="CreatedWindowsGroupIdentity" Type="FsInfoCat.Model.Store.WindowsGroupIdentities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Creator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CreatedWindowsGroupIdentity">
+        <PropertyRef Name="CreatedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ModifiedByWindowsGroupIdentity">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="ModifiedWindowsGroupIdentity" Type="FsInfoCat.Model.Store.WindowsGroupIdentities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ModifiedWindowsGroupIdentity">
+        <PropertyRef Name="ModifiedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CreatedByUserGroup">
+    <End Role="Creator" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="CreatedUserGroup" Type="FsInfoCat.Model.Store.UserGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Creator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CreatedUserGroup">
+        <PropertyRef Name="CreatedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ModifiedByUserGroup">
+    <End Role="Modifier" Type="FsInfoCat.Model.Store.UserAccounts" Multiplicity="1" />
+    <End Role="ModifiedUserGroup" Type="FsInfoCat.Model.Store.UserGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Modifier">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ModifiedUserGroup">
+        <PropertyRef Name="ModifiedById" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DefaultNewUserGroupWindowsAuthDomain">
+    <End Role="UserGroup" Type="FsInfoCat.Model.Store.UserGroups" Multiplicity="0..1" />
+    <End Role="WindowsAuthDomain" Type="FsInfoCat.Model.Store.WindowsAuthDomains" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="WindowsAuthDomain">
+        <PropertyRef Name="DefaultNewUserGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="FsInfoCat.Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="DbModel" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="UserAccounts" EntityType="FsInfoCat.Model.UserAccount" />
+          <EntitySet Name="HostDevices" EntityType="FsInfoCat.Model.HostDevice" />
+          <AssociationSet Name="CreatedByHostDevice" Association="FsInfoCat.Model.CreatedByHostDevice">
+            <End Role="Creator" EntitySet="UserAccounts" />
+            <End Role="HostDevice" EntitySet="HostDevices" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByHostDevice" Association="FsInfoCat.Model.ModifiedByHostDevice">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="HostDevice" EntitySet="HostDevices" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByUserAccount" Association="FsInfoCat.Model.CreatedByUserAccount">
+            <End Role="Creator" EntitySet="UserAccounts" />
+            <End Role="UserAccount" EntitySet="UserAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByUserAccount" Association="FsInfoCat.Model.ModifiedByUserAccount">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="UserAccount" EntitySet="UserAccounts" />
+          </AssociationSet>
+          <EntitySet Name="Volumes" EntityType="FsInfoCat.Model.Volume" />
+          <AssociationSet Name="CreatedByVolume" Association="FsInfoCat.Model.CreatedByVolume">
+            <End Role="Creator" EntitySet="UserAccounts" />
+            <End Role="Volume" EntitySet="Volumes" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByVolume" Association="FsInfoCat.Model.ModifiedByVolume">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="Volume" EntitySet="Volumes" />
+          </AssociationSet>
+          <AssociationSet Name="HostDeviceVolume" Association="FsInfoCat.Model.HostDeviceVolume">
+            <End Role="HostDevice" EntitySet="HostDevices" />
+            <End Role="Volume" EntitySet="Volumes" />
+          </AssociationSet>
+          <EntitySet Name="BasicLogins" EntityType="FsInfoCat.Model.BasicLogin" />
+          <AssociationSet Name="UserAccountBasicLogin" Association="FsInfoCat.Model.UserAccountBasicLogin">
+            <End Role="UserAccount" EntitySet="UserAccounts" />
+            <End Role="BasicLogin" EntitySet="BasicLogins" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByBasicLogin" Association="FsInfoCat.Model.CreatedByBasicLogin">
+            <End Role="Creator" EntitySet="UserAccounts" />
+            <End Role="BasicLogin" EntitySet="BasicLogins" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByBasicLogin" Association="FsInfoCat.Model.ModifiedByBasicLogin">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="BasicLogin" EntitySet="BasicLogins" />
+          </AssociationSet>
+          <EntitySet Name="WindowsIdentityLogins" EntityType="FsInfoCat.Model.WindowsIdentityLogin" />
+          <EntitySet Name="WindowsAuthDomains" EntityType="FsInfoCat.Model.WindowsAuthDomain" />
+          <AssociationSet Name="WindowsAuthDomainWindowsIdentityLogin" Association="FsInfoCat.Model.WindowsAuthDomainWindowsIdentityLogin">
+            <End Role="WindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+            <End Role="WindowsIdentityLogin" EntitySet="WindowsIdentityLogins" />
+          </AssociationSet>
+          <AssociationSet Name="UserAccountWindowsIdentityLogin" Association="FsInfoCat.Model.UserAccountWindowsIdentityLogin">
+            <End Role="UserAccount" EntitySet="UserAccounts" />
+            <End Role="WindowsIdentityLogin" EntitySet="WindowsIdentityLogins" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByWindowsIdentityLogin" Association="FsInfoCat.Model.CreatedByWindowsIdentityLogin">
+            <End Role="Creator" EntitySet="UserAccounts" />
+            <End Role="CreatedWindowsIdentityLogin" EntitySet="WindowsIdentityLogins" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByWindowsIdentityLogin" Association="FsInfoCat.Model.ModifiedByWindowsIdentityLogin">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="ModifiedWindowsIdentityLogin" EntitySet="WindowsIdentityLogins" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByWindowsAuthDomain" Association="FsInfoCat.Model.CreatedByWindowsAuthDomain">
+            <End Role="Creator" EntitySet="UserAccounts" />
+            <End Role="CreatedWindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByWindowsAuthDomain" Association="FsInfoCat.Model.ModifiedByWindowsAuthDomain">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="ModifiedWindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+          </AssociationSet>
+          <EntitySet Name="UserGroups" EntityType="FsInfoCat.Model.UserGroup" />
+          <EntitySet Name="GroupMembers" EntityType="FsInfoCat.Model.GroupMember" />
+          <AssociationSet Name="UserGroupGroupMember" Association="FsInfoCat.Model.UserGroupGroupMember">
+            <End Role="UserGroup" EntitySet="UserGroups" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="UserAccountGroupMember" Association="FsInfoCat.Model.UserAccountGroupMember">
+            <End Role="UserAccount" EntitySet="UserAccounts" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="AddedByGroupMember" Association="FsInfoCat.Model.AddedByGroupMember">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <EntitySet Name="WindowsGroupIdentities" EntityType="FsInfoCat.Model.WindowsGroupIdentity" />
+          <AssociationSet Name="UserGroupWindowsGroupIdentity" Association="FsInfoCat.Model.UserGroupWindowsGroupIdentity">
+            <End Role="UserGroup" EntitySet="UserGroups" />
+            <End Role="WindowsGroupIdentity" EntitySet="WindowsGroupIdentities" />
+          </AssociationSet>
+          <AssociationSet Name="WindowsAuthDomainWindowsGroupIdentity" Association="FsInfoCat.Model.WindowsAuthDomainWindowsGroupIdentity">
+            <End Role="WindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+            <End Role="WindowsGroupIdentity" EntitySet="WindowsGroupIdentities" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByWindowsGroupIdentity" Association="FsInfoCat.Model.CreatedByUserAccountWindowsGroupIdentity">
+            <End Role="Creator" EntitySet="UserAccounts" />
+            <End Role="CreatedWindowsGroupIdentity" EntitySet="WindowsGroupIdentities" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByWindowsGroupIdentity" Association="FsInfoCat.Model.ModifiedByWindowsGroupIdentity">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="ModifiedWindowsGroupIdentity" EntitySet="WindowsGroupIdentities" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByUserGroup" Association="FsInfoCat.Model.CreatedByUserGroup">
+            <End Role="Creator" EntitySet="UserAccounts" />
+            <End Role="CreatedUserGroup" EntitySet="UserGroups" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByUserGroup" Association="FsInfoCat.Model.ModifiedByUserGroup">
+            <End Role="Modifier" EntitySet="UserAccounts" />
+            <End Role="ModifiedUserGroup" EntitySet="UserGroups" />
+          </AssociationSet>
+          <AssociationSet Name="DefaultNewUserGroupWindowsAuthDomain" Association="FsInfoCat.Model.DefaultNewUserGroupWindowsAuthDomain">
+            <End Role="UserGroup" EntitySet="UserGroups" />
+            <End Role="WindowsAuthDomain" EntitySet="WindowsAuthDomains" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="UserAccount">
+          <Documentation>
+            <Summary>Application user account.</Summary>
+          </Documentation>
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="128" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="32" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="64" />
+          <Property Name="MI" Type="String" Nullable="true" FixedLength="true" MaxLength="1" />
+          <Property Name="Suffix" Type="String" Nullable="true" MaxLength="32" />
+          <Property Name="Title" Type="String" Nullable="true" MaxLength="32" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" DefaultValue="false" >
+            <Documentation>
+              <Summary>Indicates whether a user account is considered inactive.</Summary>
+              <LongDescription>This can be used to render a user administratively inactive without changing the roles, allowed login types or the locked-out status.</LongDescription>
+            </Documentation>
+          </Property>
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="CreatedHostDevices" Relationship="FsInfoCat.Model.CreatedByHostDevice" FromRole="Creator" ToRole="HostDevice" />
+          <NavigationProperty Name="ModifiedHostDevices" Relationship="FsInfoCat.Model.ModifiedByHostDevice" FromRole="Modifier" ToRole="HostDevice" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="CreatedUserAccounts" Relationship="FsInfoCat.Model.CreatedByUserAccount" FromRole="Creator" ToRole="UserAccount" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByUserAccount" FromRole="UserAccount" ToRole="Creator" />
+          <NavigationProperty Name="ModifiedUserAccounts" Relationship="FsInfoCat.Model.ModifiedByUserAccount" FromRole="Modifier" ToRole="UserAccount" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByUserAccount" FromRole="UserAccount" ToRole="Modifier" />
+          <NavigationProperty Name="CreatedVolumes" Relationship="FsInfoCat.Model.CreatedByVolume" FromRole="Creator" ToRole="Volume" />
+          <NavigationProperty Name="ModifiedVolumes" Relationship="FsInfoCat.Model.ModifiedByVolume" FromRole="Modifier" ToRole="Volume" />
+          <Property Name="ExplicitRoles" Type="FsInfoCat.Model.UserRole" Nullable="false" >
+            <Documentation>
+              <Summary>Explcitly assigned roles.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" />
+          <NavigationProperty Name="BasicLogins" Relationship="FsInfoCat.Model.UserAccountBasicLogin" FromRole="UserAccount" ToRole="BasicLogin" >
+            <Documentation>
+              <Summary>Username/Password logins for the current user account.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="CreatedBasicLogins" Relationship="FsInfoCat.Model.CreatedByBasicLogin" FromRole="Creator" ToRole="BasicLogin" />
+          <NavigationProperty Name="ModifiedBasicLogins" Relationship="FsInfoCat.Model.ModifiedByBasicLogin" FromRole="Modifier" ToRole="BasicLogin" />
+          <NavigationProperty Name="WindowsIdentityLogins" Relationship="FsInfoCat.Model.UserAccountWindowsIdentityLogin" FromRole="UserAccount" ToRole="WindowsIdentityLogin" >
+            <Documentation>
+              <Summary>Windows identities linked to the current user account for automatic login.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="CreatedWindowsIdentityLogins" Relationship="FsInfoCat.Model.CreatedByWindowsIdentityLogin" FromRole="Creator" ToRole="CreatedWindowsIdentityLogin" />
+          <NavigationProperty Name="ModifiedWindowsIdentityLogins" Relationship="FsInfoCat.Model.ModifiedByWindowsIdentityLogin" FromRole="Modifier" ToRole="ModifiedWindowsIdentityLogin" />
+          <NavigationProperty Name="CreatedWindowsAuthDomains" Relationship="FsInfoCat.Model.CreatedByWindowsAuthDomain" FromRole="Creator" ToRole="CreatedWindowsAuthDomain" />
+          <NavigationProperty Name="ModifiedWindowsAuthDomains" Relationship="FsInfoCat.Model.ModifiedByWindowsAuthDomain" FromRole="Modifier" ToRole="ModifiedWindowsAuthDomain" />
+          <NavigationProperty Name="Memberships" Relationship="FsInfoCat.Model.UserAccountGroupMember" FromRole="UserAccount" ToRole="GroupMember" >
+            <Documentation>
+              <Summary>Group memberships for the current user account.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="AddedGroupMembers" Relationship="FsInfoCat.Model.AddedByGroupMember" FromRole="Modifier" ToRole="GroupMember" />
+          <NavigationProperty Name="CreatedWindowsGroupIdentities" Relationship="FsInfoCat.Model.CreatedByUserAccountWindowsGroupIdentity" FromRole="Creator" ToRole="CreatedWindowsGroupIdentity" />
+          <NavigationProperty Name="ModifiedWindowsGroupIdentities" Relationship="FsInfoCat.Model.ModifiedByWindowsGroupIdentity" FromRole="Modifier" ToRole="ModifiedWindowsGroupIdentity" />
+          <NavigationProperty Name="CreatedUserGroups" Relationship="FsInfoCat.Model.CreatedByUserGroup" FromRole="Creator" ToRole="CreatedUserGroup" />
+          <NavigationProperty Name="ModifiedUserGroups" Relationship="FsInfoCat.Model.ModifiedByUserGroup" FromRole="Modifier" ToRole="ModifiedUserGroup" />
+        </EntityType>
+        <EntityType Name="HostDevice">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="128" />
+          <Property Name="MachineIdentifer" Type="String" Nullable="false" MaxLength="128" />
+          <Property Name="MachineName" Type="String" Nullable="false" MaxLength="128" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByHostDevice" FromRole="HostDevice" ToRole="Creator" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByHostDevice" FromRole="HostDevice" ToRole="Modifier" />
+          <NavigationProperty Name="Volumes" Relationship="FsInfoCat.Model.HostDeviceVolume" FromRole="HostDevice" ToRole="Volume" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" />
+          <Property Name="Platform" Type="FsInfoCat.Model.HostPlatformType" Nullable="false" />
+        </EntityType>
+        <Association Name="CreatedByHostDevice">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.HostDevice" Role="HostDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HostDevice">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByHostDevice">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.HostDevice" Role="HostDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HostDevice">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByUserAccount">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.UserAccount" Role="UserAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAccount">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByUserAccount">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.UserAccount" Role="UserAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAccount">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Volume">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="HostDeviceId" Type="Guid" Nullable="true" />
+          <Property Name="DisplayName" Type="String" Nullable="false" />
+          <Property Name="RootPathName" Type="String" Nullable="false" />
+          <Property Name="DriveFormat" Type="String" Nullable="false" />
+          <Property Name="VolumeName" Type="String" Nullable="false" />
+          <Property Name="Identifier" Type="String" Nullable="false" />
+          <Property Name="MaxNameLength" Type="Int64" Nullable="false" />
+          <Property Name="CaseSensitive" Type="Boolean" Nullable="false" DefaultValue="false" />
+          <Property Name="IsInactive" Type="String" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByVolume" FromRole="Volume" ToRole="Creator" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByVolume" FromRole="Volume" ToRole="Modifier" />
+          <NavigationProperty Name="HostDevice" Relationship="FsInfoCat.Model.HostDeviceVolume" FromRole="Volume" ToRole="HostDevice" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" />
+        </EntityType>
+        <Association Name="CreatedByVolume">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.Volume" Role="Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByVolume">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.Volume" Role="Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="HostDeviceVolume">
+          <End Type="FsInfoCat.Model.HostDevice" Role="HostDevice" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Model.Volume" Role="Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HostDevice">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="HostDeviceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="UserRole" UnderlyingType="Byte" IsFlags="true">
+          <Member Name="None" Value="0" />
+          <Member Name="Viewer" Value="1" />
+          <Member Name="Auditor" Value="2" />
+          <Member Name="Contributor" Value="4" />
+          <Member Name="ITSupport" Value="8" />
+          <Member Name="Administrator" Value="16" />
+        </EnumType>
+        <EnumType Name="HostPlatformType" UnderlyingType="Byte" IsFlags="true">
+          <Member Name="Unknown" Value="0" />
+          <Member Name="Windows" Value="1" />
+          <Member Name="Linux" Value="2" />
+          <Member Name="OSX" Value="3" />
+          <Member Name="XBox" Value="4" />
+        </EnumType>
+        <EntityType Name="BasicLogin">
+          <Documentation>
+            <Summary>Username/password login credentials.</Summary>
+          </Documentation>
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="LoginName" Type="String" Nullable="false" >
+            <Documentation>
+              <Summary>Login name.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="PwHash" Type="String" Nullable="false" >
+            <Documentation>
+              <Summary>Encoded hash of password credentials.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="FailCount" Type="Byte" Nullable="false" DefaultValue="0" >
+            <Documentation>
+              <Summary>Number of consecutive failed login attempts.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="LockedOut" Type="Boolean" Nullable="false" DefaultValue="false" >
+            <Documentation>
+              <Summary>Indicates whether login is locked out.</Summary>
+              <LongDescription>Logins can be locked out due to too many consecutive failed login attempts or due to other security-related violations.</LongDescription>
+            </Documentation>
+          </Property>
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" DefaultValue="false" >
+            <Documentation>
+              <Summary>Indicates whether the login is inactive.</Summary>
+              <LongDescription>This can be used to mark a specific login type as inactive without changing other user-related properties.</LongDescription>
+            </Documentation>
+          </Property>
+          <Property Name="UserId" Type="Guid" Nullable="false" >
+            <Documentation>
+              <Summary>Primary key of user account that is mapped to this login.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="UserAccount" Relationship="FsInfoCat.Model.UserAccountBasicLogin" FromRole="BasicLogin" ToRole="UserAccount" >
+            <Documentation>
+              <Summary>User account that is linked to the current login method.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByBasicLogin" FromRole="BasicLogin" ToRole="Creator" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByBasicLogin" FromRole="BasicLogin" ToRole="Modifier" />
+        </EntityType>
+        <Association Name="UserAccountBasicLogin">
+          <End Type="FsInfoCat.Model.UserAccount" Role="UserAccount" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.BasicLogin" Role="BasicLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BasicLogin">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByBasicLogin">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.BasicLogin" Role="BasicLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BasicLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByBasicLogin">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.BasicLogin" Role="BasicLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BasicLogin">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="WindowsIdentityLogin">
+          <Documentation>
+            <Summary>Maps a windows identity to a &lt;seealso cref="UserAccount"/&gt;</Summary>
+          </Documentation>
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="SID" Type="String" Nullable="false" >
+            <Documentation>
+              <Summary>Security Identifier of user in SDDL-format.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="DomainId" Type="Guid" Nullable="false" >
+            <Documentation>
+              <Summary>Primary key of the domain associated with the windows identity login.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="AccountName" Type="String" Nullable="false" >
+            <Documentation>
+              <Summary>The user's account name.</Summary>
+              <LongDescription>This is for display purposes only. Use &lt;seealso cref="UserSID"/&gt; for authentication.</LongDescription>
+            </Documentation>
+          </Property>
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" DefaultValue="false" >
+            <Documentation>
+              <Summary>Indicates whether the login is inactive.</Summary>
+              <LongDescription>This can be used to mark a specific login type as inactive without changing other user-related properties.</LongDescription>
+            </Documentation>
+          </Property>
+          <Property Name="UserId" Type="Guid" Nullable="false" >
+            <Documentation>
+              <Summary>Primary key of user account that is mapped to this login.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" />
+          <NavigationProperty Name="Domain" Relationship="FsInfoCat.Model.WindowsAuthDomainWindowsIdentityLogin" FromRole="WindowsIdentityLogin" ToRole="WindowsAuthDomain" >
+            <Documentation>
+              <Summary>The windows domain for the current windows user identity.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="UserAccount" Relationship="FsInfoCat.Model.UserAccountWindowsIdentityLogin" FromRole="WindowsIdentityLogin" ToRole="UserAccount" >
+            <Documentation>
+              <Summary>User account linked to the current windows identity.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByWindowsIdentityLogin" FromRole="CreatedWindowsIdentityLogin" ToRole="Creator" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByWindowsIdentityLogin" FromRole="ModifiedWindowsIdentityLogin" ToRole="Modifier" />
+        </EntityType>
+        <EntityType Name="WindowsAuthDomain">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="SID" Type="String" Nullable="false" >
+            <Documentation>
+              <Summary>Security Identifier of windows domain or host machine in SDDL-format.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="Name" Type="String" Nullable="false" >
+            <Documentation>
+              <Summary>The name of the domain or machine.</Summary>
+              <LongDescription>This is for display purposes only. Use &lt;seealso cref="DomainSID"/&gt; for authentication.</LongDescription>
+            </Documentation>
+          </Property>
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" DefaultValue="false" >
+            <Documentation>
+              <Summary>Indicates whether the login domain is inactive.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" />
+          <NavigationProperty Name="Logins" Relationship="FsInfoCat.Model.WindowsAuthDomainWindowsIdentityLogin" FromRole="WindowsAuthDomain" ToRole="WindowsIdentityLogin" >
+            <Documentation>
+              <Summary>Windows logins associated with the current windows authentication domain.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByWindowsAuthDomain" FromRole="CreatedWindowsAuthDomain" ToRole="Creator" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByWindowsAuthDomain" FromRole="ModifiedWindowsAuthDomain" ToRole="Modifier" />
+          <NavigationProperty Name="Groups" Relationship="FsInfoCat.Model.WindowsAuthDomainWindowsGroupIdentity" FromRole="WindowsAuthDomain" ToRole="WindowsGroupIdentity" />
+          <Property Name="AutoAddUsers" Type="Boolean" Nullable="false" DefaultValue="false" >
+            <Documentation>
+              <Summary>Indicates whether new users authenticated under this domain are automatically added to the application.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="DefaultNewUserGroupId" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="DefaultNewUserGroup" Relationship="FsInfoCat.Model.DefaultNewUserGroupWindowsAuthDomain" FromRole="WindowsAuthDomain" ToRole="UserGroup" />
+        </EntityType>
+        <Association Name="WindowsAuthDomainWindowsIdentityLogin">
+          <End Type="FsInfoCat.Model.WindowsAuthDomain" Role="WindowsAuthDomain" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsIdentityLogin" Role="WindowsIdentityLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WindowsAuthDomain">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WindowsIdentityLogin">
+              <PropertyRef Name="DomainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserAccountWindowsIdentityLogin">
+          <End Type="FsInfoCat.Model.UserAccount" Role="UserAccount" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsIdentityLogin" Role="WindowsIdentityLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WindowsIdentityLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByWindowsIdentityLogin">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsIdentityLogin" Role="CreatedWindowsIdentityLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreatedWindowsIdentityLogin">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByWindowsIdentityLogin">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsIdentityLogin" Role="ModifiedWindowsIdentityLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ModifiedWindowsIdentityLogin">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByWindowsAuthDomain">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsAuthDomain" Role="CreatedWindowsAuthDomain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreatedWindowsAuthDomain">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByWindowsAuthDomain">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsAuthDomain" Role="ModifiedWindowsAuthDomain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ModifiedWindowsAuthDomain">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="UserGroup">
+          <Documentation>
+            <Summary>Application user group.</Summary>
+          </Documentation>
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="128" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" DefaultValue="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <Property Name="Roles" Type="FsInfoCat.Model.UserRole" Nullable="false" >
+            <Documentation>
+              <Summary>Roles assigned to all group members.</Summary>
+            </Documentation>
+          </Property>
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" />
+          <NavigationProperty Name="Memberships" Relationship="FsInfoCat.Model.UserGroupGroupMember" FromRole="UserGroup" ToRole="GroupMember" >
+            <Documentation>
+              <Summary>Links to group members</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="WindowsGroupIdentities" Relationship="FsInfoCat.Model.UserGroupWindowsGroupIdentity" FromRole="UserGroup" ToRole="WindowsGroupIdentity" >
+            <Documentation>
+              <Summary>Windows group identities that are mapped to this application group.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByUserGroup" FromRole="CreatedUserGroup" ToRole="Creator" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByUserGroup" FromRole="ModifiedUserGroup" ToRole="Modifier" />
+          <NavigationProperty Name="AutoAddDomains" Relationship="FsInfoCat.Model.DefaultNewUserGroupWindowsAuthDomain" FromRole="UserGroup" ToRole="WindowsAuthDomain" />
+        </EntityType>
+        <EntityType Name="GroupMember">
+          <Documentation>
+            <Summary>User/Group membership link</Summary>
+          </Documentation>
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="GroupId" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="AddedOn" Type="DateTime" Nullable="false" />
+          <Property Name="AddedById" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="FsInfoCat.Model.UserGroupGroupMember" FromRole="GroupMember" ToRole="UserGroup" />
+          <NavigationProperty Name="User" Relationship="FsInfoCat.Model.UserAccountGroupMember" FromRole="GroupMember" ToRole="UserAccount" />
+          <NavigationProperty Name="AddedBy" Relationship="FsInfoCat.Model.AddedByGroupMember" FromRole="GroupMember" ToRole="Modifier" />
+        </EntityType>
+        <Association Name="UserGroupGroupMember">
+          <End Type="FsInfoCat.Model.UserGroup" Role="UserGroup" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.GroupMember" Role="GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserAccountGroupMember">
+          <End Type="FsInfoCat.Model.UserAccount" Role="UserAccount" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.GroupMember" Role="GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AddedByGroupMember">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.GroupMember" Role="GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="AddedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="WindowsGroupIdentity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="SID" Type="String" Nullable="false" />
+          <Property Name="DomainId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" DefaultValue="false" />
+          <Property Name="GroupId" Type="Guid" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" />
+          <NavigationProperty Name="Group" Relationship="FsInfoCat.Model.UserGroupWindowsGroupIdentity" FromRole="WindowsGroupIdentity" ToRole="UserGroup" >
+            <Documentation>
+              <Summary>The application group that is mapped to the current windows group identity.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="Domain" Relationship="FsInfoCat.Model.WindowsAuthDomainWindowsGroupIdentity" FromRole="WindowsGroupIdentity" ToRole="WindowsAuthDomain" >
+            <Documentation>
+              <Summary>The windows domain for the current windows group identity.</Summary>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByUserAccountWindowsGroupIdentity" FromRole="CreatedWindowsGroupIdentity" ToRole="Creator" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByWindowsGroupIdentity" FromRole="ModifiedWindowsGroupIdentity" ToRole="Modifier" />
+          <Property Name="AutoAddMembers" Type="Boolean" Nullable="false" >
+            <Documentation>
+              <Summary>Indicates whether to automatically add new users to the application when they belong to the current windows group.</Summary>
+            </Documentation>
+          </Property>
+        </EntityType>
+        <Association Name="UserGroupWindowsGroupIdentity">
+          <End Type="FsInfoCat.Model.UserGroup" Role="UserGroup" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsGroupIdentity" Role="WindowsGroupIdentity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WindowsGroupIdentity">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="WindowsAuthDomainWindowsGroupIdentity">
+          <End Type="FsInfoCat.Model.WindowsAuthDomain" Role="WindowsAuthDomain" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsGroupIdentity" Role="WindowsGroupIdentity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WindowsAuthDomain">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WindowsGroupIdentity">
+              <PropertyRef Name="DomainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByUserAccountWindowsGroupIdentity">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsGroupIdentity" Role="CreatedWindowsGroupIdentity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreatedWindowsGroupIdentity">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByWindowsGroupIdentity">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.WindowsGroupIdentity" Role="ModifiedWindowsGroupIdentity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ModifiedWindowsGroupIdentity">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByUserGroup">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.UserGroup" Role="CreatedUserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreatedUserGroup">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByUserGroup">
+          <End Type="FsInfoCat.Model.UserAccount" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Model.UserGroup" Role="ModifiedUserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modifier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ModifiedUserGroup">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DefaultNewUserGroupWindowsAuthDomain">
+          <Documentation>
+            <Summary>Default group for new users authenticated through this domain.</Summary>
+          </Documentation>
+          <End Type="FsInfoCat.Model.UserGroup" Role="UserGroup" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Model.WindowsAuthDomain" Role="WindowsAuthDomain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WindowsAuthDomain">
+              <PropertyRef Name="DefaultNewUserGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FsInfoCatModelStoreContainer" CdmEntityContainer="DbModel">
+    <EntitySetMapping Name="UserAccounts">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.UserAccount)">
+        <MappingFragment StoreEntitySet="UserAccounts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="MI" ColumnName="MI" />
+          <ScalarProperty Name="Suffix" ColumnName="Suffix" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedById" ColumnName="ModifiedById" />
+          <ScalarProperty Name="ExplicitRoles" ColumnName="ExplicitRoles" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="HostDevices">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.HostDevice)">
+        <MappingFragment StoreEntitySet="HostDevices">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+          <ScalarProperty Name="MachineIdentifer" ColumnName="MachineIdentifer" />
+          <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedById" ColumnName="ModifiedById" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="Platform" ColumnName="Platform" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Volumes">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.Volume)">
+        <MappingFragment StoreEntitySet="Volumes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="HostDeviceId" ColumnName="HostDeviceId" />
+          <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+          <ScalarProperty Name="RootPathName" ColumnName="RootPathName" />
+          <ScalarProperty Name="DriveFormat" ColumnName="DriveFormat" />
+          <ScalarProperty Name="VolumeName" ColumnName="VolumeName" />
+          <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+          <ScalarProperty Name="MaxNameLength" ColumnName="MaxNameLength" />
+          <ScalarProperty Name="CaseSensitive" ColumnName="CaseSensitive" />
+          <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedById" ColumnName="ModifiedById" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BasicLogins">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.BasicLogin)">
+        <MappingFragment StoreEntitySet="BasicLogins">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="LoginName" ColumnName="LoginName" />
+          <ScalarProperty Name="PwHash" ColumnName="PwHash" />
+          <ScalarProperty Name="FailCount" ColumnName="FailCount" />
+          <ScalarProperty Name="LockedOut" ColumnName="LockedOut" />
+          <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedById" ColumnName="ModifiedById" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WindowsIdentityLogins">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.WindowsIdentityLogin)">
+        <MappingFragment StoreEntitySet="WindowsIdentityLogins">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="DomainId" ColumnName="DomainId" />
+          <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+          <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedById" ColumnName="ModifiedById" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WindowsAuthDomains">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.WindowsAuthDomain)">
+        <MappingFragment StoreEntitySet="WindowsAuthDomains">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedById" ColumnName="ModifiedById" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="AutoAddUsers" ColumnName="AutoAddUsers" />
+          <ScalarProperty Name="DefaultNewUserGroupId" ColumnName="DefaultNewUserGroupId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.UserGroup)">
+        <MappingFragment StoreEntitySet="UserGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+          <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedById" ColumnName="ModifiedById" />
+          <ScalarProperty Name="Roles" ColumnName="Roles" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupMembers">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.GroupMember)">
+        <MappingFragment StoreEntitySet="GroupMembers">
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="AddedOn" ColumnName="AddedOn" />
+          <ScalarProperty Name="AddedById" ColumnName="AddedById" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WindowsGroupIdentities">
+      <EntityTypeMapping TypeName="IsTypeOf(FsInfoCat.Model.WindowsGroupIdentity)">
+        <MappingFragment StoreEntitySet="WindowsGroupIdentities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="DomainId" ColumnName="DomainId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="IsInactive" ColumnName="IsInactive" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+          <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="ModifiedById" ColumnName="ModifiedById" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="AutoAddMembers" ColumnName="AutoAddMembers" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

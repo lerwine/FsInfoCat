@@ -1,0 +1,83 @@
+4/17/2021 5:31:50 PM	This log contains information about the import schema operation into project 'FsInfoCatDb' on computer 'DESKTOP-G10FC12' by user 'lerwi'.
+4/17/2021 5:31:50 PM	Import of database schema has started.
+4/17/2021 5:31:52 PM	Gathering logins
+4/17/2021 5:31:53 PM	Gathering database credentials
+4/17/2021 5:31:53 PM	Gathering database options
+4/17/2021 5:31:53 PM	Gathering generic database scoped configuration option
+4/17/2021 5:31:53 PM	Gathering users
+4/17/2021 5:31:53 PM	Gathering roles
+4/17/2021 5:31:53 PM	Gathering application roles
+4/17/2021 5:31:53 PM	Gathering role memberships
+4/17/2021 5:31:53 PM	Gathering filegroups
+4/17/2021 5:31:53 PM	Gathering full-text catalogs
+4/17/2021 5:31:53 PM	Gathering assemblies
+4/17/2021 5:31:53 PM	Gathering certificates
+4/17/2021 5:31:53 PM	Gathering symmetric keys
+4/17/2021 5:31:53 PM	Gathering encrypted symmetric keys
+4/17/2021 5:31:53 PM	Gathering schemas
+4/17/2021 5:31:53 PM	Gathering XML schema collections
+4/17/2021 5:31:53 PM	Gathering user-defined data types
+4/17/2021 5:31:53 PM	Gathering user-defined types
+4/17/2021 5:31:53 PM	Gathering table types
+4/17/2021 5:31:53 PM	Gathering unique keys for table types
+4/17/2021 5:31:53 PM	Gathering primary keys for table types
+4/17/2021 5:31:53 PM	Gathering indexes for table types
+4/17/2021 5:31:53 PM	Gathering check constraints for table types
+4/17/2021 5:31:53 PM	Gathering default constraints for table types
+4/17/2021 5:31:53 PM	Gathering partition functions
+4/17/2021 5:31:53 PM	Gathering partition schemes
+4/17/2021 5:31:53 PM	Gathering functions
+4/17/2021 5:31:53 PM	Gathering encrypted functions
+4/17/2021 5:31:53 PM	Gathering aggregates
+4/17/2021 5:31:53 PM	Gathering procedures
+4/17/2021 5:31:53 PM	Gathering encrypted procedures
+4/17/2021 5:31:53 PM	Gathering tables
+4/17/2021 5:31:53 PM	Gathering primary keys
+4/17/2021 5:31:53 PM	Gathering unique constraints
+4/17/2021 5:31:53 PM	Gathering foreign keys
+4/17/2021 5:31:53 PM	Gathering default constraints
+4/17/2021 5:31:53 PM	Gathering check constraints
+4/17/2021 5:31:53 PM	Gathering views
+4/17/2021 5:31:53 PM	Gathering encrypted views
+4/17/2021 5:31:53 PM	Gathering indexes
+4/17/2021 5:31:53 PM	Gathering statistics
+4/17/2021 5:31:53 PM	Gathering full-text index stoplists
+4/17/2021 5:31:53 PM	Gathering search property lists
+4/17/2021 5:31:53 PM	Gathering search properties
+4/17/2021 5:31:53 PM	Gathering full-text indexes
+4/17/2021 5:31:53 PM	Gathering column store indexes
+4/17/2021 5:31:53 PM	Gathering spatial indexes
+4/17/2021 5:31:53 PM	Gathering XML indexes
+4/17/2021 5:31:53 PM	Gathering Selective XML indexes
+4/17/2021 5:31:53 PM	Gathering encrypted triggers
+4/17/2021 5:31:53 PM	Gathering triggers
+4/17/2021 5:31:53 PM	Gathering encrypted and clr ddl triggers
+4/17/2021 5:31:53 PM	Gathering ddl triggers
+4/17/2021 5:31:53 PM	Creating edge constraints
+4/17/2021 5:31:53 PM	Gathering synonyms
+4/17/2021 5:31:53 PM	Gathering defaults
+4/17/2021 5:31:53 PM	Gathering data constraint uddt bindings
+4/17/2021 5:31:53 PM	Gathering rules
+4/17/2021 5:31:53 PM	Gathering data constraint uddt bindings
+4/17/2021 5:31:53 PM	Gathering message types
+4/17/2021 5:31:53 PM	Gathering queues
+4/17/2021 5:31:53 PM	Gathering contracts
+4/17/2021 5:31:53 PM	Gathering services
+4/17/2021 5:31:53 PM	Gathering event notifications
+4/17/2021 5:31:53 PM	Gathering remote service bindings
+4/17/2021 5:31:53 PM	Gathering broker priorities
+4/17/2021 5:31:53 PM	Gathering signatures
+4/17/2021 5:31:53 PM	Gathering data compression options
+4/17/2021 5:31:53 PM	Gathering sequence types
+4/17/2021 5:31:53 PM	Gathering security policies
+4/17/2021 5:31:53 PM	Gather column encryption keys
+4/17/2021 5:31:53 PM	Gathering column master keys
+4/17/2021 5:31:53 PM	Gathering external data sources
+4/17/2021 5:31:53 PM	Gathering external tables
+4/17/2021 5:31:53 PM	Gathering extended properties
+4/17/2021 5:31:53 PM	Gathering logins
+4/17/2021 5:31:54 PM	Scanning project for duplicate elements
+4/17/2021 5:31:54 PM	Finished duplicate element processing
+4/17/2021 5:31:54 PM	Finished importing database.
+4/17/2021 5:31:54 PM	A summary of the import was saved to the following location: C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCatDb\Import Schema Logs\FsInfoCatDb_20210417093150.log
+4/17/2021 5:31:54 PM	Click Finish to continue...

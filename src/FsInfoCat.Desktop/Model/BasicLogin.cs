@@ -12,28 +12,30 @@ namespace FsInfoCat.Desktop.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class HostDevice
+    public partial class BasicLogin
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public HostDevice()
+        public BasicLogin()
         {
-            this.Volumes = new HashSet<Volume>();
+            this.FailCount = 0;
+            this.LockedOut = false;
+            this.IsInactive = false;
         }
     
         public System.Guid Id { get; set; }
-        public string DisplayName { get; set; }
-        public string MachineIdentifer { get; set; }
-        public string MachineName { get; set; }
+        public string LoginName { get; set; }
+        public string PwHash { get; set; }
+        public byte FailCount { get; set; }
+        public bool LockedOut { get; set; }
+        public bool IsInactive { get; set; }
+        public System.Guid UserId { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public System.Guid CreatedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
-        public string Notes { get; set; }
-        public HostPlatformType Platform { get; set; }
     
+        public virtual UserAccount UserAccount { get; set; }
         public virtual UserAccount CreatedBy { get; set; }
         public virtual UserAccount ModifiedBy { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Volume> Volumes { get; set; }
     }
 }

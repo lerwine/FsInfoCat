@@ -1,9 +1,10 @@
+using FsInfoCat.Desktop.Model;
 using System.Globalization;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Converters
 {
-    public class AccountToStringConverter : ToClassConverterBase<Account, string>
+    public class AccountToStringConverter : ToClassConverterBase<UserAccount, string>
     {
 
         public static readonly DependencyProperty NullSourceProperty =
@@ -16,6 +17,6 @@ namespace FsInfoCat.Desktop.Converters
             set { SetValue(NullSourceProperty, value); }
         }
 
-        public override string Convert(Account value, object parameter, CultureInfo culture) => value.LoginName;
+        public override string Convert(UserAccount value, object parameter, CultureInfo culture) => value.DisplayName;
     }
 }
