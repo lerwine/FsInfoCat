@@ -163,6 +163,8 @@
     <Compile Include="Model\UserCredential.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\AsyncActionViewModel.cs" />
+    <Compile Include="ViewModel\AsyncFunctionViewModel.cs" />
     <Compile Include="ViewModel\AsyncOperationViewModel.cs" />
     <Compile Include="ViewModel\AsyncResultEventArgs.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />

@@ -17,7 +17,6 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         private static readonly ILogger<SettingsViewModel> _logger = App.LoggerFactory.CreateLogger<SettingsViewModel>();
         private Task<HostDevice> _localMachineRegistrationTask = null;
-        private Commands.RelayCommand _registerLocalMachineCommand = null;
         private const string RegisterLocalMachine_MenuItem_Text = "Register Local Machine";
         private const string UnregisterLocalMachine_MenuItem_Text = "Un-Register Local Machine";
 
@@ -27,19 +26,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public event DependencyPropertyChangedEventHandler HostDeviceRegistrationPropertyChanged;
 
-        public static readonly RoutedEvent ButtonColorChangedEvent = EventManager.RegisterRoutedEvent(nameof(ButtonColorChanged), RoutingStrategy.Bubble, typeof(DependencyPropertyChangedEventHandler),
-            typeof(SettingsViewModel));
-
-        public event RoutedEventHandler ButtonColorChanged
-        {
-            add { ButtonColorChangedEvent.AddHandler(ButtonColorChangedEvent, value); }
-            remove { RemoveHandler(ButtonColorChangedEvent, value); }
-        }
         #region Properties
 
-        public static readonly DependencyPropertyKey MachineSIDPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(MachineSID), typeof(string), typeof(SettingsViewModel),
-                new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey MachineSIDPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MachineSID), typeof(string), typeof(SettingsViewModel), new PropertyMetadata(""));
 
         public static readonly DependencyProperty MachineSIDProperty = MachineSIDPropertyKey.DependencyProperty;
 
@@ -49,9 +38,7 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(MachineSIDPropertyKey, value); }
         }
 
-        public static readonly DependencyPropertyKey MachineNamePropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(MachineName), typeof(string), typeof(SettingsViewModel),
-                new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey MachineNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(MachineName), typeof(string), typeof(SettingsViewModel), new PropertyMetadata(""));
 
         public static readonly DependencyProperty MachineNameProperty = MachineNamePropertyKey.DependencyProperty;
 
@@ -61,10 +48,8 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(MachineNamePropertyKey, value); }
         }
 
-        public static readonly DependencyPropertyKey UserPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(User), typeof(UserCredential), typeof(SettingsViewModel),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as SettingsViewModel).OnUserPropertyChanged(e)));
+        private static readonly DependencyPropertyKey UserPropertyKey = DependencyProperty.RegisterReadOnly(nameof(User), typeof(UserCredential), typeof(SettingsViewModel),
+            new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnUserPropertyChanged(e)));
 
         public static readonly DependencyProperty UserProperty = UserPropertyKey.DependencyProperty;
 
@@ -74,10 +59,8 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(UserPropertyKey, value); }
         }
 
-        public static readonly DependencyPropertyKey HostDeviceRegistrationPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(HostDeviceRegistration), typeof(HostDevice), typeof(SettingsViewModel),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as SettingsViewModel).OnHostDeviceRegistrationPropertyChanged(e)));
+        private static readonly DependencyPropertyKey HostDeviceRegistrationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HostDeviceRegistration), typeof(HostDevice), typeof(SettingsViewModel),
+            new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnHostDeviceRegistrationPropertyChanged(e)));
 
         public static readonly DependencyProperty HostDeviceRegistrationProperty = HostDeviceRegistrationPropertyKey.DependencyProperty;
 
@@ -87,29 +70,16 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(HostDeviceRegistrationPropertyKey, value); }
         }
 
-        public Commands.RelayCommand RegisterLocalMachineCommand
-        {
-            get
-            {
-                if (_registerLocalMachineCommand == null)
-                    _registerLocalMachineCommand = new Commands.RelayCommand(parameter =>
-                    {
-                        try
-                        {
-                            if (HostDeviceRegistration is null)
-                                StartRegisterLocalMachineAsync(MachineSID, MachineName);
-                            else
-                                StartUnregisterLocalMachineAsync(HostDeviceRegistration);
-                        }
-                        finally { RegisterLocalMachine?.Invoke(this, EventArgs.Empty); }
-                    });
-                return _registerLocalMachineCommand;
-            }
-        }
+        private static readonly DependencyPropertyKey RegisterLocalMachineCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RegisterLocalMachineCommand),
+            typeof(Commands.RelayCommand), typeof(SettingsViewModel), new PropertyMetadata(null, null, (DependencyObject d, object baseValue) =>
+                (baseValue is Commands.RelayCommand rc) ? rc : new Commands.RelayCommand(((SettingsViewModel)d).OnRegisterLocalMachineExecute)));
 
-        public static readonly DependencyPropertyKey RegisterLocalMachineMenuItemTextPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(RegisterLocalMachineMenuItemText), typeof(string), typeof(MainViewModel),
-                new PropertyMetadata(RegisterLocalMachine_MenuItem_Text));
+        public static readonly DependencyProperty RegisterLocalMachineCommandProperty = RegisterLocalMachineCommandPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand RegisterLocalMachineCommand => (Commands.RelayCommand)GetValue(RegisterLocalMachineCommandProperty);
+
+        private static readonly DependencyPropertyKey RegisterLocalMachineMenuItemTextPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RegisterLocalMachineMenuItemText), typeof(string),
+            typeof(MainViewModel), new PropertyMetadata(RegisterLocalMachine_MenuItem_Text));
 
         public static readonly DependencyProperty RegisterLocalMachineMenuItemTextProperty = RegisterLocalMachineMenuItemTextPropertyKey.DependencyProperty;
 
@@ -127,6 +97,14 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             try { RegisterLocalMachineMenuItemText = (args.NewValue is null) ? RegisterLocalMachine_MenuItem_Text : UnregisterLocalMachine_MenuItem_Text; }
             finally { HostDeviceRegistrationPropertyChanged?.Invoke(this, args); }
+        }
+
+        private void OnRegisterLocalMachineExecute(object parameter)
+        {
+            if (HostDeviceRegistration is null)
+                StartRegisterLocalMachineAsync(MachineSID, MachineName);
+            else
+                StartUnregisterLocalMachineAsync(HostDeviceRegistration);
         }
 
         internal Task<HostDevice> CheckHostDeviceRegistrationAsync(bool forceRecheck)
@@ -192,12 +170,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private Task<HostDevice> StartRegisterLocalMachineAsync(string sidString, string machineName)
         {
-            AsyncResultEventArgs<HostDevice> result;
             VerifyAccess();
             Task<HostDevice> task = _localMachineRegistrationTask;
             if (task is null || task.IsCompleted)
             {
-                _registerLocalMachineCommand.IsEnabled = false;
+                RegisterLocalMachineCommand.IsEnabled = false;
                 _localMachineRegistrationTask = task = Task.Factory.StartNew(() =>
                 {
                     using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
@@ -206,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 });
                 task.ContinueWith(t =>
                 {
-                    Dispatcher.BeginInvoke(new Action(() => _registerLocalMachineCommand.IsEnabled = true));
+                    Dispatcher.BeginInvoke(new Action(() => RegisterLocalMachineCommand.IsEnabled = true));
                     if (t.IsCanceled)
                         _logger.LogWarning("{CommandName} for registration canceled", nameof(RegisterLocalMachineCommand));
                     else if (t.IsFaulted)
@@ -227,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel
             Task<HostDevice> task = _localMachineRegistrationTask;
             if (task is null || task.IsCompleted)
             {
-                _registerLocalMachineCommand.IsEnabled = false;
+                RegisterLocalMachineCommand.IsEnabled = false;
                 _localMachineRegistrationTask = task = Task.Factory.StartNew<HostDevice>(() =>
                 {
                     using (FsInfoCatEntities dbContext = new FsInfoCatEntities())
@@ -240,7 +217,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 });
                 task.ContinueWith((Task<HostDevice> t) =>
                 {
-                    Dispatcher.BeginInvoke(new Action(() => _registerLocalMachineCommand.IsEnabled = true));
+                    Dispatcher.BeginInvoke(new Action(() => RegisterLocalMachineCommand.IsEnabled = true));
                     if (t.IsCanceled)
                         _logger.LogWarning("{CommandName} for un-registration canceled", nameof(RegisterLocalMachineCommand));
                     else if (t.IsFaulted)
