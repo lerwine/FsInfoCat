@@ -1,5 +1,7 @@
 using FsInfoCat.Desktop.Model;
 using System;
+using System.Linq;
+using System.Security.Principal;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.View
@@ -20,31 +22,56 @@ namespace FsInfoCat.Desktop.View
             ViewModel.SettingsViewModel settingsViewModel = App.GetSettingsVM();
             if (settingsViewModel.User is null)
             {
-                System.Threading.Tasks.Task<HostDevice> task = settingsViewModel.CheckHostDeviceRegistrationAsync(false);
-                bool? result = (new LoginWindow { Owner = this }).ShowDialog();
-                if (settingsViewModel.User is null)
+                OuterGrid.Visibility = Visibility.Collapsed;
+                if (!DbInitializeWindow.CheckConfiguration(this))
                 {
-                    DialogResult = result.HasValue && result.Value;
+                    DialogResult = false;
                     Close();
+                    return;
                 }
-                else
-                    task.ContinueWith(t =>
+                System.Threading.Tasks.Task<HostDevice> task = settingsViewModel.CheckHostDeviceRegistrationAsync(false);
+                settingsViewModel.AuthenticateUserAsync(WindowsIdentity.GetCurrent()).ContinueWith(t =>
+                {
+                    UserAccount userAccount;
+                    if (t.IsCanceled)
+                        userAccount = null;
+                    else if (t.IsFaulted)
                     {
-                        if (t.IsCanceled)
-                            Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFailed(null)));
-                        else if (t.IsFaulted)
-                            Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFailed(t.Exception)));
-                        else
-                            Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFinished(t.Result)));
-                    });
+                        Dispatcher.Invoke(new Action(() => MessageBox.Show($"Error checking auto-login status: {(string.IsNullOrWhiteSpace(t.Exception.Message) ? t.Exception.ToString() : t.Exception.Message)}", "Login Check Error", MessageBoxButton.OK, MessageBoxImage.Error)));
+                        userAccount = null;
+                    }
+                    else
+                        userAccount = t.Result;
+                    if (!(userAccount is null) || Dispatcher.Invoke(new Func<bool>(() =>
+                    {
+                        bool? result = (new LoginWindow { Owner = this }).ShowDialog();
+                        if (settingsViewModel.User is null)
+                        {
+                            DialogResult = result.HasValue && result.Value;
+                            Close();
+                            return false;
+                        }
+                        return true;
+                    })))
+                        task.ContinueWith(c =>
+                        {
+                            if (c.IsCanceled)
+                                Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFailed(null)));
+                            else if (c.IsFaulted)
+                                Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFailed(c.Exception)));
+                            else
+                                Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFinished(c.Result)));
+                        });
+                    Dispatcher.BeginInvoke(new Action(() => OuterGrid.Visibility = Visibility.Visible));
+                });
             }
         }
 
         private void OnCheckHostDeviceRegistrationFinished(HostDevice result)
         {
+            ViewModel.SettingsViewModel settingsViewModel = App.GetSettingsVM();
             if (result is null)
             {
-                ViewModel.SettingsViewModel settingsViewModel = App.GetSettingsVM();
                 if (string.IsNullOrWhiteSpace(settingsViewModel.MachineSID) || string.IsNullOrWhiteSpace(settingsViewModel.MachineName))
                 {
                     MessageBox.Show("Failed to detect machine identifier", "Initialization failure", MessageBoxButton.OK, MessageBoxImage.Error);

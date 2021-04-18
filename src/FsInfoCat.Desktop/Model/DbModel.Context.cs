@@ -12,19 +12,19 @@ namespace FsInfoCat.Desktop.Model
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+
     public partial class DbModel : DbContext
     {
         public DbModel()
-            : base("name=DbModel")
+            : base("name=FsInfoCat.Desktop.Properties.Settings.EntityClientConnectionString")
         {
         }
-    
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
         }
-    
+
         public virtual DbSet<UserAccount> UserAccounts { get; set; }
         public virtual DbSet<HostDevice> HostDevices { get; set; }
         public virtual DbSet<Volume> Volumes { get; set; }

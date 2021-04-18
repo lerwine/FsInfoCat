@@ -1,13 +1,11 @@
 using FsInfoCat.Desktop.Model;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Management;
 using System.Security;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,9 +18,11 @@ namespace FsInfoCat.Desktop.ViewModel
         private const string RegisterLocalMachine_MenuItem_Text = "Register Local Machine";
         private const string UnregisterLocalMachine_MenuItem_Text = "Un-Register Local Machine";
 
-        public event EventHandler<AsyncResultEventArgs<HostDevice>> LocalMachineRegistrationChanged;
+        //public event EventHandler<AsyncResultEventArgs<HostDevice>> LocalMachineRegistrationChanged;
 
         public event DependencyPropertyChangedEventHandler UserPropertyChanged;
+
+        public event DependencyPropertyChangedEventHandler RolesPropertyChanged;
 
         public event DependencyPropertyChangedEventHandler HostDeviceRegistrationPropertyChanged;
 
@@ -49,7 +49,7 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         private static readonly DependencyPropertyKey UserPropertyKey = DependencyProperty.RegisterReadOnly(nameof(User), typeof(UserAccount), typeof(SettingsViewModel),
-            new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnUserPropertyChanged(e)));
+            new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).UserPropertyChanged?.Invoke(d, e)));
 
         public static readonly DependencyProperty UserProperty = UserPropertyKey.DependencyProperty;
 
@@ -59,8 +59,29 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(UserPropertyKey, value); }
         }
 
+        private static readonly DependencyPropertyKey RolesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Roles), typeof(UserRole), typeof(SettingsViewModel),
+            new PropertyMetadata(UserRole.None, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnRolesPropertyChanged(e)));
+
+        private void OnRolesPropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            try
+            {
+                RegisterLocalMachineCommand.IsEnabled = args.NewValue is UserRole role && (role.HasFlag(UserRole.ITSupport) || role.HasFlag(UserRole.Contributor));
+            }
+            finally { RolesPropertyChanged?.Invoke(this, args);  }
+        }
+
+        public static readonly DependencyProperty RolesProperty = RolesPropertyKey.DependencyProperty;
+
+        public UserRole Roles
+        {
+            get { return (UserRole)GetValue(RolesProperty); }
+            private set { SetValue(RolesPropertyKey, value); }
+        }
+
         private static readonly DependencyPropertyKey HostDeviceRegistrationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HostDeviceRegistration), typeof(HostDevice), typeof(SettingsViewModel),
             new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnHostDeviceRegistrationPropertyChanged(e)));
+
 
         public static readonly DependencyProperty HostDeviceRegistrationProperty = HostDeviceRegistrationPropertyKey.DependencyProperty;
 
@@ -90,8 +111,6 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-
-        private void OnUserPropertyChanged(DependencyPropertyChangedEventArgs args) => UserPropertyChanged?.Invoke(this, args);
 
         private void OnHostDeviceRegistrationPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
@@ -148,6 +167,8 @@ namespace FsInfoCat.Desktop.ViewModel
         internal Task<UserAccount> AuthenticateUserAsync(string userName, SecureString securePassword)
         {
             VerifyAccess();
+            if (string.IsNullOrEmpty(userName) || securePassword is null || securePassword.Length == 0)
+                return Task.FromResult<UserAccount>(null);
             return Task.Factory.StartNew(() =>
             {
                 using (DbModel dbContext = new DbModel())
@@ -159,12 +180,112 @@ namespace FsInfoCat.Desktop.ViewModel
                         UserAccount account = (from u in dbContext.UserAccounts where u.Id == userCredential.Id select u).FirstOrDefault();
                         if (!(account is null))
                         {
-                            Dispatcher.BeginInvoke(new Action(() => User = account));
+                            UserRole roles = account.GetEffectiveRoles();
+                            Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                User = account;
+                                Roles = roles;
+                            }));
                             return account;
                         }
                     }
                 }
                 return null;
+            });
+        }
+
+        internal Task<UserAccount> AuthenticateUserAsync(WindowsIdentity windowsIdentity)
+        {
+            VerifyAccess();
+            SecurityIdentifier sid;
+            if (windowsIdentity is null || windowsIdentity.IsGuest || windowsIdentity.IsAnonymous || !windowsIdentity.IsAuthenticated || (sid = windowsIdentity.User) is null || !sid.IsAccountSid())
+                return Task.FromResult<UserAccount>(null);
+            return Task.Factory.StartNew(() =>
+            {
+                using (DbModel dbContext = new DbModel())
+                {
+                    string sddl = sid.AccountDomainSid.ToString();
+                    WindowsAuthDomain authDomain = (from d in dbContext.WindowsAuthDomains where d.SID == sddl && !d.IsInactive select d).FirstOrDefault();
+                    if (authDomain is null)
+                        return null;
+                    sddl = sid.ToString();
+                    UserAccount userAccount = (from u in authDomain.Logins where u.SID == sddl && !u.IsInactive select u.UserAccount).FirstOrDefault();
+                    if (userAccount is null)
+                    {
+                        if (authDomain.AutoAddUsers)
+                        {
+                            UserAccount systemUser = dbContext.GetSystemAccount();
+                            using (DbContextTransaction transaction = dbContext.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    userAccount = new UserAccount
+                                    {
+                                        CreatedOn = DateTime.Now,
+                                        CreatedById = systemUser.Id,
+                                        CreatedBy = systemUser,
+                                        ModifiedById = systemUser.Id,
+                                        ModifiedBy = systemUser,
+                                        DisplayName = windowsIdentity.Name,
+                                        FirstName = "",
+                                        LastName = windowsIdentity.Name
+                                    };
+                                    userAccount.ModifiedOn = userAccount.CreatedOn;
+                                    dbContext.UserAccounts.Add(userAccount);
+                                    dbContext.SaveChanges();
+                                    WindowsIdentityLogin windowsIdentityLogin = new WindowsIdentityLogin
+                                    {
+                                        Id = Guid.NewGuid(),
+                                        AccountName = windowsIdentity.Name,
+                                        CreatedOn = DateTime.Now,
+                                        CreatedById = systemUser.Id,
+                                        CreatedBy = systemUser,
+                                        ModifiedById = systemUser.Id,
+                                        ModifiedBy = systemUser,
+                                        DomainId = authDomain.Id,
+                                        Domain = authDomain,
+                                        SID = sddl,
+                                        UserId = userAccount.Id,
+                                        UserAccount = userAccount
+                                    };
+                                    windowsIdentityLogin.ModifiedOn = windowsIdentityLogin.CreatedOn;
+                                    userAccount.WindowsIdentityLogins.Add(windowsIdentityLogin);
+                                    dbContext.SaveChanges();
+                                    UserGroup group = authDomain.DefaultNewUserGroup;
+                                    if (!(group is null))
+                                    {
+                                        userAccount.Memberships.Add(new GroupMember
+                                        {
+                                            AddedById = systemUser.Id,
+                                            AddedBy = systemUser,
+                                            AddedOn = DateTime.Now,
+                                            GroupId = group.Id,
+                                            Group = group,
+                                            UserId = userAccount.Id,
+                                            User = userAccount
+                                        });
+                                        dbContext.SaveChanges();
+                                    }
+                                    transaction.Commit();
+                                }
+                                catch
+                                {
+                                    transaction.Rollback();
+                                    throw;
+                                }
+                            }
+                        }
+                        else
+                            return null;
+                    }
+                    UserRole roles = userAccount.GetEffectiveRoles();
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        User = userAccount;
+                        Roles = roles;
+                    }));
+                    return userAccount;
+                }
             });
         }
 

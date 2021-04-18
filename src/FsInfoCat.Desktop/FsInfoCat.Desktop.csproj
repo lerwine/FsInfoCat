@@ -211,6 +211,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DbModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\GroupMember.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
@@ -248,12 +249,19 @@
     <Compile Include="ViewModel\AsyncOperationViewModel.cs" />
     <Compile Include="ViewModel\AsyncResultEventArgs.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="View\DbInitializeWindow.xaml.cs">
+      <DependentUpon>DbInitializeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\DbInitializeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

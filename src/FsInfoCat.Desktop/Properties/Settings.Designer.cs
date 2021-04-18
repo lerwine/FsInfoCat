@@ -36,10 +36,20 @@ namespace FsInfoCat.Desktop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCatEntities")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DbModel")]
         public string EdmConnectionStringSettingName {
             get {
                 return ((string)(this["EdmConnectionStringSettingName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.DbModel.csdl|res://*/Model.DbModel.ssdl|res://*/Model.DbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;connect timeout=30;encrypt=True;MultipleActiveResultSets=True;App=EntityFramework""")]
+        public string EntityClientConnectionString {
+            get {
+                return ((string)(this["EntityClientConnectionString"]));
             }
         }
     }

@@ -11,7 +11,7 @@
         <converters:AccountToStringConverter x:Key="AccountConverter" NullSource="(not logged in)"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>
-    <Grid>
+    <Grid x:Name="OuterGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

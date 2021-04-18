@@ -11,7 +11,14 @@
       <Value Profile="(Default)">Data Source=c868dbserver.database.windows.net;Initial Catalog=FsInfoCat;Persist Security Info=True;User ID=fsinfocatadmin;Connect Timeout=30;Encrypt=True</Value>
     </Setting>
     <Setting Name="EdmConnectionStringSettingName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">FsInfoCatEntities</Value>
+      <Value Profile="(Default)">DbModel</Value>
+    </Setting>
+    <Setting Name="EntityClientConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;metadata=res://*/Model.DbModel.csdl|res://*/Model.DbModel.ssdl|res://*/Model.DbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;connect timeout=30;encrypt=True;MultipleActiveResultSets=True;App=EntityFramework"&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">metadata=res://*/Model.DbModel.csdl|res://*/Model.DbModel.ssdl|res://*/Model.DbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;connect timeout=30;encrypt=True;MultipleActiveResultSets=True;App=EntityFramework"</Value>
     </Setting>
   </Settings>
 </SettingsFile>
