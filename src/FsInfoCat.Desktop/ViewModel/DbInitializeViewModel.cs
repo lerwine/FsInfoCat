@@ -1,4 +1,5 @@
 using FsInfoCat.Desktop.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +16,7 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class DbInitializeViewModel : DependencyObject
     {
+        private static readonly ILogger<DbInitializeViewModel> _logger = App.LoggerFactory.CreateLogger<DbInitializeViewModel>();
         private static readonly Regex UserNameCheckRegex = new Regex(@"^[a-z]\w*(\.[a-z]\w*)*", RegexOptions.Compiled);
         private static readonly Regex PwCheckRegex = new Regex(@"^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d)(?=[^\p{P}\p{S}]*[\p{P}\p{S}]).{8}", RegexOptions.Compiled);
         private static readonly Regex WsRegex = new Regex(@"( \s+|(?! )\s+)", RegexOptions.Compiled);
@@ -443,20 +445,11 @@ namespace FsInfoCat.Desktop.ViewModel
             }
         }
 
-        protected virtual void OnUserNamePropertyChanged(string oldValue, string newValue)
-        {
-            ValidateUserName(newValue);
-        }
+        protected virtual void OnUserNamePropertyChanged(string oldValue, string newValue) => ValidateUserName(newValue);
 
-        protected virtual void OnPasswordPropertyChanged(SecureString oldValue, SecureString newValue)
-        {
-            ValidatePassword(newValue, PwConfirm);
-        }
+        protected virtual void OnPasswordPropertyChanged(SecureString oldValue, SecureString newValue) => ValidatePassword(newValue, PwConfirm);
 
-        protected virtual void OnPwConfirmPropertyChanged(SecureString oldValue, SecureString newValue)
-        {
-            ValidatePassword(Password, newValue);
-        }
+        protected virtual void OnPwConfirmPropertyChanged(SecureString oldValue, SecureString newValue) => ValidatePassword(Password, newValue);
 
         private void ValidateUserName(string userName)
         {
@@ -475,6 +468,7 @@ namespace FsInfoCat.Desktop.ViewModel
             }
             finally { Marshal.FreeBSTR(ptr); }
         }
+
         private void ValidatePassword(SecureString password, SecureString pwConfirm)
         {
             if (password is null || password.Length == 0)
@@ -490,15 +484,9 @@ namespace FsInfoCat.Desktop.ViewModel
                 PasswordError = ErrorMessage_PasswordMismatch;
         }
 
-        protected virtual void OnUserNameErrorPropertyChanged(string oldValue, string newValue)
-        {
-            IsUserNameValid = IsWindowsAuth || string.IsNullOrWhiteSpace(newValue);
-        }
+        protected virtual void OnUserNameErrorPropertyChanged(string oldValue, string newValue) => IsUserNameValid = IsWindowsAuth || string.IsNullOrWhiteSpace(newValue);
 
-        protected virtual void OnPasswordErrorPropertyChanged(string oldValue, string newValue)
-        {
-            IsPasswordValid = IsWindowsAuth || string.IsNullOrWhiteSpace(newValue);
-        }
+        protected virtual void OnPasswordErrorPropertyChanged(string oldValue, string newValue) => IsPasswordValid = IsWindowsAuth || string.IsNullOrWhiteSpace(newValue);
 
         protected virtual void OnTitlePropertyChanged(string oldValue, string newValue) => NormalizedTitle = AsWsNormalized(newValue);
 
@@ -524,10 +512,7 @@ namespace FsInfoCat.Desktop.ViewModel
             AutoDisplayName = BuildAutoDisplayName(NormalizedTitle, newValue, NormalizedFirstName, NormalizedMiddleInitial, NormalizedSuffix);
         }
 
-        protected virtual void OnLastNameErrorPropertyChanged(string oldValue, string newValue)
-        {
-            IsLastNameValid = newValue.Length > 0;
-        }
+        protected virtual void OnLastNameErrorPropertyChanged(string oldValue, string newValue) => IsLastNameValid = newValue.Length > 0;
 
         protected virtual void OnNormalizedFirstNamePropertyChanged(string oldValue, string newValue) =>
             AutoDisplayName = BuildAutoDisplayName(NormalizedTitle, NormalizedLastName, newValue, NormalizedMiddleInitial, NormalizedSuffix);
@@ -637,20 +622,11 @@ namespace FsInfoCat.Desktop.ViewModel
                 DisplayName = newValue;
         }
 
-        protected virtual void OnIsUserNameValidPropertyChanged(bool oldValue, bool newValue)
-        {
-            ContinueCommand.IsEnabled = newValue && IsPasswordValid && IsLastNameValid;
-        }
+        protected virtual void OnIsUserNameValidPropertyChanged(bool oldValue, bool newValue) => ContinueCommand.IsEnabled = newValue && IsPasswordValid && IsLastNameValid;
 
-        protected virtual void OnIsPasswordValidPropertyChanged(bool oldValue, bool newValue)
-        {
-            ContinueCommand.IsEnabled = IsUserNameValid && newValue && IsLastNameValid;
-        }
+        protected virtual void OnIsPasswordValidPropertyChanged(bool oldValue, bool newValue) => ContinueCommand.IsEnabled = IsUserNameValid && newValue && IsLastNameValid;
 
-        protected virtual void OnIsLastNameValidPropertyChanged(bool oldValue, bool newValue)
-        {
-            ContinueCommand.IsEnabled = IsUserNameValid && IsPasswordValid && newValue;
-        }
+        protected virtual void OnIsLastNameValidPropertyChanged(bool oldValue, bool newValue) => ContinueCommand.IsEnabled = IsUserNameValid && IsPasswordValid && newValue;
 
         private void OnContinueExecute()
         {
@@ -668,13 +644,12 @@ namespace FsInfoCat.Desktop.ViewModel
                 });
         }
 
-        private void OnCancelExecute()
-        {
-            InitializationCancelled?.Invoke(this, EventArgs.Empty);
-        }
+        private void OnCancelExecute() => InitializationCancelled?.Invoke(this, EventArgs.Empty);
 
         private void UpdateState(string message, int progress)
         {
+            VerifyAccess();
+            
             // TODO: Implement UpdateState Logic
         }
 
@@ -689,8 +664,12 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         // TODO: Need to put DB access on a common background thread.
-        private static Task<bool> InitializeDbAsync(string userName, SecureString password, string title, string lastName, string firstName, string mi, string suffix,
-            string displayName, Action<string, int> updateState) => Task.Run(() => InitializeDb(userName, password, title, lastName, firstName, mi, suffix, displayName, updateState));
+        private Task<bool> InitializeDbAsync(string userName, SecureString password, string title, string lastName, string firstName, string mi, string suffix,
+            string displayName, Action<string, int> updateState)
+        {
+            VerifyAccess();
+            return Task.Run(() => InitializeDb(userName, password, title, lastName, firstName, mi, suffix, displayName, updateState));
+        }
 
         private static bool InitializeDb(string userName, SecureString password, string title, string lastName, string firstName, string mi, string suffix,
             string displayName, Action<string, int> updateState)

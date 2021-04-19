@@ -26,8 +26,8 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Margin="5,5,5,0" TextWrapping="Wrap" Text="The default system account was not found in the database. If this is the first-time setup for the database, please indicate your authentication options, otherwise cancel and check your settings and connectivity." Grid.ColumnSpan="2"/>
-        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="5" VerticalAlignment="Top">
+        <TextBlock Margin="{DynamicResource DefaultMarginTopLeftRight}" TextWrapping="Wrap" Text="The default system account was not found in the database. If this is the first-time setup for the database, please indicate your authentication options, otherwise cancel and check your settings and connectivity." Grid.ColumnSpan="2"/>
+        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="{DynamicResource DefaultMargin}" VerticalAlignment="Top">
             <Grid VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -42,16 +42,16 @@
                 <Border Grid.ColumnSpan="2" Background="Black">
                     <RadioButton x:Name="WindowsAuthRadioButton" Content="Windows Authentication" IsChecked="{Binding IsWindowsAuth}" Foreground="White" Padding="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                 </Border>
-                <Label Content="Account Name:" HorizontalAlignment="Right" Grid.Row="1" Margin="5,5,0,0"/>
-                <TextBox x:Name="AccountNameTextBox" Grid.Column="1" Grid.Row="1" IsEnabled="False" Margin="0,5,5,0" Height="23" Text="{Binding WindowsAccountName, Mode=OneWay}"/>
-                <Label Content="Identifier:" Grid.Row="2" HorizontalAlignment="Right" Margin="5,5,0,0"/>
-                <TextBox x:Name="SIDTextBox" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" IsEnabled="False" Margin="0,5,5,0" Height="23" Text="{Binding WindowsSid, Mode=OneWay}"/>
-                <Label Content="Domain:" Grid.Row="3" HorizontalAlignment="Right" Margin="5,5,0,5"/>
-                <TextBox x:Name="DomainTextBox" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" Margin="0,5,5,5" Height="23" Text="{Binding WindowsDomain, Mode=OneWay}" IsEnabled="False"/>
+                <Label Content="Account Name:" HorizontalAlignment="Right" Grid.Row="1" Margin="{DynamicResource DefaultMarginTopLeft}"/>
+                <TextBox x:Name="AccountNameTextBox" Grid.Column="1" Grid.Row="1" IsEnabled="False" Margin="{DynamicResource DefaultMarginTopRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding WindowsAccountName, Mode=OneWay}"/>
+                <Label Content="Identifier:" Grid.Row="2" HorizontalAlignment="Right" Margin="{DynamicResource DefaultMarginTopLeft}"/>
+                <TextBox x:Name="SIDTextBox" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" IsEnabled="False" Margin="{DynamicResource DefaultMarginTopRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding WindowsSid, Mode=OneWay}"/>
+                <Label Content="Domain:" Grid.Row="3" HorizontalAlignment="Right" Margin="{DynamicResource DefaultMarginTopBottomLeft}"/>
+                <TextBox x:Name="DomainTextBox" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" Margin="{DynamicResource DefaultMarginTopBottomRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding WindowsDomain, Mode=OneWay}" IsEnabled="False"/>
             </Grid>
         </Border>
-        <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" Margin="5" BorderThickness="1" VerticalAlignment="Top">
-            <Grid VerticalAlignment="Top" Margin="0,0,0,5">
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" Margin="{DynamicResource DefaultMargin}" BorderThickness="1" VerticalAlignment="Top">
+            <Grid VerticalAlignment="Top" Margin="{DynamicResource DefaultMarginBottom}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
@@ -67,17 +67,17 @@
                 <Border Grid.ColumnSpan="2" Background="Black">
                     <RadioButton x:Name="UserNameRadioButton" Content="User Name / Password" Foreground="White" Padding="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" IsChecked="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}"/>
                 </Border>
-                <Label Content="User Name:" HorizontalAlignment="Right" Grid.Row="1" Margin="5,5,0,0"/>
-                <TextBox x:Name="UserNameTextBox" Grid.Column="1" Grid.Row="1" Margin="0,5,5,0" Height="23" Text="{Binding UserName}" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" />
+                <Label Content="User Name:" HorizontalAlignment="Right" Grid.Row="1" Margin="{DynamicResource DefaultMarginTopLeft}"/>
+                <TextBox x:Name="UserNameTextBox" Grid.Column="1" Grid.Row="1" Margin="{DynamicResource DefaultMarginTopRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding UserName}" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" />
                 <TextBlock x:Name="UserNameErrorTextBlock" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="{Binding UserNameError, Mode=OneWay}" Foreground="Red" Visibility="{Binding UserNameError, Converter={StaticResource StringToVisibilityConverter}, Mode=OneWay}"/>
-                <Label Content="Password:" HorizontalAlignment="Right" Grid.Row="3" Margin="5,5,0,0"/>
-                <PasswordBox x:Name="PasswordTextBox" Grid.Column="1" Grid.Row="3" Margin="0,5,5,0" Height="23" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" vm:DbInitializeViewModel.BindToPasswordModel="{Binding Mode=OneWay}" />
-                <Label Content="Confirm:" Grid.Row="4" HorizontalAlignment="Right" Margin="5,5,0,0"/>
-                <PasswordBox x:Name="ConfirmTextBox" Grid.Column="1" Grid.Row="4" Margin="0,5,5,0" Height="23" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" vm:DbInitializeViewModel.BindToPwConfirmModel="{Binding Mode=OneWay}" />
+                <Label Content="Password:" HorizontalAlignment="Right" Grid.Row="3" Margin="{DynamicResource DefaultMarginTopLeft}"/>
+                <PasswordBox x:Name="PasswordTextBox" Grid.Column="1" Grid.Row="3" Margin="{DynamicResource DefaultMarginTopRight}" Style="{DynamicResource DefaultPasswordBoxStyle}" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" vm:DbInitializeViewModel.BindToPasswordModel="{Binding Mode=OneWay}" />
+                <Label Content="Confirm:" Grid.Row="4" HorizontalAlignment="Right" Margin="{DynamicResource DefaultMarginTopLeft}"/>
+                <PasswordBox x:Name="ConfirmTextBox" Grid.Column="1" Grid.Row="4" Margin="{DynamicResource DefaultMarginTopRight}" Style="{DynamicResource DefaultPasswordBoxStyle}" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" vm:DbInitializeViewModel.BindToPwConfirmModel="{Binding Mode=OneWay}" />
                 <TextBlock x:Name="PasswordErrorTextBlock" Grid.Column="1" Grid.Row="5" TextWrapping="Wrap" Text="{Binding PasswordError, Mode=OneWay}" Foreground="Red" Visibility="{Binding PasswordError, Converter={StaticResource StringToVisibilityConverter}, Mode=OneWay}"/>
             </Grid>
         </Border>
-        <Border Grid.Row="2" BorderBrush="Black" Margin="5,5,5,0" BorderThickness="1" Grid.ColumnSpan="2" VerticalAlignment="Top">
+        <Border Grid.Row="2" BorderBrush="Black" Margin="{DynamicResource DefaultMarginTopLeftRight}" BorderThickness="1" Grid.ColumnSpan="2" VerticalAlignment="Top">
             <Grid VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="95*"/>
@@ -104,29 +104,29 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="Title:" Margin="5,5,0,0"/>
-                    <TextBox x:Name="TitleTextBox" Grid.Column="1" Margin="0,5,5,0" Height="23" Text="{Binding Title}"/>
+                    <Label Content="Title:" Margin="{DynamicResource DefaultMarginTopLeft}"/>
+                    <TextBox x:Name="TitleTextBox" Grid.Column="1" Margin="{DynamicResource DefaultMarginTopRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding Title}"/>
                 </Grid>
-                <Label Content="Last Name:" Grid.Row="2" Grid.ColumnSpan="2" Margin="5,5,5,0"/>
-                <Label Content="First Name:" Grid.Row="2" Grid.Column="2" Margin="5,5,5,0"/>
-                <Label Content="MI:" Grid.Row="2" Grid.Column="3" Margin="5,5,5,0"/>
-                <Label Content="Suffix:" Grid.Row="2" Grid.Column="5" Margin="5,5,5,0"/>
-                <TextBox x:Name="LastNameTextBox" Grid.Row="3" Margin="5,0" Height="23" Text="{Binding LastName}"/>
+                <Label Content="Last Name:" Grid.Row="2" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginTopLeftRight}"/>
+                <Label Content="First Name:" Grid.Row="2" Grid.Column="2" Margin="{DynamicResource DefaultMarginTopLeftRight}"/>
+                <Label Content="MI:" Grid.Row="2" Grid.Column="3" Margin="{DynamicResource DefaultMarginTopLeftRight}"/>
+                <Label Content="Suffix:" Grid.Row="2" Grid.Column="5" Margin="{DynamicResource DefaultMarginTopLeftRight}"/>
+                <TextBox x:Name="LastNameTextBox" Grid.Row="3" Margin="{DynamicResource DefaultMarginLeftRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding LastName}"/>
                 <TextBlock Grid.Column="1" Grid.Row="3" Text=", " FontWeight="Bold"/>
-                <TextBox x:Name="FirstNameTextBox" Grid.Row="3" Grid.Column="2" Margin="5,0" Height="23" Text="{Binding FirstName}"/>
-                <TextBox x:Name="MITextBox" Grid.Column="3" Grid.Row="3" Margin="5,0" Height="23" Text="{Binding MiddleInitial}"/>
+                <TextBox x:Name="FirstNameTextBox" Grid.Row="3" Grid.Column="2" Margin="{DynamicResource DefaultMarginLeftRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding FirstName}"/>
+                <TextBox x:Name="MITextBox" Grid.Column="3" Grid.Row="3" Margin="{DynamicResource DefaultMarginLeftRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding MiddleInitial}"/>
                 <TextBlock Grid.Column="4" Grid.Row="3" Text=", " FontWeight="Bold"/>
-                <TextBox x:Name="SuffixTextBox" Grid.Column="5" Grid.Row="3" Margin="5,0" Height="23" Text="{Binding Suffix}"/>
-                <TextBlock x:Name="LastNameErrorTextBlock" Grid.Row="4" Grid.ColumnSpan="6" TextWrapping="Wrap" Text="{Binding LastNameError, Mode=OneWay}" Foreground="Red" Margin="5,0,0,0" Visibility="{Binding LastNameError, Converter={StaticResource StringToVisibilityConverter}, Mode=OneWay}"/>
-                <Grid Grid.Row="5" Grid.ColumnSpan="6" Margin="5">
+                <TextBox x:Name="SuffixTextBox" Grid.Column="5" Grid.Row="3" Margin="{DynamicResource DefaultMarginLeftRight}" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding Suffix}"/>
+                <TextBlock x:Name="LastNameErrorTextBlock" Grid.Row="4" Grid.ColumnSpan="6" TextWrapping="Wrap" Text="{Binding LastNameError, Mode=OneWay}" Foreground="Red" Margin="{DynamicResource DefaultMarginLeft}" Visibility="{Binding LastNameError, Converter={StaticResource StringToVisibilityConverter}, Mode=OneWay}"/>
+                <Grid Grid.Row="5" Grid.ColumnSpan="6" Margin="{DynamicResource DefaultMargin}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Display Name:"/>
-                    <TextBox x:Name="DisplayNameTextBox" Grid.Column="1" Height="23" Text="{Binding DisplayName}"/>
+                    <TextBox x:Name="DisplayNameTextBox" Grid.Column="1" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Text="{Binding DisplayName}"/>
                 </Grid>
-                <TextBlock Grid.ColumnSpan="6" Grid.Row="6" Margin="5,0,5,5" HorizontalAlignment="Right">
+                <TextBlock Grid.ColumnSpan="6" Grid.Row="6" Margin="{DynamicResource DefaultMarginBottomLeftRight}" HorizontalAlignment="Right">
                     <TextBlock.Inlines>
                         <Run Text="NOTE: " FontWeight="ExtraBold" />
                         <Run Text="This account will be initially created as an administrative account."/>
@@ -135,8 +135,17 @@
             </Grid>
         </Border>
         <WrapPanel Grid.Row="3" Grid.ColumnSpan="2" FlowDirection="RightToLeft">
-            <Button x:Name="CancelButton" Content="Cancel" Width="75" Margin="5" Command="{Binding CancelCommand, Mode=OneWay}" />
-            <Button x:Name="ContinueButton" Content="Continue" Width="75" Margin="5" IsEnabled="False" Command="{Binding ContinueCommand, Mode=OneWay}" />
+            <Button x:Name="CancelButton" Content="Cancel" Style="{DynamicResource DefaultButtonStyle}" Margin="{DynamicResource DefaultMargin}" Command="{Binding CancelCommand, Mode=OneWay}" />
+            <Button x:Name="ContinueButton" Content="Continue" Style="{DynamicResource DefaultButtonStyle}" Margin="{DynamicResource DefaultMargin}" IsEnabled="False" Command="{Binding ContinueCommand, Mode=OneWay}" />
         </WrapPanel>
+        <Border Grid.ColumnSpan="2" Grid.RowSpan="4" Background="#3F000000">
+            <Border Background="White" BorderBrush="Black" BorderThickness="2">
+                <StackPanel>
+                    <TextBlock TextWrapping="Wrap" Text="TextBlock" Margin="{DynamicResource DefaultMargin}"/>
+                    <ProgressBar Height="10" Margin="{DynamicResource DefaultMargin}"/>
+                    <Button Content="Cancel" HorizontalAlignment="Right" Margin="{DynamicResource DefaultMargin}" Style="{DynamicResource DefaultButtonStyle}"/>
+                </StackPanel>
+            </Border>
+        </Border>
     </Grid>
 </Window>
