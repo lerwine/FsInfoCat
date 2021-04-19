@@ -23,7 +23,12 @@ namespace FsInfoCat.Desktop.View
             if (settingsViewModel.User is null)
             {
                 OuterGrid.Visibility = Visibility.Collapsed;
-                if (!DbInitializeWindow.CheckConfiguration(this))
+                if (!DbInitializeWindow.CheckConfiguration(() => new DbInitializeWindow
+                {
+                    Owner = this
+                }.ShowDialog() ?? false, (Exception exc, string message) => MessageBox.Show(this,
+                    $"Error reading from database: {(string.IsNullOrWhiteSpace(exc.Message) ? exc.ToString() : exc.Message)}",
+                    "DB Access Error", MessageBoxButton.OK, MessageBoxImage.Error)))
                 {
                     DialogResult = false;
                     Close();

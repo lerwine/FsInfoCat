@@ -4,8 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
+        xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
+        xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
         mc:Ignorable="d"
         Title="Database Initialization" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:DbInitializeViewModel InitializationCancelled="DbInitializeViewModel_InitializationCancelled" InitializationSuccess="DbInitializeViewModel_InitializationSuccess" />
+    </Window.DataContext>
+    <Window.Resources>
+        <cvt:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <cvt:StringToVisibilityConverter x:Key="StringToVisibilityConverter" NullSource="Collapsed"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -31,14 +40,14 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Border Grid.ColumnSpan="2" Background="Black">
-                    <RadioButton x:Name="WindowsAuthRadioButton" Content="Windows Authentication" IsChecked="True" Foreground="White" Padding="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Checked="WindowsAuthRadioButton_Checked"/>
+                    <RadioButton x:Name="WindowsAuthRadioButton" Content="Windows Authentication" IsChecked="{Binding IsWindowsAuth}" Foreground="White" Padding="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                 </Border>
                 <Label Content="Account Name:" HorizontalAlignment="Right" Grid.Row="1" Margin="5,5,0,0"/>
-                <TextBox x:Name="AccountNameTextBox" Grid.Column="1" Grid.Row="1" IsEnabled="False" Margin="0,5,5,0" Height="23"/>
+                <TextBox x:Name="AccountNameTextBox" Grid.Column="1" Grid.Row="1" IsEnabled="False" Margin="0,5,5,0" Height="23" Text="{Binding WindowsAccountName, Mode=OneWay}"/>
                 <Label Content="Identifier:" Grid.Row="2" HorizontalAlignment="Right" Margin="5,5,0,0"/>
-                <TextBox x:Name="SIDTextBox" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" IsEnabled="False" Margin="0,5,5,0" Height="23"/>
+                <TextBox x:Name="SIDTextBox" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" IsEnabled="False" Margin="0,5,5,0" Height="23" Text="{Binding WindowsSid, Mode=OneWay}"/>
                 <Label Content="Domain:" Grid.Row="3" HorizontalAlignment="Right" Margin="5,5,0,5"/>
-                <TextBox x:Name="DomainTextBox" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" IsEnabled="False" Margin="0,5,5,5" Height="23"/>
+                <TextBox x:Name="DomainTextBox" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" Margin="0,5,5,5" Height="23" Text="{Binding WindowsDomain, Mode=OneWay}" IsEnabled="False"/>
             </Grid>
         </Border>
         <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" Margin="5" BorderThickness="1" VerticalAlignment="Top">
@@ -56,16 +65,16 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Border Grid.ColumnSpan="2" Background="Black">
-                    <RadioButton x:Name="UserNameRadioButton" Content="User Name / Password" Foreground="White" Padding="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Checked="UserNameRadioButton_Checked"/>
+                    <RadioButton x:Name="UserNameRadioButton" Content="User Name / Password" Foreground="White" Padding="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" IsChecked="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}"/>
                 </Border>
                 <Label Content="User Name:" HorizontalAlignment="Right" Grid.Row="1" Margin="5,5,0,0"/>
-                <TextBox x:Name="UserNameTextBox" Grid.Column="1" Grid.Row="1" Margin="0,5,5,0" TextChanged="UserNameTextBox_TextChanged" Height="23" IsEnabled="False" />
-                <TextBlock x:Name="UserNameErrorTextBlock" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="User name cannot be empty." Foreground="Red" Visibility="Collapsed"/>
+                <TextBox x:Name="UserNameTextBox" Grid.Column="1" Grid.Row="1" Margin="0,5,5,0" Height="23" Text="{Binding UserName}" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" />
+                <TextBlock x:Name="UserNameErrorTextBlock" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="{Binding UserNameError, Mode=OneWay}" Foreground="Red" Visibility="{Binding UserNameError, Converter={StaticResource StringToVisibilityConverter}, Mode=OneWay}"/>
                 <Label Content="Password:" HorizontalAlignment="Right" Grid.Row="3" Margin="5,5,0,0"/>
-                <PasswordBox x:Name="PasswordTextBox" Grid.Column="1" Grid.Row="3" Margin="0,5,5,0" Height="23" PasswordChanged="PasswordTextBox_PasswordChanged" IsEnabled="False"/>
+                <PasswordBox x:Name="PasswordTextBox" Grid.Column="1" Grid.Row="3" Margin="0,5,5,0" Height="23" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" vm:DbInitializeViewModel.BindToPasswordModel="{Binding Mode=OneWay}" />
                 <Label Content="Confirm:" Grid.Row="4" HorizontalAlignment="Right" Margin="5,5,0,0"/>
-                <PasswordBox x:Name="ConfirmTextBox" Grid.Column="1" Grid.Row="4" Margin="0,5,5,0" Height="23" PasswordChanged="PasswordTextBox_PasswordChanged" IsEnabled="False"/>
-                <TextBlock x:Name="PasswordErrorTextBlock" Grid.Column="1" Grid.Row="5" TextWrapping="Wrap" Text="Password cannot be empty." Foreground="Red" Visibility="Collapsed"/>
+                <PasswordBox x:Name="ConfirmTextBox" Grid.Column="1" Grid.Row="4" Margin="0,5,5,0" Height="23" IsEnabled="{Binding IsWindowsAuth, Converter={StaticResource InverseBooleanConverter}}" vm:DbInitializeViewModel.BindToPwConfirmModel="{Binding Mode=OneWay}" />
+                <TextBlock x:Name="PasswordErrorTextBlock" Grid.Column="1" Grid.Row="5" TextWrapping="Wrap" Text="{Binding PasswordError, Mode=OneWay}" Foreground="Red" Visibility="{Binding PasswordError, Converter={StaticResource StringToVisibilityConverter}, Mode=OneWay}"/>
             </Grid>
         </Border>
         <Border Grid.Row="2" BorderBrush="Black" Margin="5,5,5,0" BorderThickness="1" Grid.ColumnSpan="2" VerticalAlignment="Top">
@@ -96,26 +105,26 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Title:" Margin="5,5,0,0"/>
-                    <TextBox x:Name="TitleTextBox" Grid.Column="1" Margin="0,5,5,0" Height="23" TextChanged="TitleTextBox_TextChanged"/>
+                    <TextBox x:Name="TitleTextBox" Grid.Column="1" Margin="0,5,5,0" Height="23" Text="{Binding Title}"/>
                 </Grid>
                 <Label Content="Last Name:" Grid.Row="2" Grid.ColumnSpan="2" Margin="5,5,5,0"/>
                 <Label Content="First Name:" Grid.Row="2" Grid.Column="2" Margin="5,5,5,0"/>
                 <Label Content="MI:" Grid.Row="2" Grid.Column="3" Margin="5,5,5,0"/>
                 <Label Content="Suffix:" Grid.Row="2" Grid.Column="5" Margin="5,5,5,0"/>
-                <TextBox x:Name="LastNameTextBox" Grid.Row="3" Margin="5,0" Height="23" TextChanged="LastNameTextBox_TextChanged" />
+                <TextBox x:Name="LastNameTextBox" Grid.Row="3" Margin="5,0" Height="23" Text="{Binding LastName}"/>
                 <TextBlock Grid.Column="1" Grid.Row="3" Text=", " FontWeight="Bold"/>
-                <TextBox x:Name="FirstNameTextBox" Grid.Row="3" Grid.Column="2" Margin="5,0" Height="23" TextChanged="FirstNameTextBox_TextChanged" />
-                <TextBox x:Name="MITextBox" Grid.Column="3" Grid.Row="3" Margin="5,0" Height="23" TextChanged="MITextBox_TextChanged" />
+                <TextBox x:Name="FirstNameTextBox" Grid.Row="3" Grid.Column="2" Margin="5,0" Height="23" Text="{Binding FirstName}"/>
+                <TextBox x:Name="MITextBox" Grid.Column="3" Grid.Row="3" Margin="5,0" Height="23" Text="{Binding MiddleInitial}"/>
                 <TextBlock Grid.Column="4" Grid.Row="3" Text=", " FontWeight="Bold"/>
-                <TextBox x:Name="SuffixTextBox" Grid.Column="5" Grid.Row="3" Margin="5,0" Height="23" TextChanged="SuffixTextBox_TextChanged" />
-                <TextBlock x:Name="LastNameErrorTextBlock" Grid.Row="4" Grid.ColumnSpan="6" TextWrapping="Wrap" Text="Last Name cannot be empty." Foreground="Red" Margin="5,0,0,0"/>
+                <TextBox x:Name="SuffixTextBox" Grid.Column="5" Grid.Row="3" Margin="5,0" Height="23" Text="{Binding Suffix}"/>
+                <TextBlock x:Name="LastNameErrorTextBlock" Grid.Row="4" Grid.ColumnSpan="6" TextWrapping="Wrap" Text="{Binding LastNameError, Mode=OneWay}" Foreground="Red" Margin="5,0,0,0" Visibility="{Binding LastNameError, Converter={StaticResource StringToVisibilityConverter}, Mode=OneWay}"/>
                 <Grid Grid.Row="5" Grid.ColumnSpan="6" Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Display Name:"/>
-                    <TextBox x:Name="DisplayNameTextBox" Grid.Column="1" Height="23" TextChanged="DisplayNameTextBox_TextChanged"/>
+                    <TextBox x:Name="DisplayNameTextBox" Grid.Column="1" Height="23" Text="{Binding DisplayName}"/>
                 </Grid>
                 <TextBlock Grid.ColumnSpan="6" Grid.Row="6" Margin="5,0,5,5" HorizontalAlignment="Right">
                     <TextBlock.Inlines>
@@ -126,8 +135,8 @@
             </Grid>
         </Border>
         <WrapPanel Grid.Row="3" Grid.ColumnSpan="2" FlowDirection="RightToLeft">
-            <Button x:Name="CancelButton" Content="Cancel" Width="75" Margin="5" Click="CancelButton_Click"/>
-            <Button x:Name="ContinueButton" Content="Continue" Width="75" Margin="5" IsEnabled="False" Click="ContinueButton_Click"/>
+            <Button x:Name="CancelButton" Content="Cancel" Width="75" Margin="5" Command="{Binding CancelCommand, Mode=OneWay}" />
+            <Button x:Name="ContinueButton" Content="Continue" Width="75" Margin="5" IsEnabled="False" Command="{Binding ContinueCommand, Mode=OneWay}" />
         </WrapPanel>
     </Grid>
 </Window>

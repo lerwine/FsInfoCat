@@ -46,14 +46,18 @@ namespace FsInfoCat.Desktop.View
             SIDTextBox.Text = sid.ToString();
         }
 
-        internal static bool CheckConfiguration(MainWindow mainWindow)
+        protected override void OnActivated(EventArgs e)
+        {
+
+        }
+
+        internal static bool CheckConfiguration(Func<bool> ifNoSystemAccount, Action<Exception, string> onException)
         {
             DbModel dbContext;
             try { dbContext = new DbModel(); }
             catch (Exception exception)
             {
-                MessageBox.Show(mainWindow, $"Error connecting to database: {(string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message)}",
-                    "DB Access Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                onException(exception, $"Error connecting to database: {(string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message)}");
                 return false;
             }
             using (dbContext)
@@ -66,15 +70,11 @@ namespace FsInfoCat.Desktop.View
                 }
                 catch (Exception exception)
                 {
-                    MessageBox.Show(mainWindow, $"Error reading from database: {(string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message)}",
-                        "DB Access Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    onException(exception, $"Error reading from to database: {(string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message)}");
                     return false;
                 }
             }
-            return new DbInitializeWindow
-            {
-                Owner = mainWindow
-            }.ShowDialog() ?? false;
+            return ifNoSystemAccount();
         }
 
         private void WindowsAuthRadioButton_Checked(object sender, RoutedEventArgs e)
@@ -385,6 +385,18 @@ namespace FsInfoCat.Desktop.View
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
+        }
+
+        private void DbInitializeViewModel_InitializationSuccess(object sender, EventArgs e)
+        {
+            DialogResult = true;
+            Close();
+        }
+
+        private void DbInitializeViewModel_InitializationCancelled(object sender, EventArgs e)
         {
             DialogResult = false;
             Close();

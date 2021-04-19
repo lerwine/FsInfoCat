@@ -18,8 +18,6 @@ namespace FsInfoCat.Desktop.ViewModel
         private const string RegisterLocalMachine_MenuItem_Text = "Register Local Machine";
         private const string UnregisterLocalMachine_MenuItem_Text = "Un-Register Local Machine";
 
-        //public event EventHandler<AsyncResultEventArgs<HostDevice>> LocalMachineRegistrationChanged;
-
         public event DependencyPropertyChangedEventHandler UserPropertyChanged;
 
         public event DependencyPropertyChangedEventHandler RolesPropertyChanged;
@@ -28,7 +26,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #region Properties
 
-        private static readonly DependencyPropertyKey MachineSIDPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MachineSID), typeof(string), typeof(SettingsViewModel), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey MachineSIDPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MachineSID), typeof(string), typeof(SettingsViewModel),
+            new PropertyMetadata(""));
 
         public static readonly DependencyProperty MachineSIDProperty = MachineSIDPropertyKey.DependencyProperty;
 
@@ -126,6 +125,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 StartUnregisterLocalMachineAsync(HostDeviceRegistration);
         }
 
+        // TODO: Need to put DB access on a common background thread.
         internal Task<HostDevice> CheckHostDeviceRegistrationAsync(bool forceRecheck)
         {
             VerifyAccess();
@@ -164,6 +164,7 @@ namespace FsInfoCat.Desktop.ViewModel
             return task;
         }
 
+        // TODO: Need to put DB access on a common background thread.
         internal Task<UserAccount> AuthenticateUserAsync(string userName, SecureString securePassword)
         {
             VerifyAccess();
@@ -194,6 +195,7 @@ namespace FsInfoCat.Desktop.ViewModel
             });
         }
 
+        // TODO: Need to put DB access on a common background thread.
         internal Task<UserAccount> AuthenticateUserAsync(WindowsIdentity windowsIdentity)
         {
             VerifyAccess();
@@ -289,6 +291,7 @@ namespace FsInfoCat.Desktop.ViewModel
             });
         }
 
+        // TODO: Need to put DB access on a common background thread.
         private Task<HostDevice> StartRegisterLocalMachineAsync(string sidString, string machineName)
         {
             VerifyAccess();
@@ -319,6 +322,7 @@ namespace FsInfoCat.Desktop.ViewModel
             return task;
         }
 
+        // TODO: Need to put DB access on a common background thread.
         private Task<HostDevice> StartUnregisterLocalMachineAsync(HostDevice hostDeviceRegistration)
         {
             VerifyAccess();
