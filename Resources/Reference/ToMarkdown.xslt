@@ -3,7 +3,7 @@
                 xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns:msxsl="urn:schemas-microsoft-com:xslt"
                 xmlns:cs="uri:erwinefamily.net:regex"
                 extension-element-prefixes="msxsl cs">
-    <xsl:output encoding="utf-8" omit-xml-declaration="yes" method="text" />
+    <xsl:output encoding="utf-8" method="text" />
     <xsl:variable name="UcLetters" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
     <xsl:variable name="LcLetters" select="'abcdefghijklmnopqrstuvwxyz'" />
     <xsl:variable name="AllLetters" select="concat($UcLetters, $LcLetters)" />
@@ -18,38 +18,49 @@
             return Regex.Replace(value.Trim().ToLower(), @"[^a-z\d]+", "-");
         }
     ]]></msxsl:script>
+    <xsl:variable name="Sources" select="document('Sources.xml')/b:Sources" />
     <xsl:template match="/">
-        <xsl:variable name="aggregated">
-            <xsl:apply-templates select="/r:References/r:Categories/r:Category" mode="Aggregate">
-                <xsl:with-param name="sources" select="document('Sources.xml')/b:Sources/b:Source" />
+        <xsl:variable name="Categorized">
+            <xsl:apply-templates select="/r:References/r:Categories/r:Category" mode="Categorize"/>
+        </xsl:variable>
+        <xsl:variable name="Uncategorized">
+            <xsl:apply-templates select="msxsl:node-set($Sources)/b:Source" mode="Categorize">
+                <xsl:with-param name="AllTags" select="//r:Link/@Tag"/>
             </xsl:apply-templates>
         </xsl:variable>
-        <xsl:apply-templates select="msxsl:node-set($aggregated)/r:Category" mode="Index" />
-        <xsl:apply-templates select="msxsl:node-set($aggregated)/r:Category" mode="Links" />
+        <xsl:apply-templates select="msxsl:node-set($Categorized)/r:Category" mode="Index" />
+        <xsl:if test="not(count(msxsl:node-set($Uncategorized)/b:*)=0)">
+            <xsl:value-of select="concat($NewLine, '## Uncategorized', $NewLine, $NewLine)"/>
+            <xsl:apply-templates select="msxsl:node-set($Uncategorized)" mode="Links" />
+        </xsl:if>
+        <xsl:apply-templates select="msxsl:node-set($Categorized)/r:Category" mode="Links" />
     </xsl:template>
-    <xsl:template match="r:Category" mode="Aggregate">
-        <xsl:param name="sources" />
-        <xsl:element name="r:Category">
-            <xsl:attribute name="Name">
-                <xsl:value-of select="@Name"/>
-            </xsl:attribute>
-            <xsl:apply-templates select="r:Link" mode="Aggregate">
-                <xsl:with-param name="sources" select="$sources"/>
-            </xsl:apply-templates>
-            <xsl:apply-templates select="r:Categories/r:Category" mode="Aggregate">
-                <xsl:with-param name="sources" select="$sources"/>
-            </xsl:apply-templates>
+    <xsl:template match="b:Source" mode="Categorize">
+        <xsl:param name="AllTags" />
+        <xsl:variable name="tag" select="normalize-space(b:Tag)" />
+        <xsl:if test="count(msxsl:node-set($AllTags)[.=$tag])=0">
+            <xsl:copy-of select="."/>
+        </xsl:if>
+    </xsl:template>
+    <xsl:template match="r:Categories" mode="Categorize">
+        <xsl:element name="r:Categories">
+            <xsl:apply-templates select="r:Category" mode="Categorize"/>
         </xsl:element>
     </xsl:template>
-    <xsl:template match="r:Link" mode="Aggregate">
-        <xsl:param name="sources" />
+    <xsl:template match="r:Category" mode="Categorize">
+        <xsl:element name="r:Category">
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates select="r:*" mode="Categorize"/>
+        </xsl:element>
+    </xsl:template>
+    <xsl:template match="r:Link" mode="Categorize">
         <xsl:variable name="tag" select="normalize-space(@Tag)" />
-        <xsl:copy-of select="msxsl:node-set($sources)[b:Tag=$tag]"/>
+        <xsl:copy-of select="msxsl:node-set($Sources)/b:Source[b:Tag=$tag]"/>
     </xsl:template>
     <xsl:template match="r:Category" mode="Index">
         <xsl:param name="indent" select="''" />
         <xsl:value-of select="concat($indent, '- [', @Name, '](#', cs:ToIdentifier(@Name), ')', $NewLine)"/>
-        <xsl:apply-templates select="r:Category" mode="Index">
+        <xsl:apply-templates select="r:Categories/r:Category" mode="Index">
             <xsl:with-param name="indent" select="concat('  ', $indent)"/>
         </xsl:apply-templates>
     </xsl:template>
@@ -57,7 +68,7 @@
         <xsl:param name="heading" select="'##'" />
         <xsl:value-of select="concat($NewLine, $heading, ' ', @Name, $NewLine, $NewLine)"/>
         <xsl:apply-templates select="b:Source[b:SourceType='InternetSite']" mode="Links" />
-        <xsl:apply-templates select="r:Category" mode="Links">
+        <xsl:apply-templates select="r:Categories/r:Category" mode="Links">
             <xsl:with-param name="heading" select="concat('#', $heading)"/>
         </xsl:apply-templates>
     </xsl:template>

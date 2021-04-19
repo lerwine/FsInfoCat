@@ -1,0 +1,1163 @@
+<r:Categories xmlns:r="http://git.erwinefamily.net/FsInfoCat/V1/References.xsd">
+  <r:Category Name="General">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>GDIPlus</b:Tag>
+      <b:Guid>{597521d5-0771-4178-92a6-920ef7ba0d5c}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>GDI+ Property Item Descriptions</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-property-item-descriptions</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>CfgMgrWmi</b:Tag>
+      <b:Guid>{18ab4f2d-bc1a-4a18-b973-6f0c58780029}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Configuration Manager Client WMI Programming</b:Title>
+      <b:URL>https://msdn.microsoft.com/en-us/library/cc144081.aspx</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>VsCode</b:Tag>
+      <b:Guid>{7d561c68-3e54-47d6-863b-bfbfdfeea33d}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Documentation for Visual Studio Code</b:Title>
+      <b:URL>https://code.visualstudio.com/docs</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>RefSrc</b:Tag>
+      <b:Guid>{26234de9-f75a-4471-b150-aae0e2dcba19}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>.NET Framework Reference Source Code</b:Title>
+      <b:URL>https://referencesource.microsoft.com/</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>SpellChecking</b:Tag>
+      <b:Guid>{7ed92d51-5b44-4e6e-81cd-d21cf39aa81c}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Spell Checking</b:Title>
+      <b:URL>https://www.perrla.com/#/</b:URL>
+    </b:Source>
+  </r:Category>
+  <r:Category Name="Library Repositories">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>NuGet</b:Tag>
+      <b:Guid>{2e3f2d87-8384-4fa0-9e6e-0b2faae75096}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>NuGet Gallery | Packages</b:Title>
+      <b:URL>https://www.nuget.org/packages</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsGallery</b:Tag>
+      <b:Guid>{6e6bcbdb-08f9-4245-a09b-9167d5c2bcc2}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>PowerShell Gallery | Home</b:Title>
+      <b:URL>https://www.powershellgallery.com/</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>CdnJs</b:Tag>
+      <b:Guid>{b0ef1210-d3d7-4e74-89b3-294b84fcf5cb}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>cdnjs - The #1 free and open source CDN built to make life easier for developers</b:Title>
+      <b:URL>https://cdnjs.com/</b:URL>
+      <b:Comments>Simple. Fast. Reliable. Content delivery at its finest. cdnjs is a free and open-source CDN service trusted by over 11% of all websites, powered by Cloudflare. We make it faster and easier to load library files on your websites.</b:Comments>
+    </b:Source>
+  </r:Category>
+  <r:Category Name="Linux Refrerences">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>LinuxUuid</b:Tag>
+      <b:Guid>{4c3a23cf-0d9c-4789-a20e-af301a206a6a}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>7 Methods to identify Disk Partition/FileSystem UUID in Linux</b:Title>
+      <b:URL>https://www.2daygeek.com/check-partitions-uuid-filesystem-uuid-universally-unique-identifier-linux/</b:URL>
+    </b:Source>
+  </r:Category>
+  <r:Category Name="Languages, Formats and Markup">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>MdSyntax</b:Tag>
+      <b:Guid>{fb7ee733-4e9e-47f3-9495-e1be69b96ce2}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Markdown Syntax</b:Title>
+      <b:URL>https://www.markdownguide.org/cheat-sheet/</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>T4Tpl</b:Tag>
+      <b:Guid>{8a6e81cc-f5cd-4123-918a-b915ae0bc461}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Writing a T4 Text Template</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/visualstudio/modeling/writing-a-t4-text-template?view=vs-2019</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>HTML5</b:Tag>
+      <b:Guid>{fb42a521-4eeb-4dbd-a10e-fe43e7b07502}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>HTML5</b:Title>
+      <b:URL>https://www.w3.org/TR/html5/</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>WHATWGURL2</b:Tag>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Guid>{73F6B065-EE99-44EB-8579-7B5BAEB51875}</b:Guid>
+      <b:Title>URLs and Fetching Resources</b:Title>
+      <b:InternetSiteTitle>HTML Living Standard</b:InternetSiteTitle>
+      <b:Year>2020</b:Year>
+      <b:Month>April</b:Month>
+      <b:URL>https://html.spec.whatwg.org/multipage/urls-and-fetching.html#urls</b:URL>
+      <b:ProductionCompany>WHATWG (Apple, Google, Mozilla, Microsoft)</b:ProductionCompany>
+      <b:YearAccessed>2021</b:YearAccessed>
+      <b:MonthAccessed>April</b:MonthAccessed>
+      <b:DayAccessed>07</b:DayAccessed>
+      <b:RefOrder>8</b:RefOrder>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>MDNJsStr</b:Tag>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Guid>{B1E3D836-6964-48D4-A921-ACB73B4C1E92}</b:Guid>
+      <b:Title>String - JavaScript</b:Title>
+      <b:InternetSiteTitle>MDN Web Docs</b:InternetSiteTitle>
+      <b:Year>2021</b:Year>
+      <b:Month>04</b:Month>
+      <b:Day>08</b:Day>
+      <b:URL>https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#string_primitives_and_string_objects</b:URL>
+      <b:Author>
+        <b:Author>
+          <b:Corporate>MDN contributors</b:Corporate>
+        </b:Author>
+      </b:Author>
+      <b:ProductionCompany>Mozilla</b:ProductionCompany>
+      <b:YearAccessed>2021</b:YearAccessed>
+      <b:MonthAccessed>04</b:MonthAccessed>
+      <b:DayAccessed>08</b:DayAccessed>
+      <b:RefOrder>6</b:RefOrder>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>ECMAScript</b:Tag>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Guid>{96504678-0FD3-4C2A-ABC5-EFD15E89B7FB}</b:Guid>
+      <b:Title>ECMAScript® 2022 Language Specification</b:Title>
+      <b:InternetSiteTitle>TC39</b:InternetSiteTitle>
+      <b:Year>2021</b:Year>
+      <b:Month>04</b:Month>
+      <b:Day>06</b:Day>
+      <b:URL>https://tc39.es/ecma262/#sec-ecmascript-language-lexical-grammar-literals</b:URL>
+      <b:ProductionCompany>ECMA International</b:ProductionCompany>
+      <b:YearAccessed>2021</b:YearAccessed>
+      <b:MonthAccessed>04</b:MonthAccessed>
+      <b:DayAccessed>10</b:DayAccessed>
+      <b:Author>
+        <b:Editor>
+          <b:NameList>
+            <b:Person>
+              <b:Last>Guo</b:Last>
+              <b:First>Shu-yu</b:First>
+            </b:Person>
+            <b:Person>
+              <b:Last>Michael</b:Last>
+              <b:First>Ficarra</b:First>
+            </b:Person>
+            <b:Person>
+              <b:Last>Gibbons</b:Last>
+              <b:First>Kevin</b:First>
+            </b:Person>
+          </b:NameList>
+        </b:Editor>
+      </b:Author>
+      <b:RefOrder>9</b:RefOrder>
+    </b:Source>
+    <r:Categories>
+      <r:Category Name="URI">
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>RFC3986</b:Tag>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Guid>{363582AF-B1B8-4A17-8E8C-14127B1DFF40}</b:Guid>
+          <b:Title>Uniform Resource Identifier (URI): Generic Syntax</b:Title>
+          <b:InternetSiteTitle>IETF Tools</b:InternetSiteTitle>
+          <b:Year>2005</b:Year>
+          <b:Month>January</b:Month>
+          <b:URL>https://tools.ietf.org/html/rfc3986</b:URL>
+          <b:ProductionCompany>Internet Engineering Task Force (IETF)</b:ProductionCompany>
+          <b:YearAccessed>2021</b:YearAccessed>
+          <b:MonthAccessed>04</b:MonthAccessed>
+          <b:DayAccessed>10</b:DayAccessed>
+          <b:StandardNumber>STD66</b:StandardNumber>
+          <b:Author>
+            <b:Author>
+              <b:NameList>
+                <b:Person>
+                  <b:Last>Berners-Lee</b:Last>
+                  <b:First>Tim</b:First>
+                </b:Person>
+                <b:Person>
+                  <b:Last>Masinter</b:Last>
+                  <b:First>Larry</b:First>
+                </b:Person>
+                <b:Person>
+                  <b:Last>Fielding</b:Last>
+                  <b:First>Roy</b:First>
+                  <b:Middle>T</b:Middle>
+                </b:Person>
+              </b:NameList>
+            </b:Author>
+          </b:Author>
+          <b:DOI>10.17487/RFC3986</b:DOI>
+          <b:RefOrder>3</b:RefOrder>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>rfc6068</b:Tag>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Guid>{F32E32FE-9EB7-47D1-BE71-136674931E79}</b:Guid>
+          <b:Title>The 'mailto' URI Scheme</b:Title>
+          <b:Year>2010</b:Year>
+          <b:YearAccessed>2021</b:YearAccessed>
+          <b:MonthAccessed>April</b:MonthAccessed>
+          <b:DayAccessed>07</b:DayAccessed>
+          <b:URL>https://tools.ietf.org/html/rfc6068</b:URL>
+          <b:DOI>10.17487/RFC6068</b:DOI>
+          <b:Author>
+            <b:Author>
+              <b:NameList>
+                <b:Person>
+                  <b:Last>Duerst</b:Last>
+                  <b:First>Martin</b:First>
+                </b:Person>
+                <b:Person>
+                  <b:Last>Masinter</b:Last>
+                  <b:First>Larry</b:First>
+                </b:Person>
+                <b:Person>
+                  <b:Last>Zawinski</b:Last>
+                  <b:First>Jamie</b:First>
+                </b:Person>
+              </b:NameList>
+            </b:Author>
+          </b:Author>
+          <b:InternetSiteTitle>IETF Tools</b:InternetSiteTitle>
+          <b:Month>October</b:Month>
+          <b:ProductionCompany>Internet Engineering Task Force (IETF)</b:ProductionCompany>
+          <b:RefOrder>1</b:RefOrder>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>RFC6874</b:Tag>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Guid>{DC2FF8F4-B312-4AFD-A50E-82C5D3BE9BF4}</b:Guid>
+          <b:Title>Representing IPv6 Zone Identifiers in Address Literals and Uniform Resource Identifiers</b:Title>
+          <b:InternetSiteTitle>IETF Tools</b:InternetSiteTitle>
+          <b:Year>2013</b:Year>
+          <b:Month>February</b:Month>
+          <b:URL>https://tools.ietf.org/html/rfc6874</b:URL>
+          <b:ProductionCompany>Internet Engineering Task Force (IETF)</b:ProductionCompany>
+          <b:YearAccessed>2021</b:YearAccessed>
+          <b:MonthAccessed>04</b:MonthAccessed>
+          <b:DayAccessed>07</b:DayAccessed>
+          <b:Author>
+            <b:Author>
+              <b:NameList>
+                <b:Person>
+                  <b:Last>Carpenter</b:Last>
+                  <b:First>Brian</b:First>
+                </b:Person>
+                <b:Person>
+                  <b:Last>Hinden</b:Last>
+                  <b:First>Robert</b:First>
+                </b:Person>
+                <b:Person>
+                  <b:Last>Cheshire</b:Last>
+                  <b:First>Stuart</b:First>
+                </b:Person>
+              </b:NameList>
+            </b:Author>
+          </b:Author>
+          <b:DOI>10.17487/RFC6874</b:DOI>
+          <b:RefOrder>2</b:RefOrder>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>RFC8089</b:Tag>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Guid>{88AF8F75-866B-446F-949F-D80821C9F8A2}</b:Guid>
+          <b:Title>The "file" URI Scheme</b:Title>
+          <b:InternetSiteTitle>IETF Tools</b:InternetSiteTitle>
+          <b:Year>2017</b:Year>
+          <b:Month>February</b:Month>
+          <b:URL>https://tools.ietf.org/html/rfc8089</b:URL>
+          <b:Author>
+            <b:Author>
+              <b:NameList>
+                <b:Person>
+                  <b:Last>Kerwin</b:Last>
+                  <b:First>Matthew</b:First>
+                </b:Person>
+              </b:NameList>
+            </b:Author>
+          </b:Author>
+          <b:ProductionCompany>Internet Engineering Task Force (IETF)</b:ProductionCompany>
+          <b:YearAccessed>2021</b:YearAccessed>
+          <b:MonthAccessed>04</b:MonthAccessed>
+          <b:DayAccessed>07</b:DayAccessed>
+          <b:DOI>10.17487/RFC8089</b:DOI>
+          <b:RefOrder>4</b:RefOrder>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>WHATWGURL</b:Tag>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Guid>{56CB277C-CE83-40C7-BFE1-4A31480ABDD6}</b:Guid>
+          <b:Title>URLs</b:Title>
+          <b:InternetSiteTitle>URL - Living Standard</b:InternetSiteTitle>
+          <b:Year>2021</b:Year>
+          <b:Month>March</b:Month>
+          <b:Day>23</b:Day>
+          <b:URL>https://url.spec.whatwg.org/</b:URL>
+          <b:ProductionCompany>WHATWG (Apple, Google, Mozilla, Microsoft)</b:ProductionCompany>
+          <b:YearAccessed>2021</b:YearAccessed>
+          <b:MonthAccessed>April</b:MonthAccessed>
+          <b:DayAccessed>10</b:DayAccessed>
+          <b:RefOrder>7</b:RefOrder>
+        </b:Source>
+      </r:Category>
+      <r:Category Name="XML">
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>W3XML</b:Tag>
+          <b:Guid>{ad5b7f0b-8aa2-4d57-9da3-d1372839dac6}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>XML</b:Title>
+          <b:URL>http://www.w3.org/TR/xml/</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>W3XMLNS</b:Tag>
+          <b:Guid>{b75d77af-1503-467a-9a54-530cfb1af16d}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Namespaces in XML</b:Title>
+          <b:URL>http://www.w3.org/TR/xml-names/</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>W3XPath</b:Tag>
+          <b:Guid>{ae08e182-5d33-480f-aae0-0cfe41cf6cec}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>XPath</b:Title>
+          <b:URL>https://www.w3.org/TR/xpath-31/</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>W3XSLT</b:Tag>
+          <b:Guid>{7242784e-1ce3-4e5c-9cbd-f285be85701a}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>XSLT (W3)</b:Title>
+          <b:URL>https://www.w3.org/TR/xslt-30/</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>MDNXSLT</b:Tag>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Guid>{183F1D16-869C-4575-9003-60EF175C1E26}</b:Guid>
+          <b:Author>
+            <b:Author>
+              <b:Corporate>MDN contributors</b:Corporate>
+            </b:Author>
+          </b:Author>
+          <b:Title>The Netscape XSLT/XPath Reference</b:Title>
+          <b:InternetSiteTitle>MDN Web Docs</b:InternetSiteTitle>
+          <b:Year>2021</b:Year>
+          <b:Month>03</b:Month>
+          <b:Day>23</b:Day>
+          <b:URL>https://developer.mozilla.org/en-US/docs/Web/XSLT/Transforming_XML_with_XSLT/The_Netscape_XSLT_XPath_Reference</b:URL>
+          <b:ProductionCompany>Mozilla</b:ProductionCompany>
+          <b:YearAccessed>2021</b:YearAccessed>
+          <b:MonthAccessed>04</b:MonthAccessed>
+          <b:DayAccessed>11</b:DayAccessed>
+          <b:RefOrder>5</b:RefOrder>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>MSXSLT1</b:Tag>
+          <b:Guid>{320d71e6-30ae-4dab-bbc9-7880b3715814}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>XSLT Reference</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/ms256069(v=vs.100</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>MSXSLT2</b:Tag>
+          <b:Guid>{0bab4d20-e937-4ecd-bec4-590416300a5d}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>XSLT Transformations</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/dotnet/standard/data/xml/xslt-transformations</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>XSD1</b:Tag>
+          <b:Guid>{6d459ee7-f930-46fa-a95f-c71ed7270b8b}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>XSD Part 1: Structures</b:Title>
+          <b:URL>https://www.w3.org/TR/xmlschema11-1</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>XSD2</b:Tag>
+          <b:Guid>{19ddd08c-0e4c-4ff6-b2f1-bb2e7e089808}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>XSD Part 2: Datatypes</b:Title>
+          <b:URL>https://www.w3.org/TR/xmlschema11-2</b:URL>
+        </b:Source>
+      </r:Category>
+    </r:Categories>
+  </r:Category>
+  <r:Category Name="Client Side APIs">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>ClientAPI</b:Tag>
+      <b:Guid>{4944fec3-7fe5-4942-b47a-991755919092}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Introduction</b:Title>
+      <b:InternetSiteTitle>Bootstrap</b:InternetSiteTitle>
+      <b:URL>https://getbootstrap.com/docs/4.0/getting-started/introduction/</b:URL>
+      <b:Comments>Get started with Bootstrap, the world’s most popular framework for building responsive, mobile-first sites, with BootstrapCDN and a template starter page.</b:Comments>
+    </b:Source>
+  </r:Category>
+  <r:Category Name=".NET Core API">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>CoreAPI</b:Tag>
+      <b:Guid>{2C5BC4F0-C61D-4A90-94E8-2009135AB412}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>.NET API browser</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/dotnet/api/?view=netcore-3.1</b:URL>
+      <b:Year>2021</b:Year>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>NetCLI</b:Tag>
+      <b:Guid>{cba137fc-1a3b-4065-a862-b473fdeaa8ea}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>.NET CLI</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/dotnet/core/tools/</b:URL>
+      <b:Comments>An overview of the .NET CLI and its features.</b:Comments>
+    </b:Source>
+    <r:Categories>
+      <r:Category Name="ASP.NET">
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>AspNet</b:Tag>
+          <b:Guid>{0b70bc62-7189-46b9-95c9-182ad0529c33}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>ASP.NET documentation</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1</b:URL>
+          <b:Comments>Learn to use ASP.NET Core to create web apps and services that are fast, secure, cross-platform, and cloud-based. Browse tutorials, sample code, fundamentals, API reference and more.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>Rt2Ctrl</b:Tag>
+          <b:Guid>{a2adf457-c5dd-474a-911d-8741f8aac4db}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Routing to controller actions in ASP.NET Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-5.0</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>JsWebApiCall</b:Tag>
+          <b:Guid>{00d9d829-8228-4b4c-9c4d-84030f6e3b02}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Tutorial: Call an ASP.NET Core web API with JavaScript</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-javascript?view=aspnetcore-5.0</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>EfCoreRzr</b:Tag>
+          <b:Guid>{311b9309-3fde-4428-8a02-1724a6363c30}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Part 5, Razor Pages with EF Core in ASP.NET Core - Data Model</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/aspnet/core/data/ef-rp/complex-data-model?view=aspnetcore-5.0&amp;tabs=visual-studio</b:URL>
+          <b:Comments>Part 5 of Razor Pages and Entity Framework tutorial series.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>CtrlTestNetCore</b:Tag>
+          <b:Guid>{b6c29763-0ced-4550-a690-2ce309937a6d}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Test controller logic in ASP.NET Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-5.0</b:URL>
+          <b:Comments>Learn how to test controller logic in ASP.NET Core with Moq and xUnit.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>CplxDmEFCore</b:Tag>
+          <b:Guid>{5c6aed34-4c90-41ed-a4cc-c15d0e08b59f}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Tutorial: Create a complex data model - ASP.NET MVC with EF Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model?view=aspnetcore-5.0</b:URL>
+          <b:Comments>In this tutorial, add more entities and relationships and customize the data model by specifying formatting, validation, and mapping rules.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>MvcEfCore</b:Tag>
+          <b:Guid>{db9b9e36-560b-4390-86af-5e19ee088311}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Tutorial: Implement inheritance - ASP.NET MVC with EF Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/inheritance?view=aspnetcore-5.0</b:URL>
+          <b:Comments>This tutorial will show you how to implement inheritance in the data model, using Entity Framework Core in an ASP.NET Core application.</b:Comments>
+        </b:Source>
+        <r:Categories>
+          <r:Category Name="Client Side">
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>MvcSubmitAjax</b:Tag>
+              <b:Guid>{19733b9b-21fa-4f2a-8252-894e1f3eda29}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>ASP.NET MVC: Show Busy Indicator on Form Submit using JQuery and Ajax</b:Title>
+              <b:Author>
+                <b:Author>
+                  <b:NameList>
+                    <b:Person>
+                      <b:Last>Atten</b:Last>
+                      <b:First>John</b:First>
+                    </b:Person>
+                  </b:NameList>
+                </b:Author>
+              </b:Author>
+              <b:URL>http://johnatten.com/2013/12/22/asp-net-mvc-show-busy-indicator-on-form-submit-using-jquery-and-ajax/</b:URL>
+              <b:Comments>Image by Martin Abegglen | Some Rights Reserved As we all know, users are impatient. We also know that if we don’t tell them our application is “doing something” they tend to do silly things like click the mouse repeatedly, seeking some sign that the requested action is indeed being performed. For this reason, it is a good idea to throw up some sort of “busy” indicator when a user-initiated action may invoke a long-running process which requires them to wait. In this article we are going to demonstrate a very basic way to achieve this which will be effective…</b:Comments>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>MvcFileUpload</b:Tag>
+              <b:Guid>{615f0710-67a3-474c-99e7-4b0a47b82a9a}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Async File Uploads in MVC 4</b:Title>
+              <b:Author>
+                <b:Author>
+                  <b:NameList>
+                    <b:Person>
+                      <b:Last>Sampica</b:Last>
+                      <b:First>Bryan</b:First>
+                    </b:Person>
+                  </b:NameList>
+                </b:Author>
+              </b:Author>
+              <b:URL>https://weblogs.asp.net/bryansampica/AsyncMVCFileUpload</b:URL>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>JsResultMvc</b:Tag>
+              <b:Guid>{6bd47d2e-fd3f-4c0e-a279-5e46aa6591d8}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Create a JavascriptResult for ASP.NET MVC</b:Title>
+              <b:InternetSiteTitle>Ugo Lattanzi's tech world</b:InternetSiteTitle>
+              <b:Author>
+                <b:Author>
+                  <b:NameList>
+                    <b:Person>
+                      <b:Last>Lattanzi</b:Last>
+                      <b:First>Ugo</b:First>
+                    </b:Person>
+                  </b:NameList>
+                </b:Author>
+              </b:Author>
+              <b:URL>http://tostring.it/2014/01/14/create-a-javascriptresult-for-asp-net-mvc/?utm_source=feedburner&amp;utm_medium=feed&amp;utm_campaign=Feed%3A+override%2Ftostring%2Fit+%28override.tostring.it%29</b:URL>
+              <b:Comments>Ugo Lattanzi's tech world</b:Comments>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>MvcResources</b:Tag>
+              <b:Guid>{d010482f-43b9-4080-aa2e-61ab5ced8bf0}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>MVC Recommended Resources</b:Title>
+              <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+              <b:URL>https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/recommended-resources-for-mvc</b:URL>
+              <b:Comments>This topic provides links to documentation resources about ASP.NET MVC 5. If you know a great blog post, stackoverflow thread or any other link that would be...</b:Comments>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>PassingDataToJs</b:Tag>
+              <b:Guid>{00c86689-1f40-45d1-9114-25edf6c890f2}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Passing .NET Server-Side Data to JavaScript</b:Title>
+              <b:Author>
+                <b:Author>
+                  <b:NameList>
+                    <b:Person>
+                      <b:Last>Schulz</b:Last>
+                      <b:First>Marius</b:First>
+                    </b:Person>
+                  </b:NameList>
+                </b:Author>
+              </b:Author>
+              <b:URL>https://mariusschulz.com/blog/passing-net-server-side-data-to-javascript</b:URL>
+              <b:Comments>This post lists various methodologies to pass server-side C# data from an ASP.NET back-end to a JavaScript front-end.</b:Comments>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>MvcViewBag</b:Tag>
+              <b:Guid>{30a2e717-e01e-41e1-a6bb-1c4b1595f4bc}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Set ViewBag using JavaScript or jQuery in ASP.Net MVC</b:Title>
+              <b:URL>https://www.aspsnippets.com/Articles/Set-ViewBag-using-JavaScript-or-jQuery-in-ASPNet-MVC.aspx</b:URL>
+              <b:Comments>
+                            Here Mudassar Ahmed Khan has explained with an example, how to set ViewBag using JavaScript or jQuery in ASP.Net MVC Razor.
+                            ViewBag is created on Server Side of the Web application and hence it is not possible to directly set it on Client Side using JavaScript or jQuery.
+                            Thus, only possible way is to set it by making an AJAX call to the Controller’s Action method using jQuery AJAX function in ASP.Net MVC Razor.
+                            TAGs: ASP.Net, JavaScript, AJAX, jQuery, MVC
+                        </b:Comments>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>AjaxMvc</b:Tag>
+              <b:Guid>{ffbba56c-dc54-4256-852b-32ea88865df7}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Unobtrusive AJAX client side validation Remote method calls to check uniqueness of value</b:Title>
+              <b:InternetSiteTitle>The ASP.NET Forums</b:InternetSiteTitle>
+              <b:URL>https://forums.asp.net/t/1851343.aspx?Unobtrusive+AJAX+client+side+validation+Remote+method+calls+to+check+uniqueness+of+value</b:URL>
+              <b:Comments>Hey there. I am trying to add some client side validation to my asp.net MVC 4 application (I wish I just could add the appropriate jquery libraries and just code the requisite jquery script on the...</b:Comments>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>AjaxRzr</b:Tag>
+              <b:Guid>{f738bbf7-8285-4a6d-887d-6b17d8ab6dd0}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Using JavaScript with Ajax and Razor partial views</b:Title>
+              <b:InternetSiteTitle>Pluralsight</b:InternetSiteTitle>
+              <b:URL>https://www.pluralsight.com/guides/asp-net-mvc-using-javascript-with-ajax-and-razor-partial-views</b:URL>
+              <b:Comments>This guide shows how to effectively implement JavaScript functionality when creating a web page from Razor partial views, including form elements created using the Ajax.BeginForm helper method. Check it out!</b:Comments>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>MvcRtrData</b:Tag>
+              <b:Guid>{3de1dca7-610f-4177-9aa3-baba868e0acc}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Retrieving Data with a JavaScript MVC Framework</b:Title>
+              <b:URL>https://blog.learningtree.com/retrieving-data-with-a-javascript-mvc-framework/</b:URL>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>AngularJsMvc</b:Tag>
+              <b:Guid>{17199126-7f95-4abd-b7ae-4a7ce3506685}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Bootstrapping AngularJS Applications with Server-Side Data from ASP.NET MVC &amp; Razor — Marius Schulz</b:Title>
+              <b:Author>
+                <b:Author>
+                  <b:NameList>
+                    <b:Person>
+                      <b:Last>Schulz</b:Last>
+                      <b:First>Marius</b:First>
+                    </b:Person>
+                  </b:NameList>
+                </b:Author>
+              </b:Author>
+              <b:URL>https://mariusschulz.com/blog/bootstrapping-angularjs-applications-with-server-side-data-from-asp-net-mvc-and-razor</b:URL>
+              <b:Comments>Many AngularJS applications require initial data on startup. Here's how you can pass server-side C# data from ASP.NET to HTML.</b:Comments>
+            </b:Source>
+            <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+              <b:Tag>MvcPostDatda</b:Tag>
+              <b:Guid>{955de406-5d4e-49af-879d-8b7d3e495f6a}</b:Guid>
+              <b:SourceType>InternetSite</b:SourceType>
+              <b:Title>Post data using the \$resource Service in an ASP.NET MVC app</b:Title>
+              <b:InternetSiteTitle>AngularJS</b:InternetSiteTitle>
+              <b:URL>https://www.devcurry.com/2013/07/angularjs-post-data-using-resource.html</b:URL>
+              <b:Comments>See how to use a $resource service in AngularJS  to post data to an ASP.NET MVC Controller.</b:Comments>
+            </b:Source>
+          </r:Category>
+        </r:Categories>
+      </r:Category>
+      <r:Category Name="Entity Framework">
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>EfCodeFirst</b:Tag>
+          <b:Guid>{5142e8b6-996d-4cd1-97df-4664fe4d8984}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Code First DataAnnotations</b:Title>
+          <b:InternetSiteTitle>Entity Framework Tutorial</b:InternetSiteTitle>
+          <b:URL>https://entity-framework.programmingpedia.net/en/tutorial/4161/code-first-dataannotations</b:URL>
+          <b:Comments>Code First DataAnnotations | Entity Framework Tutorial</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>EfCoreCreate</b:Tag>
+          <b:Guid>{e2eaa574-be67-4e57-a5fc-f00e9e5358e8}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Creating and configuring a model - EF Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/ef/core/modeling/</b:URL>
+          <b:Comments>Overview of creating and configuring a model with Entity Framework Core</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>EFCoreOverview</b:Tag>
+          <b:Guid>{6ebe4903-aaa3-471b-9328-5a4b4ed65f3a}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Overview of Entity Framework Core - EF Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/ef/core/</b:URL>
+          <b:Comments>General introductory overview of Entity Framework Core</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>IValidatableObject</b:Tag>
+          <b:Guid>{cd516f4f-a1e0-4a27-b795-e4da823840e5}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>c# - How do I use IValidatableObject?</b:Title>
+          <b:InternetSiteTitle>Stack Overflow</b:InternetSiteTitle>
+          <b:URL>https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject</b:URL>
+        </b:Source>
+      </r:Category>
+      <r:Category Name="Testing">
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>NUnitCore</b:Tag>
+          <b:Guid>{71bb6d18-829f-4546-9112-784359dab4f3}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Unit testing C# with NUnit and .NET Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-nunit</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>CoreTest</b:Tag>
+          <b:Guid>{1e4eb82a-cf96-47b7-bf2d-e19605c8de78}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Integration tests in ASP.NET Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0#test-app-prerequisites</b:URL>
+          <b:Comments>Learn how integration tests ensure that an app's components function correctly at the infrastructure level, including the database, file system, and network.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>CoreLogging</b:Tag>
+          <b:Guid>{e7f92b4c-3005-4262-8ab4-ca357cc818da}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Logging and tracing - .NET Core</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/dotnet/core/diagnostics/logging-tracing</b:URL>
+          <b:Comments>An introduction to .NET Core logging and tracing.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>NUnit</b:Tag>
+          <b:Guid>{baa0f909-1b1a-4948-922f-6264dee7f3de}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>NUnit Documentation</b:Title>
+          <b:InternetSiteTitle>NUnit Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.nunit.org/articles/nunit/intro.html</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>NetTrace</b:Tag>
+          <b:Guid>{7245a7d5-cee5-44bf-abe3-39737c57acd1}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>dotnet-trace diagnostic tool - .NET CLI</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace</b:URL>
+          <b:Comments>Learn how to install and use the dotnet-trace CLI tool to collect .NET traces of a running process without the native profiler, by using the .NET EventPipe.</b:Comments>
+        </b:Source>
+      </r:Category>
+      <r:Category Name="WPF">
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>WPFSamples</b:Tag>
+          <b:Guid>{693a0d53-b345-47bf-a208-c385115d1102}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>GitHub - microsoft/WPF-Samples: Repository for WPF related samples</b:Title>
+          <b:URL>https://github.com/Microsoft/WPF-Samples</b:URL>
+          <b:Comments>Repository for WPF related samples. Contribute to microsoft/WPF-Samples development by creating an account on GitHub.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>WhatWpf</b:Tag>
+          <b:Guid>{031397fb-55b0-46cb-aef7-5ab62513dcb6}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>What is Windows Presentation Foundation - WPF .NET</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-5.0</b:URL>
+          <b:Comments>This article gives an overview about what Windows Presentation Foundation (WPF) is as it relates to .NET and what features are provided.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>WpfCore</b:Tag>
+          <b:Guid>{2de1f7c3-ff3c-4095-8b6f-19c255eeba64}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>Windows Presentation Foundation (WPF) for .NET Core documentation</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-5.0&amp;preserve-view=true</b:URL>
+          <b:Comments>Learn about using Windows Presentation Foundation, an open-source, graphical user interface for Windows, on .NET Core.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>WpfAnnotations</b:Tag>
+          <b:Guid>{3602c8f7-48c9-4f86-a034-1017e098ed43}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>c# - How to use System.ComponentModel.DataAnnotations in WPF or Winforms application</b:Title>
+          <b:InternetSiteTitle>Stack Overflow</b:InternetSiteTitle>
+          <b:URL>https://stackoverflow.com/questions/6854759/how-to-use-system-componentmodel-dataannotations-in-wpf-or-winforms-application</b:URL>
+        </b:Source>
+      </r:Category>
+    </r:Categories>
+  </r:Category>
+  <r:Category Name="PowerShell">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>Pester</b:Tag>
+      <b:Guid>{55fe7880-9005-45d5-b8e3-53c12c90312d}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Quick Start</b:Title>
+      <b:InternetSiteTitle>Pester</b:InternetSiteTitle>
+      <b:URL>https://pester.dev/docs/quick-start</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsMmodule</b:Tag>
+      <b:Guid>{737906b2-99d6-4595-a044-22cbdf7a9623}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Basics of Writing a PowerShell Module with C#, Part 2: Debugging</b:Title>
+      <b:InternetSiteTitle>PowerShell Magazine</b:InternetSiteTitle>
+      <b:URL>https://www.powershellmagazine.com/2014/04/08/basics-of-writing-a-powershell-module-with-c-part-2-debugging/</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>CmdletHelp</b:Tag>
+      <b:Guid>{002e13e8-e193-43b9-84bb-1dab1445a030}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Writing Help for PowerShell Cmdlets</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/powershell/scripting/developer/help/writing-help-for-windows-powershell-cmdlets?view=powershell-7.1</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsModuleHelp</b:Tag>
+      <b:Guid>{002b97eb-74c7-453c-8a10-2419ebffa695}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Writing Help for PowerShell Modules</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/powershell/scripting/developer/help/writing-help-for-windows-powershell-modules?view=powershell-7.1</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>CimCmdletsModule</b:Tag>
+      <b:Guid>{18681b23-89d4-49f5-b5fb-0f65731de3f2}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>CimCmdlets Module - PowerShell</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/powershell/module/cimcmdlets/?view=powershell-7.1</b:URL>
+      <b:Comments>Contains cmdlets that interact with Common Information Model (CIM) Servers like the Windows Management Instrumentation (WMI) service.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>HttpClient</b:Tag>
+      <b:Guid>{76d50fd6-4e38-4759-bfcc-973d23eea3fe}</b:Guid>
+      <b:Title>HttpClient Class (System.Net.Http)</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-5.0</b:URL>
+      <b:Comments>Provides a base class for sending HTTP requests and receiving HTTP responses from a resource identified by a URI.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>HttpWebRequest</b:Tag>
+      <b:Guid>{90bf1f15-293d-453b-bd78-f2c2a4966425}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>HttpWebRequest Class (System.Net)</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/dotnet/api/system.net.httpwebrequest?view=net-5.0</b:URL>
+      <b:Comments>Provides an HTTP-specific implementation of the WebRequest class.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>JsonContent</b:Tag>
+      <b:Guid>{74b861b7-9165-44c1-9de2-1390b108e038}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>JsonContent Class (System.Net.Http.Json)</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/dotnet/api/system.net.http.json.jsoncontent?view=net-5.0</b:URL>
+      <b:Comments>Provides HTTP content based on JSON.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>WebJsSerializer</b:Tag>
+      <b:Guid>{7874240e-1a3b-49d6-a40d-62a8799d0bfb}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>JavaScriptSerializer.Serialize Method (System.Web.Script.Serialization)</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/dotnet/api/system.web.script.serialization.javascriptserializer.serialize?view=netframework-4.8</b:URL>
+      <b:Comments>Converts an object to a JSON string.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>TextJsSerializer</b:Tag>
+      <b:Guid>{1a31d70c-e5be-4657-a489-9a144bffff31}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>JsonSerializer.Serialize Method (System.Text.Json)</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/dotnet/api/system.text.json.jsonserializer.serialize?view=net-5.0</b:URL>
+      <b:Comments>Converts the value of a specified type into a JSON string.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsArchive</b:Tag>
+      <b:Guid>{63598f69-de5e-40e4-b5b1-26b5abc67036}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Microsoft.PowerShell.Archive Module - PowerShell</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.archive/?view=powershell-7.1</b:URL>
+      <b:Comments>This section contains the help topics for the cmdlets that are installed with the PowerShell Microsoft.PowerShell.Archive module. The Archive module contains cmdlets that let you create and extract archive or ZIP files.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PSRemotingJob</b:Tag>
+      <b:Guid>{3494137b-9db6-4c6a-aa53-5a2e8d9021ea}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>PSRemotingJob.cs</b:Title>
+      <b:URL>https://referencesource.microsoft.com/#System.Management.Automation/System/Management/Automation/PSRemotingJob.cs</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsTeam</b:Tag>
+      <b:Guid>{ab412e12-ad65-4a7e-85b2-3e64759f8297}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>PowerShell</b:Title>
+      <b:InternetSiteTitle>PowerShell Team</b:InternetSiteTitle>
+      <b:URL>https://github.com/PowerShell</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>ApachePsm</b:Tag>
+      <b:Guid>{bc6a82af-13b4-40af-b1ee-5b41e45a424b}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>PowerShell/Apache.psm1 at master</b:Title>
+      <b:InternetSiteTitle>PowerShell/PowerShell</b:InternetSiteTitle>
+      <b:URL>https://github.com/PowerShell/PowerShell/blob/master/demos/Apache/Apache/Apache.psm1</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>CrontabDemo</b:Tag>
+      <b:Guid>{9def1710-3966-4144-b6ba-df80a7d496dd}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>PowerShell/demos/crontab at master</b:Title>
+      <b:InternetSiteTitle>PowerShell/PowerShell</b:InternetSiteTitle>
+      <b:URL>https://github.com/PowerShell/PowerShell/tree/master/demos/crontab</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>RestPs1</b:Tag>
+      <b:Guid>{29c26360-2aae-4f34-8501-86f454aa370e}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>PowerShell/rest.ps1 at master</b:Title>
+      <b:InternetSiteTitle>PowerShell/PowerShell</b:InternetSiteTitle>
+      <b:URL>https://github.com/PowerShell/PowerShell/blob/master/demos/rest/rest.ps1</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsRestSamples</b:Tag>
+      <b:Guid>{f3d7355f-07b1-45bc-97b9-4cef2526eb9f}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Quickstart in REST - PowerShell - Code Samples</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/samples/azure-samples/azure-search-powershell-samples/powershell-rest-quickstart/</b:URL>
+      <b:Comments>Learn basic steps for creating, loading, and querying an Azure Cognitive Search index using the latest-version REST APIs and PowerShell cmdlets.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>VsCodePsDev</b:Tag>
+      <b:Guid>{efd0f37b-025c-4f3e-a07c-3106149a3333}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Using Visual Studio Code for PowerShell Development - PowerShell</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/powershell/scripting/dev-cross-plat/vscode/using-vscode?view=powershell-7.1</b:URL>
+      <b:Comments>Using Visual Studio Code for PowerShell Development</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PortablePsMod</b:Tag>
+      <b:Guid>{6fdcddd0-44e9-4c6a-bb4b-68d823e57729}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Writing Portable Modules - PowerShell</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/powershell/scripting/dev-cross-plat/writing-portable-modules?view=powershell-7.1</b:URL>
+      <b:Comments>This article explains how to create modules new modules or update existing modules so that they work across the platforms supported by PowerShell.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsClasses</b:Tag>
+      <b:Guid>{de2683b6-475b-423e-8a43-0ec5e57251ba}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>about_Classes - PowerShell</b:Title>
+      <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+      <b:URL>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_classes?view=powershell-7.1</b:URL>
+      <b:Comments>Describes how you can use classes to create your own custom types.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>VsCodePsLaunch</b:Tag>
+      <b:Guid>{5ca3b3f5-d854-42b0-9887-e94ba26ab36d}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>vscode-powershell/launch.json at master</b:Title>
+      <b:InternetSiteTitle>PowerShell/vscode-powershell</b:InternetSiteTitle>
+      <b:URL>https://github.com/PowerShell/vscode-powershell/blob/master/examples/.vscode/launch.json</b:URL>
+      <b:Comments>Provides PowerShell language and debugging support for Visual Studio Code - PowerShell/vscode-powershell</b:Comments>
+    </b:Source>
+    <r:Categories>
+      <r:Category Name="Jobs">
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsJobs</b:Tag>
+          <b:Guid>{890c3f52-2246-4b1e-8f0f-893703c9169d}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>How to Support Jobs</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/how-to-support-jobs?view=powershell-7.1</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsJobDetails</b:Tag>
+          <b:Guid>{10e6c302-7f8d-4f2a-b105-6c8dc5cfee9a}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>about_Job_Details - PowerShell</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_job_details?view=powershell-7.1</b:URL>
+          <b:Comments>Provides details about background jobs on local and remote computers.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsAboutJobs</b:Tag>
+          <b:Guid>{a7d45a2a-1b17-4642-81c2-7a8f2c7be878}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>about_Jobs - PowerShell</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_jobs?view=powershell-7.1</b:URL>
+          <b:Comments>Provides information about how PowerShell background jobs run a command or expression in the background without interacting with the current session.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsThreadJobs</b:Tag>
+          <b:Guid>{601fd768-345b-4e47-b9f1-162d7482bf08}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>about_Thread_Jobs - PowerShell</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_thread_jobs?view=powershell-7.1</b:URL>
+          <b:Comments>Provides information about PowerShell thread-based jobs. A thread job is a type of background job that runs a command or expression in a separate thread within the current session process.</b:Comments>
+        </b:Source>
+      </r:Category>
+      <r:Category Name="Security">
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsPasswordCredential</b:Tag>
+          <b:Guid>{2cf96c94-906e-49d3-8036-f5a872691f04}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>PasswordCredential Class (Windows.Security.Credentials) - Windows UWP applications</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/uwp/api/Windows.Security.Credentials.PasswordCredential?view=winrt-19041</b:URL>
+          <b:Comments>Represents the password credential store.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsCertPin</b:Tag>
+          <b:Guid>{aa67a123-59d2-43a0-9c8a-a49420bdaab0}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>PowerShell Certificate Pinning</b:Title>
+          <b:InternetSiteTitle>PowerShell Magazine</b:InternetSiteTitle>
+          <b:URL>https://www.powershellmagazine.com/2013/12/17/powershell-certificate-pinning/</b:URL>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsLoggingWin</b:Tag>
+          <b:Guid>{08efa72c-498b-4e39-87bd-d95622a38527}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>about_Logging-Windows - PowerShell</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows?view=powershell-7.1</b:URL>
+          <b:Comments>PowerShell logs internal operations from the engine, providers, and cmdlets to the Windows event log.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsLoggingNonWin</b:Tag>
+          <b:Guid>{9c0f3e24-c84b-4a90-a879-81fb352a03ed}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>about_Logging_Non-Windows - PowerShell</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_non-windows?view=powershell-7.1</b:URL>
+          <b:Comments>PowerShell logs internal operations from the engine, providers, and cmdlets.</b:Comments>
+        </b:Source>
+        <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+          <b:Tag>PsSigning</b:Tag>
+          <b:Guid>{767360a2-8644-4490-bde9-8d17b5be66dc}</b:Guid>
+          <b:SourceType>InternetSite</b:SourceType>
+          <b:Title>about_Signing - PowerShell</b:Title>
+          <b:InternetSiteTitle>Microsoft Docs</b:InternetSiteTitle>
+          <b:URL>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.1</b:URL>
+          <b:Comments>Explains how to sign scripts so that they comply with the PowerShell execution policies.</b:Comments>
+        </b:Source>
+      </r:Category>
+    </r:Categories>
+  </r:Category>
+  <r:Category Name="Gists">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>VolumeInfo</b:Tag>
+      <b:Guid>{c8fbc905-9b38-4508-a5ea-cddfc1b9c5df}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Get volume information for desktop app</b:Title>
+      <b:URL>https://gist.github.com/lerwine/37745116cc8366f58b13f1713927a9bd</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>BitHashStruct</b:Tag>
+      <b:Guid>{9571919c-cae5-44e6-b917-f3d17fe1088a}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Struct objects which contain 64, 128, 256 and 384-bit hashes</b:Title>
+      <b:URL>https://gist.github.com/lerwine/b953694061acb834984dce238834c3f5</b:URL>
+    </b:Source>
+  </r:Category>
+  <r:Category Name="Old Projects">
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>FsDedunderator</b:Tag>
+      <b:Guid>{03d42135-1518-4285-a994-9ca164115512}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>FS Dedunderator</b:Title>
+      <b:URL>https://github.com/lerwine/FsDedunderator</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>RIMSS</b:Tag>
+      <b:Guid>{b8f38564-16e1-4253-9249-bfbdf48fc7a1}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>RIMSS - Raster Image Manipulation and Storage Service</b:Title>
+      <b:URL>https://github.com/lerwine/RIMSS</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>FileDataView</b:Tag>
+      <b:Guid>{9312bbd6-e57a-482a-b85f-0ae1a2240c3d}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>File Comparison Project</b:Title>
+      <b:URL>https://github.com/lerwine/FileDataView</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsModulesPrj</b:Tag>
+      <b:Guid>{da4c3bfe-9819-46bc-b436-dacc0dfbdd44}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Powershell-Modules</b:Title>
+      <b:URL>https://github.com/lerwine/PowerShell-Modules</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>DotNetProgrammersToolbox</b:Tag>
+      <b:Guid>{417543c4-a3b6-4c24-805e-87269d3f2b1b}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>DotNetProgrammersToolbox</b:Title>
+      <b:URL>https://github.com/lerwine/DotNetProgrammersToolbox</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>LErwineExample</b:Tag>
+      <b:Guid>{dc51575e-0564-415d-bc93-7a205529178e}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>LErwineExample</b:Title>
+      <b:URL>https://github.com/lerwine/LErwineExamples</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>LTEControls</b:Tag>
+      <b:Guid>{b134af27-0f15-4efd-a124-7079ad2449d1}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>LTEControls</b:Title>
+      <b:URL>https://github.com/lerwine/LTEControls</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>WebConfigTool</b:Tag>
+      <b:Guid>{a3c4bb1c-146f-4b50-91cb-b4cb91b878f5}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>WebConfigTool</b:Title>
+      <b:URL>https://github.com/lerwine/WebConfigTool</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>JsTypeCommander</b:Tag>
+      <b:Guid>{e02393e1-9251-49bd-b84e-ecef16f7bbcc}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>JsTypeCommander</b:Title>
+      <b:URL>https://github.com/lerwine/JsTypeCommander</b:URL>
+      <b:Comments>Validate, detect and convert JavaScript types and classes.</b:Comments>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>JSCookbook</b:Tag>
+      <b:Guid>{7f68d50e-44e3-43e2-8973-4033ec307880}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>JSCookbook</b:Title>
+      <b:URL>https://github.com/lerwine/JSCookbook</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>PsSolutionManager</b:Tag>
+      <b:Guid>{0c7dd285-cdd5-4672-9b44-ae148b80f4e3}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>PsSolutionManager</b:Title>
+      <b:URL>https://github.com/lerwine/PsSolutionManager</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>VsCodeToolKit</b:Tag>
+      <b:Guid>{071340c8-5de5-42da-93ba-522da227449b}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>Visual Studio Code Toolkit</b:Title>
+      <b:URL>https://github.com/lerwine/LTEToolkit</b:URL>
+    </b:Source>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>WguSw2</b:Tag>
+      <b:Guid>{7bdc1acf-075d-4310-beaf-9c8330c0b971}</b:Guid>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Title>WGU Software 2 Project</b:Title>
+      <b:URL>https://github.com/lerwine/WguScheduler356334</b:URL>
+    </b:Source>
+  </r:Category>
+  <Uncategorized>
+    <b:Source xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography">
+      <b:Tag>MosPwBox</b:Tag>
+      <b:SourceType>InternetSite</b:SourceType>
+      <b:Guid>{78AA2908-9639-4362-BC0B-94140C5A2A97}</b:Guid>
+      <b:Title>WPF PasswordBox Control</b:Title>
+      <b:Year>2014</b:Year>
+      <b:Month>June</b:Month>
+      <b:Day>22</b:Day>
+      <b:InternetSiteTitle>WPF Tutorial</b:InternetSiteTitle>
+      <b:URL>http://www.wpftutorial.net/PasswordBox.html</b:URL>
+      <b:Author>
+        <b:Author>
+          <b:NameList>
+            <b:Person>
+              <b:Last>Moser</b:Last>
+              <b:First>Christian</b:First>
+            </b:Person>
+          </b:NameList>
+        </b:Author>
+      </b:Author>
+      <b:YearAccessed>2021</b:YearAccessed>
+      <b:MonthAccessed>April</b:MonthAccessed>
+      <b:DayAccessed>18</b:DayAccessed>
+    </b:Source>
+  </Uncategorized>
+</r:Categories>

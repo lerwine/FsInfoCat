@@ -1,157 +1,169 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <References xmlns="http://git.erwinefamily.net/FsInfoCat/V1/References.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://git.erwinefamily.net/FsInfoCat/V1/References.xsd ./References.xsd">
-  <Categories>
-    <Category Name="General">
-      <Link Tag="GDIPlus" />
-      <Link Tag="CfgMgrWmi" />
-      <Link Tag="VsCode" />
-      <Link Tag="RefSrc" />
-      <Link Tag="SpellChecking" />
-    </Category>
-    <Category Name="Library Repositories">
-      <Link Tag="NuGet" />
-      <Link Tag="PsGallery" />
-      <Link Tag="CdnJs" />
-    </Category>
-    <Category Name="Linux Refrerences">
-      <Link Tag="LinuxUuid" />
-    </Category>
-    <Category Name="Languages, Formats and Markup">
-      <Link Tag="MdSyntax" />
-      <Link Tag="T4Tpl" />
-      <Link Tag="HTML5" />
-      <Link Tag="WHATWGURL2" />
-      <Link Tag="MDNJsStr" />
-      <Link Tag="ECMAScript" />
-      <Categories>
-        <Category Name="URI">
-          <Link Tag="RFC3986" />
-          <Link Tag="rfc6068" />
-          <Link Tag="RFC6874" />
-          <Link Tag="RFC8089" />
-          <Link Tag="WHATWGURL" />
+    <Categories>
+        <Category Name="General">
+            <Link Tag="GDIPlus" />
+            <Link Tag="CfgMgrWmi" />
+            <Link Tag="VsCode" />
+            <Link Tag="RefSrc" />
+            <Link Tag="SpellChecking" />
         </Category>
-        <Category Name="XML">
-          <Link Tag="W3XML" />
-          <Link Tag="W3XMLNS" />
-          <Link Tag="W3XPath" />
-          <Link Tag="W3XSLT" />
-          <Link Tag="MDNXSLT" />
-          <Link Tag="MSXSLT1" />
-          <Link Tag="MSXSLT2" />
-          <Link Tag="XSD1" />
-          <Link Tag="XSD2" />
+        <Category Name="Library Repositories">
+            <Link Tag="NuGet" />
+            <Link Tag="PsGallery" />
+            <Link Tag="CdnJs" />
         </Category>
-      </Categories>
-    </Category>
-    <Category Name="Client Side APIs">
-      <Link Tag="ClientAPI" />
-    </Category>
-    <Category Name=".NET Core API">
-      <Link Tag="CoreAPI" />
-      <Link Tag="NetCLI" />
-      <Categories>
-        <Category Name="ASP.NET">
-          <Link Tag="AspNet" />
-          <Link Tag="Rt2Ctrl" />
-          <Link Tag="JsWebApiCall" />
-          <Link Tag="EfCoreRzr" />
-          <Link Tag="CtrlTestNetCore" />
-          <Link Tag="CplxDmEFCore" />
-          <Link Tag="MvcEfCore" />
-          <Categories>
-            <Category Name="Client Side">
-              <Link Tag="MvcSubmitAjax" />
-              <Link Tag="MvcFileUpload" />
-              <Link Tag="JsResultMvc" />
-              <Link Tag="MvcResources" />
-              <Link Tag="PassingDataToJs" />
-              <Link Tag="MvcViewBag" />
-              <Link Tag="AjaxMvc" />
-              <Link Tag="AjaxRzr" />
-              <Link Tag="MvcRtrData" />
-              <Link Tag="AngularJsMvc" />
-              <Link Tag="MvcPostDatda" />
-            </Category>
-          </Categories>
+        <Category Name="Linux Refrerences">
+            <Link Tag="LinuxUuid" />
         </Category>
-        <Category Name="Entity Framework">
-          <Link Tag="EfCodeFirst" />
-          <Link Tag="EfCoreCreate" />
-          <Link Tag="EFCoreOverview" />
-          <Link Tag="IValidatableObject" />
+        <Category Name="Languages, Formats and Markup">
+            <Link Tag="MdSyntax" />
+            <Link Tag="T4Tpl" />
+            <Link Tag="HTML5" />
+            <Link Tag="WHATWGURL2" />
+            <Link Tag="MDNJsStr" />
+            <Link Tag="ECMAScript" />
+            <Categories>
+                <Category Name="URI">
+                    <Link Tag="RFC3986" />
+                    <Link Tag="rfc6068" />
+                    <Link Tag="RFC6874" />
+                    <Link Tag="RFC8089" />
+                    <Link Tag="WHATWGURL" />
+                </Category>
+                <Category Name="XML">
+                    <Link Tag="W3XML" />
+                    <Link Tag="W3XMLNS" />
+                    <Link Tag="W3XPath" />
+                    <Link Tag="W3XSLT" />
+                    <Link Tag="MDNXSLT" />
+                    <Link Tag="MSXSLT1" />
+                    <Link Tag="MSXSLT2" />
+                    <Link Tag="XSD1" />
+                    <Link Tag="XSD2" />
+                </Category>
+            </Categories>
         </Category>
-        <Category Name="Testing">
-          <Link Tag="NUnitCore" />
-          <Link Tag="CoreTest" />
-          <Link Tag="CoreLogging" />
-          <Link Tag="NUnit" />
-          <Link Tag="NetTrace" />
+        <Category Name="Client Side APIs">
+            <Link Tag="ClientAPI" />
         </Category>
-        <Category Name="WPF">
-          <Link Tag="WPFSamples" />
-          <Link Tag="WhatWpf" />
-          <Link Tag="WpfCore" />
-          <Link Tag="WpfAnnotations" />
+        <Category Name=".NET Core API">
+            <Link Tag="CoreAPI" />
+            <Link Tag="NetCLI" />
+            <Categories>
+                <Category Name="ASP.NET">
+                    <Link Tag="AspNet" />
+                    <Link Tag="Rt2Ctrl" />
+                    <Link Tag="JsWebApiCall" />
+                    <Link Tag="EfCoreRzr" />
+                    <Link Tag="CtrlTestNetCore" />
+                    <Link Tag="CplxDmEFCore" />
+                    <Link Tag="MvcEfCore" />
+                    <Categories>
+                        <Category Name="Client Side">
+                            <Link Tag="MvcSubmitAjax" />
+                            <Link Tag="MvcFileUpload" />
+                            <Link Tag="JsResultMvc" />
+                            <Link Tag="MvcResources" />
+                            <Link Tag="PassingDataToJs" />
+                            <Link Tag="MvcViewBag" />
+                            <Link Tag="AjaxMvc" />
+                            <Link Tag="AjaxRzr" />
+                            <Link Tag="MvcRtrData" />
+                            <Link Tag="AngularJsMvc" />
+                            <Link Tag="MvcPostDatda" />
+                        </Category>
+                    </Categories>
+                </Category>
+                <Category Name="Entity Framework">
+                    <Link Tag="EfCodeFirst" />
+                    <Link Tag="EfCoreCreate" />
+                    <Link Tag="EFCoreOverview" />
+                    <Link Tag="IValidatableObject" />
+                </Category>
+                <Category Name="Testing">
+                    <Link Tag="NUnitCore" />
+                    <Link Tag="CoreTest" />
+                    <Link Tag="CoreLogging" />
+                    <Link Tag="NUnit" />
+                    <Link Tag="NetTrace" />
+                </Category>
+                <Category Name="WPF">
+                    <Link Tag="WPFSamples" />
+                    <Link Tag="WhatWpf" />
+                    <Link Tag="WpfCore" />
+                    <Link Tag="WpfAnnotations" />
+                    <Link Tag="MosPwBox"/>
+                </Category>
+            </Categories>
         </Category>
-      </Categories>
-    </Category>
-    <Category Name="PowerShell">
-      <Link Tag="Pester" />
-      <Link Tag="PsMmodule" />
-      <Link Tag="CmdletHelp" />
-      <Link Tag="PsModuleHelp" />
-      <Link Tag="CimCmdletsModule" />
-      <Link Tag="HttpClient" />
-      <Link Tag="HttpWebRequest" />
-      <Link Tag="JsonContent" />
-      <Link Tag="WebJsSerializer" />
-      <Link Tag="TextJsSerializer" />
-      <Link Tag="PsArchive" />
-      <Link Tag="PSRemotingJob" />
-      <Link Tag="PsTeam" />
-      <Link Tag="ApachePsm" />
-      <Link Tag="CrontabDemo" />
-      <Link Tag="RestPs1" />
-      <Link Tag="PsRestSamples" />
-      <Link Tag="VsCodePsDev" />
-      <Link Tag="PortablePsMod" />
-      <Link Tag="PsClasses" />
-      <Link Tag="VsCodePsLaunch" />
-      <Categories>
-        <Category Name="Jobs">
-          <Link Tag="PsJobs" />
-          <Link Tag="PsJobDetails" />
-          <Link Tag="PsAboutJobs" />
-          <Link Tag="PsThreadJobs" />
+        <Category Name="PowerShell">
+            <Link Tag="Pester" />
+            <Link Tag="PsMmodule" />
+            <Link Tag="CmdletHelp" />
+            <Link Tag="PsModuleHelp" />
+            <Link Tag="CimCmdletsModule" />
+            <Link Tag="HttpClient" />
+            <Link Tag="HttpWebRequest" />
+            <Link Tag="JsonContent" />
+            <Link Tag="WebJsSerializer" />
+            <Link Tag="TextJsSerializer" />
+            <Link Tag="PsArchive" />
+            <Link Tag="PSRemotingJob" />
+            <Link Tag="PsTeam" />
+            <Link Tag="ApachePsm" />
+            <Link Tag="CrontabDemo" />
+            <Link Tag="RestPs1" />
+            <Link Tag="PsRestSamples" />
+            <Link Tag="VsCodePsDev" />
+            <Link Tag="PortablePsMod" />
+            <Link Tag="PsClasses" />
+            <Link Tag="VsCodePsLaunch" />
+            <Categories>
+                <Category Name="Jobs">
+                    <Link Tag="PsJobs" />
+                    <Link Tag="PsJobDetails" />
+                    <Link Tag="PsAboutJobs" />
+                    <Link Tag="PsThreadJobs" />
+                </Category>
+                <Category Name="Security">
+                    <Link Tag="PsPasswordCredential" />
+                    <Link Tag="PsCertPin" />
+                    <Link Tag="PsLoggingWin" />
+                    <Link Tag="PsLoggingNonWin" />
+                    <Link Tag="PsSigning" />
+                </Category>
+            </Categories>
         </Category>
-        <Category Name="Security">
-          <Link Tag="PsPasswordCredential" />
-          <Link Tag="PsCertPin" />
-          <Link Tag="PsLoggingWin" />
-          <Link Tag="PsLoggingNonWin" />
-          <Link Tag="PsSigning" />
+        <Category Name="Gists">
+            <Link Tag="VolumeInfo" />
+            <Link Tag="BitHashStruct" />
         </Category>
-      </Categories>
-    </Category>
-    <Category Name="Gists">
-      <Link Tag="VolumeInfo" />
-      <Link Tag="BitHashStruct" />
-    </Category>
-    <Category Name="Old Projects">
-      <Link Tag="FsDedunderator" />
-      <Link Tag="RIMSS" />
-      <Link Tag="FileDataView" />
-      <Link Tag="PsModulesPrj" />
-      <Link Tag="DotNetProgrammersToolbox" />
-      <Link Tag="LErwineExample" />
-      <Link Tag="LTEControls" />
-      <Link Tag="WebConfigTool" />
-      <Link Tag="JsTypeCommander" />
-      <Link Tag="JSCookbook" />
-      <Link Tag="PsSolutionManager" />
-      <Link Tag="VsCodeToolKit" />
-      <Link Tag="WguSw2" />
-    </Category>
-  </Categories>
+        <Category Name="Old Projects">
+            <Link Tag="FsDedunderator" />
+            <Link Tag="RIMSS" />
+            <Link Tag="FileDataView" />
+            <Link Tag="PsModulesPrj" />
+            <Link Tag="DotNetProgrammersToolbox" />
+            <Link Tag="LErwineExample" />
+            <Link Tag="LTEControls" />
+            <Link Tag="WebConfigTool" />
+            <Link Tag="JsTypeCommander" />
+            <Link Tag="JSCookbook" />
+            <Link Tag="PsSolutionManager" />
+            <Link Tag="VsCodeToolKit" />
+            <Link Tag="WguSw2" />
+        </Category>
+    </Categories>
+    <Types>
+        <Namespace Name="FsInfoCat">
+            <Namespace Name="Desktop">
+                <Namespace Name="ViewModel">
+                    <Type Name="LoginViewModel">
+                        <ReferenceTag>MosPwBox</ReferenceTag>
+                    </Type>
+                </Namespace>
+            </Namespace>
+        </Namespace>
+    </Types>
 </References>

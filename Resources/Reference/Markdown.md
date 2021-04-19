@@ -58,7 +58,7 @@
 - [XML](http://www.w3.org/TR/xml/)
 - [Namespaces in XML](http://www.w3.org/TR/xml-names/)
 - [XPath](https://www.w3.org/TR/xpath-31/)
-- [XSLT (W3)](https://www.w3.org/TR/xslt-30/)
+- [XSL Transformations (XSLT) Version 3.0 | Saxonica, Michael K](https://www.w3.org/TR/xslt-30/)
 - [The Netscape XSLT/XPath Reference | MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/XSLT/Transforming_XML_with_XSLT/The_Netscape_XSLT_XPath_Reference)
 - [XSLT Reference | Microsoft Docs](https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/ms256069(v=vs.100)
 - [XSLT Transformations | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/standard/data/xml/xslt-transformations)
@@ -144,6 +144,7 @@
 - [Windows Presentation Foundation (WPF) for .NET Core documentation | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-5.0&preserve-view=true)
  Learn about using Windows Presentation Foundation, an open-source, graphical user interface for Windows, on .NET Core.
 - [c# - How to use System.ComponentModel.DataAnnotations in WPF or Winforms application | Stack Overflow](https://stackoverflow.com/questions/6854759/how-to-use-system-componentmodel-dataannotations-in-wpf-or-winforms-application)
+- [WPF PasswordBox Control | WPF Tutorial](http://www.wpftutorial.net/PasswordBox.html)
 
 ## PowerShell
 

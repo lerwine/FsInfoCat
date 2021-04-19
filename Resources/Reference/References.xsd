@@ -70,16 +70,17 @@
         <xs:attribute name="Name" type="CsNameSpaceNameType" use="required"/>
     </xs:complexType>
     <xs:complexType name="ClrTypeType">
-        <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="Type" type="ClrTypeType" />
-        </xs:choice>
+        <xs:sequence>
+            <xs:element name="ReferenceTag" type="xs:NCName" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Type" type="ClrTypeType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
         <xs:attribute name="Name" type="CsClassNameType" use="required"/>
     </xs:complexType>
     <xs:complexType name="CategoryType">
         <xs:sequence>
             <xs:element name="Link" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
-                    <xs:attribute name="Tag" type="xs:string"/>
+                    <xs:attribute name="Tag" type="xs:NCName"/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="Categories" minOccurs="0" maxOccurs="1">
