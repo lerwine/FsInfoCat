@@ -73,4 +73,10 @@
     <Build Include="dbo\Tables\GroupMembers.sql" />
     <Build Include="dbo\Tables\WindowsGroupIdentities.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="InitDb.sql" />
+  </ItemGroup>
 </Project>
