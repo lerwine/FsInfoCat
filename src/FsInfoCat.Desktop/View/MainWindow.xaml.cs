@@ -20,6 +20,7 @@ namespace FsInfoCat.Desktop.View
         {
             base.OnActivated(e);
             ViewModel.SettingsViewModel settingsViewModel = App.GetSettingsVM();
+            // TODO: Probably should't be doing all of this in the view object
             if (settingsViewModel.User is null)
             {
                 OuterGrid.Visibility = Visibility.Collapsed;
