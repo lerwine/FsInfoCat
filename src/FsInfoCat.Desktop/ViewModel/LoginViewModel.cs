@@ -135,7 +135,6 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnLoginExecute(object parameter)
         {
             EnableInputs = false;
-            // TODO: Need to put DB access on a common background thread.
             App.GetSettingsVM().AuthenticateUserAsync(UserName, Password).ContinueWith(t =>
             {
                 if (t.IsCanceled)

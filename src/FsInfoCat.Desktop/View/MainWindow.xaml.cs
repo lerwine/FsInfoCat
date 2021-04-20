@@ -23,12 +23,13 @@ namespace FsInfoCat.Desktop.View
             if (settingsViewModel.User is null)
             {
                 OuterGrid.Visibility = Visibility.Collapsed;
+                // TODO: Need to re-think logic - need to use continuation rather than just pulling result.
                 if (!DbInitializeWindow.CheckConfiguration(() => new DbInitializeWindow
                 {
                     Owner = this
                 }.ShowDialog() ?? false, (Exception exc, string message) => MessageBox.Show(this,
                     $"Error reading from database: {(string.IsNullOrWhiteSpace(exc.Message) ? exc.ToString() : exc.Message)}",
-                    "DB Access Error", MessageBoxButton.OK, MessageBoxImage.Error)))
+                    "DB Access Error", MessageBoxButton.OK, MessageBoxImage.Error)).Result)
                 {
                     DialogResult = false;
                     Close();

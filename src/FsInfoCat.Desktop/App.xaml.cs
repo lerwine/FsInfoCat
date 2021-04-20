@@ -25,5 +25,10 @@ namespace FsInfoCat.Desktop
         public static ViewModel.MainViewModel GetMainVM() => ((App)Current).FindResource("MainVM") as ViewModel.MainViewModel;
 
         public static ViewModel.SettingsViewModel GetSettingsVM() => ((App)Current).FindResource("SettingsVM") as ViewModel.SettingsViewModel;
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+
+        }
     }
 }

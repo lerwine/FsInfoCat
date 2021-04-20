@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:FsInfoCat.Desktop"
              xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
              xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="FsInfoCat.Desktop.App"
-             StartupUri="View\MainWindow.xaml">
+             StartupUri="View\MainWindow.xaml" DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <vm:MainViewModel x:Key="MainVM" />
         <vm:SettingsViewModel x:Key="SettingsVM" />

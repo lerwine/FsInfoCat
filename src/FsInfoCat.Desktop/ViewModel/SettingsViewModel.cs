@@ -120,12 +120,33 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnRegisterLocalMachineExecute(object parameter)
         {
             if (HostDeviceRegistration is null)
-                StartRegisterLocalMachineAsync(MachineSID, MachineName);
+                RegisterLocalMachineAsync(MachineSID, MachineName);
             else
-                StartUnregisterLocalMachineAsync(HostDeviceRegistration);
+                UnregisterLocalMachineAsync(HostDeviceRegistration);
         }
 
-        // TODO: Need to put DB access on a common background thread.
+        private async Task<HostDevice> CheckHostDeviceRegistrationAsync(string machineName, Action<string> setMachineSid)
+        {
+            SelectQuery selectQuery = new SelectQuery("SELECT * from Win32_UserAccount WHERE Name=\"Administrator\"");
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery))
+            {
+                ManagementObjectCollection managementObjectCollection = searcher.Get();
+                if (managementObjectCollection.Count > 0)
+                {
+                    ManagementObject item = managementObjectCollection.OfType<ManagementObject>().First();
+                    SecurityIdentifier sid = new SecurityIdentifier(item["SID"] as string).AccountDomainSid;
+                    if (!(sid is null))
+                    {
+                        string sidString = sid.ToString();
+                        setMachineSid(sidString);
+                        using (DbModel dbContext = new DbModel())
+                            return await dbContext.HostDevices.FirstOrDefaultAsync(h => h.MachineIdentifer == sidString && h.MachineName == machineName);
+                    }
+                }
+            }
+            return null;
+        }
+
         internal Task<HostDevice> CheckHostDeviceRegistrationAsync(bool forceRecheck)
         {
             VerifyAccess();
@@ -135,37 +156,47 @@ namespace FsInfoCat.Desktop.ViewModel
                 if ((task = _localMachineRegistrationTask) is null || (forceRecheck && task.IsCompleted))
                 {
                     string machineName = Environment.MachineName.ToLower();
-                    Dispatcher.BeginInvoke(new Action(() => MachineName = machineName));
-                    _localMachineRegistrationTask = task = Task.Factory.StartNew(() =>
-                    {
-                        SelectQuery selectQuery = new SelectQuery("SELECT * from Win32_UserAccount WHERE Name=\"Administrator\"");
-                        using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery))
-                        {
-                            ManagementObjectCollection managementObjectCollection = searcher.Get();
-                            if (managementObjectCollection.Count > 0)
-                            {
-                                ManagementObject item = managementObjectCollection.OfType<ManagementObject>().First();
-                                SecurityIdentifier sid = new SecurityIdentifier(item["SID"] as string).AccountDomainSid;
-                                if (!(sid is null))
-                                {
-                                    string sidString = sid.ToString();
-                                    Dispatcher.BeginInvoke(new Action(() => MachineSID = sidString));
-                                    using (DbModel dbContext = new DbModel())
-                                        return (from h in dbContext.HostDevices where h.MachineIdentifer == sidString && h.MachineName == machineName select h)
-                                            .FirstOrDefault();
-                                }
-                            }
-                        }
-                        return null;
-                    });
+                    MachineName = machineName;
+                    _localMachineRegistrationTask = task = CheckHostDeviceRegistrationAsync(machineName, Dispatcher.AsBeginInvocationAction<string>(sidString => MachineSID = sidString));
                 }
             }
 
             return task;
         }
 
-        // TODO: Need to put DB access on a common background thread.
+        private async Task<UserAccount> AuthenticateUserAsync(string userName, SecureString securePassword, Action<UserRole, UserAccount> onSuccess)
+        {
+            if (string.IsNullOrEmpty(userName) || securePassword is null || securePassword.Length == 0)
+                return null;
+            using (DbModel dbContext = new DbModel())
+            {
+                BasicLogin userCredential = (from c in dbContext.BasicLogins where c.LoginName == userName select c).FirstOrDefault();
+                if (!(userCredential is null || string.IsNullOrWhiteSpace(userCredential.PwHash)) &&
+                        PwHash.TryCreate(userCredential.PwHash, out PwHash? result) && result.HasValue && result.Value.Test(securePassword))
+                {
+                    UserAccount account = await dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Id == userCredential.Id);
+                    if (!(account is null))
+                    {
+                        onSuccess(account.GetEffectiveRoles(), account);
+                        return account;
+                    }
+                }
+            }
+            return null;
+        }
+
         internal Task<UserAccount> AuthenticateUserAsync(string userName, SecureString securePassword)
+        {
+            if (string.IsNullOrEmpty(userName) || securePassword is null || securePassword.Length == 0)
+                return Task.FromResult<UserAccount>(null);
+            return AuthenticateUserAsync(userName, securePassword, Dispatcher.AsBeginInvocationAction<UserRole, UserAccount>((roles, account) =>
+            {
+                User = account;
+                Roles = roles;
+            }));
+        }
+
+        internal Task<UserAccount> AuthenticateUserAsync_old(string userName, SecureString securePassword)
         {
             VerifyAccess();
             if (string.IsNullOrEmpty(userName) || securePassword is null || securePassword.Length == 0)
@@ -195,116 +226,120 @@ namespace FsInfoCat.Desktop.ViewModel
             });
         }
 
-        // TODO: Need to put DB access on a common background thread.
+        private async Task<UserAccount> AuthenticateUserAsync(string name, SecurityIdentifier sid, Action<UserRole, UserAccount> onSuccess)
+        {
+            //Dispatcher.BeginInvoke(new Action(() =>
+            //{
+            //    User = userAccount;
+            //    Roles = roles;
+            //}));
+            using (DbModel dbContext = new DbModel())
+            {
+                string sddl = sid.AccountDomainSid.ToString();
+                WindowsAuthDomain authDomain = (from d in dbContext.WindowsAuthDomains where d.SID == sddl && !d.IsInactive select d).FirstOrDefault();
+                if (authDomain is null)
+                    return null;
+                sddl = sid.ToString();
+                UserAccount userAccount = (from u in authDomain.Logins where u.SID == sddl && !u.IsInactive select u.UserAccount).FirstOrDefault();
+                if (userAccount is null)
+                {
+                    if (authDomain.AutoAddUsers)
+                    {
+                        UserAccount systemUser = dbContext.GetSystemAccount();
+                        using (DbContextTransaction transaction = dbContext.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                userAccount = new UserAccount
+                                {
+                                    CreatedOn = DateTime.Now,
+                                    CreatedById = systemUser.Id,
+                                    CreatedBy = systemUser,
+                                    ModifiedById = systemUser.Id,
+                                    ModifiedBy = systemUser,
+                                    DisplayName = name,
+                                    FirstName = "",
+                                    LastName = name
+                                };
+                                userAccount.ModifiedOn = userAccount.CreatedOn;
+                                dbContext.UserAccounts.Add(userAccount);
+                                await dbContext.SaveChangesAsync();
+                                WindowsIdentityLogin windowsIdentityLogin = new WindowsIdentityLogin
+                                {
+                                    Id = Guid.NewGuid(),
+                                    AccountName = name,
+                                    CreatedOn = DateTime.Now,
+                                    CreatedById = systemUser.Id,
+                                    CreatedBy = systemUser,
+                                    ModifiedById = systemUser.Id,
+                                    ModifiedBy = systemUser,
+                                    DomainId = authDomain.Id,
+                                    Domain = authDomain,
+                                    SID = sddl,
+                                    UserId = userAccount.Id,
+                                    UserAccount = userAccount
+                                };
+                                windowsIdentityLogin.ModifiedOn = windowsIdentityLogin.CreatedOn;
+                                userAccount.WindowsIdentityLogins.Add(windowsIdentityLogin);
+                                dbContext.SaveChanges();
+                                UserGroup group = authDomain.DefaultNewUserGroup;
+                                if (!(group is null))
+                                {
+                                    userAccount.Memberships.Add(new GroupMember
+                                    {
+                                        AddedById = systemUser.Id,
+                                        AddedBy = systemUser,
+                                        AddedOn = DateTime.Now,
+                                        GroupId = group.Id,
+                                        Group = group,
+                                        UserId = userAccount.Id,
+                                        User = userAccount
+                                    });
+                                    await dbContext.SaveChangesAsync();
+                                }
+                                transaction.Commit();
+                            }
+                            catch
+                            {
+                                transaction.Rollback();
+                                throw;
+                            }
+                        }
+                    }
+                    else
+                        return null;
+                }
+                onSuccess(userAccount.GetEffectiveRoles(), userAccount);
+                return userAccount;
+            }
+        }
+
         internal Task<UserAccount> AuthenticateUserAsync(WindowsIdentity windowsIdentity)
         {
-            VerifyAccess();
             SecurityIdentifier sid;
             if (windowsIdentity is null || windowsIdentity.IsGuest || windowsIdentity.IsAnonymous || !windowsIdentity.IsAuthenticated || (sid = windowsIdentity.User) is null || !sid.IsAccountSid())
                 return Task.FromResult<UserAccount>(null);
-            return Task.Factory.StartNew(() =>
+            return AuthenticateUserAsync(windowsIdentity.Name, sid, Dispatcher.AsBeginInvocationAction<UserRole, UserAccount>((roles, userAccount) =>
             {
-                using (DbModel dbContext = new DbModel())
-                {
-                    string sddl = sid.AccountDomainSid.ToString();
-                    WindowsAuthDomain authDomain = (from d in dbContext.WindowsAuthDomains where d.SID == sddl && !d.IsInactive select d).FirstOrDefault();
-                    if (authDomain is null)
-                        return null;
-                    sddl = sid.ToString();
-                    UserAccount userAccount = (from u in authDomain.Logins where u.SID == sddl && !u.IsInactive select u.UserAccount).FirstOrDefault();
-                    if (userAccount is null)
-                    {
-                        if (authDomain.AutoAddUsers)
-                        {
-                            UserAccount systemUser = dbContext.GetSystemAccount();
-                            using (DbContextTransaction transaction = dbContext.Database.BeginTransaction())
-                            {
-                                try
-                                {
-                                    userAccount = new UserAccount
-                                    {
-                                        CreatedOn = DateTime.Now,
-                                        CreatedById = systemUser.Id,
-                                        CreatedBy = systemUser,
-                                        ModifiedById = systemUser.Id,
-                                        ModifiedBy = systemUser,
-                                        DisplayName = windowsIdentity.Name,
-                                        FirstName = "",
-                                        LastName = windowsIdentity.Name
-                                    };
-                                    userAccount.ModifiedOn = userAccount.CreatedOn;
-                                    dbContext.UserAccounts.Add(userAccount);
-                                    dbContext.SaveChanges();
-                                    WindowsIdentityLogin windowsIdentityLogin = new WindowsIdentityLogin
-                                    {
-                                        Id = Guid.NewGuid(),
-                                        AccountName = windowsIdentity.Name,
-                                        CreatedOn = DateTime.Now,
-                                        CreatedById = systemUser.Id,
-                                        CreatedBy = systemUser,
-                                        ModifiedById = systemUser.Id,
-                                        ModifiedBy = systemUser,
-                                        DomainId = authDomain.Id,
-                                        Domain = authDomain,
-                                        SID = sddl,
-                                        UserId = userAccount.Id,
-                                        UserAccount = userAccount
-                                    };
-                                    windowsIdentityLogin.ModifiedOn = windowsIdentityLogin.CreatedOn;
-                                    userAccount.WindowsIdentityLogins.Add(windowsIdentityLogin);
-                                    dbContext.SaveChanges();
-                                    UserGroup group = authDomain.DefaultNewUserGroup;
-                                    if (!(group is null))
-                                    {
-                                        userAccount.Memberships.Add(new GroupMember
-                                        {
-                                            AddedById = systemUser.Id,
-                                            AddedBy = systemUser,
-                                            AddedOn = DateTime.Now,
-                                            GroupId = group.Id,
-                                            Group = group,
-                                            UserId = userAccount.Id,
-                                            User = userAccount
-                                        });
-                                        dbContext.SaveChanges();
-                                    }
-                                    transaction.Commit();
-                                }
-                                catch
-                                {
-                                    transaction.Rollback();
-                                    throw;
-                                }
-                            }
-                        }
-                        else
-                            return null;
-                    }
-                    UserRole roles = userAccount.GetEffectiveRoles();
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        User = userAccount;
-                        Roles = roles;
-                    }));
-                    return userAccount;
-                }
-            });
+                User = userAccount;
+                Roles = roles;
+            }));
         }
 
-        // TODO: Need to put DB access on a common background thread.
-        private Task<HostDevice> StartRegisterLocalMachineAsync(string sidString, string machineName)
+        private async Task<HostDevice> ForceRegisterLocalMachineAsync(string sidString, string machineName)
+        {
+            using (DbModel dbContext = new DbModel())
+                return await dbContext.HostDevices.FirstOrDefaultAsync(h => h.MachineIdentifer == sidString && h.MachineName == machineName);
+        }
+
+        private Task<HostDevice> RegisterLocalMachineAsync(string sidString, string machineName)
         {
             VerifyAccess();
             Task<HostDevice> task = _localMachineRegistrationTask;
             if (task is null || task.IsCompleted)
             {
                 RegisterLocalMachineCommand.IsEnabled = false;
-                _localMachineRegistrationTask = task = Task.Factory.StartNew(() =>
-                {
-                    using (DbModel dbContext = new DbModel())
-                        return (from h in dbContext.HostDevices where h.MachineIdentifer == sidString && h.MachineName == machineName select h)
-                            .FirstOrDefault();
-                });
+                _localMachineRegistrationTask = task = ForceRegisterLocalMachineAsync(sidString, machineName);
                 task.ContinueWith(t =>
                 {
                     Dispatcher.BeginInvoke(new Action(() => RegisterLocalMachineCommand.IsEnabled = true));
@@ -322,24 +357,25 @@ namespace FsInfoCat.Desktop.ViewModel
             return task;
         }
 
-        // TODO: Need to put DB access on a common background thread.
-        private Task<HostDevice> StartUnregisterLocalMachineAsync(HostDevice hostDeviceRegistration)
+        private async Task<HostDevice> ForceUnregisterLocalMachineAsync(HostDevice hostDeviceRegistration)
+        {
+            using (DbModel dbContext = new DbModel())
+            {
+                dbContext.HostDevices.Attach(hostDeviceRegistration);
+                dbContext.HostDevices.Remove(hostDeviceRegistration);
+                await dbContext.SaveChangesAsync();
+                return null;
+            }
+        }
+
+        private Task<HostDevice> UnregisterLocalMachineAsync(HostDevice hostDeviceRegistration)
         {
             VerifyAccess();
             Task<HostDevice> task = _localMachineRegistrationTask;
             if (task is null || task.IsCompleted)
             {
                 RegisterLocalMachineCommand.IsEnabled = false;
-                _localMachineRegistrationTask = task = Task.Factory.StartNew<HostDevice>(() =>
-                {
-                    using (DbModel dbContext = new DbModel())
-                    {
-                        dbContext.HostDevices.Attach(hostDeviceRegistration);
-                        dbContext.HostDevices.Remove(hostDeviceRegistration);
-                        dbContext.SaveChanges();
-                        return null;
-                    }
-                });
+                _localMachineRegistrationTask = task = ForceUnregisterLocalMachineAsync(hostDeviceRegistration);
                 task.ContinueWith((Task<HostDevice> t) =>
                 {
                     Dispatcher.BeginInvoke(new Action(() => RegisterLocalMachineCommand.IsEnabled = true));

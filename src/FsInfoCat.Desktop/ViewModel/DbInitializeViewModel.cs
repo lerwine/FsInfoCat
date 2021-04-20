@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -663,19 +664,129 @@ namespace FsInfoCat.Desktop.ViewModel
             // TODO: Implement OnIntitializationFailed Logic
         }
 
-        // TODO: Need to put DB access on a common background thread.
-        private Task<bool> InitializeDbAsync(string userName, SecureString password, string title, string lastName, string firstName, string mi, string suffix,
+        private async Task<bool> InitializeDbAsync(string userName, SecureString password, string title, string lastName, string firstName, string mi, string suffix,
             string displayName, Action<string, int> updateState)
         {
-            VerifyAccess();
-            return Task.Run(() => InitializeDb(userName, password, title, lastName, firstName, mi, suffix, displayName, updateState));
-        }
-
-        private static bool InitializeDb(string userName, SecureString password, string title, string lastName, string firstName, string mi, string suffix,
-            string displayName, Action<string, int> updateState)
-        {
-            // TODO: Implement InitializeDb Logic
-            return false;
+            using (DbModel dbContext = new DbModel())
+            {
+                using (System.Data.Entity.DbContextTransaction transaction = dbContext.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        UserAccount sysAccount = new UserAccount
+                        {
+                            Id = Guid.Empty,
+                            LastName = "Account",
+                            FirstName = "System",
+                            DisplayName = "System Account",
+                            CreatedById = Guid.Empty,
+                            CreatedOn = DateTime.Now,
+                            ModifiedById = Guid.Empty,
+                            ExplicitRoles = UserRole.Administrator
+                        };
+                        sysAccount.ModifiedOn = sysAccount.CreatedOn;
+                        dbContext.UserAccounts.Add(sysAccount);
+                        updateState("Creating System Account", 25);
+                        await dbContext.SaveChangesAsync();
+                        UserAccount userAccount = new UserAccount
+                        {
+                            Id = Guid.NewGuid(),
+                            LastName = lastName,
+                            FirstName = firstName,
+                            DisplayName = displayName,
+                            Title = title,
+                            Suffix = suffix,
+                            CreatedById = sysAccount.Id,
+                            CreatedBy = sysAccount,
+                            CreatedOn = DateTime.Now,
+                            ModifiedById = sysAccount.Id,
+                            ModifiedBy = sysAccount,
+                            ExplicitRoles = UserRole.Administrator
+                        };
+                        userAccount.ModifiedOn = userAccount.CreatedOn;
+                        dbContext.UserAccounts.Add(userAccount);
+                        await dbContext.SaveChangesAsync();
+                        if (string.IsNullOrEmpty(userName))
+                        {
+                            WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
+                            SecurityIdentifier sid = windowsIdentity.User;
+                            string sddl = sid.IsAccountSid() ? sid.AccountDomainSid.ToString() : "";
+                            string accountName = windowsIdentity.Name;
+                            int index = accountName.IndexOf('\\');
+                            string domain;
+                            if (index < 0)
+                                domain = sddl;
+                            else
+                            {
+                                domain = accountName.Substring(0, index);
+                                accountName = accountName.Substring(index + 1);
+                            }
+                            WindowsAuthDomain authDomain = new WindowsAuthDomain
+                            {
+                                Id = Guid.NewGuid(),
+                                Name = domain,
+                                SID = sddl,
+                                CreatedById = sysAccount.Id,
+                                CreatedBy = sysAccount,
+                                CreatedOn = DateTime.Now,
+                                ModifiedById = sysAccount.Id,
+                                ModifiedBy = sysAccount
+                            };
+                            authDomain.ModifiedOn = authDomain.CreatedOn;
+                            dbContext.WindowsAuthDomains.Add(authDomain);
+                            updateState("Adding Authorization Domain", 50);
+                            await dbContext.SaveChangesAsync();
+                            WindowsIdentityLogin windowsIdentityLogin = new WindowsIdentityLogin
+                            {
+                                Id = Guid.NewGuid(),
+                                AccountName = accountName,
+                                DomainId = authDomain.Id,
+                                Domain = authDomain,
+                                SID = sid.ToString(),
+                                UserId = userAccount.Id,
+                                UserAccount = userAccount,
+                                CreatedById = sysAccount.Id,
+                                CreatedBy = sysAccount,
+                                CreatedOn = DateTime.Now,
+                                ModifiedById = sysAccount.Id,
+                                ModifiedBy = sysAccount
+                            };
+                            authDomain.ModifiedOn = authDomain.CreatedOn;
+                            userAccount.WindowsIdentityLogins.Add(windowsIdentityLogin);
+                            updateState("Adding Windows Identity information", 75);
+                            await dbContext.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            BasicLogin basicLogin = new BasicLogin
+                            {
+                                Id = Guid.NewGuid(),
+                                LoginName = userName,
+                                PwHash = (PwHash.TryCreate(password, out PwHash? h) && h.HasValue) ? h.Value.ToString() : "",
+                                UserId = userAccount.Id,
+                                UserAccount = userAccount,
+                                CreatedById = sysAccount.Id,
+                                CreatedBy = sysAccount,
+                                CreatedOn = DateTime.Now,
+                                ModifiedById = sysAccount.Id,
+                                ModifiedBy = sysAccount
+                            };
+                            basicLogin.ModifiedOn = basicLogin.CreatedOn;
+                            userAccount.BasicLogins.Add(basicLogin);
+                            updateState("Adding Basic Authentication information", 50);
+                            await dbContext.SaveChangesAsync();
+                        }
+                        transaction.Commit();
+                        updateState("Success!", 100);
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+            return true;
         }
     }
 }
