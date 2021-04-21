@@ -4,42 +4,25 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4781d513548e46d39d5aa47fcc978b67" Name="Diagram1" ZoomLevel="57" >
-        <EntityTypeShape EntityType="FsInfoCat.Model.UserAccount" Width="2.5" PointX="0.75" PointY="11.125" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.HostDevice" Width="1.5" PointX="4" PointY="30.5" />
+      <Diagram DiagramId="4781d513548e46d39d5aa47fcc978b67" Name="Diagram1" ZoomLevel="62" >
+        <EntityTypeShape EntityType="FsInfoCat.Model.UserAccount" Width="2.5" PointX="0.75" PointY="3.25" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.HostDevice" Width="1.5" PointX="4" PointY="10.625" />
         <AssociationConnector Association="FsInfoCat.Model.CreatedByHostDevice" />
         <AssociationConnector Association="FsInfoCat.Model.ModifiedByHostDevice" />
         <AssociationConnector Association="FsInfoCat.Model.CreatedByUserAccount" />
         <AssociationConnector Association="FsInfoCat.Model.ModifiedByUserAccount" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.Volume" Width="1.5" PointX="6.25" PointY="20.375" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.Volume" Width="1.5" PointX="6.25" PointY="9" />
         <AssociationConnector Association="FsInfoCat.Model.CreatedByVolume" />
         <AssociationConnector Association="FsInfoCat.Model.ModifiedByVolume" />
         <AssociationConnector Association="FsInfoCat.Model.HostDeviceVolume" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.BasicLogin" Width="1.5" PointX="4" PointY="26" />
-        <AssociationConnector Association="FsInfoCat.Model.UserAccountBasicLogin" />
-        <AssociationConnector Association="FsInfoCat.Model.CreatedByBasicLogin" />
-        <AssociationConnector Association="FsInfoCat.Model.ModifiedByBasicLogin" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.WindowsIdentityLogin" Width="2" PointX="9.5" PointY="16.125" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.WindowsAuthDomain" Width="1.875" PointX="6.875" PointY="12" />
-        <AssociationConnector Association="FsInfoCat.Model.WindowsAuthDomainWindowsIdentityLogin" />
-        <AssociationConnector Association="FsInfoCat.Model.UserAccountWindowsIdentityLogin" />
-        <AssociationConnector Association="FsInfoCat.Model.CreatedByWindowsIdentityLogin" />
-        <AssociationConnector Association="FsInfoCat.Model.ModifiedByWindowsIdentityLogin" />
-        <AssociationConnector Association="FsInfoCat.Model.CreatedByWindowsAuthDomain" />
-        <AssociationConnector Association="FsInfoCat.Model.ModifiedByWindowsAuthDomain" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.UserGroup" Width="2.125" PointX="4" PointY="8.875" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.GroupMember" Width="1.5" PointX="9.875" PointY="12.875" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.UserGroup" Width="2.125" PointX="4" PointY="3.5" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.GroupMember" Width="1.5" PointX="6.875" PointY="5.625" />
         <AssociationConnector Association="FsInfoCat.Model.UserGroupGroupMember" />
         <AssociationConnector Association="FsInfoCat.Model.UserAccountGroupMember" />
         <AssociationConnector Association="FsInfoCat.Model.AddedByGroupMember" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.WindowsGroupIdentity" Width="2.25" PointX="12.5" PointY="12" />
-        <AssociationConnector Association="FsInfoCat.Model.UserGroupWindowsGroupIdentity" />
-        <AssociationConnector Association="FsInfoCat.Model.WindowsAuthDomainWindowsGroupIdentity" />
-        <AssociationConnector Association="FsInfoCat.Model.CreatedByUserAccountWindowsGroupIdentity" />
-        <AssociationConnector Association="FsInfoCat.Model.ModifiedByWindowsGroupIdentity" />
         <AssociationConnector Association="FsInfoCat.Model.CreatedByUserGroup" />
         <AssociationConnector Association="FsInfoCat.Model.ModifiedByUserGroup" />
-        <AssociationConnector Association="FsInfoCat.Model.DefaultNewUserGroupWindowsAuthDomain" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.DbUserRole" Width="1.5" PointX="1.125" PointY="0.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

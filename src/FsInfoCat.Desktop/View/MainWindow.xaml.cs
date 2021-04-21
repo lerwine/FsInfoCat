@@ -23,53 +23,21 @@ namespace FsInfoCat.Desktop.View
             // TODO: Probably should't be doing all of this in the view object
             if (settingsViewModel.User is null)
             {
-                OuterGrid.Visibility = Visibility.Collapsed;
-                // TODO: Need to re-think logic - need to use continuation rather than just pulling result.
-                if (!DbInitializeWindow.CheckConfiguration(() => new DbInitializeWindow
+                bool? result = (new LoginWindow { Owner = this }).ShowDialog();
+                if (settingsViewModel.User is null)
                 {
-                    Owner = this
-                }.ShowDialog() ?? false, (Exception exc, string message) => MessageBox.Show(this,
-                    $"Error reading from database: {(string.IsNullOrWhiteSpace(exc.Message) ? exc.ToString() : exc.Message)}",
-                    "DB Access Error", MessageBoxButton.OK, MessageBoxImage.Error)).Result)
-                {
-                    DialogResult = false;
+                    DialogResult = result.HasValue && result.Value;
                     Close();
                     return;
                 }
-                System.Threading.Tasks.Task<HostDevice> task = settingsViewModel.CheckHostDeviceRegistrationAsync(false);
-                settingsViewModel.AuthenticateUserAsync(WindowsIdentity.GetCurrent()).ContinueWith(t =>
+                settingsViewModel.CheckHostDeviceRegistrationAsync(false).ContinueWith(c =>
                 {
-                    UserAccount userAccount;
-                    if (t.IsCanceled)
-                        userAccount = null;
-                    else if (t.IsFaulted)
-                    {
-                        Dispatcher.Invoke(new Action(() => MessageBox.Show($"Error checking auto-login status: {(string.IsNullOrWhiteSpace(t.Exception.Message) ? t.Exception.ToString() : t.Exception.Message)}", "Login Check Error", MessageBoxButton.OK, MessageBoxImage.Error)));
-                        userAccount = null;
-                    }
+                    if (c.IsCanceled)
+                        Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFailed(null)));
+                    else if (c.IsFaulted)
+                        Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFailed(c.Exception)));
                     else
-                        userAccount = t.Result;
-                    if (!(userAccount is null) || Dispatcher.Invoke(new Func<bool>(() =>
-                    {
-                        bool? result = (new LoginWindow { Owner = this }).ShowDialog();
-                        if (settingsViewModel.User is null)
-                        {
-                            DialogResult = result.HasValue && result.Value;
-                            Close();
-                            return false;
-                        }
-                        return true;
-                    })))
-                        task.ContinueWith(c =>
-                        {
-                            if (c.IsCanceled)
-                                Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFailed(null)));
-                            else if (c.IsFaulted)
-                                Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFailed(c.Exception)));
-                            else
-                                Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFinished(c.Result)));
-                        });
-                    Dispatcher.BeginInvoke(new Action(() => OuterGrid.Visibility = Visibility.Visible));
+                        Dispatcher.BeginInvoke(new Action(() => OnCheckHostDeviceRegistrationFinished(c.Result)));
                 });
             }
         }

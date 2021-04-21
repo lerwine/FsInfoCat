@@ -24,18 +24,8 @@ namespace FsInfoCat.Desktop.Model
             this.ModifiedUserAccounts = new HashSet<UserAccount>();
             this.CreatedVolumes = new HashSet<Volume>();
             this.ModifiedVolumes = new HashSet<Volume>();
-            this.BasicLogins = new HashSet<BasicLogin>();
-            this.CreatedBasicLogins = new HashSet<BasicLogin>();
-            this.ModifiedBasicLogins = new HashSet<BasicLogin>();
-            this.WindowsIdentityLogins = new HashSet<WindowsIdentityLogin>();
-            this.CreatedWindowsIdentityLogins = new HashSet<WindowsIdentityLogin>();
-            this.ModifiedWindowsIdentityLogins = new HashSet<WindowsIdentityLogin>();
-            this.CreatedWindowsAuthDomains = new HashSet<WindowsAuthDomain>();
-            this.ModifiedWindowsAuthDomains = new HashSet<WindowsAuthDomain>();
             this.Memberships = new HashSet<GroupMember>();
             this.AddedGroupMembers = new HashSet<GroupMember>();
-            this.CreatedWindowsGroupIdentities = new HashSet<WindowsGroupIdentity>();
-            this.ModifiedWindowsGroupIdentities = new HashSet<WindowsGroupIdentity>();
             this.CreatedUserGroups = new HashSet<UserGroup>();
             this.ModifiedUserGroups = new HashSet<UserGroup>();
         }
@@ -54,6 +44,9 @@ namespace FsInfoCat.Desktop.Model
         public System.Guid ModifiedById { get; set; }
         public UserRole ExplicitRoles { get; set; }
         public string Notes { get; set; }
+        public Nullable<int> DbPrincipalId { get; set; }
+        public byte[] SID { get; set; }
+        public string LoginName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HostDevice> CreatedHostDevices { get; set; }
@@ -70,29 +63,9 @@ namespace FsInfoCat.Desktop.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Volume> ModifiedVolumes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BasicLogin> BasicLogins { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BasicLogin> CreatedBasicLogins { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BasicLogin> ModifiedBasicLogins { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsIdentityLogin> WindowsIdentityLogins { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsIdentityLogin> CreatedWindowsIdentityLogins { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsIdentityLogin> ModifiedWindowsIdentityLogins { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsAuthDomain> CreatedWindowsAuthDomains { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsAuthDomain> ModifiedWindowsAuthDomains { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GroupMember> Memberships { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GroupMember> AddedGroupMembers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsGroupIdentity> CreatedWindowsGroupIdentities { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsGroupIdentity> ModifiedWindowsGroupIdentities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroup> CreatedUserGroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

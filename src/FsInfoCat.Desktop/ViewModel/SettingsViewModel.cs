@@ -125,6 +125,12 @@ namespace FsInfoCat.Desktop.ViewModel
                 UnregisterLocalMachineAsync(HostDeviceRegistration);
         }
 
+        internal async Task<UserAccount> AuthenticateUserAsync(string userName, SecureString password, Action<string> onErrorMessage)
+        {
+            // TODO: Implement AuthenticateUserAsync
+            throw new NotImplementedException();
+        }
+
         private async Task<HostDevice> CheckHostDeviceRegistrationAsync(string machineName, Action<string> setMachineSid)
         {
             SelectQuery selectQuery = new SelectQuery("SELECT * from Win32_UserAccount WHERE Name=\"Administrator\"");
@@ -162,168 +168,6 @@ namespace FsInfoCat.Desktop.ViewModel
             }
 
             return task;
-        }
-
-        private async Task<UserAccount> AuthenticateUserAsync(string userName, SecureString securePassword, Action<UserRole, UserAccount> onSuccess)
-        {
-            if (string.IsNullOrEmpty(userName) || securePassword is null || securePassword.Length == 0)
-                return null;
-            using (DbModel dbContext = new DbModel())
-            {
-                BasicLogin userCredential = (from c in dbContext.BasicLogins where c.LoginName == userName select c).FirstOrDefault();
-                if (!(userCredential is null || string.IsNullOrWhiteSpace(userCredential.PwHash)) &&
-                        PwHash.TryCreate(userCredential.PwHash, out PwHash? result) && result.HasValue && result.Value.Test(securePassword))
-                {
-                    UserAccount account = await dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Id == userCredential.Id);
-                    if (!(account is null))
-                    {
-                        onSuccess(account.GetEffectiveRoles(), account);
-                        return account;
-                    }
-                }
-            }
-            return null;
-        }
-
-        internal Task<UserAccount> AuthenticateUserAsync(string userName, SecureString securePassword)
-        {
-            if (string.IsNullOrEmpty(userName) || securePassword is null || securePassword.Length == 0)
-                return Task.FromResult<UserAccount>(null);
-            return AuthenticateUserAsync(userName, securePassword, Dispatcher.AsBeginInvocationAction<UserRole, UserAccount>((roles, account) =>
-            {
-                User = account;
-                Roles = roles;
-            }));
-        }
-
-        internal Task<UserAccount> AuthenticateUserAsync_old(string userName, SecureString securePassword)
-        {
-            VerifyAccess();
-            if (string.IsNullOrEmpty(userName) || securePassword is null || securePassword.Length == 0)
-                return Task.FromResult<UserAccount>(null);
-            return Task.Factory.StartNew(() =>
-            {
-                using (DbModel dbContext = new DbModel())
-                {
-                    BasicLogin userCredential = (from c in dbContext.BasicLogins where c.LoginName == userName select c).FirstOrDefault();
-                    if (!(userCredential is null || string.IsNullOrWhiteSpace(userCredential.PwHash)) &&
-                            PwHash.TryCreate(userCredential.PwHash, out PwHash? result) && result.HasValue && result.Value.Test(securePassword))
-                    {
-                        UserAccount account = (from u in dbContext.UserAccounts where u.Id == userCredential.Id select u).FirstOrDefault();
-                        if (!(account is null))
-                        {
-                            UserRole roles = account.GetEffectiveRoles();
-                            Dispatcher.BeginInvoke(new Action(() =>
-                            {
-                                User = account;
-                                Roles = roles;
-                            }));
-                            return account;
-                        }
-                    }
-                }
-                return null;
-            });
-        }
-
-        private async Task<UserAccount> AuthenticateUserAsync(string name, SecurityIdentifier sid, Action<UserRole, UserAccount> onSuccess)
-        {
-            //Dispatcher.BeginInvoke(new Action(() =>
-            //{
-            //    User = userAccount;
-            //    Roles = roles;
-            //}));
-            using (DbModel dbContext = new DbModel())
-            {
-                string sddl = sid.AccountDomainSid.ToString();
-                WindowsAuthDomain authDomain = (from d in dbContext.WindowsAuthDomains where d.SID == sddl && !d.IsInactive select d).FirstOrDefault();
-                if (authDomain is null)
-                    return null;
-                sddl = sid.ToString();
-                UserAccount userAccount = (from u in authDomain.Logins where u.SID == sddl && !u.IsInactive select u.UserAccount).FirstOrDefault();
-                if (userAccount is null)
-                {
-                    if (authDomain.AutoAddUsers)
-                    {
-                        UserAccount systemUser = dbContext.GetSystemAccount();
-                        using (DbContextTransaction transaction = dbContext.Database.BeginTransaction())
-                        {
-                            try
-                            {
-                                userAccount = new UserAccount
-                                {
-                                    CreatedOn = DateTime.Now,
-                                    CreatedById = systemUser.Id,
-                                    CreatedBy = systemUser,
-                                    ModifiedById = systemUser.Id,
-                                    ModifiedBy = systemUser,
-                                    DisplayName = name,
-                                    FirstName = "",
-                                    LastName = name
-                                };
-                                userAccount.ModifiedOn = userAccount.CreatedOn;
-                                dbContext.UserAccounts.Add(userAccount);
-                                await dbContext.SaveChangesAsync();
-                                WindowsIdentityLogin windowsIdentityLogin = new WindowsIdentityLogin
-                                {
-                                    Id = Guid.NewGuid(),
-                                    AccountName = name,
-                                    CreatedOn = DateTime.Now,
-                                    CreatedById = systemUser.Id,
-                                    CreatedBy = systemUser,
-                                    ModifiedById = systemUser.Id,
-                                    ModifiedBy = systemUser,
-                                    DomainId = authDomain.Id,
-                                    Domain = authDomain,
-                                    SID = sddl,
-                                    UserId = userAccount.Id,
-                                    UserAccount = userAccount
-                                };
-                                windowsIdentityLogin.ModifiedOn = windowsIdentityLogin.CreatedOn;
-                                userAccount.WindowsIdentityLogins.Add(windowsIdentityLogin);
-                                dbContext.SaveChanges();
-                                UserGroup group = authDomain.DefaultNewUserGroup;
-                                if (!(group is null))
-                                {
-                                    userAccount.Memberships.Add(new GroupMember
-                                    {
-                                        AddedById = systemUser.Id,
-                                        AddedBy = systemUser,
-                                        AddedOn = DateTime.Now,
-                                        GroupId = group.Id,
-                                        Group = group,
-                                        UserId = userAccount.Id,
-                                        User = userAccount
-                                    });
-                                    await dbContext.SaveChangesAsync();
-                                }
-                                transaction.Commit();
-                            }
-                            catch
-                            {
-                                transaction.Rollback();
-                                throw;
-                            }
-                        }
-                    }
-                    else
-                        return null;
-                }
-                onSuccess(userAccount.GetEffectiveRoles(), userAccount);
-                return userAccount;
-            }
-        }
-
-        internal Task<UserAccount> AuthenticateUserAsync(WindowsIdentity windowsIdentity)
-        {
-            SecurityIdentifier sid;
-            if (windowsIdentity is null || windowsIdentity.IsGuest || windowsIdentity.IsAnonymous || !windowsIdentity.IsAuthenticated || (sid = windowsIdentity.User) is null || !sid.IsAccountSid())
-                return Task.FromResult<UserAccount>(null);
-            return AuthenticateUserAsync(windowsIdentity.Name, sid, Dispatcher.AsBeginInvocationAction<UserRole, UserAccount>((roles, userAccount) =>
-            {
-                User = userAccount;
-                Roles = roles;
-            }));
         }
 
         private async Task<HostDevice> ForceRegisterLocalMachineAsync(string sidString, string machineName)

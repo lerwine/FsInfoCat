@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/17/2021 16:53:44
+-- Date Created: 04/20/2021 22:40:05
 -- Generated from EDMX file: C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop\Model\DbModel.edmx
 -- --------------------------------------------------
 
@@ -17,11 +17,62 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_AddedByGroupMember]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupMembers] DROP CONSTRAINT [FK_AddedByGroupMember];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByHostDevice]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HostDevices] DROP CONSTRAINT [FK_CreatedByHostDevice];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByUserAccount]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[UserAccounts] DROP CONSTRAINT [FK_CreatedByUserAccount];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByUserGroup]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[UserGroups] DROP CONSTRAINT [FK_CreatedByUserGroup];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByVolume]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_CreatedByVolume];
+GO
+IF OBJECT_ID(N'[dbo].[FK_HostDeviceVolume]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_HostDeviceVolume];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByHostDevice]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HostDevices] DROP CONSTRAINT [FK_ModifiedByHostDevice];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByUserAccount]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[UserAccounts] DROP CONSTRAINT [FK_ModifiedByUserAccount];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByUserGroup]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[UserGroups] DROP CONSTRAINT [FK_ModifiedByUserGroup];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByVolume]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_ModifiedByVolume];
+GO
+IF OBJECT_ID(N'[dbo].[FK_UserAccountGroupMember]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupMembers] DROP CONSTRAINT [FK_UserAccountGroupMember];
+GO
+IF OBJECT_ID(N'[dbo].[FK_UserGroupGroupMember]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupMembers] DROP CONSTRAINT [FK_UserGroupGroupMember];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[GroupMembers]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GroupMembers];
+GO
+IF OBJECT_ID(N'[dbo].[HostDevices]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[HostDevices];
+GO
+IF OBJECT_ID(N'[dbo].[UserAccounts]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[UserAccounts];
+GO
+IF OBJECT_ID(N'[dbo].[UserGroups]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[UserGroups];
+GO
+IF OBJECT_ID(N'[dbo].[Volumes]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Volumes];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -42,7 +93,10 @@ CREATE TABLE [dbo].[UserAccounts] (
     [ModifiedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
     [ExplicitRoles] tinyint  NOT NULL,
-    [Notes] nvarchar(max)  NOT NULL
+    [Notes] nvarchar(max)  NOT NULL,
+    [DbPrincipalId] int  NULL,
+    [SID] varbinary(85)  NOT NULL,
+    [LoginName] nvarchar(128)  NOT NULL
 );
 GO
 
@@ -81,54 +135,6 @@ CREATE TABLE [dbo].[Volumes] (
 );
 GO
 
--- Creating table 'BasicLogins'
-CREATE TABLE [dbo].[BasicLogins] (
-    [Id] uniqueidentifier  NOT NULL,
-    [LoginName] nvarchar(max)  NOT NULL,
-    [PwHash] nvarchar(max)  NOT NULL,
-    [FailCount] tinyint  NOT NULL,
-    [LockedOut] bit  NOT NULL,
-    [IsInactive] bit  NOT NULL,
-    [UserId] uniqueidentifier  NOT NULL,
-    [CreatedOn] datetime  NOT NULL,
-    [CreatedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL,
-    [ModifiedById] uniqueidentifier  NOT NULL
-);
-GO
-
--- Creating table 'WindowsIdentityLogins'
-CREATE TABLE [dbo].[WindowsIdentityLogins] (
-    [Id] uniqueidentifier  NOT NULL,
-    [SID] nvarchar(max)  NOT NULL,
-    [DomainId] uniqueidentifier  NOT NULL,
-    [AccountName] nvarchar(max)  NOT NULL,
-    [IsInactive] bit  NOT NULL,
-    [UserId] uniqueidentifier  NOT NULL,
-    [CreatedOn] datetime  NOT NULL,
-    [CreatedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL,
-    [ModifiedById] uniqueidentifier  NOT NULL,
-    [Notes] nvarchar(max)  NOT NULL
-);
-GO
-
--- Creating table 'WindowsAuthDomains'
-CREATE TABLE [dbo].[WindowsAuthDomains] (
-    [Id] uniqueidentifier  NOT NULL,
-    [SID] nvarchar(max)  NOT NULL,
-    [Name] nvarchar(max)  NOT NULL,
-    [IsInactive] bit  NOT NULL,
-    [CreatedOn] datetime  NOT NULL,
-    [CreatedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL,
-    [ModifiedById] uniqueidentifier  NOT NULL,
-    [Notes] nvarchar(max)  NOT NULL,
-    [AutoAddUsers] bit  NOT NULL,
-    [DefaultNewUserGroupId] uniqueidentifier  NULL
-);
-GO
-
 -- Creating table 'UserGroups'
 CREATE TABLE [dbo].[UserGroups] (
     [Id] uniqueidentifier  NOT NULL,
@@ -149,23 +155,6 @@ CREATE TABLE [dbo].[GroupMembers] (
     [UserId] uniqueidentifier  NOT NULL,
     [AddedOn] datetime  NOT NULL,
     [AddedById] uniqueidentifier  NOT NULL
-);
-GO
-
--- Creating table 'WindowsGroupIdentities'
-CREATE TABLE [dbo].[WindowsGroupIdentities] (
-    [Id] uniqueidentifier  NOT NULL,
-    [SID] nvarchar(max)  NOT NULL,
-    [DomainId] uniqueidentifier  NOT NULL,
-    [Name] nvarchar(max)  NOT NULL,
-    [IsInactive] bit  NOT NULL,
-    [GroupId] uniqueidentifier  NOT NULL,
-    [CreatedOn] datetime  NOT NULL,
-    [CreatedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL,
-    [ModifiedById] uniqueidentifier  NOT NULL,
-    [Notes] nvarchar(max)  NOT NULL,
-    [AutoAddMembers] bit  NOT NULL
 );
 GO
 
@@ -191,24 +180,6 @@ ADD CONSTRAINT [PK_Volumes]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'BasicLogins'
-ALTER TABLE [dbo].[BasicLogins]
-ADD CONSTRAINT [PK_BasicLogins]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
-
--- Creating primary key on [Id] in table 'WindowsIdentityLogins'
-ALTER TABLE [dbo].[WindowsIdentityLogins]
-ADD CONSTRAINT [PK_WindowsIdentityLogins]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
-
--- Creating primary key on [Id] in table 'WindowsAuthDomains'
-ALTER TABLE [dbo].[WindowsAuthDomains]
-ADD CONSTRAINT [PK_WindowsAuthDomains]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
-
 -- Creating primary key on [Id] in table 'UserGroups'
 ALTER TABLE [dbo].[UserGroups]
 ADD CONSTRAINT [PK_UserGroups]
@@ -219,12 +190,6 @@ GO
 ALTER TABLE [dbo].[GroupMembers]
 ADD CONSTRAINT [PK_GroupMembers]
     PRIMARY KEY CLUSTERED ([GroupId], [UserId] ASC);
-GO
-
--- Creating primary key on [Id] in table 'WindowsGroupIdentities'
-ALTER TABLE [dbo].[WindowsGroupIdentities]
-ADD CONSTRAINT [PK_WindowsGroupIdentities]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -336,141 +301,6 @@ ON [dbo].[Volumes]
     ([HostDeviceId]);
 GO
 
--- Creating foreign key on [CreatedById] in table 'BasicLogins'
-ALTER TABLE [dbo].[BasicLogins]
-ADD CONSTRAINT [FK_UserAccountBasicLogin]
-    FOREIGN KEY ([CreatedById])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_UserAccountBasicLogin'
-CREATE INDEX [IX_FK_UserAccountBasicLogin]
-ON [dbo].[BasicLogins]
-    ([CreatedById]);
-GO
-
--- Creating foreign key on [UserId] in table 'BasicLogins'
-ALTER TABLE [dbo].[BasicLogins]
-ADD CONSTRAINT [FK_CreatedByBasicLogin]
-    FOREIGN KEY ([UserId])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByBasicLogin'
-CREATE INDEX [IX_FK_CreatedByBasicLogin]
-ON [dbo].[BasicLogins]
-    ([UserId]);
-GO
-
--- Creating foreign key on [ModifiedById] in table 'BasicLogins'
-ALTER TABLE [dbo].[BasicLogins]
-ADD CONSTRAINT [FK_ModifiedByBasicLogin]
-    FOREIGN KEY ([ModifiedById])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByBasicLogin'
-CREATE INDEX [IX_FK_ModifiedByBasicLogin]
-ON [dbo].[BasicLogins]
-    ([ModifiedById]);
-GO
-
--- Creating foreign key on [DomainId] in table 'WindowsIdentityLogins'
-ALTER TABLE [dbo].[WindowsIdentityLogins]
-ADD CONSTRAINT [FK_WindowsAuthDomainWindowsIdentityLogin]
-    FOREIGN KEY ([DomainId])
-    REFERENCES [dbo].[WindowsAuthDomains]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_WindowsAuthDomainWindowsIdentityLogin'
-CREATE INDEX [IX_FK_WindowsAuthDomainWindowsIdentityLogin]
-ON [dbo].[WindowsIdentityLogins]
-    ([DomainId]);
-GO
-
--- Creating foreign key on [UserId] in table 'WindowsIdentityLogins'
-ALTER TABLE [dbo].[WindowsIdentityLogins]
-ADD CONSTRAINT [FK_UserAccountWindowsIdentityLogin]
-    FOREIGN KEY ([UserId])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_UserAccountWindowsIdentityLogin'
-CREATE INDEX [IX_FK_UserAccountWindowsIdentityLogin]
-ON [dbo].[WindowsIdentityLogins]
-    ([UserId]);
-GO
-
--- Creating foreign key on [CreatedById] in table 'WindowsIdentityLogins'
-ALTER TABLE [dbo].[WindowsIdentityLogins]
-ADD CONSTRAINT [FK_CreatedByWindowsIdentityLogin]
-    FOREIGN KEY ([CreatedById])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByWindowsIdentityLogin'
-CREATE INDEX [IX_FK_CreatedByWindowsIdentityLogin]
-ON [dbo].[WindowsIdentityLogins]
-    ([CreatedById]);
-GO
-
--- Creating foreign key on [ModifiedById] in table 'WindowsIdentityLogins'
-ALTER TABLE [dbo].[WindowsIdentityLogins]
-ADD CONSTRAINT [FK_ModifiedByWindowsIdentityLogin]
-    FOREIGN KEY ([ModifiedById])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByWindowsIdentityLogin'
-CREATE INDEX [IX_FK_ModifiedByWindowsIdentityLogin]
-ON [dbo].[WindowsIdentityLogins]
-    ([ModifiedById]);
-GO
-
--- Creating foreign key on [CreatedById] in table 'WindowsAuthDomains'
-ALTER TABLE [dbo].[WindowsAuthDomains]
-ADD CONSTRAINT [FK_CreatedByWindowsAuthDomain]
-    FOREIGN KEY ([CreatedById])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByWindowsAuthDomain'
-CREATE INDEX [IX_FK_CreatedByWindowsAuthDomain]
-ON [dbo].[WindowsAuthDomains]
-    ([CreatedById]);
-GO
-
--- Creating foreign key on [ModifiedById] in table 'WindowsAuthDomains'
-ALTER TABLE [dbo].[WindowsAuthDomains]
-ADD CONSTRAINT [FK_ModifiedByWindowsAuthDomain]
-    FOREIGN KEY ([ModifiedById])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByWindowsAuthDomain'
-CREATE INDEX [IX_FK_ModifiedByWindowsAuthDomain]
-ON [dbo].[WindowsAuthDomains]
-    ([ModifiedById]);
-GO
-
 -- Creating foreign key on [GroupId] in table 'GroupMembers'
 ALTER TABLE [dbo].[GroupMembers]
 ADD CONSTRAINT [FK_UserGroupGroupMember]
@@ -510,66 +340,6 @@ ON [dbo].[GroupMembers]
     ([AddedById]);
 GO
 
--- Creating foreign key on [GroupId] in table 'WindowsGroupIdentities'
-ALTER TABLE [dbo].[WindowsGroupIdentities]
-ADD CONSTRAINT [FK_UserGroupWindowsGroupIdentity]
-    FOREIGN KEY ([GroupId])
-    REFERENCES [dbo].[UserGroups]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_UserGroupWindowsGroupIdentity'
-CREATE INDEX [IX_FK_UserGroupWindowsGroupIdentity]
-ON [dbo].[WindowsGroupIdentities]
-    ([GroupId]);
-GO
-
--- Creating foreign key on [DomainId] in table 'WindowsGroupIdentities'
-ALTER TABLE [dbo].[WindowsGroupIdentities]
-ADD CONSTRAINT [FK_WindowsAuthDomainWindowsGroupIdentity]
-    FOREIGN KEY ([DomainId])
-    REFERENCES [dbo].[WindowsAuthDomains]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_WindowsAuthDomainWindowsGroupIdentity'
-CREATE INDEX [IX_FK_WindowsAuthDomainWindowsGroupIdentity]
-ON [dbo].[WindowsGroupIdentities]
-    ([DomainId]);
-GO
-
--- Creating foreign key on [CreatedById] in table 'WindowsGroupIdentities'
-ALTER TABLE [dbo].[WindowsGroupIdentities]
-ADD CONSTRAINT [FK_CreatedByUserAccountWindowsGroupIdentity]
-    FOREIGN KEY ([CreatedById])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByUserAccountWindowsGroupIdentity'
-CREATE INDEX [IX_FK_CreatedByUserAccountWindowsGroupIdentity]
-ON [dbo].[WindowsGroupIdentities]
-    ([CreatedById]);
-GO
-
--- Creating foreign key on [ModifiedById] in table 'WindowsGroupIdentities'
-ALTER TABLE [dbo].[WindowsGroupIdentities]
-ADD CONSTRAINT [FK_ModifiedByWindowsGroupIdentity]
-    FOREIGN KEY ([ModifiedById])
-    REFERENCES [dbo].[UserAccounts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByWindowsGroupIdentity'
-CREATE INDEX [IX_FK_ModifiedByWindowsGroupIdentity]
-ON [dbo].[WindowsGroupIdentities]
-    ([ModifiedById]);
-GO
-
 -- Creating foreign key on [CreatedById] in table 'UserGroups'
 ALTER TABLE [dbo].[UserGroups]
 ADD CONSTRAINT [FK_CreatedByUserGroup]
@@ -598,21 +368,6 @@ GO
 CREATE INDEX [IX_FK_ModifiedByUserGroup]
 ON [dbo].[UserGroups]
     ([ModifiedById]);
-GO
-
--- Creating foreign key on [DefaultNewUserGroupId] in table 'WindowsAuthDomains'
-ALTER TABLE [dbo].[WindowsAuthDomains]
-ADD CONSTRAINT [FK_DefaultNewUserGroupWindowsAuthDomain]
-    FOREIGN KEY ([DefaultNewUserGroupId])
-    REFERENCES [dbo].[UserGroups]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_DefaultNewUserGroupWindowsAuthDomain'
-CREATE INDEX [IX_FK_DefaultNewUserGroupWindowsAuthDomain]
-ON [dbo].[WindowsAuthDomains]
-    ([DefaultNewUserGroupId]);
 GO
 
 -- --------------------------------------------------

@@ -135,7 +135,8 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnLoginExecute(object parameter)
         {
             EnableInputs = false;
-            App.GetSettingsVM().AuthenticateUserAsync(UserName, Password).ContinueWith(t =>
+            ErrorMessage = "";
+            App.GetSettingsVM().AuthenticateUserAsync(UserName, Password, Dispatcher.AsBeginInvocationAction<string>(m => ErrorMessage = m)).ContinueWith(t =>
             {
                 if (t.IsCanceled)
                     Dispatcher.BeginInvoke(new Action<AggregateException>(OnLoginFailed), null);
@@ -149,7 +150,10 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnLoginCompleted(UserAccount result)
         {
             if (result is null)
-                ErrorMessage = "Invalid user name or password";
+            {
+                if (string.IsNullOrWhiteSpace(ErrorMessage))
+                    ErrorMessage = "Invalid user name or password";
+            }
             else
                 LoginSucceeded?.Invoke(this, EventArgs.Empty);
         }

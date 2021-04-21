@@ -19,8 +19,6 @@ namespace FsInfoCat.Desktop.Model
         {
             this.IsInactive = false;
             this.Memberships = new HashSet<GroupMember>();
-            this.WindowsGroupIdentities = new HashSet<WindowsGroupIdentity>();
-            this.AutoAddDomains = new HashSet<WindowsAuthDomain>();
         }
     
         public System.Guid Id { get; set; }
@@ -35,11 +33,7 @@ namespace FsInfoCat.Desktop.Model
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GroupMember> Memberships { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsGroupIdentity> WindowsGroupIdentities { get; set; }
         public virtual UserAccount CreatedBy { get; set; }
         public virtual UserAccount ModifiedBy { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WindowsAuthDomain> AutoAddDomains { get; set; }
     }
 }

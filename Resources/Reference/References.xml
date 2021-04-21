@@ -89,6 +89,7 @@
                     <Link Tag="NetTrace" />
                 </Category>
                 <Category Name="WPF">
+                    <Link Tag="WpfSamples"/>
                     <Link Tag="WPFSamples" />
                     <Link Tag="WhatWpf" />
                     <Link Tag="WpfCore" />
@@ -96,6 +97,9 @@
                     <Link Tag="MosPwBox"/>
                 </Category>
             </Categories>
+        </Category>
+        <Category Name="SQL">
+            <Link Tag="SqlCreateUser"/>
         </Category>
         <Category Name="PowerShell">
             <Link Tag="Pester" />

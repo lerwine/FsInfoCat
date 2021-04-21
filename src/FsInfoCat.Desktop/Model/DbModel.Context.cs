@@ -12,27 +12,31 @@ namespace FsInfoCat.Desktop.Model
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
+    
     public partial class DbModel : DbContext
     {
         public DbModel()
-            : base("name=FsInfoCat.Desktop.Properties.Settings.EntityClientConnectionString")
+            : base("name=DbModel")
         {
         }
-
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
         }
-
+    
         public virtual DbSet<UserAccount> UserAccounts { get; set; }
         public virtual DbSet<HostDevice> HostDevices { get; set; }
         public virtual DbSet<Volume> Volumes { get; set; }
-        public virtual DbSet<BasicLogin> BasicLogins { get; set; }
-        public virtual DbSet<WindowsIdentityLogin> WindowsIdentityLogins { get; set; }
-        public virtual DbSet<WindowsAuthDomain> WindowsAuthDomains { get; set; }
         public virtual DbSet<UserGroup> UserGroups { get; set; }
         public virtual DbSet<GroupMember> GroupMembers { get; set; }
-        public virtual DbSet<WindowsGroupIdentity> WindowsGroupIdentities { get; set; }
+        public virtual DbSet<DbUserRole> DbUserRoles { get; set; }
+    
+        public virtual ObjectResult<GetAutoUserAccountId_Result> GetAutoUserAccountId()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAutoUserAccountId_Result>("GetAutoUserAccountId");
+        }
     }
 }

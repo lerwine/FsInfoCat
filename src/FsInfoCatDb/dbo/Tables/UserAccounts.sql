@@ -13,10 +13,15 @@
     [ModifiedById]  UNIQUEIDENTIFIER NOT NULL,
     [ExplicitRoles] TINYINT          NOT NULL,
     [Notes]         NVARCHAR (MAX)   NOT NULL,
+    [DbPrincipalId] INT              NULL,
+    [SID]           VARBINARY (85)   NOT NULL,
+    [LoginName]     NVARCHAR (128)   NOT NULL,
     CONSTRAINT [PK_UserAccounts] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_CreatedByUserAccount] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[UserAccounts] ([Id]),
     CONSTRAINT [FK_ModifiedByUserAccount] FOREIGN KEY ([ModifiedById]) REFERENCES [dbo].[UserAccounts] ([Id])
 );
+
+
 
 
 GO
