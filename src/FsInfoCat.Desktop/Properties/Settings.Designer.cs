@@ -63,5 +63,17 @@ namespace FsInfoCat.Desktop.Properties {
                 return ((string)(this["LocalDbConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCatLocal.sdf")]
+        public string LocalDbFile {
+            get {
+                return ((string)(this["LocalDbFile"]));
+            }
+            set {
+                this["LocalDbFile"] = value;
+            }
+        }
     }
 }

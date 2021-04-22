@@ -28,5 +28,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop/FsInfoCatLocal.sdf</Value>
     </Setting>
+    <Setting Name="LocalDbFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FsInfoCatLocal.sdf</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,6 +17,18 @@ namespace FsInfoCat.Desktop
     public partial class App : Application
     {
         public static readonly LoggerFactory LoggerFactory;
+
+        public static string GetAppDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FsInfoCat");
+
+        public static DirectoryInfo EnsureAppDataPath()
+        {
+            string path = GetAppDataPath();
+            DirectoryInfo result = new DirectoryInfo(GetAppDataPath());
+            if (!result.Exists)
+                result.Create();
+            return result;
+        }
+
         static App()
         {
             LoggerFactory = new LoggerFactory();
