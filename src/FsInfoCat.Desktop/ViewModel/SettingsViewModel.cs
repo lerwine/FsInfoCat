@@ -1,7 +1,10 @@
 using FsInfoCat.Desktop.Model;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Data.Common;
 using System.Data.Entity;
+using System.Data.EntityClient;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Management;
 using System.Security;
@@ -123,12 +126,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 RegisterLocalMachineAsync(MachineSID, MachineName);
             else
                 UnregisterLocalMachineAsync(HostDeviceRegistration);
-        }
-
-        internal async Task<UserAccount> AuthenticateUserAsync(string userName, SecureString password, Action<string> onErrorMessage)
-        {
-            // TODO: Implement AuthenticateUserAsync
-            throw new NotImplementedException();
         }
 
         private async Task<HostDevice> CheckHostDeviceRegistrationAsync(string machineName, Action<string> setMachineSid)

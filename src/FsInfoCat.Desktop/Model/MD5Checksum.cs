@@ -255,6 +255,17 @@ namespace FsInfoCat.Desktop.Model
             return new MD5Checksum(BitConverter.GetBytes(long.Parse(sb.ToString(MD5ByteSize, MD5ByteSize), System.Globalization.NumberStyles.HexNumber)).Concat(BitConverter.GetBytes(long.Parse(sb.ToString(0, MD5ByteSize), System.Globalization.NumberStyles.HexNumber))).ToArray());
         }
 
+        public static bool TryCreate(byte[] buffer, out MD5Checksum value)
+        {
+            if (buffer is null || buffer.Length != MD5ByteSize)
+            {
+                value = default;
+                return false;
+            }
+            value = new MD5Checksum(buffer);
+            return true;
+        }
+
         /// <summary>
         /// Attempts to parses a hexidecimal string into a <see cref="MD5Checksum"/> object.
         /// </summary>

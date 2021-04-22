@@ -18,6 +18,7 @@ namespace FsInfoCat.Desktop.Model
         public UserGroup()
         {
             this.IsInactive = false;
+            this.Notes = "\"\"";
             this.Memberships = new HashSet<GroupMember>();
         }
     

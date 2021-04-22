@@ -18,6 +18,8 @@ namespace FsInfoCat.Desktop.Model
         public Volume()
         {
             this.CaseSensitive = false;
+            this.Notes = "\"\"";
+            this.Subdirectories = new HashSet<Subdirectory>();
         }
     
         public System.Guid Id { get; set; }
@@ -29,7 +31,7 @@ namespace FsInfoCat.Desktop.Model
         public string Identifier { get; set; }
         public long MaxNameLength { get; set; }
         public bool CaseSensitive { get; set; }
-        public string IsInactive { get; set; }
+        public bool IsInactive { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public System.Guid CreatedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
@@ -39,5 +41,7 @@ namespace FsInfoCat.Desktop.Model
         public virtual UserAccount CreatedBy { get; set; }
         public virtual UserAccount ModifiedBy { get; set; }
         public virtual HostDevice HostDevice { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Subdirectory> Subdirectories { get; set; }
     }
 }

@@ -20,5 +20,13 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">metadata=res://*/Model.DbModel.csdl|res://*/Model.DbModel.ssdl|res://*/Model.DbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;connect timeout=30;encrypt=True;MultipleActiveResultSets=True;App=EntityFramework"</Value>
     </Setting>
+    <Setting Name="LocalDbConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop/FsInfoCatLocal.sdf&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlServerCe.4.0&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop/FsInfoCatLocal.sdf</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

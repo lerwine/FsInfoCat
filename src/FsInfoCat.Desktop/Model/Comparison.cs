@@ -10,11 +10,16 @@
 namespace FsInfoCat.Desktop.Model
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class GetAutoUserAccountId_Result
+    public partial class Comparison
     {
-        public Nullable<System.Guid> Id { get; set; }
-        public int Code { get; set; }
-        public string Message { get; set; }
+        public System.Guid Id { get; set; }
+        public System.Guid FileId1 { get; set; }
+        public System.Guid FileId2 { get; set; }
+        public bool AreEqual { get; set; }
+    
+        public virtual File File1 { get; set; }
+        public virtual File File2 { get; set; }
     }
 }

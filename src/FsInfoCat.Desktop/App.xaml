@@ -6,38 +6,45 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="FsInfoCat.Desktop.App"
              StartupUri="View\MainWindow.xaml" DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
-        <vm:MainViewModel x:Key="MainVM" />
-        <vm:SettingsViewModel x:Key="SettingsVM" />
-        <Thickness x:Key="DefaultMarginBottom">0,0,0,5</Thickness>
-        <Thickness x:Key="DefaultMarginRight">0,0,5,0</Thickness>
-        <Thickness x:Key="DefaultMarginBottomRight">0,0,5,5</Thickness>
-        <Thickness x:Key="DefaultMarginTop">0,5,0,0</Thickness>
-        <Thickness x:Key="DefaultMarginTopBottom">0,5</Thickness>
-        <Thickness x:Key="DefaultMarginTopRight">0,5,5,0</Thickness>
-        <Thickness x:Key="DefaultMarginTopBottomRight">0,5,5,5</Thickness>
-        <Thickness x:Key="DefaultMarginLeft">5,0,0,0</Thickness>
-        <Thickness x:Key="DefaultMarginBottomLeft">5,0,0,5</Thickness>
-        <Thickness x:Key="DefaultMarginLeftRight">5,0</Thickness>
-        <Thickness x:Key="DefaultMarginBottomLeftRight">5,0,5,5</Thickness>
-        <Thickness x:Key="DefaultMarginTopLeft">5,5,0,0</Thickness>
-        <Thickness x:Key="DefaultMarginTopBottomLeft">5,5,0,5</Thickness>
-        <Thickness x:Key="DefaultMarginTopLeftRight">5,5,5,0</Thickness>
-        <Thickness x:Key="DefaultMargin">5</Thickness>
-        <System:Double x:Key="DefaultButtonWidth">75</System:Double>
-        <System:Double x:Key="DefaultButtonHeight">25</System:Double>
-        <System:Double x:Key="DefaultTextBoxHeight">23</System:Double>
-        <Style x:Key="DefaultButtonStyle" TargetType="Button">
-            <Setter Property="Height" Value="{StaticResource DefaultButtonHeight}"/>
-            <Setter Property="Width" Value="{StaticResource DefaultButtonWidth}"/>
-        </Style>
-        <Style x:Key="DefaultSingleLineTextBoxStyle" TargetType="TextBox">
-            <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
-            <Setter Property="AcceptsReturn" Value="False"/>
-            <Setter Property="AcceptsTab" Value="False"/>
-            <Setter Property="TextWrapping" Value="NoWrap"/>
-        </Style>
-        <Style x:Key="DefaultPasswordBoxStyle" TargetType="PasswordBox">
-            <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/PresentationFramework.Royale;component/themes/royale.normalcolor.xaml" />
+                <ResourceDictionary>
+                    <vm:MainViewModel x:Key="MainVM" />
+                    <vm:SettingsViewModel x:Key="SettingsVM" />
+                    <Thickness x:Key="DefaultMarginBottom">0,0,0,5</Thickness>
+                    <Thickness x:Key="DefaultMarginRight">0,0,5,0</Thickness>
+                    <Thickness x:Key="DefaultMarginBottomRight">0,0,5,5</Thickness>
+                    <Thickness x:Key="DefaultMarginTop">0,5,0,0</Thickness>
+                    <Thickness x:Key="DefaultMarginTopBottom">0,5</Thickness>
+                    <Thickness x:Key="DefaultMarginTopRight">0,5,5,0</Thickness>
+                    <Thickness x:Key="DefaultMarginTopBottomRight">0,5,5,5</Thickness>
+                    <Thickness x:Key="DefaultMarginLeft">5,0,0,0</Thickness>
+                    <Thickness x:Key="DefaultMarginBottomLeft">5,0,0,5</Thickness>
+                    <Thickness x:Key="DefaultMarginLeftRight">5,0</Thickness>
+                    <Thickness x:Key="DefaultMarginBottomLeftRight">5,0,5,5</Thickness>
+                    <Thickness x:Key="DefaultMarginTopLeft">5,5,0,0</Thickness>
+                    <Thickness x:Key="DefaultMarginTopBottomLeft">5,5,0,5</Thickness>
+                    <Thickness x:Key="DefaultMarginTopLeftRight">5,5,5,0</Thickness>
+                    <Thickness x:Key="DefaultMargin">5</Thickness>
+                    <System:Double x:Key="DefaultButtonWidth">75</System:Double>
+                    <System:Double x:Key="DefaultButtonHeight">25</System:Double>
+                    <System:Double x:Key="DefaultTextBoxHeight">23</System:Double>
+                    <Style x:Key="DefaultButtonStyle" TargetType="Button">
+                        <Setter Property="Height" Value="{StaticResource DefaultButtonHeight}"/>
+                        <Setter Property="Width" Value="{StaticResource DefaultButtonWidth}"/>
+                    </Style>
+                    <Style x:Key="DefaultSingleLineTextBoxStyle" TargetType="TextBox">
+                        <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
+                        <Setter Property="AcceptsReturn" Value="False"/>
+                        <Setter Property="AcceptsTab" Value="False"/>
+                        <Setter Property="TextWrapping" Value="NoWrap"/>
+                    </Style>
+                    <Style x:Key="DefaultPasswordBoxStyle" TargetType="PasswordBox">
+                        <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

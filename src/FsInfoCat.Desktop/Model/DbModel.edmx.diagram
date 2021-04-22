@@ -4,25 +4,39 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4781d513548e46d39d5aa47fcc978b67" Name="Diagram1" ZoomLevel="62" >
-        <EntityTypeShape EntityType="FsInfoCat.Model.UserAccount" Width="2.5" PointX="0.75" PointY="3.25" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.HostDevice" Width="1.5" PointX="4" PointY="10.625" />
+      <Diagram DiagramId="4781d513548e46d39d5aa47fcc978b67" Name="Diagram1" ZoomLevel="57" >
+        <EntityTypeShape EntityType="FsInfoCat.Model.UserAccount" Width="2.5" PointX="0.75" PointY="4.625" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.HostDevice" Width="1.5" PointX="4" PointY="13.375" />
         <AssociationConnector Association="FsInfoCat.Model.CreatedByHostDevice" />
         <AssociationConnector Association="FsInfoCat.Model.ModifiedByHostDevice" />
         <AssociationConnector Association="FsInfoCat.Model.CreatedByUserAccount" />
         <AssociationConnector Association="FsInfoCat.Model.ModifiedByUserAccount" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.Volume" Width="1.5" PointX="6.25" PointY="9" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.Volume" Width="1.5" PointX="7.25" PointY="11.5" />
         <AssociationConnector Association="FsInfoCat.Model.CreatedByVolume" />
         <AssociationConnector Association="FsInfoCat.Model.ModifiedByVolume" />
         <AssociationConnector Association="FsInfoCat.Model.HostDeviceVolume" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.UserGroup" Width="2.125" PointX="4" PointY="3.5" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.GroupMember" Width="1.5" PointX="6.875" PointY="5.625" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.UserGroup" Width="2.125" PointX="4" PointY="9.375" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.GroupMember" Width="1.5" PointX="6.875" PointY="7.625" />
         <AssociationConnector Association="FsInfoCat.Model.UserGroupGroupMember" />
         <AssociationConnector Association="FsInfoCat.Model.UserAccountGroupMember" />
         <AssociationConnector Association="FsInfoCat.Model.AddedByGroupMember" />
         <AssociationConnector Association="FsInfoCat.Model.CreatedByUserGroup" />
         <AssociationConnector Association="FsInfoCat.Model.ModifiedByUserGroup" />
-        <EntityTypeShape EntityType="FsInfoCat.Model.DbUserRole" Width="1.5" PointX="1.125" PointY="0.5" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.DbUserRole" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.Subdirectory" Width="1.5" PointX="9.5" PointY="8.5" />
+        <AssociationConnector Association="FsInfoCat.Model.VolumeDirectory" />
+        <AssociationConnector Association="FsInfoCat.Model.ParentDirectory" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.File" Width="1.5" PointX="11.75" PointY="6.375" />
+        <AssociationConnector Association="FsInfoCat.Model.SubdirectoryFile" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.Comparison" Width="1.5" PointX="14" PointY="7.625" />
+        <AssociationConnector Association="FsInfoCat.Model.FileComparison1" />
+        <AssociationConnector Association="FsInfoCat.Model.FileComparison2" />
+        <AssociationConnector Association="FsInfoCat.Model.FileCreated" />
+        <AssociationConnector Association="FsInfoCat.Model.FileModified" />
+        <AssociationConnector Association="FsInfoCat.Model.SubdirectoryCreated" />
+        <AssociationConnector Association="FsInfoCat.Model.SubdirectoryModified" />
+        <EntityTypeShape EntityType="FsInfoCat.Model.ChecksumCalculation" Width="1.875" PointX="4" PointY="3.625" />
+        <AssociationConnector Association="FsInfoCat.Model.ChecksumCalculationFile" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

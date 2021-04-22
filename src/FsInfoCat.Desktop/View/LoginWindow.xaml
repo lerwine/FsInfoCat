@@ -10,7 +10,7 @@
     <Window.DataContext>
         <vm:LoginViewModel LoginSucceeded="LoginViewModel_LoginSucceeded" LoginAborted="LoginViewModel_LoginAborted" />
     </Window.DataContext>
-    <Grid Margin="{DynamicResource DefaultMargin}">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
@@ -24,13 +24,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label Content="User name:" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginTopLeftRight}"/>
-        <TextBox Grid.Row="1" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginBottom}" Text="{Binding UserName}" IsEnabled="{Binding EnableInputs, Mode=OneWay}"/>
-        <Label Content="Password:" Grid.Row="2" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginTopLeftRight}"/>
-        <PasswordBox Grid.Row="3" Style="{DynamicResource DefaultPasswordBoxStyle}" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginBottom}" IsEnabled="{Binding EnableInputs, Mode=OneWay}" vm:LoginViewModel.BindToModel="{Binding Mode=OneWay}"/>
-        <TextBlock Grid.Row="4" TextWrapping="Wrap" Text="{Binding ErrorMessage, Mode=OneWay}" Grid.ColumnSpan="2" Foreground="Red" Margin="{DynamicResource DefaultMarginTopBottom}"/>
-        <Button Content="Login" HorizontalAlignment="Right" Grid.Row="5" VerticalAlignment="Bottom" Margin="{DynamicResource DefaultMarginTopBottomRight}" IsEnabled="{Binding CanSubmit, Mode=OneWay}" Style="{DynamicResource DefaultButtonStyle}"/>
-        <Button Content="Cancel" Grid.Column="1" Grid.Row="5" VerticalAlignment="Bottom" Style="{DynamicResource DefaultButtonStyle}" Margin="{DynamicResource DefaultMarginTopBottomLeft}"/>
+        <Label Content="User name:" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginTopLeftRight}" Padding="0"/>
+        <TextBox Grid.Row="1" Style="{DynamicResource DefaultSingleLineTextBoxStyle}" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginLeftRight}" Text="{Binding UserName}" IsEnabled="{Binding EnableInputs, Mode=OneWay}"/>
+        <Label Content="Password:" Grid.Row="2" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginTopLeftRight}" Padding="0"/>
+        <PasswordBox Grid.Row="3" Style="{DynamicResource DefaultPasswordBoxStyle}" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultMarginLeftRight}" IsEnabled="{Binding EnableInputs, Mode=OneWay}" vm:LoginViewModel.BindToModel="{Binding Mode=OneWay}"/>
+        <TextBlock Grid.Row="4" TextWrapping="Wrap" Text="{Binding ErrorMessage, Mode=OneWay}" Grid.ColumnSpan="2" Foreground="Red" Margin="{DynamicResource DefaultMarginTopLeftRight}"/>
+        <Button Content="Login" HorizontalAlignment="Right" Grid.Row="5" VerticalAlignment="Bottom" Margin="{DynamicResource DefaultMargin}" IsEnabled="{Binding CanSubmit, Mode=OneWay}" Style="{DynamicResource DefaultButtonStyle}"/>
+        <Button Content="Cancel" Grid.Column="1" Grid.Row="5" VerticalAlignment="Bottom" Style="{DynamicResource DefaultButtonStyle}" Margin="{DynamicResource DefaultMargin}"/>
         <StatusBar Grid.Row="6" Grid.ColumnSpan="2">
             <StatusBarItem>
                 <ProgressBar Width="200" Value="{Binding ProgressValue, Mode=OneWay}"/>

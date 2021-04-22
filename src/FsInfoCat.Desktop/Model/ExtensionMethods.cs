@@ -48,4 +48,9 @@ namespace FsInfoCat.Desktop.Model
             return userAccount;
         }
     }
+
+    public partial class DbModel
+    {
+        internal DbModel(string connectionString) : base(connectionString) { }
+    }
 }

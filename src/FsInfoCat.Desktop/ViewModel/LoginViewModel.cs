@@ -136,15 +136,6 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             EnableInputs = false;
             ErrorMessage = "";
-            App.GetSettingsVM().AuthenticateUserAsync(UserName, Password, Dispatcher.AsBeginInvocationAction<string>(m => ErrorMessage = m)).ContinueWith(t =>
-            {
-                if (t.IsCanceled)
-                    Dispatcher.BeginInvoke(new Action<AggregateException>(OnLoginFailed), null);
-                else if (t.IsFaulted)
-                    Dispatcher.BeginInvoke(new Action<AggregateException>(OnLoginFailed), t.Exception);
-                else
-                    Dispatcher.BeginInvoke(new Action<UserAccount>(OnLoginCompleted), t.Result);
-            });
         }
 
         private void OnLoginCompleted(UserAccount result)

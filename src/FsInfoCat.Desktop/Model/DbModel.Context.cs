@@ -33,6 +33,10 @@ namespace FsInfoCat.Desktop.Model
         public virtual DbSet<UserGroup> UserGroups { get; set; }
         public virtual DbSet<GroupMember> GroupMembers { get; set; }
         public virtual DbSet<DbUserRole> DbUserRoles { get; set; }
+        public virtual DbSet<Subdirectory> Subdirectories { get; set; }
+        public virtual DbSet<File> Files { get; set; }
+        public virtual DbSet<Comparison> Comparisons { get; set; }
+        public virtual DbSet<ChecksumCalculation> ChecksumCalculations { get; set; }
     
         public virtual ObjectResult<GetAutoUserAccountId_Result> GetAutoUserAccountId()
         {

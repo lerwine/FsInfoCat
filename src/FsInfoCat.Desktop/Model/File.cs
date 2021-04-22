@@ -12,29 +12,31 @@ namespace FsInfoCat.Desktop.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class HostDevice
+    public partial class File
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public HostDevice()
+        public File()
         {
-            this.Notes = "\"\"";
-            this.Volumes = new HashSet<Volume>();
+            this.Comparisons1 = new HashSet<Comparison>();
+            this.Comparisons2 = new HashSet<Comparison>();
         }
     
         public System.Guid Id { get; set; }
-        public string DisplayName { get; set; }
-        public string MachineIdentifer { get; set; }
-        public string MachineName { get; set; }
+        public string Name { get; set; }
+        public Nullable<System.Guid> CalculationId { get; set; }
+        public System.Guid DirectoryId { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public System.Guid CreatedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
-        public string Notes { get; set; }
-        public HostPlatformType Platform { get; set; }
     
+        public virtual Subdirectory ParentDirectory { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Comparison> Comparisons1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Comparison> Comparisons2 { get; set; }
         public virtual UserAccount CreatedBy { get; set; }
         public virtual UserAccount ModifiedBy { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Volume> Volumes { get; set; }
+        public virtual ChecksumCalculation ChecksumCalculation { get; set; }
     }
 }

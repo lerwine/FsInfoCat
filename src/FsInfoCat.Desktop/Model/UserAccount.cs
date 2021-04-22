@@ -18,6 +18,7 @@ namespace FsInfoCat.Desktop.Model
         public UserAccount()
         {
             this.IsInactive = false;
+            this.Notes = "\"\"";
             this.CreatedHostDevices = new HashSet<HostDevice>();
             this.ModifiedHostDevices = new HashSet<HostDevice>();
             this.CreatedUserAccounts = new HashSet<UserAccount>();
@@ -28,6 +29,10 @@ namespace FsInfoCat.Desktop.Model
             this.AddedGroupMembers = new HashSet<GroupMember>();
             this.CreatedUserGroups = new HashSet<UserGroup>();
             this.ModifiedUserGroups = new HashSet<UserGroup>();
+            this.FilesCreated = new HashSet<File>();
+            this.FilesModified = new HashSet<File>();
+            this.SubdirectoriesCreated = new HashSet<Subdirectory>();
+            this.SubdirectoriesModified = new HashSet<Subdirectory>();
         }
     
         public System.Guid Id { get; set; }
@@ -70,5 +75,13 @@ namespace FsInfoCat.Desktop.Model
         public virtual ICollection<UserGroup> CreatedUserGroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroup> ModifiedUserGroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<File> FilesCreated { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<File> FilesModified { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Subdirectory> SubdirectoriesCreated { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Subdirectory> SubdirectoriesModified { get; set; }
     }
 }

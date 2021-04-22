@@ -52,5 +52,16 @@ namespace FsInfoCat.Desktop.Properties {
                 return ((string)(this["EntityClientConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=C:\\Users\\lerwi\\Git\\FsInfoCat\\src\\FsInfoCat.Desktop/FsInfoCatLocal.sdf" +
+            "")]
+        public string LocalDbConnectionString {
+            get {
+                return ((string)(this["LocalDbConnectionString"]));
+            }
+        }
     }
 }
