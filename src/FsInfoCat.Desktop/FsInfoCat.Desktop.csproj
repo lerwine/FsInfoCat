@@ -223,7 +223,7 @@
     <Compile Include="Model\DbUserRole.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\ExtensionMethods.cs" />
+    <Compile Include="Model\Extensions.cs" />
     <Compile Include="Model\File.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
@@ -240,6 +240,7 @@
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\IChecksumCalculation.cs" />
+    <Compile Include="Model\IDbContext.cs" />
     <Compile Include="Model\IFile.cs" />
     <Compile Include="Model\IFileComparison.cs" />
     <Compile Include="Model\ISubDirectory.cs" />
@@ -252,7 +253,7 @@
     <Compile Include="Model\LocalVolume.cs" />
     <Compile Include="Model\MD5Checksum.cs" />
     <Compile Include="Model\PwHash.cs" />
-    <Compile Include="Model\ReadOnlyListDelegateWrapper.cs" />
+    <Compile Include="Model\ReadOnlyCollectionDelegateWrapper.cs" />
     <Compile Include="Model\Subdirectory.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>

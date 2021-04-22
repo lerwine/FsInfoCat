@@ -16,7 +16,7 @@ namespace FsInfoCat.Desktop.Model
         DateTime ModifiedOn { get; }
         string Notes { get; }
         string RootPathName { get; }
-        IReadOnlyList<ISubDirectory> SubDirectories { get; }
+        IReadOnlyCollection<ISubDirectory> SubDirectories { get; }
         string VolumeName { get; }
     }
 }

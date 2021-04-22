@@ -7,8 +7,8 @@ namespace FsInfoCat.Desktop.Model
 {
     public class LocalDirectory : ISubDirectory
     {
-        private readonly ReadOnlyListDelegateWrapper<LocalFile, IFile> _filesWrapper;
-        private readonly ReadOnlyListDelegateWrapper<LocalDirectory, ISubDirectory> _subdirectoriesWrapper;
+        private readonly ReadOnlyCollectionDelegateWrapper<LocalFile, IFile> _filesWrapper;
+        private readonly ReadOnlyCollectionDelegateWrapper<LocalDirectory, ISubDirectory> _subdirectoriesWrapper;
         [Required]
         [Key]
         public Guid Id { get; set; }
@@ -39,18 +39,18 @@ namespace FsInfoCat.Desktop.Model
 
         public List<LocalDirectory> SubDirectories { get; set; }
 
-        IReadOnlyList<IFile> ISubDirectory.Files => _filesWrapper;
+        IReadOnlyCollection<IFile> ISubDirectory.Files => _filesWrapper;
 
         ISubDirectory ISubDirectory.ParentDirectory => ParentDirectory;
 
-        IReadOnlyList<ISubDirectory> ISubDirectory.SubDirectories => _subdirectoriesWrapper;
+        IReadOnlyCollection<ISubDirectory> ISubDirectory.SubDirectories => _subdirectoriesWrapper;
 
         IVolume ISubDirectory.Volume => Volume;
 
         public LocalDirectory()
         {
-            _filesWrapper = new ReadOnlyListDelegateWrapper<LocalFile, IFile>(() => Files);
-            _subdirectoriesWrapper = new ReadOnlyListDelegateWrapper<LocalDirectory, ISubDirectory>(() => SubDirectories);
+            _filesWrapper = new ReadOnlyCollectionDelegateWrapper<LocalFile, IFile>(() => Files);
+            _subdirectoriesWrapper = new ReadOnlyCollectionDelegateWrapper<LocalDirectory, ISubDirectory>(() => SubDirectories);
         }
     }
 }

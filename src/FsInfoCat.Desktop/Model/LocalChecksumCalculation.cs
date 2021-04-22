@@ -7,13 +7,13 @@ namespace FsInfoCat.Desktop.Model
 {
     public class LocalChecksumCalculation : IChecksumCalculation
     {
-        private readonly ReadOnlyListDelegateWrapper<byte, byte> _checksumWrapper;
-        private readonly ReadOnlyListDelegateWrapper<LocalFile, IFile> _filesWrapper;
+        private readonly ReadOnlyCollectionDelegateWrapper<byte, byte> _checksumWrapper;
+        private readonly ReadOnlyCollectionDelegateWrapper<LocalFile, IFile> _filesWrapper;
 
         public LocalChecksumCalculation()
         {
-            _checksumWrapper = new ReadOnlyListDelegateWrapper<byte, byte>(() => Checksum);
-            _filesWrapper = new ReadOnlyListDelegateWrapper<LocalFile, IFile>(() => Files);
+            _checksumWrapper = new ReadOnlyCollectionDelegateWrapper<byte, byte>(() => Checksum);
+            _filesWrapper = new ReadOnlyCollectionDelegateWrapper<LocalFile, IFile>(() => Files);
         }
 
         [Required]
@@ -30,9 +30,9 @@ namespace FsInfoCat.Desktop.Model
         [InverseProperty(nameof(LocalComparison.FileId1))]
         public List<LocalFile> Files { get; set; }
 
-        IReadOnlyList<byte> IChecksumCalculation.Checksum => _checksumWrapper;
+        IReadOnlyCollection<byte> IChecksumCalculation.Checksum => _checksumWrapper;
 
-        IReadOnlyList<IFile> IChecksumCalculation.Files => _filesWrapper;
+        IReadOnlyCollection<IFile> IChecksumCalculation.Files => _filesWrapper;
 
         public bool TryGetMD5Checksum(out MD5Checksum result) => MD5Checksum.TryCreate(Checksum, out result);
     }

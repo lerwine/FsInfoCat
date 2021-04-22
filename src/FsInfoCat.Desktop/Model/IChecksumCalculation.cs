@@ -5,8 +5,8 @@ namespace FsInfoCat.Desktop.Model
 {
     public interface IChecksumCalculation
     {
-        IReadOnlyList<byte> Checksum { get; }
-        IReadOnlyList<IFile> Files { get; }
+        IReadOnlyCollection<byte> Checksum { get; }
+        IReadOnlyCollection<IFile> Files { get; }
         Guid Id { get; }
         long Length { get; }
         bool TryGetMD5Checksum(out MD5Checksum result);

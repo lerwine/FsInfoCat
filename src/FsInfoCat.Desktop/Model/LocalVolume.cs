@@ -6,7 +6,7 @@ namespace FsInfoCat.Desktop.Model
 {
     public class LocalVolume : IVolume
     {
-        private readonly ReadOnlyListDelegateWrapper<LocalDirectory, ISubDirectory> _subdirectoriesWrapper;
+        private readonly ReadOnlyCollectionDelegateWrapper<LocalDirectory, ISubDirectory> _subdirectoriesWrapper;
 
         [Required]
         [Key]
@@ -53,11 +53,11 @@ namespace FsInfoCat.Desktop.Model
 
         public List<LocalDirectory> SubDirectories { get; set; }
 
-        IReadOnlyList<ISubDirectory> IVolume.SubDirectories => _subdirectoriesWrapper;
+        IReadOnlyCollection<ISubDirectory> IVolume.SubDirectories => _subdirectoriesWrapper;
 
         public LocalVolume()
         {
-            _subdirectoriesWrapper = new ReadOnlyListDelegateWrapper<LocalDirectory, ISubDirectory>(() => SubDirectories);
+            _subdirectoriesWrapper = new ReadOnlyCollectionDelegateWrapper<LocalDirectory, ISubDirectory>(() => SubDirectories);
         }
     }
 }

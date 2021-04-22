@@ -7,8 +7,8 @@ namespace FsInfoCat.Desktop.Model
 {
     public class LocalFile : IFile
     {
-        private ReadOnlyListDelegateWrapper<LocalComparison, IFileComparison> _comparisonsWrapper1;
-        private ReadOnlyListDelegateWrapper<LocalComparison, IFileComparison> _comparisonsWrapper2;
+        private ReadOnlyCollectionDelegateWrapper<LocalComparison, IFileComparison> _comparisonsWrapper1;
+        private ReadOnlyCollectionDelegateWrapper<LocalComparison, IFileComparison> _comparisonsWrapper2;
 
         [Required]
         [Key]
@@ -31,9 +31,9 @@ namespace FsInfoCat.Desktop.Model
         [Required]
         public DateTime ModifiedOn { get; set; }
 
-        public Guid? ChecksumId { get; set; }
+        public Guid? CalculationId { get; set; }
 
-        [ForeignKey(nameof(ChecksumId))]
+        [ForeignKey(nameof(CalculationId))]
         public LocalChecksumCalculation ChecksumCalculation { get; set; }
 
         [InverseProperty(nameof(LocalComparison.FileId1))]
@@ -44,16 +44,16 @@ namespace FsInfoCat.Desktop.Model
 
         IChecksumCalculation IFile.ChecksumCalculation => ChecksumCalculation;
 
-        IReadOnlyList<IFileComparison> IFile.Comparisons1 => _comparisonsWrapper1;
+        IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => _comparisonsWrapper1;
 
-        IReadOnlyList<IFileComparison> IFile.Comparisons2 => _comparisonsWrapper2;
+        IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => _comparisonsWrapper2;
 
         ISubDirectory IFile.ParentDirectory => ParentDirectory;
 
         public LocalFile()
         {
-            _comparisonsWrapper1 = new ReadOnlyListDelegateWrapper<LocalComparison, IFileComparison>(() => Comparisons1);
-            _comparisonsWrapper2 = new ReadOnlyListDelegateWrapper<LocalComparison, IFileComparison>(() => Comparisons2);
+            _comparisonsWrapper1 = new ReadOnlyCollectionDelegateWrapper<LocalComparison, IFileComparison>(() => Comparisons1);
+            _comparisonsWrapper2 = new ReadOnlyCollectionDelegateWrapper<LocalComparison, IFileComparison>(() => Comparisons2);
         }
     }
 }
