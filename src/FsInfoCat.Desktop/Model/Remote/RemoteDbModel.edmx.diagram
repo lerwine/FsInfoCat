@@ -5,51 +5,51 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="ef15a0b96b2b470288022c2d39620d7c" Name="Diagram1" ZoomLevel="76" >
-        <EntityTypeShape EntityType="RemoteDbModel.UserProfile" Width="1.5" PointX="5.75" PointY="8.25" />
-        <EntityTypeShape EntityType="RemoteDbModel.Volume" Width="1.625" PointX="7.75" PointY="2.625" />
-        <EntityTypeShape EntityType="RemoteDbModel.Directory" Width="1.5" PointX="10.125" PointY="3.875" />
-        <EntityTypeShape EntityType="RemoteDbModel.File" Width="1.5" PointX="13.25" PointY="6.125" />
-        <EntityTypeShape EntityType="RemoteDbModel.FileSystem" Width="1.75" PointX="0.75" PointY="3.625" />
-        <EntityTypeShape EntityType="RemoteDbModel.HostDevice" Width="1.5" PointX="5.5" PointY="2.5" />
-        <EntityTypeShape EntityType="RemoteDbModel.HostPlatform" Width="1.5" PointX="3.25" PointY="2.5" />
-        <AssociationConnector Association="RemoteDbModel.DefaultFSTypeHostPlatform" />
-        <AssociationConnector Association="RemoteDbModel.HostPlatformHostDevice" />
-        <AssociationConnector Association="RemoteDbModel.HostDeviceVolume" />
-        <AssociationConnector Association="RemoteDbModel.FileSystemVolume" />
-        <EntityTypeShape EntityType="RemoteDbModel.FsSymbolicName" Width="1.5" PointX="3.25" PointY="6.875" />
-        <AssociationConnector Association="RemoteDbModel.FileSystemFsSymbolicName" />
-        <EntityTypeShape EntityType="RemoteDbModel.HashCalculation" Width="1.5" PointX="10.125" PointY="0.5" />
-        <AssociationConnector Association="RemoteDbModel.HashCalculationFile" />
-        <AssociationConnector Association="RemoteDbModel.VolumeDirectory" />
-        <AssociationConnector Association="RemoteDbModel.DirectoryParent" />
-        <AssociationConnector Association="RemoteDbModel.DirectoryFile" />
-        <EntityTypeShape EntityType="RemoteDbModel.Redundancy" Width="1.5" PointX="13.875" PointY="10.625" />
-        <AssociationConnector Association="RemoteDbModel.RedundancyFile" />
-        <EntityTypeShape EntityType="RemoteDbModel.Comparison" Width="1.5" PointX="10.375" PointY="7.875" />
-        <AssociationConnector Association="RemoteDbModel.FileComparison1" />
-        <AssociationConnector Association="RemoteDbModel.FileComparison2" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByFsSymbolicName" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByComparison" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByDirectory" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByFile" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByFileSystem" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByHashCalculation" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByHostDevice" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByHostPlatform" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByRedundancy" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByUserProfile" />
-        <AssociationConnector Association="RemoteDbModel.CreatedByVolume" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByVolume" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByUserProfile" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByRedundancy" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByHostPlatform" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByHostDevice" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByHashCalculation" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByFsSymbolicName" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByFileSystem" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByFile" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByDirectory" />
-        <AssociationConnector Association="RemoteDbModel.ModifiedByComparison" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.UserProfile" Width="1.5" PointX="5.75" PointY="8.25" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.Volume" Width="1.625" PointX="7.75" PointY="2.625" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.Directory" Width="1.5" PointX="10.125" PointY="3.875" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.File" Width="1.5" PointX="13.25" PointY="6.125" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.FileSystem" Width="1.75" PointX="0.75" PointY="3.625" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.HostDevice" Width="1.5" PointX="5.5" PointY="2.5" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.HostPlatform" Width="1.5" PointX="3.25" PointY="2.5" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.DefaultFSTypeHostPlatform" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.HostPlatformHostDevice" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.HostDeviceVolume" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.FileSystemVolume" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.FsSymbolicName" Width="1.5" PointX="3.25" PointY="6.875" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.FileSystemFsSymbolicName" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.HashCalculation" Width="1.5" PointX="10.125" PointY="0.5" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.HashCalculationFile" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.VolumeDirectory" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.DirectoryParent" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.DirectoryFile" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.Redundancy" Width="1.5" PointX="13.875" PointY="10.625" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.RedundancyFile" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.Comparison" Width="1.5" PointX="10.375" PointY="7.875" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.FileComparison1" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.FileComparison2" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByFsSymbolicName" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByComparison" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByDirectory" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByFile" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByFileSystem" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByHashCalculation" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByHostDevice" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByHostPlatform" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByRedundancy" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByUserProfile" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByVolume" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByVolume" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByUserProfile" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByRedundancy" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByHostPlatform" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByHostDevice" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByHashCalculation" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFsSymbolicName" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFileSystem" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFile" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectory" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByComparison" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

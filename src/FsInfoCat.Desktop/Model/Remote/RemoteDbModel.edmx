@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
   <!-- EF Runtime content -->
   <edmx:Runtime>
@@ -11,152 +11,152 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="RemoteDbModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
-        <EntityContainer Name="RemoteDbModelContainer" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="UserProfiles" EntityType="RemoteDbModel.UserProfile" />
-          <EntitySet Name="Volumes" EntityType="RemoteDbModel.Volume" />
-          <EntitySet Name="Directories" EntityType="RemoteDbModel.Directory" />
-          <EntitySet Name="Files" EntityType="RemoteDbModel.File" />
-          <EntitySet Name="FileSystems" EntityType="RemoteDbModel.FileSystem" />
-          <EntitySet Name="HostDevices" EntityType="RemoteDbModel.HostDevice" />
-          <EntitySet Name="HostPlatforms" EntityType="RemoteDbModel.HostPlatform" />
-          <AssociationSet Name="DefaultFSTypeHostPlatform" Association="RemoteDbModel.DefaultFSTypeHostPlatform">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="FsInfoCat.Desktop.Model.Remote" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="RemoteDbContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="UserProfiles" EntityType="FsInfoCat.Desktop.Model.Remote.UserProfile" />
+          <EntitySet Name="Volumes" EntityType="FsInfoCat.Desktop.Model.Remote.Volume" />
+          <EntitySet Name="Directories" EntityType="FsInfoCat.Desktop.Model.Remote.Directory" />
+          <EntitySet Name="Files" EntityType="FsInfoCat.Desktop.Model.Remote.File" />
+          <EntitySet Name="FileSystems" EntityType="FsInfoCat.Desktop.Model.Remote.FileSystem" />
+          <EntitySet Name="HostDevices" EntityType="FsInfoCat.Desktop.Model.Remote.HostDevice" />
+          <EntitySet Name="HostPlatforms" EntityType="FsInfoCat.Desktop.Model.Remote.HostPlatform" />
+          <AssociationSet Name="DefaultFSTypeHostPlatform" Association="FsInfoCat.Desktop.Model.Remote.DefaultFSTypeHostPlatform">
             <End Role="FileSystem" EntitySet="FileSystems" />
             <End Role="HostPlatform" EntitySet="HostPlatforms" />
           </AssociationSet>
-          <AssociationSet Name="HostPlatformHostDevice" Association="RemoteDbModel.HostPlatformHostDevice">
+          <AssociationSet Name="HostPlatformHostDevice" Association="FsInfoCat.Desktop.Model.Remote.HostPlatformHostDevice">
             <End Role="HostPlatform" EntitySet="HostPlatforms" />
             <End Role="HostDevice" EntitySet="HostDevices" />
           </AssociationSet>
-          <AssociationSet Name="HostDeviceVolume" Association="RemoteDbModel.HostDeviceVolume">
+          <AssociationSet Name="HostDeviceVolume" Association="FsInfoCat.Desktop.Model.Remote.HostDeviceVolume">
             <End Role="HostDevice" EntitySet="HostDevices" />
             <End Role="Volume" EntitySet="Volumes" />
           </AssociationSet>
-          <AssociationSet Name="FileSystemVolume" Association="RemoteDbModel.FileSystemVolume">
+          <AssociationSet Name="FileSystemVolume" Association="FsInfoCat.Desktop.Model.Remote.FileSystemVolume">
             <End Role="FileSystem" EntitySet="FileSystems" />
             <End Role="Volume" EntitySet="Volumes" />
           </AssociationSet>
-          <EntitySet Name="FsSymbolicNames" EntityType="RemoteDbModel.FsSymbolicName" />
-          <AssociationSet Name="FileSystemFsSymbolicName" Association="RemoteDbModel.FileSystemFsSymbolicName">
+          <EntitySet Name="FsSymbolicNames" EntityType="FsInfoCat.Desktop.Model.Remote.FsSymbolicName" />
+          <AssociationSet Name="FileSystemFsSymbolicName" Association="FsInfoCat.Desktop.Model.Remote.FileSystemFsSymbolicName">
             <End Role="FileSystem" EntitySet="FileSystems" />
             <End Role="FsSymbolicName" EntitySet="FsSymbolicNames" />
           </AssociationSet>
-          <EntitySet Name="HashCalculations" EntityType="RemoteDbModel.HashCalculation" />
-          <AssociationSet Name="HashCalculationFile" Association="RemoteDbModel.HashCalculationFile">
+          <EntitySet Name="HashCalculations" EntityType="FsInfoCat.Desktop.Model.Remote.HashCalculation" />
+          <AssociationSet Name="HashCalculationFile" Association="FsInfoCat.Desktop.Model.Remote.HashCalculationFile">
             <End Role="HashCalculation" EntitySet="HashCalculations" />
             <End Role="File" EntitySet="Files" />
           </AssociationSet>
-          <AssociationSet Name="VolumeDirectory" Association="RemoteDbModel.VolumeDirectory">
+          <AssociationSet Name="VolumeDirectory" Association="FsInfoCat.Desktop.Model.Remote.VolumeDirectory">
             <End Role="Volume" EntitySet="Volumes" />
             <End Role="RootDirectory" EntitySet="Directories" />
           </AssociationSet>
-          <AssociationSet Name="DirectoryParent" Association="RemoteDbModel.DirectoryParent">
+          <AssociationSet Name="DirectoryParent" Association="FsInfoCat.Desktop.Model.Remote.DirectoryParent">
             <End Role="Parent" EntitySet="Directories" />
             <End Role="SubDirectory" EntitySet="Directories" />
           </AssociationSet>
-          <AssociationSet Name="DirectoryFile" Association="RemoteDbModel.DirectoryFile">
+          <AssociationSet Name="DirectoryFile" Association="FsInfoCat.Desktop.Model.Remote.DirectoryFile">
             <End Role="Directory" EntitySet="Directories" />
             <End Role="File" EntitySet="Files" />
           </AssociationSet>
-          <EntitySet Name="Redundancies" EntityType="RemoteDbModel.Redundancy" />
-          <AssociationSet Name="RedundancyFile" Association="RemoteDbModel.RedundancyFile">
+          <EntitySet Name="Redundancies" EntityType="FsInfoCat.Desktop.Model.Remote.Redundancy" />
+          <AssociationSet Name="RedundancyFile" Association="FsInfoCat.Desktop.Model.Remote.RedundancyFile">
             <End Role="Redundancy" EntitySet="Redundancies" />
             <End Role="File" EntitySet="Files" />
           </AssociationSet>
-          <EntitySet Name="Comparisons" EntityType="RemoteDbModel.Comparison" />
-          <AssociationSet Name="FileComparison1" Association="RemoteDbModel.FileComparison1">
+          <EntitySet Name="Comparisons" EntityType="FsInfoCat.Desktop.Model.Remote.Comparison" />
+          <AssociationSet Name="FileComparison1" Association="FsInfoCat.Desktop.Model.Remote.FileComparison1">
             <End Role="File1" EntitySet="Files" />
             <End Role="Comparison1" EntitySet="Comparisons" />
           </AssociationSet>
-          <AssociationSet Name="FileComparison2" Association="RemoteDbModel.FileComparison2">
+          <AssociationSet Name="FileComparison2" Association="FsInfoCat.Desktop.Model.Remote.FileComparison2">
             <End Role="File2" EntitySet="Files" />
             <End Role="Comparison2" EntitySet="Comparisons" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByFsSymbolicName" Association="RemoteDbModel.CreatedByFsSymbolicName">
+          <AssociationSet Name="CreatedByFsSymbolicName" Association="FsInfoCat.Desktop.Model.Remote.CreatedByFsSymbolicName">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedFsSymbolicName" EntitySet="FsSymbolicNames" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByComparison" Association="RemoteDbModel.CreatedByComparison">
+          <AssociationSet Name="CreatedByComparison" Association="FsInfoCat.Desktop.Model.Remote.CreatedByComparison">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedComparison" EntitySet="Comparisons" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByDirectory" Association="RemoteDbModel.CreatedByDirectory">
+          <AssociationSet Name="CreatedByDirectory" Association="FsInfoCat.Desktop.Model.Remote.CreatedByDirectory">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedDirectory" EntitySet="Directories" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByFile" Association="RemoteDbModel.CreatedByFile">
+          <AssociationSet Name="CreatedByFile" Association="FsInfoCat.Desktop.Model.Remote.CreatedByFile">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedFile" EntitySet="Files" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByFileSystem" Association="RemoteDbModel.CreatedByFileSystem">
+          <AssociationSet Name="CreatedByFileSystem" Association="FsInfoCat.Desktop.Model.Remote.CreatedByFileSystem">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedFileSystem" EntitySet="FileSystems" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByHashCalculation" Association="RemoteDbModel.CreatedByHashCalculation">
+          <AssociationSet Name="CreatedByHashCalculation" Association="FsInfoCat.Desktop.Model.Remote.CreatedByHashCalculation">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedHashCalculation" EntitySet="HashCalculations" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByHostDevice" Association="RemoteDbModel.CreatedByHostDevice">
+          <AssociationSet Name="CreatedByHostDevice" Association="FsInfoCat.Desktop.Model.Remote.CreatedByHostDevice">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedHostDevice" EntitySet="HostDevices" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByHostPlatform" Association="RemoteDbModel.CreatedByHostPlatform">
+          <AssociationSet Name="CreatedByHostPlatform" Association="FsInfoCat.Desktop.Model.Remote.CreatedByHostPlatform">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedHostPlatform" EntitySet="HostPlatforms" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByRedundancy" Association="RemoteDbModel.CreatedByRedundancy">
+          <AssociationSet Name="CreatedByRedundancy" Association="FsInfoCat.Desktop.Model.Remote.CreatedByRedundancy">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedRedundancy" EntitySet="Redundancies" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByUserProfile" Association="RemoteDbModel.CreatedByUserProfile">
+          <AssociationSet Name="CreatedByUserProfile" Association="FsInfoCat.Desktop.Model.Remote.CreatedByUserProfile">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedUserProfile" EntitySet="UserProfiles" />
           </AssociationSet>
-          <AssociationSet Name="CreatedByVolume" Association="RemoteDbModel.CreatedByVolume">
+          <AssociationSet Name="CreatedByVolume" Association="FsInfoCat.Desktop.Model.Remote.CreatedByVolume">
             <End Role="Creator" EntitySet="UserProfiles" />
             <End Role="CreatedVolume" EntitySet="Volumes" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByVolume" Association="RemoteDbModel.ModifiedByVolume">
+          <AssociationSet Name="ModifiedByVolume" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByVolume">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedVolume" EntitySet="Volumes" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByUserProfile" Association="RemoteDbModel.ModifiedByUserProfile">
+          <AssociationSet Name="ModifiedByUserProfile" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByUserProfile">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedUserProfile" EntitySet="UserProfiles" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByRedundancy" Association="RemoteDbModel.ModifiedByRedundancy">
+          <AssociationSet Name="ModifiedByRedundancy" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByRedundancy">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedRedundancy" EntitySet="Redundancies" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByHostPlatform" Association="RemoteDbModel.ModifiedByHostPlatform">
+          <AssociationSet Name="ModifiedByHostPlatform" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByHostPlatform">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedHostPlatform" EntitySet="HostPlatforms" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByHostDevice" Association="RemoteDbModel.ModifiedByHostDevice">
+          <AssociationSet Name="ModifiedByHostDevice" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByHostDevice">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedHostDevice" EntitySet="HostDevices" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByHashCalculation" Association="RemoteDbModel.ModifiedByHashCalculation">
+          <AssociationSet Name="ModifiedByHashCalculation" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByHashCalculation">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedHashCalculation" EntitySet="HashCalculations" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByFsSymbolicName" Association="RemoteDbModel.ModifiedByFsSymbolicName">
+          <AssociationSet Name="ModifiedByFsSymbolicName" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFsSymbolicName">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedFsSymbolicName" EntitySet="FsSymbolicNames" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByFileSystem" Association="RemoteDbModel.ModifiedByFileSystem">
+          <AssociationSet Name="ModifiedByFileSystem" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFileSystem">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedFileSystem" EntitySet="FileSystems" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByFile" Association="RemoteDbModel.ModifiedByFile">
+          <AssociationSet Name="ModifiedByFile" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFile">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedFile" EntitySet="Files" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByDirectory" Association="RemoteDbModel.ModifiedByDirectory">
+          <AssociationSet Name="ModifiedByDirectory" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectory">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedDirectory" EntitySet="Directories" />
           </AssociationSet>
-          <AssociationSet Name="ModifiedByComparison" Association="RemoteDbModel.ModifiedByComparison">
+          <AssociationSet Name="ModifiedByComparison" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByComparison">
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedComparison" EntitySet="Comparisons" />
           </AssociationSet>
@@ -175,36 +175,36 @@
           <Property Name="DbPrincipalId" Type="Int32" Nullable="true" />
           <Property Name="SID" Type="Binary" Nullable="false" MaxLength="85" FixedLength="false" />
           <Property Name="LoginName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ExplicitRoles" Type="RemoteDbModel.UserRole" Nullable="false" />
+          <Property Name="ExplicitRoles" Type="FsInfoCat.Desktop.Model.Remote.UserRole" Nullable="false" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" DefaultValue="false" />
-          <NavigationProperty Name="CreatedSymbolicNames" Relationship="RemoteDbModel.CreatedByFsSymbolicName" FromRole="Creator" ToRole="CreatedFsSymbolicName" />
-          <NavigationProperty Name="CreatedComparisons" Relationship="RemoteDbModel.CreatedByComparison" FromRole="Creator" ToRole="CreatedComparison" />
-          <NavigationProperty Name="CreatedDirectories" Relationship="RemoteDbModel.CreatedByDirectory" FromRole="Creator" ToRole="CreatedDirectory" />
-          <NavigationProperty Name="CreatedFiles" Relationship="RemoteDbModel.CreatedByFile" FromRole="Creator" ToRole="CreatedFile" />
-          <NavigationProperty Name="CreatedFileSystems" Relationship="RemoteDbModel.CreatedByFileSystem" FromRole="Creator" ToRole="CreatedFileSystem" />
-          <NavigationProperty Name="CreatedHashCalculations" Relationship="RemoteDbModel.CreatedByHashCalculation" FromRole="Creator" ToRole="CreatedHashCalculation" />
-          <NavigationProperty Name="CreatedHostDevices" Relationship="RemoteDbModel.CreatedByHostDevice" FromRole="Creator" ToRole="CreatedHostDevice" />
-          <NavigationProperty Name="CreatedHostPlatforms" Relationship="RemoteDbModel.CreatedByHostPlatform" FromRole="Creator" ToRole="CreatedHostPlatform" />
-          <NavigationProperty Name="CreatedRedundancies" Relationship="RemoteDbModel.CreatedByRedundancy" FromRole="Creator" ToRole="CreatedRedundancy" />
-          <NavigationProperty Name="CreatedUserProfiles" Relationship="RemoteDbModel.CreatedByUserProfile" FromRole="Creator" ToRole="CreatedUserProfile" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByUserProfile" FromRole="CreatedUserProfile" ToRole="Creator" />
+          <NavigationProperty Name="CreatedSymbolicNames" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFsSymbolicName" FromRole="Creator" ToRole="CreatedFsSymbolicName" />
+          <NavigationProperty Name="CreatedComparisons" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByComparison" FromRole="Creator" ToRole="CreatedComparison" />
+          <NavigationProperty Name="CreatedDirectories" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByDirectory" FromRole="Creator" ToRole="CreatedDirectory" />
+          <NavigationProperty Name="CreatedFiles" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFile" FromRole="Creator" ToRole="CreatedFile" />
+          <NavigationProperty Name="CreatedFileSystems" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFileSystem" FromRole="Creator" ToRole="CreatedFileSystem" />
+          <NavigationProperty Name="CreatedHashCalculations" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByHashCalculation" FromRole="Creator" ToRole="CreatedHashCalculation" />
+          <NavigationProperty Name="CreatedHostDevices" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByHostDevice" FromRole="Creator" ToRole="CreatedHostDevice" />
+          <NavigationProperty Name="CreatedHostPlatforms" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByHostPlatform" FromRole="Creator" ToRole="CreatedHostPlatform" />
+          <NavigationProperty Name="CreatedRedundancies" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByRedundancy" FromRole="Creator" ToRole="CreatedRedundancy" />
+          <NavigationProperty Name="CreatedUserProfiles" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByUserProfile" FromRole="Creator" ToRole="CreatedUserProfile" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByUserProfile" FromRole="CreatedUserProfile" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="CreatedVolumes" Relationship="RemoteDbModel.CreatedByVolume" FromRole="Creator" ToRole="CreatedVolume" />
+          <NavigationProperty Name="CreatedVolumes" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByVolume" FromRole="Creator" ToRole="CreatedVolume" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedVolumes" Relationship="RemoteDbModel.ModifiedByVolume" FromRole="Modifier" ToRole="ModifiedVolume" />
-          <NavigationProperty Name="ModifiedUserProfiles" Relationship="RemoteDbModel.ModifiedByUserProfile" FromRole="Modifier" ToRole="ModifiedUserProfile" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByUserProfile" FromRole="ModifiedUserProfile" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedVolumes" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByVolume" FromRole="Modifier" ToRole="ModifiedVolume" />
+          <NavigationProperty Name="ModifiedUserProfiles" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByUserProfile" FromRole="Modifier" ToRole="ModifiedUserProfile" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByUserProfile" FromRole="ModifiedUserProfile" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="ModifiedRedundancies" Relationship="RemoteDbModel.ModifiedByRedundancy" FromRole="Modifier" ToRole="ModifiedRedundancy" />
-          <NavigationProperty Name="ModifiedHostPlatforms" Relationship="RemoteDbModel.ModifiedByHostPlatform" FromRole="Modifier" ToRole="ModifiedHostPlatform" />
-          <NavigationProperty Name="ModifiedHostDevices" Relationship="RemoteDbModel.ModifiedByHostDevice" FromRole="Modifier" ToRole="ModifiedHostDevice" />
-          <NavigationProperty Name="ModifiedHashCalculations" Relationship="RemoteDbModel.ModifiedByHashCalculation" FromRole="Modifier" ToRole="ModifiedHashCalculation" />
-          <NavigationProperty Name="ModifiedSymbolicNames" Relationship="RemoteDbModel.ModifiedByFsSymbolicName" FromRole="Modifier" ToRole="ModifiedFsSymbolicName" />
-          <NavigationProperty Name="ModifiedFileSystems" Relationship="RemoteDbModel.ModifiedByFileSystem" FromRole="Modifier" ToRole="ModifiedFileSystem" />
-          <NavigationProperty Name="ModifiedFiles" Relationship="RemoteDbModel.ModifiedByFile" FromRole="Modifier" ToRole="ModifiedFile" />
-          <NavigationProperty Name="ModifiedDirectories" Relationship="RemoteDbModel.ModifiedByDirectory" FromRole="Modifier" ToRole="ModifiedDirectory" />
-          <NavigationProperty Name="ModifiedComparisons" Relationship="RemoteDbModel.ModifiedByComparison" FromRole="Modifier" ToRole="ModifiedComparison" />
+          <NavigationProperty Name="ModifiedRedundancies" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByRedundancy" FromRole="Modifier" ToRole="ModifiedRedundancy" />
+          <NavigationProperty Name="ModifiedHostPlatforms" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByHostPlatform" FromRole="Modifier" ToRole="ModifiedHostPlatform" />
+          <NavigationProperty Name="ModifiedHostDevices" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByHostDevice" FromRole="Modifier" ToRole="ModifiedHostDevice" />
+          <NavigationProperty Name="ModifiedHashCalculations" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByHashCalculation" FromRole="Modifier" ToRole="ModifiedHashCalculation" />
+          <NavigationProperty Name="ModifiedSymbolicNames" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFsSymbolicName" FromRole="Modifier" ToRole="ModifiedFsSymbolicName" />
+          <NavigationProperty Name="ModifiedFileSystems" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFileSystem" FromRole="Modifier" ToRole="ModifiedFileSystem" />
+          <NavigationProperty Name="ModifiedFiles" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFile" FromRole="Modifier" ToRole="ModifiedFile" />
+          <NavigationProperty Name="ModifiedDirectories" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectory" FromRole="Modifier" ToRole="ModifiedDirectory" />
+          <NavigationProperty Name="ModifiedComparisons" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByComparison" FromRole="Modifier" ToRole="ModifiedComparison" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <EntityType Name="Volume">
@@ -216,25 +216,25 @@
           <Property Name="RootPathName" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="VolumeName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Identifier" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="HostDevice" Relationship="RemoteDbModel.HostDeviceVolume" FromRole="Volume" ToRole="HostDevice" />
+          <NavigationProperty Name="HostDevice" Relationship="FsInfoCat.Desktop.Model.Remote.HostDeviceVolume" FromRole="Volume" ToRole="HostDevice" />
           <Property Name="HostDeviceId" Type="Guid" Nullable="true" >
             <Documentation>
               <Summary>Unique identifier of host device or null if it is a network filesystem.</Summary>
             </Documentation>
           </Property>
-          <NavigationProperty Name="FileSystem" Relationship="RemoteDbModel.FileSystemVolume" FromRole="Volume" ToRole="FileSystem" />
+          <NavigationProperty Name="FileSystem" Relationship="FsInfoCat.Desktop.Model.Remote.FileSystemVolume" FromRole="Volume" ToRole="FileSystem" />
           <Property Name="FileSystemId" Type="Guid" Nullable="false" />
-          <Property Name="Type" Type="RemoteDbModel.DriveType" Nullable="false" />
+          <Property Name="Type" Type="FsInfoCat.Desktop.Model.Remote.DriveType" Nullable="false" />
           <Property Name="CaseSensitiveSearch" Type="Boolean" Nullable="true" />
           <Property Name="ReadOnly" Type="Boolean" Nullable="true" />
           <Property Name="MaxNameLength" Type="Int64" Nullable="true" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RootDirectory" Relationship="RemoteDbModel.VolumeDirectory" FromRole="Volume" ToRole="RootDirectory" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByVolume" FromRole="CreatedVolume" ToRole="Creator" />
+          <NavigationProperty Name="RootDirectory" Relationship="FsInfoCat.Desktop.Model.Remote.VolumeDirectory" FromRole="Volume" ToRole="RootDirectory" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByVolume" FromRole="CreatedVolume" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByVolume" FromRole="ModifiedVolume" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByVolume" FromRole="ModifiedVolume" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
@@ -249,25 +249,25 @@
               <LongDescription>This can be an empty string if it is the RootDirectory object for a Volume that has no root directory.</LongDescription>
             </Documentation>
           </Property>
-          <NavigationProperty Name="Volume" Relationship="RemoteDbModel.VolumeDirectory" FromRole="RootDirectory" ToRole="Volume" >
+          <NavigationProperty Name="Volume" Relationship="FsInfoCat.Desktop.Model.Remote.VolumeDirectory" FromRole="RootDirectory" ToRole="Volume" >
             <Documentation>
               <Summary>Parent volume or null if this is a nested subdirectory.</Summary>
               <LongDescription>Volume and Parent are exclusive. Either Volume or Parent is required.</LongDescription>
             </Documentation>
           </NavigationProperty>
-          <NavigationProperty Name="SubDirectories" Relationship="RemoteDbModel.DirectoryParent" FromRole="Parent" ToRole="SubDirectory" />
-          <NavigationProperty Name="Parent" Relationship="RemoteDbModel.DirectoryParent" FromRole="SubDirectory" ToRole="Parent" >
+          <NavigationProperty Name="SubDirectories" Relationship="FsInfoCat.Desktop.Model.Remote.DirectoryParent" FromRole="Parent" ToRole="SubDirectory" />
+          <NavigationProperty Name="Parent" Relationship="FsInfoCat.Desktop.Model.Remote.DirectoryParent" FromRole="SubDirectory" ToRole="Parent" >
             <Documentation>
               <Summary>Parent filesystem directory or null if this is the root subdirectory.</Summary>
               <LongDescription>Volume and Parent are exclusive. Either Volume or Parent is required.</LongDescription>
             </Documentation>
           </NavigationProperty>
           <Property Name="ParentId" Type="Guid" Nullable="true" />
-          <NavigationProperty Name="Files" Relationship="RemoteDbModel.DirectoryFile" FromRole="Directory" ToRole="File" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByDirectory" FromRole="CreatedDirectory" ToRole="Creator" />
+          <NavigationProperty Name="Files" Relationship="FsInfoCat.Desktop.Model.Remote.DirectoryFile" FromRole="Directory" ToRole="File" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByDirectory" FromRole="CreatedDirectory" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByDirectory" FromRole="ModifiedDirectory" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectory" FromRole="ModifiedDirectory" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
@@ -277,17 +277,17 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="HashCalculation" Relationship="RemoteDbModel.HashCalculationFile" FromRole="File" ToRole="HashCalculation" />
+          <NavigationProperty Name="HashCalculation" Relationship="FsInfoCat.Desktop.Model.Remote.HashCalculationFile" FromRole="File" ToRole="HashCalculation" />
           <Property Name="HashCalculationId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Parent" Relationship="RemoteDbModel.DirectoryFile" FromRole="File" ToRole="Directory" />
+          <NavigationProperty Name="Parent" Relationship="FsInfoCat.Desktop.Model.Remote.DirectoryFile" FromRole="File" ToRole="Directory" />
           <Property Name="ParentId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Redundancies" Relationship="RemoteDbModel.RedundancyFile" FromRole="File" ToRole="Redundancy" />
-          <NavigationProperty Name="Comparisons1" Relationship="RemoteDbModel.FileComparison1" FromRole="File1" ToRole="Comparison1" />
-          <NavigationProperty Name="Comparisons2" Relationship="RemoteDbModel.FileComparison2" FromRole="File2" ToRole="Comparison2" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByFile" FromRole="CreatedFile" ToRole="Creator" />
+          <NavigationProperty Name="Redundancies" Relationship="FsInfoCat.Desktop.Model.Remote.RedundancyFile" FromRole="File" ToRole="Redundancy" />
+          <NavigationProperty Name="Comparisons1" Relationship="FsInfoCat.Desktop.Model.Remote.FileComparison1" FromRole="File1" ToRole="Comparison1" />
+          <NavigationProperty Name="Comparisons2" Relationship="FsInfoCat.Desktop.Model.Remote.FileComparison2" FromRole="File2" ToRole="Comparison2" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFile" FromRole="CreatedFile" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByFile" FromRole="ModifiedFile" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFile" FromRole="ModifiedFile" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
@@ -308,17 +308,17 @@
           <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="CaseSensitiveSearch" Type="Boolean" Nullable="false" />
           <Property Name="ReadOnly" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="DefaultHostPlatforms" Relationship="RemoteDbModel.DefaultFSTypeHostPlatform" FromRole="FileSystem" ToRole="HostPlatform" />
+          <NavigationProperty Name="DefaultHostPlatforms" Relationship="FsInfoCat.Desktop.Model.Remote.DefaultFSTypeHostPlatform" FromRole="FileSystem" ToRole="HostPlatform" />
           <Property Name="MaxNameLength" Type="Int64" Nullable="false" />
-          <Property Name="DefaultDriveType" Type="RemoteDbModel.DriveType" Nullable="true" />
-          <NavigationProperty Name="Volumes" Relationship="RemoteDbModel.FileSystemVolume" FromRole="FileSystem" ToRole="Volume" />
-          <NavigationProperty Name="SymbolicNames" Relationship="RemoteDbModel.FileSystemFsSymbolicName" FromRole="FileSystem" ToRole="FsSymbolicName" />
+          <Property Name="DefaultDriveType" Type="FsInfoCat.Desktop.Model.Remote.DriveType" Nullable="true" />
+          <NavigationProperty Name="Volumes" Relationship="FsInfoCat.Desktop.Model.Remote.FileSystemVolume" FromRole="FileSystem" ToRole="Volume" />
+          <NavigationProperty Name="SymbolicNames" Relationship="FsInfoCat.Desktop.Model.Remote.FileSystemFsSymbolicName" FromRole="FileSystem" ToRole="FsSymbolicName" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByFileSystem" FromRole="CreatedFileSystem" ToRole="Creator" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFileSystem" FromRole="CreatedFileSystem" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByFileSystem" FromRole="ModifiedFileSystem" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFileSystem" FromRole="ModifiedFileSystem" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
@@ -331,13 +331,13 @@
           <Property Name="MachineIdentifer" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="MachineName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="PlatformId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Volumes" Relationship="RemoteDbModel.HostDeviceVolume" FromRole="HostDevice" ToRole="Volume" />
+          <NavigationProperty Name="Volumes" Relationship="FsInfoCat.Desktop.Model.Remote.HostDeviceVolume" FromRole="HostDevice" ToRole="Volume" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByHostDevice" FromRole="CreatedHostDevice" ToRole="Creator" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByHostDevice" FromRole="CreatedHostDevice" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByHostDevice" FromRole="ModifiedHostDevice" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByHostDevice" FromRole="ModifiedHostDevice" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
@@ -347,16 +347,16 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="RemoteDbModel.PlatformType" Nullable="false" />
-          <NavigationProperty Name="DefaultFSType" Relationship="RemoteDbModel.DefaultFSTypeHostPlatform" FromRole="HostPlatform" ToRole="FileSystem" />
+          <Property Name="Type" Type="FsInfoCat.Desktop.Model.Remote.PlatformType" Nullable="false" />
+          <NavigationProperty Name="DefaultFSType" Relationship="FsInfoCat.Desktop.Model.Remote.DefaultFSTypeHostPlatform" FromRole="HostPlatform" ToRole="FileSystem" />
           <Property Name="DefaultFsTypeId" Type="Guid" Nullable="true" />
-          <NavigationProperty Name="HostDevices" Relationship="RemoteDbModel.HostPlatformHostDevice" FromRole="HostPlatform" ToRole="HostDevice" />
+          <NavigationProperty Name="HostDevices" Relationship="FsInfoCat.Desktop.Model.Remote.HostPlatformHostDevice" FromRole="HostPlatform" ToRole="HostDevice" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByHostPlatform" FromRole="CreatedHostPlatform" ToRole="Creator" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByHostPlatform" FromRole="CreatedHostPlatform" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByHostPlatform" FromRole="ModifiedHostPlatform" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByHostPlatform" FromRole="ModifiedHostPlatform" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
@@ -370,8 +370,8 @@
           <Member Name="Other" Value="255" />
         </EnumType>
         <Association Name="DefaultFSTypeHostPlatform">
-          <End Type="RemoteDbModel.FileSystem" Role="FileSystem" Multiplicity="0..1" />
-          <End Type="RemoteDbModel.HostPlatform" Role="HostPlatform" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileSystem" Role="FileSystem" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HostPlatform" Role="HostPlatform" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="FileSystem">
               <PropertyRef Name="Id" />
@@ -382,8 +382,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="HostPlatformHostDevice">
-          <End Type="RemoteDbModel.HostPlatform" Role="HostPlatform" Multiplicity="1" />
-          <End Type="RemoteDbModel.HostDevice" Role="HostDevice" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HostPlatform" Role="HostPlatform" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HostDevice" Role="HostDevice" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="HostPlatform">
               <PropertyRef Name="Id" />
@@ -394,8 +394,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="HostDeviceVolume">
-          <End Type="RemoteDbModel.HostDevice" Role="HostDevice" Multiplicity="0..1" />
-          <End Type="RemoteDbModel.Volume" Role="Volume" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HostDevice" Role="HostDevice" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Volume" Role="Volume" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="HostDevice">
               <PropertyRef Name="Id" />
@@ -406,8 +406,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FileSystemVolume">
-          <End Type="RemoteDbModel.FileSystem" Role="FileSystem" Multiplicity="1" />
-          <End Type="RemoteDbModel.Volume" Role="Volume" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileSystem" Role="FileSystem" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Volume" Role="Volume" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="FileSystem">
               <PropertyRef Name="Id" />
@@ -423,20 +423,20 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="FileSystem" Relationship="RemoteDbModel.FileSystemFsSymbolicName" FromRole="FsSymbolicName" ToRole="FileSystem" />
+          <NavigationProperty Name="FileSystem" Relationship="FsInfoCat.Desktop.Model.Remote.FileSystemFsSymbolicName" FromRole="FsSymbolicName" ToRole="FileSystem" />
           <Property Name="FileSystemId" Type="Guid" Nullable="false" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByFsSymbolicName" FromRole="CreatedFsSymbolicName" ToRole="Creator" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFsSymbolicName" FromRole="CreatedFsSymbolicName" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByFsSymbolicName" FromRole="ModifiedFsSymbolicName" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFsSymbolicName" FromRole="ModifiedFsSymbolicName" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="FileSystemFsSymbolicName">
-          <End Type="RemoteDbModel.FileSystem" Role="FileSystem" Multiplicity="1" />
-          <End Type="RemoteDbModel.FsSymbolicName" Role="FsSymbolicName" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileSystem" Role="FileSystem" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FsSymbolicName" Role="FsSymbolicName" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="FileSystem">
               <PropertyRef Name="Id" />
@@ -461,17 +461,17 @@
               <Summary>MD5 Hash bytes or null if hash was not yet calculated.</Summary>
             </Documentation>
           </Property>
-          <NavigationProperty Name="Files" Relationship="RemoteDbModel.HashCalculationFile" FromRole="HashCalculation" ToRole="File" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByHashCalculation" FromRole="CreatedHashCalculation" ToRole="Creator" />
+          <NavigationProperty Name="Files" Relationship="FsInfoCat.Desktop.Model.Remote.HashCalculationFile" FromRole="HashCalculation" ToRole="File" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByHashCalculation" FromRole="CreatedHashCalculation" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByHashCalculation" FromRole="ModifiedHashCalculation" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByHashCalculation" FromRole="ModifiedHashCalculation" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="HashCalculationFile">
-          <End Type="RemoteDbModel.HashCalculation" Role="HashCalculation" Multiplicity="1" />
-          <End Type="RemoteDbModel.File" Role="File" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HashCalculation" Role="HashCalculation" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.File" Role="File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="HashCalculation">
               <PropertyRef Name="Id" />
@@ -482,12 +482,12 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="VolumeDirectory">
-          <End Type="RemoteDbModel.Volume" Role="Volume" Multiplicity="0..1" />
-          <End Type="RemoteDbModel.Directory" Role="RootDirectory" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Volume" Role="Volume" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="RootDirectory" Multiplicity="1" />
         </Association>
         <Association Name="DirectoryParent">
-          <End Type="RemoteDbModel.Directory" Role="Parent" Multiplicity="0..1" />
-          <End Type="RemoteDbModel.Directory" Role="SubDirectory" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="Parent" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="SubDirectory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Parent">
               <PropertyRef Name="Id" />
@@ -498,8 +498,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="DirectoryFile">
-          <End Type="RemoteDbModel.Directory" Role="Directory" Multiplicity="1" />
-          <End Type="RemoteDbModel.File" Role="File" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="Directory" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.File" Role="File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Directory">
               <PropertyRef Name="Id" />
@@ -515,38 +515,38 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="Files" Relationship="RemoteDbModel.RedundancyFile" FromRole="Redundancy" ToRole="File" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByRedundancy" FromRole="CreatedRedundancy" ToRole="Creator" />
+          <NavigationProperty Name="Files" Relationship="FsInfoCat.Desktop.Model.Remote.RedundancyFile" FromRole="Redundancy" ToRole="File" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByRedundancy" FromRole="CreatedRedundancy" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByRedundancy" FromRole="ModifiedRedundancy" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByRedundancy" FromRole="ModifiedRedundancy" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="RedundancyFile">
-          <End Type="RemoteDbModel.Redundancy" Role="Redundancy" Multiplicity="*" />
-          <End Type="RemoteDbModel.File" Role="File" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Redundancy" Role="Redundancy" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.File" Role="File" Multiplicity="*" />
         </Association>
         <EntityType Name="Comparison">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="File1" Relationship="RemoteDbModel.FileComparison1" FromRole="Comparison1" ToRole="File1" />
+          <NavigationProperty Name="File1" Relationship="FsInfoCat.Desktop.Model.Remote.FileComparison1" FromRole="Comparison1" ToRole="File1" />
           <Property Name="FileId1" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="File2" Relationship="RemoteDbModel.FileComparison2" FromRole="Comparison2" ToRole="File2" />
+          <NavigationProperty Name="File2" Relationship="FsInfoCat.Desktop.Model.Remote.FileComparison2" FromRole="Comparison2" ToRole="File2" />
           <Property Name="FileId2" Type="Guid" Nullable="false" />
           <Property Name="AreEqual" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CreatedBy" Relationship="RemoteDbModel.CreatedByComparison" FromRole="CreatedComparison" ToRole="Creator" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByComparison" FromRole="CreatedComparison" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="ModifiedBy" Relationship="RemoteDbModel.ModifiedByComparison" FromRole="ModifiedComparison" ToRole="Modifier" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByComparison" FromRole="ModifiedComparison" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="FileComparison1">
-          <End Type="RemoteDbModel.File" Role="File1" Multiplicity="1" />
-          <End Type="RemoteDbModel.Comparison" Role="Comparison1" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.File" Role="File1" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Comparison" Role="Comparison1" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="File1">
               <PropertyRef Name="Id" />
@@ -557,8 +557,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FileComparison2">
-          <End Type="RemoteDbModel.File" Role="File2" Multiplicity="1" />
-          <End Type="RemoteDbModel.Comparison" Role="Comparison2" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.File" Role="File2" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Comparison" Role="Comparison2" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="File2">
               <PropertyRef Name="Id" />
@@ -569,8 +569,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByFsSymbolicName">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.FsSymbolicName" Role="CreatedFsSymbolicName" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FsSymbolicName" Role="CreatedFsSymbolicName" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -581,8 +581,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByComparison">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.Comparison" Role="CreatedComparison" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Comparison" Role="CreatedComparison" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -593,8 +593,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByDirectory">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.Directory" Role="CreatedDirectory" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="CreatedDirectory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -605,8 +605,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByFile">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.File" Role="CreatedFile" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.File" Role="CreatedFile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -617,8 +617,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByFileSystem">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.FileSystem" Role="CreatedFileSystem" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileSystem" Role="CreatedFileSystem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -629,8 +629,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByHashCalculation">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.HashCalculation" Role="CreatedHashCalculation" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HashCalculation" Role="CreatedHashCalculation" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -641,8 +641,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByHostDevice">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.HostDevice" Role="CreatedHostDevice" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HostDevice" Role="CreatedHostDevice" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -653,8 +653,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByHostPlatform">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.HostPlatform" Role="CreatedHostPlatform" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HostPlatform" Role="CreatedHostPlatform" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -665,8 +665,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByRedundancy">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.Redundancy" Role="CreatedRedundancy" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Redundancy" Role="CreatedRedundancy" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -677,8 +677,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByUserProfile">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.UserProfile" Role="CreatedUserProfile" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="CreatedUserProfile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -689,8 +689,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="CreatedByVolume">
-          <End Type="RemoteDbModel.UserProfile" Role="Creator" Multiplicity="1" />
-          <End Type="RemoteDbModel.Volume" Role="CreatedVolume" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Creator" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Volume" Role="CreatedVolume" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creator">
               <PropertyRef Name="Id" />
@@ -701,8 +701,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByVolume">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.Volume" Role="ModifiedVolume" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Volume" Role="ModifiedVolume" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -713,8 +713,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByUserProfile">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.UserProfile" Role="ModifiedUserProfile" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="ModifiedUserProfile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -725,8 +725,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByRedundancy">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.Redundancy" Role="ModifiedRedundancy" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Redundancy" Role="ModifiedRedundancy" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -737,8 +737,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByHostPlatform">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.HostPlatform" Role="ModifiedHostPlatform" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HostPlatform" Role="ModifiedHostPlatform" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -749,8 +749,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByHostDevice">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.HostDevice" Role="ModifiedHostDevice" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HostDevice" Role="ModifiedHostDevice" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -761,8 +761,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByHashCalculation">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.HashCalculation" Role="ModifiedHashCalculation" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.HashCalculation" Role="ModifiedHashCalculation" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -773,8 +773,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByFsSymbolicName">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.FsSymbolicName" Role="ModifiedFsSymbolicName" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FsSymbolicName" Role="ModifiedFsSymbolicName" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -785,8 +785,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByFileSystem">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.FileSystem" Role="ModifiedFileSystem" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileSystem" Role="ModifiedFileSystem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -797,8 +797,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByFile">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.File" Role="ModifiedFile" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.File" Role="ModifiedFile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -809,8 +809,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByDirectory">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.Directory" Role="ModifiedDirectory" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="ModifiedDirectory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -821,8 +821,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="ModifiedByComparison">
-          <End Type="RemoteDbModel.UserProfile" Role="Modifier" Multiplicity="1" />
-          <End Type="RemoteDbModel.Comparison" Role="ModifiedComparison" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="Modifier" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Comparison" Role="ModifiedComparison" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Modifier">
               <PropertyRef Name="Id" />
@@ -839,7 +839,7 @@
       <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
         <Alias Key="Model" Value="RemoteDbModel" />
         <Alias Key="Target" Value="RemoteDbModel.Store" />
-        <EntityContainerMapping CdmEntityContainer="RemoteDbModelContainer" StorageEntityContainer="RemoteDbModelTargetContainer">
+        <EntityContainerMapping CdmEntityContainer="RemoteDbContainer" StorageEntityContainer="RemoteDbModelTargetContainer">
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
