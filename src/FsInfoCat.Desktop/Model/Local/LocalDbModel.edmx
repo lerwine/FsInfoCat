@@ -11,49 +11,49 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="LocalDbModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
-        <EntityContainer Name="LocalDbModelContainer" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Volumes" EntityType="LocalDbModel.Volume" />
-          <EntitySet Name="FileSystems" EntityType="LocalDbModel.FileSystem" />
-          <AssociationSet Name="FileSystemVolume" Association="LocalDbModel.FileSystemVolume">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="FsInfoCat.Desktop.Model.Local" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="LocalDbContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Volumes" EntityType="FsInfoCat.Desktop.Model.Local.Volume" />
+          <EntitySet Name="FileSystems" EntityType="FsInfoCat.Desktop.Model.Local.FileSystem" />
+          <AssociationSet Name="FileSystemVolume" Association="FsInfoCat.Desktop.Model.Local.FileSystemVolume">
             <End Role="FileSystem" EntitySet="FileSystems" />
             <End Role="Volume" EntitySet="Volumes" />
           </AssociationSet>
-          <EntitySet Name="FsSymbolicNames" EntityType="LocalDbModel.FsSymbolicName" />
-          <AssociationSet Name="FileSystemFsSymbolicName" Association="LocalDbModel.FileSystemFsSymbolicName">
+          <EntitySet Name="FsSymbolicNames" EntityType="FsInfoCat.Desktop.Model.Local.FsSymbolicName" />
+          <AssociationSet Name="FileSystemFsSymbolicName" Association="FsInfoCat.Desktop.Model.Local.FileSystemFsSymbolicName">
             <End Role="FileSystem" EntitySet="FileSystems" />
             <End Role="FsSymbolicName" EntitySet="FsSymbolicNames" />
           </AssociationSet>
-          <EntitySet Name="Directories" EntityType="LocalDbModel.Directory" />
-          <AssociationSet Name="ParentDirectory" Association="LocalDbModel.ParentDirectory">
+          <EntitySet Name="Directories" EntityType="FsInfoCat.Desktop.Model.Local.Directory" />
+          <AssociationSet Name="ParentDirectory" Association="FsInfoCat.Desktop.Model.Local.ParentDirectory">
             <End Role="Parent" EntitySet="Directories" />
             <End Role="SubDirectory" EntitySet="Directories" />
           </AssociationSet>
-          <AssociationSet Name="DirectoryVolume" Association="LocalDbModel.DirectoryVolume">
+          <AssociationSet Name="DirectoryVolume" Association="FsInfoCat.Desktop.Model.Local.DirectoryVolume">
             <End Role="Volume" EntitySet="Volumes" />
             <End Role="Directory" EntitySet="Directories" />
           </AssociationSet>
-          <EntitySet Name="Files" EntityType="LocalDbModel.File" />
-          <AssociationSet Name="DirectoryFile" Association="LocalDbModel.DirectoryFile">
+          <EntitySet Name="Files" EntityType="FsInfoCat.Desktop.Model.Local.File" />
+          <AssociationSet Name="DirectoryFile" Association="FsInfoCat.Desktop.Model.Local.DirectoryFile">
             <End Role="Parent" EntitySet="Directories" />
             <End Role="File" EntitySet="Files" />
           </AssociationSet>
-          <EntitySet Name="HashCalculations" EntityType="LocalDbModel.HashCalculation" />
-          <AssociationSet Name="HashCalculationFile" Association="LocalDbModel.HashCalculationFile">
+          <EntitySet Name="HashCalculations" EntityType="FsInfoCat.Desktop.Model.Local.HashCalculation" />
+          <AssociationSet Name="HashCalculationFile" Association="FsInfoCat.Desktop.Model.Local.HashCalculationFile">
             <End Role="HashCalculation" EntitySet="HashCalculations" />
             <End Role="File" EntitySet="Files" />
           </AssociationSet>
-          <EntitySet Name="Redundancies" EntityType="LocalDbModel.Redundancy" />
-          <AssociationSet Name="RedundancyFile" Association="LocalDbModel.RedundancyFile">
+          <EntitySet Name="Redundancies" EntityType="FsInfoCat.Desktop.Model.Local.Redundancy" />
+          <AssociationSet Name="RedundancyFile" Association="FsInfoCat.Desktop.Model.Local.RedundancyFile">
             <End Role="Redundancy" EntitySet="Redundancies" />
             <End Role="File" EntitySet="Files" />
           </AssociationSet>
-          <EntitySet Name="Comparisons" EntityType="LocalDbModel.Comparison" />
-          <AssociationSet Name="FileComparison1" Association="LocalDbModel.FileComparison1">
+          <EntitySet Name="Comparisons" EntityType="FsInfoCat.Desktop.Model.Local.Comparison" />
+          <AssociationSet Name="FileComparison1" Association="FsInfoCat.Desktop.Model.Local.FileComparison1">
             <End Role="File1" EntitySet="Files" />
             <End Role="Comparison1" EntitySet="Comparisons" />
           </AssociationSet>
-          <AssociationSet Name="FileComparison2" Association="LocalDbModel.FileComparison2">
+          <AssociationSet Name="FileComparison2" Association="FsInfoCat.Desktop.Model.Local.FileComparison2">
             <End Role="File2" EntitySet="Files" />
             <End Role="Comparison2" EntitySet="Comparisons" />
           </AssociationSet>
@@ -67,15 +67,15 @@
           <Property Name="RootPathName" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="VolumeName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Identifier" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="FileSystem" Relationship="LocalDbModel.FileSystemVolume" FromRole="Volume" ToRole="FileSystem" />
+          <NavigationProperty Name="FileSystem" Relationship="FsInfoCat.Desktop.Model.Local.FileSystemVolume" FromRole="Volume" ToRole="FileSystem" />
           <Property Name="FileSystemId" Type="Guid" Nullable="false" />
-          <Property Name="Type" Type="DriveType" Nullable="false" />
+          <Property Name="Type" Type="FsInfoCat.Desktop.Model.Local.DriveType" Nullable="false" />
           <Property Name="CaseSensitiveSearch" Type="Boolean" Nullable="true" />
           <Property Name="ReadOnly" Type="Boolean" Nullable="true" />
           <Property Name="MaxNameLength" Type="Int64" Nullable="true" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RootDirectory" Relationship="LocalDbModel.DirectoryVolume" FromRole="Volume" ToRole="Directory" />
+          <NavigationProperty Name="RootDirectory" Relationship="FsInfoCat.Desktop.Model.Local.DirectoryVolume" FromRole="Volume" ToRole="Directory" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
@@ -88,17 +88,17 @@
           <Property Name="CaseSensitiveSearch" Type="Boolean" Nullable="false" />
           <Property Name="ReadOnly" Type="Boolean" Nullable="false" />
           <Property Name="MaxNameLength" Type="Int64" Nullable="false" />
-          <Property Name="DefaultDriveType" Type="DriveType" Nullable="true" />
+          <Property Name="DefaultDriveType" Type="FsInfoCat.Desktop.Model.Local.DriveType" Nullable="true" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Volumes" Relationship="LocalDbModel.FileSystemVolume" FromRole="FileSystem" ToRole="Volume" />
-          <NavigationProperty Name="SymbolicNames" Relationship="LocalDbModel.FileSystemFsSymbolicName" FromRole="FileSystem" ToRole="FsSymbolicName" />
+          <NavigationProperty Name="Volumes" Relationship="FsInfoCat.Desktop.Model.Local.FileSystemVolume" FromRole="FileSystem" ToRole="Volume" />
+          <NavigationProperty Name="SymbolicNames" Relationship="FsInfoCat.Desktop.Model.Local.FileSystemFsSymbolicName" FromRole="FileSystem" ToRole="FsSymbolicName" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="FileSystemVolume">
-          <End Type="LocalDbModel.FileSystem" Role="FileSystem" Multiplicity="1" />
-          <End Type="LocalDbModel.Volume" Role="Volume" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.FileSystem" Role="FileSystem" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Volume" Role="Volume" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="FileSystem">
               <PropertyRef Name="Id" />
@@ -114,7 +114,7 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="FileSystem" Relationship="LocalDbModel.FileSystemFsSymbolicName" FromRole="FsSymbolicName" ToRole="FileSystem" />
+          <NavigationProperty Name="FileSystem" Relationship="FsInfoCat.Desktop.Model.Local.FileSystemFsSymbolicName" FromRole="FsSymbolicName" ToRole="FileSystem" />
           <Property Name="FileSystemId" Type="Guid" Nullable="false" />
           <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
@@ -122,8 +122,8 @@
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="FileSystemFsSymbolicName">
-          <End Type="LocalDbModel.FileSystem" Role="FileSystem" Multiplicity="1" />
-          <End Type="LocalDbModel.FsSymbolicName" Role="FsSymbolicName" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.FileSystem" Role="FileSystem" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.FsSymbolicName" Role="FsSymbolicName" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="FileSystem">
               <PropertyRef Name="Id" />
@@ -139,27 +139,27 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SubDirectories" Relationship="LocalDbModel.ParentDirectory" FromRole="Parent" ToRole="SubDirectory" />
-          <NavigationProperty Name="Parent" Relationship="LocalDbModel.ParentDirectory" FromRole="SubDirectory" ToRole="Parent" >
+          <NavigationProperty Name="SubDirectories" Relationship="FsInfoCat.Desktop.Model.Local.ParentDirectory" FromRole="Parent" ToRole="SubDirectory" />
+          <NavigationProperty Name="Parent" Relationship="FsInfoCat.Desktop.Model.Local.ParentDirectory" FromRole="SubDirectory" ToRole="Parent" >
             <Documentation>
               <Summary>Parent filesystem directory or null if this is the root subdirectory.</Summary>
               <LongDescription>Volume and Parent are exclusive. Either Volume or Parent is required.</LongDescription>
             </Documentation>
           </NavigationProperty>
           <Property Name="ParentId" Type="Guid" Nullable="true" />
-          <NavigationProperty Name="Volume" Relationship="LocalDbModel.DirectoryVolume" FromRole="Directory" ToRole="Volume" >
+          <NavigationProperty Name="Volume" Relationship="FsInfoCat.Desktop.Model.Local.DirectoryVolume" FromRole="Directory" ToRole="Volume" >
             <Documentation>
               <Summary>Parent volume or null if this is a nested subdirectory.</Summary>
               <LongDescription>Volume and Parent are exclusive. Either Volume or Parent is required.</LongDescription>
             </Documentation>
           </NavigationProperty>
-          <NavigationProperty Name="Files" Relationship="LocalDbModel.DirectoryFile" FromRole="Parent" ToRole="File" />
+          <NavigationProperty Name="Files" Relationship="FsInfoCat.Desktop.Model.Local.DirectoryFile" FromRole="Parent" ToRole="File" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="ParentDirectory">
-          <End Type="LocalDbModel.Directory" Role="Parent" Multiplicity="0..1" />
-          <End Type="LocalDbModel.Directory" Role="SubDirectory" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Directory" Role="Parent" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Directory" Role="SubDirectory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Parent">
               <PropertyRef Name="Id" />
@@ -170,27 +170,27 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="DirectoryVolume">
-          <End Type="LocalDbModel.Volume" Role="Volume" Multiplicity="0..1" />
-          <End Type="LocalDbModel.Directory" Role="Directory" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Volume" Role="Volume" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Directory" Role="Directory" Multiplicity="1" />
         </Association>
         <EntityType Name="File">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="Parent" Relationship="LocalDbModel.DirectoryFile" FromRole="File" ToRole="Parent" />
+          <NavigationProperty Name="Parent" Relationship="FsInfoCat.Desktop.Model.Local.DirectoryFile" FromRole="File" ToRole="Parent" />
           <Property Name="ParentId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="HashCalculation" Relationship="LocalDbModel.HashCalculationFile" FromRole="File" ToRole="HashCalculation" />
+          <NavigationProperty Name="HashCalculation" Relationship="FsInfoCat.Desktop.Model.Local.HashCalculationFile" FromRole="File" ToRole="HashCalculation" />
           <Property Name="HashCalculationId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Redundancies" Relationship="LocalDbModel.RedundancyFile" FromRole="File" ToRole="Redundancy" />
-          <NavigationProperty Name="Comparisons1" Relationship="LocalDbModel.FileComparison1" FromRole="File1" ToRole="Comparison1" />
-          <NavigationProperty Name="Comparisons2" Relationship="LocalDbModel.FileComparison2" FromRole="File2" ToRole="Comparison2" />
+          <NavigationProperty Name="Redundancies" Relationship="FsInfoCat.Desktop.Model.Local.RedundancyFile" FromRole="File" ToRole="Redundancy" />
+          <NavigationProperty Name="Comparisons1" Relationship="FsInfoCat.Desktop.Model.Local.FileComparison1" FromRole="File1" ToRole="Comparison1" />
+          <NavigationProperty Name="Comparisons2" Relationship="FsInfoCat.Desktop.Model.Local.FileComparison2" FromRole="File2" ToRole="Comparison2" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="DirectoryFile">
-          <End Type="LocalDbModel.Directory" Role="Parent" Multiplicity="1" />
-          <End Type="LocalDbModel.File" Role="File" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Directory" Role="Parent" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.File" Role="File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Parent">
               <PropertyRef Name="Id" />
@@ -207,13 +207,13 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Length" Type="Int64" Nullable="false" />
           <Property Name="Data" Type="Binary" Nullable="true" MaxLength="16" FixedLength="true" />
-          <NavigationProperty Name="Files" Relationship="LocalDbModel.HashCalculationFile" FromRole="HashCalculation" ToRole="File" />
+          <NavigationProperty Name="Files" Relationship="FsInfoCat.Desktop.Model.Local.HashCalculationFile" FromRole="HashCalculation" ToRole="File" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="HashCalculationFile">
-          <End Type="LocalDbModel.HashCalculation" Role="HashCalculation" Multiplicity="1" />
-          <End Type="LocalDbModel.File" Role="File" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.HashCalculation" Role="HashCalculation" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.File" Role="File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="HashCalculation">
               <PropertyRef Name="Id" />
@@ -228,30 +228,30 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="Files" Relationship="LocalDbModel.RedundancyFile" FromRole="Redundancy" ToRole="File" />
+          <NavigationProperty Name="Files" Relationship="FsInfoCat.Desktop.Model.Local.RedundancyFile" FromRole="Redundancy" ToRole="File" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="RedundancyFile">
-          <End Type="LocalDbModel.Redundancy" Role="Redundancy" Multiplicity="*" />
-          <End Type="LocalDbModel.File" Role="File" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Redundancy" Role="Redundancy" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.File" Role="File" Multiplicity="*" />
         </Association>
         <EntityType Name="Comparison">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="File1" Relationship="LocalDbModel.FileComparison1" FromRole="Comparison1" ToRole="File1" />
+          <NavigationProperty Name="File1" Relationship="FsInfoCat.Desktop.Model.Local.FileComparison1" FromRole="Comparison1" ToRole="File1" />
           <Property Name="FileId1" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="File2" Relationship="LocalDbModel.FileComparison2" FromRole="Comparison2" ToRole="File2" />
+          <NavigationProperty Name="File2" Relationship="FsInfoCat.Desktop.Model.Local.FileComparison2" FromRole="Comparison2" ToRole="File2" />
           <Property Name="FileId2" Type="Guid" Nullable="false" />
           <Property Name="AreEqual" Type="Boolean" Nullable="false" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="FileComparison1">
-          <End Type="LocalDbModel.File" Role="File1" Multiplicity="1" />
-          <End Type="LocalDbModel.Comparison" Role="Comparison1" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.File" Role="File1" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Comparison" Role="Comparison1" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="File1">
               <PropertyRef Name="Id" />
@@ -262,8 +262,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FileComparison2">
-          <End Type="LocalDbModel.File" Role="File2" Multiplicity="1" />
-          <End Type="LocalDbModel.Comparison" Role="Comparison2" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Local.File" Role="File2" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Local.Comparison" Role="Comparison2" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="File2">
               <PropertyRef Name="Id" />
@@ -273,6 +273,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EnumType Name="DriveType" UnderlyingType="Byte" cg:ExternalTypeName="System.IO.DriveType" />
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -280,7 +281,7 @@
       <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
         <Alias Key="Model" Value="LocalDbModel" />
         <Alias Key="Target" Value="LocalDbModel.Store" />
-        <EntityContainerMapping CdmEntityContainer="LocalDbModelContainer" StorageEntityContainer="LocalDbModelTargetContainer">
+        <EntityContainerMapping CdmEntityContainer="LocalDbContainer" StorageEntityContainer="LocalDbModelTargetContainer">
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
