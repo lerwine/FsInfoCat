@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9fae78f98ea841b2a5be4f55389a202f" Name="Diagram1" >
+        <EntityTypeShape EntityType="LocalDbModel.Volume" Width="1.5" PointX="3" PointY="4.125" />
+        <EntityTypeShape EntityType="LocalDbModel.FileSystem" Width="1.5" PointX="0.75" PointY="3" />
+        <AssociationConnector Association="LocalDbModel.FileSystemVolume" />
+        <EntityTypeShape EntityType="LocalDbModel.FsSymbolicName" Width="1.5" PointX="3" PointY="1.125" />
+        <AssociationConnector Association="LocalDbModel.FileSystemFsSymbolicName" />
+        <EntityTypeShape EntityType="LocalDbModel.Directory" Width="1.5" PointX="5.25" PointY="4.75" />
+        <AssociationConnector Association="LocalDbModel.ParentDirectory" />
+        <AssociationConnector Association="LocalDbModel.DirectoryVolume" />
+        <EntityTypeShape EntityType="LocalDbModel.File" Width="1.5" PointX="7.5" PointY="4.625" />
+        <AssociationConnector Association="LocalDbModel.DirectoryFile" />
+        <EntityTypeShape EntityType="LocalDbModel.HashCalculation" Width="1.5" PointX="5.25" PointY="2" />
+        <AssociationConnector Association="LocalDbModel.HashCalculationFile" />
+        <EntityTypeShape EntityType="LocalDbModel.Redundancy" Width="1.5" PointX="5.25" PointY="8.5" />
+        <AssociationConnector Association="LocalDbModel.RedundancyFile" />
+        <EntityTypeShape EntityType="LocalDbModel.Comparison" Width="1.5" PointX="9.75" PointY="4.875" />
+        <AssociationConnector Association="LocalDbModel.FileComparison1" />
+        <AssociationConnector Association="LocalDbModel.FileComparison2" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

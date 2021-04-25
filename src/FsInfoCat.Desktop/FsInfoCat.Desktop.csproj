@@ -38,6 +38,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>FsInfoCat.Desktop.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
@@ -96,7 +99,9 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.1\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationFramework.Royale" />
+    <Reference Include="PresentationFramework.Royale">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -256,9 +261,19 @@
     <Compile Include="Model\LocalDirectory.cs" />
     <Compile Include="Model\LocalFile.cs" />
     <Compile Include="Model\LocalVolume.cs" />
+    <Compile Include="Model\Local\LocalDbModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalDbModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Model\MD5Checksum.cs" />
     <Compile Include="Model\PwHash.cs" />
     <Compile Include="Model\ReadOnlyCollectionDelegateWrapper.cs" />
+    <Compile Include="Model\Remote\RemoteDbModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RemoteDbModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Model\Subdirectory.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
@@ -290,7 +305,6 @@
     <Compile Include="ViewModel\AsyncOperationViewModel.cs" />
     <Compile Include="ViewModel\AsyncResultEventArgs.cs" />
     <Compile Include="ViewModel\ExtensionMethods.cs" />
-    <Compile Include="ViewModel\LocalDbValidationStateValue.cs" />
     <Compile Include="ViewModel\LocalVolumeVM.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\ModalOperationStatusViewModel.cs" />
@@ -369,6 +383,20 @@
     <None Include="Model\DbModel.edmx.diagram">
       <DependentUpon>DbModel.edmx</DependentUpon>
     </None>
+    <EntityDeploy Include="Model\Remote\RemoteDbModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>RemoteDbModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="Model\Local\LocalDbModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>LocalDbModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Model\Local\LocalDbModel.edmx.diagram">
+      <DependentUpon>LocalDbModel.edmx</DependentUpon>
+    </None>
+    <None Include="Model\Remote\RemoteDbModel.edmx.diagram">
+      <DependentUpon>RemoteDbModel.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -398,6 +426,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

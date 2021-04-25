@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="LocalDbModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="LocalDbModelTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="LocalDbModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="LocalDbModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Volumes" EntityType="LocalDbModel.Volume" />
+          <EntitySet Name="FileSystems" EntityType="LocalDbModel.FileSystem" />
+          <AssociationSet Name="FileSystemVolume" Association="LocalDbModel.FileSystemVolume">
+            <End Role="FileSystem" EntitySet="FileSystems" />
+            <End Role="Volume" EntitySet="Volumes" />
+          </AssociationSet>
+          <EntitySet Name="FsSymbolicNames" EntityType="LocalDbModel.FsSymbolicName" />
+          <AssociationSet Name="FileSystemFsSymbolicName" Association="LocalDbModel.FileSystemFsSymbolicName">
+            <End Role="FileSystem" EntitySet="FileSystems" />
+            <End Role="FsSymbolicName" EntitySet="FsSymbolicNames" />
+          </AssociationSet>
+          <EntitySet Name="Directories" EntityType="LocalDbModel.Directory" />
+          <AssociationSet Name="ParentDirectory" Association="LocalDbModel.ParentDirectory">
+            <End Role="Parent" EntitySet="Directories" />
+            <End Role="SubDirectory" EntitySet="Directories" />
+          </AssociationSet>
+          <AssociationSet Name="DirectoryVolume" Association="LocalDbModel.DirectoryVolume">
+            <End Role="Volume" EntitySet="Volumes" />
+            <End Role="Directory" EntitySet="Directories" />
+          </AssociationSet>
+          <EntitySet Name="Files" EntityType="LocalDbModel.File" />
+          <AssociationSet Name="DirectoryFile" Association="LocalDbModel.DirectoryFile">
+            <End Role="Parent" EntitySet="Directories" />
+            <End Role="File" EntitySet="Files" />
+          </AssociationSet>
+          <EntitySet Name="HashCalculations" EntityType="LocalDbModel.HashCalculation" />
+          <AssociationSet Name="HashCalculationFile" Association="LocalDbModel.HashCalculationFile">
+            <End Role="HashCalculation" EntitySet="HashCalculations" />
+            <End Role="File" EntitySet="Files" />
+          </AssociationSet>
+          <EntitySet Name="Redundancies" EntityType="LocalDbModel.Redundancy" />
+          <AssociationSet Name="RedundancyFile" Association="LocalDbModel.RedundancyFile">
+            <End Role="Redundancy" EntitySet="Redundancies" />
+            <End Role="File" EntitySet="Files" />
+          </AssociationSet>
+          <EntitySet Name="Comparisons" EntityType="LocalDbModel.Comparison" />
+          <AssociationSet Name="FileComparison1" Association="LocalDbModel.FileComparison1">
+            <End Role="File1" EntitySet="Files" />
+            <End Role="Comparison1" EntitySet="Comparisons" />
+          </AssociationSet>
+          <AssociationSet Name="FileComparison2" Association="LocalDbModel.FileComparison2">
+            <End Role="File2" EntitySet="Files" />
+            <End Role="Comparison2" EntitySet="Comparisons" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Volume">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="RootPathName" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="VolumeName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Identifier" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FileSystem" Relationship="LocalDbModel.FileSystemVolume" FromRole="Volume" ToRole="FileSystem" />
+          <Property Name="FileSystemId" Type="Guid" Nullable="false" />
+          <Property Name="Type" Type="DriveType" Nullable="false" />
+          <Property Name="CaseSensitiveSearch" Type="Boolean" Nullable="true" />
+          <Property Name="ReadOnly" Type="Boolean" Nullable="true" />
+          <Property Name="MaxNameLength" Type="Int64" Nullable="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="RootDirectory" Relationship="LocalDbModel.DirectoryVolume" FromRole="Volume" ToRole="Directory" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FileSystem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CaseSensitiveSearch" Type="Boolean" Nullable="false" />
+          <Property Name="ReadOnly" Type="Boolean" Nullable="false" />
+          <Property Name="MaxNameLength" Type="Int64" Nullable="false" />
+          <Property Name="DefaultDriveType" Type="DriveType" Nullable="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Volumes" Relationship="LocalDbModel.FileSystemVolume" FromRole="FileSystem" ToRole="Volume" />
+          <NavigationProperty Name="SymbolicNames" Relationship="LocalDbModel.FileSystemFsSymbolicName" FromRole="FileSystem" ToRole="FsSymbolicName" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="FileSystemVolume">
+          <End Type="LocalDbModel.FileSystem" Role="FileSystem" Multiplicity="1" />
+          <End Type="LocalDbModel.Volume" Role="Volume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileSystem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Volume">
+              <PropertyRef Name="FileSystemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="FsSymbolicName">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FileSystem" Relationship="LocalDbModel.FileSystemFsSymbolicName" FromRole="FsSymbolicName" ToRole="FileSystem" />
+          <Property Name="FileSystemId" Type="Guid" Nullable="false" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="FileSystemFsSymbolicName">
+          <End Type="LocalDbModel.FileSystem" Role="FileSystem" Multiplicity="1" />
+          <End Type="LocalDbModel.FsSymbolicName" Role="FsSymbolicName" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileSystem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FsSymbolicName">
+              <PropertyRef Name="FileSystemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Directory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SubDirectories" Relationship="LocalDbModel.ParentDirectory" FromRole="Parent" ToRole="SubDirectory" />
+          <NavigationProperty Name="Parent" Relationship="LocalDbModel.ParentDirectory" FromRole="SubDirectory" ToRole="Parent" >
+            <Documentation>
+              <Summary>Parent filesystem directory or null if this is the root subdirectory.</Summary>
+              <LongDescription>Volume and Parent are exclusive. Either Volume or Parent is required.</LongDescription>
+            </Documentation>
+          </NavigationProperty>
+          <Property Name="ParentId" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="Volume" Relationship="LocalDbModel.DirectoryVolume" FromRole="Directory" ToRole="Volume" >
+            <Documentation>
+              <Summary>Parent volume or null if this is a nested subdirectory.</Summary>
+              <LongDescription>Volume and Parent are exclusive. Either Volume or Parent is required.</LongDescription>
+            </Documentation>
+          </NavigationProperty>
+          <NavigationProperty Name="Files" Relationship="LocalDbModel.DirectoryFile" FromRole="Parent" ToRole="File" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="ParentDirectory">
+          <End Type="LocalDbModel.Directory" Role="Parent" Multiplicity="0..1" />
+          <End Type="LocalDbModel.Directory" Role="SubDirectory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubDirectory">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DirectoryVolume">
+          <End Type="LocalDbModel.Volume" Role="Volume" Multiplicity="0..1" />
+          <End Type="LocalDbModel.Directory" Role="Directory" Multiplicity="1" />
+        </Association>
+        <EntityType Name="File">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="Parent" Relationship="LocalDbModel.DirectoryFile" FromRole="File" ToRole="Parent" />
+          <Property Name="ParentId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="HashCalculation" Relationship="LocalDbModel.HashCalculationFile" FromRole="File" ToRole="HashCalculation" />
+          <Property Name="HashCalculationId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Redundancies" Relationship="LocalDbModel.RedundancyFile" FromRole="File" ToRole="Redundancy" />
+          <NavigationProperty Name="Comparisons1" Relationship="LocalDbModel.FileComparison1" FromRole="File1" ToRole="Comparison1" />
+          <NavigationProperty Name="Comparisons2" Relationship="LocalDbModel.FileComparison2" FromRole="File2" ToRole="Comparison2" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="DirectoryFile">
+          <End Type="LocalDbModel.Directory" Role="Parent" Multiplicity="1" />
+          <End Type="LocalDbModel.File" Role="File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="HashCalculation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Length" Type="Int64" Nullable="false" />
+          <Property Name="Data" Type="Binary" Nullable="true" MaxLength="16" FixedLength="true" />
+          <NavigationProperty Name="Files" Relationship="LocalDbModel.HashCalculationFile" FromRole="HashCalculation" ToRole="File" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="HashCalculationFile">
+          <End Type="LocalDbModel.HashCalculation" Role="HashCalculation" Multiplicity="1" />
+          <End Type="LocalDbModel.File" Role="File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HashCalculation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="HashCalculationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Redundancy">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="Files" Relationship="LocalDbModel.RedundancyFile" FromRole="Redundancy" ToRole="File" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="RedundancyFile">
+          <End Type="LocalDbModel.Redundancy" Role="Redundancy" Multiplicity="*" />
+          <End Type="LocalDbModel.File" Role="File" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Comparison">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="File1" Relationship="LocalDbModel.FileComparison1" FromRole="Comparison1" ToRole="File1" />
+          <Property Name="FileId1" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="File2" Relationship="LocalDbModel.FileComparison2" FromRole="Comparison2" ToRole="File2" />
+          <Property Name="FileId2" Type="Guid" Nullable="false" />
+          <Property Name="AreEqual" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="FileComparison1">
+          <End Type="LocalDbModel.File" Role="File1" Multiplicity="1" />
+          <End Type="LocalDbModel.Comparison" Role="Comparison1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comparison1">
+              <PropertyRef Name="FileId1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FileComparison2">
+          <End Type="LocalDbModel.File" Role="File2" Multiplicity="1" />
+          <End Type="LocalDbModel.Comparison" Role="Comparison2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File2">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comparison2">
+              <PropertyRef Name="FileId2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="LocalDbModel" />
+        <Alias Key="Target" Value="LocalDbModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="LocalDbModelContainer" StorageEntityContainer="LocalDbModelTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
