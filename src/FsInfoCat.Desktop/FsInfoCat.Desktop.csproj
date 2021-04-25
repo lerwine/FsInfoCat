@@ -202,9 +202,12 @@
     <Compile Include="Model\ChecksumCalculation.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\CimGroupPartComponent.cs" />
+    <Compile Include="Model\CIM_PowerManagementCapability.cs" />
     <Compile Include="Model\Comparison.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\ConfigurationManagerErrorCode.cs" />
     <Compile Include="Model\DbModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -223,10 +226,12 @@
     <Compile Include="Model\DbUserRole.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\DeviceOperationalState.cs" />
     <Compile Include="Model\Extensions.cs" />
     <Compile Include="Model\File.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\FileSystemFeature.cs" />
     <Compile Include="Model\GetAutoUserAccountId_Result.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
@@ -269,11 +274,24 @@
     <Compile Include="Model\Volume.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\VolumeIdentifier.cs" />
+    <Compile Include="Model\VolumeInfo.cs" />
+    <Compile Include="Model\Win32_AccessMask.cs" />
+    <Compile Include="Model\Win32_DeviceAvailability.cs" />
+    <Compile Include="Model\Win32_Directory.cs" />
+    <Compile Include="Model\Win32_LocalTime.cs" />
+    <Compile Include="Model\Win32_LogicalDisk.cs" />
+    <Compile Include="Model\Win32_LogicalDiskRootDirectory.cs" />
+    <Compile Include="Model\Win32_MediaAccess.cs" />
+    <Compile Include="Model\WIN32_MEDIA_TYPE.cs" />
+    <Compile Include="Util\UriHelper.cs" />
     <Compile Include="ViewModel\AsyncActionViewModel.cs" />
     <Compile Include="ViewModel\AsyncFunctionViewModel.cs" />
     <Compile Include="ViewModel\AsyncOperationViewModel.cs" />
     <Compile Include="ViewModel\AsyncResultEventArgs.cs" />
     <Compile Include="ViewModel\ExtensionMethods.cs" />
+    <Compile Include="ViewModel\LocalDbValidationStateValue.cs" />
+    <Compile Include="ViewModel\LocalVolumeVM.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\ModalOperationStatusViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />

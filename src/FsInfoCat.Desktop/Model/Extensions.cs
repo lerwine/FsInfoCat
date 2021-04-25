@@ -1,12 +1,41 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Management;
 
 namespace FsInfoCat.Desktop.Model
 {
     public static class Extensions
     {
+        public static T? ToEnumPropertyValue<T>(this ManagementObject managementObject, string propertyName)
+            where T : struct, Enum
+        {
+            object obj = managementObject[propertyName];
+            if (obj is null)
+                return null;
+            return (T)Enum.ToObject(typeof(T), obj);
+        }
+
+        public static IEnumerable<T> ToEnumPropertyValues<T>(this ManagementObject managementObject, string propertyName)
+            where T : struct, Enum
+        {
+            object obj = managementObject[propertyName];
+            if (obj is null)
+                yield break;
+            foreach (object o in (IEnumerable)obj)
+                yield return (T)Enum.ToObject(typeof(T), o);
+        }
+
+        public static Win32_LocalTime ToWin32LocalTime(this ManagementObject managementObject, string propertyName)
+        {
+            object obj = managementObject[propertyName];
+            if (obj is null)
+                return null;
+            return new Win32_LocalTime((ManagementObject)obj);
+        }
+
         public static UserRole AsNormalized(this UserRole userRole)
         {
             if (userRole.HasFlag(UserRole.Administrator))

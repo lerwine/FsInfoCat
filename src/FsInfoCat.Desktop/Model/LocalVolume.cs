@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace FsInfoCat.Desktop.Model
 {
@@ -37,6 +38,9 @@ namespace FsInfoCat.Desktop.Model
 
         [Required]
         public bool CaseSensitive { get; set; }
+
+        [Required]
+        public DriveType DriveType { get; set; }
 
         [Required]
         public bool IsInactive { get; set; }

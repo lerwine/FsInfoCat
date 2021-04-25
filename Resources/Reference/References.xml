@@ -51,7 +51,30 @@
             <Link Tag="CoreAPI" />
             <Link Tag="NetCLI" />
             <Categories>
-                <Category Name="ASP.NET">
+                <Category Name="Entity Framework">
+                    <Link Tag="EfCodeFirst" />
+                    <Link Tag="EfCoreCreate" />
+                    <Link Tag="EFCoreOverview" />
+                    <Link Tag="IValidatableObject" />
+                </Category>
+                <Category Name="Testing">
+                    <Link Tag="NUnit" />
+                    <Link Tag="NetTrace" />
+                </Category>
+                <Category Name="WPF">
+                    <Link Tag="Wpf" />
+                    <Link Tag="WhatWpf" />
+                    <Link Tag="WpfSamples"/>
+                    <Link Tag="WPFSampleSrc" />
+                    <Link Tag="WpfAnnotations" />
+                    <Link Tag="MosPwBox"/>
+                </Category>
+                <Category Name="WMI">
+                    <Link Tag="Win32LdRd" />
+                    <Link Tag="Win32LogicalDisk" />
+                    <Link Tag="Win32Directory" />
+                </Category>
+                <Category Name=".NET Core">
                     <Link Tag="AspNet" />
                     <Link Tag="Rt2Ctrl" />
                     <Link Tag="JsWebApiCall" />
@@ -59,6 +82,9 @@
                     <Link Tag="CtrlTestNetCore" />
                     <Link Tag="CplxDmEFCore" />
                     <Link Tag="MvcEfCore" />
+                    <Link Tag="NUnitCore" />
+                    <Link Tag="CoreTest" />
+                    <Link Tag="CoreLogging" />
                     <Categories>
                         <Category Name="Client Side">
                             <Link Tag="MvcSubmitAjax" />
@@ -75,30 +101,11 @@
                         </Category>
                     </Categories>
                 </Category>
-                <Category Name="Entity Framework">
-                    <Link Tag="EfCodeFirst" />
-                    <Link Tag="EfCoreCreate" />
-                    <Link Tag="EFCoreOverview" />
-                    <Link Tag="IValidatableObject" />
-                </Category>
-                <Category Name="Testing">
-                    <Link Tag="NUnitCore" />
-                    <Link Tag="CoreTest" />
-                    <Link Tag="CoreLogging" />
-                    <Link Tag="NUnit" />
-                    <Link Tag="NetTrace" />
-                </Category>
-                <Category Name="WPF">
-                    <Link Tag="WpfSamples"/>
-                    <Link Tag="WPFSamples" />
-                    <Link Tag="WhatWpf" />
-                    <Link Tag="WpfCore" />
-                    <Link Tag="WpfAnnotations" />
-                    <Link Tag="MosPwBox"/>
-                </Category>
             </Categories>
         </Category>
         <Category Name="SQL">
+            <Link Tag="SqlProgramming"/>
+            <Link Tag="SysDbPrincipal"/>
             <Link Tag="SqlCreateUser"/>
         </Category>
         <Category Name="PowerShell">
@@ -165,6 +172,17 @@
                 <Namespace Name="ViewModel">
                     <Type Name="LoginViewModel">
                         <ReferenceTag>MosPwBox</ReferenceTag>
+                    </Type>
+                </Namespace>
+                <Namespace Name="Model">
+                    <Type Name="Win32_LogicalDiskRootDirectory">
+                        <ReferenceTag>Win32LdRd</ReferenceTag>
+                    </Type>
+                    <Type Name="Win32_LogicalDisk">
+                        <ReferenceTag>Win32LogicalDisk</ReferenceTag>
+                    </Type>
+                    <Type Name="Win32_Directory">
+                        <ReferenceTag>Win32Directory</ReferenceTag>
                     </Type>
                 </Namespace>
             </Namespace>

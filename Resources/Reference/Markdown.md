@@ -6,11 +6,13 @@
   - [XML](#xml)
 - [Client Side APIs](#client-side-apis)
 - [.NET Core API](#-net-core-api)
-  - [ASP.NET](#asp-net)
-    - [Client Side](#client-side)
   - [Entity Framework](#entity-framework)
   - [Testing](#testing)
   - [WPF](#wpf)
+  - [WMI](#wmi)
+  - [.NET Core](#-net-core)
+    - [Client Side](#client-side)
+- [SQL](#sql)
 - [PowerShell](#powershell)
   - [Jobs](#jobs)
   - [Security](#security)
@@ -76,7 +78,41 @@
 - [.NET CLI | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/tools/)
  An overview of the .NET CLI and its features.
 
-### ASP.NET
+### Entity Framework
+
+- [Code First DataAnnotations | Entity Framework Tutorial](https://entity-framework.programmingpedia.net/en/tutorial/4161/code-first-dataannotations)
+ Code First DataAnnotations | Entity Framework Tutorial
+- [Creating and configuring a model - EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/ef/core/modeling/)
+ Overview of creating and configuring a model with Entity Framework Core
+- [Overview of Entity Framework 6 | Microsoft Docs](https://docs.microsoft.com/en-us/ef/ef6/)
+ General introductory overview of Entity Framework 6
+- [c# - How do I use IValidatableObject? | Stack Overflow](https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject)
+
+### Testing
+
+- [NUnit Documentation | NUnit Docs](https://docs.nunit.org/articles/nunit/intro.html)
+- [dotnet-trace diagnostic tool - .NET CLI | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace)
+ Learn how to install and use the dotnet-trace CLI tool to collect .NET traces of a running process without the native profiler, by using the .NET EventPipe.
+
+### WPF
+
+- [Windows Presentation Foundation | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netframeworkdesktop-4.8&preserve-view=true)
+ Learn about using Windows Presentation Foundation, an open-source, graphical user interface for Windows, on .NET Core.
+- [What is Windows Presentation Foundation - WPF .NET | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-5.0)
+ This article gives an overview about what Windows Presentation Foundation (WPF) is as it relates to .NET and what features are provided.
+- [Browse code samples (Windows Presentation Foundation; C#) | Microsoft Docs](https://docs.microsoft.com/en-us/samples/browse/?redirectedfrom=MSDN-samples&languages=csharp&expanded=windows&products=windows-wpf)
+- [GitHub - microsoft/WPF-Samples: Repository for WPF related samples](https://github.com/Microsoft/WPF-Samples)
+ Repository for WPF related samples. Contribute to microsoft/WPF-Samples development by creating an account on GitHub.
+- [c# - How to use System.ComponentModel.DataAnnotations in WPF or Winforms application | Stack Overflow](https://stackoverflow.com/questions/6854759/how-to-use-system-componentmodel-dataannotations-in-wpf-or-winforms-application)
+- [WPF PasswordBox Control | WPF Tutorial](http://www.wpftutorial.net/PasswordBox.html)
+
+### WMI
+
+- [Win32_LogicalDiskRootDirectory class - Win32 apps | Microsoft Docs](https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-logicaldiskrootdirectory)
+- [Win32_LogicalDisk class - Win32 apps | Microsoft Docs](https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-logicaldisk)
+- [Win32_Directory class - Win32 apps | Microsoft Docs](https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-directory)
+
+### .NET Core
 
 - [ASP.NET documentation | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1)
  Learn to use ASP.NET Core to create web apps and services that are fast, secure, cross-platform, and cloud-based. Browse tutorials, sample code, fundamentals, API reference and more.
@@ -90,6 +126,11 @@
  In this tutorial, add more entities and relationships and customize the data model by specifying formatting, validation, and mapping rules.
 - [Tutorial: Implement inheritance - ASP.NET MVC with EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/inheritance?view=aspnetcore-5.0)
  This tutorial will show you how to implement inheritance in the data model, using Entity Framework Core in an ASP.NET Core application.
+- [Unit testing C# with NUnit and .NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-nunit)
+- [Integration tests in ASP.NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0#test-app-prerequisites)
+ Learn how integration tests ensure that an app's components function correctly at the infrastructure level, including the database, file system, and network.
+- [Logging and tracing - .NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/logging-tracing)
+ An introduction to .NET Core logging and tracing.
 
 #### Client Side
 
@@ -114,37 +155,11 @@
 - [Post data using the \$resource Service in an ASP.NET MVC app | AngularJS](https://www.devcurry.com/2013/07/angularjs-post-data-using-resource.html)
  See how to use a $resource service in AngularJS to post data to an ASP.NET MVC Controller.
 
-### Entity Framework
+## SQL
 
-- [Code First DataAnnotations | Entity Framework Tutorial](https://entity-framework.programmingpedia.net/en/tutorial/4161/code-first-dataannotations)
- Code First DataAnnotations | Entity Framework Tutorial
-- [Creating and configuring a model - EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/ef/core/modeling/)
- Overview of creating and configuring a model with Entity Framework Core
-- [Overview of Entity Framework Core - EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/ef/core/)
- General introductory overview of Entity Framework Core
-- [c# - How do I use IValidatableObject? | Stack Overflow](https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject)
-
-### Testing
-
-- [Unit testing C# with NUnit and .NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-nunit)
-- [Integration tests in ASP.NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0#test-app-prerequisites)
- Learn how integration tests ensure that an app's components function correctly at the infrastructure level, including the database, file system, and network.
-- [Logging and tracing - .NET Core | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/logging-tracing)
- An introduction to .NET Core logging and tracing.
-- [NUnit Documentation | NUnit Docs](https://docs.nunit.org/articles/nunit/intro.html)
-- [dotnet-trace diagnostic tool - .NET CLI | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace)
- Learn how to install and use the dotnet-trace CLI tool to collect .NET traces of a running process without the native profiler, by using the .NET EventPipe.
-
-### WPF
-
-- [GitHub - microsoft/WPF-Samples: Repository for WPF related samples](https://github.com/Microsoft/WPF-Samples)
- Repository for WPF related samples. Contribute to microsoft/WPF-Samples development by creating an account on GitHub.
-- [What is Windows Presentation Foundation - WPF .NET | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/overview/?view=netdesktop-5.0)
- This article gives an overview about what Windows Presentation Foundation (WPF) is as it relates to .NET and what features are provided.
-- [Windows Presentation Foundation (WPF) for .NET Core documentation | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-5.0&preserve-view=true)
- Learn about using Windows Presentation Foundation, an open-source, graphical user interface for Windows, on .NET Core.
-- [c# - How to use System.ComponentModel.DataAnnotations in WPF or Winforms application | Stack Overflow](https://stackoverflow.com/questions/6854759/how-to-use-system-componentmodel-dataannotations-in-wpf-or-winforms-application)
-- [WPF PasswordBox Control | WPF Tutorial](http://www.wpftutorial.net/PasswordBox.html)
+- [Homepage for client programming to Microsoft SQL Server | SQL Docs - Microsoft Docs](https://docs.microsoft.com/en-us/sql/connect/homepage-sql-connection-programming?view=sql-server-ver15#an-110-ado-net-docu)
+- [sys.database_principals (Transact-SQL)](https://docs.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-database-principals-transact-sql?view=sql-server-ver15)
+- [CREATE USER (Transact-SQL) | Microsoft Docs](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-user-transact-sql?view=sql-server-ver15)
 
 ## PowerShell
 

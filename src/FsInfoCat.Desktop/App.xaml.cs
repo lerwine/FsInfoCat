@@ -22,7 +22,6 @@ namespace FsInfoCat.Desktop
 
         public static DirectoryInfo EnsureAppDataPath()
         {
-            string path = GetAppDataPath();
             DirectoryInfo result = new DirectoryInfo(GetAppDataPath());
             if (!result.Exists)
                 result.Create();

@@ -27,7 +27,11 @@ namespace FsInfoCat.Desktop.Model
         }
 
         public LocalDbContext() : base(GetConnectionString())
-        {   
+        {
+        }
+
+        public LocalDbContext(string connectionString) : base(string.IsNullOrWhiteSpace(connectionString) ? GetConnectionString() : connectionString)
+        {
         }
 
         public DbSet<LocalVolume> Volumes { get; set; }
