@@ -194,6 +194,9 @@ namespace FsInfoCat.Desktop.Model
     public partial class Volume : IVolume
     {
         private ReadOnlyCollectionDelegateWrapper<Subdirectory, ISubDirectory> _subdirectoriesWrapper;
+
+        public Guid VolumeId => Id;
+
         IReadOnlyCollection<ISubDirectory> IVolume.SubDirectories
         {
             get

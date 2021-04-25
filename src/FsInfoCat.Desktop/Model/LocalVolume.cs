@@ -39,6 +39,8 @@ namespace FsInfoCat.Desktop.Model
 
         IReadOnlyCollection<ISubDirectory> IVolume.SubDirectories => _subdirectoriesWrapper;
 
+        public Guid VolumeId => Id;
+
         public LocalVolume()
         {
             _subdirectoriesWrapper = new ReadOnlyCollectionDelegateWrapper<LocalDirectory, ISubDirectory>(() => SubDirectories);
