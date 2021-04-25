@@ -398,7 +398,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
             public void ThrowIfCancellationRequested() => CancellationToken.ThrowIfCancellationRequested();
 
-            internal Controller(ModalOperationStatusViewModel target, CancellationToken cancellationToken)
+            public Controller(ModalOperationStatusViewModel target, CancellationToken cancellationToken)
             {
                 _target = target ?? throw new ArgumentNullException(nameof(target));
                 CancellationToken = cancellationToken;
