@@ -26,19 +26,29 @@ namespace FsInfoCat.Desktop.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.DbModel.csdl|res://*/Model.DbModel.ssdl|res://*/Model.DbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;connect timeout=30;encrypt=True;MultipleActiveResultSets=True;App=EntityFramework""")]
-        public string EntityClientConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;multipleactiveresultsets=True;connect timeout=30;encrypt=True;application name=EntityFramework""")]
+        public string RemoteConnectionString {
             get {
-                return ((string)(this["EntityClientConnectionString"]));
+                return ((string)(this["RemoteConnectionString"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCatLocal.sdf")]
+        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCat.sdf")]
         public string LocalDbFile {
             get {
                 return ((string)(this["LocalDbFile"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Local.LocalDbModel.csdl|res://*/Model.Local.LocalDbModel.ssdl|res://*/Model.Local.LocalDbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=(localdb)\ProjectsV13;initial catalog=FsInfoCatDb;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework""")]
+        public string LocalConnectionString {
+            get {
+                return ((string)(this["LocalConnectionString"]));
             }
         }
     }

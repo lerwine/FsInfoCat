@@ -261,18 +261,101 @@
     <Compile Include="Model\LocalDirectory.cs" />
     <Compile Include="Model\LocalFile.cs" />
     <Compile Include="Model\LocalVolume.cs" />
+    <Compile Include="Model\Local\Comparison.cs">
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Local\Directory.cs">
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Local\File.cs">
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Local\FileSystem.cs">
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Local\FsSymbolicName.cs">
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Local\HashCalculation.cs">
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Local\LocalDbModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalDbModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Local\LocalDbModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Local\LocalDbModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LocalDbModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model\Local\Redundancy.cs">
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Local\Volume.cs">
+      <DependentUpon>LocalDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\MD5Checksum.cs" />
     <Compile Include="Model\PwHash.cs" />
     <Compile Include="Model\ReadOnlyCollectionDelegateWrapper.cs" />
+    <Compile Include="Model\Remote\Comparison.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\Directory.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\File.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\FileSystem.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\FsSymbolicName.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\HashCalculation.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\HostDevice.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\HostPlatform.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\PlatformType.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\Redundancy.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\RemoteDbModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RemoteDbModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\RemoteDbModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Remote\RemoteDbModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RemoteDbModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\UserProfile.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\UserRole.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Remote\Volume.cs">
+      <DependentUpon>RemoteDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Subdirectory.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
@@ -417,6 +500,28 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DbModel.cs</LastGenOutput>
       <DependentUpon>DbModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Model\Local\LocalDbModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LocalDbModel.Context.cs</LastGenOutput>
+      <DependentUpon>LocalDbModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Model\Local\LocalDbModel.edmx.sql" />
+    <Content Include="Model\Local\LocalDbModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LocalDbModel.cs</LastGenOutput>
+      <DependentUpon>LocalDbModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Model\Remote\RemoteDbModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RemoteDbModel.Context.cs</LastGenOutput>
+      <DependentUpon>RemoteDbModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Model\Remote\RemoteDbModel.edmx.sql" />
+    <Content Include="Model\Remote\RemoteDbModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RemoteDbModel.cs</LastGenOutput>
+      <DependentUpon>RemoteDbModel.edmx</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -2,15 +2,22 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FsInfoCat.Desktop.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="EntityClientConnectionString" Type="(Connection string)" Scope="Application">
+    <Setting Name="RemoteConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;metadata=res://*/Model.DbModel.csdl|res://*/Model.DbModel.ssdl|res://*/Model.DbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;connect timeout=30;encrypt=True;MultipleActiveResultSets=True;App=EntityFramework"&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;metadata=res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;multipleactiveresultsets=True;connect timeout=30;encrypt=True;application name=EntityFramework"&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">metadata=res://*/Model.DbModel.csdl|res://*/Model.DbModel.ssdl|res://*/Model.DbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;connect timeout=30;encrypt=True;MultipleActiveResultSets=True;App=EntityFramework"</Value>
+      <Value Profile="(Default)">metadata=res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;multipleactiveresultsets=True;connect timeout=30;encrypt=True;application name=EntityFramework"</Value>
     </Setting>
     <Setting Name="LocalDbFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">FsInfoCatLocal.sdf</Value>
+      <Value Profile="(Default)">FsInfoCat.sdf</Value>
+    </Setting>
+    <Setting Name="LocalConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;metadata=res://*/Model.Local.LocalDbModel.csdl|res://*/Model.Local.LocalDbModel.ssdl|res://*/Model.Local.LocalDbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=(localdb)\ProjectsV13;initial catalog=FsInfoCatDb;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework"&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">metadata=res://*/Model.Local.LocalDbModel.csdl|res://*/Model.Local.LocalDbModel.ssdl|res://*/Model.Local.LocalDbModel.msl;provider=System.Data.SqlClient;provider connection string="data source=(localdb)\ProjectsV13;initial catalog=FsInfoCatDb;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework"</Value>
     </Setting>
   </Settings>
 </SettingsFile>
