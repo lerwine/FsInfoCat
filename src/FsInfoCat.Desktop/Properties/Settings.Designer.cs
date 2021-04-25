@@ -26,26 +26,6 @@ namespace FsInfoCat.Desktop.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=c868dbserver.database.windows.net;Initial Catalog=FsInfoCat;Persist S" +
-            "ecurity Info=True;User ID=fsinfocatadmin;Connect Timeout=30;Encrypt=True")]
-        public string FsInfoCatConnectionString {
-            get {
-                return ((string)(this["FsInfoCatConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("DbModel")]
-        public string EdmConnectionStringSettingName {
-            get {
-                return ((string)(this["EdmConnectionStringSettingName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.DbModel.csdl|res://*/Model.DbModel.ssdl|res://*/Model.DbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;connect timeout=30;encrypt=True;MultipleActiveResultSets=True;App=EntityFramework""")]
         public string EntityClientConnectionString {
             get {
@@ -55,24 +35,10 @@ namespace FsInfoCat.Desktop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=C:\\Users\\lerwi\\Git\\FsInfoCat\\src\\FsInfoCat.Desktop/FsInfoCatLocal.sdf" +
-            "")]
-        public string LocalDbConnectionString {
-            get {
-                return ((string)(this["LocalDbConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCatLocal.sdf")]
         public string LocalDbFile {
             get {
                 return ((string)(this["LocalDbFile"]));
-            }
-            set {
-                this["LocalDbFile"] = value;
             }
         }
     }

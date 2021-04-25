@@ -14,6 +14,75 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         public static readonly Regex NormalizableWsRegex = new Regex(@" \s+|(?! )\s+", RegexOptions.Compiled);
 
+        public static void CheckInvoke<T1, T2>(this Dispatcher dispatcher, Action<T1, T2> action, T1 arg1, T2 arg2)
+        {
+            if (dispatcher is null)
+                throw new ArgumentNullException(nameof(dispatcher));
+            if (action is null)
+                throw new ArgumentNullException(nameof(action));
+            if (dispatcher.CheckAccess())
+                action(arg1, arg2);
+            else
+                dispatcher.Invoke(action, arg1, arg2);
+        }
+
+        public static TResult CheckInvoke<T1, T2, TResult>(this Dispatcher dispatcher, Func<T1, T2, TResult> function, T1 arg1, T2 arg2)
+        {
+            if (dispatcher is null)
+                throw new ArgumentNullException(nameof(dispatcher));
+            if (function is null)
+                throw new ArgumentNullException(nameof(function));
+            if (dispatcher.CheckAccess())
+                return function(arg1, arg2);
+            return (TResult)dispatcher.Invoke(function, arg1, arg2);
+        }
+
+        public static void CheckInvoke<T>(this Dispatcher dispatcher, Action<T> action, T arg)
+        {
+            if (dispatcher is null)
+                throw new ArgumentNullException(nameof(dispatcher));
+            if (action is null)
+                throw new ArgumentNullException(nameof(action));
+            if (dispatcher.CheckAccess())
+                action(arg);
+            else
+                dispatcher.Invoke(action, arg);
+        }
+
+        public static TResult CheckInvoke<T, TResult>(this Dispatcher dispatcher, Func<T, TResult> function, T arg)
+        {
+            if (dispatcher is null)
+                throw new ArgumentNullException(nameof(dispatcher));
+            if (function is null)
+                throw new ArgumentNullException(nameof(function));
+            if (dispatcher.CheckAccess())
+                return function(arg);
+            return (TResult)dispatcher.Invoke(function, arg);
+        }
+
+        public static void CheckInvoke(this Dispatcher dispatcher, Action action)
+        {
+            if (dispatcher is null)
+                throw new ArgumentNullException(nameof(dispatcher));
+            if (action is null)
+                throw new ArgumentNullException(nameof(action));
+            if (dispatcher.CheckAccess())
+                action();
+            else
+                dispatcher.Invoke(action);
+        }
+
+        public static TResult CheckInvoke<TResult>(this Dispatcher dispatcher, Func<TResult> function)
+        {
+            if (dispatcher is null)
+                throw new ArgumentNullException(nameof(dispatcher));
+            if (function is null)
+                throw new ArgumentNullException(nameof(function));
+            if (dispatcher.CheckAccess())
+                return function();
+            return (TResult)dispatcher.Invoke(function);
+        }
+
         public static CoerceValueCallback ToCoerceValueCallback<TResult>(TResult defaultValue) => (DependencyObject d, object baseValue) =>
             (baseValue is TResult result) ? result : defaultValue;
 

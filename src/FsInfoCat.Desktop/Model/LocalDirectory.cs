@@ -9,30 +9,17 @@ namespace FsInfoCat.Desktop.Model
     {
         private readonly ReadOnlyCollectionDelegateWrapper<LocalFile, IFile> _filesWrapper;
         private readonly ReadOnlyCollectionDelegateWrapper<LocalDirectory, ISubDirectory> _subdirectoriesWrapper;
-        [Required]
-        [Key]
+
         public Guid Id { get; set; }
 
-        [Required]
-        [StringLength(128)]
         public string Name { get; set; }
 
-        [Required]
-        public Guid VolumeId { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(VolumeId))]
         public LocalVolume Volume { get; set; }
 
-        public Guid? ParentId { get; set; }
-
-        [ForeignKey(nameof(ParentId))]
         public LocalDirectory ParentDirectory { get; set; }
 
-        [Required]
         public DateTime CreatedOn { get; set; }
 
-        [Required]
         public DateTime ModifiedOn { get; set; }
 
         public List<LocalFile> Files { get; set; }

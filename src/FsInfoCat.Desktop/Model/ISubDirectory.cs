@@ -11,9 +11,7 @@ namespace FsInfoCat.Desktop.Model
         DateTime ModifiedOn { get; }
         string Name { get; }
         ISubDirectory ParentDirectory { get; }
-        Guid? ParentId { get; }
         IReadOnlyCollection<ISubDirectory> SubDirectories { get; }
         IVolume Volume { get; }
-        Guid VolumeId { get; }
     }
 }

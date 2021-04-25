@@ -16,18 +16,12 @@ namespace FsInfoCat.Desktop.Model
             _filesWrapper = new ReadOnlyCollectionDelegateWrapper<LocalFile, IFile>(() => Files);
         }
 
-        [Required]
-        [Key]
         public Guid Id { get; set; }
 
-        [Required]
         public long Length { get; set; }
 
-        [MaxLength(MD5Checksum.MD5ByteSize)]
-        [MinLength(MD5Checksum.MD5ByteSize)]
         public byte[] Checksum { get; set; }
-
-        [InverseProperty(nameof(LocalComparison.FileId1))]
+        
         public List<LocalFile> Files { get; set; }
 
         IReadOnlyCollection<byte> IChecksumCalculation.Checksum => _checksumWrapper;

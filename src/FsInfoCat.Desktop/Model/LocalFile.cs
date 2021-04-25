@@ -7,39 +7,23 @@ namespace FsInfoCat.Desktop.Model
 {
     public class LocalFile : IFile
     {
-        private ReadOnlyCollectionDelegateWrapper<LocalComparison, IFileComparison> _comparisonsWrapper1;
-        private ReadOnlyCollectionDelegateWrapper<LocalComparison, IFileComparison> _comparisonsWrapper2;
+        private readonly ReadOnlyCollectionDelegateWrapper<LocalComparison, IFileComparison> _comparisonsWrapper1;
+        private readonly ReadOnlyCollectionDelegateWrapper<LocalComparison, IFileComparison> _comparisonsWrapper2;
 
-        [Required]
-        [Key]
         public Guid Id { get; set; }
 
-        [Required]
-        [StringLength(128)]
         public string Name { get; set; }
 
-        [Required]
-        public Guid DirectoryId { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(DirectoryId))]
         public LocalDirectory ParentDirectory { get; set; }
 
-        [Required]
         public DateTime CreatedOn { get; set; }
 
-        [Required]
         public DateTime ModifiedOn { get; set; }
 
-        public Guid? CalculationId { get; set; }
-
-        [ForeignKey(nameof(CalculationId))]
         public LocalChecksumCalculation ChecksumCalculation { get; set; }
 
-        [InverseProperty(nameof(LocalComparison.FileId1))]
         public List<LocalComparison> Comparisons1 { get; set; }
 
-        [InverseProperty(nameof(LocalComparison.FileId2))]
         public List<LocalComparison> Comparisons2 { get; set; }
 
         IChecksumCalculation IFile.ChecksumCalculation => ChecksumCalculation;

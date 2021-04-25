@@ -5,11 +5,11 @@ namespace FsInfoCat.Desktop.Model
 {
     public interface IVolume
     {
+        Guid VolumeId { get; }
         bool CaseSensitive { get; }
         DateTime CreatedOn { get; }
         string DisplayName { get; }
         string DriveFormat { get; }
-        Guid Id { get; }
         string Identifier { get; }
         bool IsInactive { get; }
         long MaxNameLength { get; }
