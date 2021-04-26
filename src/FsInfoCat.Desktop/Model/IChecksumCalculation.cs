@@ -9,6 +9,6 @@ namespace FsInfoCat.Desktop.Model
         IReadOnlyCollection<IFile> Files { get; }
         Guid Id { get; }
         long Length { get; }
-        bool TryGetMD5Checksum(out MD5Checksum result);
+        bool TryGetMD5Checksum(out UInt128 result);
     }
 }

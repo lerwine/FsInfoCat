@@ -11,17 +11,17 @@ namespace FsInfoCat.Desktop.Model
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Volume
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Volume()
         {
             this.CaseSensitive = false;
-            this.Notes = "\"\"";
+            this.Notes = "";
             this.Subdirectories = new HashSet<Subdirectory>();
         }
-    
+
         public System.Guid Id { get; set; }
         public Nullable<System.Guid> HostDeviceId { get; set; }
         public string DisplayName { get; set; }
@@ -37,7 +37,7 @@ namespace FsInfoCat.Desktop.Model
         public System.DateTime ModifiedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public string Notes { get; set; }
-    
+
         public virtual UserAccount CreatedBy { get; set; }
         public virtual UserAccount ModifiedBy { get; set; }
         public virtual HostDevice HostDevice { get; set; }

@@ -79,7 +79,7 @@ namespace FsInfoCat.Desktop.Model
             // BUG: The referential relationship will result in a cyclical reference that is not allowed. [ Constraint name = FK_dbo.LocalComparisons_dbo.LocalFiles_FileId2 ]
             modelBuilder.Entity<LocalFile>().HasMany(f => f.Comparisons2).WithRequired(c => c.File2).HasForeignKey(c => c.FileId2);
             modelBuilder.Entity<LocalChecksumCalculation>().HasKey(v => v.Id);
-            modelBuilder.Entity<LocalChecksumCalculation>().Property(v => v.Checksum).HasMaxLength(MD5Checksum.MD5ByteSize).IsFixedLength().IsRequired();
+            modelBuilder.Entity<LocalChecksumCalculation>().Property(v => v.Checksum).HasMaxLength(UInt128.ByteSize).IsFixedLength().IsRequired();
             modelBuilder.Entity<LocalComparison>().HasKey(c => new { c.FileId1, c.FileId2 });
             base.OnModelCreating(modelBuilder);
         }

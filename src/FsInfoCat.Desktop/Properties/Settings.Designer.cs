@@ -51,5 +51,14 @@ namespace FsInfoCat.Desktop.Properties {
                 return ((string)(this["LocalConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6ba7b811-ffff-3fff-80b4-00c04fd430c8")]
+        public global::System.Guid AppUUID {
+            get {
+                return ((global::System.Guid)(this["AppUUID"]));
+            }
+        }
     }
 }

@@ -11,40 +11,34 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class Directory
+
+    public partial class UserGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Directory()
+        public UserGroup()
         {
-            this.SubDirectories = new HashSet<Directory>();
-            this.Files = new HashSet<File>();
+            this.Notes = "";
+            this.Members = new HashSet<UserProfile>();
+            this.DirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
             this.FileRelocationTasks = new HashSet<FileRelocateTask>();
-            this.TargetDirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
         }
-    
+
         public System.Guid Id { get; set; }
         public string Name { get; set; }
-        public FsInfoCat.Desktop.Model.DirectoryCrawlFlags CrawlFlags { get; set; }
-        public Nullable<System.Guid> ParentId { get; set; }
         public System.Guid CreatedById { get; set; }
+        public string Notes { get; set; }
+        public bool IsInactive { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-        public Nullable<System.Guid> SourceRelocationTaskId { get; set; }
-    
-        public virtual Volume Volume { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Directory> SubDirectories { get; set; }
-        public virtual Directory Parent { get; set; }
+        public virtual ICollection<UserProfile> Members { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<File> Files { get; set; }
-        public virtual UserProfile CreatedBy { get; set; }
-        public virtual UserProfile ModifiedBy { get; set; }
-        public virtual DirectoryRelocateTask SourceRelocationTask { get; set; }
+        public virtual ICollection<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FileRelocateTask> FileRelocationTasks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DirectoryRelocateTask> TargetDirectoryRelocationTasks { get; set; }
+        public virtual UserProfile CreatedBy { get; set; }
+        public virtual UserProfile ModifiedBy { get; set; }
     }
 }

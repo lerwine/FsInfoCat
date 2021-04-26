@@ -36,5 +36,8 @@ namespace FsInfoCat.Desktop.Model.Remote
         public virtual DbSet<HashCalculation> HashCalculations { get; set; }
         public virtual DbSet<Redundancy> Redundancies { get; set; }
         public virtual DbSet<Comparison> Comparisons { get; set; }
+        public virtual DbSet<FileRelocateTask> FileRelocateTasks { get; set; }
+        public virtual DbSet<DirectoryRelocateTask> DirectoryRelocateTasks { get; set; }
+        public virtual DbSet<UserGroup> UserGroups { get; set; }
     }
 }

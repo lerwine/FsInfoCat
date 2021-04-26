@@ -25,7 +25,7 @@
         <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.DirectoryFile" />
         <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.Redundancy" Width="1.5" PointX="13.875" PointY="10.625" />
         <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.RedundancyFile" />
-        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.Comparison" Width="1.5" PointX="10.375" PointY="7.875" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.Comparison" Width="1.5" PointX="10.25" PointY="8.875" />
         <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.FileComparison1" />
         <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.FileComparison2" />
         <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByFsSymbolicName" />
@@ -50,6 +50,24 @@
         <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFile" />
         <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectory" />
         <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByComparison" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.FileRelocateTask" Width="1.5" PointX="15.75" PointY="7.375" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.DirectoryRelocateTask" Width="2.375" PointX="16.125" PointY="2.5" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.SourceDirectoryRelocateTask" />
+        <EntityTypeShape EntityType="FsInfoCat.Desktop.Model.Remote.UserGroup" Width="1.5" PointX="13.75" PointY="2.875" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.UserGroupUserProfile" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.UserGroupDirectoryRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.UserProfileDirectoryRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.FileRelocateTaskFile" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.DirectoryFileRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.TargetDirectoryRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.UserGroupFileRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.UserProfileFileRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByDirectoryRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByFileRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.CreatedByUserGroup" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectoryRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFileRelocateTask" />
+        <AssociationConnector Association="FsInfoCat.Desktop.Model.Remote.ModifiedByUserGroup" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

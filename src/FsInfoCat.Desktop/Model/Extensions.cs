@@ -118,7 +118,7 @@ namespace FsInfoCat.Desktop.Model
             }
         }
 
-        public bool TryGetMD5Checksum(out MD5Checksum result) => MD5Checksum.TryCreate(Checksum, out result);
+        public bool TryGetMD5Checksum(out UInt128 result) => UInt128.TryCreate(Checksum, out result);
     }
 
     public partial class Comparison : IFileComparison

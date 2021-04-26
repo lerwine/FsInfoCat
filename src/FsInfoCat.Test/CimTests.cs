@@ -1,7 +1,9 @@
 using FsInfoCat.Desktop.Model;
 using FsInfoCat.Desktop.ViewModel;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace FsInfoCat.Test
@@ -11,6 +13,23 @@ namespace FsInfoCat.Test
         [SetUp]
         public void Setup()
         {
+        }
+
+        [Test]
+        public void UUIDTest()
+        {
+            string result = new Guid(UUID.NameSpace_DNS.GetBytes().ToArray()).ToString();
+            Assert.That(result, Is.EqualTo("6ba7b810-9dad-11d1-80b4-00c04fd430c8"));
+            result = new Guid(UUID.NameSpace_URL.GetBytes().ToArray()).ToString();
+            Assert.That(result, Is.EqualTo("6ba7b811-9dad-11d1-80b4-00c04fd430c8"));
+            result = new Guid(UUID.NameSpace_OID.GetBytes().ToArray()).ToString();
+            Assert.That(result, Is.EqualTo("6ba7b812-9dad-11d1-80b4-00c04fd430c8"));
+            result = new Guid(UUID.NameSpace_X500.GetBytes().ToArray()).ToString();
+            Assert.That(result, Is.EqualTo("6ba7b814-9dad-11d1-80b4-00c04fd430c8"));
+            UUID uuid = UUID.CreateMD5FromName(UUID.NameSpace_URL, "https://github.com/lerwine/FsInfoCat");
+            Guid guid = new Guid(uuid.GetBytes().ToArray());
+            result = guid.ToString();
+            Assert.That(result, Is.EqualTo("6ba7b811-ffff-3fff-80b4-00c04fd430c8"));
         }
 
         [Test]

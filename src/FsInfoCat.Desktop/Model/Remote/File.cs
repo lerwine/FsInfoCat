@@ -30,6 +30,8 @@ namespace FsInfoCat.Desktop.Model.Remote
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
+        public FsInfoCat.Desktop.Model.FileStatus Status { get; set; }
+        public Nullable<System.Guid> FileRelocateTaskId { get; set; }
     
         public virtual HashCalculation HashCalculation { get; set; }
         public virtual Directory Parent { get; set; }
@@ -41,5 +43,6 @@ namespace FsInfoCat.Desktop.Model.Remote
         public virtual ICollection<Comparison> Comparisons2 { get; set; }
         public virtual UserProfile CreatedBy { get; set; }
         public virtual UserProfile ModifiedBy { get; set; }
+        public virtual FileRelocateTask FileRelocateTask { get; set; }
     }
 }

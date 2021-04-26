@@ -28,6 +28,6 @@ namespace FsInfoCat.Desktop.Model
 
         IReadOnlyCollection<IFile> IChecksumCalculation.Files => _filesWrapper;
 
-        public bool TryGetMD5Checksum(out MD5Checksum result) => MD5Checksum.TryCreate(Checksum, out result);
+        public bool TryGetMD5Checksum(out UInt128 result) => UInt128.TryCreate(Checksum, out result);
     }
 }
