@@ -11,7 +11,7 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class UserGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,16 +22,17 @@ namespace FsInfoCat.Desktop.Model.Remote
             this.DirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
             this.FileRelocationTasks = new HashSet<FileRelocateTask>();
         }
-
+    
         public System.Guid Id { get; set; }
         public string Name { get; set; }
         public System.Guid CreatedById { get; set; }
+        public UserRole Roles { get; set; }
         public string Notes { get; set; }
         public bool IsInactive { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserProfile> Members { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

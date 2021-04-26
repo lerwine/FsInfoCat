@@ -17,7 +17,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public sealed class SettingsViewModel : DependencyObject
     {
         private static readonly ILogger<SettingsViewModel> _logger = App.LoggerFactory.CreateLogger<SettingsViewModel>();
-        private Task<HostDevice> _localMachineRegistrationTask = null;
+        private Task<Model.Remote.HostDevice> _localMachineRegistrationTask = null;
         private const string RegisterLocalMachine_MenuItem_Text = "Register Local Machine";
         private const string UnregisterLocalMachine_MenuItem_Text = "Un-Register Local Machine";
 
@@ -50,46 +50,46 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(MachineNamePropertyKey, value); }
         }
 
-        private static readonly DependencyPropertyKey UserPropertyKey = DependencyProperty.RegisterReadOnly(nameof(User), typeof(UserAccount), typeof(SettingsViewModel),
+        private static readonly DependencyPropertyKey UserPropertyKey = DependencyProperty.RegisterReadOnly(nameof(User), typeof(Model.Remote.UserProfile), typeof(SettingsViewModel),
             new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).UserPropertyChanged?.Invoke(d, e)));
 
         public static readonly DependencyProperty UserProperty = UserPropertyKey.DependencyProperty;
 
-        public UserAccount User
+        public Model.Remote.UserProfile User
         {
-            get { return (UserAccount)GetValue(UserProperty); }
+            get { return (Model.Remote.UserProfile)GetValue(UserProperty); }
             private set { SetValue(UserPropertyKey, value); }
         }
 
-        private static readonly DependencyPropertyKey RolesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Roles), typeof(UserRole), typeof(SettingsViewModel),
-            new PropertyMetadata(UserRole.None, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnRolesPropertyChanged(e)));
+        private static readonly DependencyPropertyKey RolesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Roles), typeof(Model.Remote.UserRole), typeof(SettingsViewModel),
+            new PropertyMetadata(Model.Remote.UserRole.None, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnRolesPropertyChanged(e)));
 
         private void OnRolesPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             try
             {
-                RegisterLocalMachineCommand.IsEnabled = args.NewValue is UserRole role && (role.HasFlag(UserRole.ITSupport) || role.HasFlag(UserRole.Contributor));
+                RegisterLocalMachineCommand.IsEnabled = args.NewValue is Model.Remote.UserRole role && (role.HasFlag(Model.Remote.UserRole.ITSupport) || role.HasFlag(Model.Remote.UserRole.Contributor));
             }
             finally { RolesPropertyChanged?.Invoke(this, args); }
         }
 
         public static readonly DependencyProperty RolesProperty = RolesPropertyKey.DependencyProperty;
 
-        public UserRole Roles
+        public Model.Remote.UserRole Roles
         {
-            get { return (UserRole)GetValue(RolesProperty); }
+            get { return (Model.Remote.UserRole)GetValue(RolesProperty); }
             private set { SetValue(RolesPropertyKey, value); }
         }
 
-        private static readonly DependencyPropertyKey HostDeviceRegistrationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HostDeviceRegistration), typeof(HostDevice), typeof(SettingsViewModel),
+        private static readonly DependencyPropertyKey HostDeviceRegistrationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HostDeviceRegistration), typeof(Model.Remote.HostDevice), typeof(SettingsViewModel),
             new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SettingsViewModel).OnHostDeviceRegistrationPropertyChanged(e)));
 
 
         public static readonly DependencyProperty HostDeviceRegistrationProperty = HostDeviceRegistrationPropertyKey.DependencyProperty;
 
-        public HostDevice HostDeviceRegistration
+        public Model.Remote.HostDevice HostDeviceRegistration
         {
-            get { return (HostDevice)GetValue(HostDeviceRegistrationProperty); }
+            get { return (Model.Remote.HostDevice)GetValue(HostDeviceRegistrationProperty); }
             private set { SetValue(HostDeviceRegistrationPropertyKey, value); }
         }
 
@@ -128,7 +128,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 UnregisterLocalMachineAsync(HostDeviceRegistration);
         }
 
-        private async Task<HostDevice> CheckHostDeviceRegistrationAsync(string machineName, Action<string> setMachineSid)
+        private async Task<Model.Remote.HostDevice> CheckHostDeviceRegistrationAsync(string machineName, Action<string> setMachineSid)
         {
             SelectQuery selectQuery = new SelectQuery("SELECT * from Win32_UserAccount WHERE Name=\"Administrator\"");
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery))
@@ -142,7 +142,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     {
                         string sidString = sid.ToString();
                         setMachineSid(sidString);
-                        using (DbModel dbContext = new DbModel())
+                        using (Model.Remote.RemoteDbContainer dbContext = new Model.Remote.RemoteDbContainer())
                             return await dbContext.HostDevices.FirstOrDefaultAsync(h => h.MachineIdentifer == sidString && h.MachineName == machineName);
                     }
                 }
@@ -150,10 +150,10 @@ namespace FsInfoCat.Desktop.ViewModel
             return null;
         }
 
-        internal Task<HostDevice> CheckHostDeviceRegistrationAsync(bool forceRecheck)
+        internal Task<Model.Remote.HostDevice> CheckHostDeviceRegistrationAsync(bool forceRecheck)
         {
             VerifyAccess();
-            Task<HostDevice> task;
+            Task<Model.Remote.HostDevice> task;
             lock (this)
             {
                 if ((task = _localMachineRegistrationTask) is null || (forceRecheck && task.IsCompleted))
@@ -167,16 +167,16 @@ namespace FsInfoCat.Desktop.ViewModel
             return task;
         }
 
-        private async Task<HostDevice> ForceRegisterLocalMachineAsync(string sidString, string machineName)
+        private async Task<Model.Remote.HostDevice> ForceRegisterLocalMachineAsync(string sidString, string machineName)
         {
-            using (DbModel dbContext = new DbModel())
+            using (Model.Remote.RemoteDbContainer dbContext = new Model.Remote.RemoteDbContainer())
                 return await dbContext.HostDevices.FirstOrDefaultAsync(h => h.MachineIdentifer == sidString && h.MachineName == machineName);
         }
 
-        private Task<HostDevice> RegisterLocalMachineAsync(string sidString, string machineName)
+        private Task<Model.Remote.HostDevice> RegisterLocalMachineAsync(string sidString, string machineName)
         {
             VerifyAccess();
-            Task<HostDevice> task = _localMachineRegistrationTask;
+            Task<Model.Remote.HostDevice> task = _localMachineRegistrationTask;
             if (task is null || task.IsCompleted)
             {
                 RegisterLocalMachineCommand.IsEnabled = false;
@@ -198,9 +198,9 @@ namespace FsInfoCat.Desktop.ViewModel
             return task;
         }
 
-        private async Task<HostDevice> ForceUnregisterLocalMachineAsync(HostDevice hostDeviceRegistration)
+        private async Task<Model.Remote.HostDevice> ForceUnregisterLocalMachineAsync(Model.Remote.HostDevice hostDeviceRegistration)
         {
-            using (DbModel dbContext = new DbModel())
+            using (Model.Remote.RemoteDbContainer dbContext = new Model.Remote.RemoteDbContainer())
             {
                 dbContext.HostDevices.Attach(hostDeviceRegistration);
                 dbContext.HostDevices.Remove(hostDeviceRegistration);
@@ -209,15 +209,15 @@ namespace FsInfoCat.Desktop.ViewModel
             }
         }
 
-        private Task<HostDevice> UnregisterLocalMachineAsync(HostDevice hostDeviceRegistration)
+        private Task<Model.Remote.HostDevice> UnregisterLocalMachineAsync(Model.Remote.HostDevice hostDeviceRegistration)
         {
             VerifyAccess();
-            Task<HostDevice> task = _localMachineRegistrationTask;
+            Task<Model.Remote.HostDevice> task = _localMachineRegistrationTask;
             if (task is null || task.IsCompleted)
             {
                 RegisterLocalMachineCommand.IsEnabled = false;
                 _localMachineRegistrationTask = task = ForceUnregisterLocalMachineAsync(hostDeviceRegistration);
-                task.ContinueWith((Task<HostDevice> t) =>
+                task.ContinueWith((Task<Model.Remote.HostDevice> t) =>
                 {
                     Dispatcher.BeginInvoke(new Action(() => RegisterLocalMachineCommand.IsEnabled = true));
                     if (t.IsCanceled)

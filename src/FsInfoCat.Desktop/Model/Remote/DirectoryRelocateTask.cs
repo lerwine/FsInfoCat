@@ -11,7 +11,7 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class DirectoryRelocateTask
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,7 +20,7 @@ namespace FsInfoCat.Desktop.Model.Remote
             this.Notes = "";
             this.SourceDirectories = new HashSet<Directory>();
         }
-
+    
         public System.Guid Id { get; set; }
         public FsInfoCat.Desktop.Model.AppTaskStatus Status { get; set; }
         public FsInfoCat.Desktop.Model.PriorityLevel Priority { get; set; }
@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Directory> SourceDirectories { get; set; }
         public virtual UserGroup AssignmentGroup { get; set; }

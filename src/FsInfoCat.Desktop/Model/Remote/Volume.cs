@@ -11,7 +11,7 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class Volume
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,10 +19,9 @@ namespace FsInfoCat.Desktop.Model.Remote
         {
             this.Notes = "";
         }
-
+    
         public System.Guid Id { get; set; }
         public string DisplayName { get; set; }
-        public string RootPathName { get; set; }
         public string VolumeName { get; set; }
         public string Identifier { get; set; }
         public Nullable<System.Guid> HostDeviceId { get; set; }
@@ -37,7 +36,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-
+    
         public virtual HostDevice HostDevice { get; set; }
         public virtual FileSystem FileSystem { get; set; }
         public virtual Directory RootDirectory { get; set; }

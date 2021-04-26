@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    public class FsSymbolicName
+    public class FsSymbolicName : IFsSymbolicName
     {
         public FsSymbolicName()
         {
             Notes = "";
+            DefaultFileSystems = new HashSet<FileSystem>();
         }
 
         public Guid Id { get; set; }
@@ -18,5 +20,6 @@ namespace FsInfoCat.Desktop.Model.Local
         public DateTime ModifiedOn { get; set; }
 
         public virtual FileSystem FileSystem { get; set; }
+        public virtual ICollection<FileSystem> DefaultFileSystems { get; set; }
     }
 }

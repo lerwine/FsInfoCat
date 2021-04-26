@@ -11,15 +11,16 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class FsSymbolicName
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public FsSymbolicName()
         {
             this.Notes = "";
+            this.DefaultFileSystems = new HashSet<FileSystem>();
         }
-
+    
         public System.Guid Id { get; set; }
         public string Name { get; set; }
         public System.Guid FileSystemId { get; set; }
@@ -29,9 +30,11 @@ namespace FsInfoCat.Desktop.Model.Remote
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-
+    
         public virtual FileSystem FileSystem { get; set; }
         public virtual UserProfile CreatedBy { get; set; }
         public virtual UserProfile ModifiedBy { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FileSystem> DefaultFileSystems { get; set; }
     }
 }

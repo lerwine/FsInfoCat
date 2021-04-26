@@ -76,9 +76,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public static async Task<List<LocalVolume>> GetDbVolumesAsync()
+        public static async Task<List<Model.Local.Volume>> GetDbVolumesAsync()
         {
-            using (LocalDbContext dbContext = LocalDbContext.GetDbContext())
+            using (Model.Local.LocalDbModel dbContext = Model.Local.LocalDbModel.GetDbContext())
                 return await dbContext.Volumes.ToListAsync();
         }
 
@@ -89,9 +89,9 @@ namespace FsInfoCat.Desktop.ViewModel
             ModalStatus.StartNew("Getting local drive listing", controller =>
             {
                 List<Win32_LogicalDiskRootDirectory> sysVolumes = Win32_LogicalDiskRootDirectory.GetLogicalDiskRootDirectories(controller);
-                Task<List<LocalVolume>> task = GetDbVolumesAsync();
+                Task<List<Model.Local.Volume>> task = GetDbVolumesAsync();
                 task.Wait();
-                return new Tuple<List<LocalVolume>, List<Win32_LogicalDiskRootDirectory>>(task.Result, sysVolumes);
+                return new Tuple<List<Model.Local.Volume>, List<Win32_LogicalDiskRootDirectory>>(task.Result, sysVolumes);
             }).ContinueWith(task =>
             {
                 if (!(task.IsCanceled || task.IsFaulted))

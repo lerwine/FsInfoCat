@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    public class Volume
+    public class Volume : IVolume
     {
         public Volume()
         {
@@ -15,7 +15,6 @@ namespace FsInfoCat.Desktop.Model.Local
 
         public Guid Id { get; set; }
         public string DisplayName { get; set; }
-        public string RootPathName { get; set; }
         public string VolumeName { get; set; }
         public string Identifier { get; set; }
         public Guid FileSystemId { get; set; }
@@ -29,6 +28,8 @@ namespace FsInfoCat.Desktop.Model.Local
         public DateTime ModifiedOn { get; set; }
 
         public virtual FileSystem FileSystem { get; set; }
+        IFileSystem IVolume.FileSystem => FileSystem;
         public virtual Directory RootDirectory { get; set; }
+        ISubDirectory IVolume.RootDirectory => RootDirectory;
     }
 }

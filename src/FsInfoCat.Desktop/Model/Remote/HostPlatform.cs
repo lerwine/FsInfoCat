@@ -11,7 +11,7 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class HostPlatform
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,7 +20,7 @@ namespace FsInfoCat.Desktop.Model.Remote
             this.Notes = "";
             this.HostDevices = new HashSet<HostDevice>();
         }
-
+    
         public System.Guid Id { get; set; }
         public string DisplayName { get; set; }
         public PlatformType Type { get; set; }
@@ -31,7 +31,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-
+    
         public virtual FileSystem DefaultFSType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HostDevice> HostDevices { get; set; }

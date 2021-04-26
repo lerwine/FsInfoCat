@@ -204,65 +204,22 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\AccountToStringConverter.cs" />
-    <Compile Include="Model\ChecksumCalculation.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\CimGroupPartComponent.cs" />
     <Compile Include="Model\CIM_PowerManagementCapability.cs" />
-    <Compile Include="Model\Comparison.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\ConfigurationManagerErrorCode.cs" />
-    <Compile Include="Model\DbModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DbModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\DbModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\DbModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DbModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Model\DbUserRole.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\DeviceOperationalState.cs" />
     <Compile Include="Model\DirectoryCrawlFlags.cs" />
     <Compile Include="Model\Extensions.cs" />
-    <Compile Include="Model\File.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\FileStatus.cs" />
     <Compile Include="Model\FileSystemFeature.cs" />
-    <Compile Include="Model\GetAutoUserAccountId_Result.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GroupMember.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\HostDevice.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\HostPlatformType.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\IChecksumCalculation.cs" />
+    <Compile Include="Model\IHashCalculation.cs" />
     <Compile Include="Model\IDbContext.cs" />
     <Compile Include="Model\IFile.cs" />
     <Compile Include="Model\IFileComparison.cs" />
+    <Compile Include="Model\IFileSystem.cs" />
+    <Compile Include="Model\IFsSymbolicName.cs" />
     <Compile Include="Model\ISubDirectory.cs" />
     <Compile Include="Model\IVolume.cs" />
-    <Compile Include="Model\LocalChecksumCalculation.cs" />
-    <Compile Include="Model\LocalComparison.cs" />
-    <Compile Include="Model\LocalDbContext.cs" />
-    <Compile Include="Model\LocalDirectory.cs" />
-    <Compile Include="Model\LocalFile.cs" />
-    <Compile Include="Model\LocalVolume.cs" />
     <Compile Include="Model\Local\Comparison.cs" />
     <Compile Include="Model\Local\DirectoryRelocateTask.cs" />
     <Compile Include="Model\Local\FileRelocateTask.cs" />
@@ -285,6 +242,7 @@
     <Compile Include="Model\Remote\DirectoryRelocateTask.cs">
       <DependentUpon>RemoteDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Remote\Extensions.cs" />
     <Compile Include="Model\Remote\File.cs">
       <DependentUpon>RemoteDbModel.tt</DependentUpon>
     </Compile>
@@ -342,22 +300,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>RemoteDbModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Model\Subdirectory.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserAccount.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserGroup.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserRole.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\UUID.cs" />
-    <Compile Include="Model\Volume.cs">
-      <DependentUpon>DbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\VolumeIdentifier.cs" />
     <Compile Include="Model\VolumeInfo.cs" />
     <Compile Include="Model\Win32_AccessMask.cs" />
@@ -445,13 +388,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="Model\DbModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>DbModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Model\DbModel.edmx.diagram">
-      <DependentUpon>DbModel.edmx</DependentUpon>
-    </None>
     <EntityDeploy Include="Model\Remote\RemoteDbModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>RemoteDbModel.Designer.cs</LastGenOutput>
@@ -469,17 +405,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Model\DbModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DbModel.Context.cs</LastGenOutput>
-      <DependentUpon>DbModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Model\DbModel.edmx.sql" />
-    <Content Include="Model\DbModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DbModel.cs</LastGenOutput>
-      <DependentUpon>DbModel.edmx</DependentUpon>
-    </Content>
     <Resource Include="Model\Local\XMLFile1.xml" />
     <Content Include="Model\Remote\RemoteDbModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

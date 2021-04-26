@@ -36,13 +36,13 @@ namespace FsInfoCat.Desktop.Model.Local
             modelBuilder.Entity<FileSystem>().Property(t => t.DisplayName).HasMaxLength(128).IsRequired().IsVariableLength();
             modelBuilder.Entity<FileSystem>().Property(t => t.DefaultDriveType).IsOptional();
             modelBuilder.Entity<FileSystem>().Property(t => t.Notes).IsMaxLength().IsRequired().IsVariableLength();
+            modelBuilder.Entity<FileSystem>().HasRequired(t => t.DefaultSymbolicName).WithMany(d => d.DefaultFileSystems).HasForeignKey(t => t.DefaultSymbolicNameId);
             modelBuilder.Entity<FsSymbolicName>().HasKey(p => p.Id);
             modelBuilder.Entity<FsSymbolicName>().Property(t => t.Name).HasMaxLength(128).IsRequired().IsVariableLength();
             modelBuilder.Entity<FsSymbolicName>().Property(t => t.Notes).IsMaxLength().IsRequired().IsVariableLength();
             modelBuilder.Entity<FsSymbolicName>().HasRequired(p => p.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(p => p.FileSystemId);
             modelBuilder.Entity<Volume>().HasKey(p => p.Id);
             modelBuilder.Entity<Volume>().Property(t => t.DisplayName).HasMaxLength(128).IsRequired().IsVariableLength();
-            modelBuilder.Entity<Volume>().Property(t => t.RootPathName).HasMaxLength(1024).IsRequired().IsVariableLength();
             modelBuilder.Entity<Volume>().Property(t => t.VolumeName).HasMaxLength(128).IsRequired().IsVariableLength();
             modelBuilder.Entity<Volume>().Property(t => t.Identifier).HasMaxLength(1024).IsRequired().IsVariableLength();
             modelBuilder.Entity<Volume>().Property(t => t.CaseSensitiveSearch).IsOptional();
@@ -85,6 +85,11 @@ namespace FsInfoCat.Desktop.Model.Local
             modelBuilder.Entity<FileRelocateTask>().HasKey(p => p.Id);
             modelBuilder.Entity<FileRelocateTask>().HasRequired(p => p.TargetDirectory).WithMany(d => d.FileRelocationTasks);
             base.OnModelCreating(modelBuilder);
+        }
+
+        internal static LocalDbModel GetDbContext()
+        {
+            throw new NotImplementedException();
         }
     }
 }

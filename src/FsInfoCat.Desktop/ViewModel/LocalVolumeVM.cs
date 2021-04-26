@@ -1,4 +1,5 @@
 using FsInfoCat.Desktop.Model;
+using FsInfoCat.Desktop.Model.Local;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -195,19 +196,19 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(StatusPropertyKey, value); }
         }
 
-        internal void InitializeFromModel(LocalVolume volume)
+        internal void InitializeFromModel(Volume volume)
         {
             if (volume is null)
                 throw new ArgumentNullException(nameof(volume));
             DisplayName = volume.DisplayName;
             VolumeName = volume.VolumeName;
-            RootPathName = volume.RootPathName;
-            DriveType = volume.DriveType;
+            RootPathName = volume.GetRootPathName();
+            DriveType = volume.Type;
             IsInactive = volume.IsInactive;
-            DriveFormat = volume.DriveFormat;
+            DriveFormat = volume.GetDriveFormat();
             Identifier = VolumeIdentifier.TryCreate(volume.Identifier, out VolumeIdentifier volumeIdentifier) ? volumeIdentifier : VolumeIdentifier.Empty;
-            MaxNameLength = volume.MaxNameLength;
-            CaseSensitive = volume.CaseSensitive;
+            MaxNameLength = volume.GetEffectiveMaxNameLength();
+            CaseSensitive = volume.GetEffectiveCaseSensitiveSearch();
             Id = volume.Id;
             CreatedOn = volume.CreatedOn;
             ModifiedOn = volume.ModifiedOn;
@@ -293,7 +294,7 @@ namespace FsInfoCat.Desktop.ViewModel
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<LocalVolumeVM> GetAllLocalVolumes(IEnumerable<LocalVolume> dbVolumes, List<Win32_LogicalDiskRootDirectory> logicalDisks)
+        public static IEnumerable<LocalVolumeVM> GetAllLocalVolumes(IEnumerable<Volume> dbVolumes, List<Win32_LogicalDiskRootDirectory> logicalDisks)
         {
             Dictionary<VolumeIdentifier, Win32_LogicalDiskRootDirectory> byVolumeIdentifer = new Dictionary<VolumeIdentifier, Win32_LogicalDiskRootDirectory>();
             if (!(logicalDisks is  null))
@@ -308,7 +309,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     }
                 }
             if (!(dbVolumes is null))
-                foreach (LocalVolume lv in dbVolumes)
+                foreach (Volume lv in dbVolumes)
                 {
                     if (lv is null)
                         continue;

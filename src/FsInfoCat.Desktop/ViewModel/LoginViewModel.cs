@@ -7,6 +7,7 @@ using System.Security;
 using System.Windows;
 using System.Windows.Controls;
 using FsInfoCat.Desktop.Model;
+using FsInfoCat.Desktop.Model.Remote;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
@@ -138,7 +139,7 @@ namespace FsInfoCat.Desktop.ViewModel
             ErrorMessage = "";
         }
 
-        private void OnLoginCompleted(UserAccount result)
+        private void OnLoginCompleted(UserProfile result)
         {
             if (result is null)
             {

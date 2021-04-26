@@ -20,6 +20,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         Contributor = 4,
         ChangeAdministrator = 8,
         AppAdministrator = 16,
-        SystemAdmin = 32
+        SystemAdmin = 32,
+        ITSupport = 64
     }
 }

@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    public class Comparison
+    public class Comparison : IFileComparison
     {
         public Guid Id { get; set; }
         public Guid FileId1 { get; set; }
@@ -16,6 +12,8 @@ namespace FsInfoCat.Desktop.Model.Local
         public DateTime ModifiedOn { get; set; }
 
         public virtual File File1 { get; set; }
+        IFile IFileComparison.File1 => File1;
         public virtual File File2 { get; set; }
+        IFile IFileComparison.File2 => File2;
     }
 }

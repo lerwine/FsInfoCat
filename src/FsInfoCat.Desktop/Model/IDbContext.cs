@@ -4,7 +4,7 @@ namespace FsInfoCat.Desktop.Model
 {
     public interface IDbContext
     {
-        IQueryable<IChecksumCalculation> Checksums { get; }
+        IQueryable<IHashCalculation> Checksums { get; }
         IQueryable<IFileComparison> Comparisons { get; }
         IQueryable<IFile> Files { get; }
         IQueryable<ISubDirectory> Subdirectories { get; }

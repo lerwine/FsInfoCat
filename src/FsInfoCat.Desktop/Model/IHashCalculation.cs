@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.Model
 {
-    public interface IChecksumCalculation
+    public interface IHashCalculation
     {
-        IReadOnlyCollection<byte> Checksum { get; }
+        IReadOnlyCollection<byte> Data { get; }
         IReadOnlyCollection<IFile> Files { get; }
         Guid Id { get; }
         long Length { get; }
