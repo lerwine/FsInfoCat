@@ -11,16 +11,16 @@ namespace FsInfoCat.Desktop.Model
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class HostDevice
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public HostDevice()
         {
-            this.Notes = "\"\"";
+            this.Notes = "";
             this.Volumes = new HashSet<Volume>();
         }
-    
+
         public System.Guid Id { get; set; }
         public string DisplayName { get; set; }
         public string MachineIdentifer { get; set; }
@@ -31,7 +31,7 @@ namespace FsInfoCat.Desktop.Model
         public System.Guid ModifiedById { get; set; }
         public string Notes { get; set; }
         public HostPlatformType Platform { get; set; }
-    
+
         public virtual UserAccount CreatedBy { get; set; }
         public virtual UserAccount ModifiedBy { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

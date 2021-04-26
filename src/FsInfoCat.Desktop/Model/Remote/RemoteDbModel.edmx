@@ -174,7 +174,7 @@
     <Property Name="SID" Type="varbinary" Nullable="false" MaxLength="85" />
     <Property Name="LoginName" Type="nvarchar" Nullable="false" MaxLength="128" />
     <Property Name="ExplicitRoles" Type="tinyint" Nullable="false" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
     <Property Name="IsInactive" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="CreatedOn" Type="datetime" Nullable="false" />
@@ -196,7 +196,7 @@
     <Property Name="CaseSensitiveSearch" Type="bit" Nullable="true" />
     <Property Name="ReadOnly" Type="bit" Nullable="true" />
     <Property Name="MaxNameLength" Type="bigint" Nullable="true" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
     <Property Name="IsInactive" Type="bit" Nullable="false" />
     <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="CreatedOn" Type="datetime" Nullable="false" />
@@ -239,7 +239,7 @@
     <Property Name="ReadOnly" Type="bit" Nullable="false" />
     <Property Name="MaxNameLength" Type="bigint" Nullable="false" />
     <Property Name="DefaultDriveType" Type="tinyint" Nullable="true" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
     <Property Name="IsInactive" Type="bit" Nullable="false" />
     <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="CreatedOn" Type="datetime" Nullable="false" />
@@ -255,7 +255,7 @@
     <Property Name="MachineIdentifer" Type="nvarchar" Nullable="false" MaxLength="128" />
     <Property Name="MachineName" Type="nvarchar" Nullable="false" MaxLength="128" />
     <Property Name="PlatformId" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
     <Property Name="IsInactive" Type="bit" Nullable="false" />
     <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="CreatedOn" Type="datetime" Nullable="false" />
@@ -270,7 +270,7 @@
     <Property Name="DisplayName" Type="nvarchar" Nullable="false" MaxLength="128" />
     <Property Name="Type" Type="tinyint" Nullable="false" />
     <Property Name="DefaultFsTypeId" Type="uniqueidentifier" Nullable="true" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
     <Property Name="IsInactive" Type="bit" Nullable="false" />
     <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="CreatedOn" Type="datetime" Nullable="false" />
@@ -284,7 +284,7 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="128" />
     <Property Name="FileSystemId" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
     <Property Name="IsInactive" Type="bit" Nullable="false" />
     <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="CreatedOn" Type="datetime" Nullable="false" />
@@ -906,6 +906,69 @@
             <End Role="Modifier" EntitySet="UserProfiles" />
             <End Role="ModifiedComparison" EntitySet="Comparisons" />
           </AssociationSet>
+          <EntitySet Name="FileRelocateTasks" EntityType="FsInfoCat.Desktop.Model.Remote.FileRelocateTask" />
+          <EntitySet Name="DirectoryRelocateTasks" EntityType="FsInfoCat.Desktop.Model.Remote.DirectoryRelocateTask" />
+          <AssociationSet Name="SourceDirectoryRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.SourceDirectoryRelocateTask">
+            <End Role="SourceRelocateTask" EntitySet="DirectoryRelocateTasks" />
+            <End Role="SourceDirectory" EntitySet="Directories" />
+          </AssociationSet>
+          <EntitySet Name="UserGroups" EntityType="FsInfoCat.Desktop.Model.Remote.UserGroup" />
+          <AssociationSet Name="UserGroupUserProfile" Association="FsInfoCat.Desktop.Model.Remote.UserGroupUserProfile">
+            <End Role="UserGroup" EntitySet="UserGroups" />
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+          </AssociationSet>
+          <AssociationSet Name="UserGroupDirectoryRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.UserGroupDirectoryRelocateTask">
+            <End Role="UserGroup" EntitySet="UserGroups" />
+            <End Role="DirectoryRelocateTask" EntitySet="DirectoryRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="UserProfileDirectoryRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.UserProfileDirectoryRelocateTask">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="DirectoryRelocateTask" EntitySet="DirectoryRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FileRelocateTaskFile" Association="FsInfoCat.Desktop.Model.Remote.FileRelocateTaskFile">
+            <End Role="FileRelocateTask" EntitySet="FileRelocateTasks" />
+            <End Role="File" EntitySet="Files" />
+          </AssociationSet>
+          <AssociationSet Name="DirectoryFileRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.DirectoryFileRelocateTask">
+            <End Role="Directory" EntitySet="Directories" />
+            <End Role="FileRelocateTask" EntitySet="FileRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="TargetDirectoryRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.TargetDirectoryRelocateTask">
+            <End Role="Directory" EntitySet="Directories" />
+            <End Role="DirectoryRelocateTask" EntitySet="DirectoryRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="UserGroupFileRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.UserGroupFileRelocateTask">
+            <End Role="UserGroup" EntitySet="UserGroups" />
+            <End Role="FileRelocateTask" EntitySet="FileRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="UserProfileFileRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.UserProfileFileRelocateTask">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="FileRelocateTask" EntitySet="FileRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByDirectoryRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.CreatedByDirectoryRelocateTask">
+            <End Role="CreatedBy" EntitySet="UserProfiles" />
+            <End Role="CreatedDirectoryRelocateTasks" EntitySet="DirectoryRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByFileRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.CreatedByFileRelocateTask">
+            <End Role="CreatedBy" EntitySet="UserProfiles" />
+            <End Role="CreatedFileRelocateTasks" EntitySet="FileRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="CreatedByUserGroup" Association="FsInfoCat.Desktop.Model.Remote.CreatedByUserGroup">
+            <End Role="CreatedBy" EntitySet="UserProfiles" />
+            <End Role="CreatedUserGroups" EntitySet="UserGroups" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByDirectoryRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectoryRelocateTask">
+            <End Role="ModifiedBy" EntitySet="UserProfiles" />
+            <End Role="ModifiedDirectoryRelocateTask" EntitySet="DirectoryRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByFileRelocateTask" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByFileRelocateTask">
+            <End Role="ModifiedBy" EntitySet="UserProfiles" />
+            <End Role="ModifiedFileRelocateTask" EntitySet="FileRelocateTasks" />
+          </AssociationSet>
+          <AssociationSet Name="ModifiedByUserGroup" Association="FsInfoCat.Desktop.Model.Remote.ModifiedByUserGroup">
+            <End Role="ModifiedBy" EntitySet="UserProfiles" />
+            <End Role="ModifiedUserGroup" EntitySet="UserGroups" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="UserProfile">
           <Key>
@@ -922,7 +985,7 @@
           <Property Name="SID" Type="Binary" Nullable="false" MaxLength="85" FixedLength="false" />
           <Property Name="LoginName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="ExplicitRoles" Type="FsInfoCat.Desktop.Model.Remote.UserRole" Nullable="false" />
-          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" DefaultValue="false" />
           <NavigationProperty Name="CreatedSymbolicNames" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFsSymbolicName" FromRole="Creator" ToRole="CreatedFsSymbolicName" />
           <NavigationProperty Name="CreatedComparisons" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByComparison" FromRole="Creator" ToRole="CreatedComparison" />
@@ -952,6 +1015,15 @@
           <NavigationProperty Name="ModifiedDirectories" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectory" FromRole="Modifier" ToRole="ModifiedDirectory" />
           <NavigationProperty Name="ModifiedComparisons" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByComparison" FromRole="Modifier" ToRole="ModifiedComparison" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="AssignmentGroups" Relationship="FsInfoCat.Desktop.Model.Remote.UserGroupUserProfile" FromRole="UserProfile" ToRole="UserGroup" />
+          <NavigationProperty Name="DirectoryRelocationTasks" Relationship="FsInfoCat.Desktop.Model.Remote.UserProfileDirectoryRelocateTask" FromRole="UserProfile" ToRole="DirectoryRelocateTask" />
+          <NavigationProperty Name="FileRelocationTasks" Relationship="FsInfoCat.Desktop.Model.Remote.UserProfileFileRelocateTask" FromRole="UserProfile" ToRole="FileRelocateTask" />
+          <NavigationProperty Name="CreatedDirectoryRelocateTasks" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByDirectoryRelocateTask" FromRole="CreatedBy" ToRole="CreatedDirectoryRelocateTasks" />
+          <NavigationProperty Name="CreatedFileRelocateTasks" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFileRelocateTask" FromRole="CreatedBy" ToRole="CreatedFileRelocateTasks" />
+          <NavigationProperty Name="CreatedUserGroups" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByUserGroup" FromRole="CreatedBy" ToRole="CreatedUserGroups" />
+          <NavigationProperty Name="ModifiedDirectoryRelocateTasks" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectoryRelocateTask" FromRole="ModifiedBy" ToRole="ModifiedDirectoryRelocateTask" />
+          <NavigationProperty Name="ModifiedFileRelocateTasks" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFileRelocateTask" FromRole="ModifiedBy" ToRole="ModifiedFileRelocateTask" />
+          <NavigationProperty Name="ModifiedUserGroups" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByUserGroup" FromRole="ModifiedBy" ToRole="ModifiedUserGroup" />
         </EntityType>
         <EntityType Name="Volume">
           <Key>
@@ -974,7 +1046,7 @@
           <Property Name="CaseSensitiveSearch" Type="Boolean" Nullable="true" />
           <Property Name="ReadOnly" Type="Boolean" Nullable="true" />
           <Property Name="MaxNameLength" Type="Int64" Nullable="true" />
-          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="RootDirectory" Relationship="FsInfoCat.Desktop.Model.Remote.VolumeDirectory" FromRole="Volume" ToRole="RootDirectory" />
           <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByVolume" FromRole="CreatedVolume" ToRole="Creator" />
@@ -1008,6 +1080,7 @@
               <LongDescription>Volume and Parent are exclusive. Either Volume or Parent is required.</LongDescription>
             </Documentation>
           </NavigationProperty>
+          <Property Name="CrawlFlags" Type="FsInfoCat.Desktop.Model.Remote.DirectoryCrawlFlags" Nullable="false" />
           <Property Name="ParentId" Type="Guid" Nullable="true" />
           <NavigationProperty Name="Files" Relationship="FsInfoCat.Desktop.Model.Remote.DirectoryFile" FromRole="Directory" ToRole="File" />
           <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByDirectory" FromRole="CreatedDirectory" ToRole="Creator" />
@@ -1016,6 +1089,10 @@
           <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectory" FromRole="ModifiedDirectory" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="SourceRelocationTask" Relationship="FsInfoCat.Desktop.Model.Remote.SourceDirectoryRelocateTask" FromRole="SourceDirectory" ToRole="SourceRelocateTask" />
+          <Property Name="SourceRelocationTaskId" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="FileRelocationTasks" Relationship="FsInfoCat.Desktop.Model.Remote.DirectoryFileRelocateTask" FromRole="Directory" ToRole="FileRelocateTask" />
+          <NavigationProperty Name="TargetDirectoryRelocationTasks" Relationship="FsInfoCat.Desktop.Model.Remote.TargetDirectoryRelocateTask" FromRole="Directory" ToRole="DirectoryRelocateTask" />
         </EntityType>
         <EntityType Name="File">
           <Key>
@@ -1036,6 +1113,9 @@
           <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFile" FromRole="ModifiedFile" ToRole="Modifier" />
           <Property Name="ModifiedById" Type="Guid" Nullable="false" />
           <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+          <Property Name="Status" Type="FsInfoCat.Desktop.Model.Remote.FileStatus" Nullable="false" />
+          <NavigationProperty Name="FileRelocateTask" Relationship="FsInfoCat.Desktop.Model.Remote.FileRelocateTaskFile" FromRole="File" ToRole="FileRelocateTask" />
+          <Property Name="FileRelocateTaskId" Type="Guid" Nullable="true" />
         </EntityType>
         <EnumType Name="UserRole" UnderlyingType="Byte" IsFlags="true">
           <Member Name="None" Value="0" />
@@ -1059,7 +1139,7 @@
           <Property Name="DefaultDriveType" Type="FsInfoCat.Desktop.Model.Remote.DriveType" Nullable="true" />
           <NavigationProperty Name="Volumes" Relationship="FsInfoCat.Desktop.Model.Remote.FileSystemVolume" FromRole="FileSystem" ToRole="Volume" />
           <NavigationProperty Name="SymbolicNames" Relationship="FsInfoCat.Desktop.Model.Remote.FileSystemFsSymbolicName" FromRole="FileSystem" ToRole="FsSymbolicName" />
-          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFileSystem" FromRole="CreatedFileSystem" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
@@ -1078,7 +1158,7 @@
           <Property Name="MachineName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="PlatformId" Type="Guid" Nullable="false" />
           <NavigationProperty Name="Volumes" Relationship="FsInfoCat.Desktop.Model.Remote.HostDeviceVolume" FromRole="HostDevice" ToRole="Volume" />
-          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByHostDevice" FromRole="CreatedHostDevice" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
@@ -1097,7 +1177,7 @@
           <NavigationProperty Name="DefaultFSType" Relationship="FsInfoCat.Desktop.Model.Remote.DefaultFSTypeHostPlatform" FromRole="HostPlatform" ToRole="FileSystem" />
           <Property Name="DefaultFsTypeId" Type="Guid" Nullable="true" />
           <NavigationProperty Name="HostDevices" Relationship="FsInfoCat.Desktop.Model.Remote.HostPlatformHostDevice" FromRole="HostPlatform" ToRole="HostDevice" />
-          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByHostPlatform" FromRole="CreatedHostPlatform" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
@@ -1171,7 +1251,7 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="FileSystem" Relationship="FsInfoCat.Desktop.Model.Remote.FileSystemFsSymbolicName" FromRole="FsSymbolicName" ToRole="FileSystem" />
           <Property Name="FileSystemId" Type="Guid" Nullable="false" />
-          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="&quot;&quot;" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsInactive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFsSymbolicName" FromRole="CreatedFsSymbolicName" ToRole="Creator" />
           <Property Name="CreatedById" Type="Guid" Nullable="false" />
@@ -1574,6 +1654,247 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="ModifiedComparison">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="DirectoryCrawlFlags" UnderlyingType="Byte" cg:ExternalTypeName="FsInfoCat.Desktop.Model.DirectoryCrawlFlags" IsFlags="true" />
+        <EnumType Name="FileStatus" UnderlyingType="Byte" IsFlags="true" cg:ExternalTypeName="FsInfoCat.Desktop.Model.FileStatus" />
+        <EntityType Name="FileRelocateTask">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Status" Type="FsInfoCat.Desktop.Model.Remote.AppTaskStatus" Nullable="false" />
+          <Property Name="Priority" Type="FsInfoCat.Desktop.Model.Remote.PriorityLevel" Nullable="false" />
+          <Property Name="ShortDescription" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Files" Relationship="FsInfoCat.Desktop.Model.Remote.FileRelocateTaskFile" FromRole="FileRelocateTask" ToRole="File" />
+          <NavigationProperty Name="TargetDirectory" Relationship="FsInfoCat.Desktop.Model.Remote.DirectoryFileRelocateTask" FromRole="FileRelocateTask" ToRole="Directory" />
+          <Property Name="TargetDirectoryId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="AssignmentGroup" Relationship="FsInfoCat.Desktop.Model.Remote.UserGroupFileRelocateTask" FromRole="FileRelocateTask" ToRole="UserGroup" />
+          <Property Name="AssignmentGroupId" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="AssignedTo" Relationship="FsInfoCat.Desktop.Model.Remote.UserProfileFileRelocateTask" FromRole="FileRelocateTask" ToRole="UserProfile" />
+          <Property Name="AssignedToId" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByFileRelocateTask" FromRole="CreatedFileRelocateTasks" ToRole="CreatedBy" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByFileRelocateTask" FromRole="ModifiedFileRelocateTask" ToRole="ModifiedBy" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DirectoryRelocateTask">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="SourceDirectories" Relationship="FsInfoCat.Desktop.Model.Remote.SourceDirectoryRelocateTask" FromRole="SourceRelocateTask" ToRole="SourceDirectory" />
+          <Property Name="Status" Type="FsInfoCat.Desktop.Model.Remote.AppTaskStatus" Nullable="false" />
+          <Property Name="Priority" Type="FsInfoCat.Desktop.Model.Remote.PriorityLevel" Nullable="false" />
+          <Property Name="ShortDescription" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AssignmentGroup" Relationship="FsInfoCat.Desktop.Model.Remote.UserGroupDirectoryRelocateTask" FromRole="DirectoryRelocateTask" ToRole="UserGroup" />
+          <Property Name="AssignmentGroupId" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="AssignedTo" Relationship="FsInfoCat.Desktop.Model.Remote.UserProfileDirectoryRelocateTask" FromRole="DirectoryRelocateTask" ToRole="UserProfile" />
+          <Property Name="AssignedToId" Type="Guid" Nullable="true" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TargetDirectory" Relationship="FsInfoCat.Desktop.Model.Remote.TargetDirectoryRelocateTask" FromRole="DirectoryRelocateTask" ToRole="Directory" />
+          <Property Name="TargetDirectoryId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByDirectoryRelocateTask" FromRole="CreatedDirectoryRelocateTasks" ToRole="CreatedBy" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByDirectoryRelocateTask" FromRole="ModifiedDirectoryRelocateTask" ToRole="ModifiedBy" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EnumType Name="AppTaskStatus" UnderlyingType="Byte" cg:ExternalTypeName="FsInfoCat.Desktop.Model.AppTaskStatus" />
+        <Association Name="SourceDirectoryRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.DirectoryRelocateTask" Role="SourceRelocateTask" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="SourceDirectory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SourceRelocateTask">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SourceDirectory">
+              <PropertyRef Name="SourceRelocationTaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="PriorityLevel" UnderlyingType="Byte" cg:ExternalTypeName="FsInfoCat.Desktop.Model.PriorityLevel" />
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Members" Relationship="FsInfoCat.Desktop.Model.Remote.UserGroupUserProfile" FromRole="UserGroup" ToRole="UserProfile" />
+          <NavigationProperty Name="DirectoryRelocationTasks" Relationship="FsInfoCat.Desktop.Model.Remote.UserGroupDirectoryRelocateTask" FromRole="UserGroup" ToRole="DirectoryRelocateTask" />
+          <NavigationProperty Name="FileRelocationTasks" Relationship="FsInfoCat.Desktop.Model.Remote.UserGroupFileRelocateTask" FromRole="UserGroup" ToRole="FileRelocateTask" />
+          <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Desktop.Model.Remote.CreatedByUserGroup" FromRole="CreatedUserGroups" ToRole="CreatedBy" />
+          <Property Name="CreatedById" Type="Guid" Nullable="false" />
+          <Property Name="Notes" Type="String" Nullable="false" DefaultValue="" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsInactive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Desktop.Model.Remote.ModifiedByUserGroup" FromRole="ModifiedUserGroup" ToRole="ModifiedBy" />
+          <Property Name="ModifiedById" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="UserGroupUserProfile">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserGroup" Role="UserGroup" Multiplicity="*" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="UserProfile" Multiplicity="*" />
+        </Association>
+        <Association Name="UserGroupDirectoryRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserGroup" Role="UserGroup" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.DirectoryRelocateTask" Role="DirectoryRelocateTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DirectoryRelocateTask">
+              <PropertyRef Name="AssignmentGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserProfileDirectoryRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.DirectoryRelocateTask" Role="DirectoryRelocateTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DirectoryRelocateTask">
+              <PropertyRef Name="AssignedToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FileRelocateTaskFile">
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileRelocateTask" Role="FileRelocateTask" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.File" Role="File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileRelocateTask">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="FileRelocateTaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DirectoryFileRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="Directory" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileRelocateTask" Role="FileRelocateTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Directory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FileRelocateTask">
+              <PropertyRef Name="TargetDirectoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TargetDirectoryRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.Directory" Role="Directory" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.DirectoryRelocateTask" Role="DirectoryRelocateTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Directory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DirectoryRelocateTask">
+              <PropertyRef Name="TargetDirectoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserGroupFileRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserGroup" Role="UserGroup" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileRelocateTask" Role="FileRelocateTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FileRelocateTask">
+              <PropertyRef Name="AssignmentGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserProfileFileRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileRelocateTask" Role="FileRelocateTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FileRelocateTask">
+              <PropertyRef Name="AssignedToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByDirectoryRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="CreatedBy" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.DirectoryRelocateTask" Role="CreatedDirectoryRelocateTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreatedBy">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreatedDirectoryRelocateTasks">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByFileRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="CreatedBy" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileRelocateTask" Role="CreatedFileRelocateTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreatedBy">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreatedFileRelocateTasks">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CreatedByUserGroup">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="CreatedBy" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserGroup" Role="CreatedUserGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreatedBy">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreatedUserGroups">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByDirectoryRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="ModifiedBy" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.DirectoryRelocateTask" Role="ModifiedDirectoryRelocateTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ModifiedBy">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ModifiedDirectoryRelocateTask">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByFileRelocateTask">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="ModifiedBy" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.FileRelocateTask" Role="ModifiedFileRelocateTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ModifiedBy">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ModifiedFileRelocateTask">
+              <PropertyRef Name="ModifiedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModifiedByUserGroup">
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserProfile" Role="ModifiedBy" Multiplicity="1" />
+          <End Type="FsInfoCat.Desktop.Model.Remote.UserGroup" Role="ModifiedUserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ModifiedBy">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ModifiedUserGroup">
               <PropertyRef Name="ModifiedById" />
             </Dependent>
           </ReferentialConstraint>

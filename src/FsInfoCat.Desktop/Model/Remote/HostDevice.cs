@@ -11,16 +11,16 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class HostDevice
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public HostDevice()
         {
-            this.Notes = "\"\"";
+            this.Notes = "";
             this.Volumes = new HashSet<Volume>();
         }
-    
+
         public System.Guid Id { get; set; }
         public string DisplayName { get; set; }
         public string MachineIdentifer { get; set; }
@@ -32,7 +32,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Volume> Volumes { get; set; }
         public virtual UserProfile CreatedBy { get; set; }

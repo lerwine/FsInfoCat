@@ -11,14 +11,14 @@ namespace FsInfoCat.Desktop.Model
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class UserAccount
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public UserAccount()
         {
             this.IsInactive = false;
-            this.Notes = "\"\"";
+            this.Notes = "";
             this.CreatedHostDevices = new HashSet<HostDevice>();
             this.ModifiedHostDevices = new HashSet<HostDevice>();
             this.CreatedUserAccounts = new HashSet<UserAccount>();
@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.Model
             this.SubdirectoriesCreated = new HashSet<Subdirectory>();
             this.SubdirectoriesModified = new HashSet<Subdirectory>();
         }
-    
+
         public System.Guid Id { get; set; }
         public string DisplayName { get; set; }
         public string FirstName { get; set; }
@@ -52,7 +52,7 @@ namespace FsInfoCat.Desktop.Model
         public Nullable<int> DbPrincipalId { get; set; }
         public byte[] SID { get; set; }
         public string LoginName { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HostDevice> CreatedHostDevices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

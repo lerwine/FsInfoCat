@@ -122,7 +122,7 @@
     <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
     <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ExplicitRoles" Type="tinyint" Nullable="false" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
     <Property Name="DbPrincipalId" Type="int" Nullable="true" />
     <Property Name="SID" Type="varbinary" Nullable="false" MaxLength="85" />
     <Property Name="LoginName" Type="nvarchar" Nullable="false" MaxLength="128" />
@@ -139,7 +139,7 @@
     <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
     <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
     <Property Name="Platform" Type="tinyint" Nullable="false" />
   </EntityType>
   <EntityType Name="Volumes">
@@ -160,7 +160,7 @@
     <Property Name="CreatedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
     <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
   </EntityType>
   <EntityType Name="UserGroups">
     <Key>
@@ -174,7 +174,7 @@
     <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
     <Property Name="ModifiedById" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Roles" Type="tinyint" Nullable="false" />
-    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="&quot;&quot;" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" DefaultValue="" />
   </EntityType>
   <EntityType Name="GroupMembers">
     <Key>
@@ -646,7 +646,7 @@
               <Summary>Explcitly assigned roles.</Summary>
             </Documentation>
           </Property>
-          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" DefaultValue="&quot;&quot;" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" DefaultValue="" />
           <NavigationProperty Name="Memberships" Relationship="FsInfoCat.Model.UserAccountGroupMember" FromRole="UserAccount" ToRole="GroupMember" >
             <Documentation>
               <Summary>Group memberships for the current user account.</Summary>
@@ -678,7 +678,7 @@
           <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByHostDevice" FromRole="HostDevice" ToRole="Creator" />
           <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByHostDevice" FromRole="HostDevice" ToRole="Modifier" />
           <NavigationProperty Name="Volumes" Relationship="FsInfoCat.Model.HostDeviceVolume" FromRole="HostDevice" ToRole="Volume" />
-          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" DefaultValue="&quot;&quot;" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" DefaultValue="" />
           <Property Name="Platform" Type="FsInfoCat.Model.HostPlatformType" Nullable="false" />
         </EntityType>
         <Association Name="CreatedByHostDevice">
@@ -750,7 +750,7 @@
           <NavigationProperty Name="CreatedBy" Relationship="FsInfoCat.Model.CreatedByVolume" FromRole="Volume" ToRole="Creator" />
           <NavigationProperty Name="ModifiedBy" Relationship="FsInfoCat.Model.ModifiedByVolume" FromRole="Volume" ToRole="Modifier" />
           <NavigationProperty Name="HostDevice" Relationship="FsInfoCat.Model.HostDeviceVolume" FromRole="Volume" ToRole="HostDevice" />
-          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" DefaultValue="&quot;&quot;" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" DefaultValue="" />
           <NavigationProperty Name="Subdirectories" Relationship="FsInfoCat.Model.VolumeDirectory" FromRole="Volume" ToRole="Directory" />
         </EntityType>
         <Association Name="CreatedByVolume">
@@ -823,7 +823,7 @@
               <Summary>Roles assigned to all group members.</Summary>
             </Documentation>
           </Property>
-          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" DefaultValue="&quot;&quot;" />
+          <Property Name="Notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" DefaultValue="" />
           <NavigationProperty Name="Memberships" Relationship="FsInfoCat.Model.UserGroupGroupMember" FromRole="UserGroup" ToRole="GroupMember" >
             <Documentation>
               <Summary>Links to group members</Summary>

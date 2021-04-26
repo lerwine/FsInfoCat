@@ -11,18 +11,18 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class FileSystem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public FileSystem()
         {
-            this.Notes = "\"\"";
+            this.Notes = "";
             this.DefaultHostPlatforms = new HashSet<HostPlatform>();
             this.Volumes = new HashSet<Volume>();
             this.SymbolicNames = new HashSet<FsSymbolicName>();
         }
-    
+
         public System.Guid Id { get; set; }
         public string DisplayName { get; set; }
         public bool CaseSensitiveSearch { get; set; }
@@ -35,7 +35,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HostPlatform> DefaultHostPlatforms { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

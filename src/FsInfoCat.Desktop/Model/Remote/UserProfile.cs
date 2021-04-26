@@ -11,13 +11,13 @@ namespace FsInfoCat.Desktop.Model.Remote
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class UserProfile
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public UserProfile()
         {
-            this.Notes = "\"\"";
+            this.Notes = "";
             this.IsInactive = false;
             this.CreatedSymbolicNames = new HashSet<FsSymbolicName>();
             this.CreatedComparisons = new HashSet<Comparison>();
@@ -41,8 +41,17 @@ namespace FsInfoCat.Desktop.Model.Remote
             this.ModifiedFiles = new HashSet<File>();
             this.ModifiedDirectories = new HashSet<Directory>();
             this.ModifiedComparisons = new HashSet<Comparison>();
+            this.AssignmentGroups = new HashSet<UserGroup>();
+            this.DirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
+            this.FileRelocationTasks = new HashSet<FileRelocateTask>();
+            this.CreatedDirectoryRelocateTasks = new HashSet<DirectoryRelocateTask>();
+            this.CreatedFileRelocateTasks = new HashSet<FileRelocateTask>();
+            this.CreatedUserGroups = new HashSet<UserGroup>();
+            this.ModifiedDirectoryRelocateTasks = new HashSet<DirectoryRelocateTask>();
+            this.ModifiedFileRelocateTasks = new HashSet<FileRelocateTask>();
+            this.ModifiedUserGroups = new HashSet<UserGroup>();
         }
-    
+
         public System.Guid Id { get; set; }
         public string DisplayName { get; set; }
         public string FirstName { get; set; }
@@ -60,7 +69,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         public System.DateTime CreatedOn { get; set; }
         public System.Guid ModifiedById { get; set; }
         public System.DateTime ModifiedOn { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FsSymbolicName> CreatedSymbolicNames { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -107,5 +116,23 @@ namespace FsInfoCat.Desktop.Model.Remote
         public virtual ICollection<Directory> ModifiedDirectories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comparison> ModifiedComparisons { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserGroup> AssignmentGroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FileRelocateTask> FileRelocationTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DirectoryRelocateTask> CreatedDirectoryRelocateTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FileRelocateTask> CreatedFileRelocateTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserGroup> CreatedUserGroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DirectoryRelocateTask> ModifiedDirectoryRelocateTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FileRelocateTask> ModifiedFileRelocateTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserGroup> ModifiedUserGroups { get; set; }
     }
 }
