@@ -30,6 +30,7 @@
                     <Link Tag="RFC6874" />
                     <Link Tag="RFC8089" />
                     <Link Tag="WHATWGURL" />
+                    <Link Tag="UrnUUID"/>
                 </Category>
                 <Category Name="XML">
                     <Link Tag="W3XML" />
@@ -107,6 +108,9 @@
             <Link Tag="SqlProgramming"/>
             <Link Tag="SysDbPrincipal"/>
             <Link Tag="SqlCreateUser"/>
+            <Link Tag="DbListExtProp"/>
+            <Link Tag="DbAddExtProp"/>
+            <Link Tag="DbModExtProp"/>
         </Category>
         <Category Name="PowerShell">
             <Link Tag="Pester" />

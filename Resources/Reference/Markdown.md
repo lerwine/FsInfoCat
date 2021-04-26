@@ -1,4 +1,4 @@
-- [General](#general)
+﻿- [General](#general)
 - [Library Repositories](#library-repositories)
 - [Linux Refrerences](#linux-refrerences)
 - [Languages, Formats and Markup](#languages-formats-and-markup)
@@ -54,6 +54,7 @@
 - [Representing IPv6 Zone Identifiers in Address Literals and Uniform Resource Identifiers | IETF Tools](https://tools.ietf.org/html/rfc6874)
 - [The "file" URI Scheme | IETF Tools](https://tools.ietf.org/html/rfc8089)
 - [URLs | URL - Living Standard](https://url.spec.whatwg.org/)
+- [RFC 4122 - A Universally Unique IDentifier (UUID) URN Namespace | IETF Tools](https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml)
 
 ### XML
 
@@ -160,6 +161,9 @@
 - [Homepage for client programming to Microsoft SQL Server | SQL Docs - Microsoft Docs](https://docs.microsoft.com/en-us/sql/connect/homepage-sql-connection-programming?view=sql-server-ver15#an-110-ado-net-docu)
 - [sys.database_principals (Transact-SQL)](https://docs.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-database-principals-transact-sql?view=sql-server-ver15)
 - [CREATE USER (Transact-SQL) | Microsoft Docs](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-user-transact-sql?view=sql-server-ver15)
+- [sys.fn_listextendedproperty (Transact-SQL) - SQL Server | Microsoft Docs](https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/sys-fn-listextendedproperty-transact-sql?view=sql-server-2016)
+- [sp_addextendedproperty (Transact-SQL) - SQL Server | Microsoft Docs](https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-2016)
+- [sp_updateextendedproperty (Transact-SQL) - SQL Server | Microsoft Docs](https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-updateextendedproperty-transact-sql?view=sql-server-2016)
 
 ## PowerShell
 
