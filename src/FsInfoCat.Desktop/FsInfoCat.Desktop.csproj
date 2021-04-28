@@ -204,6 +204,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\AccountToStringConverter.cs" />
+    <Compile Include="Model\Bits\Binary128.cs" />
+    <Compile Include="Model\Bits\Binary16.cs" />
+    <Compile Include="Model\Bits\Binary32.cs" />
+    <Compile Include="Model\Bits\Binary64.cs" />
     <Compile Include="Model\CimGroupPartComponent.cs" />
     <Compile Include="Model\CIM_PowerManagementCapability.cs" />
     <Compile Include="Model\ConfigurationManagerErrorCode.cs" />
