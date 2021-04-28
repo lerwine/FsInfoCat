@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/25/2021 17:21:32
+-- Date Created: 04/28/2021 01:08:15
 -- Generated from EDMX file: C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop\Model\Remote\RemoteDbModel.edmx
 -- --------------------------------------------------
 
@@ -17,11 +17,152 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_DefaultFSTypeHostPlatform]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HostPlatforms] DROP CONSTRAINT [FK_DefaultFSTypeHostPlatform];
+GO
+IF OBJECT_ID(N'[dbo].[FK_HostPlatformHostDevice]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HostDevices] DROP CONSTRAINT [FK_HostPlatformHostDevice];
+GO
+IF OBJECT_ID(N'[dbo].[FK_HostDeviceVolume]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_HostDeviceVolume];
+GO
+IF OBJECT_ID(N'[dbo].[FK_FileSystemVolume]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_FileSystemVolume];
+GO
+IF OBJECT_ID(N'[dbo].[FK_FileSystemFsSymbolicName]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FsSymbolicNames] DROP CONSTRAINT [FK_FileSystemFsSymbolicName];
+GO
+IF OBJECT_ID(N'[dbo].[FK_HashCalculationFile]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Files] DROP CONSTRAINT [FK_HashCalculationFile];
+GO
+IF OBJECT_ID(N'[dbo].[FK_VolumeDirectory]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_VolumeDirectory];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DirectoryParent]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Directories] DROP CONSTRAINT [FK_DirectoryParent];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DirectoryFile]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Files] DROP CONSTRAINT [FK_DirectoryFile];
+GO
+IF OBJECT_ID(N'[dbo].[FK_RedundancyFile_Redundancy]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RedundancyFile] DROP CONSTRAINT [FK_RedundancyFile_Redundancy];
+GO
+IF OBJECT_ID(N'[dbo].[FK_RedundancyFile_File]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RedundancyFile] DROP CONSTRAINT [FK_RedundancyFile_File];
+GO
+IF OBJECT_ID(N'[dbo].[FK_FileComparison1]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Comparisons] DROP CONSTRAINT [FK_FileComparison1];
+GO
+IF OBJECT_ID(N'[dbo].[FK_FileComparison2]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Comparisons] DROP CONSTRAINT [FK_FileComparison2];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByFsSymbolicName]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FsSymbolicNames] DROP CONSTRAINT [FK_CreatedByFsSymbolicName];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByComparison]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Comparisons] DROP CONSTRAINT [FK_CreatedByComparison];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByDirectory]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Directories] DROP CONSTRAINT [FK_CreatedByDirectory];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByFile]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Files] DROP CONSTRAINT [FK_CreatedByFile];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByFileSystem]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FileSystems] DROP CONSTRAINT [FK_CreatedByFileSystem];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByHashCalculation]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HashCalculations] DROP CONSTRAINT [FK_CreatedByHashCalculation];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByHostDevice]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HostDevices] DROP CONSTRAINT [FK_CreatedByHostDevice];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByHostPlatform]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HostPlatforms] DROP CONSTRAINT [FK_CreatedByHostPlatform];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByRedundancy]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Redundancies] DROP CONSTRAINT [FK_CreatedByRedundancy];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByUserProfile]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[UserProfiles] DROP CONSTRAINT [FK_CreatedByUserProfile];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CreatedByVolume]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_CreatedByVolume];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByVolume]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_ModifiedByVolume];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByUserProfile]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[UserProfiles] DROP CONSTRAINT [FK_ModifiedByUserProfile];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByRedundancy]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Redundancies] DROP CONSTRAINT [FK_ModifiedByRedundancy];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByHostPlatform]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HostPlatforms] DROP CONSTRAINT [FK_ModifiedByHostPlatform];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByHostDevice]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HostDevices] DROP CONSTRAINT [FK_ModifiedByHostDevice];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByHashCalculation]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[HashCalculations] DROP CONSTRAINT [FK_ModifiedByHashCalculation];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByFsSymbolicName]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FsSymbolicNames] DROP CONSTRAINT [FK_ModifiedByFsSymbolicName];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByFileSystem]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FileSystems] DROP CONSTRAINT [FK_ModifiedByFileSystem];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByFile]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Files] DROP CONSTRAINT [FK_ModifiedByFile];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByDirectory]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Directories] DROP CONSTRAINT [FK_ModifiedByDirectory];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByComparison]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Comparisons] DROP CONSTRAINT [FK_ModifiedByComparison];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[UserProfiles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[UserProfiles];
+GO
+IF OBJECT_ID(N'[dbo].[Volumes]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Volumes];
+GO
+IF OBJECT_ID(N'[dbo].[Directories]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Directories];
+GO
+IF OBJECT_ID(N'[dbo].[Files]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Files];
+GO
+IF OBJECT_ID(N'[dbo].[FileSystems]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[FileSystems];
+GO
+IF OBJECT_ID(N'[dbo].[HostDevices]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[HostDevices];
+GO
+IF OBJECT_ID(N'[dbo].[HostPlatforms]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[HostPlatforms];
+GO
+IF OBJECT_ID(N'[dbo].[FsSymbolicNames]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[FsSymbolicNames];
+GO
+IF OBJECT_ID(N'[dbo].[HashCalculations]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[HashCalculations];
+GO
+IF OBJECT_ID(N'[dbo].[Redundancies]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Redundancies];
+GO
+IF OBJECT_ID(N'[dbo].[Comparisons]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Comparisons];
+GO
+IF OBJECT_ID(N'[dbo].[RedundancyFile]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[RedundancyFile];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -53,7 +194,6 @@ GO
 CREATE TABLE [dbo].[Volumes] (
     [Id] uniqueidentifier  NOT NULL,
     [DisplayName] nvarchar(128)  NOT NULL,
-    [RootPathName] nvarchar(1024)  NOT NULL,
     [VolumeName] nvarchar(128)  NOT NULL,
     [Identifier] nvarchar(1024)  NOT NULL,
     [HostDeviceId] uniqueidentifier  NULL,
@@ -76,11 +216,13 @@ GO
 CREATE TABLE [dbo].[Directories] (
     [Id] uniqueidentifier  NOT NULL,
     [Name] nvarchar(128)  NOT NULL,
+    [CrawlFlags] tinyint  NOT NULL,
     [ParentId] uniqueidentifier  NULL,
     [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL
+    [ModifiedOn] datetime  NOT NULL,
+    [SourceRelocationTaskId] uniqueidentifier  NULL
 );
 GO
 
@@ -93,7 +235,9 @@ CREATE TABLE [dbo].[Files] (
     [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL
+    [ModifiedOn] datetime  NOT NULL,
+    [Status] tinyint  NOT NULL,
+    [FileRelocateTaskId] uniqueidentifier  NULL
 );
 GO
 
@@ -110,7 +254,8 @@ CREATE TABLE [dbo].[FileSystems] (
     [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL
+    [ModifiedOn] datetime  NOT NULL,
+    [DefaultSymbolicNameId] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -194,10 +339,66 @@ CREATE TABLE [dbo].[Comparisons] (
 );
 GO
 
+-- Creating table 'FileRelocateTasks'
+CREATE TABLE [dbo].[FileRelocateTasks] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Status] tinyint  NOT NULL,
+    [Priority] tinyint  NOT NULL,
+    [ShortDescription] nvarchar(1024)  NOT NULL,
+    [TargetDirectoryId] uniqueidentifier  NOT NULL,
+    [AssignmentGroupId] uniqueidentifier  NULL,
+    [AssignedToId] uniqueidentifier  NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
+    [Notes] nvarchar(max)  NOT NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedById] uniqueidentifier  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+);
+GO
+
+-- Creating table 'DirectoryRelocateTasks'
+CREATE TABLE [dbo].[DirectoryRelocateTasks] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Status] tinyint  NOT NULL,
+    [Priority] tinyint  NOT NULL,
+    [ShortDescription] nvarchar(1024)  NOT NULL,
+    [AssignmentGroupId] uniqueidentifier  NULL,
+    [AssignedToId] uniqueidentifier  NULL,
+    [Notes] nvarchar(max)  NOT NULL,
+    [IsInactive] bit  NOT NULL,
+    [TargetDirectoryId] uniqueidentifier  NOT NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedById] uniqueidentifier  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+);
+GO
+
+-- Creating table 'UserGroups'
+CREATE TABLE [dbo].[UserGroups] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Name] nvarchar(128)  NOT NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
+    [Roles] tinyint  NOT NULL,
+    [Notes] nvarchar(max)  NOT NULL,
+    [IsInactive] bit  NOT NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedById] uniqueidentifier  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+);
+GO
+
 -- Creating table 'RedundancyFile'
 CREATE TABLE [dbo].[RedundancyFile] (
     [Redundancies_Id] uniqueidentifier  NOT NULL,
     [Files_Id] uniqueidentifier  NOT NULL
+);
+GO
+
+-- Creating table 'UserGroupUserProfile'
+CREATE TABLE [dbo].[UserGroupUserProfile] (
+    [AssignmentGroups_Id] uniqueidentifier  NOT NULL,
+    [Members_Id] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -271,10 +472,34 @@ ADD CONSTRAINT [PK_Comparisons]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
+-- Creating primary key on [Id] in table 'FileRelocateTasks'
+ALTER TABLE [dbo].[FileRelocateTasks]
+ADD CONSTRAINT [PK_FileRelocateTasks]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'DirectoryRelocateTasks'
+ALTER TABLE [dbo].[DirectoryRelocateTasks]
+ADD CONSTRAINT [PK_DirectoryRelocateTasks]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'UserGroups'
+ALTER TABLE [dbo].[UserGroups]
+ADD CONSTRAINT [PK_UserGroups]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
 -- Creating primary key on [Redundancies_Id], [Files_Id] in table 'RedundancyFile'
 ALTER TABLE [dbo].[RedundancyFile]
 ADD CONSTRAINT [PK_RedundancyFile]
     PRIMARY KEY CLUSTERED ([Redundancies_Id], [Files_Id] ASC);
+GO
+
+-- Creating primary key on [AssignmentGroups_Id], [Members_Id] in table 'UserGroupUserProfile'
+ALTER TABLE [dbo].[UserGroupUserProfile]
+ADD CONSTRAINT [PK_UserGroupUserProfile]
+    PRIMARY KEY CLUSTERED ([AssignmentGroups_Id], [Members_Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -798,6 +1023,255 @@ GO
 CREATE INDEX [IX_FK_ModifiedByComparison]
 ON [dbo].[Comparisons]
     ([ModifiedById]);
+GO
+
+-- Creating foreign key on [SourceRelocationTaskId] in table 'Directories'
+ALTER TABLE [dbo].[Directories]
+ADD CONSTRAINT [FK_SourceDirectoryRelocateTask]
+    FOREIGN KEY ([SourceRelocationTaskId])
+    REFERENCES [dbo].[DirectoryRelocateTasks]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_SourceDirectoryRelocateTask'
+CREATE INDEX [IX_FK_SourceDirectoryRelocateTask]
+ON [dbo].[Directories]
+    ([SourceRelocationTaskId]);
+GO
+
+-- Creating foreign key on [AssignmentGroups_Id] in table 'UserGroupUserProfile'
+ALTER TABLE [dbo].[UserGroupUserProfile]
+ADD CONSTRAINT [FK_UserGroupUserProfile_UserGroup]
+    FOREIGN KEY ([AssignmentGroups_Id])
+    REFERENCES [dbo].[UserGroups]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Members_Id] in table 'UserGroupUserProfile'
+ALTER TABLE [dbo].[UserGroupUserProfile]
+ADD CONSTRAINT [FK_UserGroupUserProfile_UserProfile]
+    FOREIGN KEY ([Members_Id])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserGroupUserProfile_UserProfile'
+CREATE INDEX [IX_FK_UserGroupUserProfile_UserProfile]
+ON [dbo].[UserGroupUserProfile]
+    ([Members_Id]);
+GO
+
+-- Creating foreign key on [AssignmentGroupId] in table 'DirectoryRelocateTasks'
+ALTER TABLE [dbo].[DirectoryRelocateTasks]
+ADD CONSTRAINT [FK_UserGroupDirectoryRelocateTask]
+    FOREIGN KEY ([AssignmentGroupId])
+    REFERENCES [dbo].[UserGroups]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserGroupDirectoryRelocateTask'
+CREATE INDEX [IX_FK_UserGroupDirectoryRelocateTask]
+ON [dbo].[DirectoryRelocateTasks]
+    ([AssignmentGroupId]);
+GO
+
+-- Creating foreign key on [AssignedToId] in table 'DirectoryRelocateTasks'
+ALTER TABLE [dbo].[DirectoryRelocateTasks]
+ADD CONSTRAINT [FK_UserProfileDirectoryRelocateTask]
+    FOREIGN KEY ([AssignedToId])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserProfileDirectoryRelocateTask'
+CREATE INDEX [IX_FK_UserProfileDirectoryRelocateTask]
+ON [dbo].[DirectoryRelocateTasks]
+    ([AssignedToId]);
+GO
+
+-- Creating foreign key on [FileRelocateTaskId] in table 'Files'
+ALTER TABLE [dbo].[Files]
+ADD CONSTRAINT [FK_FileRelocateTaskFile]
+    FOREIGN KEY ([FileRelocateTaskId])
+    REFERENCES [dbo].[FileRelocateTasks]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_FileRelocateTaskFile'
+CREATE INDEX [IX_FK_FileRelocateTaskFile]
+ON [dbo].[Files]
+    ([FileRelocateTaskId]);
+GO
+
+-- Creating foreign key on [TargetDirectoryId] in table 'FileRelocateTasks'
+ALTER TABLE [dbo].[FileRelocateTasks]
+ADD CONSTRAINT [FK_DirectoryFileRelocateTask]
+    FOREIGN KEY ([TargetDirectoryId])
+    REFERENCES [dbo].[Directories]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DirectoryFileRelocateTask'
+CREATE INDEX [IX_FK_DirectoryFileRelocateTask]
+ON [dbo].[FileRelocateTasks]
+    ([TargetDirectoryId]);
+GO
+
+-- Creating foreign key on [TargetDirectoryId] in table 'DirectoryRelocateTasks'
+ALTER TABLE [dbo].[DirectoryRelocateTasks]
+ADD CONSTRAINT [FK_TargetDirectoryRelocateTask]
+    FOREIGN KEY ([TargetDirectoryId])
+    REFERENCES [dbo].[Directories]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_TargetDirectoryRelocateTask'
+CREATE INDEX [IX_FK_TargetDirectoryRelocateTask]
+ON [dbo].[DirectoryRelocateTasks]
+    ([TargetDirectoryId]);
+GO
+
+-- Creating foreign key on [AssignmentGroupId] in table 'FileRelocateTasks'
+ALTER TABLE [dbo].[FileRelocateTasks]
+ADD CONSTRAINT [FK_UserGroupFileRelocateTask]
+    FOREIGN KEY ([AssignmentGroupId])
+    REFERENCES [dbo].[UserGroups]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserGroupFileRelocateTask'
+CREATE INDEX [IX_FK_UserGroupFileRelocateTask]
+ON [dbo].[FileRelocateTasks]
+    ([AssignmentGroupId]);
+GO
+
+-- Creating foreign key on [AssignedToId] in table 'FileRelocateTasks'
+ALTER TABLE [dbo].[FileRelocateTasks]
+ADD CONSTRAINT [FK_UserProfileFileRelocateTask]
+    FOREIGN KEY ([AssignedToId])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserProfileFileRelocateTask'
+CREATE INDEX [IX_FK_UserProfileFileRelocateTask]
+ON [dbo].[FileRelocateTasks]
+    ([AssignedToId]);
+GO
+
+-- Creating foreign key on [CreatedById] in table 'DirectoryRelocateTasks'
+ALTER TABLE [dbo].[DirectoryRelocateTasks]
+ADD CONSTRAINT [FK_CreatedByDirectoryRelocateTask]
+    FOREIGN KEY ([CreatedById])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByDirectoryRelocateTask'
+CREATE INDEX [IX_FK_CreatedByDirectoryRelocateTask]
+ON [dbo].[DirectoryRelocateTasks]
+    ([CreatedById]);
+GO
+
+-- Creating foreign key on [CreatedById] in table 'FileRelocateTasks'
+ALTER TABLE [dbo].[FileRelocateTasks]
+ADD CONSTRAINT [FK_CreatedByFileRelocateTask]
+    FOREIGN KEY ([CreatedById])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByFileRelocateTask'
+CREATE INDEX [IX_FK_CreatedByFileRelocateTask]
+ON [dbo].[FileRelocateTasks]
+    ([CreatedById]);
+GO
+
+-- Creating foreign key on [CreatedById] in table 'UserGroups'
+ALTER TABLE [dbo].[UserGroups]
+ADD CONSTRAINT [FK_CreatedByUserGroup]
+    FOREIGN KEY ([CreatedById])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByUserGroup'
+CREATE INDEX [IX_FK_CreatedByUserGroup]
+ON [dbo].[UserGroups]
+    ([CreatedById]);
+GO
+
+-- Creating foreign key on [ModifiedById] in table 'DirectoryRelocateTasks'
+ALTER TABLE [dbo].[DirectoryRelocateTasks]
+ADD CONSTRAINT [FK_ModifiedByDirectoryRelocateTask]
+    FOREIGN KEY ([ModifiedById])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByDirectoryRelocateTask'
+CREATE INDEX [IX_FK_ModifiedByDirectoryRelocateTask]
+ON [dbo].[DirectoryRelocateTasks]
+    ([ModifiedById]);
+GO
+
+-- Creating foreign key on [ModifiedById] in table 'FileRelocateTasks'
+ALTER TABLE [dbo].[FileRelocateTasks]
+ADD CONSTRAINT [FK_ModifiedByFileRelocateTask]
+    FOREIGN KEY ([ModifiedById])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByFileRelocateTask'
+CREATE INDEX [IX_FK_ModifiedByFileRelocateTask]
+ON [dbo].[FileRelocateTasks]
+    ([ModifiedById]);
+GO
+
+-- Creating foreign key on [ModifiedById] in table 'UserGroups'
+ALTER TABLE [dbo].[UserGroups]
+ADD CONSTRAINT [FK_ModifiedByUserGroup]
+    FOREIGN KEY ([ModifiedById])
+    REFERENCES [dbo].[UserProfiles]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByUserGroup'
+CREATE INDEX [IX_FK_ModifiedByUserGroup]
+ON [dbo].[UserGroups]
+    ([ModifiedById]);
+GO
+
+-- Creating foreign key on [DefaultSymbolicNameId] in table 'FileSystems'
+ALTER TABLE [dbo].[FileSystems]
+ADD CONSTRAINT [FK_FsSymbolicNameFileSystem]
+    FOREIGN KEY ([DefaultSymbolicNameId])
+    REFERENCES [dbo].[FsSymbolicNames]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_FsSymbolicNameFileSystem'
+CREATE INDEX [IX_FK_FsSymbolicNameFileSystem]
+ON [dbo].[FileSystems]
+    ([DefaultSymbolicNameId]);
 GO
 
 -- --------------------------------------------------

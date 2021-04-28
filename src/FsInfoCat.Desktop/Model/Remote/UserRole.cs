@@ -18,9 +18,9 @@ namespace FsInfoCat.Desktop.Model.Remote
         Reader = 1,
         Auditor = 2,
         Contributor = 4,
-        ChangeAdministrator = 8,
-        AppAdministrator = 16,
-        SystemAdmin = 32,
-        ITSupport = 64
+        ITSupport = 8,
+        ChangeAdministrator = 16,
+        AppAdministrator = 32,
+        SystemAdmin = 64
     }
 }
