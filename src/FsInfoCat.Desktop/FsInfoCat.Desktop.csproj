@@ -208,6 +208,7 @@
     <Compile Include="Model\Bits\Binary16.cs" />
     <Compile Include="Model\Bits\Binary32.cs" />
     <Compile Include="Model\Bits\Binary64.cs" />
+    <Compile Include="Model\Bits\Version2Domain.cs" />
     <Compile Include="Model\CimGroupPartComponent.cs" />
     <Compile Include="Model\CIM_PowerManagementCapability.cs" />
     <Compile Include="Model\ConfigurationManagerErrorCode.cs" />
@@ -305,6 +306,8 @@
       <DependentUpon>RemoteDbModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Model\UUID.cs" />
+    <Compile Include="Model\Bits\UuidVariant.cs" />
+    <Compile Include="Model\Bits\UuidVersion.cs" />
     <Compile Include="Model\VolumeIdentifier.cs" />
     <Compile Include="Model\VolumeInfo.cs" />
     <Compile Include="Model\Win32_AccessMask.cs" />

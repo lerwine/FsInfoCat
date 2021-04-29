@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
 namespace FsInfoCat.Desktop.Model.Bits
@@ -18,6 +20,37 @@ namespace FsInfoCat.Desktop.Model.Bits
         private const float FIRST_HIGH_BIT_F = 18446744073709551616f;
         private const ulong MAX_DECIMAL_HIGH_BITS = 4294967295UL;
         private const ulong MAX_SINGLE_HIGH_BITS = 18446742974197923840UL;
+        private const ulong UUID_RESERVED_NCS_BACKWARD_COMPAT_HIGH_FLAGS = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+        private const ulong UUID_RESERVED_NCS_BACKWARD_COMPAT_HIGH_MASK = 0b11111111_11111111_11111111_11111111_11111111_11111111_11111111_01111111;
+        private const ulong UUID_MS_BACKWARD_COMPAT_HIGH_FLAGS = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_11000000;
+        private const ulong UUID_RESERVED_FUTURE_HIGH_FLAGS = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_11100000;
+        private const ulong UUID_RESERVED_HIGH_MASK = 0b11111111_11111111_11111111_11111111_11111111_11111111_11111111_00011111;
+        private const ulong UUID_RFC4122_HIGH_MASK = 0b11111111_11111111_11111111_11111111_11111111_11111111_11111111_00111111;
+        private const ulong UUID_RFC4122_HIGH_FLAGS = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_10000000;
+        private const ulong UUID_CLOCK_SEQ_AND_RESERVED_MASK = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_11111111;
+        private const ulong UUID_CLOCK_SEQ_LOW_MASK = 0b00000000_00000000_00000000_00000000_00000000_00000000_11111111_00000000;
+        private const ulong UUID_CLOCK_SEQ_HIGH_MASK = 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00111111;
+        private const int UUID_CLOCK_SEQ_SHIFT = 8;
+        private const int UUID_MAC_ADDR_BYTE_LENGTH = 6;
+        private const short UUID_CLOCK_SEQ_MAX_VALUE = 0b00111111;
+        private const ulong UUID_NODE_MASK = 0b11111111_11111111_11111111_11111111_11111111_11111111_00000000_00000000;
+        private const int UUID_NODE_SHIFT = 16;
+        private const ulong UUID_VERSION_MASK = 0b11110000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+        private const int UUID_VERSION_SHIFT = 60;
+        private const ulong UUID_RFC4122_LOW_MASK = 0b00001111_11111111_11111111_11111111_11111111_11111111_11111111_11111111;
+        private const ulong UUID_VERSION1_TIME_MASK2 = 1152921504606846975;
+        private const ulong UUID_VERSION1_LOW_FLAGS = 0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+        private const ulong UUID_VERSION2_LOW_FLAGS = 0b00100000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+        private const ulong UUID_VERSION3_LOW_FLAGS = 0b00110000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+        private const ulong UUID_VERSION4_LOW_FLAGS = 0b01000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+        private const ulong UUID_VERSION5_LOW_FLAGS = 0b01010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+        private static readonly DateTime UUID_V1_MIN_DATE_TIME = new DateTime(1582, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime UUID_V1_MAX_DATE_TIME = UUID_V1_MIN_DATE_TIME.AddMilliseconds(UUID_RFC4122_LOW_MASK / 10000);
+        public static readonly Binary128 NameSpace_DNS = new Binary128(0b1101011_10100111_10111000_00010000_10011101_10101101_00010001_11010001, 0b10000000_10110100_00000000_11000000_01001111_11010100_00110000_11001000);
+        public static readonly Binary128 NameSpace_URL = new Binary128(0b1101011_10100111_10111000_00010001_10011101_10101101_00010001_11010001, 0b10000000_10110100_00000000_11000000_01001111_11010100_00110000_11001000);
+        public static readonly Binary128 NameSpace_OID = new Binary128(0b1101011_10100111_10111000_00010010_10011101_10101101_00010001_11010001, 0b10000000_10110100_00000000_11000000_01001111_11010100_00110000_11001000);
+        public static readonly Binary128 NameSpace_X500 = new Binary128(0b1101011_10100111_10111000_00010100_10011101_10101101_00010001_11010001, 0b10000000_10110100_00000000_11000000_01001111_11010100_00110000_11001000);
+        private static readonly Random _randomizer = new Random();
 
         [FieldOffset(0)]
         private readonly Guid _guid;
@@ -28,6 +61,11 @@ namespace FsInfoCat.Desktop.Model.Bits
         public Binary64 Low => _low;
         public Binary64 High => _high;
         public Guid UUID => _guid;
+        public int TimeLow => GetInt32Value(0);
+        public short TimeMid => GetInt16Value(2);
+        public short TimeHighAndVersion => GetInt16Value(3);
+        public byte ClockSeqHighAndReserved => this[8];
+        public byte ClockSeqLow => this[9];
 
         public Binary128(Guid value)
         {
@@ -70,6 +108,143 @@ namespace FsInfoCat.Desktop.Model.Bits
         byte IList<byte>.this[int index] { get => this[index]; set => throw new NotSupportedException(); }
 
         object IList.this[int index] { get => this[index]; set => throw new NotSupportedException(); }
+
+        public static Binary128 ToVersion1UUID(PhysicalAddress address, DateTime dateTime, short clockSequence)
+        {
+            if (address is null)
+                throw new ArgumentNullException(nameof(address));
+            byte[] buffer = address.GetAddressBytes();
+            if (buffer.Length != UUID_MAC_ADDR_BYTE_LENGTH)
+                throw new ArgumentOutOfRangeException(nameof(address));
+            if (clockSequence < 0 || clockSequence > UUID_CLOCK_SEQ_MAX_VALUE)
+                throw new ArgumentOutOfRangeException(nameof(clockSequence));
+            if (dateTime < UUID_V1_MIN_DATE_TIME || dateTime > UUID_V1_MAX_DATE_TIME)
+                throw new ArgumentOutOfRangeException(nameof(dateTime));
+            return new Binary128(
+                Convert.ToUInt64(dateTime.Subtract(UUID_V1_MIN_DATE_TIME).TotalMilliseconds * 10000.0) | UUID_VERSION1_LOW_FLAGS,
+                ((((ulong)BitConverter.ToUInt16(buffer, 4) << 32) | BitConverter.ToUInt32(buffer, 0)) << UUID_NODE_SHIFT) | ((ulong)clockSequence >> UUID_CLOCK_SEQ_SHIFT) |
+                    ((ulong)(clockSequence << UUID_CLOCK_SEQ_SHIFT) & UUID_CLOCK_SEQ_LOW_MASK) | UUID_RFC4122_HIGH_FLAGS
+            );
+        }
+
+        public static Binary128 ToVersion1UUID(PhysicalAddress address, DateTime dateTime) => ToVersion1UUID(address, dateTime, (short)_randomizer.Next(UUID_CLOCK_SEQ_MAX_VALUE));
+
+        public static Binary128 ToVersion1UUID(PhysicalAddress address) => ToVersion1UUID(address, DateTime.UtcNow);
+
+        public static Binary128 ToVersion2UUID(PhysicalAddress address, Version2Domain domain, uint id)
+        {
+            if (address is null)
+                throw new ArgumentNullException(nameof(address));
+            byte[] buffer = address.GetAddressBytes();
+            if (buffer.Length != UUID_MAC_ADDR_BYTE_LENGTH)
+                throw new ArgumentOutOfRangeException(nameof(address));
+            return new Binary128(
+                (ulong)id | UUID_VERSION2_LOW_FLAGS,
+                ((((ulong)BitConverter.ToUInt16(buffer, 4) << 32) | BitConverter.ToUInt32(buffer, 0)) << UUID_NODE_SHIFT) | (ulong)domain | UUID_RFC4122_HIGH_FLAGS
+            );
+        }
+
+        private static Binary128 ToVersion3UUID(string name, Binary128 nsid)
+        {
+            // TODO: Incorporate hashed name
+            Binary128 u = new Binary128((ulong)IPAddress.HostToNetworkOrder(nsid._low.Low.Unsigned) | ((ulong)IPAddress.HostToNetworkOrder(nsid._low.High.Low.Unsigned) << 32) |
+                ((ulong)IPAddress.HostToNetworkOrder(nsid._low.High.High.Unsigned) << 48), nsid.High.Unsigned);
+
+            return new Binary128((((ulong)IPAddress.HostToNetworkOrder(u._low.Low.Unsigned) | ((ulong)IPAddress.HostToNetworkOrder(u._low.High.Low.Unsigned) << 32) |
+                ((ulong)IPAddress.HostToNetworkOrder(u._low.High.High.Unsigned) << 48)) & UUID_RFC4122_LOW_MASK) | UUID_VERSION3_LOW_FLAGS,
+                (nsid.High.Unsigned & UUID_RFC4122_HIGH_MASK) | UUID_RFC4122_HIGH_FLAGS);
+        }
+
+        private static Binary128 ToVersion5UUID(string name, Binary128 nsid)
+        {
+            // TODO: Incorporate hashed name
+            Binary128 u = new Binary128((ulong)IPAddress.HostToNetworkOrder(nsid._low.Low.Unsigned) | ((ulong)IPAddress.HostToNetworkOrder(nsid._low.High.Low.Unsigned) << 32) |
+                ((ulong)IPAddress.HostToNetworkOrder(nsid._low.High.High.Unsigned) << 48), nsid.High.Unsigned);
+
+            return new Binary128((((ulong)IPAddress.HostToNetworkOrder(u._low.Low.Unsigned) | ((ulong)IPAddress.HostToNetworkOrder(u._low.High.Low.Unsigned) << 32) |
+                ((ulong)IPAddress.HostToNetworkOrder(u._low.High.High.Unsigned) << 48)) & UUID_RFC4122_LOW_MASK) | UUID_VERSION5_LOW_FLAGS,
+                (nsid.High.Unsigned & UUID_RFC4122_HIGH_MASK) | UUID_RFC4122_HIGH_FLAGS);
+        }
+
+        public static Binary128 ToVersion3UUID(Uri uri) => ToVersion3UUID((uri ?? throw new ArgumentNullException(nameof(uri))).IsAbsoluteUri ? uri.AbsoluteUri : throw new ArgumentOutOfRangeException(nameof(uri)), NameSpace_URL);
+
+        public static Binary128 ToVersion3UUID(string hostName) => ToVersion3UUID(hostName ?? "", NameSpace_DNS);
+
+        public static Binary128 ToVersion5UUID(Uri uri) => ToVersion5UUID((uri ?? throw new ArgumentNullException(nameof(uri))).IsAbsoluteUri ? uri.AbsoluteUri : throw new ArgumentOutOfRangeException(nameof(uri)), NameSpace_URL);
+
+        public static Binary128 ToVersion5UUID(string hostName) => ToVersion3UUID(hostName ?? "", NameSpace_DNS);
+
+        public static UuidVariant GetUUIDVariant(Binary128 value)
+        {
+            int variant = value._high.High.High.High;
+            if ((variant & 0b1000_0000) == 0)
+                return UuidVariant.NcsBackwardCompat;
+            switch (variant & 0b1110_0000)
+            {
+                case 0b1110_0000:
+                    return UuidVariant.ReservedFuture;
+                case 0b1100_0000:
+                    return UuidVariant.MsBackwardCompat;
+                default:
+                    return UuidVariant.RFC4122;
+            }
+        }
+
+        public static bool IsRFC4122UUID(Binary128 value)
+        {
+            int variant = value._high.High.High.High;
+            if ((variant & 0b1000_0000) == 0)
+                return false;
+            switch (variant)
+            {
+                case 0b1110_0000:
+                case 0b1100_0000:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
+        public static UuidVersion GetUUIDVersion(Binary128 value)
+        {
+            if (IsRFC4122UUID(value))
+                return (UuidVersion)(value._low.High.High.Unsigned >> 5);
+            return UuidVersion.Unknown;
+        }
+
+        public static DateTime? GetUUIDTimestamp(Binary128 value, out short clockSequence)
+        {
+            if (GetUUIDVersion(value) == UuidVersion.TimeBased)
+            {
+                clockSequence = (short)(((value._high.Low.Low.Low & 0b00111111) << 8) | value._high.Low.Low.High);
+                return new DateTime(1582, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds((value._high.Unsigned & 0b00001111_11111111_11111111_11111111_11111111_11111111_11111111_11111111) * 10000UL);
+            }
+            clockSequence = default;
+            return null;
+        }
+
+        public static PhysicalAddress GetUUIDMacAddress(Binary128 value)
+        {
+            switch (GetUUIDVersion(value))
+            {
+                case UuidVersion.TimeBased:
+                case UuidVersion.DceSecurity:
+                    return new PhysicalAddress(BitConverter.GetBytes(value._high.Low.High.Unsigned).Concat(BitConverter.GetBytes(value._high.High.Unsigned)).ToArray());
+                default:
+                    return null;
+            }
+        }
+
+        public uint? GetUUIDLocalId(Binary128 value, out Version2Domain domain)
+        {
+            if (GetUUIDVersion(value) == UuidVersion.DceSecurity)
+            {
+                domain = (Version2Domain)value._high.Low.Low.Unsigned;
+                return value._low.Low.Unsigned;
+            }
+            domain = default;
+            return null;
+        }
 
         void ICollection<byte>.Add(byte item) => throw new NotSupportedException();
 
@@ -208,6 +383,44 @@ namespace FsInfoCat.Desktop.Model.Bits
         IEnumerator IEnumerable.GetEnumerator() => ToArray().GetEnumerator();
 
         public override int GetHashCode() => _guid.GetHashCode();
+
+        public short GetInt16Value(int index) => (index < 4) ? _low.GetInt16Value(index) : _high.GetInt16Value(index - 4);
+
+        public ushort GetUInt16Value(int index) => (index < 4) ? _low.GetUInt16Value(index) : _high.GetUInt16Value(index - 4);
+
+        public int GetInt32Value(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return _low.Low.Signed;
+                case 1:
+                    return _low.High.Signed;
+                case 2:
+                    return _high.Low.Signed;
+                case 3:
+                    return _high.High.Signed;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+        }
+
+        public uint GetUInt32Value(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return _low.Low.Unsigned;
+                case 1:
+                    return _low.High.Unsigned;
+                case 2:
+                    return _high.Low.Unsigned;
+                case 3:
+                    return _high.High.Unsigned;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+        }
 
         TypeCode IConvertible.GetTypeCode() => TypeCode.UInt64;
 
