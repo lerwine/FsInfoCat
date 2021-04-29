@@ -224,6 +224,40 @@ namespace FsInfoCat.Desktop.Model.Bits
 
         public override int GetHashCode() => _unsigned.GetHashCode();
 
+        public short GetInt16Value(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return _low.Low.Signed;
+                case 1:
+                    return _low.High.Signed;
+                case 2:
+                    return _high.Low.Signed;
+                case 3:
+                    return _high.High.Signed;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+        }
+
+        public ushort GetUInt16Value(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return _low.Low.Unsigned;
+                case 1:
+                    return _low.High.Unsigned;
+                case 2:
+                    return _high.Low.Unsigned;
+                case 3:
+                    return _high.High.Unsigned;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+        }
+
         TypeCode IConvertible.GetTypeCode() => TypeCode.UInt64;
 
         public int IndexOf(byte item)
