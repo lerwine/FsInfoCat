@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static async Task<List<Model.Local.Volume>> GetDbVolumesAsync()
         {
-            using (Model.Local.LocalDbModel dbContext = Model.Local.LocalDbModel.GetDbContext())
+            using (Model.Local.LocalDbContainer dbContext = Model.Local.LocalDbContainer.GetDbContext())
                 return await dbContext.Volumes.ToListAsync();
         }
 

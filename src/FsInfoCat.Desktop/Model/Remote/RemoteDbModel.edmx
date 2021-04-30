@@ -1462,9 +1462,10 @@
           <Member Name="Reader" Value="1" />
           <Member Name="Auditor" Value="2" />
           <Member Name="Contributor" Value="4" />
-          <Member Name="ChangeAdministrator" Value="8" />
-          <Member Name="AppAdministrator" Value="16" />
-          <Member Name="SystemAdmin" Value="32" />
+          <Member Name="ITSupport" Value="8" />
+          <Member Name="ChangeAdministrator" Value="16" />
+          <Member Name="AppAdministrator" Value="32" />
+          <Member Name="SystemAdmin" Value="64" />
         </EnumType>
         <EntityType Name="FileSystem">
           <Key>
@@ -1625,7 +1626,7 @@
               <Summary>Length of file in bytes.</Summary>
             </Documentation>
           </Property>
-          <Property Name="Data" Type="Binary" Nullable="true" MaxLength="16" FixedLength="true" >
+          <Property Name="Data" Nullable="true" MaxLength="16" FixedLength="true" Type="Binary">
             <Documentation>
               <Summary>MD5 Hash bytes or null if hash was not yet calculated.</Summary>
             </Documentation>

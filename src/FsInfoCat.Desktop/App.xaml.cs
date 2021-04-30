@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -18,7 +19,10 @@ namespace FsInfoCat.Desktop
     {
         public static readonly LoggerFactory LoggerFactory;
 
-        public static string GetAppDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FsInfoCat");
+        public static string GetAppDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                Desktop.Properties.Settings.Default.ApplicationDataFolderName);
+
+        public static string GetLocalDbPath() => Path.Combine(GetAppDataPath(), Desktop.Properties.Settings.Default.LocalDbFile);
 
         public static DirectoryInfo EnsureAppDataPath()
         {

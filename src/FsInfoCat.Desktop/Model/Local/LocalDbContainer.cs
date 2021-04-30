@@ -4,16 +4,16 @@ using System.Linq;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    public class LocalDbModel : DbContext
+    public class LocalDbContainer : DbContext
     {
-        // Your context has been configured to use a 'LocalDbModel' connection string from your application's 
+        // Your context has been configured to use a 'LocalDbContainer' connection string from your application's 
         // configuration file (App.config or Web.config). By default, this connection string targets the 
-        // 'FsInfoCat.Desktop.Model.Local.LocalDbModel' database on your LocalDb instance. 
+        // 'FsInfoCat.Desktop.Model.Local.LocalDbContainer' database on your LocalDb instance. 
         // 
-        // If you wish to target a different database and/or database provider, modify the 'LocalDbModel' 
+        // If you wish to target a different database and/or database provider, modify the 'LocalDbContainer' 
         // connection string in the application configuration file.
-        public LocalDbModel()
-            : base("name=LocalDbModel")
+        public LocalDbContainer()
+            : base("name=LocalDbContainer")
         {
         }
 
@@ -87,7 +87,7 @@ namespace FsInfoCat.Desktop.Model.Local
             base.OnModelCreating(modelBuilder);
         }
 
-        internal static LocalDbModel GetDbContext()
+        internal static LocalDbContainer GetDbContext()
         {
             throw new NotImplementedException();
         }

@@ -27,9 +27,9 @@ namespace FsInfoCat.Desktop.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;multipleactiveresultsets=True;connect timeout=30;encrypt=True;application name=EntityFramework""")]
-        public string RemoteConnectionString {
+        public string RemoteEntityConnectionString {
             get {
-                return ((string)(this["RemoteConnectionString"]));
+                return ((string)(this["RemoteEntityConnectionString"]));
             }
         }
         
@@ -44,20 +44,29 @@ namespace FsInfoCat.Desktop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Local.LocalDbModel.csdl|res://*/Model.Local.LocalDbModel.ssdl|res://*/Model.Local.LocalDbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=(localdb)\ProjectsV13;initial catalog=FsInfoCatDb;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework""")]
-        public string LocalConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("6ba7b811-ffff-3fff-80b4-00c04fd430c8")]
+        public global::System.Guid AppUUID {
             get {
-                return ((string)(this["LocalConnectionString"]));
+                return ((global::System.Guid)(this["AppUUID"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6ba7b811-ffff-3fff-80b4-00c04fd430c8")]
-        public global::System.Guid AppUUID {
+        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCat")]
+        public string ApplicationDataFolderName {
             get {
-                return ((global::System.Guid)(this["AppUUID"]));
+                return ((string)(this["ApplicationDataFolderName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Local.LocalDbContainer.csdl|res://*/Model.Local.LocalDbContainer.ssdl|res://*/Model.Local.LocalDbContainer.msl;provider=System.Data.SqlClient;provider connection string=""data source=(localdb)\ProjectsV13;initial catalog=FsInfoCatLocal;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework""")]
+        public string LocalEntityConnectionString {
+            get {
+                return ((string)(this["LocalEntityConnectionString"]));
             }
         }
     }
