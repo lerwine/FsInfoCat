@@ -923,7 +923,6 @@ namespace FsInfoCat.Desktop.ViewModel
             _lastParsedConnectRetryCount = -1;
         }
 
-        // TODO: Validate range 0 and 255
         protected virtual void OnConnectRetryCountPropertyChanged(int oldValue, int newValue)
         {
             if (oldValue != newValue && TryChangeConnectionSetting(nameof(ConnectRetryCount), newValue, () => _backingBuilder.ConnectRetryCount = newValue,
@@ -936,6 +935,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     ConnectRetryCountText = newValue.ToString();
                 }
                 finally { _ignoreChange = false; }
+                if (newValue < 0 || newValue > 255)
+                    ConnectRetryCountError = "Value cannot be less than 0 or greater than 255";
             }
         }
 
@@ -970,7 +971,6 @@ namespace FsInfoCat.Desktop.ViewModel
             _lastParsedConnectRetryInterval = -1;
         }
 
-        // TODO: Validate range 1 to 60
         protected virtual void OnConnectRetryIntervalPropertyChanged(int oldValue, int newValue)
         {
             if (oldValue != newValue && TryChangeConnectionSetting(nameof(ConnectRetryInterval), newValue, () => _backingBuilder.ConnectRetryInterval = newValue,
@@ -983,6 +983,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     ConnectRetryIntervalText = newValue.ToString();
                 }
                 finally { _ignoreChange = false; }
+                if (newValue < 1 || newValue > 60)
+                    ConnectRetryIntervalError = "Value cannot be less than 1 or greater than 60";
             }
         }
 
@@ -1017,7 +1019,6 @@ namespace FsInfoCat.Desktop.ViewModel
             _lastParsedConnectTimeout = -1;
         }
 
-        // TODO: Validate non-negative
         protected virtual void OnConnectTimeoutPropertyChanged(int oldValue, int newValue)
         {
             if (oldValue != newValue && TryChangeConnectionSetting(nameof(ConnectTimeout), newValue, () => _backingBuilder.ConnectTimeout = newValue,
@@ -1030,6 +1031,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     ConnectTimeoutText = newValue.ToString();
                 }
                 finally { _ignoreChange = false; }
+                if (newValue < 0)
+                    ConnectTimeoutError = "Value cannot be negative";
             }
         }
 
@@ -1047,12 +1050,13 @@ namespace FsInfoCat.Desktop.ViewModel
                     m => CurrentLanguageError = m);
         }
 
-        // TODO: Validate not empty
         protected virtual void OnDataSourcePropertyChanged(string oldValue, string newValue)
         {
-            if (oldValue != newValue)
-                TryChangeConnectionSetting(nameof(DataSource), newValue, () => _backingBuilder.DataSource = newValue,
-                    m => DataSourceError = m);
+            if (oldValue != newValue && TryChangeConnectionSetting(nameof(DataSource), newValue, () => _backingBuilder.DataSource = newValue, m => DataSourceError = m) &&
+                string.IsNullOrWhiteSpace(newValue))
+            {
+                DataSourceError = "Server name or network address required";
+            }
         }
 
         protected virtual void OnEnclaveAttestationUrlPropertyChanged(string oldValue, string newValue)
@@ -1141,7 +1145,6 @@ namespace FsInfoCat.Desktop.ViewModel
             _lastParsedLoadBalanceTimeout = -1;
         }
 
-        // TODO: Validate non-zero
         protected virtual void OnLoadBalanceTimeoutPropertyChanged(int oldValue, int newValue)
         {
             if (oldValue != newValue && TryChangeConnectionSetting(nameof(LoadBalanceTimeout), newValue, () => _backingBuilder.LoadBalanceTimeout = newValue,
@@ -1154,6 +1157,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     LoadBalanceTimeoutText = newValue.ToString();
                 }
                 finally { _ignoreChange = false; }
+                if (newValue < 0)
+                    LoadBalanceTimeoutError = "Value cannot be negative";
             }
         }
 
@@ -1188,7 +1193,6 @@ namespace FsInfoCat.Desktop.ViewModel
             _lastParsedMaxPoolSize = -1;
         }
 
-        // TODO: Validate greater than or equal to MinPoolSize
         protected virtual void OnMaxPoolSizePropertyChanged(int oldValue, int newValue)
         {
             if (oldValue != newValue && TryChangeConnectionSetting(nameof(MaxPoolSize), newValue, () => _backingBuilder.MaxPoolSize = newValue, m => MaxPoolSizeError = m) &&
@@ -1201,6 +1205,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     MaxPoolSizeText = newValue.ToString();
                 }
                 finally { _ignoreChange = false; }
+                if (newValue < MinPoolSize)
+                    MaxPoolSizeError = "Value cannot be less than the Minimum Pool Size";
             }
         }
 
@@ -1235,7 +1241,6 @@ namespace FsInfoCat.Desktop.ViewModel
             _lastParsedMinPoolSize = -1;
         }
 
-        // TODO: Validate non-zero
         protected virtual void OnMinPoolSizePropertyChanged(int oldValue, int newValue)
         {
             if (oldValue != newValue && TryChangeConnectionSetting(nameof(MinPoolSize), newValue, () => _backingBuilder.MinPoolSize = newValue, m => MinPoolSizeError = m) &&
@@ -1248,6 +1253,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     MinPoolSizeText = newValue.ToString();
                 }
                 finally { _ignoreChange = false; }
+                if (newValue < 0)
+                    MinPoolSizeError = "Value cannot be negative";
             }
         }
 
@@ -1301,7 +1308,6 @@ namespace FsInfoCat.Desktop.ViewModel
             _lastParsedPacketSize = -1;
         }
 
-        // TODO: Validate 512 to 32768
         protected virtual void OnPacketSizePropertyChanged(int oldValue, int newValue)
         {
             if (oldValue != newValue && TryChangeConnectionSetting(nameof(PacketSize), newValue, () => _backingBuilder.PacketSize = newValue, m => PacketSizeError = m) &&
@@ -1314,6 +1320,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     PacketSizeText = newValue.ToString();
                 }
                 finally { _ignoreChange = false; }
+                if (newValue < 512 || newValue > 32768)
+                    PacketSizeError = "Value cannot be less than 512 or greater than 32768";
             }
         }
 
