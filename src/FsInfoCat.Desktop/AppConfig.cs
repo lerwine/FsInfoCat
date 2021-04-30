@@ -132,5 +132,11 @@ namespace FsInfoCat.Desktop
             connectionStringBuilder.ConnectionString = connectionString;
             return connectionStringBuilder;
         }
+
+        internal static void SetRemoteDbContainerConnectionString(string connectionString, bool doNotRefreshConfigurationManager = false)
+        {
+            SetConnectionString(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal), nameof(Model.Remote.RemoteDbContainer),
+                GetProviderFactoryInvariantName<SqlClientFactory>(), connectionString, doNotRefreshConfigurationManager);
+        }
     }
 }

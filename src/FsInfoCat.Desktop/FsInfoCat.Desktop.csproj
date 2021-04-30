@@ -336,6 +336,9 @@
     <Compile Include="View\ModalOperationStatusControl.xaml.cs">
       <DependentUpon>ModalOperationStatusControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\RemoteConnectionConfigWindow.xaml.cs">
+      <DependentUpon>RemoteConnectionConfigWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -371,6 +374,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\ModalOperationStatusControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RemoteConnectionConfigWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

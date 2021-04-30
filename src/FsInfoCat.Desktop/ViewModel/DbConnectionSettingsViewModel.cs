@@ -831,11 +831,7 @@ namespace FsInfoCat.Desktop.ViewModel
             get
             {
                 if (_saveCommand == null)
-                    _saveCommand = new Commands.RelayCommand(parameter =>
-                    {
-                        try { OnSave(parameter); }
-                        finally { Save?.Invoke(this, EventArgs.Empty); }
-                    });
+                    _saveCommand = new Commands.RelayCommand(OnSave);
                 return _saveCommand;
             }
         }
@@ -875,9 +871,14 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #region Callbacks
 
-        protected virtual void OnSave(object parameter)
+        protected virtual void OnSave()
         {
-            // TODO: Implement OnSave Logic
+            SaveCommand.IsEnabled = false;
+            Task.Factory.StartNew(() => AppConfig.SetRemoteDbContainerConnectionString(_backingBuilder.ConnectionString)).ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                try { Save?.Invoke(this, EventArgs.Empty); }
+                finally { SaveCommand.IsEnabled = true; }
+            }));
         }
 
         protected virtual void OnAsynchronousProcessingPropertyChanged(bool oldValue, bool newValue)
