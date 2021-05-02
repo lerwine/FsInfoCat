@@ -1,4 +1,5 @@
-﻿using System;
+using FsInfoCat.Desktop.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,18 @@ namespace FsInfoCat.Desktop.View
         public CrawlSourcesPage()
         {
             InitializeComponent();
+        }
+
+        private void CrawlSourcesViewModel_NewCrawlSource(object sender, EventArgs e)
+        {
+            //if (sender is CrawlSourcesViewModel crawlSources)
+            // TODO: Implement CrawlSourcesViewModel_NewCrawlSource
+        }
+
+        private void CrawlSourcesViewModel_EditItem(object sender, ItemEventArgs<CrawlSourceItemVM> e)
+        {
+            //if (sender is CrawlSourcesViewModel crawlSources)
+            // TODO: Implement CrawlSourcesViewModel_EditItem
         }
     }
 }
