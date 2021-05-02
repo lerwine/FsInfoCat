@@ -329,6 +329,9 @@
     <Compile Include="ViewModel\AsyncOperationViewModel.cs" />
     <Compile Include="ViewModel\AsyncResultEventArgs.cs" />
     <Compile Include="ViewModel\CloseWindowEventArgs.cs" />
+    <Compile Include="ViewModel\CrawlSourceItemVM.cs" />
+    <Compile Include="ViewModel\CrawlSourcesViewModel.cs" />
+    <Compile Include="ViewModel\ItemEventArgs.cs" />
     <Compile Include="ViewModel\NotifyErrorViewModel.cs" />
     <Compile Include="ViewModel\RemoteConnectionConfigViewModel.cs" />
     <Compile Include="ViewModel\ExtensionMethods.cs" />
