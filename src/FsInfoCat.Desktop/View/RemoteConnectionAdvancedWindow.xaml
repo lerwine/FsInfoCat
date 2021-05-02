@@ -1,0 +1,295 @@
+<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
+        xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
+        xmlns:convert="clr-namespace:FsInfoCat.Desktop.Converters"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="FsInfoCat.Desktop.View.RemoteConnectionAdvancedWindow"
+        mc:Ignorable="d"
+        Title="Remote DB Connection (Advanced)" Height="600" Width="800">
+    <Window.Resources>
+        <convert:StringToVisibilityConverter x:Key="StringToVisibilityConverter" Empty="Collapsed" NonWhitespace="Visible" NullSource="Collapsed" Whitespace="Collapsed"/>
+        <convert:InverseBooleanConverter x:Key="InverseBooleanConverter" NullSource="False"/>
+        <convert:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" False="Collapsed" NullSource="Collapsed" True="Visible"/>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="UIElement.GotFocus" SourceName="radioButton">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="GotFocus">
+                    <b:InvokeCommandAction Command="{Binding AdvancedCommand}" CommandParameter="Test"/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </EventTrigger>
+    </Window.Triggers>
+    <Window.DataContext>
+        <vm:RemoteConnectionConfigViewModel CloseWindow="RemoteConnectionConfigViewModel_CloseWindow" TestConnection="RemoteConnectionConfigViewModel_TestConnection"/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer>
+            <StackPanel>
+                <Expander Header="Advanced" Margin="{DynamicResource DefaultSpacingBottomLeft}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="MultipleActiveResultSets" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton x:Name="radioButton" GroupName="MultipleActiveResultSetsGroup" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding MultipleActiveResultSets}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="GotFocus">
+                                    <b:InvokeCommandAction Command="{Binding SetSelectedPropertyNameCommand}" CommandParameter="MultipleActiveResultSets"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </RadioButton>
+                        <RadioButton GroupName="MultipleActiveResultSetsGroup" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding MultipleActiveResultSets, Converter={StaticResource InverseBooleanConverter}}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="GotFocus">
+                                    <b:InvokeCommandAction Command="{Binding SetSelectedPropertyNameCommand}" CommandParameter="MultipleActiveResultSets"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </RadioButton>
+                        <Label Grid.Row="1" Content="Network Library" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding NetworkLibrary}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="GotFocus">
+                                    <b:InvokeCommandAction Command="{Binding SetSelectedPropertyNameCommand}" CommandParameter="NetworkLibrary"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </TextBox>
+                        <Label Grid.Row="2" Content="Packet Size" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding PacketSize}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="GotFocus">
+                                    <b:InvokeCommandAction Command="{Binding SetSelectedPropertyNameCommand}" CommandParameter="PacketSize"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </TextBox>
+                    </Grid>
+                </Expander>
+                <Expander Header="Connection Resiliancy" Margin="{DynamicResource DefaultSpacingBottomLeft}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="ConnectTryCount" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding ConnectRetryCount}"/>
+                        <Label Grid.Row="1" Content="ConnectTryInterval" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding ConnectRetryInterval}"/>
+                    </Grid>
+                </Expander>
+                <Expander Header="Context" Margin="{DynamicResource DefaultSpacingBottomLeft}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Application Name" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox IsReadOnly="True" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding ApplicationName}"/>
+                        <Label Grid.Row="2" Content="Workstation ID" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox IsReadOnly="True" Grid.Row="2" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding WorkstationID}"/>
+                    </Grid>
+                </Expander>
+                <Expander Header="Initialization" Margin="{DynamicResource DefaultSpacingBottomLeft}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Asynchronous Processing" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="AsynchronousProcessingGroup" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding AsynchronousProcessing}"/>
+                        <RadioButton GroupName="AsynchronousProcessingGroup" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding AsynchronousProcessing, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="1" Content="Connect Timeout" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding ConnectTimeout}"/>
+                        <Label Grid.Row="2" Content="Current Language" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding CurrentLanguage}"/>
+                    </Grid>
+                </Expander>
+                <Expander Header="Pooling" Margin="{DynamicResource DefaultSpacingBottomLeft}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Enlist" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="EnlistGroup" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}" IsChecked="{Binding Enlist}"/>
+                        <RadioButton GroupName="EnlistGroup" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding Enlist, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="1" Content="Load Balance Timeout" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding LoadBalanceTimeout}"/>
+                        <Label Grid.Row="2" Content="Max Pool Size" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding MaxPoolSize}"/>
+                        <Label Grid.Row="3" Content="Min Pool Size" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding MinPoolSize}"/>
+                        <Label Grid.Row="4" Content="PoolBlockingPeriod" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <ComboBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" />
+                        <Label Grid.Row="5" Content="Pooling" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="PoolingGroup" Grid.Row="5" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding Pooling}"/>
+                        <RadioButton GroupName="PoolingGroup" Grid.Row="5" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding Pooling, Converter={StaticResource InverseBooleanConverter}}"/>
+                    </Grid>
+                </Expander>
+                <Expander Header="Replication" Margin="{DynamicResource DefaultSpacingBottomLeft}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Replication" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="ReplicationGroup" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}" IsChecked="{Binding Replication}"/>
+                        <RadioButton GroupName="ReplicationGroup" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding Replication, Converter={StaticResource InverseBooleanConverter}}"/>
+                    </Grid>
+                </Expander>
+                <Expander Header="Security" Margin="{DynamicResource DefaultSpacingBottomLeft}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Column Encryption Setting" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <ComboBox Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}"/>
+                        <Label Grid.Row="1" Content="Enclave Attestation Url" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding EnclaveAttestationUrl}"/>
+                        <Label Grid.Row="2" Content="Encrypt" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="EncryptGroup" Grid.Row="2" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}" IsChecked="{Binding Encrypt}"/>
+                        <RadioButton GroupName="EncryptGroup" Grid.Row="2" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding Encrypt, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="3" Content="Integrated Security" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="IntegratedSecurityGroup" Grid.Row="3" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding IntegratedSecurity}"/>
+                        <RadioButton GroupName="IntegratedSecurityGroup" Grid.Row="3" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding IntegratedSecurity, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="4" Content="Password" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <PasswordBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}"/>
+                        <Label Grid.Row="5" Content="Persist Security Info" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="PersistSecurityInfoGroup" Grid.Row="5" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding PersistSecurityInfo}"/>
+                        <RadioButton GroupName="PersistSecurityInfoGroup" Grid.Row="5" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding PersistSecurityInfo, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="6" Content="TrustServerCertificate" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="TrustServerCertificateGroup" Grid.Row="6" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding TrustServerCertificate}"/>
+                        <RadioButton GroupName="TrustServerCertificateGroup" Grid.Row="6" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding TrustServerCertificate, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="7" Content="User ID" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding UserID}"/>
+                    </Grid>
+                </Expander>
+                <Expander Header="Source" Margin="{DynamicResource DefaultSpacingBottomLeft}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="AttachDbFilename" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding AttachDBFilename}"/>
+                        <Label Grid.Row="1" Content="Context Connection" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="ContextConnectionGroup" Grid.Row="1" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding ContextConnection}"/>
+                        <RadioButton GroupName="ContextConnectionGroup" Grid.Row="1" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding ContextConnection, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="2" Content="Data Source" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding DataSource}"/>
+                        <Label Grid.Row="3" Content="Failover Partner" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding FailoverPartner}"/>
+                        <Label Grid.Row="4" Content="Initial Catalog" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding InitialCatalog}"/>
+                        <Label Grid.Row="5" Content="MultiSubnetFailover" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="MultiSubnetFailoverGroup" Grid.Row="5" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding MultiSubnetFailover}"/>
+                        <RadioButton GroupName="MultiSubnetFailoverGroup" Grid.Row="5" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding MultiSubnetFailover, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="6" Content="TransparentNetworkIPResolution" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="TransparentNetworkIPResolutionGroup" Grid.Row="6" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding TransparentNetworkIPResolution}"/>
+                        <RadioButton GroupName="TransparentNetworkIPResolutionGroup" Grid.Row="6" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding TransparentNetworkIPResolution, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Label Grid.Row="7" Content="User Instance" Padding="{DynamicResource DefaultSpacingTopLeft}" HorizontalAlignment="Right"/>
+                        <RadioButton GroupName="UserInstanceGroup" Grid.Row="7" Grid.Column="1" Content="True" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding UserInstance}"/>
+                        <RadioButton GroupName="UserInstanceGroup"  Grid.Row="7" Grid.Column="2" Content="False" Margin="{DynamicResource DefaultSpacingTopLeft}"
+                                     IsChecked="{Binding UserInstance, Converter={StaticResource InverseBooleanConverter}}"/>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        <GridSplitter Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" ResizeDirection="Rows" Height="7"/>
+        <GroupBox Grid.Row="1" Header="{Binding SelectedPropertyTitle}" Height="125" Margin="{DynamicResource DefaultSpacing}">
+            <TextBlock Text="{Binding SelectedPropertyDescription}"/>
+        </GroupBox>
+        <GroupBox Header="Connection String" Grid.Row="2" Margin="{DynamicResource DefaultSpacingBottomLeftRight}">
+            <TextBox Style="{DynamicResource MultiLineTextBox}" IsReadOnly="True" BorderThickness="0" Text="{Binding ConnectionString}"/>
+        </GroupBox>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,0,5,0" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+            <Button Content="Test Connection" Width="100" Margin="{DynamicResource DefaultSpacingBottomLeft}" Command="{Binding TestConnectionCommand, Mode=OneWay}"/>
+            <Button Content="Cancel" Width="75" Margin="{DynamicResource DefaultSpacingBottomLeft}" Command="{Binding CancelCommand, Mode=OneWay}"/>
+            <Button Content="Save" Width="75" Margin="{DynamicResource DefaultSpacingBottomLeft}" Command="{Binding SaveCommand, Mode=OneWay}"/>
+        </StackPanel>
+    </Grid>
+</Window>

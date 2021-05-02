@@ -17,11 +17,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Border Background="Black">
-                    <TextBlock Text="Background Operation" Foreground="White" Margin="{DynamicResource DefaultMargin}" HorizontalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="Background Operation" Foreground="White" Margin="{DynamicResource DefaultSpacing}" HorizontalAlignment="Center" FontWeight="Bold"/>
                 </Border>
-                <TextBlock Margin="{DynamicResource DefaultMargin}" VerticalAlignment="Center" Grid.Row="1"/>
-                <ProgressBar Grid.Row="2" Margin="{DynamicResource DefaultMarginLeftRight}" VerticalAlignment="Center" Height="25"/>
-                <Button Content="Cancel" Grid.Row="3" Style="{DynamicResource DefaultButtonStyle}" Margin="{DynamicResource DefaultMargin}" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                <TextBlock Margin="{DynamicResource DefaultSpacing}" VerticalAlignment="Center" Grid.Row="1"/>
+                <ProgressBar Grid.Row="2" Margin="{DynamicResource DefaultSpacingLeftRight}" VerticalAlignment="Center" Height="25"/>
+                <Button Content="Cancel" Grid.Row="3" Margin="{DynamicResource DefaultSpacing}" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
             </Grid>
         </Border> 
     </Border>

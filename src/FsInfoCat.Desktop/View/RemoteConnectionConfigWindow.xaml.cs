@@ -1,4 +1,5 @@
-﻿using System;
+using FsInfoCat.Desktop.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +18,27 @@ namespace FsInfoCat.Desktop.View
     /// <summary>
     /// Interaction logic for RemovteConnectionConfigWindow.xaml
     /// </summary>
-    public partial class RemovteConnectionConfigWindow : Window
+    public partial class RemoteConnectionConfigWindow : Window
     {
-        public RemovteConnectionConfigWindow()
+        public RemoteConnectionConfigWindow()
         {
             InitializeComponent();
+        }
+
+        private void RemoteConnectionConfigViewModel_Advanced(object sender, SqlConnectionStringBuilderEventArgs e)
+        {
+
+        }
+
+        private void RemoteConnectionConfigViewModel_TestConnection(object sender, SqlConnectionStringEventArgs e)
+        {
+
+        }
+
+        private void RemoteConnectionConfigViewModel_CloseWindow(object sender, CloseWindowEventArgs e)
+        {
+            DialogResult = e.DialogResult;
+            Close();
         }
     }
 }

@@ -15,10 +15,5 @@ namespace FsInfoCat.Desktop.View
         {
             InitializeComponent();
         }
-
-        private void ViewHostDevicesMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
