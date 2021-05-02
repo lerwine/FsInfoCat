@@ -12,6 +12,7 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         public event EventHandler NewCrawlSource;
         public event EventHandler<ItemEventArgs<CrawlSourceItemVM>> EditItem;
+        public event EventHandler<ItemEventArgs<CrawlSourceItemVM>> DeleteItem;
 
         private static readonly DependencyPropertyKey CrawlSourcesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlSources),
             typeof(ObservableCollection<CrawlSourceItemVM>), typeof(CrawlSourcesViewModel), new PropertyMetadata(null));
@@ -80,7 +81,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void Item_Delete(object sender, EventArgs e)
         {
-            // TODO: Implement Item_Delete
+            if (sender is CrawlSourceItemVM item && CrawlSources.Contains(item))
+                DeleteItem?.Invoke(this, new ItemEventArgs<CrawlSourceItemVM>(item));
         }
     }
 }

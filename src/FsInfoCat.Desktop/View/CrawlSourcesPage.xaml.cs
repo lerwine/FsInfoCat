@@ -37,5 +37,11 @@ namespace FsInfoCat.Desktop.View
             //if (sender is CrawlSourcesViewModel crawlSources)
             // TODO: Implement CrawlSourcesViewModel_EditItem
         }
+
+        private void CrawlSourcesViewModel_DeleteItem(object sender, ItemEventArgs<CrawlSourceItemVM> e)
+        {
+            //if (sender is CrawlSourcesViewModel crawlSources)
+            // TODO: Implement CrawlSourcesViewModel_DeleteItem
+        }
     }
 }

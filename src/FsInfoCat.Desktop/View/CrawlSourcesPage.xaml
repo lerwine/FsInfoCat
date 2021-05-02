@@ -8,7 +8,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Crawl Sources">
     <Page.DataContext>
-        <vm:CrawlSourcesViewModel NewCrawlSource="CrawlSourcesViewModel_NewCrawlSource" EditItem="CrawlSourcesViewModel_EditItem"/>
+        <vm:CrawlSourcesViewModel NewCrawlSource="CrawlSourcesViewModel_NewCrawlSource" EditItem="CrawlSourcesViewModel_EditItem" DeleteItem="CrawlSourcesViewModel_DeleteItem"/>
     </Page.DataContext>
     <Grid>
         <Grid.RowDefinitions>
