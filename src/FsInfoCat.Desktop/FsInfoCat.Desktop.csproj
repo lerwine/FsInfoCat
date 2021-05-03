@@ -209,6 +209,16 @@
     </ApplicationDefinition>
     <Compile Include="AppConfig.cs" />
     <Compile Include="Converters\AccountToStringConverter.cs" />
+    <Compile Include="Model\Validation\DataErrorNotifiedCollection.cs" />
+    <Compile Include="Model\Validation\IComponentRelay.cs" />
+    <Compile Include="Model\Validation\IInstanceItemPropertyValue.cs" />
+    <Compile Include="Model\Validation\IItemPropertyDefinition.cs" />
+    <Compile Include="Model\Validation\IItemPropertyInfo.cs" />
+    <Compile Include="Model\Validation\IItemPropertyValidation.cs" />
+    <Compile Include="Model\Validation\INotifyComponentDataErrorInfoRelay.cs" />
+    <Compile Include="Model\Validation\INotifyComponentPropertyChangeRelay.cs" />
+    <Compile Include="Model\Validation\PropertyChangeNotifiedCollection.cs" />
+    <Compile Include="Model\Validation\IValidatablePropertyValue.cs" />
     <Compile Include="Model\Bits\Binary128.cs" />
     <Compile Include="Model\Bits\Binary16.cs" />
     <Compile Include="Model\Bits\Binary32.cs" />
@@ -323,6 +333,11 @@
     <Compile Include="Model\Win32_LogicalDiskRootDirectory.cs" />
     <Compile Include="Model\Win32_MediaAccess.cs" />
     <Compile Include="Model\WIN32_MEDIA_TYPE.cs" />
+    <Compile Include="Util\ComponentModelCollection.cs" />
+    <Compile Include="Util\ComponentModelHelper.cs" />
+    <Compile Include="Util\ComponentModelPropertyValue.cs" />
+    <Compile Include="Util\ComponentModelPropertyWrapper.cs" />
+    <Compile Include="Util\ComponentModelWrapper.cs" />
     <Compile Include="Util\UriHelper.cs" />
     <Compile Include="ViewModel\AsyncActionViewModel.cs" />
     <Compile Include="ViewModel\AsyncFunctionViewModel.cs" />
@@ -448,6 +463,9 @@
     <None Include="Model\Remote\RemoteDbModel.edmx.diagram">
       <DependentUpon>RemoteDbModel.edmx</DependentUpon>
     </None>
+    <None Include="Model\Validation\ClassDiagram1.cd">
+      <CustomToolNamespace>FsInfoCat.Desktop.Model.Validation</CustomToolNamespace>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -478,7 +496,9 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModel\Validation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

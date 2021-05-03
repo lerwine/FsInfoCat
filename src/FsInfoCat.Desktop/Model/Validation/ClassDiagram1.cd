@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.Desktop.Model.Validation.DataErrorNotifiedCollection&lt;TComponent, TWrapper&gt;">
+    <Position X="20.75" Y="16.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\DataErrorNotifiedCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.Desktop.Model.Validation.PropertyChangeNotifiedCollection&lt;TComponent, TWrapper&gt;">
+    <Position X="20.5" Y="8.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AkIAAEAAyIAEABABCAAglCQQwAUAAAAECAAAAABQIAI=</HashCode>
+      <FileName>Model\Validation\PropertyChangeNotifiedCollection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_backingCollection" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IComponentRelay">
+    <Position X="12" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IComponentRelay.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IComponentRelay&lt;TComponent&gt;">
+    <Position X="9.75" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IComponentRelay.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IInstanceItemPropertyValue">
+    <Position X="15" Y="13.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IInstanceItemPropertyValue.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IInstanceItemPropertyValue&lt;TValue&gt;">
+    <Position X="13.25" Y="15.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IInstanceItemPropertyValue.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IItemPropertyDefinition">
+    <Position X="8.75" Y="13.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAgAAAAAAAAAAAAAAEAAAAAAACAAABAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IItemPropertyDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IItemPropertyDefinition&lt;TValue&gt;">
+    <Position X="10" Y="16.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAgAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IItemPropertyDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IItemPropertyInfo">
+    <Position X="12.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAgAAAQAAAAAAQAAAAAAAAAAAACAAAACAA=</HashCode>
+      <FileName>Model\Validation\IItemPropertyInfo.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IItemPropertyValidation">
+    <Position X="7.25" Y="16.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IItemPropertyValidation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.INotifyComponentDataErrorInfoRelay">
+    <Position X="17.75" Y="5.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\INotifyComponentDataErrorInfoRelay.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.INotifyComponentDataErrorInfoRelay&lt;TComponent&gt;">
+    <Position X="13.75" Y="8.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\INotifyComponentDataErrorInfoRelay.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.INotifyComponentPropertyChangeRelay">
+    <Position X="13" Y="3.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\INotifyComponentPropertyChangeRelay.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.INotifyComponentPropertyChangeRelay&lt;TComponent&gt;">
+    <Position X="10.75" Y="5.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\INotifyComponentPropertyChangeRelay.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IValidatablePropertyValue">
+    <Position X="16.75" Y="15.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IValidatablePropertyValue.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IValidatablePropertyValue&lt;TValue&gt;">
+    <Position X="14.75" Y="17.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IValidatablePropertyValue.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
