@@ -6,8 +6,8 @@ using System.Text;
 
 namespace FsInfoCat.Components
 {
-    public interface IModelInstance : ITypeDescriptorContext
+    public interface ITypeInstanceModel : ITypeDescriptorContext
     {
-        IReadOnlyList<IInstanceProperty> Properties { get; }
+        IReadOnlyList<IPropertyInstanceModel> Properties { get; }
     }
 }

@@ -7,7 +7,7 @@ namespace FsInfoCat.Components
     /// <summary>
     /// Exposes select, normalized properties of a <seealso cref="PropertyDescriptor"/>.
     /// </summary>
-    public interface IPropertyDefinition : IPropertyModel
+    public interface IPropertyDefinitionModel : IPropertyModel
     {
         /// <summary>
         /// Returns whether the collection of standard values returned from <see cref="GetStandardValues"/> is an exclusive list of possible values.
@@ -84,17 +84,17 @@ namespace FsInfoCat.Components
         /// <returns><see langword="true"/> if <paramref name="value"/> can be directly assigned or converted and then assigned to the current property type.</returns>
         bool IsCompatibleType(object value);
 
-        IInstanceProperty ToInstanceProperty(IModelInstance componentContext);
+        IPropertyInstanceModel ToInstanceProperty(ITypeInstanceModel componentContext);
 
-        IModelDefinition ComponentDefinition { get; }
+        ITypeDefinitionModel Owner { get; }
     }
 
-    public interface IPropertyDefinition<TComponent> : IPropertyDefinition
-        where TComponent : class
+    public interface IPropertyDefinitionModel<TOwner> : IPropertyDefinitionModel
+        where TOwner : class
     {
-        IInstanceProperty<TComponent> ToInstanceProperty(ModelInstance<TComponent> componentContext);
+        IPropertyInstanceModel<TOwner> ToInstanceProperty(TypeInstanceModel<TOwner> componentContext);
 
-        new ModelDefinition<TComponent> ComponentDefinition { get; }
+        new TypeDefinitionModel<TOwner> Owner { get; }
     }
 
 }

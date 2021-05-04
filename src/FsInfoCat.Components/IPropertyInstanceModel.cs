@@ -11,7 +11,7 @@ namespace FsInfoCat.Components
     /// Exposes methods and properties from a <seealso cref="PropertyDescriptor"/> and the associated <seealso cref="TypeConverter"/>
     /// from the <seealso cref="ITypeDescriptorContext">Context</seealso> of an instance of a component object.
     /// </summary>
-    public interface IInstanceProperty : IPropertyModel
+    public interface IPropertyInstanceModel : IPropertyModel
     {
         event EventHandler PropertyValueChanged;
 
@@ -136,12 +136,12 @@ namespace FsInfoCat.Components
         TypeConverter.StandardValuesCollection GetStandardValues();
     }
 
-    public interface IInstanceProperty<TComponent> : IInstanceProperty
-        where TComponent : class
+    public interface IPropertyInstanceModel<TInstance> : IPropertyInstanceModel
+        where TInstance : class
     {
         /// <summary>
         /// The context that references the component which contains the current property.
         /// </summary>
-        new IPropertyTypeDescriptorContext<TComponent> Context { get; }
+        new IPropertyDescriptorContext<TInstance> Context { get; }
     }
 }

@@ -7,16 +7,16 @@ using System.Text;
 
 namespace FsInfoCat.Components
 {
-    public class ModelInstance<TComponent> : IModelInstance
-        where TComponent : class
+    public class TypeInstanceModel<TInstance> : ITypeInstanceModel
+        where TInstance : class
     {
-        public TComponent Instance { get; }
+        public TInstance Instance { get; }
 
         object ITypeDescriptorContext.Instance => Instance;
 
-        public ReadOnlyCollection<IInstanceProperty<TComponent>> Properties { get; }
+        public ReadOnlyCollection<IPropertyInstanceModel<TInstance>> Properties { get; }
 
-        IReadOnlyList<IInstanceProperty> IModelInstance.Properties => Properties;
+        IReadOnlyList<IPropertyInstanceModel> ITypeInstanceModel.Properties => Properties;
 
         public IContainer Container { get; }
 

@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace FsInfoCat.Components
 {
-    public class InstanceProperty<TInstance, TProperty> : IInstanceProperty<TInstance>
+    public class PropertyInstanceModel<TInstance, TProperty> : IPropertyInstanceModel<TInstance>
         where TInstance : class
     {
         private readonly TypeConverter _converter;
@@ -17,7 +17,7 @@ namespace FsInfoCat.Components
         /// </summary>
         public TProperty PropertyValue => (TProperty)_descriptor.GetValue(Context.Instance);
 
-        object IInstanceProperty.PropertyValue => PropertyValue;
+        object IPropertyInstanceModel.PropertyValue => PropertyValue;
 
         /// <summary>
         /// Indicates whether this object supports a <see cref="GetStandardValues">standard set of values</see> that can be picked from a list.
@@ -32,11 +32,11 @@ namespace FsInfoCat.Components
         /// <summary>
         /// The context that references the component which contains the current property.
         /// </summary>
-        public PropertyTypeDescriptorContext<TInstance, TProperty> Context { get; }
+        public PropertyDescriptorContext<TInstance, TProperty> Context { get; }
 
-        IPropertyTypeDescriptorContext<TInstance> IInstanceProperty<TInstance>.Context => Context;
+        IPropertyDescriptorContext<TInstance> IPropertyInstanceModel<TInstance>.Context => Context;
 
-        ITypeDescriptorContext IInstanceProperty.Context => Context;
+        ITypeDescriptorContext IPropertyInstanceModel.Context => Context;
 
         /// <summary>
         /// The <see cref="MemberDescriptor.Name">name</see> (identifier) of the property.
@@ -87,7 +87,7 @@ namespace FsInfoCat.Components
         /// Creates a new instance property model.
         /// </summary>
         /// <param name="context">The context of the property and its component.</param>
-        public InstanceProperty(PropertyTypeDescriptorContext<TInstance, TProperty> context)
+        public PropertyInstanceModel(PropertyDescriptorContext<TInstance, TProperty> context)
         {
             _descriptor = (Context = context ?? throw new ArgumentNullException(nameof(context))).PropertyDescriptor;
             _converter = _descriptor.Converter;
@@ -107,7 +107,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public TProperty ConvertFrom(object value) => (TProperty)_converter.ConvertFrom(value);
 
-        object IInstanceProperty.ConvertFrom(object value) => ConvertFrom(value);
+        object IPropertyInstanceModel.ConvertFrom(object value) => ConvertFrom(value);
 
         /// <summary>
         /// Converts the given object to the type of this property, using the specified culture information and the current <see cref="Context"/>.
@@ -118,7 +118,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public TProperty ConvertFrom(CultureInfo culture, object value) => (TProperty)_converter.ConvertFrom(Context, culture, value);
 
-        object IInstanceProperty.ConvertFrom(CultureInfo culture, object value) => ConvertFrom(culture, value);
+        object IPropertyInstanceModel.ConvertFrom(CultureInfo culture, object value) => ConvertFrom(culture, value);
 
         /// <summary>
         /// Converts the given string to the type of this property, using the invariant culture and the current <see cref="Context"/>.
@@ -128,7 +128,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public TProperty ConvertFromInvariantString(string text) => (TProperty)_converter.ConvertFromInvariantString(Context, text);
 
-        object IInstanceProperty.ConvertFromInvariantString(string text) => ConvertFromInvariantString(text);
+        object IPropertyInstanceModel.ConvertFromInvariantString(string text) => ConvertFromInvariantString(text);
 
         /// <summary>
         /// Converts the given string to the type of this property, using the current <see cref="Context"/>.
@@ -138,7 +138,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public TProperty ConvertFromString(string text) => (TProperty)_converter.ConvertFromString(Context, text);
 
-        object IInstanceProperty.ConvertFromString(string text) => ConvertFromString(text);
+        object IPropertyInstanceModel.ConvertFromString(string text) => ConvertFromString(text);
 
         /// <summary>
         /// Converts the given string to the type of this property, using the specified <see cref="CultureInfo">culture</see> and the current <see cref="Context"/>.
@@ -149,7 +149,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public TProperty ConvertFromString(CultureInfo culture, string text) => (TProperty)_converter.ConvertFromString(Context, culture, text);
 
-        object IInstanceProperty.ConvertFromString(CultureInfo culture, string text) => ConvertFromString(culture, text);
+        object IPropertyInstanceModel.ConvertFromString(CultureInfo culture, string text) => ConvertFromString(culture, text);
 
         /// <summary>
         /// Converts the specified value to a culture-invariant string representation, using the current <see cref="Context"/>.
@@ -159,7 +159,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public string ConvertToInvariantString(TProperty value) => _converter.ConvertToInvariantString(Context, value);
 
-        string IInstanceProperty.ConvertToInvariantString(object value) => ConvertToString(ConvertFrom(value));
+        string IPropertyInstanceModel.ConvertToInvariantString(object value) => ConvertToString(ConvertFrom(value));
 
         /// <summary>
         /// Converts the given value to a string representation, using the current <see cref="Context"/>.
@@ -169,7 +169,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public string ConvertToString(TProperty value) => _converter.ConvertToString(Context, value);
 
-        string IInstanceProperty.ConvertToString(object value) => ConvertToString(ConvertFrom(value));
+        string IPropertyInstanceModel.ConvertToString(object value) => ConvertToString(ConvertFrom(value));
 
         /// <summary>
         /// Converts the given value to a string representation, using the specified <see cref="CultureInfo">culture</see> and the current <see cref="Context"/>.
@@ -180,7 +180,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public string ConvertToString(CultureInfo culture, TProperty value) => _converter.ConvertToString(Context, culture, value);
 
-        string IInstanceProperty.ConvertToString(CultureInfo culture, object value) => ConvertToString(culture, ConvertFrom(value));
+        string IPropertyInstanceModel.ConvertToString(CultureInfo culture, object value) => ConvertToString(culture, ConvertFrom(value));
 
         /// <summary>
         /// Returns a collection of standard values for the data type this type converter is designed for in the current <see cref="Context"/>.
@@ -213,6 +213,6 @@ namespace FsInfoCat.Components
             _descriptor.SetValue(Context.Instance, value);
         }
 
-        void IInstanceProperty.SetValue(object value) => SetValue(ConvertFrom(value));
+        void IPropertyInstanceModel.SetValue(object value) => SetValue(ConvertFrom(value));
     }
 }

@@ -11,8 +11,8 @@ namespace FsInfoCat.Components
     /// <summary>
     /// Exposes select, normalized properties of a <seealso cref="PropertyDescriptor"/>.
     /// </summary>
-    public class PropertyDefinition<TComponent, TProperty> : IPropertyDefinition<TComponent>
-        where TComponent : class
+    public class PropertyDefinitionModel<TOwner, TProperty> : IPropertyDefinitionModel<TOwner>
+        where TOwner : class
     {
         private readonly PropertyDescriptor _descriptor;
 
@@ -81,18 +81,18 @@ namespace FsInfoCat.Components
         /// </summary>
         public bool AreStandardValuesExclusive => _descriptor.Converter.GetStandardValuesExclusive();
 
-        public ModelDefinition<TComponent> ComponentDefinition { get; }
+        public TypeDefinitionModel<TOwner> Owner { get; }
 
-        IModelDefinition IPropertyDefinition.ComponentDefinition => ComponentDefinition;
+        ITypeDefinitionModel IPropertyDefinitionModel.Owner => Owner;
 
         /// <summary>
         /// Creates a new property definition object.
         /// </summary>
         /// <param name="descriptor">The property descriptor.</param>
         /// <param name="validationAttributes">Use this parameter to specify validation attributes which take precedence over any attributes applied to the property.</param>
-        public PropertyDefinition(ModelDefinition<TComponent> component, PropertyDescriptor descriptor, IEnumerable<ValidationAttribute> validationAttributes = null)
+        public PropertyDefinitionModel(TypeDefinitionModel<TOwner> component, PropertyDescriptor descriptor, IEnumerable<ValidationAttribute> validationAttributes = null)
         {
-            ComponentDefinition = component ?? throw new ArgumentNullException(nameof(component));
+            Owner = component ?? throw new ArgumentNullException(nameof(component));
             _descriptor = descriptor ?? throw new ArgumentNullException(nameof(descriptor));
             ValidationAttributes = new ReadOnlyCollection<ValidationAttribute>(((validationAttributes is null || !(validationAttributes = validationAttributes.Where(a => !(a is null))).Any()) ?
                 descriptor.Attributes.OfType<ValidationAttribute>() :
@@ -113,7 +113,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public TProperty ConvertFrom(object value) => (TProperty)_descriptor.Converter.ConvertFrom(value);
 
-        object IPropertyDefinition.ConvertFrom(object value)
+        object IPropertyDefinitionModel.ConvertFrom(object value)
         {
             throw new NotImplementedException();
         }
@@ -126,7 +126,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public TProperty ConvertFromInvariantString(string text) => (TProperty)_descriptor.Converter.ConvertFromInvariantString(text);
 
-        object IPropertyDefinition.ConvertFromInvariantString(string text)
+        object IPropertyDefinitionModel.ConvertFromInvariantString(string text)
         {
             throw new NotImplementedException();
         }
@@ -139,7 +139,7 @@ namespace FsInfoCat.Components
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public TProperty ConvertFromString(string text) => (TProperty)_descriptor.Converter.ConvertFromString(text);
 
-        object IPropertyDefinition.ConvertFromString(string text)
+        object IPropertyDefinitionModel.ConvertFromString(string text)
         {
             throw new NotImplementedException();
         }
@@ -183,11 +183,11 @@ namespace FsInfoCat.Components
         /// <returns>A <see cref="TypeConverter.StandardValuesCollection"/> that holds a standard set of valid values, or <see langword="null"/> if the property does not support a standard set of values.</returns>
         public TypeConverter.StandardValuesCollection GetStandardValues() => (TypeConverter.StandardValuesCollection)_descriptor.Converter.GetStandardValues();
 
-        public InstanceProperty<TComponent, TProperty> ToInstanceProperty(ModelInstance<TComponent>  componentContext) => new InstanceProperty<TComponent, TProperty>(new PropertyTypeDescriptorContext<TComponent, TProperty>(componentContext, this));
+        public PropertyInstanceModel<TOwner, TProperty> ToInstanceProperty(TypeInstanceModel<TOwner>  componentContext) => new PropertyInstanceModel<TOwner, TProperty>(new PropertyDescriptorContext<TOwner, TProperty>(componentContext, this));
 
-        IInstanceProperty<TComponent> IPropertyDefinition<TComponent>.ToInstanceProperty(ModelInstance<TComponent> component) => ToInstanceProperty(component);
+        IPropertyInstanceModel<TOwner> IPropertyDefinitionModel<TOwner>.ToInstanceProperty(TypeInstanceModel<TOwner> component) => ToInstanceProperty(component);
 
-        IInstanceProperty IPropertyDefinition.ToInstanceProperty(IModelInstance component) => ToInstanceProperty((ModelInstance<TComponent>)component);
+        IPropertyInstanceModel IPropertyDefinitionModel.ToInstanceProperty(ITypeInstanceModel component) => ToInstanceProperty((TypeInstanceModel<TOwner>)component);
 
         class AttributeComparer : IEqualityComparer<ValidationAttribute>
         {

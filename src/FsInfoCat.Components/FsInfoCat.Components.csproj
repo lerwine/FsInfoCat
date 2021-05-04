@@ -42,18 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IModelDefinition.cs" />
-    <Compile Include="IModelInstance.cs" />
-    <Compile Include="InstanceProperty.cs" />
-    <Compile Include="IInstanceProperty.cs" />
-    <Compile Include="IPropertyDefinition.cs" />
-    <Compile Include="IPropertyTypeDescriptorContext.cs" />
-    <Compile Include="ModelDefinition.cs" />
-    <Compile Include="ModelInstance.cs" />
+    <Compile Include="ITypeDefinitionModel.cs" />
+    <Compile Include="ITypeInstanceModel.cs" />
+    <Compile Include="PropertyInstanceModel.cs" />
+    <Compile Include="IPropertyInstanceModel.cs" />
+    <Compile Include="IPropertyDefinitionModel.cs" />
+    <Compile Include="IPropertyDescriptorContext.cs" />
+    <Compile Include="TypeDefinitionModel.cs" />
+    <Compile Include="TypeInstanceModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyDefinition.cs" />
+    <Compile Include="PropertyDefinitionModel.cs" />
     <Compile Include="IPropertyModel.cs" />
-    <Compile Include="PropertyTypeDescriptorContext.cs" />
+    <Compile Include="PropertyDescriptorContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
