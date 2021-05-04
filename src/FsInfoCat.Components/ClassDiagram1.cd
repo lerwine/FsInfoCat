@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.Components.PropertyDefinition&lt;TComponent, TProperty&gt;">
+    <Position X="3.25" Y="11.5" Width="3.75" />
+    <NestedTypes>
+      <Class Name="FsInfoCat.Components.PropertyDefinition&lt;TComponent, TProperty&gt;.AttributeComparer" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PropertyDefinition.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>oIAikAkAAAAhCAAQAgAAAEyAAAACBCCAQAAAABAECAA=</HashCode>
+      <FileName>PropertyDefinition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ComponentDefinition" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Components.InstanceProperty&lt;TInstance, TProperty&gt;">
+    <Position X="20.25" Y="6" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>IIECkAkABgAhCggQAAYAAkQAAAECCISAAAAABQAECAA=</HashCode>
+      <FileName>InstanceProperty.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Context" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Components.PropertyTypeDescriptorContext&lt;TInstance, TProperty&gt;">
+    <Position X="15.25" Y="8.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAUAAAAAIAABQAAAAACAQAgAAAAAAEA=</HashCode>
+      <FileName>PropertyTypeDescriptorContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ComponentContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Components.ModelDefinition&lt;TComponent&gt;">
+    <Position X="8.5" Y="11.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQCAAA=</HashCode>
+      <FileName>ModelDefinition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Properties" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Components.ModelInstance&lt;TComponent&gt;">
+    <Position X="12" Y="8.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAwAAAAAAQQAAAQAAAAAAAAAAAAASAAAAAACBAA=</HashCode>
+      <FileName>ModelInstance.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Properties" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="FsInfoCat.Components.IPropertyModel">
+    <Position X="7" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAEAAAAgCAAQAAAAAAQAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>IPropertyModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Components.IInstanceProperty&lt;TComponent&gt;">
+    <Position X="5" Y="8.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IInstanceProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Components.IInstanceProperty">
+    <Position X="5" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IIEAgAgABgABAgAAAAAAAEAAAAAAAISAAAAAAAAECAA=</HashCode>
+      <FileName>IInstanceProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Components.IPropertyDefinition">
+    <Position X="8.5" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IIAggAgAAAABAAAAAAAAAECAAAAABCCAAAAAAAAECAA=</HashCode>
+      <FileName>IPropertyDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Components.IPropertyDefinition&lt;TComponent&gt;">
+    <Position X="8.25" Y="8.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPropertyDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Components.IPropertyTypeDescriptorContext">
+    <Position X="12" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>IPropertyTypeDescriptorContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ComponentContext" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Components.IModelDefinition">
+    <Position X="12" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>IModelDefinition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Properties" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Components.IModelInstance">
+    <Position X="12" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>IModelInstance.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Properties" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Components.IPropertyTypeDescriptorContext&lt;TInstance&gt;">
+    <Position X="11.75" Y="2.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAgAAAAAAAA=</HashCode>
+      <FileName>IPropertyTypeDescriptorContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ComponentContext" />
+    </ShowAsAssociation>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
