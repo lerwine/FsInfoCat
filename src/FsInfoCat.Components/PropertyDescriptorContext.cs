@@ -8,7 +8,7 @@ namespace FsInfoCat.Components
     public class PropertyDescriptorContext<TInstance, TProperty> : IPropertyDescriptorContext<TInstance>
         where TInstance : class
     {
-        public TInstance Instance => ComponentContext.Instance;
+        public TInstance Instance => OwnerContext.Instance;
 
         object ITypeDescriptorContext.Instance => Instance;
 
@@ -18,13 +18,13 @@ namespace FsInfoCat.Components
 
         public IContainer Container { get; }
 
-        public TypeInstanceModel<TInstance> ComponentContext { get; }
+        public TypeInstanceModel<TInstance> OwnerContext { get; }
 
-        ITypeInstanceModel IPropertyDescriptorContext.ComponentContext => throw new NotImplementedException();
+        ITypeInstanceModel IPropertyDescriptorContext.OwnerContext => throw new NotImplementedException();
 
         public PropertyDescriptorContext(TypeInstanceModel<TInstance> componentContext, PropertyDefinitionModel<TInstance, TProperty> definition, IContainer container = null)
         {
-            ComponentContext = componentContext ?? throw new ArgumentNullException(nameof(componentContext));
+            OwnerContext = componentContext ?? throw new ArgumentNullException(nameof(componentContext));
             PropertyDescriptor = (definition ?? throw new ArgumentNullException(nameof(definition))).GetDescriptor();
             ValidationAttributes = definition.ValidationAttributes;
             Container = container;
