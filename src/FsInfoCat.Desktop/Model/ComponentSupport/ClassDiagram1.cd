@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelContext&lt;TInstance&gt;">
+    <Position X="13.5" Y="18.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIgAAACAAQQEAAAAAAAAAAAAAAAACAQACAAAAgA=</HashCode>
+      <FileName>Model\ComponentSupport\ModelContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelContextBase&lt;TInstance, TPropertyContext&gt;">
+    <Position X="13.75" Y="14.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAQAAAAACAAAQIAAQAAAAAACAAA=</HashCode>
+      <FileName>Model\ComponentSupport\ModelContextBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelDescriptor&lt;TModel&gt;" BaseTypeListCollapsed="true">
+    <Position X="22.75" Y="4" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>SggAAIgAIAAEAoAEiIAAAAAQAEQAQIAEgAAAgAACAAA=</HashCode>
+      <FileName>Model\ComponentSupport\ModelDescriptor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.PropertyContext&lt;TInstance, TValue, TOwner&gt;">
+    <Position X="8.75" Y="14.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>ACAEkEjABiChAwQQAAUAACSAk0AAAASAGAAyAQAAiAA=</HashCode>
+      <FileName>Model\ComponentSupport\PropertyContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.PropertyContext&lt;TInstance, TValue&gt;">
+    <Position X="8.5" Y="24.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ComponentSupport\PropertyContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelPropertyDescriptor&lt;TModel, TValue&gt;">
+    <Position X="17.25" Y="3.25" Width="4" />
+    <TypeIdentifier>
+      <HashCode>IAAClAjAAABhAAAUgACAAFSAAAUAgKGAAAgCAAAECgA=</HashCode>
+      <FileName>Model\ComponentSupport\ModelPropertyDescriptor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Owner" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelContext">
+    <Position X="0.75" Y="14.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAIAAAAAAAAACAAA=</HashCode>
+      <FileName>Model\ComponentSupport\IModelContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelContext&lt;TInstance&gt;">
+    <Position X="0.75" Y="18" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAQAAAAAACAAA=</HashCode>
+      <FileName>Model\ComponentSupport\IModelContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelDescriptor">
+    <Position X="3.75" Y="14.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Model\ComponentSupport\IModelDescriptor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelInfo">
+    <Position X="3" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAAACAAA=</HashCode>
+      <FileName>Model\ComponentSupport\IModelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelProperty">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEABAAAAhAAAQAAAAAAQAAAAAAACAAAAAAAAACAA=</HashCode>
+      <FileName>Model\ComponentSupport\IModelProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelPropertyDescriptor">
+    <Position X="11.75" Y="4.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAgAiAAABAAAAAAAAAAEAAAAAAACAAAAACAAAEAAA=</HashCode>
+      <FileName>Model\ComponentSupport\IModelPropertyDescriptor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelPropertyDescriptor&lt;TModel&gt;">
+    <Position X="5.25" Y="6.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ComponentSupport\IModelPropertyDescriptor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IPropertyContext">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <InheritanceLine Type="FsInfoCat.Desktop.Model.ComponentSupport.IModelProperty" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.25" Y="1.133" />
+        <Point X="10.875" Y="1.133" />
+        <Point X="10.875" Y="0.905" />
+        <Point X="3" Y="0.905" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAEgECABCBAAgAEAAAAAAAAAkAAAAQAAAAiAAAAAAA=</HashCode>
+      <FileName>Model\ComponentSupport\IPropertyContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IPropertyContext&lt;TInstance&gt;">
+    <Position X="0.5" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ComponentSupport\IPropertyContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.ITypedPropertyContext&lt;TValue&gt;">
+    <Position X="4" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAEAAACAAAgAAAAAAAAAAAAAAAAQAAAAgAAAAAAA=</HashCode>
+      <FileName>Model\ComponentSupport\ITypedPropertyContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.ITypedPropertyDescriptor&lt;TValue&gt;">
+    <Position X="7" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ComponentSupport\ITypedPropertyDescriptor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.ITypedProperty&lt;TValue&gt;">
+    <Position X="7.5" Y="1.75" Width="2" />
+    <InheritanceLine Type="FsInfoCat.Desktop.Model.ComponentSupport.IModelProperty" FixedToPoint="true">
+      <Path>
+        <Point X="11.25" Y="2.368" />
+        <Point X="9.5" Y="2.368" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ComponentSupport\ITypedProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

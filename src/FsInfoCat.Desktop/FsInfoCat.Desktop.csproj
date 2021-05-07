@@ -209,16 +209,6 @@
     </ApplicationDefinition>
     <Compile Include="AppConfig.cs" />
     <Compile Include="Converters\AccountToStringConverter.cs" />
-    <Compile Include="Model\Validation\DataErrorNotifiedCollection.cs" />
-    <Compile Include="Model\Validation\IComponentRelay.cs" />
-    <Compile Include="Model\Validation\IInstanceItemPropertyValue.cs" />
-    <Compile Include="Model\Validation\IItemPropertyDefinition.cs" />
-    <Compile Include="Model\Validation\IItemPropertyInfo.cs" />
-    <Compile Include="Model\Validation\IItemPropertyValidation.cs" />
-    <Compile Include="Model\Validation\INotifyComponentDataErrorInfoRelay.cs" />
-    <Compile Include="Model\Validation\INotifyComponentPropertyChangeRelay.cs" />
-    <Compile Include="Model\Validation\PropertyChangeNotifiedCollection.cs" />
-    <Compile Include="Model\Validation\IValidatablePropertyValue.cs" />
     <Compile Include="Model\Bits\Binary128.cs" />
     <Compile Include="Model\Bits\Binary16.cs" />
     <Compile Include="Model\Bits\Binary32.cs" />
@@ -226,6 +216,14 @@
     <Compile Include="Model\Bits\Version2Domain.cs" />
     <Compile Include="Model\CimGroupPartComponent.cs" />
     <Compile Include="Model\CIM_PowerManagementCapability.cs" />
+    <Compile Include="Model\ComponentSupport\AttributeComparer.cs" />
+    <Compile Include="Model\ComponentSupport\Descriptors.cs" />
+    <Compile Include="Model\ComponentSupport\ITypedPropertyDescriptor.cs" />
+    <Compile Include="Model\ComponentSupport\ITypedProperty.cs" />
+    <Compile Include="Model\ComponentSupport\ComponentEqualityComparer.cs" />
+    <Compile Include="Model\ComponentSupport\ComponentExtensions.cs" />
+    <Compile Include="Model\ComponentSupport\ModelPropertyDescriptor.cs" />
+    <Compile Include="Util\RelayComparer.cs" />
     <Compile Include="Model\ConfigurationManagerErrorCode.cs" />
     <Compile Include="Model\DeviceOperationalState.cs" />
     <Compile Include="Model\DirectoryCrawlFlags.cs" />
@@ -323,6 +321,24 @@
     <Compile Include="Model\UUID.cs" />
     <Compile Include="Model\Bits\UuidVariant.cs" />
     <Compile Include="Model\Bits\UuidVersion.cs" />
+    <Compile Include="Model\ComponentSupport\IModelContext.cs" />
+    <Compile Include="Model\ComponentSupport\IModelDescriptor.cs" />
+    <Compile Include="Model\ComponentSupport\IModelPropertyDescriptor.cs" />
+    <Compile Include="Model\Validation\IPropertyValidationContext.cs" />
+    <Compile Include="Model\ComponentSupport\ITypedPropertyContext.cs" />
+    <Compile Include="Model\ComponentSupport\ModelDescriptor.cs" />
+    <Compile Include="Model\ComponentSupport\IModelInfo.cs" />
+    <Compile Include="Model\Validation\IModelValidationContext.cs" />
+    <Compile Include="Model\ComponentSupport\IPropertyContext.cs" />
+    <Compile Include="Model\ComponentSupport\IModelProperty.cs" />
+    <Compile Include="Model\ComponentSupport\ModelContext.cs" />
+    <Compile Include="Model\ComponentSupport\ModelContextBase.cs" />
+    <Compile Include="Model\Validation\ModelErrorsChangedEventArgs.cs" />
+    <Compile Include="Model\Validation\ModelValidationContext.cs" />
+    <Compile Include="Model\ComponentSupport\PropertyContext.cs" />
+    <Compile Include="Model\Validation\PropertyValidationContext.cs" />
+    <Compile Include="Model\ComponentSupport\PropertyValueChangedEventArgs.cs" />
+    <Compile Include="Model\ComponentSupport\PropertyValueChangedEventHandler.cs" />
     <Compile Include="Model\VolumeIdentifier.cs" />
     <Compile Include="Model\VolumeInfo.cs" />
     <Compile Include="Model\Win32_AccessMask.cs" />
@@ -333,11 +349,8 @@
     <Compile Include="Model\Win32_LogicalDiskRootDirectory.cs" />
     <Compile Include="Model\Win32_MediaAccess.cs" />
     <Compile Include="Model\WIN32_MEDIA_TYPE.cs" />
-    <Compile Include="Util\ComponentModelCollection.cs" />
     <Compile Include="Util\ComponentModelHelper.cs" />
-    <Compile Include="Util\ComponentModelPropertyValue.cs" />
-    <Compile Include="Util\ComponentModelPropertyWrapper.cs" />
-    <Compile Include="Util\ComponentModelWrapper.cs" />
+    <Compile Include="Util\TypeHelper.cs" />
     <Compile Include="Util\UriHelper.cs" />
     <Compile Include="ViewModel\AsyncActionViewModel.cs" />
     <Compile Include="ViewModel\AsyncFunctionViewModel.cs" />
@@ -460,11 +473,9 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>RemoteDbModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Model\ComponentSupport\ClassDiagram1.cd" />
     <None Include="Model\Remote\RemoteDbModel.edmx.diagram">
       <DependentUpon>RemoteDbModel.edmx</DependentUpon>
-    </None>
-    <None Include="Model\Validation\ClassDiagram1.cd">
-      <CustomToolNamespace>FsInfoCat.Desktop.Model.Validation</CustomToolNamespace>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -1,12 +1,69 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Management;
+using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Desktop.Model
 {
     public static class Extensions
     {
+        //public static int FindPrimeNumber(int startValue)
+        //{
+        //    try
+        //    {
+        //        if ((Math.Abs(startValue) & 1) == 0)
+        //            startValue++;
+        //        while (!IsPrimeNumber(startValue))
+        //            startValue += 2;
+        //    }
+        //    catch (OverflowException) { return 1; }
+        //    return startValue;
+        //}
+
+        //public static bool IsPrimeNumber(int n)
+        //{   
+        //    if (((n = Math.Abs(n)) & 1) == 0)
+        //        return false;
+        //    for (int i = n >> 1; i > 1; i--)
+        //    {
+        //        if (n % i == 0)
+        //            return false;
+        //    }
+        //    return true;
+        //}
+
+        //public static T[] CoerceAsArray<T>(this IEnumerable<T> source) => (source is null) ? Array.Empty<T>() : (source is T[] a) ? a : source.ToArray();
+
+        //public static int ToAggregateHashCode(this IEnumerable<int> hashCodes)
+        //{
+        //    int[] arr = hashCodes.CoerceAsArray();
+        //    int prime = arr.Length;
+        //    if (prime == 0)
+        //        return 0;
+        //    if (arr.Length == 1)
+        //        return arr[0];
+        //    int seed = FindPrimeNumber(prime);
+        //    for (int n = 1; n < prime; n++)
+        //        seed = FindPrimeNumber(seed + 1);
+        //    prime = FindPrimeNumber(seed + 1);
+        //    return arr.Aggregate(seed, (a, i) =>
+        //    {
+        //        unchecked { return (a * prime) ^ i; }
+        //    });
+        //}
+
+        //public static int GetAggregateHashCode<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
+        //{
+        //    if (source is null || !source.Any())
+        //        return 0;
+        //    if (comparer is null)
+        //        comparer = EqualityComparer<T>.Default;
+        //    return source.Select(obj => comparer.GetHashCode(obj)).ToAggregateHashCode();
+        //}
+
         public static T? ToEnumPropertyValue<T>(this ManagementObject managementObject, string propertyName)
             where T : struct, Enum
         {
