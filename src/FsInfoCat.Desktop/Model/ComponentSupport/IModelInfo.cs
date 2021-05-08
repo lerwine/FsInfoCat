@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.Model.ComponentSupport
 {
+    /// <summary>
+    /// Provides information about a compont and its properties.
+    /// </summary>
     public interface IModelInfo
     {
         /// <summary>
@@ -20,6 +23,12 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         /// </value>
         string FullName { get; }
 
+        /// <summary>
+        /// Gets information about properties of the target object.
+        /// </summary>
+        /// <value>
+        /// Information about properties of the target object.
+        /// </value>
         IReadOnlyList<IModelProperty> Properties { get; }
     }
 }

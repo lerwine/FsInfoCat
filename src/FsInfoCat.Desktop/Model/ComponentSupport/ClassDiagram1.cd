@@ -1,48 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelContext&lt;TInstance&gt;">
-    <Position X="13.5" Y="18.25" Width="3.5" />
+    <Position X="22.5" Y="15.25" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAIgAAACAAQQEAAAAAAAAAAAAAAAACAQACAAAAgA=</HashCode>
+      <HashCode>EAAAAIgAIACEAQQEQAAAAIAAAAAAIAAEiAQACAAAAgA=</HashCode>
       <FileName>Model\ComponentSupport\ModelContext.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelContextBase&lt;TInstance, TPropertyContext&gt;">
-    <Position X="13.75" Y="14.5" Width="3.25" />
+    <Position X="22.5" Y="10" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAIAAAAQAAAAACAAAQIAAQAAAAAACAAA=</HashCode>
+      <HashCode>CAAAAAAAAAAEAIAACAQAAAAACAAAQIAgQAAAAAACAAA=</HashCode>
       <FileName>Model\ComponentSupport\ModelContextBase.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelDescriptor&lt;TModel&gt;" BaseTypeListCollapsed="true">
-    <Position X="22.75" Y="4" Width="5.75" />
+    <Position X="15.5" Y="0.5" Width="5.75" />
     <TypeIdentifier>
-      <HashCode>SggAAIgAIAAEAoAEiIAAAAAQAEQAQIAEgAAAgAACAAA=</HashCode>
+      <HashCode>SggAAIgAIAAEAoAEiIAAABAQAEQAQMAEgAAAgAACAAA=</HashCode>
       <FileName>Model\ComponentSupport\ModelDescriptor.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Properties" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.PropertyContext&lt;TInstance, TValue, TOwner&gt;">
-    <Position X="8.75" Y="14.5" Width="3.5" />
+    <Position X="11.5" Y="10.75" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>ACAEkEjABiChAwQQAAUAACSAk0AAAASAGAAyAQAAiAA=</HashCode>
+      <HashCode>ACAEkEjABiChAwQQIAUAACSAk0AAAASgGAAyAQIAiAA=</HashCode>
       <FileName>Model\ComponentSupport\PropertyContext.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.PropertyContext&lt;TInstance, TValue&gt;">
-    <Position X="8.5" Y="24.75" Width="3.75" />
+    <Position X="6.25" Y="15.25" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\ComponentSupport\PropertyContext.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelPropertyDescriptor&lt;TModel, TValue&gt;">
-    <Position X="17.25" Y="3.25" Width="4" />
+    <Position X="22.5" Y="0.5" Width="3.75" />
     <TypeIdentifier>
-      <HashCode>IAAClAjAAABhAAAUgACAAFSAAAUAgKGAAAgCAAAECgA=</HashCode>
+      <HashCode>IAAClAjAIABhAACUgACAAFSAAAUAgKGAAggCIAAECgA=</HashCode>
       <FileName>Model\ComponentSupport\ModelPropertyDescriptor.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -50,63 +53,79 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
+  <Class Name="FsInfoCat.Desktop.Model.Validation.ModelValidationContext&lt;TInstance&gt;">
+    <Position X="16.5" Y="7.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>EgABAIgAIAGEAQRBQAkAAIAAAAAAIAAMiYQACCABAgA=</HashCode>
+      <FileName>Model\Validation\ModelValidationContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Desktop.Model.Validation.PropertyValidationContext&lt;TInstance, TValue&gt;">
+    <Position X="16.5" Y="16" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABIAAABKIEAAAAAAAAAAACoAAAAACABAAA=</HashCode>
+      <FileName>Model\Validation\PropertyValidationContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelContext">
-    <Position X="0.75" Y="14.75" Width="2" />
+    <Position X="0.75" Y="11.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAIAAAAAAAAACAAA=</HashCode>
       <FileName>Model\ComponentSupport\IModelContext.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelContext&lt;TInstance&gt;">
-    <Position X="0.75" Y="18" Width="2.25" />
+    <Position X="0.75" Y="8.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAQAAAAAACAAA=</HashCode>
       <FileName>Model\ComponentSupport\IModelContext.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelDescriptor">
-    <Position X="3.75" Y="14.75" Width="3.25" />
+    <Position X="7.75" Y="11.25" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
       <FileName>Model\ComponentSupport\IModelDescriptor.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelInfo">
-    <Position X="3" Y="12.5" Width="1.5" />
+    <Position X="4.75" Y="11.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAAACAAA=</HashCode>
       <FileName>Model\ComponentSupport\IModelInfo.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelProperty">
-    <Position X="11.25" Y="0.5" Width="1.5" />
+    <Position X="8" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAEABAAAAhAAAQAAAAAAQAAAAAAACAAAAAAAAACAA=</HashCode>
       <FileName>Model\ComponentSupport\IModelProperty.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelPropertyDescriptor">
-    <Position X="11.75" Y="4.25" Width="2.5" />
+    <Position X="11.5" Y="3.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>IAAAgAiAAABAAAAAAAAAAEAAAAAAACAAAAACAAAEAAA=</HashCode>
+      <HashCode>IAAAgAiAIABAAAAAAAAAAEAAAAAAACAAAAACAAAEAAA=</HashCode>
       <FileName>Model\ComponentSupport\IModelPropertyDescriptor.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelPropertyDescriptor&lt;TModel&gt;">
-    <Position X="5.25" Y="6.25" Width="3" />
+    <Position X="11.25" Y="0.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAACAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\ComponentSupport\IModelPropertyDescriptor.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IPropertyContext">
-    <Position X="0.5" Y="0.5" Width="2.5" />
-    <InheritanceLine Type="FsInfoCat.Desktop.Model.ComponentSupport.IModelProperty" FixedFromPoint="true" FixedToPoint="true">
+    <Position X="4.25" Y="3.5" Width="2.5" />
+    <InheritanceLine Type="FsInfoCat.Desktop.Model.ComponentSupport.IModelProperty" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="11.25" Y="1.133" />
-        <Point X="10.875" Y="1.133" />
-        <Point X="10.875" Y="0.905" />
-        <Point X="3" Y="0.905" />
+        <Point X="8" Y="3.688" />
+        <Point X="7.375" Y="3.688" />
+        <Point X="7.375" Y="4.688" />
+        <Point X="6.75" Y="4.688" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -115,37 +134,79 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IPropertyContext&lt;TInstance&gt;">
-    <Position X="0.5" Y="6.5" Width="2.25" />
+    <Position X="0.75" Y="2.5" Width="2.25" />
+    <InheritanceLine Type="FsInfoCat.Desktop.Model.ComponentSupport.IPropertyContext" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.25" Y="7.125" />
+        <Point X="1.938" Y="7.125" />
+        <Point X="1.938" Y="3.733" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\ComponentSupport\IPropertyContext.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.ITypedPropertyContext&lt;TValue&gt;">
-    <Position X="4" Y="2.25" Width="2.5" />
+    <Position X="4.25" Y="8.5" Width="2.5" />
+    <InheritanceLine Type="FsInfoCat.Desktop.Model.ComponentSupport.ITypedProperty&lt;TValue&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="8.25" Y="9.125" />
+        <Point X="6.75" Y="9.125" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAEAEAAACAAAgAAAAAAAAAAAAAAAAQAAAAgAAAAAAA=</HashCode>
       <FileName>Model\ComponentSupport\ITypedPropertyContext.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.ITypedPropertyDescriptor&lt;TValue&gt;">
-    <Position X="7" Y="4.5" Width="3" />
+    <Position X="11.5" Y="8" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\ComponentSupport\ITypedPropertyDescriptor.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.ITypedProperty&lt;TValue&gt;">
-    <Position X="7.5" Y="1.75" Width="2" />
-    <InheritanceLine Type="FsInfoCat.Desktop.Model.ComponentSupport.IModelProperty" FixedToPoint="true">
-      <Path>
-        <Point X="11.25" Y="2.368" />
-        <Point X="9.5" Y="2.368" />
-      </Path>
-    </InheritanceLine>
+    <Position X="8.25" Y="8.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\ComponentSupport\ITypedProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IModelValidationContext">
+    <Position X="0.75" Y="15.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAEAAAAAAAAAAAAAAIAAAAACAAA=</HashCode>
+      <FileName>Model\Validation\IModelValidationContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IPropertyValidationContext">
+    <Position X="4.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAABAAAAAAAAAAAAAAAIAAAAACABAAA=</HashCode>
+      <FileName>Model\Validation\IPropertyValidationContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Desktop.Model.Validation.IPropertyValidationContext&lt;TInstance&gt;">
+    <Position X="0.5" Y="0.5" Width="3" />
+    <InheritanceLine Type="FsInfoCat.Desktop.Model.ComponentSupport.IPropertyContext&lt;TInstance&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="1.875" Y="2.5" />
+        <Point X="1.875" Y="2.237" />
+        <Point X="1.938" Y="2.237" />
+        <Point X="1.938" Y="1.862" />
+      </Path>
+    </InheritanceLine>
+    <InheritanceLine Type="FsInfoCat.Desktop.Model.Validation.IPropertyValidationContext" FixedToPoint="true">
+      <Path>
+        <Point X="4.25" Y="1.125" />
+        <Point X="3.5" Y="1.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Validation\IPropertyValidationContext.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

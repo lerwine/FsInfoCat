@@ -8,7 +8,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
     /// </summary>
     /// <remarks>This implements the <see cref="ITypeDescriptorContext"/> interface whereby
     /// the <see cref="ITypeDescriptorContext.PropertyDescriptor"/> is <see langword="null"/>.</remarks>
-    public interface IModelContext : ITypeDescriptorContext, IModelInfo
+    public interface IModelContext : ITypeDescriptorContext, IModelInfo, IReadOnlyDictionary<string, IPropertyContext>
     {
         /// <summary>
         /// Occurs when the value of a property on the underlying model <see cref="ITypeDescriptorContext.Instance"/> has changed.
@@ -41,13 +41,38 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         int GetHashCode();
     }
 
-    public interface IModelContext<TInstance> : IModelContext
+    /// <summary>
+    /// Provides contextual information about a property on an instantiated model object as well as generic access to its properties.
+    /// </summary>
+    /// <typeparam name="TInstance">The type of the comp0nent instance.</typeparam>
+    /// <seealso cref="System.ComponentModel.ITypeDescriptorContext" />
+    /// <seealso cref="FsInfoCat.Desktop.Model.ComponentSupport.IModelInfo" />
+    /// <seealso cref="System.Collections.Generic.IReadOnlyDictionary{System.String, FsInfoCat.Desktop.Model.ComponentSupport.IPropertyContext}" />
+    public interface IModelContext<TInstance> : IModelContext, IReadOnlyDictionary<string, IPropertyContext<TInstance>>
         where TInstance : class
     {
+        /// <summary>
+        /// Gets the object that is connected with this context.
+        /// </summary>
+        /// <value>
+        /// The object that is connected with this context.
+        /// </value>
         new TInstance Instance { get; }
 
+        /// <summary>
+        /// Gets the descriptor for the type of the underlying model instance.
+        /// </summary>
+        /// <value>
+        /// The <see cref="IModelDescriptor"/> that describes the type of the underlying model <see cref="ITypeDescriptorContext.Instance"/>.
+        /// </value>
         new ModelDescriptor<TInstance> ModelDescriptor { get; }
 
+        /// <summary>
+        /// Gets the context objects that represent the properties of the underlying model instance.
+        /// </summary>
+        /// <value>
+        /// The <see cref="IPropertyContext{TInstance}"/> objects that represent the properties of the underlying model <see cref="ITypeDescriptorContext.Instance"/>.
+        /// </value>
         new IReadOnlyList<IPropertyContext<TInstance>> Properties { get; }
     }
 }

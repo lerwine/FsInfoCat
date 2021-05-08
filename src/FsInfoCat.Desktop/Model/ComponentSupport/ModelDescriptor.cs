@@ -8,10 +8,24 @@ using System.Linq;
 
 namespace FsInfoCat.Desktop.Model.ComponentSupport
 {
+    /// <summary>
+    /// Provides information about the characteristics and properties of a type.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the target object.</typeparam>
+    /// <seealso cref="IEquatable{ModelDescriptor{TModel}}" />
+    /// <seealso cref="IModelDescriptor" />
+    /// <seealso cref="IReadOnlyDictionary{string, IModelPropertyDescriptor{TModel}}" />
+    /// <seealso cref="IEqualityComparer{TModel}" />
     public sealed class ModelDescriptor<TModel> : IEquatable<ModelDescriptor<TModel>>, IModelDescriptor,
         IReadOnlyDictionary<string, IModelPropertyDescriptor<TModel>>, IEqualityComparer<TModel>
         where TModel : class
     {
+        /// <summary>
+        /// Gets the objects that represent the properties of the underlying model instance.
+        /// </summary>
+        /// <value>
+        /// The <see cref="IModelPropertyDescriptor{TModel}"/> objects that represent the properties of the underlying model <see cref="ITypeDescriptorContext.Instance"/>.
+        /// </value>
         public ReadOnlyCollection<IModelPropertyDescriptor<TModel>> Properties { get; }
 
         IReadOnlyList<IModelPropertyDescriptor> IModelDescriptor.Properties => Properties;
@@ -20,8 +34,20 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         Type IModelDescriptor.ComponentType => typeof(TModel);
 
+        /// <summary>
+        /// Gets the simple name for the type of the underlying model instance.
+        /// </summary>
+        /// <value>
+        /// The <see cref="RuntimeType.Name"/> for the type of the underlying model <see cref="ITypeDescriptorContext.Instance"/>.
+        /// </value>
         public string SimpleName { get; }
 
+        /// <summary>
+        /// Gets the full name for the type of the underlying model instance.
+        /// </summary>
+        /// <value>
+        /// The <see cref="Type.FullName"/> for the type of the underlying model <see cref="ITypeDescriptorContext.Instance"/>.
+        /// </value>
         public string FullName { get; }
 
         public IEnumerable<string> Keys => Properties.Select(p => p.Name);

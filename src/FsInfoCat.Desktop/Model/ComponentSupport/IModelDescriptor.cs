@@ -13,6 +13,12 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
     {
         Type ComponentType { get; }
 
+        /// <summary>
+        /// Gets the objects that represent the properties of the underlying model instance.
+        /// </summary>
+        /// <value>
+        /// The <see cref="IModelPropertyDescriptor"/> objects that represent the properties of the underlying model <see cref="ITypeDescriptorContext.Instance"/>.
+        /// </value>
         new IReadOnlyList<IModelPropertyDescriptor> Properties { get; }
     }
 }

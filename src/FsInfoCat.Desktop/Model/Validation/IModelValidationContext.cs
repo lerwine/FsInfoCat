@@ -6,10 +6,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Desktop.Model.Validation
 {
+    /// <summary>
+    /// Provides contextual validation information for an object
+    /// </summary>
+    /// <seealso cref="IModelContext" />
+    /// <seealso cref="INotifyDataErrorInfo" />
+    /// <seealso cref="IValidatableObject" />
     public interface IModelValidationContext : IModelContext, INotifyDataErrorInfo, IValidatableObject
     {
+        /// <summary>
+        /// Occurs when error messages have changed.
+        /// </summary>
         event EventHandler<ModelErrorsChangedEventArgs> ModelErrorsChanged;
 
+        /// <summary>
+        /// Gets the context objects that represent the properties of the underlying model instance.
+        /// </summary>
+        /// <value>
+        /// The <see cref="IPropertyValidationContext"/> objects that represent the properties of the underlying model <see cref="ITypeDescriptorContext.Instance"/>.
+        /// </value>
         new IReadOnlyList<IPropertyValidationContext> Properties { get; }
 
         /// <summary>
