@@ -16,14 +16,19 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         /// </value>
         public IPropertyContext Context { get; }
 
+        public object OldValue { get; }
+
+        public object NewValue { get; }
+
         /// <summary>
         /// Initializes a new <see cref="PropertyValueChangedEventArgs"/> object.
         /// </summary>
         /// <param name="context">The <see cref="IPropertyContext"/> object that gives contextual information of the property that was changed.</param>
         /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
-        public PropertyValueChangedEventArgs(IPropertyContext context) : base((context ?? throw new ArgumentNullException(nameof(context))).Name)
+        public PropertyValueChangedEventArgs(object oldValue, IPropertyContext context) : base((context ?? throw new ArgumentNullException(nameof(context))).Name)
         {
-            Context = context;
+            OldValue = oldValue;
+            NewValue = (Context = context).Value;
         }
     }
 }

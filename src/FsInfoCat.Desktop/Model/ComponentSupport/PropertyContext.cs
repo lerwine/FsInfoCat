@@ -2,9 +2,12 @@ using FsInfoCat.Desktop.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Windows;
 
 namespace FsInfoCat.Desktop.Model.ComponentSupport
 {
@@ -15,7 +18,9 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         private readonly TypeConverter _converter;
         private readonly PropertyDescriptor _propertyDescriptor;
 
-        public event EventHandler ValueChanged;
+        private object _oldValue;
+
+        public event ValueChangedEventHandler ValueChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public TValue Value => (TValue)_propertyDescriptor.GetValue(Owner.Instance);
@@ -54,6 +59,22 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         {
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             _converter = (_propertyDescriptor = propertyDescriptor ?? throw new ArgumentNullException(nameof(propertyDescriptor))).Converter;
+            _propertyDescriptor.AddValueChanged(owner.Instance, OnPropertyValueChanged);
+            _oldValue = _propertyDescriptor.GetValue(owner.Instance);
+            WeakComponentPropertyChangedManager.AddValueChanged(owner.Instance, propertyDescriptor, OnPropertyValueChanged);
+        }
+
+        private void OnPropertyValueChanged(object sender, EventArgs e)
+        {
+            object oldValue = _oldValue;
+            _oldValue = _propertyDescriptor.GetValue(Owner.Instance);
+            OnPropertyChanged(oldValue, _oldValue);
+        }
+
+        protected virtual void OnPropertyChanged(object oldValue, object newValue)
+        {
+            try { ValueChanged?.Invoke(this, new ValueChangedEventArgs(oldValue, newValue)); }
+            finally { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value))); }
         }
 
         public bool CanConvertFrom(Type sourceType) => _converter.CanConvertFrom(this, sourceType);

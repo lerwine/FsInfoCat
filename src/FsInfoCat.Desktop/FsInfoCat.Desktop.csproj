@@ -223,6 +223,10 @@
     <Compile Include="Model\ComponentSupport\ComponentEqualityComparer.cs" />
     <Compile Include="Model\ComponentSupport\ComponentExtensions.cs" />
     <Compile Include="Model\ComponentSupport\ModelPropertyDescriptor.cs" />
+    <Compile Include="Model\ComponentSupport\ValueChangedEventArgs.cs" />
+    <Compile Include="Model\ComponentSupport\ValueChangedEventHandler.cs" />
+    <Compile Include="Model\ComponentSupport\WeakComponentPropertyChangedManager.cs" />
+    <Compile Include="Util\LinkedComponentList.cs" />
     <Compile Include="Util\RelayComparer.cs" />
     <Compile Include="Model\ConfigurationManagerErrorCode.cs" />
     <Compile Include="Model\DeviceOperationalState.cs" />

@@ -22,7 +22,8 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor => null;
 
-        public ModelContext(ModelDescriptor<TInstance> modelDescriptor, TInstance instance) : base(modelDescriptor, instance)
+        public ModelContext(ModelDescriptor<TInstance> modelDescriptor, TInstance instance)
+            : base(modelDescriptor, instance, (owner, pd) => Descriptors.CreatePropertyContext((ModelContext<TInstance>)owner, instance, pd))
         {
         }
 

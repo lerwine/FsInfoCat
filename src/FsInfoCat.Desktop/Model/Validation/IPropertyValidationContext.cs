@@ -16,6 +16,11 @@ namespace FsInfoCat.Desktop.Model.Validation
         event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         /// <summary>
+        /// Occurs when the <see cref="HasErrors"/> property has changed.
+        /// </summary>
+        event EventHandler HasErrorsChanged;
+
+        /// <summary>
         /// Gets a value indicating whether this property has errors.
         /// </summary>
         /// <value>

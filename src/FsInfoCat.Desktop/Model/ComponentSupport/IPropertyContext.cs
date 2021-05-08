@@ -11,7 +11,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
     /// its <see cref="PropertyDescriptor"/>, including that of the <see cref="TypeConverter"/> for its value type.</remarks>
     public interface IPropertyContext : IModelProperty, ITypeDescriptorContext, INotifyPropertyChanged
     {
-        event EventHandler ValueChanged;
+        event ValueChangedEventHandler ValueChanged;
 
         /// <summary>
         /// Gets the current value of this property.
