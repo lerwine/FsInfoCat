@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Desktop.Model.ComponentSupport
 {
@@ -26,6 +28,14 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         /// <see langword="true"/> if value change notifications may originate from outside the property descriptor; otherwise, <see langword="false"/>.
         /// </value>
         bool SupportsChangeEvents { get; }
+
+        /// <summary>
+        /// Gets the attributes for property validation.
+        /// </summary>
+        /// <value>
+        /// The <see cref="ValidationAttribute"/> objects used for property validation.
+        /// </value>
+        IReadOnlyList<ValidationAttribute> ValidationAttributes { get; }
 
         /// <summary>
         /// Represents the model type that owns this property.

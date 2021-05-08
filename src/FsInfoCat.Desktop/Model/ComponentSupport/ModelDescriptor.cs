@@ -64,37 +64,20 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         IEnumerable<IModelPropertyDescriptor> IReadOnlyDictionary<string, IModelPropertyDescriptor>.Values => Properties;
 
-        private ModelDescriptor(string simpleName, string fullName, ReadOnlyCollection<IModelPropertyDescriptor<TModel>> properties)
+        internal ModelDescriptor(ModelDescriptorBuilder<TModel> builder)
         {
-            SimpleName = simpleName;
-            FullName = fullName;
-            Properties = properties;
-        }
-
-        public static IModelPropertyDescriptor<TModel> CreateProperty(ModelDescriptor<TModel> modelDescriptor, PropertyDescriptor propertyDescriptor)
-        {
-            return (IModelPropertyDescriptor<TModel>)Activator.CreateInstance(typeof(ModelPropertyDescriptor<,>)
-                .MakeGenericType(typeof(TModel), propertyDescriptor.PropertyType), new object[] { modelDescriptor, propertyDescriptor, null });
-        }
-
-        public static ModelDescriptor<TModel> Create(Func<PropertyDescriptor, bool> filter = null,
-            Func<ModelDescriptor<TModel>, PropertyDescriptor, IModelPropertyDescriptor<TModel>> propertyFactory = null)
-        {
-            if (propertyFactory is null)
-                propertyFactory = CreateProperty;
-            Func<PropertyDescriptor, bool> predicate = (filter is null) ?
-                new Func<PropertyDescriptor, bool>(pd => !pd.DesignTimeOnly) :
-                new Func<PropertyDescriptor, bool>(pd => !pd.DesignTimeOnly && filter(pd));
-            Collection<IModelPropertyDescriptor<TModel>> properties = new Collection<IModelPropertyDescriptor<TModel>>();
             Type t = typeof(TModel);
-            ModelDescriptor<TModel> modelDescriptor = new ModelDescriptor<TModel>(t.Name, t.FullName, new ReadOnlyCollection<IModelPropertyDescriptor<TModel>>(properties));
-            foreach (PropertyDescriptor pd in TypeDescriptor.GetProperties(t).OfType<PropertyDescriptor>().Where(predicate))
-                properties.Add(propertyFactory(modelDescriptor, pd));
-            return modelDescriptor;
+            Collection<IModelPropertyDescriptor<TModel>> properties = new Collection<IModelPropertyDescriptor<TModel>>();
+            SimpleName = t.Name;
+            FullName = t.FullName;
+            Properties = new ReadOnlyCollection<IModelPropertyDescriptor<TModel>>(properties);
+            foreach (PropertyDescriptor pd in TypeDescriptor.GetProperties(t).OfType<PropertyDescriptor>()
+                .Where(p => builder.ShouldIncludeProperty(this, p)))
+            {
+                ModelDescriptorBuilder<TModel>.IPropertyBuilder propertyBuilder = builder.CreatePropertyBuilder(this, pd);
+                properties.Add(propertyBuilder.Build());
+            }
         }
-
-        public static ModelDescriptor<TModel> Create(Func<ModelDescriptor<TModel>, PropertyDescriptor, IModelPropertyDescriptor<TModel>> propertyFactory) =>
-            Create(null, propertyFactory);
 
         public bool ContainsKey(string key) => Properties.Any(p => p.Name.Equals(key));
 

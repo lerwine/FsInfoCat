@@ -26,4 +26,8 @@
     <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+  </ItemGroup>
+
 </Project>

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
@@ -157,6 +158,39 @@ namespace FsInfoCat.Test
             Assert.That(modelDescriptor2.FullName, Is.EqualTo(type.FullName));
             Assert.That(modelDescriptor2.Properties, Is.Not.Null);
             Assert.That(modelDescriptor2.Properties.Count, Is.EqualTo(39));
+        }
+
+        [Test]
+        public void ValidationAttributeListTest()
+        {
+            // TODO: Need to test with an attribute that allows multiple
+            ValidationAttributeList target = new ValidationAttributeList();
+            RequiredAttribute item0 = new RequiredAttribute { AllowEmptyStrings = true };
+            target.Add(item0);
+            Assert.That(target.Count, Is.EqualTo(1));
+            Assert.That(target[0], Is.SameAs(item0));
+            Assert.That(((RequiredAttribute)target[0]).AllowEmptyStrings, Is.True);
+
+            item0 = new RequiredAttribute { AllowEmptyStrings = false };
+            target.Add(item0);
+            Assert.That(target.Count, Is.EqualTo(1));
+            Assert.That(target[0], Is.SameAs(item0));
+            Assert.That(((RequiredAttribute)target[0]).AllowEmptyStrings, Is.False);
+
+            StringLengthAttribute item1 = new StringLengthAttribute(100);
+            target.Add(item1);
+            Assert.That(target.Count, Is.EqualTo(2));
+            Assert.That(target[0], Is.SameAs(item0));
+            Assert.That(target[1], Is.SameAs(item1));
+            Assert.That(((RequiredAttribute)target[0]).AllowEmptyStrings, Is.False);
+            Assert.That(((StringLengthAttribute)target[1]).MaximumLength, Is.EqualTo(100));
+
+            target.Add(item0);
+            Assert.That(target.Count, Is.EqualTo(2));
+            Assert.That(target[1], Is.SameAs(item0));
+            Assert.That(target[0], Is.SameAs(item1));
+            Assert.That(((RequiredAttribute)target[1]).AllowEmptyStrings, Is.False);
+            Assert.That(((StringLengthAttribute)target[0]).MaximumLength, Is.EqualTo(100));
         }
     }
 }

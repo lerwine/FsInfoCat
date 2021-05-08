@@ -2,16 +2,22 @@ using FsInfoCat.Desktop.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace FsInfoCat.Desktop.Model.ComponentSupport
 {
-    internal class ModelPropertyDescriptor<TModel, TValue> : IEquatable<ModelPropertyDescriptor<TModel, TValue>>, ITypedPropertyDescriptor<TValue>, IModelPropertyDescriptor<TModel>
+    public class ModelPropertyDescriptor<TModel, TValue> : IEquatable<ModelPropertyDescriptor<TModel, TValue>>, ITypedPropertyDescriptor<TValue>, IModelPropertyDescriptor<TModel>
         where TModel : class
     {
         private readonly PropertyDescriptor _descriptor;
         private readonly IEqualityComparer<TValue> _backingComparer;
+
+        public ReadOnlyCollection<ValidationAttribute> ValidationAttributes { get; }
+
+        IReadOnlyList<ValidationAttribute> IModelPropertyDescriptor.ValidationAttributes => ValidationAttributes;
 
         public ModelDescriptor<TModel> Owner { get; }
 
@@ -35,12 +41,12 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         public bool IsReadOnly => _descriptor.IsReadOnly;
 
-        public ModelPropertyDescriptor(ModelDescriptor<TModel> owner, PropertyDescriptor descriptor,
-            IEqualityComparer<TValue> equalityComparer = null)
+        public ModelPropertyDescriptor(ModelDescriptorBuilder<TModel>.PropertyBuilder<TValue> builder)
         {
-            Owner = owner ?? throw new ArgumentNullException(nameof(owner));
-            _descriptor = descriptor ?? throw new ArgumentNullException(nameof(descriptor));
-            _backingComparer = equalityComparer ?? EqualityComparer<TValue>.Default;
+            Owner = (builder ?? throw new ArgumentNullException(nameof(builder))).ModelDescriptor;
+            _descriptor = builder.PropertyDescriptor;
+            _backingComparer = builder.EqualityComparer ?? EqualityComparer<TValue>.Default;
+            ValidationAttributes = new ReadOnlyCollection<ValidationAttribute>(builder.ValidationAttributes.ToArray());
         }
 
         public bool CanConvertFrom(Type sourceType) => _descriptor.Converter.CanConvertFrom(sourceType);

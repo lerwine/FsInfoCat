@@ -308,7 +308,11 @@ namespace FsInfoCat.Desktop.Util
             if (source is null || !source.Any())
                 return 0;
             if (comparer is null)
+            {
+                if (typeof(T).Equals(typeof(object)) || typeof(T).Equals(typeof(ValueType)) || typeof(T).Equals(typeof(void)))
+                    return source.Cast<object>().Select(obj => (obj is null) ? 0 : obj.GetHashCode()).ToAggregateHashCode();
                 comparer = EqualityComparer<T>.Default;
+            }
             return source.Select(obj => comparer.GetHashCode(obj)).ToAggregateHashCode();
         }
 
