@@ -171,7 +171,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
                 return Equals(mpd);
             if (other is IModelPropertyDescriptor<TModel> m)
                 return Equals(m);
-            return  other is ITypedPropertyDescriptor<TValue> t && Equals(t);
+            return other is ITypedPropertyDescriptor<TValue> t && Equals(t);
         }
 
         public override bool Equals(object obj) => Equals(obj as IModelPropertyDescriptor);
