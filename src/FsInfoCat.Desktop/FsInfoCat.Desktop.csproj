@@ -227,6 +227,11 @@
     <Compile Include="Model\ComponentSupport\ValueChangedEventArgs.cs" />
     <Compile Include="Model\ComponentSupport\ValueChangedEventHandler.cs" />
     <Compile Include="Model\ComponentSupport\WeakComponentPropertyChangedManager.cs" />
+    <Compile Include="Model\Validation\DbConnectionStringModelDescriptorBuilder.cs" />
+    <Compile Include="Model\Validation\OdbcConnectionStringModelDescriptionBuilder.cs" />
+    <Compile Include="Model\Validation\OleDbConnectionStringModelDescriptionBuilder.cs" />
+    <Compile Include="Model\Validation\SqlCeConnectionStringModelDescriptionBuilder.cs" />
+    <Compile Include="Model\Validation\SqlConnectionStringModelDescriptionBuilder.cs" />
     <Compile Include="Util\AttributeComparer.cs" />
     <Compile Include="Util\LinkedComponentList.cs" />
     <Compile Include="Util\RelayComparer.cs" />

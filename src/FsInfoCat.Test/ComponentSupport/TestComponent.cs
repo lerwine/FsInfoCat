@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,6 +90,50 @@ namespace FsInfoCat.Test.ComponentSupport
         public int CompareTo(TestComparableComponent other) { return BaseCompareTo(other); }
         public override int GetHashCode() { return BaseGetHashCode(); }
         public override string ToString() { return BaseToString(); }
+    }
+
+    public class TestValidator
+    {
+        public static bool IsValidNumerator(int numerator, ValidationContext context, out ValidationResult result)
+        {
+            if (numerator < 0)
+            {
+                result = new ValidationResult("Numerator cannot be negative");
+                return false;
+            }
+            result = null;
+            return true;
+        }
+
+        public static bool IsFraction(int numerator, ValidationContext context, out ValidationResult result)
+        {
+            if (context.ObjectInstance is TestComponent testComponent && testComponent.Denominator < numerator)
+            {
+                result = new ValidationResult("Numerator cannot be greater than the Denominator");
+                return false;
+            }
+            result = null;
+            return true;
+        }
+
+        public static bool IsValidDenominator(int denominator, ValidationContext context, out ValidationResult result)
+        {
+            if (denominator == 0)
+            {
+                if (!(context.ObjectInstance is TestComponent testComponent && testComponent.Numerator == 0))
+                {
+                    result = new ValidationResult("Denominator cannot be zero");
+                    return false;
+                }
+            }
+            else if (denominator < 0)
+            {
+                result = new ValidationResult("Denominator cannot be negative");
+                return false;
+            }
+            result = null;
+            return true;
+        }
     }
 
     public class TestComponent
@@ -187,6 +232,7 @@ namespace FsInfoCat.Test.ComponentSupport
 
         [ReadOnly(true)]
         [Description(DESCRIPTION_DENOMINATOR)]
+        [CustomValidation(typeof(TestValidator), nameof(TestValidator.IsValidDenominator))]
         public int Denominator
         {
             get

@@ -41,7 +41,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         public bool IsReadOnly => _descriptor.IsReadOnly;
 
-        public ModelPropertyDescriptor(ModelDescriptorBuilder<TModel>.PropertyBuilder<TValue> builder)
+        public ModelPropertyDescriptor(PropertyBuilder<TModel, TValue> builder)
         {
             Owner = (builder ?? throw new ArgumentNullException(nameof(builder))).ModelDescriptor;
             _descriptor = builder.PropertyDescriptor;

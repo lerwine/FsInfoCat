@@ -1,4 +1,5 @@
 using FsInfoCat.Desktop.Model.ComponentSupport;
+using FsInfoCat.Desktop.Model.Validation;
 using FsInfoCat.Test.ComponentSupport;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
@@ -89,7 +90,8 @@ namespace FsInfoCat.Test
         public void ModelDescriptorTest()
         {
             Type type = typeof(TestComponent);
-            ModelDescriptor<TestComponent> modelDescriptor1 = ModelDescriptor<TestComponent>.Create();
+            ModelDescriptorBuilder<TestComponent> builder1 = new ModelDescriptorBuilder<TestComponent>();
+            ModelDescriptor<TestComponent> modelDescriptor1 = builder1.Build();
             Assert.That(modelDescriptor1, Is.Not.Null);
             Assert.That(modelDescriptor1.SimpleName, Is.EqualTo(type.Name));
             Assert.That(modelDescriptor1.FullName, Is.EqualTo(type.FullName));
@@ -146,24 +148,27 @@ namespace FsInfoCat.Test
             actual = pd1.ConvertFromInvariantString("17");
             Assert.That(actual, Is.InstanceOf(expectedType));
             Assert.That(actual, Is.EqualTo(17.0));
+        }
 
-            type = typeof(SqlConnectionStringBuilder);
-            string[] ignore = new string[] { nameof(DbConnectionStringBuilder.IsFixedSize), nameof(DbConnectionStringBuilder.IsReadOnly),
-                nameof(DbConnectionStringBuilder.Keys) };
-            string misc = System.ComponentModel.CategoryAttribute.Default.Category;
-            Func<PropertyDescriptor, bool> filter = pd => pd.ComponentType.Equals(type) && !(pd.Category == misc && ignore.Contains(pd.Name));
-            ModelDescriptor<SqlConnectionStringBuilder> modelDescriptor2 = ModelDescriptor<SqlConnectionStringBuilder>.Create(filter);
-            Assert.That(modelDescriptor2, Is.Not.Null);
-            Assert.That(modelDescriptor2.SimpleName, Is.EqualTo(type.Name));
-            Assert.That(modelDescriptor2.FullName, Is.EqualTo(type.FullName));
-            Assert.That(modelDescriptor2.Properties, Is.Not.Null);
-            Assert.That(modelDescriptor2.Properties.Count, Is.EqualTo(39));
+        [Test]
+        public void DbConnectionStringModelDescriptorBuilderTest()
+        {
+            Type type = typeof(SqlConnectionStringBuilder);
+            DbConnectionStringModelDescriptorBuilder<SqlConnectionStringBuilder> builder = new DbConnectionStringModelDescriptorBuilder<SqlConnectionStringBuilder>();
+            ModelDescriptor<SqlConnectionStringBuilder> modelDescriptor = builder.Build();
+            Assert.That(modelDescriptor, Is.Not.Null);
+            Assert.That(modelDescriptor.SimpleName, Is.EqualTo(type.Name));
+            Assert.That(modelDescriptor.FullName, Is.EqualTo(type.FullName));
+            Assert.That(modelDescriptor.Properties, Is.Not.Null);
+            Assert.That(modelDescriptor.Properties.Count, Is.EqualTo(39));
+            IModelPropertyDescriptor<SqlConnectionStringBuilder> modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.ConnectionString)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
         }
 
         [Test]
         public void ValidationAttributeListTest()
         {
-            // TODO: Need to test with an attribute that allows multiple
             ValidationAttributeList target = new ValidationAttributeList();
             RequiredAttribute item0 = new RequiredAttribute { AllowEmptyStrings = true };
             target.Add(item0);
@@ -191,6 +196,33 @@ namespace FsInfoCat.Test
             Assert.That(target[0], Is.SameAs(item1));
             Assert.That(((RequiredAttribute)target[1]).AllowEmptyStrings, Is.False);
             Assert.That(((StringLengthAttribute)target[0]).MaximumLength, Is.EqualTo(100));
+
+            CustomValidationAttribute item2 = new CustomValidationAttribute(typeof(TestValidator), nameof(TestValidator.IsValidDenominator));
+
+            target.Add(item2);
+            Assert.That(target.Count, Is.EqualTo(3));
+            Assert.That(target[1], Is.SameAs(item0));
+            Assert.That(target[0], Is.SameAs(item1));
+            Assert.That(target[2], Is.SameAs(item2));
+            Assert.That(((RequiredAttribute)target[1]).AllowEmptyStrings, Is.False);
+            Assert.That(((StringLengthAttribute)target[0]).MaximumLength, Is.EqualTo(100));
+            Assert.That(((CustomValidationAttribute)target[2]).Method, Is.EqualTo(nameof(TestValidator.IsValidDenominator)));
+            Assert.That(((CustomValidationAttribute)target[2]).ValidatorType, Is.EqualTo(typeof(TestValidator)));
+
+            CustomValidationAttribute item3 = new CustomValidationAttribute(typeof(TestValidator), nameof(TestValidator.IsValidNumerator));
+
+            target.Add(item3);
+            Assert.That(target.Count, Is.EqualTo(4));
+            Assert.That(target[1], Is.SameAs(item0));
+            Assert.That(target[0], Is.SameAs(item1));
+            Assert.That(target[2], Is.SameAs(item2));
+            Assert.That(target[3], Is.SameAs(item3));
+            Assert.That(((RequiredAttribute)target[1]).AllowEmptyStrings, Is.False);
+            Assert.That(((StringLengthAttribute)target[0]).MaximumLength, Is.EqualTo(100));
+            Assert.That(((CustomValidationAttribute)target[2]).Method, Is.EqualTo(nameof(TestValidator.IsValidDenominator)));
+            Assert.That(((CustomValidationAttribute)target[2]).ValidatorType, Is.EqualTo(typeof(TestValidator)));
+            Assert.That(((CustomValidationAttribute)target[3]).Method, Is.EqualTo(nameof(TestValidator.IsValidNumerator)));
+            Assert.That(((CustomValidationAttribute)target[3]).ValidatorType, Is.EqualTo(typeof(TestValidator)));
         }
     }
 }

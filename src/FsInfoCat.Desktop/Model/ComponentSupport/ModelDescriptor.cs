@@ -74,7 +74,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             foreach (PropertyDescriptor pd in TypeDescriptor.GetProperties(t).OfType<PropertyDescriptor>()
                 .Where(p => builder.ShouldIncludeProperty(this, p)))
             {
-                ModelDescriptorBuilder<TModel>.IPropertyBuilder propertyBuilder = builder.CreatePropertyBuilder(this, pd);
+                IPropertyBuilder<TModel> propertyBuilder = builder.CreatePropertyBuilder(this, pd);
                 properties.Add(propertyBuilder.Build());
             }
         }
