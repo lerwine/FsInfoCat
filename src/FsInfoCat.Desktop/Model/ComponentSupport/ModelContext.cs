@@ -6,15 +6,26 @@ using System.Linq;
 
 namespace FsInfoCat.Desktop.Model.ComponentSupport
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TInstance">The type of the instance.</typeparam>
-    /// <seealso cref="ModelContextBase{TInstance, IPropertyContext{TInstance}}" />
-    /// <seealso cref="IModelContext{TInstance}" />
     public sealed class ModelContext<TInstance> : ModelContextBase<TInstance, IPropertyContext<TInstance>>, IModelContext<TInstance>
         where TInstance : class
     {
+        public ModelContext(ModelDescriptor<TInstance> modelDescriptor, TInstance instance)
+            : base(modelDescriptor, instance,
+                  (owner, pd) => Descriptors.CreatePropertyContext((ModelContext<TInstance>)owner, instance, pd))
+        {
+        }
+
+        public override string ToString()
+        {
+            if (Properties.Count == 0)
+                return $@"{nameof(ModelContext<TInstance>)}<{SimpleName}> {{ }}";
+            return $@"{nameof(ModelContext<TInstance>)}<{SimpleName}> {{\n\t{
+                string.Join(",\n\t", Properties.Select(pd => pd.Name + " = " + TypeHelper.ToPseudoCsText(pd.Value)))
+            }\n}}";
+        }
+
+        #region Explicit Members
+
         IModelDescriptor IModelContext.ModelDescriptor => ModelDescriptor;
 
         IReadOnlyList<IPropertyContext<TInstance>> IModelContext<TInstance>.Properties => Properties;
@@ -39,24 +50,9 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         IEnumerable<IPropertyContext> IReadOnlyDictionary<string, IPropertyContext>.Values => Properties;
 
-        public ModelContext(ModelDescriptor<TInstance> modelDescriptor, TInstance instance)
-            : base(modelDescriptor, instance,
-                  (owner, pd) => Descriptors.CreatePropertyContext((ModelContext<TInstance>)owner, instance, pd))
-        {
-        }
-
         bool ITypeDescriptorContext.OnComponentChanging() => false;
 
         void ITypeDescriptorContext.OnComponentChanged() { }
-
-        public override string ToString()
-        {
-            if (Properties.Count == 0)
-                return $@"{nameof(ModelContext<TInstance>)}<{SimpleName}> {{ }}";
-            return $@"{nameof(ModelContext<TInstance>)}<{SimpleName}> {{\n\t{
-                string.Join(",\n\t", Properties.Select(pd => pd.Name + " = " + TypeHelper.ToPseudoCsText(pd.Value)))
-            }\n}}";
-        }
 
         bool IReadOnlyDictionary<string, IPropertyContext>.TryGetValue(string key, out IPropertyContext value)
         {
@@ -80,6 +76,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         }
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Properties.Select(p => new KeyValuePair<string, IPropertyContext<TInstance>>(p.Name, p))).GetEnumerator();
-    }
 
+        #endregion
+    }
 }

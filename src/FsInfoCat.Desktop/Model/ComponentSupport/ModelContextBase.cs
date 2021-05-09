@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
@@ -12,10 +13,12 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
     /// <typeparam name="TInstance">The type of the object instance.</typeparam>
     /// <typeparam name="TPropertyContext">The type of the property context element.</typeparam>
     /// <seealso cref="System.IServiceProvider" />
-    public abstract class ModelContextBase<TInstance, TPropertyContext> : IServiceProvider
+    public abstract class ModelContextBase<TInstance, TPropertyContext> : INotifyPropertyChanged, IServiceProvider
         where TInstance : class
         where TPropertyContext : class, IPropertyContext<TInstance>
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Occurs when the value of <typeparam name="TPropertyContext"> element of <see cref="Properties"/> has changed.
         /// </summary>
@@ -94,6 +97,8 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
                     OnPropertyValueChanged);
         }
 
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) => PropertyChanged?.Invoke(this, args);
+
         private void OnPropertyValueChanged(object sender, ValueChangedEventArgs e)
         {
             if (sender is IPropertyContext propertyContext)
@@ -104,6 +109,8 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         {
             PropertyValueChanged?.Invoke(this, args);
         }
+
+        protected void RaisePropertyChanged(string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 
         object IServiceProvider.GetService(Type serviceType) => null;
 

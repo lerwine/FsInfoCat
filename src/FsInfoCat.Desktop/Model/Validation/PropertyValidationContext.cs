@@ -22,8 +22,6 @@ namespace FsInfoCat.Desktop.Model.Validation
 
         public bool HasErrors { get; private set; }
 
-        IModelValidationContext IPropertyValidationContext.Owner => Owner;
-
         public PropertyValidationContext(ModelValidationContext<TInstance> owner, PropertyDescriptor propertyDescriptor, IEnumerable<ValidationAttribute> validationAttributes)
             : base(owner, propertyDescriptor)
         {
@@ -33,9 +31,9 @@ namespace FsInfoCat.Desktop.Model.Validation
             Revalidate(Value);
         }
 
-        protected override void OnPropertyChanged(object oldValue, object newValue)
+        protected override void OnInstancePropertyValueChanged(object oldValue, object newValue)
         {
-            try { base.OnPropertyChanged(oldValue, newValue); }
+            try { base.OnInstancePropertyValueChanged(oldValue, newValue); }
             finally { Revalidate((TValue)newValue); }
         }
 
@@ -95,20 +93,22 @@ namespace FsInfoCat.Desktop.Model.Validation
                 }
                 HasErrors = true;
             }
-            RaiseHasErrorsChanged();
+            try { RaisePropertyChanged(nameof(HasErrors)); }
+            finally
+            {
+                try { HasErrorsChanged?.Invoke(this, EventArgs.Empty); }
+                finally { RaiseErrorsChanged(); }
+            }
         }
 
-        private void RaiseErrorsChanged()
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(Name));
-        }
-
-        private void RaiseHasErrorsChanged()
-        {
-            try { HasErrorsChanged?.Invoke(this, EventArgs.Empty); }
-            finally { RaiseErrorsChanged(); }
-        }
+        private void RaiseErrorsChanged() => ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(Name));
 
         public IEnumerable<string> GetErrors() => (_roErrors.Count > 0) ? _roErrors : null;
+
+        #region Explicit Members
+
+        IModelValidationContext IPropertyValidationContext.Owner => Owner;
+
+        #endregion
     }
 }

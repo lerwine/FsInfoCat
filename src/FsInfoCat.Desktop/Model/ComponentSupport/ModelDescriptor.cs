@@ -28,12 +28,6 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         /// </value>
         public ReadOnlyCollection<IModelPropertyDescriptor<TModel>> Properties { get; }
 
-        IReadOnlyList<IModelPropertyDescriptor> IModelDescriptor.Properties => Properties;
-
-        IReadOnlyList<IModelProperty> IModelInfo.Properties => Properties;
-
-        Type IModelDescriptor.ComponentType => typeof(TModel);
-
         /// <summary>
         /// Gets the simple name for the type of the underlying model instance.
         /// </summary>
@@ -54,16 +48,6 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         public IModelPropertyDescriptor<TModel> this[string key] => Properties.FirstOrDefault(p => p.Name.Equals(key));
 
-        IModelPropertyDescriptor IReadOnlyDictionary<string, IModelPropertyDescriptor>.this[string key] => throw new NotImplementedException();
-
-        int IReadOnlyCollection<KeyValuePair<string, IModelPropertyDescriptor<TModel>>>.Count => Properties.Count;
-
-        int IReadOnlyCollection<KeyValuePair<string, IModelPropertyDescriptor>>.Count => Properties.Count;
-
-        IEnumerable<IModelPropertyDescriptor<TModel>> IReadOnlyDictionary<string, IModelPropertyDescriptor<TModel>>.Values => Properties;
-
-        IEnumerable<IModelPropertyDescriptor> IReadOnlyDictionary<string, IModelPropertyDescriptor>.Values => Properties;
-
         internal ModelDescriptor(ModelDescriptorBuilder<TModel> builder)
         {
             Type t = typeof(TModel);
@@ -81,22 +65,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         public bool ContainsKey(string key) => Properties.Any(p => p.Name.Equals(key));
 
-        IEnumerator<KeyValuePair<string, IModelPropertyDescriptor<TModel>>> IEnumerable<KeyValuePair<string, IModelPropertyDescriptor<TModel>>>.GetEnumerator() =>
-            Properties.Select(p => new KeyValuePair<string, IModelPropertyDescriptor<TModel>>(p.Name, p)).GetEnumerator();
-
-        IEnumerator<KeyValuePair<string, IModelPropertyDescriptor>> IEnumerable<KeyValuePair<string, IModelPropertyDescriptor>>.GetEnumerator() =>
-            Properties.Select(p => new KeyValuePair<string, IModelPropertyDescriptor>(p.Name, p)).GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() =>
-            ((IEnumerable)Properties.Select(p => new KeyValuePair<string, IModelPropertyDescriptor<TModel>>(p.Name, p))).GetEnumerator();
-
         public bool TryGetValue(string key, out IModelPropertyDescriptor<TModel> value)
-        {
-            value = Properties.FirstOrDefault(p => p.Name.Equals(key));
-            return !(value is null);
-        }
-
-        bool IReadOnlyDictionary<string, IModelPropertyDescriptor>.TryGetValue(string key, out IModelPropertyDescriptor value)
         {
             value = Properties.FirstOrDefault(p => p.Name.Equals(key));
             return !(value is null);
@@ -111,8 +80,6 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             return Properties.Count == other.Properties.Count &&
                 Properties.OrderBy(p => p.Name).SequenceEqual(other.Properties.OrderBy(p => p.Name));
         }
-
-        bool IEquatable<IModelDescriptor>.Equals(IModelDescriptor other) => other is ModelDescriptor<TModel> d && Equals(d);
 
         public override bool Equals(object obj) => obj is ModelDescriptor<TModel> d && Equals(d);
 
@@ -139,6 +106,44 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             return Properties.All(pd => pd.Equals(pd.GetValue(x), pd.GetValue(y)));
         }
 
+        public int GetHashCode(TModel obj) =>
+            Properties.Select(pd => pd.GetHashCode(obj)).Concat(new int[] { FullName.GetHashCode() }).ToAggregateHashCode();
+
+        #region Explicit Members
+
+        IReadOnlyList<IModelPropertyDescriptor> IModelDescriptor.Properties => Properties;
+
+        IReadOnlyList<IModelProperty> IModelInfo.Properties => Properties;
+
+        Type IModelDescriptor.ComponentType => typeof(TModel);
+
+        IModelPropertyDescriptor IReadOnlyDictionary<string, IModelPropertyDescriptor>.this[string key] => throw new NotImplementedException();
+
+        int IReadOnlyCollection<KeyValuePair<string, IModelPropertyDescriptor<TModel>>>.Count => Properties.Count;
+
+        int IReadOnlyCollection<KeyValuePair<string, IModelPropertyDescriptor>>.Count => Properties.Count;
+
+        IEnumerable<IModelPropertyDescriptor<TModel>> IReadOnlyDictionary<string, IModelPropertyDescriptor<TModel>>.Values => Properties;
+
+        IEnumerable<IModelPropertyDescriptor> IReadOnlyDictionary<string, IModelPropertyDescriptor>.Values => Properties;
+
+        IEnumerator<KeyValuePair<string, IModelPropertyDescriptor<TModel>>> IEnumerable<KeyValuePair<string, IModelPropertyDescriptor<TModel>>>.GetEnumerator() =>
+            Properties.Select(p => new KeyValuePair<string, IModelPropertyDescriptor<TModel>>(p.Name, p)).GetEnumerator();
+
+        IEnumerator<KeyValuePair<string, IModelPropertyDescriptor>> IEnumerable<KeyValuePair<string, IModelPropertyDescriptor>>.GetEnumerator() =>
+            Properties.Select(p => new KeyValuePair<string, IModelPropertyDescriptor>(p.Name, p)).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() =>
+            ((IEnumerable)Properties.Select(p => new KeyValuePair<string, IModelPropertyDescriptor<TModel>>(p.Name, p))).GetEnumerator();
+
+        bool IReadOnlyDictionary<string, IModelPropertyDescriptor>.TryGetValue(string key, out IModelPropertyDescriptor value)
+        {
+            value = Properties.FirstOrDefault(p => p.Name.Equals(key));
+            return !(value is null);
+        }
+
+        bool IEquatable<IModelDescriptor>.Equals(IModelDescriptor other) => other is ModelDescriptor<TModel> d && Equals(d);
+
         bool IEqualityComparer.Equals(object x, object y)
         {
             if (x is TModel a)
@@ -148,14 +153,13 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             return (x is null) ? y is null : x.Equals(y);
         }
 
-        public int GetHashCode(TModel obj) =>
-            Properties.Select(pd => pd.GetHashCode(obj)).Concat(new int[] { FullName.GetHashCode() }).ToAggregateHashCode();
-
         int IEqualityComparer.GetHashCode(object obj)
         {
             if (obj is TModel m)
                 return GetHashCode(m);
             return (obj is null) ? 0 : obj.GetHashCode();
         }
+
+        #endregion
     }
 }

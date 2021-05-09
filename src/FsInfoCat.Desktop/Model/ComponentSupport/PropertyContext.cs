@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
     {
         private readonly TypeConverter _converter;
         private readonly PropertyDescriptor _propertyDescriptor;
-
         private object _oldValue;
 
         public event ValueChangedEventHandler ValueChanged;
@@ -22,13 +21,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         public TValue Value => (TValue)_propertyDescriptor.GetValue(Owner.Instance);
 
-        object IPropertyContext.Value => Value;
-
         public TOwner Owner { get; }
-
-        IModelContext<TInstance> IPropertyContext<TInstance>.Owner => Owner;
-
-        IModelContext IPropertyContext.Owner => Owner;
 
         public string Name => _propertyDescriptor.Name;
 
@@ -40,12 +33,6 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         public bool IsReadOnly => _propertyDescriptor.IsReadOnly;
 
-        IContainer ITypeDescriptorContext.Container => null;
-
-        object ITypeDescriptorContext.Instance => Owner.Instance;
-
-        PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor => _propertyDescriptor;
-
         public bool AreStandardValuesExclusive => _converter.GetStandardValuesExclusive(this);
 
         public bool AreStandardValuesSupported => _converter.GetStandardValuesSupported(this);
@@ -56,23 +43,27 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         {
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             _converter = (_propertyDescriptor = propertyDescriptor ?? throw new ArgumentNullException(nameof(propertyDescriptor))).Converter;
-            _propertyDescriptor.AddValueChanged(owner.Instance, OnPropertyValueChanged);
+            _propertyDescriptor.AddValueChanged(owner.Instance, OnInstancePropertyValueChanged);
             _oldValue = _propertyDescriptor.GetValue(owner.Instance);
-            WeakComponentPropertyChangedManager.AddValueChanged(owner.Instance, propertyDescriptor, OnPropertyValueChanged);
+            WeakComponentPropertyChangedManager.AddValueChanged(owner.Instance, propertyDescriptor, OnInstancePropertyValueChanged);
         }
 
-        private void OnPropertyValueChanged(object sender, EventArgs e)
+        private void OnInstancePropertyValueChanged(object sender, EventArgs e)
         {
             object oldValue = _oldValue;
             _oldValue = _propertyDescriptor.GetValue(Owner.Instance);
-            OnPropertyChanged(oldValue, _oldValue);
+            OnInstancePropertyValueChanged(oldValue, _oldValue);
         }
 
-        protected virtual void OnPropertyChanged(object oldValue, object newValue)
+        protected virtual void OnInstancePropertyValueChanged(object oldValue, object newValue)
         {
             try { ValueChanged?.Invoke(this, new ValueChangedEventArgs(oldValue, newValue)); }
-            finally { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value))); }
+            finally { RaisePropertyChanged(nameof(Value)); }
         }
+
+        protected void RaisePropertyChanged(string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) => PropertyChanged?.Invoke(this, args);
 
         public bool CanConvertFrom(Type sourceType) => _converter.CanConvertFrom(this, sourceType);
 
@@ -80,21 +71,11 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         public string GetInvariantStringValue() => _converter.ConvertToInvariantString(this, Value);
 
-        object IServiceProvider.GetService(Type serviceType) => null;
-
         public IEnumerable<TValue> GetStandardValues() => _converter.GetStandardValues(this).OfType<TValue>();
-
-        ICollection IModelProperty.GetStandardValues() => _converter.GetStandardValues(this);
 
         public string GetStringValue(CultureInfo culture) => _converter.ConvertToString(this, culture, Value);
 
         public string GetStringValue() => _converter.ConvertToString(this, Value);
-
-        bool IPropertyContext.IsAssignableFrom(object value) => _converter.IsValid(this, value);
-
-        bool ITypeDescriptorContext.OnComponentChanging() => false;
-
-        void ITypeDescriptorContext.OnComponentChanged() { }
 
         public TValue ResetValue()
         {
@@ -102,11 +83,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             return Value;
         }
 
-        object IPropertyContext.ResetValue() => ResetValue();
-
         public void SetValue(TValue value) => _propertyDescriptor.SetValue(Owner.Instance, value);
-
-        void IPropertyContext.SetValue(object value) => SetValueFromConverted(value);
 
         public TValue SetValueFromConverted(object value)
         {
@@ -134,15 +111,11 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             return Value;
         }
 
-        object IPropertyContext.SetValueFromConverted(CultureInfo culture, object value) => SetValueFromConverted(culture, value);
-
         public TValue SetValueFromInvariantString(string text)
         {
             SetValue((TValue)_converter.ConvertFromInvariantString(this, text));
             return Value;
         }
-
-        object IPropertyContext.SetValueFromInvariantString(string text) => SetValueFromInvariantString(text);
 
         public TValue SetValueFromString(string text)
         {
@@ -150,15 +123,49 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             return Value;
         }
 
-        object IPropertyContext.SetValueFromString(string text) => SetValueFromString(text);
-
         public TValue SetValueFromString(CultureInfo culture, string text)
         {
             SetValue((TValue)_converter.ConvertFromString(this, culture, text));
             return Value;
         }
 
+        #region Explicit Members
+
+        object IPropertyContext.Value => Value;
+
+        IModelContext<TInstance> IPropertyContext<TInstance>.Owner => Owner;
+
+        IModelContext IPropertyContext.Owner => Owner;
+
+        IContainer ITypeDescriptorContext.Container => null;
+
+        object ITypeDescriptorContext.Instance => Owner.Instance;
+
+        PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor => _propertyDescriptor;
+
+        object IServiceProvider.GetService(Type serviceType) => null;
+
+        ICollection IModelProperty.GetStandardValues() => _converter.GetStandardValues(this);
+
+        bool IPropertyContext.IsAssignableFrom(object value) => _converter.IsValid(this, value);
+
+        bool ITypeDescriptorContext.OnComponentChanging() => false;
+
+        void ITypeDescriptorContext.OnComponentChanged() { }
+
+        object IPropertyContext.ResetValue() => ResetValue();
+
+        void IPropertyContext.SetValue(object value) => SetValueFromConverted(value);
+
+        object IPropertyContext.SetValueFromConverted(CultureInfo culture, object value) => SetValueFromConverted(culture, value);
+
+        object IPropertyContext.SetValueFromInvariantString(string text) => SetValueFromInvariantString(text);
+
+        object IPropertyContext.SetValueFromString(string text) => SetValueFromString(text);
+
         object IPropertyContext.SetValueFromString(CultureInfo culture, string text) => SetValueFromString(culture, text);
+
+        #endregion
     }
 
     public sealed class PropertyContext<TInstance, TValue> : PropertyContext<TInstance, TValue, ModelContext<TInstance>>

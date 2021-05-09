@@ -20,35 +20,7 @@ namespace FsInfoCat.Desktop.Model.Validation
 
         private readonly LinkedComponentList<IPropertyValidationContext<TInstance>> _invalidProperties = new LinkedComponentList<IPropertyValidationContext<TInstance>>();
 
-        IPropertyContext<TInstance> IReadOnlyDictionary<string, IPropertyContext<TInstance>>.this[string key] => this[key];
-
-        IPropertyContext IReadOnlyDictionary<string, IPropertyContext>.this[string key] => this[key];
-
-        IModelDescriptor IModelContext.ModelDescriptor => ModelDescriptor;
-
-        IReadOnlyList<IPropertyContext<TInstance>> IModelContext<TInstance>.Properties => Properties;
-
-        IReadOnlyList<IPropertyValidationContext> IModelValidationContext.Properties => Properties;
-
-        IReadOnlyList<IPropertyContext> IModelContext.Properties => Properties;
-
-        IReadOnlyList<IModelProperty> IModelInfo.Properties => Properties;
-
-        PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor => null;
-
-        IContainer ITypeDescriptorContext.Container => null;
-
-        public bool HasErrors { get; private set; }
-
-        object ITypeDescriptorContext.Instance => Instance;
-
-        int IReadOnlyCollection<KeyValuePair<string, IPropertyContext>>.Count => throw new NotImplementedException();
-
-        int IReadOnlyCollection<KeyValuePair<string, IPropertyContext<TInstance>>>.Count => throw new NotImplementedException();
-
-        IEnumerable<IPropertyContext<TInstance>> IReadOnlyDictionary<string, IPropertyContext<TInstance>>.Values => throw new NotImplementedException();
-
-        IEnumerable<IPropertyContext> IReadOnlyDictionary<string, IPropertyContext>.Values => throw new NotImplementedException();
+        public bool HasErrors => !_invalidProperties.IsEmpty;
 
         public ModelValidationContext(ModelDescriptor<TInstance> modelDescriptor, TInstance instance) :
             base(modelDescriptor, instance, (owner, pd) => Descriptors.CreatePropertyValidationContext((ModelValidationContext<TInstance>)owner, instance, pd))
@@ -66,13 +38,13 @@ namespace FsInfoCat.Desktop.Model.Validation
 
         private void InvalidProperties_EmptyChanged(object sender, EventArgs e)
         {
-            HasErrors = !_invalidProperties.IsEmpty;
             OnHasErrorsChanged(HasErrors);
         }
 
         private void OnHasErrorsChanged(bool hasErrors)
         {
-            HasErrorsChanged?.Invoke(this, EventArgs.Empty);
+            try { RaisePropertyChanged(nameof(HasErrors)); }
+            finally { HasErrorsChanged?.Invoke(this, EventArgs.Empty); }
         }
 
         private void OnHasErrorsChangedChanged(object sender, EventArgs e)
@@ -94,10 +66,6 @@ namespace FsInfoCat.Desktop.Model.Validation
             throw new NotImplementedException();
         }
 
-        bool ITypeDescriptorContext.OnComponentChanging() => false;
-
-        void ITypeDescriptorContext.OnComponentChanged() { }
-
         public IEnumerable<ValidationResult> Revalidate()
         {
             throw new NotImplementedException();
@@ -112,6 +80,40 @@ namespace FsInfoCat.Desktop.Model.Validation
         {
             throw new NotImplementedException();
         }
+
+        #region Explicit Members
+
+        IPropertyContext<TInstance> IReadOnlyDictionary<string, IPropertyContext<TInstance>>.this[string key] => this[key];
+
+        IPropertyContext IReadOnlyDictionary<string, IPropertyContext>.this[string key] => this[key];
+
+        IModelDescriptor IModelContext.ModelDescriptor => ModelDescriptor;
+
+        IReadOnlyList<IPropertyContext<TInstance>> IModelContext<TInstance>.Properties => Properties;
+
+        IReadOnlyList<IPropertyValidationContext> IModelValidationContext.Properties => Properties;
+
+        IReadOnlyList<IPropertyContext> IModelContext.Properties => Properties;
+
+        IReadOnlyList<IModelProperty> IModelInfo.Properties => Properties;
+
+        PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor => null;
+
+        IContainer ITypeDescriptorContext.Container => null;
+
+        object ITypeDescriptorContext.Instance => Instance;
+
+        int IReadOnlyCollection<KeyValuePair<string, IPropertyContext>>.Count => throw new NotImplementedException();
+
+        int IReadOnlyCollection<KeyValuePair<string, IPropertyContext<TInstance>>>.Count => throw new NotImplementedException();
+
+        IEnumerable<IPropertyContext<TInstance>> IReadOnlyDictionary<string, IPropertyContext<TInstance>>.Values => throw new NotImplementedException();
+
+        IEnumerable<IPropertyContext> IReadOnlyDictionary<string, IPropertyContext>.Values => throw new NotImplementedException();
+
+        bool ITypeDescriptorContext.OnComponentChanging() => false;
+
+        void ITypeDescriptorContext.OnComponentChanged() { }
 
         bool IReadOnlyDictionary<string, IPropertyContext>.TryGetValue(string key, out IPropertyContext value)
         {
@@ -146,5 +148,7 @@ namespace FsInfoCat.Desktop.Model.Validation
         }
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Properties.Select(p => new KeyValuePair<string, IPropertyContext<TInstance>>(p.Name, p))).GetEnumerator();
+
+        #endregion
     }
 }

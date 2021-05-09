@@ -11,7 +11,7 @@
   <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelContextBase&lt;TInstance, TPropertyContext&gt;">
     <Position X="22.5" Y="10" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>CAAAAAAAAAAEAIAACAQAAAAACAAAQIAgQAAAAAACAAA=</HashCode>
+      <HashCode>CAAAAAACAAAEAIAAKAQAAAAAiAAAQIAgQAAAAAACAAA=</HashCode>
       <FileName>Model\ComponentSupport\ModelContextBase.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -19,7 +19,7 @@
   <Class Name="FsInfoCat.Desktop.Model.ComponentSupport.ModelDescriptor&lt;TModel&gt;" BaseTypeListCollapsed="true">
     <Position X="15.5" Y="0.5" Width="5.75" />
     <TypeIdentifier>
-      <HashCode>SggAAIgAIAAEAoAEiIAAABAQAEQAQMAEgAAAgAACAAA=</HashCode>
+      <HashCode>SggAAIgAIAAEAoAEiIAAABAAAEQAQIAEgAAAgAACAAA=</HashCode>
       <FileName>Model\ComponentSupport\ModelDescriptor.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -62,7 +62,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Desktop.Model.Validation.PropertyValidationContext&lt;TInstance, TValue&gt;">
-    <Position X="16.5" Y="16" Width="4.25" />
+    <Position X="16.5" Y="16.75" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAABIAAABKIEAAAAAAAAAAACoAAAAACABAAA=</HashCode>
       <FileName>Model\Validation\PropertyValidationContext.cs</FileName>
@@ -107,7 +107,7 @@
   <Interface Name="FsInfoCat.Desktop.Model.ComponentSupport.IModelPropertyDescriptor">
     <Position X="11.5" Y="3.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>IAAAgAiAIABAAAAAAAAAAEAAAAAAACAAAAACAAAEAAA=</HashCode>
+      <HashCode>IAAAgAiAIABAAAAAAAAAAEAAAAAAACCAAAACAAAEAAA=</HashCode>
       <FileName>Model\ComponentSupport\IModelPropertyDescriptor.cs</FileName>
     </TypeIdentifier>
   </Interface>

@@ -8,7 +8,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
     /// </summary>
     /// <remarks>This implements the <see cref="ITypeDescriptorContext"/> interface whereby
     /// the <see cref="ITypeDescriptorContext.PropertyDescriptor"/> is <see langword="null"/>.</remarks>
-    public interface IModelContext : ITypeDescriptorContext, IModelInfo, IReadOnlyDictionary<string, IPropertyContext>
+    public interface IModelContext : ITypeDescriptorContext, IModelInfo, IReadOnlyDictionary<string, IPropertyContext>, INotifyPropertyChanged
     {
         /// <summary>
         /// Occurs when the value of a property on the underlying model <see cref="ITypeDescriptorContext.Instance"/> has changed.
