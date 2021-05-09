@@ -12,7 +12,7 @@ namespace FsInfoCat.Desktop.Model.Validation
     /// <seealso cref="IModelContext" />
     /// <seealso cref="INotifyDataErrorInfo" />
     /// <seealso cref="IValidatableObject" />
-    public interface IModelValidationContext : IModelContext, INotifyDataErrorInfo, IValidatableObject
+    public interface IModelValidationContext : IModelContext
     {
         /// <summary>
         /// Occurs when error messages have changed.

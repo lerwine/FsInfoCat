@@ -1,8 +1,13 @@
+using FsInfoCat.Desktop.Model.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
+using System.Data.Odbc;
+using System.Data.OleDb;
 using System.Data.SqlClient;
+using System.Data.SqlServerCe;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +16,201 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 {
     public static class ComponentExtensions
     {
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, string> ConnectionString(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, string>)context[nameof(DbConnectionStringBuilder.ConnectionString)];
+
+        public static PropertyValidationContext<OleDbConnectionStringBuilder, string> ConnectionString(this ModelValidationContext<OleDbConnectionStringBuilder> context) =>
+            (PropertyValidationContext<OleDbConnectionStringBuilder, string>)context[nameof(DbConnectionStringBuilder.ConnectionString)].Value;
+
+        public static PropertyValidationContext<OdbcConnectionStringBuilder, string> ConnectionString(this ModelValidationContext<OdbcConnectionStringBuilder> context) =>
+            (PropertyValidationContext<OdbcConnectionStringBuilder, string>)context[nameof(DbConnectionStringBuilder.ConnectionString)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> ApplicationIntent(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.ApplicationIntent)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> ApplicationName(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.ApplicationName)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> AsynchronousProcessing(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.AsynchronousProcessing)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> AttachDBFilename(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.AttachDBFilename)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, SqlAuthenticationMethod> Authentication(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext < SqlConnectionStringBuilder, SqlAuthenticationMethod>)context[nameof(SqlConnectionStringBuilder.Authentication)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, SqlConnectionColumnEncryptionSetting> ColumnEncryptionSetting(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, SqlConnectionColumnEncryptionSetting>)context[nameof(SqlConnectionStringBuilder.ColumnEncryptionSetting)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, int> ConnectRetryCount(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, int>)context[nameof(SqlConnectionStringBuilder.ConnectRetryCount)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, int> ConnectRetryInterval(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, int>)context[nameof(SqlConnectionStringBuilder.ConnectRetryInterval)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, int> ConnectTimeout(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, int>)context[nameof(SqlConnectionStringBuilder.ConnectTimeout)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> ContextConnection(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.ContextConnection)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> CurrentLanguage(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.CurrentLanguage)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> DataSource(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.DataSource)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> EnclaveAttestationUrl(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.EnclaveAttestationUrl)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> Encrypt(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.Encrypt)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> Enlist(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.Enlist)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> FailoverPartner(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.FailoverPartner)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> InitialCatalog(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.InitialCatalog)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> IntegratedSecurity(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.IntegratedSecurity)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, int> LoadBalanceTimeout(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, int>)context[nameof(SqlConnectionStringBuilder.LoadBalanceTimeout)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, int> MinPoolSize(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, int>)context[nameof(SqlConnectionStringBuilder.MinPoolSize)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, int> MaxPoolSize(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, int>)context[nameof(SqlConnectionStringBuilder.MaxPoolSize)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> MultipleActiveResultSets(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.MultipleActiveResultSets)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> MultiSubnetFailover(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.MultiSubnetFailover)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> NetworkLibrary(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.NetworkLibrary)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, int> PacketSize(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, int>)context[nameof(SqlConnectionStringBuilder.PacketSize)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> Password(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.Password)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> PersistSecurityInfo(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.PersistSecurityInfo)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, PoolBlockingPeriod> PoolBlockingPeriod(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, PoolBlockingPeriod>)context[nameof(SqlConnectionStringBuilder.PoolBlockingPeriod)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> Pooling(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.Pooling)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> Replication(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.Replication)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> TransactionBinding(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.TransactionBinding)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> TransparentNetworkIPResolution(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.TransparentNetworkIPResolution)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> TrustServerCertificate(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.TrustServerCertificate)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> TypeSystemVersion(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.TypeSystemVersion)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> UserID(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.UserID)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, bool> UserInstance(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, bool>)context[nameof(SqlConnectionStringBuilder.UserInstance)].Value;
+
+        public static PropertyValidationContext<SqlConnectionStringBuilder, string> WorkstationID(this ModelValidationContext<SqlConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlConnectionStringBuilder, string>)context[nameof(SqlConnectionStringBuilder.WorkstationID)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> AutoshrinkThreshold(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.AutoshrinkThreshold)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, bool> CaseSensitive(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, bool>)context[nameof(SqlCeConnectionStringBuilder.CaseSensitive)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, string> DataSource(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, string>)context[nameof(SqlCeConnectionStringBuilder.DataSource)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> DefaultLockEscalation(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.DefaultLockEscalation)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> DefaultLockTimeout(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.DefaultLockTimeout)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, bool> Encrypt(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, bool>)context[nameof(SqlCeConnectionStringBuilder.Encrypt)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, string> EncryptionMode(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, string>)context[nameof(SqlCeConnectionStringBuilder.EncryptionMode)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, bool> Enlist(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, bool>)context[nameof(SqlCeConnectionStringBuilder.Enlist)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> FileAccessRetryTimeout(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.FileAccessRetryTimeout)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, string> FileMode(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, string>)context[nameof(SqlCeConnectionStringBuilder.FileMode)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> FlushInterval(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.FlushInterval)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> MaxBufferSize(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.MaxBufferSize)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> InitialLcid(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.InitialLcid)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> MaxDatabaseSize(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.MaxDatabaseSize)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, string> Password(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, string>)context[nameof(SqlCeConnectionStringBuilder.Password)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, bool> PersistSecurityInfo(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, bool>)context[nameof(SqlCeConnectionStringBuilder.PersistSecurityInfo)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, int> TempFileMaxSize(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, int>)context[nameof(SqlCeConnectionStringBuilder.TempFileMaxSize)].Value;
+
+        public static PropertyValidationContext<SqlCeConnectionStringBuilder, string> TempFilePath(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
+            (PropertyValidationContext<SqlCeConnectionStringBuilder, string>)context[nameof(SqlCeConnectionStringBuilder.TempFilePath)].Value;
+
+        public static PropertyValidationContext<OleDbConnectionStringBuilder, string> DataSource(this ModelValidationContext<OleDbConnectionStringBuilder> context) =>
+            (PropertyValidationContext<OleDbConnectionStringBuilder, string>)context[nameof(OleDbConnectionStringBuilder.DataSource)].Value;
+
+        public static PropertyValidationContext<OleDbConnectionStringBuilder, string> FileName(this ModelValidationContext<OleDbConnectionStringBuilder> context) =>
+            (PropertyValidationContext<OleDbConnectionStringBuilder, string>)context[nameof(OleDbConnectionStringBuilder.FileName)].Value;
+
+        public static PropertyValidationContext<OleDbConnectionStringBuilder, int> OleDbServices(this ModelValidationContext<OleDbConnectionStringBuilder> context) =>
+            (PropertyValidationContext < OleDbConnectionStringBuilder, int>)context[nameof(OleDbConnectionStringBuilder.OleDbServices)].Value;
+
+        public static PropertyValidationContext<OleDbConnectionStringBuilder, bool> PersistSecurityInfo(this ModelValidationContext<OleDbConnectionStringBuilder> context) =>
+            (PropertyValidationContext < OleDbConnectionStringBuilder, bool>)context[nameof(OleDbConnectionStringBuilder.PersistSecurityInfo)].Value;
+
+        public static PropertyValidationContext<OleDbConnectionStringBuilder, string> Provider(this ModelValidationContext<OleDbConnectionStringBuilder> context) =>
+            (PropertyValidationContext<OleDbConnectionStringBuilder, string>)context[nameof(OleDbConnectionStringBuilder.Provider)].Value;
+
+        public static PropertyValidationContext<OdbcConnectionStringBuilder, string> Driver(this ModelValidationContext<OdbcConnectionStringBuilder> context) =>
+            (PropertyValidationContext<OdbcConnectionStringBuilder, string>)context[nameof(OdbcConnectionStringBuilder.Driver)].Value;
+
+        public static PropertyValidationContext<OdbcConnectionStringBuilder, string> Dsn(this ModelValidationContext<OdbcConnectionStringBuilder> context) =>
+            (PropertyValidationContext<OdbcConnectionStringBuilder, string>)context[nameof(OdbcConnectionStringBuilder.Dsn)].Value;
+
         public static string GetInitialCatalogDisplay(this ModelDescriptor<SqlConnectionStringBuilder> descriptor) =>
             descriptor[nameof(SqlConnectionStringBuilder.InitialCatalog)].DisplayName;
 

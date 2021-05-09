@@ -162,6 +162,8 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         /// otherwise, <see langword="false"/>.
         /// </returns>
         bool IsAssignableFrom(object value);
+
+        bool CheckPropertyChange();
     }
 
     public interface IPropertyContext<TInstance> : IPropertyContext

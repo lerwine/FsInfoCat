@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.Model.Validation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -123,6 +124,10 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         /// <see langword="true"/> if the specified value can be directly assigned to this property; otherwise, <see langword="false"/>.
         /// </returns>
         bool IsAssignableFrom(object value);
+
+        IPropertyContext CreateInstanceProperty(IModelContext owner);
+
+        IPropertyValidationContext CreateInstanceValidationProperty(IModelValidationContext owner);
     }
     
     public interface IModelPropertyDescriptor<TModel> : IEquatable<IModelPropertyDescriptor<TModel>>, IModelPropertyDescriptor
@@ -143,5 +148,9 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         /// <returns>The value of this property on the specified <paramref name="component"/> object.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="component"/> is null.</exception>
         object GetValue(TModel component);
+
+        IPropertyContext<TModel> CreateInstanceProperty(ModelContext<TModel> owner);
+
+        IPropertyValidationContext<TModel> CreateInstanceValidationProperty(ModelValidationContext<TModel> owner);
     }
 }

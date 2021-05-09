@@ -6,9 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
 using System.Data.Odbc;
 using System.Data.OleDb;
 using System.Data.SqlClient;
@@ -163,7 +161,7 @@ namespace FsInfoCat.Test
             Assert.That(modelDescriptor.SimpleName, Is.EqualTo(type.Name));
             Assert.That(modelDescriptor.FullName, Is.EqualTo(type.FullName));
             Assert.That(modelDescriptor.Properties, Is.Not.Null);
-            Assert.That(modelDescriptor.Properties.Count, Is.EqualTo(39));
+            Assert.That(modelDescriptor.Properties.Count, Is.EqualTo(38));
             IModelPropertyDescriptor<SqlConnectionStringBuilder> modelPropertyDescriptor =
                 modelDescriptor[nameof(SqlConnectionStringBuilder.ConnectionString)];
             Assert.That(modelPropertyDescriptor, Is.Not.Null);
@@ -343,6 +341,169 @@ namespace FsInfoCat.Test
             Assert.That(((CustomValidationAttribute)target[2]).ValidatorType, Is.EqualTo(typeof(TestValidator)));
             Assert.That(((CustomValidationAttribute)target[3]).Method, Is.EqualTo(nameof(TestValidator.IsValidNumerator)));
             Assert.That(((CustomValidationAttribute)target[3]).ValidatorType, Is.EqualTo(typeof(TestValidator)));
+        }
+
+        [Test]
+        public void ModelValidationContextTest()
+        {
+            SqlConnectionStringModelDescriptionBuilder builder = new SqlConnectionStringModelDescriptionBuilder();
+            ModelDescriptor<SqlConnectionStringBuilder> modelDescriptor = builder.Build();
+            SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder();
+            ModelValidationContext<SqlConnectionStringBuilder> validationContext = new ModelValidationContext<SqlConnectionStringBuilder>(modelDescriptor, connectionStringBuilder);
+            Assert.That(validationContext.HasErrors, Is.True);
+
+            string name = nameof(SqlConnectionStringBuilder.ConnectionString);
+            IPropertyValidationContext<SqlConnectionStringBuilder> propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            ValidationResult validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.DataSource);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.InitialCatalog);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.AttachDBFilename);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.UserID);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.Password);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.IntegratedSecurity);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.Authentication);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            connectionStringBuilder.DataSource = @"(localdb)\ProjectsV13";
+
+            name = nameof(SqlConnectionStringBuilder.DataSource);
+            propertyValidationContext = validationContext[name];
+            propertyValidationContext.CheckPropertyChange();
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.InitialCatalog);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.AttachDBFilename);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            Assert.That(validationContext.HasErrors, Is.True);
+
+            connectionStringBuilder.InitialCatalog = "FsInfoCatLocal";
+
+            name = nameof(SqlConnectionStringBuilder.InitialCatalog);
+            propertyValidationContext = validationContext[name];
+            propertyValidationContext.CheckPropertyChange();
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.AttachDBFilename);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.UserID);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.IntegratedSecurity);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.True);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.Authentication);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            Assert.That(validationContext.HasErrors, Is.True);
+
+            connectionStringBuilder.IntegratedSecurity = true;
+
+            name = nameof(SqlConnectionStringBuilder.IntegratedSecurity);
+            propertyValidationContext = validationContext[name];
+            propertyValidationContext.CheckPropertyChange();
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Not.Null);
+
+            name = nameof(SqlConnectionStringBuilder.DataSource);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.InitialCatalog);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.AttachDBFilename);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.InitialCatalog);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.UserID);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            name = nameof(SqlConnectionStringBuilder.Authentication);
+            propertyValidationContext = validationContext[name];
+            Assert.That(propertyValidationContext.HasErrors, Is.False);
+            validationResult = propertyValidationContext.Validate();
+            Assert.That(validationResult, Is.Null);
+
+            Assert.That(validationContext.HasErrors, Is.False);
         }
     }
 }

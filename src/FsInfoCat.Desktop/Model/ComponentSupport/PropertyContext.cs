@@ -14,14 +14,23 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
     {
         private readonly TypeConverter _converter;
         private readonly PropertyDescriptor _propertyDescriptor;
-        private object _oldValue;
+        private TValue _oldValue;
 
         public event ValueChangedEventHandler ValueChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public TValue Value => (TValue)_propertyDescriptor.GetValue(Owner.Instance);
+        public TValue Value
+        {
+            get
+            {
+                CheckPropertyChange();
+                return (TValue)_propertyDescriptor.GetValue(Owner.Instance);
+            }
+        }
 
         public TOwner Owner { get; }
+
+        private readonly IEqualityComparer<TValue> _equalityComparer;
 
         public string Name => _propertyDescriptor.Name;
 
@@ -39,23 +48,25 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 
         public Type PropertyType => _propertyDescriptor.PropertyType;
 
-        public PropertyContext(TOwner owner, PropertyDescriptor propertyDescriptor)
+        public PropertyContext(TOwner owner, PropertyDescriptor propertyDescriptor, IEqualityComparer<TValue> equalityComparer)
         {
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
+            _equalityComparer = equalityComparer ?? throw new ArgumentNullException(nameof(equalityComparer));
             _converter = (_propertyDescriptor = propertyDescriptor ?? throw new ArgumentNullException(nameof(propertyDescriptor))).Converter;
-            _propertyDescriptor.AddValueChanged(owner.Instance, OnInstancePropertyValueChanged);
-            _oldValue = _propertyDescriptor.GetValue(owner.Instance);
-            WeakComponentPropertyChangedManager.AddValueChanged(owner.Instance, propertyDescriptor, OnInstancePropertyValueChanged);
+            _oldValue = (TValue)_propertyDescriptor.GetValue(owner.Instance);
         }
 
-        private void OnInstancePropertyValueChanged(object sender, EventArgs e)
+        public bool CheckPropertyChange()
         {
-            object oldValue = _oldValue;
-            _oldValue = _propertyDescriptor.GetValue(Owner.Instance);
+            TValue oldValue = _oldValue;
+            _oldValue = (TValue)_propertyDescriptor.GetValue(Owner.Instance);
+            if (_equalityComparer.Equals(_oldValue, oldValue))
+                return false;
             OnInstancePropertyValueChanged(oldValue, _oldValue);
+            return true;
         }
 
-        protected virtual void OnInstancePropertyValueChanged(object oldValue, object newValue)
+        protected virtual void OnInstancePropertyValueChanged(TValue oldValue, TValue newValue)
         {
             try { ValueChanged?.Invoke(this, new ValueChangedEventArgs(oldValue, newValue)); }
             finally { RaisePropertyChanged(nameof(Value)); }
@@ -80,10 +91,15 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
         public TValue ResetValue()
         {
             _propertyDescriptor.ResetValue(Owner.Instance);
+            CheckPropertyChange();
             return Value;
         }
 
-        public void SetValue(TValue value) => _propertyDescriptor.SetValue(Owner.Instance, value);
+        public void SetValue(TValue value)
+        {
+            _propertyDescriptor.SetValue(Owner.Instance, value);
+            CheckPropertyChange();
+        }
 
         public TValue SetValueFromConverted(object value)
         {
@@ -171,7 +187,8 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
     public sealed class PropertyContext<TInstance, TValue> : PropertyContext<TInstance, TValue, ModelContext<TInstance>>
         where TInstance : class
     {
-        public PropertyContext(ModelContext<TInstance> owner, PropertyDescriptor propertyDescriptor) : base(owner, propertyDescriptor)
+        public PropertyContext(ModelContext<TInstance> owner, PropertyDescriptor propertyDescriptor, IEqualityComparer<TValue> equalityComparer)
+            : base(owner, propertyDescriptor, equalityComparer)
         {
         }
 

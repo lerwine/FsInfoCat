@@ -216,7 +216,6 @@
     <Compile Include="Model\Bits\Version2Domain.cs" />
     <Compile Include="Model\CimGroupPartComponent.cs" />
     <Compile Include="Model\CIM_PowerManagementCapability.cs" />
-    <Compile Include="Model\ComponentSupport\Descriptors.cs" />
     <Compile Include="Model\ComponentSupport\ITypedPropertyDescriptor.cs" />
     <Compile Include="Model\ComponentSupport\ITypedProperty.cs" />
     <Compile Include="Model\ComponentSupport\ComponentEqualityComparer.cs" />
@@ -232,6 +231,7 @@
     <Compile Include="Model\Validation\OleDbConnectionStringModelDescriptionBuilder.cs" />
     <Compile Include="Model\Validation\SqlCeConnectionStringModelDescriptionBuilder.cs" />
     <Compile Include="Model\Validation\SqlConnectionStringModelDescriptionBuilder.cs" />
+    <Compile Include="Model\Validation\ValidationMessageCollection.cs" />
     <Compile Include="Util\AttributeComparer.cs" />
     <Compile Include="Util\LinkedComponentList.cs" />
     <Compile Include="Util\RelayComparer.cs" />

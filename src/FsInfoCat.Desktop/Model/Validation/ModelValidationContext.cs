@@ -15,70 +15,75 @@ namespace FsInfoCat.Desktop.Model.Validation
         where TInstance : class
     {
         public event EventHandler HasErrorsChanged;
+
         public event EventHandler<ModelErrorsChangedEventArgs> ModelErrorsChanged;
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         private readonly LinkedComponentList<IPropertyValidationContext<TInstance>> _invalidProperties = new LinkedComponentList<IPropertyValidationContext<TInstance>>();
 
         public bool HasErrors => !_invalidProperties.IsEmpty;
 
         public ModelValidationContext(ModelDescriptor<TInstance> modelDescriptor, TInstance instance) :
-            base(modelDescriptor, instance, (owner, pd) => Descriptors.CreatePropertyValidationContext((ModelValidationContext<TInstance>)owner, instance, pd))
+            base(modelDescriptor, instance, (owner, pd) => pd.CreateInstanceValidationProperty((ModelValidationContext<TInstance>)owner))
         {
             _invalidProperties.EmptyChanged += InvalidProperties_EmptyChanged;
             foreach (IPropertyValidationContext<TInstance> property in Properties)
             {
                 if (property.HasErrors)
                     _invalidProperties.Add(property);
-                WeakEventManager<IPropertyValidationContext<TInstance>, EventArgs>.AddHandler(property,
-                    nameof(IPropertyValidationContext<TInstance>.HasErrorsChanged),
-                    OnHasErrorsChangedChanged);
+                WeakEventManager<IPropertyValidationContext, EventArgs>.AddHandler(property,
+                    nameof(IPropertyValidationContext.HasErrorsChanged),
+                    OnPropertyHasErrorsChanged);
+                //WeakEventManager<IPropertyValidationContext<TInstance>, ValueChangedEventArgs>.AddHandler(property,
+                //    nameof(IPropertyContext<TInstance>.ValueChanged),
+                //    OnPropertyValueChanged);
             }
         }
 
         private void InvalidProperties_EmptyChanged(object sender, EventArgs e)
         {
-            OnHasErrorsChanged(HasErrors);
-        }
-
-        private void OnHasErrorsChanged(bool hasErrors)
-        {
             try { RaisePropertyChanged(nameof(HasErrors)); }
             finally { HasErrorsChanged?.Invoke(this, EventArgs.Empty); }
         }
 
-        private void OnHasErrorsChangedChanged(object sender, EventArgs e)
+        //private void OnPropertyValueChanged(object sender, ValueChangedEventArgs e)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        private void OnPropertyHasErrorsChanged(object sender, EventArgs e)
         {
             if (sender is IPropertyValidationContext<TInstance> property)
             {
-                if (property.HasErrors)
+                try
                 {
-                    if (!_invalidProperties.Contains(property))
-                        _invalidProperties.Add(property);
+                    if (property.HasErrors)
+                    {
+                        if (!_invalidProperties.Contains(property))
+                            _invalidProperties.Add(property);
+                    }
+                    else if (_invalidProperties.Contains(property))
+                        _invalidProperties.Remove(property);
                 }
-                else if (_invalidProperties.Contains(property))
-                    _invalidProperties.Remove(property);
+                finally { ModelErrorsChanged?.Invoke(this, new ModelErrorsChangedEventArgs(property)); }
             }
-        }
-
-        public IEnumerable GetErrors(string propertyName)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<ValidationResult> Revalidate()
         {
-            throw new NotImplementedException();
+            return Properties.Select(p =>
+            {
+                ValidationResult validationResult = p.Revalidate();
+                return validationResult;
+            }).Where(v => !(v is null));
         }
 
         public IEnumerable<ValidationResult> Validate()
         {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            throw new NotImplementedException();
+            return Properties.Select(p =>
+            {
+                ValidationResult validationResult = p.Validate();
+                return validationResult;
+            }).Where(v => !(v is null));
         }
 
         #region Explicit Members

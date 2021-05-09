@@ -1,4 +1,5 @@
 using FsInfoCat.Desktop.Model.ComponentSupport;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 
@@ -8,230 +9,259 @@ namespace FsInfoCat.Desktop.Model.Validation
     {
         private static readonly ModelDescriptor<SqlConnectionStringBuilder> _descriptor = new SqlConnectionStringModelDescriptionBuilder().Build();
 
-        public static bool ValidateInitialCatalog(string initialCatalog, ValidationContext context, out ValidationResult result)
+        public static ValidationResult ValidateInitialCatalog(string initialCatalog, ValidationContext context)
         {
-            if (context.ObjectInstance is SqlConnectionStringBuilder connectionStringBuilder)
+            if (context.ObjectInstance is ModelValidationContext<SqlConnectionStringBuilder> modelContext)
             {
-                if (string.IsNullOrWhiteSpace(connectionStringBuilder.AttachDBFilename))
-                    result = string.IsNullOrWhiteSpace(initialCatalog) ?
-                        new ValidationResult($"'{_descriptor.GetInitialCatalogDisplay()}' or '{_descriptor.GetAttachDBFilenameDisplay()}' is required.") : null;
-                else
-                    result = string.IsNullOrWhiteSpace(initialCatalog) ? null :
-                        new ValidationResult($"Cannot use '{_descriptor.GetInitialCatalogDisplay()}' with '{_descriptor.GetAttachDBFilenameDisplay()}'.");
-            }
-            else
-                result = null;
-            return result is null;
-        }
-
-        public static bool ValidateAttachDBFilename(string attachDBFilename, ValidationContext context, out ValidationResult result)
-        {
-            if (context.ObjectInstance is SqlConnectionStringBuilder connectionStringBuilder)
-            {
-                if (string.IsNullOrWhiteSpace(connectionStringBuilder.InitialCatalog))
-                    result = string.IsNullOrWhiteSpace(attachDBFilename) ?
-                        new ValidationResult($"'{_descriptor.GetAttachDBFilenameDisplay()}' or '{_descriptor.GetInitialCatalogDisplay()}' is required.") : null;
-                else
-                    result = string.IsNullOrWhiteSpace(attachDBFilename) ? null :
-                        new ValidationResult($"'{_descriptor.GetAttachDBFilenameDisplay()}' and '{_descriptor.GetInitialCatalogDisplay()}' cannot both be specifed.");
-            }
-            else
-                result = null;
-            return result is null;
-        }
-
-        public static bool ValidateUserID(string userID, ValidationContext context, out ValidationResult result)
-        {
-            if (context.ObjectInstance is SqlConnectionStringBuilder connectionStringBuilder)
-            {
-                switch (connectionStringBuilder.Authentication)
+                PropertyValidationContext<SqlConnectionStringBuilder, string> attachDbFilename = modelContext.AttachDBFilename();
+                attachDbFilename.CheckPropertyChange();
+                if (string.IsNullOrWhiteSpace(attachDbFilename.Value))
                 {
-                    case SqlAuthenticationMethod.ActiveDirectoryIntegrated:
-                        if (string.IsNullOrWhiteSpace(userID))
-                        {
-                            if (connectionStringBuilder.IntegratedSecurity)
-                            {
-                                if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                                    result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetIntegratedSecurityDisplay()}'.");
-                                else
-                                    result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetPasswordDisplay()}'.");
-                            }
-                            else if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                                result = null;
-                            else
-                                result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetPasswordDisplay()}'.");
-                        }
-                        else if (connectionStringBuilder.IntegratedSecurity)
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetUserIDDisplay()}' with '{_descriptor.GetIntegratedSecurityDisplay()}' or '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}'.");
-                        else if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                            result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}'.");
-                        else
-                            result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetPasswordDisplay()}' or '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}'.");
-                        break;
-                    case SqlAuthenticationMethod.ActiveDirectoryInteractive:
-                        if (string.IsNullOrWhiteSpace(userID))
-                        {
-                            if (connectionStringBuilder.IntegratedSecurity)
-                                result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetIntegratedSecurityDisplay()}' or '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}'.");
-                            else
-                                result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}'.");
-                        }
-                        else if (connectionStringBuilder.IntegratedSecurity)
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetUserIDDisplay()}' with '{_descriptor.GetIntegratedSecurityDisplay()}'.");
-                        else
-                            result = null;
-                        break;
-                    default:
-                        if (string.IsNullOrWhiteSpace(userID))
-                        {
-                            if (connectionStringBuilder.IntegratedSecurity)
-                                result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetIntegratedSecurityDisplay()}'.");
-                            else if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                                result = null;
-                            else
-                                result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetPasswordDisplay()}'.");
-                        }
-                        else if (connectionStringBuilder.IntegratedSecurity)
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetUserIDDisplay()}' with '{_descriptor.GetIntegratedSecurityDisplay()}'.");
-                        else if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                            result = null;
-                        else
-                            result = new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required with '{_descriptor.GetPasswordDisplay()}'.");
-                        break;
+                    if (string.IsNullOrWhiteSpace(initialCatalog))
+                        return new ValidationResult($"'{_descriptor.GetInitialCatalogDisplay()}' or '{attachDbFilename.DisplayName}' is required.");
+                    if (attachDbFilename.HasErrors)
+                        attachDbFilename.Invalidate();
+                    return null;
                 }
+                return string.IsNullOrWhiteSpace(initialCatalog) ? null :
+                    new ValidationResult($"Cannot use '{_descriptor.GetInitialCatalogDisplay()}' with '{attachDbFilename.DisplayName}'.");
             }
-            else
-                result = null;
-            return result is null;
+            return null;
         }
 
-        public static bool ValidatePassword(string password, ValidationContext context, out ValidationResult result)
+        public static ValidationResult ValidateAttachDBFilename(string attachDBFilename, ValidationContext context)
         {
-            if (context.ObjectInstance is SqlConnectionStringBuilder connectionStringBuilder && !string.IsNullOrWhiteSpace(password))
-            {
-                switch (connectionStringBuilder.Authentication)
+            if (context.ObjectInstance is ModelValidationContext<SqlConnectionStringBuilder> modelContext)
+            {   
+                PropertyValidationContext<SqlConnectionStringBuilder, string> initialCatalog = modelContext.InitialCatalog();
+                initialCatalog.CheckPropertyChange();
+                if (string.IsNullOrWhiteSpace(attachDBFilename))
                 {
-                    case SqlAuthenticationMethod.ActiveDirectoryIntegrated:
-                        if (connectionStringBuilder.IntegratedSecurity)
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetPasswordDisplay()}' with '{_descriptor.GetIntegratedSecurityDisplay()}' or '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}'.");
-                        else
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetPasswordDisplay()}' with '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}'.");
-                        break;
-                    default:
-                        if (connectionStringBuilder.IntegratedSecurity)
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetPasswordDisplay()}' with '{_descriptor.GetIntegratedSecurityDisplay()}'.");
-                        else
-                            result = null;
-                        break;
+                    PropertyValidationContext<SqlConnectionStringBuilder, string> userID = modelContext.UserID();
+                    PropertyValidationContext<SqlConnectionStringBuilder, bool> integratedSecurity = modelContext.IntegratedSecurity();
+                    PropertyValidationContext<SqlConnectionStringBuilder, SqlAuthenticationMethod> authentication = modelContext.Authentication();
+                    userID.CheckPropertyChange();
+                    integratedSecurity.CheckPropertyChange();
+                    authentication.CheckPropertyChange();
+                    if (authentication.Value == SqlAuthenticationMethod.NotSpecified && !integratedSecurity.Value && string.IsNullOrWhiteSpace(userID.Value) && userID.HasErrors)
+                        userID.Invalidate();
+                    if (string.IsNullOrWhiteSpace(initialCatalog.Value))
+                        return new ValidationResult($"'{_descriptor.GetAttachDBFilenameDisplay()}' or '{initialCatalog.DisplayName}' is required.");
+                    return null;
                 }
+
+                if (string.IsNullOrWhiteSpace(initialCatalog.Value))
+                {
+                    if (initialCatalog.HasErrors)
+                        initialCatalog.Invalidate();
+                    return null;
+                }
+                return new ValidationResult($"Cannot use '{_descriptor.GetAttachDBFilenameDisplay()}' with '{initialCatalog.DisplayName}'.");
             }
-            else
-                result = null;
-            return result is null;
+            return null;
         }
 
-        public static bool ValidateIntegratedSecurity(bool integratedSecurity, ValidationContext context, out ValidationResult result)
+        public static ValidationResult ValidateUserID(string userID, ValidationContext context)
         {
-            if (context.ObjectInstance is SqlConnectionStringBuilder connectionStringBuilder)
+            if (context.ObjectInstance is ModelValidationContext<SqlConnectionStringBuilder> modelContext)
             {
+                PropertyValidationContext<SqlConnectionStringBuilder, SqlAuthenticationMethod> authentication = modelContext.Authentication();
+                PropertyValidationContext<SqlConnectionStringBuilder, bool> integratedSecurity = modelContext.IntegratedSecurity();
+                PropertyValidationContext<SqlConnectionStringBuilder, string> password = modelContext.Password();
+                PropertyValidationContext<SqlConnectionStringBuilder, string> attachDBFilename = modelContext.AttachDBFilename();
+                authentication.CheckPropertyChange();
+                integratedSecurity.CheckPropertyChange();
+                password.CheckPropertyChange();
+                attachDBFilename.CheckPropertyChange();
+
+                if (string.IsNullOrWhiteSpace(userID))
+                {
+                    if (integratedSecurity.Value)
+                        return null;
+                    switch (authentication.Value)
+                    {
+                        case SqlAuthenticationMethod.ActiveDirectoryInteractive:
+                        case SqlAuthenticationMethod.SqlPassword:
+                            return new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required.");
+                        case SqlAuthenticationMethod.NotSpecified:
+                            if (string.IsNullOrWhiteSpace(attachDBFilename.Value))
+                                return new ValidationResult($"'{_descriptor.GetUserIDDisplay()}' required.");
+                            break;
+                    }
+                    if (!string.IsNullOrWhiteSpace(password.Value) && !password.HasErrors)
+                        password.Invalidate();
+                    return null;
+                }
+
+                if (authentication.Value == SqlAuthenticationMethod.ActiveDirectoryIntegrated)
+                {
+                    if (integratedSecurity.Value)
+                        return new ValidationResult($"Cannot use '{_descriptor.GetUserIDDisplay()}' with '{integratedSecurity.DisplayName}' or '{_descriptor.GetAuthenticationDisplay(authentication.Value)}'.");
+                    return new ValidationResult($"Cannot use '{_descriptor.GetUserIDDisplay()}' with '{_descriptor.GetAuthenticationDisplay(authentication.Value)}'.");
+                }
+                if (integratedSecurity.Value)
+                    return new ValidationResult($"Cannot use '{_descriptor.GetUserIDDisplay()}' with '{integratedSecurity.DisplayName}'.");
+                if (password.HasErrors)
+                    password.Invalidate();
+            }
+            return null;
+        }
+
+        public static ValidationResult ValidatePassword(string password, ValidationContext context)
+        {
+            if (context.ObjectInstance is ModelValidationContext<SqlConnectionStringBuilder> modelContext && !string.IsNullOrWhiteSpace(password))
+            {
+                PropertyValidationContext<SqlConnectionStringBuilder, SqlAuthenticationMethod> authentication = modelContext.Authentication();
+                PropertyValidationContext<SqlConnectionStringBuilder, bool> integratedSecurity = modelContext.IntegratedSecurity();
+                PropertyValidationContext<SqlConnectionStringBuilder, string> userID = modelContext.UserID();
+                authentication.CheckPropertyChange();
+                integratedSecurity.CheckPropertyChange();
+                userID.CheckPropertyChange();
+                if (authentication.Value == SqlAuthenticationMethod.ActiveDirectoryIntegrated)
+                {
+                    if (integratedSecurity.Value)
+                        return new ValidationResult($"Cannot use '{_descriptor.GetPasswordDisplay()}' with '{integratedSecurity.DisplayName}' or '{_descriptor.GetAuthenticationDisplay(authentication.Value)}'.");
+                    return new ValidationResult($"Cannot use '{_descriptor.GetPasswordDisplay()}' with '{_descriptor.GetAuthenticationDisplay(authentication.Value)}'.");
+                }
+                if (integratedSecurity.Value)
+                    return new ValidationResult($"Cannot use '{_descriptor.GetPasswordDisplay()}' with '{integratedSecurity.DisplayName}'.");
+                if (string.IsNullOrWhiteSpace(userID.Value))
+                    return new ValidationResult($"Cannot use '{_descriptor.GetPasswordDisplay()}' without '{userID.DisplayName}'.");
+            }
+            return null;
+        }
+
+        public static ValidationResult ValidateIntegratedSecurity(bool integratedSecurity, ValidationContext context)
+        {
+            if (context.ObjectInstance is ModelValidationContext<SqlConnectionStringBuilder> modelContext)
+            {
+                PropertyValidationContext<SqlConnectionStringBuilder, SqlAuthenticationMethod> authentication = modelContext.Authentication();
+                PropertyValidationContext<SqlConnectionStringBuilder, string> password = modelContext.Password();
+                PropertyValidationContext<SqlConnectionStringBuilder, string> userID = modelContext.UserID();
+                authentication.CheckPropertyChange();
+                password.CheckPropertyChange();
+                userID.CheckPropertyChange();
                 if (integratedSecurity)
                 {
-                    if (connectionStringBuilder.Authentication == SqlAuthenticationMethod.NotSpecified)
+                    switch (authentication.Value)
                     {
-                        if (string.IsNullOrWhiteSpace(connectionStringBuilder.UserID))
-                        {
-                            if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                                result = null;
-                            else
-                                result = new ValidationResult($"Cannot use '{_descriptor.GetIntegratedSecurityDisplay()}' with '{_descriptor.GetPasswordDisplay()}'.");
-                        }
-                        else if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetIntegratedSecurityDisplay()}' with '{_descriptor.GetUserIDDisplay()}'.");
-                        else
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetIntegratedSecurityDisplay()}' with '{_descriptor.GetUserIDDisplay()}' or '{_descriptor.GetPasswordDisplay()}'.");
+                        case SqlAuthenticationMethod.ActiveDirectoryIntegrated:
+                            authentication.Invalidate();
+                            break;
+                        case SqlAuthenticationMethod.NotSpecified:
+                            if (!string.IsNullOrWhiteSpace(userID.Value))
+                                userID.Invalidate();
+                            if (!string.IsNullOrWhiteSpace(password.Value))
+                                password.Invalidate();
+                            return null;
+                        default:
+                            authentication.Invalidate();
+                            if (!string.IsNullOrWhiteSpace(userID.Value))
+                                userID.Invalidate();
+                            if (!string.IsNullOrWhiteSpace(password.Value))
+                                password.Invalidate();
+                            break;
                     }
-                    else if (string.IsNullOrWhiteSpace(connectionStringBuilder.UserID))
-                    {
-                        if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                            result = new ValidationResult($"Cannot use  '{_descriptor.GetIntegratedSecurityDisplay()}' with '{_descriptor.GetAuthenticationDisplay()}'.");
-                        else
-                            result = new ValidationResult($"Cannot use  '{_descriptor.GetIntegratedSecurityDisplay()}' with '{_descriptor.GetAuthenticationDisplay()}' or '{_descriptor.GetPasswordDisplay()}'.");
-                    }
-                    else if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                        result = new ValidationResult($"Cannot use  '{_descriptor.GetIntegratedSecurityDisplay()}' with '{_descriptor.GetAuthenticationDisplay()}' or '{_descriptor.GetUserIDDisplay()}'.");
-                    else
-                        result = new ValidationResult($"Cannot use  '{_descriptor.GetIntegratedSecurityDisplay()}' with '{_descriptor.GetAuthenticationDisplay()}', '{_descriptor.GetUserIDDisplay()}'or '{_descriptor.GetPasswordDisplay()}'.");
+                    return new ValidationResult($"Cannot use  '{_descriptor.GetIntegratedSecurityDisplay()}' with '{authentication.DisplayName}'.");
                 }
-                else if (connectionStringBuilder.Authentication == SqlAuthenticationMethod.NotSpecified && string.IsNullOrWhiteSpace(connectionStringBuilder.UserID))
-                    result = new ValidationResult($"Must use  '{_descriptor.GetIntegratedSecurityDisplay()}' without '{_descriptor.GetAuthenticationDisplay()}' or '{_descriptor.GetUserIDDisplay()}'.");
-                else
-                    result = null;
+
+                switch (authentication.Value)
+                {
+                    case SqlAuthenticationMethod.ActiveDirectoryIntegrated:
+                        if (authentication.HasErrors)
+                            authentication.Invalidate();
+                        break;
+                    case SqlAuthenticationMethod.NotSpecified:
+                        if (userID.HasErrors)
+                            userID.Invalidate();
+                        if (!string.IsNullOrWhiteSpace(password.Value) && password.HasErrors)
+                            password.Invalidate();
+                        break;
+                    default:
+                        if (authentication.HasErrors)
+                            authentication.Invalidate();
+                        if (userID.HasErrors)
+                            userID.Invalidate();
+                        if (!string.IsNullOrWhiteSpace(password.Value) && password.HasErrors)
+                            password.Invalidate();
+                        break;
+                }
             }
-            else
-                result = null;
-            return result is null;
+            return null;
         }
 
-        public static bool ValidateAuthentication(SqlAuthenticationMethod authentication, ValidationContext context, out ValidationResult result)
+        public static ValidationResult ValidateAuthentication(SqlAuthenticationMethod authentication, ValidationContext context)
         {
-            if (context.ObjectInstance is SqlConnectionStringBuilder connectionStringBuilder)
+            if (context.ObjectInstance is ModelValidationContext<SqlConnectionStringBuilder> modelContext)
             {
+                PropertyValidationContext<SqlConnectionStringBuilder, string> password = modelContext.Password();
+                PropertyValidationContext<SqlConnectionStringBuilder, string> userID = modelContext.UserID();
+                PropertyValidationContext<SqlConnectionStringBuilder, bool> integratedSecurity = modelContext.IntegratedSecurity();
+                PropertyValidationContext<SqlConnectionStringBuilder, string> attachDBFilename = modelContext.AttachDBFilename();
+                password.CheckPropertyChange();
+                userID.CheckPropertyChange();
+                integratedSecurity.CheckPropertyChange();
+                attachDBFilename.CheckPropertyChange();
+                if (integratedSecurity.Value)
+                {
+                    if (authentication != SqlAuthenticationMethod.NotSpecified)
+                        return new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(authentication)}' with  '{integratedSecurity.DisplayName}'.");
+                    if (integratedSecurity.HasErrors)
+                        integratedSecurity.Invalidate();
+                    return null;
+                }
+                if (integratedSecurity.HasErrors)
+                    integratedSecurity.Invalidate();
                 switch (authentication)
                 {
                     case SqlAuthenticationMethod.ActiveDirectoryIntegrated:
-                        if (connectionStringBuilder.IntegratedSecurity)
+                        if (string.IsNullOrWhiteSpace(userID.Value))
                         {
-                            if (string.IsNullOrWhiteSpace(connectionStringBuilder.UserID))
-                            {
-                                if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                                    result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with  '{_descriptor.GetIntegratedSecurityDisplay()}'.");
-                                else
-                                    result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with  '{_descriptor.GetIntegratedSecurityDisplay()}' or '{_descriptor.GetPasswordDisplay()}'.");
-                            }
-                            else if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                                result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with '{_descriptor.GetIntegratedSecurityDisplay()}' or '{_descriptor.GetUserIDDisplay()}'.");
-                            else
-                                result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with '{_descriptor.GetIntegratedSecurityDisplay()}', '{_descriptor.GetUserIDDisplay()}' or '{_descriptor.GetPasswordDisplay()}'.");
+                            if (userID.HasErrors)
+                                userID.Invalidate();
+                            if (string.IsNullOrWhiteSpace(password.Value) == password.HasErrors)
+                                password.Invalidate();
                         }
-                        else if (string.IsNullOrWhiteSpace(connectionStringBuilder.UserID))
-                        {
-                            if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                                result = null;
-                            else
-                                result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with '{_descriptor.GetPasswordDisplay()}'.");
-                        }
-                        else if (string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with '{_descriptor.GetUserIDDisplay()}'.");
                         else
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with '{_descriptor.GetUserIDDisplay()}' or '{_descriptor.GetPasswordDisplay()}'.");
+                        {
+                            userID.Invalidate();
+                            if (!string.IsNullOrWhiteSpace(password.Value))
+                                password.Invalidate();
+                        }
                         break;
                     case SqlAuthenticationMethod.ActiveDirectoryInteractive:
-                        if (connectionStringBuilder.IntegratedSecurity)
-                        {
-                            if (string.IsNullOrWhiteSpace(connectionStringBuilder.UserID))
-                                result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with  '{_descriptor.GetIntegratedSecurityDisplay()}' and without '{_descriptor.GetUserIDDisplay()}'.");
-                            else
-                                result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with  '{_descriptor.GetIntegratedSecurityDisplay()}'.");
-                        }
-                        else if (string.IsNullOrWhiteSpace(connectionStringBuilder.UserID))
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' without '{_descriptor.GetUserIDDisplay()}'.");
-                        else
-                            result = null;
+                        if (string.IsNullOrWhiteSpace(userID.Value) || userID.HasErrors)
+                            userID.Invalidate();
                         break;
                     case SqlAuthenticationMethod.NotSpecified:
-                        result = null;
-                        break;
+                        if (string.IsNullOrWhiteSpace(attachDBFilename.Value))
+                        {
+                            if (string.IsNullOrWhiteSpace(userID.Value))
+                                userID.Invalidate();
+                        }
+                        else if (userID.HasErrors)
+                            userID.Invalidate();
+                        if (string.IsNullOrWhiteSpace(password.Value) == password.HasErrors)
+                            password.Invalidate();
+                        return null;
                     default:
-                        if (connectionStringBuilder.IntegratedSecurity)
-                            result = new ValidationResult($"Cannot use '{_descriptor.GetAuthenticationDisplay(connectionStringBuilder.Authentication)}' with '{_descriptor.GetIntegratedSecurityDisplay()}'.");
-                        else
-                            result = null;
-                        break;
+                        if (userID.HasErrors)
+                            userID.Invalidate();
+                        if (string.IsNullOrWhiteSpace(password.Value) == password.HasErrors)
+                            password.Invalidate();
+                        return null;
                 }
             }
-            else
-                result = null;
-            return result is null;
+            return null;
+        }
+
+        public override bool ShouldIncludeProperty(ModelDescriptor<SqlConnectionStringBuilder> modelDescriptor, PropertyDescriptor propertyDescriptor)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            if (propertyDescriptor.Name.Equals(nameof(SqlConnectionStringBuilder.ConnectionReset)))
+#pragma warning restore CS0618 // Type or member is obsolete
+                return false;
+            return base.ShouldIncludeProperty(modelDescriptor, propertyDescriptor);
         }
 
         public override void ConfigurePropertyBuilder(IPropertyBuilder<SqlConnectionStringBuilder> propertyBuilder)

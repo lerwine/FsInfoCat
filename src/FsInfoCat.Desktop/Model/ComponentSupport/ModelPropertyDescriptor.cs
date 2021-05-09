@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.Model.Validation;
 using FsInfoCat.Desktop.Util;
 using System;
 using System.Collections;
@@ -48,6 +49,14 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             _backingComparer = builder.EqualityComparer ?? EqualityComparer<TValue>.Default;
             ValidationAttributes = new ReadOnlyCollection<ValidationAttribute>(builder.ValidationAttributes.ToArray());
         }
+
+        public TValue GetValue(TModel component) => (TValue)_descriptor.GetValue(component ?? throw new ArgumentNullException(nameof(component)));
+
+        public PropertyValidationContext<TModel, TValue> CreateInstanceValidationProperty(ModelValidationContext<TModel> owner) =>
+            new PropertyValidationContext<TModel, TValue>(owner, _descriptor, _backingComparer, ValidationAttributes);
+
+        public PropertyContext<TModel, TValue> CreateInstanceProperty(ModelContext<TModel> owner) =>
+            new PropertyContext<TModel, TValue>(owner, _descriptor, _backingComparer);
 
         public bool CanConvertFrom(Type sourceType) => _descriptor.Converter.CanConvertFrom(sourceType);
 
@@ -221,12 +230,22 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 }}";
         }
 
-        public TValue GetValue(TModel component) => (TValue)_descriptor.GetValue(component ?? throw new ArgumentNullException(nameof(component)));
-
         TValue ITypedPropertyDescriptor<TValue>.GetValue(object component) => GetValue((TModel)component);
 
         object IModelPropertyDescriptor<TModel>.GetValue(TModel component) => GetValue(component);
 
         object IModelPropertyDescriptor.GetValue(object component) => GetValue((TModel)component);
+
+        IPropertyValidationContext<TModel> IModelPropertyDescriptor<TModel>.CreateInstanceValidationProperty(ModelValidationContext<TModel> owner) =>
+            CreateInstanceValidationProperty(owner);
+
+        IPropertyValidationContext IModelPropertyDescriptor.CreateInstanceValidationProperty(IModelValidationContext owner) =>
+            CreateInstanceValidationProperty((ModelValidationContext<TModel>)owner);
+
+        IPropertyContext<TModel> IModelPropertyDescriptor<TModel>.CreateInstanceProperty(ModelContext<TModel> owner) =>
+            CreateInstanceProperty(owner);
+
+        IPropertyContext IModelPropertyDescriptor.CreateInstanceProperty(IModelContext owner) =>
+            CreateInstanceProperty((ModelContext<TModel>)owner);
     }
 }

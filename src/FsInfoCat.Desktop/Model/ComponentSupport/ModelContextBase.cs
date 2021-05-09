@@ -93,7 +93,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             foreach (IModelPropertyDescriptor<TInstance> pd in modelDescriptor.Properties)
                 properties.Add(propertyFactory(this, pd));
             foreach (TPropertyContext property in Properties)
-                WeakEventManager<TPropertyContext, ValueChangedEventArgs>.AddHandler(property, nameof(IPropertyContext<TInstance>.ValueChanged),
+                WeakEventManager<IPropertyContext, ValueChangedEventArgs>.AddHandler(property, nameof(IPropertyContext.ValueChanged),
                     OnPropertyValueChanged);
         }
 
