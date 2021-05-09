@@ -10,6 +10,7 @@ namespace FsInfoCat.Desktop.Model.Validation
             switch (propertyBuilder.PropertyDescriptor.Name)
             {
                 case nameof(OleDbConnectionStringBuilder.DataSource):
+                case nameof(OleDbConnectionStringBuilder.Provider):
                 case nameof(OleDbConnectionStringBuilder.FileName):
                     propertyBuilder.ValidationAttributes.SetRequired(true);
                     break;

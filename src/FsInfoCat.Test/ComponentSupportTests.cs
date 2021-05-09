@@ -9,7 +9,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
+using System.Data.Odbc;
+using System.Data.OleDb;
 using System.Data.SqlClient;
+using System.Data.SqlServerCe;
 using System.Linq;
 
 namespace FsInfoCat.Test
@@ -151,17 +154,134 @@ namespace FsInfoCat.Test
         }
 
         [Test]
-        public void DbConnectionStringModelDescriptorBuilderTest()
+        public void SqlConnectionStringModelDescriptionBuilderTest()
         {
             Type type = typeof(SqlConnectionStringBuilder);
-            DbConnectionStringModelDescriptorBuilder<SqlConnectionStringBuilder> builder = new DbConnectionStringModelDescriptorBuilder<SqlConnectionStringBuilder>();
+            SqlConnectionStringModelDescriptionBuilder builder = new SqlConnectionStringModelDescriptionBuilder();
             ModelDescriptor<SqlConnectionStringBuilder> modelDescriptor = builder.Build();
             Assert.That(modelDescriptor, Is.Not.Null);
             Assert.That(modelDescriptor.SimpleName, Is.EqualTo(type.Name));
             Assert.That(modelDescriptor.FullName, Is.EqualTo(type.FullName));
             Assert.That(modelDescriptor.Properties, Is.Not.Null);
             Assert.That(modelDescriptor.Properties.Count, Is.EqualTo(39));
-            IModelPropertyDescriptor<SqlConnectionStringBuilder> modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.ConnectionString)];
+            IModelPropertyDescriptor<SqlConnectionStringBuilder> modelPropertyDescriptor =
+                modelDescriptor[nameof(SqlConnectionStringBuilder.ConnectionString)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.DataSource)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+
+            type = typeof(SqlConnectionStringModelDescriptionBuilder);
+            modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.InitialCatalog)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            string name = nameof(SqlConnectionStringModelDescriptionBuilder.ValidateInitialCatalog);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<CustomValidationAttribute>().Any(v => type.Equals(v.ValidatorType) &&
+                name.Equals(v.Method)), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.AttachDBFilename)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            name = nameof(SqlConnectionStringModelDescriptionBuilder.ValidateAttachDBFilename);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<CustomValidationAttribute>().Any(v => type.Equals(v.ValidatorType) &&
+                name.Equals(v.Method)), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.UserID)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            name = nameof(SqlConnectionStringModelDescriptionBuilder.ValidateUserID);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<CustomValidationAttribute>().Any(v => type.Equals(v.ValidatorType) &&
+                name.Equals(v.Method)), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.Password)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            name = nameof(SqlConnectionStringModelDescriptionBuilder.ValidatePassword);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<CustomValidationAttribute>().Any(v => type.Equals(v.ValidatorType) &&
+                name.Equals(v.Method)), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.IntegratedSecurity)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            name = nameof(SqlConnectionStringModelDescriptionBuilder.ValidateIntegratedSecurity);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<CustomValidationAttribute>().Any(v => type.Equals(v.ValidatorType) &&
+                name.Equals(v.Method)), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(SqlConnectionStringBuilder.Authentication)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            name = nameof(SqlConnectionStringModelDescriptionBuilder.ValidateAuthentication);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<CustomValidationAttribute>().Any(v => type.Equals(v.ValidatorType) &&
+                name.Equals(v.Method)), Is.True);
+        }
+
+        [Test]
+        public void SqlCeConnectionStringModelDescriptionBuilderTest()
+        {
+            Type type = typeof(SqlCeConnectionStringBuilder);
+            SqlCeConnectionStringModelDescriptionBuilder builder = new SqlCeConnectionStringModelDescriptionBuilder();
+            ModelDescriptor<SqlCeConnectionStringBuilder> modelDescriptor = builder.Build();
+            Assert.That(modelDescriptor, Is.Not.Null);
+            Assert.That(modelDescriptor.SimpleName, Is.EqualTo(type.Name));
+            Assert.That(modelDescriptor.FullName, Is.EqualTo(type.FullName));
+            Assert.That(modelDescriptor.Properties, Is.Not.Null);
+            Assert.That(modelDescriptor.Properties.Count, Is.EqualTo(19));
+            IModelPropertyDescriptor<SqlCeConnectionStringBuilder> modelPropertyDescriptor =
+                modelDescriptor[nameof(SqlCeConnectionStringBuilder.ConnectionString)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(SqlCeConnectionStringBuilder.DataSource)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+        }
+
+        [Test]
+        public void OdbcConnectionStringModelDescriptionBuilderTest()
+        {
+            Type type = typeof(OdbcConnectionStringBuilder);
+            OdbcConnectionStringModelDescriptionBuilder builder = new OdbcConnectionStringModelDescriptionBuilder();
+            ModelDescriptor<OdbcConnectionStringBuilder> modelDescriptor = builder.Build();
+            Assert.That(modelDescriptor, Is.Not.Null);
+            Assert.That(modelDescriptor.SimpleName, Is.EqualTo(type.Name));
+            Assert.That(modelDescriptor.FullName, Is.EqualTo(type.FullName));
+            Assert.That(modelDescriptor.Properties, Is.Not.Null);
+            Assert.That(modelDescriptor.Properties.Count, Is.EqualTo(3));
+            IModelPropertyDescriptor<OdbcConnectionStringBuilder> modelPropertyDescriptor =
+                modelDescriptor[nameof(OdbcConnectionStringBuilder.ConnectionString)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(OdbcConnectionStringBuilder.Driver)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(OdbcConnectionStringBuilder.Dsn)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+        }
+
+        [Test]
+        public void OleDbConnectionStringModelDescriptionBuilderTest()
+        {
+            Type type = typeof(OleDbConnectionStringBuilder);
+            OleDbConnectionStringModelDescriptionBuilder builder = new OleDbConnectionStringModelDescriptionBuilder();
+            ModelDescriptor<OleDbConnectionStringBuilder> modelDescriptor = builder.Build();
+            Assert.That(modelDescriptor, Is.Not.Null);
+            Assert.That(modelDescriptor.SimpleName, Is.EqualTo(type.Name));
+            Assert.That(modelDescriptor.FullName, Is.EqualTo(type.FullName));
+            Assert.That(modelDescriptor.Properties, Is.Not.Null);
+            Assert.That(modelDescriptor.Properties.Count, Is.EqualTo(6));
+            IModelPropertyDescriptor<OleDbConnectionStringBuilder> modelPropertyDescriptor =
+                modelDescriptor[nameof(OleDbConnectionStringBuilder.ConnectionString)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(OleDbConnectionStringBuilder.DataSource)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(OleDbConnectionStringBuilder.FileName)];
+            Assert.That(modelPropertyDescriptor, Is.Not.Null);
+            Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
+
+            modelPropertyDescriptor = modelDescriptor[nameof(OleDbConnectionStringBuilder.Provider)];
             Assert.That(modelPropertyDescriptor, Is.Not.Null);
             Assert.That(modelPropertyDescriptor.ValidationAttributes.OfType<RequiredAttribute>().Any(), Is.True);
         }
