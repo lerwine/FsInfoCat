@@ -1,11 +1,8 @@
-using FsInfoCat.Collections;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading;
 
 namespace FsInfoCat.ComponentSupport
 {
@@ -36,7 +33,7 @@ namespace FsInfoCat.ComponentSupport
                 base.InsertItem(index, item);
                 if (oldIndex >= 0)
                     RemoveItem((oldIndex < index) ? oldIndex : oldIndex + 1);
-             }
+            }
         }
 
         protected override void SetItem(int index, Item item)

@@ -1,11 +1,12 @@
 using FsInfoCat.Collections;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace FsInfoCat.ComponentSupport
 {
+    /// <summary>
+    /// Wraps a list of <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> objects, presenting them as a list of string messages.
+    /// </summary>
+    /// <seealso cref="DerivedListBase{ValidationResultCollection.Item, string}" />
     public class ValidationMessageCollection : DerivedListBase<ValidationResultCollection.Item, string>
     {
         internal ValidationMessageCollection(ValidationResultCollection source) : base(source, StringComparer.InvariantCultureIgnoreCase) { }
