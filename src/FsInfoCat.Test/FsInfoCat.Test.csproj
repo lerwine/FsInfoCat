@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj" />
+    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
   </ItemGroup>
 
   <ItemGroup>

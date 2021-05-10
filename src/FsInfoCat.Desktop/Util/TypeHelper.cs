@@ -258,6 +258,7 @@ namespace FsInfoCat.Desktop.Util
             });
         }
 
+        [Obsolete("Use FsInfoCat.Collections.CollectionExtensions.FindPrimeNumber, instead.")]
         public static int FindPrimeNumber(int startValue)
         {
             try
@@ -271,6 +272,7 @@ namespace FsInfoCat.Desktop.Util
             return startValue;
         }
 
+        [Obsolete("Use FsInfoCat.Collections.CollectionExtensions.IsPrimeNumber, instead.")]
         public static bool IsPrimeNumber(int n)
         {
             if (((n = Math.Abs(n)) & 1) == 0)
@@ -283,8 +285,10 @@ namespace FsInfoCat.Desktop.Util
             return true;
         }
 
+        [Obsolete("Use FsInfoCat.Collections.CollectionExtensions.CoerceAsArray, instead.")]
         public static T[] CoerceAsArray<T>(this IEnumerable<T> source) => (source is null) ? Array.Empty<T>() : (source is T[] a) ? a : source.ToArray();
 
+        [Obsolete("Use FsInfoCat.Collections.CollectionExtensions.ToAggregateHashCode, instead.")]
         public static int ToAggregateHashCode(this IEnumerable<int> hashCodes)
         {
             int[] arr = hashCodes.CoerceAsArray();
@@ -303,6 +307,7 @@ namespace FsInfoCat.Desktop.Util
             });
         }
 
+        [Obsolete("Use FsInfoCat.Collections.CollectionExtensions.GetAggregateHashCode, instead.")]
         public static int GetAggregateHashCode<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
         {
             if (source is null || !source.Any())
