@@ -26,6 +26,7 @@ namespace FsInfoCat.ComponentSupport
 
         internal class PropertyBuilder<TValue>
         {
+            internal IEqualityComparer<TValue> Comparer { get; }
             internal PropertyDescriptor Descriptor { get; }
             internal ModelDescriptor<TModel> Owner { get; }
 

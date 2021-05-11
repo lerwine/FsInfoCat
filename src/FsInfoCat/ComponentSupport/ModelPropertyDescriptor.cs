@@ -74,9 +74,12 @@ namespace FsInfoCat.ComponentSupport
 
     internal sealed class ModelPropertyDescriptor<TModel, TValue> : ModelPropertyDescriptor<TModel>, IModelPropertyDescriptor<TModel, TValue> where TModel : class
     {
+        internal IEqualityComparer<TValue> Comparer { get; }
+
         internal ModelPropertyDescriptor(ModelDescriptorBuilder<TModel>.PropertyBuilder<TValue> builder)
             : base(builder.Owner, builder.Descriptor, builder.GetValidationAttributes())
         {
+            Comparer = builder.Comparer;
         }
 
         public TValue GetValue(TModel model) => (TValue)Descriptor.GetValue(model);

@@ -8,8 +8,12 @@ namespace FsInfoCat.ComponentSupport
 {
     internal sealed class PropertyContext<TModel, TValue> : IModelPropertyContext<TModel, TValue>, ITypeDescriptorContext where TModel : class
     {
+        private IEqualityComparer<TValue> _comparer;
         private readonly TypeConverter _converter;
+        private TValue _previousValue;
         private readonly PropertyDescriptor _propertyDescriptor;
+        private readonly ValidationResultCollection _validationResults = new ValidationResultCollection();
+        private readonly ValidationMessageCollection _errorMessages;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
@@ -31,7 +35,30 @@ namespace FsInfoCat.ComponentSupport
 
         IModelPropertyDescriptor IModelPropertyContext.Descriptor => Descriptor;
 
-        public TValue Value { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public TValue Value
+        {
+            get
+            {
+                TValue currentValue = (TValue)_propertyDescriptor.GetValue(Owner.Instance);
+                if (!_comparer.Equals(currentValue, _previousValue))
+                {
+                    _previousValue = currentValue;
+                    RaiseValueChanged();
+                }
+                return currentValue;
+            }
+
+            set
+            {
+                if (_comparer.Equals(value, _previousValue))
+                    _previousValue = value;
+                else
+                {
+                    _previousValue = value;
+                    RaiseValueChanged();
+                }
+            }
+        }
 
         object IModelPropertyContext.Value => throw new NotImplementedException();
 
@@ -61,7 +88,7 @@ namespace FsInfoCat.ComponentSupport
 
         public bool AreStandardValuesSupported => _converter.GetStandardValuesSupported(this);
 
-        public bool HasErrors => throw new NotImplementedException();
+        public bool HasErrors { get; private set; }
 
         IContainer ITypeDescriptorContext.Container => null;
 
@@ -73,7 +100,10 @@ namespace FsInfoCat.ComponentSupport
         {
             Owner = owner;
             Descriptor = descriptor;
+            _comparer = descriptor.Comparer ?? EqualityComparer<TValue>.Default;
             _converter = (_propertyDescriptor = descriptor.Descriptor).Converter;
+            _previousValue = (TValue)_propertyDescriptor.GetValue(Owner.Instance);
+            _errorMessages = new ValidationMessageCollection(_validationResults);
             ObservableCollection<TValue> collection = new ObservableCollection<TValue>();
             if (_converter.GetStandardValuesSupported(this))
             {
@@ -88,6 +118,17 @@ namespace FsInfoCat.ComponentSupport
                 }
             }
             StandardValues = new ReadOnlyObservableCollection<TValue>(collection);
+            HasErrors = _validationResults.Count > 0;
+        }
+
+        private void RaiseValueChanged()
+        {
+            RaisePropertyChanged(nameof(Value));
+        }
+
+        private void RaisePropertyChanged(string propertyName)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable GetErrors(string propertyName)
