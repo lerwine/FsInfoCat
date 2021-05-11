@@ -8,9 +8,13 @@ namespace FsInfoCat.ComponentSupport
 {
     internal sealed class PropertyContext<TModel, TValue> : IModelPropertyContext<TModel, TValue>, ITypeDescriptorContext where TModel : class
     {
+        private readonly TypeConverter _converter;
+        private readonly PropertyDescriptor _propertyDescriptor;
+
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
+        // TODO: Change this to items that contain the actual value as well as a string representation.
         public ReadOnlyObservableCollection<TValue> StandardValues { get; }
 
         IReadOnlyList<TValue> ITypedModelPropertyContext<TValue>.StandardValues => StandardValues;
@@ -18,9 +22,6 @@ namespace FsInfoCat.ComponentSupport
         ICollection IModelPropertyContext.StandardValues => StandardValues;
 
         internal ModelPropertyDescriptor<TModel, TValue> Descriptor { get; }
-
-        private readonly TypeConverter _converter;
-        private readonly PropertyDescriptor _propertyDescriptor;
 
         IModelPropertyDescriptor<TModel, TValue> IModelPropertyContext<TModel, TValue>.Descriptor => Descriptor;
 
