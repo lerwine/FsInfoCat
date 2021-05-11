@@ -3,27 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading;
 
 namespace FsInfoCat.ComponentSupport
 {
     internal sealed class PropertyContext<TModel, TValue> : IModelPropertyContext<TModel, TValue>, ITypeDescriptorContext where TModel : class
     {
+        private readonly object _syncRoot = new object();
         private IEqualityComparer<TValue> _comparer;
         private readonly TypeConverter _converter;
+        private string _textValue;
+        private ConversionValidationResult _conversionError;
         private TValue _previousValue;
         private readonly PropertyDescriptor _propertyDescriptor;
         private readonly ValidationResultCollection _validationResults = new ValidationResultCollection();
         private readonly ValidationMessageCollection _errorMessages;
+        private event EventHandler _valueChanged;
 
+        public event ValueChangedEventHandler<TValue> ValueChanged;
+        event EventHandler IModelPropertyContext.ValueChanged
+        {
+            add => _valueChanged += value;
+            remove => _valueChanged -= value;
+        }
+
+        public event ValueChangedEventHandler<bool> HasErrorsChanged;
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        // TODO: Change this to items that contain the actual value as well as a string representation.
-        public ReadOnlyObservableCollection<TValue> StandardValues { get; }
+        public ReadOnlyObservableCollection<DisplayValue<TValue>> StandardValues { get; }
 
-        IReadOnlyList<TValue> ITypedModelPropertyContext<TValue>.StandardValues => StandardValues;
+        IReadOnlyList<IDisplayValue<TValue>> ITypedModelPropertyContext<TValue>.StandardValues => StandardValues;
 
-        ICollection IModelPropertyContext.StandardValues => StandardValues;
+        IReadOnlyList<IDisplayValue> IModelPropertyContext.StandardValues => StandardValues;
 
         internal ModelPropertyDescriptor<TModel, TValue> Descriptor { get; }
 
@@ -35,32 +49,93 @@ namespace FsInfoCat.ComponentSupport
 
         IModelPropertyDescriptor IModelPropertyContext.Descriptor => Descriptor;
 
-        public TValue Value
+        public string TextValue
         {
             get
             {
-                TValue currentValue = (TValue)_propertyDescriptor.GetValue(Owner.Instance);
-                if (!_comparer.Equals(currentValue, _previousValue))
-                {
-                    _previousValue = currentValue;
-                    RaiseValueChanged();
-                }
-                return currentValue;
+                CheckUpdateValue((TValue)_propertyDescriptor.GetValue(Owner.Instance));
+                return _textValue;
             }
-
             set
             {
-                if (_comparer.Equals(value, _previousValue))
-                    _previousValue = value;
-                else
+                string textValue = value ?? "";
+                bool raiseValueChanged;
+                ConversionValidationResult oldConversionError;
+                ConversionValidationResult newConversionError;
+                Monitor.Enter(_syncRoot);
+                TValue newValue;
+                TValue oldValue = newValue = _previousValue;
+                try
                 {
-                    _previousValue = value;
-                    RaiseValueChanged();
+                    if (textValue.Equals(_textValue))
+                        return;
+                    _textValue = textValue;
+                    oldConversionError = _conversionError;
+                    _conversionError = null;
+                    try
+                    {
+                        newValue = (TValue)((_useInvariantStringConversion) ? _converter.ConvertFromInvariantString(this, textValue) : _converter.ConvertFromString(this, textValue));
+                        raiseValueChanged = !_comparer.Equals(newValue, _previousValue);
+                        _previousValue = newValue;
+                        newConversionError = null;
+                    }
+                    catch
+                    {
+                        newValue = _previousValue;
+                        raiseValueChanged = false;
+                        _conversionError = newConversionError = new ConversionValidationResult();
+                    }
                 }
+                finally { Monitor.Exit(_syncRoot); }
+
+                if (newConversionError is null)
+                    try
+                    {
+                        if (!(oldConversionError is null))
+                            _validationResults.Remove(oldConversionError);
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            if (raiseValueChanged)
+                                RaiseValueChanged(oldValue, newValue);
+                        }
+                        finally { RaisePropertyChanged(nameof(TextValue)); }
+                    }
+                else
+                    try
+                    {
+                        try
+                        {
+                            if (raiseValueChanged)
+                                RaiseValueChanged(oldValue, newValue);
+                        }
+                        finally { RaisePropertyChanged(nameof(TextValue)); }
+                    }
+                    finally
+                    {
+                        _validationResults.Add(newConversionError);
+                        if (!(oldConversionError is null))
+                            _validationResults.Remove(oldConversionError);
+                    }
             }
         }
 
-        object IModelPropertyContext.Value => throw new NotImplementedException();
+        public TValue RawValue
+        {
+            get
+            {
+                TValue value = (TValue)_propertyDescriptor.GetValue(Owner.Instance);
+                CheckUpdateValue(value);
+                return value;
+            }
+            set => CheckUpdateValue(value);
+        }
+
+        object IModelPropertyContext.RawValue => RawValue;
+
+        private readonly bool _useInvariantStringConversion;
 
         internal ModelContext<TModel> Owner { get; }
 
@@ -96,44 +171,182 @@ namespace FsInfoCat.ComponentSupport
 
         PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor => _propertyDescriptor;
 
+        ReadOnlyObservableCollection<IDisplayValue<TValue>> IModelPropertyContext<TModel, TValue>.StandardValues => throw new NotImplementedException();
+
         internal PropertyContext(ModelContext<TModel> owner, ModelPropertyDescriptor<TModel, TValue> descriptor)
         {
+            _useInvariantStringConversion = descriptor.UseInvariantStringConversion;
             Owner = owner;
             Descriptor = descriptor;
             _comparer = descriptor.Comparer ?? EqualityComparer<TValue>.Default;
             _converter = (_propertyDescriptor = descriptor.Descriptor).Converter;
             _previousValue = (TValue)_propertyDescriptor.GetValue(Owner.Instance);
             _errorMessages = new ValidationMessageCollection(_validationResults);
-            ObservableCollection<TValue> collection = new ObservableCollection<TValue>();
+            ObservableCollection<DisplayValue<TValue>> standardValues = new ObservableCollection<DisplayValue<TValue>>();
             if (_converter.GetStandardValuesSupported(this))
             {
-                TypeConverter.StandardValuesCollection standardValues = _converter.GetStandardValues(this);
-                if (!(standardValues is null))
+                TypeConverter.StandardValuesCollection svc = _converter.GetStandardValues(this);
+                if (!(svc is null))
                 {
-                    foreach (object obj in standardValues)
-                    {
-                        if (obj is TValue v)
-                            collection.Add(v);
-                    }
+                    if (_useInvariantStringConversion)
+                        foreach (object obj in svc)
+                        {
+                            if (obj is TValue value)
+                                standardValues.Add(new DisplayValue<TValue>(value, _converter.ConvertToInvariantString(this, value)));
+                        }
+                    else
+                        foreach (object obj in svc)
+                        {
+                            if (obj is TValue value)
+                                standardValues.Add(new DisplayValue<TValue>(value, _converter.ConvertToString(this, value)));
+                        }
                 }
             }
-            StandardValues = new ReadOnlyObservableCollection<TValue>(collection);
+            StandardValues = new ReadOnlyObservableCollection<DisplayValue<TValue>>(standardValues);
+            Validate((TValue)_propertyDescriptor.GetValue(Owner.Instance));
             HasErrors = _validationResults.Count > 0;
+            _validationResults.CollectionChanged += ValidationResults_CollectionChanged;
         }
 
-        private void RaiseValueChanged()
+        public ValidationResult[] Validate()
         {
-            RaisePropertyChanged(nameof(Value));
+            CheckUpdateValue((TValue)_propertyDescriptor.GetValue(Owner.Instance));
+            return _validationResults.Cast<ValidationResult>().ToArray();
         }
 
-        private void RaisePropertyChanged(string propertyName)
+        public ValidationResult[] Revalidate()
         {
-            throw new NotImplementedException();
+            TValue value = (TValue)_propertyDescriptor.GetValue(Owner.Instance);
+            if (!CheckUpdateValue(value))
+                Validate(value);
+            return _validationResults.Cast<ValidationResult>().ToArray();
         }
+
+        private bool CheckUpdateValue(TValue newValue)
+        {
+            ConversionValidationResult oldConversionError;
+            bool valueChanged;
+            bool textChanged;
+            TValue oldValue;
+            Monitor.Enter(_syncRoot);
+            try
+            {
+                oldValue = _previousValue;
+                valueChanged = !_comparer.Equals(newValue, oldValue);
+                _previousValue = newValue;
+                oldConversionError = _conversionError;
+                _conversionError = null;
+                if (valueChanged)
+                {
+                    string textValue;
+                    try { textValue = _useInvariantStringConversion ? _converter.ConvertToInvariantString(this, newValue) : _converter.ConvertToString(this, newValue); }
+                    catch
+                    {
+                        try { textValue = newValue.ToString(); } catch { textValue = ""; }
+                    }
+                    textChanged = !textValue.Equals(_textValue);
+                    _textValue = textValue;
+                }
+                else
+                    textChanged = !(oldConversionError is null);
+            }
+            finally { Monitor.Exit(_syncRoot); }
+            try
+            {
+                try
+                {
+                    if (valueChanged)
+                        RaiseValueChanged(oldValue, newValue);
+                }
+                finally
+                {
+                    if (textChanged)
+                        RaisePropertyChanged(nameof(TextValue));
+                }
+            }
+            finally
+            {
+                if (!(oldConversionError is null))
+                    _validationResults.Remove(oldConversionError);
+            }
+            return valueChanged;
+        }
+
+        private void RaiseValueChanged(TValue oldValue, TValue newValue)
+        {
+            try
+            {
+                try { RaisePropertyChanged(nameof(RawValue)); }
+                finally
+                {
+                    ValueChangedEventArgs<TValue> args = new ValueChangedEventArgs<TValue>(oldValue, newValue);
+                    ValueChanged?.Invoke(this, args);
+                    _valueChanged?.Invoke(this, args);
+                }
+            }
+            finally { Validate(newValue); }
+        }
+
+        private void Validate(TValue value)
+        {
+            if (Descriptor.ValidationAttributes.Count == 0)
+            {
+                if (_validationResults.Count > 0)
+                    _validationResults.Clear();
+            }
+            else
+                Validator.TryValidateValue(value, new ValidationContext(this), _validationResults, Descriptor.ValidationAttributes);
+        }
+
+        private void ValidationResults_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            bool hasErrorsChanged;
+            if (_validationResults.Count > 0)
+            {
+                if (HasErrors)
+                    hasErrorsChanged = false;
+                else
+                    HasErrors = hasErrorsChanged = true;
+            }
+            else
+            {
+                hasErrorsChanged = HasErrors;
+                HasErrors = false;
+            }
+
+            try
+            {
+                EventHandler<DataErrorsChangedEventArgs> errorsChanged = ErrorsChanged;
+                if (!(errorsChanged is null))
+                    try { errorsChanged.Invoke(this, new DataErrorsChangedEventArgs(nameof(RawValue))); }
+                    finally { errorsChanged.Invoke(this, new DataErrorsChangedEventArgs(nameof(TextValue))); }
+            }
+            finally
+            {
+                if (hasErrorsChanged)
+                    RaiseHasErrorsChanged(HasErrors);
+            }
+        }
+
+        private void RaiseHasErrorsChanged(bool hasErrors)
+        {
+            try { RaisePropertyChanged(nameof(HasErrors)); }
+            finally { HasErrorsChanged?.Invoke(this, new ValueChangedEventArgs<bool>(!hasErrors, hasErrors)); }
+        }
+
+        private void RaisePropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public IEnumerable GetErrors(string propertyName)
         {
-            throw new NotImplementedException();
+            if (propertyName is null)
+                return null;
+            switch (propertyName)
+            {
+                case nameof(TextValue):
+                case nameof(RawValue):
+                    return _errorMessages;
+            }
+            return null;
         }
 
         void ITypeDescriptorContext.OnComponentChanged() { }
@@ -141,5 +354,10 @@ namespace FsInfoCat.ComponentSupport
         bool ITypeDescriptorContext.OnComponentChanging() => false;
 
         object IServiceProvider.GetService(Type serviceType) => null;
+
+        private class ConversionValidationResult : ValidationResult
+        {
+            internal ConversionValidationResult() : base("Invalid format", new string[] { nameof(TextValue) }) { }
+        }
     }
 }

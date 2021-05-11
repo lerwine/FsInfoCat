@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace FsInfoCat.ComponentSupport
 {
@@ -11,6 +12,8 @@ namespace FsInfoCat.ComponentSupport
         internal ModelDescriptor<TModel> Owner { get; }
 
         internal PropertyDescriptor Descriptor { get; }
+
+        public bool UseInvariantStringConversion { get; }
 
         public ReadOnlyCollection<ValidationAttribute> ValidationAttributes { get; }
 
@@ -56,11 +59,12 @@ namespace FsInfoCat.ComponentSupport
 
         public bool AreStandardValuesSupported => Descriptor.Converter.GetCreateInstanceSupported();
 
-        protected ModelPropertyDescriptor(ModelDescriptor<TModel> owner, PropertyDescriptor descriptor, IList<ValidationAttribute> validationAttributes)
+        protected ModelPropertyDescriptor(PropertyBuilder<TModel> builder)
         {
-            Descriptor = descriptor;
-            Owner = owner;
-            ValidationAttributes = new ReadOnlyCollection<ValidationAttribute>(validationAttributes);
+            UseInvariantStringConversion = builder.UseInvariantStringConversion;
+            Descriptor = builder.Descriptor;
+            Owner = builder.Owner;
+            ValidationAttributes = new ReadOnlyCollection<ValidationAttribute>(builder.ValidationAttributes.ToArray());
         }
 
         internal abstract IModelPropertyContext<TModel> CreateContext(ModelContext<TModel> owner);
@@ -76,10 +80,10 @@ namespace FsInfoCat.ComponentSupport
     {
         internal IEqualityComparer<TValue> Comparer { get; }
 
-        internal ModelPropertyDescriptor(ModelDescriptorBuilder<TModel>.PropertyBuilder<TValue> builder)
-            : base(builder.Owner, builder.Descriptor, builder.GetValidationAttributes())
+        internal ModelPropertyDescriptor(PropertyBuilder<TModel, TValue> builder)
+            : base(builder)
         {
-            Comparer = builder.Comparer;
+            Comparer = builder.Comparer ?? EqualityComparer<TValue>.Default;
         }
 
         public TValue GetValue(TModel model) => (TValue)Descriptor.GetValue(model);

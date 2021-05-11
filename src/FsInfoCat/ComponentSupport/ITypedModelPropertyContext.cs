@@ -4,9 +4,11 @@ namespace FsInfoCat.ComponentSupport
 {
     public interface ITypedModelPropertyContext<TValue> : ITypedModelProperty<TValue>, IModelPropertyContext
     {
-        new TValue Value { get; set; }
+        new event ValueChangedEventHandler<TValue> ValueChanged;
 
-        new IReadOnlyList<TValue> StandardValues { get; }
+        new TValue RawValue { get; set; }
+
+        new IReadOnlyList<IDisplayValue<TValue>> StandardValues { get; }
 
         new ITypedModelPropertyDescriptor<TValue> Descriptor { get; }
     }
