@@ -2,6 +2,9 @@ using System;
 
 namespace FsInfoCat.ComponentSupport
 {
+    /// <summary>
+    /// Describes a property of a model object type.
+    /// </summary>
     public interface IModelProperty
     {
         /// <summary>
@@ -69,19 +72,34 @@ namespace FsInfoCat.ComponentSupport
         /// Indicates whether this property's type supports a standard set of values that can be picked from a list.
         /// </summary>
         /// <value>
-        ///   <see langword="true" /> if <see cref="GetStandardValues" /> should be called to find a common set of values the property supports; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if <see cref="GetStandardValues" /> should be called to find a common set of values the property supports; otherwise, <see langword="false" />.
         /// </value>
         bool AreStandardValuesSupported { get; }
 
+        /// <summary>
+        /// Describes the model type that owns this property.
+        /// </summary>
         IModelDescriptor Owner { get; }
     }
 
+    /// <summary>
+    /// Describes a property of a model object type.
+    /// </summary>
+    /// <typeparam name="TModel">The type of model that owns the property.</typeparam>
     public interface IModelProperty<TModel> : IModelProperty
         where TModel : class
     {
+        /// <summary>
+        /// Describes the model type that owns this property.
+        /// </summary>
         new IModelDescriptor<TModel> Owner { get; }
     }
 
+    /// <summary>
+    /// Describes a property of a model object type.
+    /// </summary>
+    /// <typeparam name="TModel">The type of model that owns the property.</typeparam>
+    /// <typeparam name="TValue">The type of the property's value.</typeparam>
     public interface IModelProperty<TModel, TValue> : ITypedModelProperty<TValue>, IModelProperty<TModel>
         where TModel : class
     {

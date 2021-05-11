@@ -1,12 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.ComponentSupport
 {
-    public sealed class ModelDescriptorBuilder<TModel> where TModel : class
+    /// <summary>
+    /// Creates an instance of an <seealso cref="IModelTypeDescriptor{TModel}"/>, providing methods to customize the output.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the target object model.</typeparam>
+
+    public class ModelDescriptorBuilder<TModel> where TModel : class
     {
+        /// <summary>
+        /// The target object model type.
+        /// </summary>
         public Type ModelType { get; }
 
         public ModelDescriptorBuilder()
@@ -14,26 +22,33 @@ namespace FsInfoCat.ComponentSupport
             ModelType = typeof(TModel);
         }
 
-        public IModelTypeDescriptor<TModel> Build()
+        /// <summary>
+        /// Set options for the property of a model.
+        /// </summary>
+        /// <param name="propertyBuilder">The <see cref="IPropertyBuilder{TOwner, TValue}"/> that is about to be added.</param>
+        protected virtual void SetPropertyOptions(IPropertyBuilder<TModel> propertyBuilder)
         {
-            throw new NotImplementedException();
+            propertyBuilder.IgnoreProperty = propertyBuilder.Descriptor.DesignTimeOnly;
         }
 
-        internal IList<ModelPropertyDescriptor<TModel>> BuildProperties()
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// Create a new <see cref="IModelTypeDescriptor{TModel}"/> instance.
+        /// </summary>
+        /// <returns>The new <see cref="IModelTypeDescriptor{TModel}"/> instance.</returns>
+        public IModelTypeDescriptor<TModel> Build() => new ModelDescriptor<TModel>(this);
 
-        internal class PropertyBuilder<TValue>
+        internal IList<ModelPropertyDescriptor<TModel>> BuildProperties(ModelDescriptor<TModel> owner)
         {
-            internal IEqualityComparer<TValue> Comparer { get; }
-            internal PropertyDescriptor Descriptor { get; }
-            internal ModelDescriptor<TModel> Owner { get; }
-
-            internal IList<ValidationAttribute> GetValidationAttributes()
+            Collection<ModelPropertyDescriptor<TModel>> properties = new Collection<ModelPropertyDescriptor<TModel>>();
+            foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(ModelType))
             {
-                throw new NotImplementedException();
+                PropertyBuilder<TModel>  builder = (PropertyBuilder<TModel>)Activator.CreateInstance(typeof(PropertyBuilder<,>).MakeGenericType(ModelType, propertyDescriptor.PropertyType), new object[] { owner, propertyDescriptor });
+                SetPropertyOptions(builder);
+                if (!builder.IgnoreProperty)
+                    properties.Add(builder.Build());
             }
+
+            return properties;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace FsInfoCat.ComponentSupport
 {
+#warning This will not work - using a proxy item will not allow custom ValidationResult types to be added
     public sealed class ValidationResultCollection : ObservableCollection<ValidationResultCollection.Item>, IList<ValidationResult>
     {
         public void Add(ValidationResult item) => base.Add(Item.AsComparableValidationResult(item));

@@ -22,13 +22,10 @@ namespace FsInfoCat.ComponentSupport
         internal ModelDescriptor(ModelDescriptorBuilder<TModel> builder)
         {
             ModelType = builder.ModelType;
-            Properties = new ReadOnlyCollection<ModelPropertyDescriptor<TModel>>(builder.BuildProperties());
+            Properties = new ReadOnlyCollection<ModelPropertyDescriptor<TModel>>(builder.BuildProperties(this));
         }
 
-        internal ModelContext<TModel> CreateContext(TModel model)
-        {
-            throw new NotImplementedException();
-        }
+        internal ModelContext<TModel> CreateContext(TModel model) => new ModelContext<TModel>(this, model);
 
         IModelContext<TModel> IModelTypeDescriptor<TModel>.CreateContext(TModel model) => CreateContext(model);
 
