@@ -1,4 +1,6 @@
 using FsInfoCat.Providers;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 
@@ -6,6 +8,14 @@ namespace FsInfoCat
 {
     public static class Extensions
     {
+        public static readonly IServiceProvider ServiceProvider = new ServiceCollection()
+            .AddSingleton<Services.IComparisonService, Internal.ComparisonService>()
+            .AddSingleton<Services.ISuspendable, Internal.Suspendable>()
+            .AddSingleton<Services.ISuspendableService, Internal.SuspendableService>()
+            .BuildServiceProvider();
+
+        public static bool IsNullableType(this Type type) => !(type is null) && type.IsValueType && type.IsGenericType && typeof(Nullable<>).Equals(type.GetGenericTypeDefinition());
+
         public static bool IsSelfEquatable(this Type type)
         {
             if (type is null)
