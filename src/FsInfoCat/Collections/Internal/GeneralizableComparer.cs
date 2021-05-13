@@ -2,26 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace FsInfoCat.Collections
+namespace FsInfoCat.Collections.Internal
 {
-    public class GeneralizableComparer<T> : IGeneralizableComparer<T>
+    internal class GeneralizableComparer<T> : IGeneralizableComparer<T>
     {
-        public static readonly IGeneralizableComparer<T> Default;
         private readonly IComparer<T> _typedComparer;
         private readonly IComparer _genericComparer;
 
-        static GeneralizableComparer()
+        internal GeneralizableComparer(IComparer<T> comparer)
         {
-            Type type = typeof(T);
-            if (type.Equals(typeof(string)))
-                Default = (IGeneralizableComparer<T>)Activator.CreateInstance(typeof(GeneralizableComparer<>).MakeGenericType(type), new object[] { StringComparer.InvariantCulture });
-            else
-                Default = (IGeneralizableComparer<T>)Activator.CreateInstance(typeof(GeneralizableComparer<>).MakeGenericType(type), new object[] { Comparer<T>.Default });
+            _typedComparer = comparer ?? Comparer<T>.Default;
+            _genericComparer = (comparer is IComparer g) ? g : new CoersionComparer(_typedComparer);
         }
 
-        public GeneralizableComparer() : this((IComparer<T>)null) { }
-
-        public GeneralizableComparer(IComparer comparer)
+        internal GeneralizableComparer(IComparer comparer)
         {
             if (comparer is null)
             {
@@ -36,12 +30,6 @@ namespace FsInfoCat.Collections
                 else
                     _typedComparer = Comparer<T>.Default;
             }
-        }
-
-        public GeneralizableComparer(IComparer<T> comparer)
-        {
-            _typedComparer = comparer ?? Comparer<T>.Default;
-            _genericComparer = (comparer is IComparer g) ? g : new CoersionComparer(_typedComparer);
         }
 
         public int Compare(T x, T y) => _typedComparer.Compare(x, y);

@@ -2,27 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace FsInfoCat.Collections
+namespace FsInfoCat.Collections.Internal
 {
-    public class GeneralizableOrderAndEqualityComparer<T> : IGeneralizableOrderAndEqualityComparer<T>
+    internal class GeneralizableOrderAndEqualityComparer<T> : IGeneralizableOrderAndEqualityComparer<T>
     {
-        public static readonly IGeneralizableOrderAndEqualityComparer<T> Default;
         private readonly IGeneralizableEqualityComparer<T> _equalityComparer;
         private readonly IGeneralizableComparer<T> _comparer;
 
-        static GeneralizableOrderAndEqualityComparer()
+        internal GeneralizableOrderAndEqualityComparer(IEqualityComparer<T> equalityComparer, IComparer<T> comparer)
         {
-            Type type = typeof(T);
-            if (type.Equals(typeof(string)))
-                Default = (IGeneralizableOrderAndEqualityComparer<T>)Activator.CreateInstance(typeof(GeneralizableOrderAndEqualityComparer<>).MakeGenericType(type), new object[] { StringComparer.InvariantCulture, StringComparer.InvariantCulture });
-            else
-                Default = (IGeneralizableOrderAndEqualityComparer<T>)Activator.CreateInstance(typeof(GeneralizableOrderAndEqualityComparer<>).MakeGenericType(type), new object[] { EqualityComparer<T>.Default, Comparer<T>.Default });
-        }
-
-        public GeneralizableOrderAndEqualityComparer(IEqualityComparer<T> equalityComparer, IComparer<T> comparer)
-        {
-            _equalityComparer = equalityComparer.ToGeneralizableEqualityComparer();
-            _comparer = comparer.ToGeneralizableComparer();
+            _equalityComparer = equalityComparer.ToGeneralizable();
+            _comparer = comparer.ToGeneralizable();
         }
 
         public int Compare(T x, T y) => _comparer.Compare(x, y);

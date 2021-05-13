@@ -11,6 +11,66 @@ namespace FsInfoCat.Collections
     /// </summary>
     public static class CollectionExtensions
     {
+        public static IEventSuspensionManager NewEventSuspensionManager() => new EventSuspensionManager();
+
+        public static IEqualityComparer<T> ToEqualityComparer<T>(this IComparer<T> comparer)
+        {
+            if (comparer is null)
+                return EqualityComparer<T>.Default;
+            if (comparer is IEqualityComparer<T> equalityComparer)
+                return equalityComparer;
+            return new Internal.ComparerToEqualityComparer<T>(comparer);
+        }
+
+        public static IGeneralizableOrderAndEqualityComparer<T> ToOrderAndEqualityComparer<T>(this IEqualityComparer<T> comparer)
+        {
+            if (comparer is null)
+                return Defaults<T>.OrderAndEqualityComparer;
+            if (comparer is IGeneralizableOrderAndEqualityComparer<T> g)
+                return g;
+            if (comparer is IComparer<T> c)
+                return new Internal.GeneralizableOrderAndEqualityComparer<T>(comparer, c);
+            return new Internal.GeneralizableOrderAndEqualityComparer<T>(comparer, null);
+        }
+
+        public static IGeneralizableOrderAndEqualityComparer<T> ToOrderAndEqualityComparer<T>(this IComparer<T> comparer)
+        {
+            if (comparer is null)
+                return Defaults<T>.OrderAndEqualityComparer;
+            if (comparer is IGeneralizableOrderAndEqualityComparer<T> g)
+                return g;
+            if (comparer is IEqualityComparer<T> c)
+                return new Internal.GeneralizableOrderAndEqualityComparer<T>(c, comparer);
+            return new Internal.GeneralizableOrderAndEqualityComparer<T>(null, comparer);
+        }
+
+        public static IGeneralizableEqualityComparer<T> ToGeneralizable<T>(this IEqualityComparer<T> comparer)
+        {
+            if (comparer is null)
+                return Defaults<T>.EqualityComparer;
+            if (comparer is IGeneralizableEqualityComparer<T> g)
+                return g;
+            return new Internal.GeneralizableEqualityComparer<T>(comparer);
+        }
+
+        public static IGeneralizableEqualityComparer<T> ToGeneralizableEqualityComparer<T>(this IComparer<T> comparer)
+        {
+            if (comparer is null)
+                return Defaults<T>.EqualityComparer;
+            if (comparer is IGeneralizableEqualityComparer<T> g)
+                return g;
+            return new Internal.GeneralizableEqualityComparer<T>(comparer);
+        }
+
+        public static IGeneralizableComparer<T> ToGeneralizable<T>(this IComparer<T> comparer)
+        {
+            if (comparer is null)
+                return Defaults<T>.Comparer;
+            if (comparer is IGeneralizableComparer<T> g)
+                return g;
+            return new Internal.GeneralizableComparer<T>(comparer);
+        }
+
         /// <summary>
         /// Finds the next prime number that is greater than or equal to the specified value.
         /// </summary>
@@ -264,6 +324,31 @@ namespace FsInfoCat.Collections
             IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
             return source.Skip(index).Take(count).Select((e, i) => new { E = e, I = i }).Where(a => comparer.Equals(a.E, item)).Select(a => a.I + index)
                 .DefaultIfEmpty(-1).Last();
+        }
+
+        public static class Defaults<T>
+        {
+            public static readonly IGeneralizableOrderAndEqualityComparer<T> OrderAndEqualityComparer;
+            public static readonly IGeneralizableEqualityComparer<T> EqualityComparer;
+            public static readonly IGeneralizableComparer<T> Comparer;
+
+            static Defaults()
+            {
+                Type type = typeof(T);
+                if (type.Equals(typeof(string)))
+                {
+                    OrderAndEqualityComparer = (IGeneralizableOrderAndEqualityComparer<T>)new Internal.GeneralizableOrderAndEqualityComparer<string>(StringComparer.InvariantCulture, StringComparer.InvariantCulture);
+                    EqualityComparer = (IGeneralizableEqualityComparer<T>)new Internal.GeneralizableEqualityComparer<string>((IEqualityComparer<string>)StringComparer.InvariantCulture);
+                    Comparer = (IGeneralizableComparer<T>)new Internal.GeneralizableComparer<string>((IComparer<string>)StringComparer.InvariantCulture);
+                }
+                else
+                {
+                    OrderAndEqualityComparer = new Internal.GeneralizableOrderAndEqualityComparer<T>(EqualityComparer<T>.Default, Comparer<T>.Default);
+                    EqualityComparer = new Internal.GeneralizableEqualityComparer<T>((IEqualityComparer<T>)EqualityComparer<T>.Default);
+                    Comparer = new Internal.GeneralizableComparer<T>((IComparer<T>)Comparer<T>.Default);
+                }
+            }
+
         }
     }
 }

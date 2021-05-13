@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,11 +12,12 @@ namespace FsInfoCat.ComponentSupport
 {
     internal sealed class PropertyContext<TModel, TValue> : IModelPropertyContext<TModel, TValue>, ITypeDescriptorContext where TModel : class
     {
+        private const string ErrorMessage_Invalid_Format = "Invalid Format";
         private readonly object _syncRoot = new object();
         private IEqualityComparer<TValue> _comparer;
         private readonly TypeConverter _converter;
         private string _textValue;
-        private ConversionValidationResult _conversionError;
+        private bool _hasConvertFromStringError;
         private TValue _previousValue;
         private readonly PropertyDescriptor _propertyDescriptor;
         private readonly ValidationResultCollection _validationResults = new ValidationResultCollection();
@@ -30,7 +32,9 @@ namespace FsInfoCat.ComponentSupport
         }
 
         public event ValueChangedEventHandler<bool> HasErrorsChanged;
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         public ReadOnlyObservableCollection<DisplayValue<TValue>> StandardValues { get; }
@@ -59,9 +63,7 @@ namespace FsInfoCat.ComponentSupport
             set
             {
                 string textValue = value ?? "";
-                bool raiseValueChanged;
-                ConversionValidationResult oldConversionError;
-                ConversionValidationResult newConversionError;
+                bool raiseValueChanged, hadConversionError;
                 Monitor.Enter(_syncRoot);
                 TValue newValue;
                 TValue oldValue = newValue = _previousValue;
@@ -69,56 +71,38 @@ namespace FsInfoCat.ComponentSupport
                 {
                     if (textValue.Equals(_textValue))
                         return;
+                    hadConversionError = _hasConvertFromStringError;
                     _textValue = textValue;
-                    oldConversionError = _conversionError;
-                    _conversionError = null;
                     try
                     {
                         newValue = (TValue)((_useInvariantStringConversion) ? _converter.ConvertFromInvariantString(this, textValue) : _converter.ConvertFromString(this, textValue));
                         raiseValueChanged = !_comparer.Equals(newValue, _previousValue);
                         _previousValue = newValue;
-                        newConversionError = null;
+                        _hasConvertFromStringError = false;
+
                     }
                     catch
                     {
                         newValue = _previousValue;
                         raiseValueChanged = false;
-                        _conversionError = newConversionError = new ConversionValidationResult();
+                        _hasConvertFromStringError = true;
                     }
                 }
                 finally { Monitor.Exit(_syncRoot); }
 
-                if (newConversionError is null)
-                    try
+                try
+                {
+                    if (raiseValueChanged)
+                        RaiseValueChanged(oldValue, newValue);
+                    else if (_hasConvertFromStringError)
                     {
-                        if (!(oldConversionError is null))
-                            _validationResults.Remove(oldConversionError);
+                        if (!hadConversionError)
+                            _validationResults.SetSingle(new ValidationResult(ErrorMessage_Invalid_Format));
                     }
-                    finally
-                    {
-                        try
-                        {
-                            if (raiseValueChanged)
-                                RaiseValueChanged(oldValue, newValue);
-                        }
-                        finally { RaisePropertyChanged(nameof(TextValue)); }
-                    }
-                else
-                    try
-                    {
-                        try
-                        {
-                            if (raiseValueChanged)
-                                RaiseValueChanged(oldValue, newValue);
-                        }
-                        finally { RaisePropertyChanged(nameof(TextValue)); }
-                    }
-                    finally
-                    {
-                        _validationResults.Add(newConversionError);
-                        if (!(oldConversionError is null))
-                            _validationResults.Remove(oldConversionError);
-                    }
+                    else if (hadConversionError)
+                        _validationResults.Clear();
+                }
+                finally { RaisePropertyChanged(nameof(TextValue)); }
             }
         }
 
@@ -224,18 +208,18 @@ namespace FsInfoCat.ComponentSupport
 
         private bool CheckUpdateValue(TValue newValue)
         {
-            ConversionValidationResult oldConversionError;
             bool valueChanged;
             bool textChanged;
             TValue oldValue;
+            bool hadConversionError;
             Monitor.Enter(_syncRoot);
             try
             {
+                hadConversionError = _hasConvertFromStringError;
+                _hasConvertFromStringError = false;
                 oldValue = _previousValue;
                 valueChanged = !_comparer.Equals(newValue, oldValue);
                 _previousValue = newValue;
-                oldConversionError = _conversionError;
-                _conversionError = null;
                 if (valueChanged)
                 {
                     string textValue;
@@ -248,26 +232,20 @@ namespace FsInfoCat.ComponentSupport
                     _textValue = textValue;
                 }
                 else
-                    textChanged = !(oldConversionError is null);
+                    textChanged = false;
             }
             finally { Monitor.Exit(_syncRoot); }
             try
             {
-                try
-                {
-                    if (valueChanged)
-                        RaiseValueChanged(oldValue, newValue);
-                }
-                finally
-                {
-                    if (textChanged)
-                        RaisePropertyChanged(nameof(TextValue));
-                }
+                if (valueChanged)
+                    RaiseValueChanged(oldValue, newValue);
+                else if (hadConversionError)
+                    _validationResults.Clear();
             }
             finally
             {
-                if (!(oldConversionError is null))
-                    _validationResults.Remove(oldConversionError);
+                if (textChanged)
+                    RaisePropertyChanged(nameof(TextValue));
             }
             return valueChanged;
         }
@@ -295,25 +273,46 @@ namespace FsInfoCat.ComponentSupport
                     _validationResults.Clear();
             }
             else
-                Validator.TryValidateValue(value, new ValidationContext(this), _validationResults, Descriptor.ValidationAttributes);
+            {
+                Collection<ValidationResult> validationResults = new Collection<ValidationResult>();
+                Validator.TryValidateValue(value, new ValidationContext(this), validationResults, Descriptor.ValidationAttributes);
+                _validationResults.SetItems(validationResults);
+            }
         }
 
-        private void ValidationResults_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ValidationResults_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             bool hasErrorsChanged;
-            if (_validationResults.Count > 0)
+            switch (e.Action)
             {
-                if (HasErrors)
+                case NotifyCollectionChangedAction.Add:
+                    hasErrorsChanged = !HasErrors;
+                    if (hasErrorsChanged)
+                        HasErrors = true;
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    hasErrorsChanged = _validationResults.Count == 0;
+                    if (hasErrorsChanged)
+                        HasErrors = false;
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    if (_validationResults.Count > 0)
+                    {
+                        hasErrorsChanged = !HasErrors;
+                        if (hasErrorsChanged)
+                            HasErrors = true;
+                    }
+                    else
+                    {
+                        hasErrorsChanged = HasErrors;
+                        if (hasErrorsChanged)
+                            HasErrors = false;
+                    }
+                    break;
+                default:
                     hasErrorsChanged = false;
-                else
-                    HasErrors = hasErrorsChanged = true;
+                    break;
             }
-            else
-            {
-                hasErrorsChanged = HasErrors;
-                HasErrors = false;
-            }
-
             try
             {
                 EventHandler<DataErrorsChangedEventArgs> errorsChanged = ErrorsChanged;
@@ -354,10 +353,5 @@ namespace FsInfoCat.ComponentSupport
         bool ITypeDescriptorContext.OnComponentChanging() => false;
 
         object IServiceProvider.GetService(Type serviceType) => null;
-
-        private class ConversionValidationResult : ValidationResult
-        {
-            internal ConversionValidationResult() : base("Invalid format", new string[] { nameof(TextValue) }) { }
-        }
     }
 }

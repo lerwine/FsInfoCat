@@ -2,55 +2,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace FsInfoCat.Collections
+namespace FsInfoCat.Collections.Internal
 {
     public class GeneralizableEqualityComparer<T> : IGeneralizableEqualityComparer<T>
     {
-        public static readonly IGeneralizableEqualityComparer<T> Default;
         private readonly IEqualityComparer<T> _typedComparer;
         private readonly IEqualityComparer _genericComparer;
 
-        static GeneralizableEqualityComparer()
-        {
-            Type type = typeof(T);
-            if (type.Equals(typeof(string)))
-                Default = (IGeneralizableEqualityComparer<T>)Activator.CreateInstance(typeof(GeneralizableEqualityComparer<>).MakeGenericType(type), new object[] { StringComparer.InvariantCulture });
-            else
-                Default = (IGeneralizableEqualityComparer<T>)Activator.CreateInstance(typeof(GeneralizableEqualityComparer<>).MakeGenericType(type), new object[] { EqualityComparer<T>.Default });
-        }
-
         public GeneralizableEqualityComparer() : this((IEqualityComparer<T>)null) { }
 
-        public GeneralizableEqualityComparer(IComparer comparer)
+        public GeneralizableEqualityComparer(IEqualityComparer<T> comparer)
         {
             if (comparer is null)
                 _typedComparer = EqualityComparer<T>.Default;
-            else if (comparer is IEqualityComparer<T> eq)
-                _typedComparer = eq;
-            else if (comparer is IComparer<T> tc)
-            {
-                _typedComparer = new ComparisonEqualityComparer(tc);
-                if (comparer is IEqualityComparer gc)
-                {
-                    _genericComparer = gc;
-                    return;
-                }    
-            }
             else
             {
-                if (comparer is IEqualityComparer g)
+                _typedComparer = comparer;
+                if (comparer is IEqualityComparer eq)
                 {
-                    _genericComparer = g;
-                    _typedComparer = new ComparisonEqualityComparer(new GeneralizableComparer<T>(comparer));
+                    _genericComparer = eq;
                     return;
                 }
-                else
-                    _typedComparer = new ComparisonEqualityComparer(new GeneralizableComparer<T>(comparer));
             }
-            if (_typedComparer is IEqualityComparer c)
-                _genericComparer = c;
-            else
-                _genericComparer = new CoersionComparer(_typedComparer);
+            _genericComparer = new CoersionComparer(_typedComparer);
         }
 
         public GeneralizableEqualityComparer(IComparer<T> comparer)
@@ -91,20 +65,36 @@ namespace FsInfoCat.Collections
             }
         }
 
-        public GeneralizableEqualityComparer(IEqualityComparer<T> comparer)
+        public GeneralizableEqualityComparer(IComparer comparer)
         {
             if (comparer is null)
                 _typedComparer = EqualityComparer<T>.Default;
-            else
+            else if (comparer is IEqualityComparer<T> eq)
+                _typedComparer = eq;
+            else if (comparer is IComparer<T> tc)
             {
-                _typedComparer = comparer;
-                if (comparer is IEqualityComparer eq)
+                _typedComparer = new ComparisonEqualityComparer(tc);
+                if (comparer is IEqualityComparer gc)
                 {
-                    _genericComparer = eq;
+                    _genericComparer = gc;
                     return;
                 }
             }
-            _genericComparer = new CoersionComparer(_typedComparer);
+            else
+            {
+                if (comparer is IEqualityComparer g)
+                {
+                    _genericComparer = g;
+                    _typedComparer = new ComparisonEqualityComparer(new GeneralizableComparer<T>(comparer));
+                    return;
+                }
+                else
+                    _typedComparer = new ComparisonEqualityComparer(new GeneralizableComparer<T>(comparer));
+            }
+            if (_typedComparer is IEqualityComparer c)
+                _genericComparer = c;
+            else
+                _genericComparer = new CoersionComparer(_typedComparer);
         }
 
         public bool Equals(T x, T y) => _typedComparer.Equals(x, y);

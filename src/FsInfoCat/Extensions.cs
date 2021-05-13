@@ -1,79 +1,30 @@
-using FsInfoCat.Collections;
 using FsInfoCat.Providers;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace FsInfoCat
 {
     public static class Extensions
     {
-        public static IEqualityComparer<T> ToEqualityComparer<T>(this IComparer<T> comparer)
+        public static bool IsSelfEquatable(this Type type)
         {
-            if (comparer is null)
-                return EqualityComparer<T>.Default;
-            if (comparer is IEqualityComparer<T> equalityComparer)
-                return equalityComparer;
-            return new ComparerToEqualityComparer<T>(comparer);
+            if (type is null)
+                return false;
+            Type t = typeof(IEquatable<>);
+            return (type.IsInterface && type.IsGenericType && type.GetGenericTypeDefinition().Equals(t)) ||
+                t.MakeGenericType(type).IsAssignableFrom(type);
         }
 
-        public static IGeneralizableOrderAndEqualityComparer<T> ToGeneralizableOrderAndEqualityComparer<T>(this IEqualityComparer<T> comparer)
+        public static bool IsSelfComparable(this Type type)
         {
-            if (comparer is null)
-                return GeneralizableOrderAndEqualityComparer<T>.Default;
-            if (comparer is IGeneralizableOrderAndEqualityComparer<T> g)
-                return g;
-            if (comparer is IComparer<T> c)
-                return new GeneralizableOrderAndEqualityComparer<T>(comparer, c);
-            return new GeneralizableOrderAndEqualityComparer<T>(comparer, null);
+            if (type is null)
+                return false;
+            Type t = typeof(IComparable<>);
+            return (type.IsInterface && type.IsGenericType && type.GetGenericTypeDefinition().Equals(t)) ||
+                t.MakeGenericType(type).IsAssignableFrom(type);
         }
 
-        public static IGeneralizableOrderAndEqualityComparer<T> ToGeneralizableOrderAndEqualityComparer<T>(this IComparer<T> comparer)
-        {
-            if (comparer is null)
-                return GeneralizableOrderAndEqualityComparer<T>.Default;
-            if (comparer is IGeneralizableOrderAndEqualityComparer<T> g)
-                return g;
-            if (comparer is IEqualityComparer<T> c)
-                return new GeneralizableOrderAndEqualityComparer<T>(c, comparer);
-            return new GeneralizableOrderAndEqualityComparer<T>(null, comparer);
-        }
-
-        public static IGeneralizableEqualityComparer<T> ToGeneralizableEqualityComparer<T>(this IEqualityComparer<T> comparer)
-        {
-            if (comparer is null)
-                return GeneralizableEqualityComparer<T>.Default;
-            if (comparer is IGeneralizableEqualityComparer<T> g)
-                return g;
-            return new GeneralizableEqualityComparer<T>(comparer);
-        }
-
-        public static IGeneralizableEqualityComparer<T> ToGeneralizableEqualityComparer<T>(this IComparer<T> comparer)
-        {
-            if (comparer is null)
-                return GeneralizableEqualityComparer<T>.Default;
-            if (comparer is IGeneralizableEqualityComparer<T> g)
-                return g;
-            return new GeneralizableEqualityComparer<T>(comparer);
-        }
-
-        public static IGeneralizableComparer<T> ToGeneralizableComparer<T>(this IEqualityComparer<T> comparer)
-        {
-            if (comparer is null)
-                return GeneralizableComparer<T>.Default;
-            if (comparer is IGeneralizableComparer<T> g)
-                return g;
-            //return new GeneralizableComparer<T>(comparer);
-            throw new NotImplementedException();
-        }
-
-        public static IGeneralizableComparer<T> ToGeneralizableComparer<T>(this IComparer<T> comparer)
-        {
-            if (comparer is null)
-                return GeneralizableComparer<T>.Default;
-            if (comparer is IGeneralizableComparer<T> g)
-                return g;
-            return new GeneralizableComparer<T>(comparer);
-        }
+        public static ISuspensionProvider NewSuspensionProvider() => new Internal.SuspensionProvider();
 
         public static Predicate<T> ToPredicate<T>(this Func<T, bool> function) => new Predicate<T>(function);
 
