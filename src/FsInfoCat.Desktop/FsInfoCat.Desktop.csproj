@@ -222,7 +222,7 @@
     <Compile Include="Model\ConfigurationManagerErrorCode.cs" />
     <Compile Include="Model\DeviceOperationalState.cs" />
     <Compile Include="Model\DirectoryCrawlFlags.cs" />
-    <Compile Include="Model\Extensions.cs" />
+    <Compile Include="Model\ModelExtensions.cs" />
     <Compile Include="Model\FileStatus.cs" />
     <Compile Include="Model\FileSystemFeature.cs" />
     <Compile Include="Model\IHashCalculation.cs" />

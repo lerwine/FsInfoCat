@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Desktop.Model
 {
-    public static class Extensions
+    public static class ModelExtensions
     {
         public static T? ToEnumPropertyValue<T>(this ManagementObject managementObject, string propertyName)
             where T : struct, Enum
