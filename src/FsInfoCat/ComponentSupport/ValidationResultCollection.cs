@@ -78,7 +78,7 @@ namespace FsInfoCat.ComponentSupport
                 throw new ArgumentNullException(nameof(item));
             Node existing;
             int index;
-            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -125,7 +125,7 @@ namespace FsInfoCat.ComponentSupport
 
         public void Clear()
         {
-            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -272,7 +272,7 @@ namespace FsInfoCat.ComponentSupport
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
             Node existing;
-            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -334,7 +334,7 @@ namespace FsInfoCat.ComponentSupport
 
         private void Remove(Node node)
         {
-            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -359,7 +359,7 @@ namespace FsInfoCat.ComponentSupport
         {
             if (item is null)
                 return false;
-            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -382,7 +382,7 @@ namespace FsInfoCat.ComponentSupport
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try

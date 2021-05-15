@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace FsInfoCat.ComponentSupport.Internal
 {
-    internal class ComponentPropertyEqualityComparer<T> : IEqualityComparer<T>, IEqualityComparer
+    internal class ComponentPropertyEqualityComparer<T> : IGeneralizableEqualityComparer<T>
         where T : class
     {
-        internal static readonly IEqualityComparer<T> Default;
+        internal static readonly IGeneralizableEqualityComparer<T> Default;
         private readonly Tuple<PropertyDescriptor, IEqualityComparer>[] _comparers;
 
         static ComponentPropertyEqualityComparer()

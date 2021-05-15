@@ -105,12 +105,12 @@ namespace FsInfoCat.Internal
         }
 
         /// <summary>
-        /// Called when <see cref="IsSuspended"/> changes to <see langword="true"/> as the first <see cref="ISuspension"/> is instantiated.
+        /// Called when <see cref="IsSuspended"/> changes to <see langword="true"/> as the first <see cref="ISuspension_obsolete"/> is instantiated.
         /// </summary>
         protected virtual void OnBeginSuspension() { }
 
         /// <summary>
-        /// Called when <see cref="IsSuspended"/> changes to <see langword="false"/> as the last <see cref="ISuspension"/> is disposed.
+        /// Called when <see cref="IsSuspended"/> changes to <see langword="false"/> as the last <see cref="ISuspension_obsolete"/> is disposed.
         /// </summary>
         protected virtual void OnEndSuspension() { }
 
@@ -160,7 +160,7 @@ namespace FsInfoCat.Internal
                 }
         }
 
-        public ISuspension Suspend()
+        public ISuspension_obsolete Suspend()
         {
             Suspension suspension;
             object token;
@@ -204,7 +204,7 @@ namespace FsInfoCat.Internal
                 throw new InvalidOperationException("Object is in a suspended state.");
         }
 
-        private class Suspension : ISuspension
+        private class Suspension : ISuspension_obsolete
         {
             private SuspensionProvider _suspensionManager;
             private Suspension _previous;

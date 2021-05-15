@@ -33,7 +33,7 @@ namespace FsInfoCat.Collections
 
         T Dequeue();
 
-        ISuspension Suspend(bool enqueueAvailable);
+        ISuspension_obsolete Suspend(bool enqueueAvailable);
 
         IList<T> DequeueAvailable();
 

@@ -18,12 +18,12 @@ namespace FsInfoCat
         bool IsSuspended { get; }
 
         /// <summary>
-        /// Occurs when <see cref="IsSuspended"/> changes to <see langword="true"/> as the first <see cref="ISuspension"/> is instantiated.
+        /// Occurs when <see cref="IsSuspended"/> changes to <see langword="true"/> as the first <see cref="ISuspension_obsolete"/> is instantiated.
         /// </summary>
         event EventHandler BeginSuspension;
 
         /// <summary>
-        /// Occurs when <see cref="IsSuspended"/> changes to <see langword="false"/> as the last <see cref="ISuspension"/> is disposed.
+        /// Occurs when <see cref="IsSuspended"/> changes to <see langword="false"/> as the last <see cref="ISuspension_obsolete"/> is disposed.
         /// </summary>
         event EventHandler EndSuspension;
 
@@ -46,8 +46,8 @@ namespace FsInfoCat
         /// <summary>
         /// Enters the suspended state.
         /// </summary>
-        /// <returns>The <see cref="ISuspension"/> which is used to maintain the suspended state.</returns>
-        ISuspension Suspend();
+        /// <returns>The <see cref="ISuspension_obsolete"/> which is used to maintain the suspended state.</returns>
+        ISuspension_obsolete Suspend();
 
         /// <summary>
         /// Synchronously calls a <see cref="Func{TResult}"/> delegate if this <see cref="SuspensionProvider"/> is not suspended.

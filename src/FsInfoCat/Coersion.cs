@@ -14,10 +14,10 @@ namespace FsInfoCat
                 if (type.IsGenericType && typeof(Nullable<>).Equals(type.GetGenericTypeDefinition()))
                     Default = (Coersion<T>)Activator.CreateInstance(typeof(NullableCoersion<>).MakeGenericType(Nullable.GetUnderlyingType(type)));
                 else
-                    Default = (Coersion<T>)Activator.CreateInstance(typeof(ValueCoersion<>).MakeGenericType(Nullable.GetUnderlyingType(type)));
+                    Default = (Coersion<T>)Activator.CreateInstance(typeof(ValueCoersion<>).MakeGenericType(type));
             }
             else
-                Default = (Coersion<T>)Activator.CreateInstance(typeof(ReferenceCoersion<>).MakeGenericType(Nullable.GetUnderlyingType(type)));
+                Default = (Coersion<T>)Activator.CreateInstance(typeof(ReferenceCoersion<>).MakeGenericType(type));
         }
 
         public virtual T Cast(object obj) => (T)obj;

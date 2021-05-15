@@ -153,11 +153,11 @@ namespace FsInfoCat.Collections.Internal
             return result;
         }
 
-        public ISuspension Suspend(bool enqueueAvailable)
+        public ISuspension_obsolete Suspend(bool enqueueAvailable)
         {
             if (enqueueAvailable)
             {
-                ISuspension result;
+                ISuspension_obsolete result;
                 T[] enqueued;
                 int index;
                 Monitor.Enter(SyncRoot);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat
 {
@@ -8,7 +8,7 @@ namespace FsInfoCat
     /// </summary>
     /// <remarks>The <see cref="ISuspensionProvider"/> remains in the suspended state until the last object of this type is disposed.</remarks>
     /// <seealso cref="IDisposable" />
-    public interface ISuspension : IDisposable
+    public interface ISuspension_obsolete : IDisposable
     {
         /// <summary>
         /// Gets the concurrency token that is used to track suspension states.
