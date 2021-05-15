@@ -1,6 +1,7 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
@@ -87,9 +88,18 @@ namespace FsInfoCat.Desktop.Model.Local
             base.OnModelCreating(modelBuilder);
         }
 
+        private static LocalDbContainer _localDbContainer;
+        private static readonly object _syncRoot = new object();
         internal static LocalDbContainer GetDbContext()
         {
-            throw new NotImplementedException();
+            Monitor.Enter(_syncRoot);
+            try
+            {
+                if (_localDbContainer is null)
+                    _localDbContainer = new LocalDbContainer();
+            }
+            finally { Monitor.Exit(_syncRoot); }
+            return _localDbContainer;
         }
     }
 }
