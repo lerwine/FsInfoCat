@@ -2,6 +2,7 @@ using System;
 
 namespace FsInfoCat.Desktop.Model
 {
+    // TODO: Move to FsInfoCat module
     public interface IFileComparison
     {
         bool AreEqual { get; }

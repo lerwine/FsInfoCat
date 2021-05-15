@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.Model
 {
+    // TODO: Move to FsInfoCat module
     public interface IFile
     {
         IHashCalculation HashCalculation { get; }
