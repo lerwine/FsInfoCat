@@ -326,7 +326,6 @@
     <Compile Include="Model\Win32_LogicalDiskRootDirectory.cs" />
     <Compile Include="Model\Win32_MediaAccess.cs" />
     <Compile Include="Model\WIN32_MEDIA_TYPE.cs" />
-    <Compile Include="Util\ComponentModelHelper.cs" />
     <Compile Include="Util\TypeHelper.cs" />
     <Compile Include="Util\UriHelper.cs" />
     <Compile Include="ViewModel\AsyncActionViewModel.cs" />
