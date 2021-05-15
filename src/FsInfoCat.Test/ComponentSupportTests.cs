@@ -1,17 +1,9 @@
-using FsInfoCat.Desktop.Model.ComponentSupport;
 //using FsInfoCat.Desktop.Model.Validation;
 using FsInfoCat.Test.ComponentSupport;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Odbc;
-using System.Data.OleDb;
-using System.Data.SqlClient;
-using System.Data.SqlServerCe;
-using System.Linq;
 
 namespace FsInfoCat.Test
 {
