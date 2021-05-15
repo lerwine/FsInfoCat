@@ -1,9 +1,8 @@
-//using FsInfoCat.Desktop.Model.Validation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace FsInfoCat.Desktop.Model.ComponentSupport
+namespace FsInfoCat.ComponentSupport
 {
     public static class ComponentExtensions
     {

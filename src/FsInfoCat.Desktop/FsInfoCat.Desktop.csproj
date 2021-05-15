@@ -216,10 +216,6 @@
     <Compile Include="Model\Bits\Version2Domain.cs" />
     <Compile Include="Model\CimGroupPartComponent.cs" />
     <Compile Include="Model\CIM_PowerManagementCapability.cs" />
-    <Compile Include="Model\ComponentSupport\ComponentExtensions.cs" />
-    <Compile Include="Model\ComponentSupport\ValueChangedEventArgs.cs" />
-    <Compile Include="Model\ComponentSupport\ValueChangedEventHandler.cs" />
-    <Compile Include="Model\ComponentSupport\WeakComponentPropertyChangedManager.cs" />
     <Compile Include="Util\AttributeComparer.cs" />
     <Compile Include="Util\LinkedComponentList.cs" />
     <Compile Include="Util\RelayComparer.cs" />
@@ -454,7 +450,6 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>RemoteDbModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Model\ComponentSupport\ClassDiagram1.cd" />
     <None Include="Model\Remote\RemoteDbModel.edmx.diagram">
       <DependentUpon>RemoteDbModel.edmx</DependentUpon>
     </None>
