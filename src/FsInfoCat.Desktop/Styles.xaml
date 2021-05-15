@@ -1,34 +1,20 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:royale="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Royale"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ControlTemplate x:Key="DefaultTextBoxBaseTemplate" TargetType="{x:Type TextBoxBase}">
-        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-            <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-        </Border>
-        <ControlTemplate.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-            </Trigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-    <Style x:Key="DefaultTextBoxBaseStyle" TargetType="{x:Type TextBoxBase}">
-        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="{StaticResource {x:Static SystemColors.WindowBrushKey}}"/>
         <Setter Property="BorderBrush" Value="{StaticResource TextBoxBorderBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+        <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Padding" Value="2"/>
-        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <Setter Property="AllowDrop" Value="True"/>
-        <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
-        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-        <Setter Property="Template" Value="{StaticResource DefaultTextBoxBaseTemplate}"/>
+        <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
+        <Setter Property="AcceptsReturn" Value="False"/>
+        <Setter Property="AcceptsTab" Value="False"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
@@ -39,17 +25,25 @@
             </MultiTrigger>
         </Style.Triggers>
     </Style>
-    <Style x:Name="DefaultTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBaseStyle}">
-        <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
-        <Setter Property="AcceptsReturn" Value="False"/>
-        <Setter Property="AcceptsTab" Value="False"/>
-        <Setter Property="TextWrapping" Value="NoWrap"/>
-    </Style>
-    <Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}"/>
-    <Style x:Key="MultiLineTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBaseStyle}">
+    <Style x:Key="MultiLineTextBox" TargetType="TextBox">
+        <Setter Property="Background" Value="{StaticResource {x:Static SystemColors.WindowBrushKey}}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource TextBoxBorderBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Padding" Value="2"/>
         <Setter Property="AcceptsReturn" Value="True"/>
         <Setter Property="AcceptsTab" Value="True"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="True"/>
+                    <Condition Property="IsSelectionActive" Value="False"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+            </MultiTrigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="InfoMessageTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Foreground" Value="{StaticResource InfoBrush}"/>
@@ -67,16 +61,7 @@
         <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
     </Style>
     <ControlTemplate x:Key="DefaultButtonBaseControlTemplate" TargetType="{x:Type ButtonBase}">
-        <royale:ButtonChrome x:Name="Chrome" BorderBrush="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}" RenderDefaulted="{TemplateBinding Button.IsDefaulted}" SnapsToDevicePixels="True">
-            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-        </royale:ButtonChrome>
         <ControlTemplate.Triggers>
-            <Trigger Property="IsKeyboardFocused" Value="True">
-                <Setter Property="RenderDefaulted" TargetName="Chrome" Value="True"/>
-            </Trigger>
-            <Trigger Property="ToggleButton.IsChecked" Value="True">
-                <Setter Property="RenderPressed" TargetName="Chrome" Value="True"/>
-            </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
             </Trigger>
