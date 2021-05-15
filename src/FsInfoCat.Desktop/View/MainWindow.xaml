@@ -29,7 +29,7 @@
             <Separator/>
             <MenuItem Header="Help" HorizontalAlignment="Right"/>
         </Menu>
-        <Frame Grid.Row="1" Source="/FsInfoCat.Desktop;component/View/CrawlSources.xaml"/>
+        <Frame Grid.Row="1" Source="/FsInfoCat.Desktop;component/View/CrawlSourcesPage.xaml"/>
         <StatusBar Grid.Row="2" DataContext="{DynamicResource SettingsVM}">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
