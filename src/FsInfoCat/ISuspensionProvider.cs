@@ -27,8 +27,6 @@ namespace FsInfoCat
         /// </summary>
         event EventHandler EndSuspension;
 
-        event PropertyChangedEventHandler PropertyChanged;
-
         /// <summary>
         /// Synchronously invokes an <see cref="Action"/> delegate if this <see cref="SuspensionProvider"/> is not suspended.
         /// </summary>
