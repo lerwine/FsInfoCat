@@ -1,4 +1,4 @@
-using FsInfoCat.Desktop.Model.Validation;
+//using FsInfoCat.Desktop.Model.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +16,7 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
 {
     public static class ComponentExtensions
     {
+        /*
         public static PropertyValidationContext<SqlCeConnectionStringBuilder, string> ConnectionString(this ModelValidationContext<SqlCeConnectionStringBuilder> context) =>
             (PropertyValidationContext<SqlCeConnectionStringBuilder, string>)context[nameof(DbConnectionStringBuilder.ConnectionString)];
 
@@ -273,6 +274,8 @@ namespace FsInfoCat.Desktop.Model.ComponentSupport
             IModelPropertyDescriptor<SqlConnectionStringBuilder> pd = descriptor[nameof(SqlConnectionStringBuilder.AttachDBFilename)];
             return $"{pd.DisplayName}={pd.ConvertToString(value)}";
         }
+
+        */
 
         public static int? GetMaxLength(this IEnumerable<ValidationAttribute> source, out string errorMessage)
         {

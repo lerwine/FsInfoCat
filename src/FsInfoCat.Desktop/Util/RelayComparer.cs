@@ -8,7 +8,7 @@ namespace FsInfoCat.Desktop.Util
         where TBase : class
         where TValue : TBase
     {
-        public static IEqualityComparer<TValue> Default = new RelayComparer<TValue, TBase>(ComponentEqualityComparer<TBase>.Default);
+        public static IEqualityComparer<TValue> Default = new RelayComparer<TValue, TBase>(Extensions.GetComparisonService().GetEqualityComparer<TBase>());
 
         private readonly IEqualityComparer<TBase> _backingComparer;
         public RelayComparer(IEqualityComparer<TBase> backingComparer)
