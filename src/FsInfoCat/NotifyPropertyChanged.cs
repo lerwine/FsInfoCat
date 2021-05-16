@@ -1,5 +1,4 @@
 using FsInfoCat.Collections;
-using FsInfoCat.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -228,7 +227,7 @@ namespace FsInfoCat
             {   
                 Converter = (_descriptor = descriptor).Converter;
                 IsReadOnly = descriptor.IsReadOnly;
-                Services.IComparisonService comparisonService = Extensions.GetComparisonService();
+                IComparisonService comparisonService = Extensions.GetComparisonService();
                 Coersion = comparisonService.GetDefaultCoersion<TProperty>();
                 EqualityComparer = comparisonService.GetEqualityComparer<TProperty>(true);
                 Normalization = descriptor.Attributes.OfType<NormalizationAttribute>().FirstOrDefault();
@@ -322,7 +321,7 @@ namespace FsInfoCat
 
             public PropertyHandler(PropertyDescriptor propertyDescriptor) : base(propertyDescriptor)
             {
-                Services.IComparisonService comparisonService = Extensions.GetComparisonService();
+                IComparisonService comparisonService = Extensions.GetComparisonService();
                 _coersion = comparisonService.GetDefaultCoersion<T>();
                 _equalityComparer = comparisonService.GetEqualityComparer<T>();
             }

@@ -1,12 +1,12 @@
 using System;
 using System.ComponentModel;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat
 {
     /// <summary>
     /// Interface for an object that supports a suspended state
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+    /// <seealso cref="INotifyPropertyChanged" />
     public interface ISuspendable : INotifyPropertyChanged
     {
         /// <summary>

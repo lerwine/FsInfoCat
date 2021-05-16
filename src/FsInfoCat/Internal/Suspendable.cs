@@ -1,4 +1,3 @@
-using FsInfoCat.Services;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

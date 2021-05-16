@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat
 {
 
     public interface ISuspendableService

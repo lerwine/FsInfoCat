@@ -11,22 +11,22 @@ namespace FsInfoCat
     public static class Extensions
     {
         public static readonly IServiceProvider ServiceProvider = new ServiceCollection()
-            .AddSingleton<Services.IThreadLockService, Internal.ThreadLockService>()
-            .AddSingleton<Services.IComparisonService, Internal.ComparisonService>()
-            .AddSingleton<Services.ICollectionsService, Internal.CollectionsService>()
-            .AddTransient<Services.ISuspendable, Internal.Suspendable>()
-            .AddSingleton<Services.ISuspendableService, Internal.SuspendableService>()
+            .AddSingleton<IThreadLockService, Internal.ThreadLockService>()
+            .AddSingleton<IComparisonService, Internal.ComparisonService>()
+            .AddSingleton<ICollectionsService, Internal.CollectionsService>()
+            .AddTransient<ISuspendable, Internal.Suspendable>()
+            .AddSingleton<ISuspendableService, Internal.SuspendableService>()
             .BuildServiceProvider();
 
-        public static Services.IThreadLockService GetThreadLockService() => ServiceProvider.GetService<Services.IThreadLockService>();
+        public static IThreadLockService GetThreadLockService() => ServiceProvider.GetService<IThreadLockService>();
 
-        public static Services.IComparisonService GetComparisonService() => ServiceProvider.GetService<Services.IComparisonService>();
+        public static IComparisonService GetComparisonService() => ServiceProvider.GetService<IComparisonService>();
 
-        public static Services.ISuspendable NewSuspendable() => ServiceProvider.GetService<Services.ISuspendable>();
+        public static ISuspendable NewSuspendable() => ServiceProvider.GetService<ISuspendable>();
 
-        public static Services.ISuspendableService GetSuspendableService() => ServiceProvider.GetService<Services.ISuspendableService>();
+        public static ISuspendableService GetSuspendableService() => ServiceProvider.GetService<ISuspendableService>();
 
-        public static Services.ICollectionsService GetCollectionsService() => ServiceProvider.GetService<Services.ICollectionsService>();
+        public static ICollectionsService GetCollectionsService() => ServiceProvider.GetService<ICollectionsService>();
 
         public static ISuspensionProvider NewSuspensionProvider() => new Internal.SuspensionProvider();
 

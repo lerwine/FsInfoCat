@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat
 {
     public interface IThreadLockService
     {

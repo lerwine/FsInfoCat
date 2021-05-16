@@ -15,7 +15,7 @@ namespace FsInfoCat.LocalDb
             Files = new HashSet<FsFile>();
             FileRelocationTasks = new HashSet<FileRelocateTask>();
             TargetDirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
-            Services.ICollectionsService collectionsService = Extensions.GetCollectionsService();
+            ICollectionsService collectionsService = Extensions.GetCollectionsService();
         }
 
         public Guid Id { get; set; }

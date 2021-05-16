@@ -1,5 +1,6 @@
 using FsInfoCat.Model;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Data.SqlServerCe;
 using System.Linq;
 
@@ -52,7 +53,7 @@ namespace FsInfoCat.LocalDb
                 using (SqlCeEngine engine = new SqlCeEngine(sqlCeConnectionStringBuilder.ConnectionString))
                     engine.CreateDatabase();
             }
-
+            throw new NotImplementedException();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

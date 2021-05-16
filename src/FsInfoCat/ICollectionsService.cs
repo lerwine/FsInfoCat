@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat
 {
     public interface ICollectionsService
     {

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat
 {
     /// <summary>
     /// An object that is used to maintain a suspended state on a <see cref="ISuspendable"/> opbject.
     /// </summary>
-    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="IDisposable" />
     public interface ISuspension : IDisposable
     {
         /// <summary>

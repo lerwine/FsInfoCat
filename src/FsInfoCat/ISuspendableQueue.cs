@@ -1,10 +1,10 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat
 {
     public interface ISuspendableQueue<T> : ISuspendable, IEnumerable<T>, IEnumerable, INotifyCollectionChanged
     {
@@ -49,7 +49,7 @@ namespace FsInfoCat.Services
 
         IEnumerator<T> GetEnumerator(bool includeSuspended);
 
-            bool IsItemSuspended(T item);
+        bool IsItemSuspended(T item);
 
         T Pop();
 
