@@ -19,6 +19,10 @@
 - [Gists](#gists)
 - [Old Projects](#old-projects)
 
+## Uncategorized
+
+- [Privilege (Authorisation) Services | DCE 1.1: Authentication and Security Services](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm#tagcjh_08_02_01_01)
+
 ## General
 
 - [GDI+ Property Item Descriptions | Microsoft Docs](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-property-item-descriptions)
@@ -54,7 +58,8 @@
 - [Representing IPv6 Zone Identifiers in Address Literals and Uniform Resource Identifiers | IETF Tools](https://tools.ietf.org/html/rfc6874)
 - [The "file" URI Scheme | IETF Tools](https://tools.ietf.org/html/rfc8089)
 - [URLs | URL - Living Standard](https://url.spec.whatwg.org/)
-- [RFC 4122 - A Universally Unique IDentifier (UUID) URN Namespace | IETF Tools](https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml)
+- [RFC 4122 - A Universally Unique IDentifier (UUID) URN Namespace | IETF Tools](https://tools.ietf.org/html/rfc4122)
+- [Uniform Resource Names (URN) Namespaces | Internet Assigned Numbers Authority (IANA)](https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml)
 
 ### XML
 
@@ -83,10 +88,13 @@
 
 - [Code First DataAnnotations | Entity Framework Tutorial](https://entity-framework.programmingpedia.net/en/tutorial/4161/code-first-dataannotations)
  Code First DataAnnotations | Entity Framework Tutorial
-- [Creating and configuring a model - EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/ef/core/modeling/)
+- [Code First to a New Database | Microsoft Docs](https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database)
  Overview of creating and configuring a model with Entity Framework Core
 - [Overview of Entity Framework 6 | Microsoft Docs](https://docs.microsoft.com/en-us/ef/ef6/)
  General introductory overview of Entity Framework 6
+- [EntityFramework.SqlServerCompact 6.4.4 | NuGet Gallery](https://www.nuget.org/packages/EntityFramework.SqlServerCompact)
+ NuGet package website
+- [Using EF Core with SQL Server Compact in Traditional .NET Applications | Jensen, Erik Ejlskov](https://github.com/ErikEJ/EntityFramework.SqlServerCompact/wiki/Using-EF-Core-with-SQL-Server-Compact-in-Traditional-.NET-Applications)
 - [c# - How do I use IValidatableObject? | Stack Overflow](https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject)
 
 ### Testing

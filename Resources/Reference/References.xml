@@ -55,8 +55,10 @@
             <Categories>
                 <Category Name="Entity Framework">
                     <Link Tag="EfCodeFirst" />
-                    <Link Tag="EfCoreCreate" />
-                    <Link Tag="EFCoreOverview" />
+                    <Link Tag="Ef6CfNewDb" />
+                    <Link Tag="EF6Overview" />
+                    <Link Tag="SqCePKg"/>
+                    <Link Tag="SqlCeNet"/>
                     <Link Tag="IValidatableObject" />
                 </Category>
                 <Category Name="Testing">
