@@ -11,8 +11,6 @@ namespace FsInfoCat.Collections
     /// </summary>
     public static class CollectionExtensions
     {
-        public static IEventSuspensionManager NewEventSuspensionManager() => new EventSuspensionManager();
-
         public static IEqualityComparer<T> ToEqualityComparer<T>(this IComparer<T> comparer)
         {
             if (comparer is null)

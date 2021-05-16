@@ -1,3 +1,4 @@
+using FsInfoCat.Collections;
 using System.Collections.Generic;
 
 namespace FsInfoCat
@@ -7,5 +8,6 @@ namespace FsInfoCat
     {
         ISuspendableQueue<T> CreateSuspendableQueue<T>();
         ISuspendableQueue<T> CreateSuspendableQueue<T>(IEqualityComparer<T> itemComparer);
+        IEventSuspensionManager NewEventSuspensionManager();
     }
 }

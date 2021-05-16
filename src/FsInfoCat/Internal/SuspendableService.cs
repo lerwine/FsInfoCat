@@ -1,3 +1,4 @@
+using FsInfoCat.Collections;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,6 +26,11 @@ namespace FsInfoCat.Internal
             if (itemComparer is null)
                 itemComparer = Extensions.GetComparisonService().GetEqualityComparer<T>();
             return (ISuspendableQueue<T>)Activator.CreateInstance(typeof(SuspendableReferenceQueue<>).MakeGenericType(type), new object[] { itemComparer });
+        }
+
+        public IEventSuspensionManager NewEventSuspensionManager()
+        {
+            throw new NotImplementedException();
         }
     }
 }

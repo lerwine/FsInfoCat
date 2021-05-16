@@ -15,7 +15,7 @@ namespace FsInfoCat.ComponentSupport
         IList, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly object _syncRoot = new object();
-        private IEventSuspensionManager _eventSuspension = CollectionExtensions.NewEventSuspensionManager();
+        private IEventSuspensionManager _eventSuspension = Extensions.GetSuspendableService().NewEventSuspensionManager();
         private Node _first;
         private Node _last;
 
@@ -63,7 +63,7 @@ namespace FsInfoCat.ComponentSupport
         private void EventSuspension_CollectionChanged(object sender, NotifyCollectionChangedEventArgs<IEventItem> e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
-                foreach (IEventItem item in _eventSuspension.DequeueAvailable().ToArray())
+                foreach (IEventItem item in _eventSuspension.DequeueAll().ToArray())
                 {
                     if (item.Args is PropertyChangedEventArgs propertyChangedEventArgs)
                         PropertyChanged?.Invoke(this, propertyChangedEventArgs);
@@ -78,7 +78,7 @@ namespace FsInfoCat.ComponentSupport
                 throw new ArgumentNullException(nameof(item));
             Node existing;
             int index;
-            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -125,7 +125,7 @@ namespace FsInfoCat.ComponentSupport
 
         public void Clear()
         {
-            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -272,7 +272,7 @@ namespace FsInfoCat.ComponentSupport
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
             Node existing;
-            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -334,7 +334,7 @@ namespace FsInfoCat.ComponentSupport
 
         private void Remove(Node node)
         {
-            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -359,7 +359,7 @@ namespace FsInfoCat.ComponentSupport
         {
             if (item is null)
                 return false;
-            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try
@@ -382,7 +382,7 @@ namespace FsInfoCat.ComponentSupport
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            using (ISuspension_obsolete eventSuspension = _eventSuspension.Suspend(true))
+            using (ISuspension eventSuspension = _eventSuspension.Suspend(true))
             {
                 Monitor.Enter(_syncRoot);
                 try

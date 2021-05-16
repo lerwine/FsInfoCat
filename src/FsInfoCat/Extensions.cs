@@ -28,8 +28,6 @@ namespace FsInfoCat
 
         public static ICollectionsService GetCollectionsService() => ServiceProvider.GetService<ICollectionsService>();
 
-        public static ISuspensionProvider NewSuspensionProvider() => new Internal.SuspensionProvider();
-
         public static readonly Regex BackslashEscapablePattern = new Regex(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
 
         public static readonly Regex BackslashEscapableLBPattern = new Regex(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
