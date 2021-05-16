@@ -1,6 +1,6 @@
-﻿namespace FsInfoCat
+namespace FsInfoCat
 {
-    public class ValueCoersion<T> : Coersion<T>
+    internal class ValueCoersion<T> : Coersion<T>
         where T : struct
     {
         public override bool TryCoerce(object obj, out T result)

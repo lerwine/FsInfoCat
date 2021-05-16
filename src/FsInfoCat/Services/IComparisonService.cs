@@ -6,6 +6,10 @@ namespace FsInfoCat.Services
 {
     public interface IComparisonService
     {
+        ICoersion GetDefaultCoersion(Type type);
+
+        ICoersion<T> GetDefaultCoersion<T>();
+
         /// <summary>
         /// Gets the optimal <see cref="IEqualityComparer{T}"/> instance for the current generic type.
         /// </summary>

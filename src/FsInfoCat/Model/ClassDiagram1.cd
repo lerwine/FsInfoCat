@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.Model.Validators">
+    <Position X="6" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Model\Validators.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="FsInfoCat.Model.IDbContext">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAgAAABAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFile">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAEAAAAAAAAAQAQAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HashCalculation" />
+      <Property Name="Parent" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFileComparison">
+    <Position X="0.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAACQAAAAAAAACAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFileComparison.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="File1" />
+      <Property Name="File2" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFileSystem">
+    <Position X="6" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAiEAAAAAEBAABAAAAAAAACAAAAgAAAAAAIAEACIAA=</HashCode>
+      <FileName>Model\IFileSystem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DefaultSymbolicName" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFsSymbolicName">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAAAAAAEAAAAAAAAAAQCAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFsSymbolicName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IHashCalculation">
+    <Position X="0.5" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAEBAAAAAABAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IHashCalculation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.ISubDirectory">
+    <Position X="3" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAQAQAAAAAAAAQAAIAAAAAAIA=</HashCode>
+      <FileName>Model\ISubDirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IVolume">
+    <Position X="3" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAiEACAAAAAAAAAAAAAAAACAAAAgAEAAAgAQAAAIAA=</HashCode>
+      <FileName>Model\IVolume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.ITimeStampedEntity">
+    <Position X="9.25" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ITimeStampedEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

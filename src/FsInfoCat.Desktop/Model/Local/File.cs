@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
+    [Obsolete]
     public class File : IFile
     {
         private readonly ReadOnlyCollectionDelegateWrapper<Comparison, IFileComparison> _comparisonsWrapper1;

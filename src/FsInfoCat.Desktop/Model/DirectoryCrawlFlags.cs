@@ -2,6 +2,7 @@ using System;
 
 namespace FsInfoCat.Desktop.Model
 {
+    [Obsolete]
     [Flags]
     public enum DirectoryCrawlFlags : byte
     {

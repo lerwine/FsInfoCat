@@ -3,6 +3,7 @@ using System;
 namespace FsInfoCat.Desktop.Model
 {
     [Flags]
+    [Obsolete]
     public enum FileStatus
     {
         Normal = 0b0000_0000,

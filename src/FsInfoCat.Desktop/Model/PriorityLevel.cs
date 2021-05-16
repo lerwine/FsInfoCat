@@ -1,5 +1,6 @@
 namespace FsInfoCat.Desktop.Model
 {
+    [System.Obsolete]
     public enum PriorityLevel : byte
     {
         Deferred = 0,

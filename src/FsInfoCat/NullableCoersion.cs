@@ -1,6 +1,6 @@
-﻿namespace FsInfoCat
+namespace FsInfoCat
 {
-    public class NullableCoersion<T> : Coersion<T?>
+    internal class NullableCoersion<T> : Coersion<T?>
         where T : struct
     {
         public override bool TryCoerce(object obj, out T? result)

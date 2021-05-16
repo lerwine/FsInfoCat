@@ -85,7 +85,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public MainViewModel()
         {
             ModalStatus = new ModalOperationStatusViewModel();
-            // TODO: Perhaps we need to listen for an event off of SettingsViewModel to initiate this?
+            // TODO: Nothing is being shown in a popup while connecting or when a failure occurs.
             ModalStatus.StartNew("Getting local drive listing", controller =>
             {
                 List<Win32_LogicalDiskRootDirectory> sysVolumes = Win32_LogicalDiskRootDirectory.GetLogicalDiskRootDirectories(controller);

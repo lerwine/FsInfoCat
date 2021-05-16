@@ -1,6 +1,6 @@
-﻿namespace FsInfoCat
+namespace FsInfoCat
 {
-    public class ReferenceCoersion<T> : Coersion<T>
+    internal class ReferenceCoersion<T> : Coersion<T>
         where T : class
     {
         public override bool TryCoerce(object obj, out T result)

@@ -1,10 +1,11 @@
-using System;
+using System.Data.Common;
 using System.Data.Entity;
-using System.Linq;
+using System.Data.SqlServerCe;
 using System.Threading;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
+    [System.Obsolete]
     public class LocalDbContainer : DbContext
     {
         // Your context has been configured to use a 'LocalDbContainer' connection string from your application's 
@@ -15,6 +16,11 @@ namespace FsInfoCat.Desktop.Model.Local
         // connection string in the application configuration file.
         public LocalDbContainer()
             : base("name=LocalDbContainer")
+        {
+            
+        }
+
+        private LocalDbContainer(DbConnection existingConnection) : base(existingConnection, true)
         {
         }
 
@@ -96,10 +102,35 @@ namespace FsInfoCat.Desktop.Model.Local
             try
             {
                 if (_localDbContainer is null)
-                    _localDbContainer = new LocalDbContainer();
+                {
+                    DbConnectionStringBuilder dbConnectionStringBuilder = AppConfig.GetLocalDbContainerConnectionString(out string providerName);
+                    if (dbConnectionStringBuilder is SqlCeConnectionStringBuilder sqlCeConnectionStringBuilder)
+                    {
+                        string path = sqlCeConnectionStringBuilder.DataSource;
+                        if (!System.IO.File.Exists(path))
+                        {
+                            using (SqlCeEngine engine = new SqlCeEngine(sqlCeConnectionStringBuilder.ConnectionString))
+                                engine.CreateDatabase();
+                            CreateDbContainer(dbConnectionStringBuilder.ConnectionString, providerName, true);
+                            return _localDbContainer;
+                        }
+                    }
+                    CreateDbContainer(dbConnectionStringBuilder.ConnectionString, providerName, false);
+                }
             }
             finally { Monitor.Exit(_syncRoot); }
             return _localDbContainer;
+        }
+
+        private static void CreateDbContainer(string connectionString, string providerName, bool createIfNotExists)
+        {
+            DbConnection connection = DbProviderFactories.GetFactory(providerName).CreateConnection();
+            connection.ConnectionString = connectionString;
+            _localDbContainer = new LocalDbContainer(connection);
+            if (createIfNotExists)
+                _localDbContainer.Database.CreateIfNotExists();
+            else
+                _localDbContainer.Database.Initialize(false);
         }
     }
 }

@@ -216,6 +216,15 @@
     <Compile Include="Model\Bits\Version2Domain.cs" />
     <Compile Include="Model\CimGroupPartComponent.cs" />
     <Compile Include="Model\CIM_PowerManagementCapability.cs" />
+    <Compile Include="Model\Test\Comparison.cs" />
+    <Compile Include="Model\Test\Directory.cs" />
+    <Compile Include="Model\Test\File.cs" />
+    <Compile Include="Model\Test\FileSystem.cs" />
+    <Compile Include="Model\Test\FsSymbolicName.cs" />
+    <Compile Include="Model\Test\HashCalculation.cs" />
+    <Compile Include="Model\Test\Model1.cs" />
+    <Compile Include="Model\Test\Redundancy.cs" />
+    <Compile Include="Model\Test\Volume.cs" />
     <Compile Include="Util\AttributeComparer.cs" />
     <Compile Include="Util\LinkedComponentList.cs" />
     <Compile Include="Util\RelayComparer.cs" />

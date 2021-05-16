@@ -24,6 +24,11 @@ namespace FsInfoCat.Internal
             GetComponentEqualityComparerMethodDefinition = typeof(IComparisonService).GetMethod(nameof(GetComponentEqualityComparer), Array.Empty<Type>());
         }
 
+        public ICoersion GetDefaultCoersion(Type type) => (ICoersion)typeof(Coersion<>).MakeGenericType(type ?? throw new ArgumentNullException(nameof(type)))
+            .GetField(nameof(Coersion<string>.Default)).GetValue(null);
+
+        public ICoersion<T> GetDefaultCoersion<T>() => Coersion<T>.Default;
+
         public IComparer<T> GetComparer<T>() => (IComparer<T>)GetComparer(typeof(T), false);
 
         public IComparer<T> GetComparer<T>(bool noPropertyComparer) => (IComparer<T>)GetComparer(typeof(T), noPropertyComparer);

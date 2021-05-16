@@ -29,7 +29,8 @@ namespace FsInfoCat.Desktop
                 providerName = null;
                 return null;
             }
-            providerName = connectionStringSettings.ProviderName;
+            providerName = string.IsNullOrWhiteSpace(connectionStringSettings.ProviderName) ? GetProviderFactoryInvariantName<SqlClientFactory>() :
+                connectionStringSettings.ProviderName;
             return connectionStringSettings.ConnectionString;
         }
 
@@ -79,7 +80,41 @@ namespace FsInfoCat.Desktop
             return new SqlConnectionStringBuilder(string.IsNullOrWhiteSpace(builder.ProviderConnectionString) ? DEFAULT_REMOTE_SQL_CONNECTION_STRING : builder.ProviderConnectionString);
         }
 
-        public static string GetLocalDbContainerConnectionString(out string providerName)
+        //public static string GetLocalDbContainerConnectionString(out string providerName, out bool requiresInit)
+        //{
+        //    string connectionString = GetConnectionString(nameof(Model.Local.LocalDbContainer), out providerName);
+        //    if (string.IsNullOrWhiteSpace(connectionString))
+        //    {
+        //        Assembly assembly = Assembly.GetEntryAssembly();
+        //        AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+        //        string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
+        //        if (!Directory.Exists(path))
+        //            Directory.CreateDirectory(path);
+        //        AssemblyName name = assembly.GetName();
+        //        path = Path.Combine(path, name.Name);
+        //        if (!Directory.Exists(path))
+        //            Directory.CreateDirectory(path);
+        //        path = Path.Combine(path, name.Version.ToString());
+        //        if (!Directory.Exists(path))
+        //            Directory.CreateDirectory(path);
+        //        path = Path.Combine(path, Properties.Settings.Default.LocalDbFile ?? DEFAULT_LOCAL_DB_FILENAME);
+        //        providerName = GetProviderFactoryInvariantName<SqlClientFactory>();
+        //        SqlCeConnectionStringBuilder connectionStringBuilder = new SqlCeConnectionStringBuilder();
+        //        connectionStringBuilder.DataSource = path;
+        //        connectionStringBuilder.PersistSecurityInfo = true;
+        //        requiresInit = !File.Exists(path);
+        //        if (requiresInit)
+        //            using (SqlCeEngine engine = new SqlCeEngine(connectionStringBuilder.ConnectionString))
+        //            {
+        //                engine.CreateDatabase();
+        //                // TODO: Need to initialize db from model
+        //            }
+        //        return connectionStringBuilder.ConnectionString;
+        //    }
+        //    return connectionString;
+        //}
+
+        public static DbConnectionStringBuilder GetLocalDbContainerConnectionStringAlt(out string providerName)
         {
             string connectionString = GetConnectionString(nameof(Model.Local.LocalDbContainer), out providerName);
             if (string.IsNullOrWhiteSpace(connectionString))
@@ -97,40 +132,35 @@ namespace FsInfoCat.Desktop
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
                 providerName = GetProviderFactoryInvariantName<SqlClientFactory>();
-                SqlCeConnectionStringBuilder connectionStringBuilder = new SqlCeConnectionStringBuilder();
-                connectionStringBuilder.DataSource = path;
-                connectionStringBuilder.PersistSecurityInfo = true;
-                return connectionStringBuilder.ConnectionString;
-            }
-            return connectionString;
-        }
-
-        public static DbConnectionStringBuilder GetLocalDbContainerConnectionString()
-        {
-            string connectionString = GetConnectionString(nameof(Model.Local.LocalDbContainer), out string providerName);
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                Assembly assembly = Assembly.GetEntryAssembly();
-                AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                AssemblyName name = assembly.GetName();
-                path = Path.Combine(path, name.Name);
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                path = Path.Combine(path, name.Version.ToString());
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                providerName = GetProviderFactoryInvariantName<SqlClientFactory>();
                 SqlCeConnectionStringBuilder sqlCeConnectionStringBuilder = new SqlCeConnectionStringBuilder();
-                sqlCeConnectionStringBuilder.DataSource = Path.Combine(path, Properties.Settings.Default.LocalDbFile);
+                sqlCeConnectionStringBuilder.DataSource = Path.Combine(path, Properties.Settings.Default.LocalDbFile ?? DEFAULT_LOCAL_DB_FILENAME);
                 sqlCeConnectionStringBuilder.PersistSecurityInfo = true;
                 return sqlCeConnectionStringBuilder;
             }
             DbConnectionStringBuilder connectionStringBuilder = DbProviderFactories.GetFactory(providerName).CreateConnectionStringBuilder();
             connectionStringBuilder.ConnectionString = connectionString;
             return connectionStringBuilder;
+        }
+
+        public static DbConnectionStringBuilder GetLocalDbContainerConnectionString(out string providerName)
+        {
+            Assembly assembly = Assembly.GetEntryAssembly();
+            AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            AssemblyName name = assembly.GetName();
+            path = Path.Combine(path, name.Name);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, name.Version.ToString());
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            providerName = GetProviderFactoryInvariantName<SqlCeProviderFactory>();
+            SqlCeConnectionStringBuilder sqlCeConnectionStringBuilder = new SqlCeConnectionStringBuilder();
+            sqlCeConnectionStringBuilder.DataSource = Path.Combine(path, Properties.Settings.Default.LocalDbFile ?? DEFAULT_LOCAL_DB_FILENAME);
+            sqlCeConnectionStringBuilder.PersistSecurityInfo = true;
+            return sqlCeConnectionStringBuilder;
         }
 
         internal static void SetRemoteDbContainerConnectionString(string connectionString, bool doNotRefreshConfigurationManager = false)

@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
+    [Obsolete]
     public class FileSystem : IFileSystem
     {
-        private readonly ReadOnlyCollectionDelegateWrapper<Volume, IVolume> _volumesWrapper;
-        private readonly ReadOnlyCollectionDelegateWrapper<FsSymbolicName, IFsSymbolicName> _symbolicNamesWrapper;
         public FileSystem()
         {
             Notes = "";
             Volumes = new HashSet<Volume>();
             SymbolicNames = new HashSet<FsSymbolicName>();
-            _volumesWrapper = new ReadOnlyCollectionDelegateWrapper<Volume, IVolume>(() => Volumes);
-            _symbolicNamesWrapper = new ReadOnlyCollectionDelegateWrapper<FsSymbolicName, IFsSymbolicName>(() => SymbolicNames);
         }
 
         public Guid Id { get; set; }
@@ -31,10 +28,10 @@ namespace FsInfoCat.Desktop.Model.Local
         public DateTime ModifiedOn { get; set; }
         public System.Guid DefaultSymbolicNameId { get; set; }
 
-        public virtual ICollection<Volume> Volumes { get; set; }
-        IReadOnlyCollection<IVolume> IFileSystem.Volumes => _volumesWrapper;
-        public virtual ICollection<FsSymbolicName> SymbolicNames { get; set; }
-        IReadOnlyCollection<IFsSymbolicName> IFileSystem.SymbolicNames => _symbolicNamesWrapper;
+        public virtual HashSet<Volume> Volumes { get; set; }
+        IReadOnlyCollection<IVolume> IFileSystem.Volumes => Volumes;
+        public virtual HashSet<FsSymbolicName> SymbolicNames { get; set; }
+        IReadOnlyCollection<IFsSymbolicName> IFileSystem.SymbolicNames => SymbolicNames;
         public virtual FsSymbolicName DefaultSymbolicName { get; set; }
         IFsSymbolicName IFileSystem.DefaultSymbolicName => DefaultSymbolicName;
     }

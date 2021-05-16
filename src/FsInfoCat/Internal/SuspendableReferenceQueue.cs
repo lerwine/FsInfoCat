@@ -13,14 +13,8 @@ namespace FsInfoCat.Internal
             _itemComparer = itemComparer ?? Extensions.GetComparisonService().GetEqualityComparer<T>();
         }
 
-        protected override bool AreEqual(T x, T y)
-        {
-            throw new System.NotImplementedException();
-        }
+        protected override bool AreEqual(T x, T y) => _itemComparer.Equals(x, y);
 
-        protected override int GetHashcode(T obj)
-        {
-            throw new System.NotImplementedException();
-        }
+        protected override int GetHashcode(T obj) => _itemComparer.GetHashCode(obj);
     }
 }

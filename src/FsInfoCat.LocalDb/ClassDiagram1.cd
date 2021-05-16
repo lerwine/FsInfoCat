@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.LocalDb.Comparison" BaseTypeListCollapsed="true">
+    <Position X="17" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACABBACQCAAAAAAACAAQBAAAACAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Comparison.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="File1" />
+      <Property Name="File2" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.DirectoryRelocateTask">
+    <Position X="7.5" Y="7.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAyAABEAAiAAAAEAAAAAAQKAACCAAAAAAAAAABAAAQ=</HashCode>
+      <FileName>DirectoryRelocateTask.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TargetDirectory" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.FileRelocateTask">
+    <Position X="14" Y="7.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAyAABEAAiAAAAEAAAAAAQIAAACAAAAAAAAAABAAIQ=</HashCode>
+      <FileName>FileRelocateTask.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TargetDirectory" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.FileSystem" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAyEABAAAGRAARAAAAAAAQCQAACgAAAAAAIAEBCIAA=</HashCode>
+      <FileName>FileSystem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DefaultSymbolicName" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.FsDirectory" BaseTypeListCollapsed="true">
+    <Position X="10.75" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACIABABQCAAAAAACQAQIQAAAACAAAQAiIEAADAAIA=</HashCode>
+      <FileName>FsDirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+      <Property Name="SourceRelocationTask" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.FsFile" BaseTypeListCollapsed="true">
+    <Position X="17" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>EAAiIABMAEGAAAAAAAAAQAQBACACAEAABgAAAABAAAA=</HashCode>
+      <FileName>FsFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HashCalculation" />
+      <Property Name="FileRelocateTask" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Redundancies" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.FsInfoCatContext" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAwEAAkBAAAACAiAAECACAAEIAAAAAgAAAAA=</HashCode>
+      <FileName>FsInfoCatContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.FsSymbolicName" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAyIADAAACEAAAAAAAQAAQCAAACAAAAAAAAAABAAAA=</HashCode>
+      <FileName>FsSymbolicName.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.HashCalculation" BaseTypeListCollapsed="true">
+    <Position X="20" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAABABACAAAAAAAAAAEBAAAACABAABIAAAABAAIA=</HashCode>
+      <FileName>HashCalculation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.Redundancy">
+    <Position X="20.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAABAAACAAAAAAAAAAAAAAAACAAAAAAAAAABAAIA=</HashCode>
+      <FileName>Redundancy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.LocalDb.Volume" BaseTypeListCollapsed="true">
+    <Position X="7.5" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAyMADAAACEAAAAAAAAgAYCAAACgAEAAQgIQABAIAA=</HashCode>
+      <FileName>Volume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

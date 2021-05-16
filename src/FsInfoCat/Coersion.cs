@@ -2,9 +2,11 @@ using System;
 
 namespace FsInfoCat
 {
-    public abstract class Coersion<T>
+    internal abstract class Coersion<T> : ICoersion<T>
     {
         public static Coersion<T> Default { get; }
+
+        Type ICoersion.ValueType => typeof(T);
 
         static Coersion()
         {
@@ -23,5 +25,14 @@ namespace FsInfoCat
         public virtual T Cast(object obj) => (T)obj;
 
         public abstract bool TryCoerce(object obj, out T result);
+
+        object ICoersion.Cast(object obj) => Cast(obj);
+
+        bool ICoersion.TryCoerce(object obj, out object result)
+        {
+            bool returnValue = TryCoerce(obj, out T t);
+            result = t;
+            return returnValue;
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
+    [Obsolete]
     public class HashCalculation
     {
         public HashCalculation()

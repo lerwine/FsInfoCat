@@ -1,5 +1,8 @@
+using System;
+
 namespace FsInfoCat.Desktop.Model
 {
+    [Obsolete]
     public enum AppTaskStatus : byte
     {
         New = 0,
