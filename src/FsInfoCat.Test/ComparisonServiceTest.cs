@@ -16,9 +16,9 @@ namespace FsInfoCat.Test
         [Test]
         public void ServiceTest()
         {
-            IComparisonService x = Extensions.GetComparisonService();
+            IComparisonService x = Services.GetComparisonService();
             Assert.That(x, Is.Not.Null);
-            IComparisonService y = Extensions.GetComparisonService();
+            IComparisonService y = Services.GetComparisonService();
             Assert.That(y, Is.Not.Null);
             Assert.That(x, Is.SameAs(y));
         }
@@ -26,7 +26,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetEqualityComparerTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
 
             IEqualityComparer equalityComparerA = comparisonService.GetEqualityComparer(typeof(int));
@@ -68,7 +68,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetEqualityComparer_ValueTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IEqualityComparer<int> equalityComparer = comparisonService.GetEqualityComparer<int>();
             Assert.That(equalityComparer, Is.Not.Null);
@@ -86,7 +86,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetEqualityComparer_NullableTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IEqualityComparer<decimal?> equalityComparer = comparisonService.GetEqualityComparer<decimal?>();
             Assert.That(equalityComparer, Is.Not.Null);
@@ -113,7 +113,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetEqualityComparer_AnnotatedPropertyTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IEqualityComparer<SqlConnectionStringBuilder> equalityComparer = comparisonService.GetEqualityComparer<SqlConnectionStringBuilder>();
             Assert.That(equalityComparer, Is.Not.Null);
@@ -151,7 +151,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetEqualityComparer_ConvertingTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IEqualityComparer<Uri> equalityComparer = comparisonService.GetEqualityComparer<Uri>();
             Assert.That(equalityComparer, Is.Not.Null);
@@ -183,7 +183,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetEqualityComparer_StringTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IEqualityComparer<string> equalityComparer = comparisonService.GetEqualityComparer<string>();
             Assert.That(equalityComparer, Is.Not.Null);
@@ -213,7 +213,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetComparerTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
 
             IComparer comparerA = comparisonService.GetComparer(typeof(int));
@@ -255,7 +255,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetComparer_ValueTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IComparer<int> comparer = comparisonService.GetComparer<int>();
             Assert.That(comparer, Is.Not.Null);
@@ -279,7 +279,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetComparer_NullableTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IComparer<decimal?> comparer = comparisonService.GetComparer<decimal?>();
             Assert.That(comparer, Is.Not.Null);
@@ -312,7 +312,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetComparer_ConvertingTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IComparer<Uri> comparer = comparisonService.GetComparer<Uri>();
             Assert.That(comparer, Is.Not.Null);
@@ -347,7 +347,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetComparer_StringTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
             IComparer<string> comparer = comparisonService.GetComparer<string>();
             Assert.That(comparer, Is.Not.Null);
@@ -383,7 +383,7 @@ namespace FsInfoCat.Test
         [Test]
         public void GetDefaultEqualityComparerTest()
         {
-            IComparisonService comparisonService = Extensions.GetComparisonService();
+            IComparisonService comparisonService = Services.GetComparisonService();
             Assert.That(comparisonService, Is.Not.Null);
 
         }

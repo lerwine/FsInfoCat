@@ -16,9 +16,9 @@ namespace FsInfoCat.Test
         [Test]
         public void ServiceTest()
         {
-            ISuspendableService x = Extensions.GetSuspendableService();
+            ISuspendableService x = Services.GetSuspendableService();
             Assert.That(x, Is.Not.Null);
-            ISuspendableService y = Extensions.GetSuspendableService();
+            ISuspendableService y = Services.GetSuspendableService();
             Assert.That(y, Is.Not.Null);
             Assert.That(x, Is.SameAs(y));
         }

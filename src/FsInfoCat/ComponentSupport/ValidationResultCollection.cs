@@ -15,7 +15,7 @@ namespace FsInfoCat.ComponentSupport
         IList, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly object _syncRoot = new object();
-        private IEventSuspensionManager _eventSuspension = Extensions.GetSuspendableService().NewEventSuspensionManager();
+        private IEventSuspensionManager _eventSuspension = Services.GetSuspendableService().NewEventSuspensionManager();
         private Node _first;
         private Node _last;
 

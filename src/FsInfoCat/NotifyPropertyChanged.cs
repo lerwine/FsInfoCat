@@ -19,7 +19,7 @@ namespace FsInfoCat
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly IPropertyManager _propertyManager;
         private readonly Dictionary<string, object> _propertyValues = new Dictionary<string, object>();
-        private readonly ISuspendableQueue<PropertyChangedEventArgs> _eventQueue = Extensions.GetSuspendableService().CreateSuspendableQueue<PropertyChangedEventArgs>();
+        private readonly ISuspendableQueue<PropertyChangedEventArgs> _eventQueue = Services.GetSuspendableService().CreateSuspendableQueue<PropertyChangedEventArgs>();
 
         protected object SyncRoot => _eventQueue.SyncRoot;
 
@@ -227,7 +227,7 @@ namespace FsInfoCat
             {   
                 Converter = (_descriptor = descriptor).Converter;
                 IsReadOnly = descriptor.IsReadOnly;
-                IComparisonService comparisonService = Extensions.GetComparisonService();
+                IComparisonService comparisonService = Services.GetComparisonService();
                 Coersion = comparisonService.GetDefaultCoersion<TProperty>();
                 EqualityComparer = comparisonService.GetEqualityComparer<TProperty>(true);
                 Normalization = descriptor.Attributes.OfType<NormalizationAttribute>().FirstOrDefault();
@@ -321,7 +321,7 @@ namespace FsInfoCat
 
             public PropertyHandler(PropertyDescriptor propertyDescriptor) : base(propertyDescriptor)
             {
-                IComparisonService comparisonService = Extensions.GetComparisonService();
+                IComparisonService comparisonService = Services.GetComparisonService();
                 _coersion = comparisonService.GetDefaultCoersion<T>();
                 _equalityComparer = comparisonService.GetEqualityComparer<T>();
             }

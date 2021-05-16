@@ -8,7 +8,7 @@ namespace FsInfoCat.Internal
 
         public SuspendableStringQueue(IEqualityComparer<string> itemComparer)
         {
-            _itemComparer = itemComparer ?? Extensions.GetComparisonService().GetEqualityComparer<string>();
+            _itemComparer = itemComparer ?? Services.GetComparisonService().GetEqualityComparer<string>();
         }
 
         protected override bool AreEqual(string x, string y)

@@ -16,11 +16,11 @@ namespace FsInfoCat.Test
         [Test]
         public void ServiceTest()
         {
-            ISuspendable x = Extensions.NewSuspendable();
+            ISuspendable x = Services.NewSuspendable();
             Assert.That(x, Is.Not.Null);
             Assert.That(x.IsSuspended, Is.False);
             Assert.That(x.SyncRoot, Is.Not.Null);
-            ISuspendable y = Extensions.NewSuspendable();
+            ISuspendable y = Services.NewSuspendable();
             Assert.That(y, Is.Not.Null);
             Assert.That(x, Is.Not.SameAs(y));
             Assert.That(y.IsSuspended, Is.False);
@@ -30,7 +30,7 @@ namespace FsInfoCat.Test
         [Test]
         public void SuspendTest()
         {
-            ISuspendable target = Extensions.NewSuspendable();
+            ISuspendable target = Services.NewSuspendable();
             Assert.That(target.IsSuspended, Is.False);
             ISuspension x, y;
             using (x = target.Suspend())
@@ -123,7 +123,7 @@ namespace FsInfoCat.Test
         public void SuspensionEventsTest()
         {
             SuspensionEventTargetListener eventTarget = new SuspensionEventTargetListener();
-            ISuspendable target = Extensions.NewSuspendable();
+            ISuspendable target = Services.NewSuspendable();
             target.BeginSuspension += eventTarget.OnBeginSuspension;
             target.EndSuspension += eventTarget.OnEndSuspension;
             Assert.That(target.IsSuspended, Is.False);
@@ -229,7 +229,7 @@ namespace FsInfoCat.Test
         public void AssertNotSuspendedTest()
         {
             SuspensionEventTargetListener listener = new SuspensionEventTargetListener();
-            ISuspendable target = Extensions.NewSuspendable();
+            ISuspendable target = Services.NewSuspendable();
             Assert.That(target.IsSuspended, Is.False);
             target.AssertNotSuspended();
             target.AssertNotSuspended(listener.IncrementAction);
@@ -351,7 +351,7 @@ namespace FsInfoCat.Test
         public void IfNotSuspendedTest()
         {
             SuspensionEventTargetListener eventTarget = new SuspensionEventTargetListener();
-            ISuspendable target = Extensions.NewSuspendable();
+            ISuspendable target = Services.NewSuspendable();
             Assert.That(target.IsSuspended, Is.False);
             target.IfNotSuspended(eventTarget.DecrementAction);
             Assert.That(eventTarget.Count, Is.EqualTo(-1));
@@ -541,7 +541,7 @@ namespace FsInfoCat.Test
         class BlockingTestHelper
         {
             internal int Value { get; private set; }
-            internal readonly ISuspendable Target = Extensions.NewSuspendable();
+            internal readonly ISuspendable Target = Services.NewSuspendable();
             internal void Increment()
             {
                 using (ISuspension suspension = Target.Suspend())

@@ -10,7 +10,7 @@ namespace FsInfoCat.Internal
 {
     internal abstract class SuspendableQueue<T> : Suspendable, ISuspendableQueue<T>, IReadOnlyList<T>, IList<T>, IList
     {
-        private static readonly IThreadLockService _threadLockService = Extensions.GetThreadLockService();
+        private static readonly IThreadLockService _threadLockService = Services.GetThreadLockService();
         private readonly LinkedList<T> _suspendedItems = new LinkedList<T>();
         private readonly LinkedList<T> _availableItems = new LinkedList<T>();
         private readonly Coersion<T> _coersion;

@@ -24,7 +24,7 @@ namespace FsInfoCat.Internal
             if (type.Equals(typeof(string)))
                 return (ISuspendableQueue<T>)new SuspendableStringQueue((IEqualityComparer<string>)itemComparer);
             if (itemComparer is null)
-                itemComparer = Extensions.GetComparisonService().GetEqualityComparer<T>();
+                itemComparer = Services.GetComparisonService().GetEqualityComparer<T>();
             return (ISuspendableQueue<T>)Activator.CreateInstance(typeof(SuspendableReferenceQueue<>).MakeGenericType(type), new object[] { itemComparer });
         }
 

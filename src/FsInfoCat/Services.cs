@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat
 {
-    public static class Extensions
+    public static class Services
     {
         public static readonly IServiceProvider ServiceProvider = new ServiceCollection()
             .AddSingleton<IThreadLockService, Internal.ThreadLockService>()

@@ -9,7 +9,7 @@ namespace FsInfoCat.Internal
 
         public NullableSuspendableQueue(IEqualityComparer<T?> itemComparer)
         {
-            _itemComparer = itemComparer ?? Extensions.GetComparisonService().GetEqualityComparer<T?>();
+            _itemComparer = itemComparer ?? Services.GetComparisonService().GetEqualityComparer<T?>();
         }
 
         protected override bool AreEqual(T? x, T? y)

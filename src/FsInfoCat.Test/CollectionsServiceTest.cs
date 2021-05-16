@@ -16,9 +16,9 @@ namespace FsInfoCat.Test
         [Test]
         public void ServiceTest()
         {
-            ICollectionsService x = Extensions.GetCollectionsService();
+            ICollectionsService x = Services.GetCollectionsService();
             Assert.That(x, Is.Not.Null);
-            ICollectionsService y = Extensions.GetCollectionsService();
+            ICollectionsService y = Services.GetCollectionsService();
             Assert.That(y, Is.Not.Null);
             Assert.That(x, Is.SameAs(y));
         }

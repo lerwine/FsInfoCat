@@ -7,7 +7,7 @@ namespace FsInfoCat.Internal
 {
     class Suspendable : ISuspendable
     {
-        private static readonly IThreadLockService _threadLockService = Extensions.GetThreadLockService();
+        private static readonly IThreadLockService _threadLockService = Services.GetThreadLockService();
         private Suspension _latest;
 
         public event EventHandler BeginSuspension;
