@@ -1,4 +1,5 @@
 using FsInfoCat.Model;
+using FsInfoCat.Model.Local;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
 {
-    public class FsFile : IFile, IValidatableObject
+    public class FsFile : ILocalFile, IValidatableObject
     {
         public FsFile()
         {

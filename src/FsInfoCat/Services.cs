@@ -1,7 +1,10 @@
+using FsInfoCat.Model.Local;
+using FsInfoCat.Model.Remote;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -10,12 +13,20 @@ namespace FsInfoCat
 {
     public static class Services
     {
+        public const string DEFAULT_LOCAL_DB_FILENAME = "FsInfoCat";
+
+        public static readonly Regex BackslashEscapablePattern = new Regex(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
+
+        public static readonly Regex BackslashEscapableLBPattern = new Regex(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
+
         public static readonly IServiceProvider ServiceProvider = new ServiceCollection()
             .AddSingleton<IThreadLockService, Internal.ThreadLockService>()
             .AddSingleton<IComparisonService, Internal.ComparisonService>()
             .AddSingleton<ICollectionsService, Internal.CollectionsService>()
             .AddTransient<ISuspendable, Internal.Suspendable>()
             .AddSingleton<ISuspendableService, Internal.SuspendableService>()
+            .AddSingleton<ILocalDbService, Internal.LocalDbService>()
+            .AddSingleton<IRemoteDbService, Internal.RemoteDbService>()
             .BuildServiceProvider();
 
         public static IThreadLockService GetThreadLockService() => ServiceProvider.GetService<IThreadLockService>();
@@ -28,9 +39,9 @@ namespace FsInfoCat
 
         public static ICollectionsService GetCollectionsService() => ServiceProvider.GetService<ICollectionsService>();
 
-        public static readonly Regex BackslashEscapablePattern = new Regex(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
+        public static ILocalDbService GetLocalDbService() => ServiceProvider.GetService<ILocalDbService>();
 
-        public static readonly Regex BackslashEscapableLBPattern = new Regex(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
+        public static IRemoteDbService GetRemoteDbService() => ServiceProvider.GetService<IRemoteDbService>();
 
         public static string ToCsTypeName(this Type type)
         {

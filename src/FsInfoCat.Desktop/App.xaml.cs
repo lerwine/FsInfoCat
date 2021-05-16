@@ -36,6 +36,8 @@ namespace FsInfoCat.Desktop
         {
             LoggerFactory = new LoggerFactory();
             LoggerFactory.AddProvider(new DebugLoggerProvider());
+#warning Need to remove reference to EF6 and change to EF Core after remote db ported to new module
+            //Services.GetLocalDbService().SetContextFactory(LocalDb.FsInfoCatContext.GetContextFactory(Properties.Settings.Default.LocalDbFile, Assembly.GetEntryAssembly());
         }
 
         public static ViewModel.MainViewModel GetMainVM() => ((App)Current).FindResource("MainVM") as ViewModel.MainViewModel;

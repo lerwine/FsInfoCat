@@ -1,4 +1,5 @@
 using FsInfoCat.Model;
+using FsInfoCat.Model.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -8,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
 {
-    public class HashCalculation : IHashCalculation, IValidatableObject
+    public class HashCalculation : ILocalHashCalculation, IValidatableObject
     {
         public HashCalculation()
         {

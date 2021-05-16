@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
 {
+    [Obsolete("This should be remote DB only")]
     public class FileRelocateTask : IValidatableObject
     {
         public FileRelocateTask()

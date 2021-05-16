@@ -1,42 +1,80 @@
 using FsInfoCat.Model;
+using FsInfoCat.Model.Local;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Data.SqlServerCe;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace FsInfoCat.LocalDb
 {
-    public class FsInfoCatContext : DbContext, IDbContext
+    public class FsInfoCatContext : DbContext, ILocalDbContext
     {
+        public static Func<ILocalDbContext> GetContextFactory(string dbFileName, Assembly assembly)
+        {
+            AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            AssemblyName name = assembly.GetName();
+            path = Path.Combine(path, name.Name);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, name.Version.ToString());
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, dbFileName ?? Services.DEFAULT_LOCAL_DB_FILENAME);
+            return new Func<ILocalDbContext>(() => Open(path));
+        }
+
         public virtual DbSet<FsSymbolicName> FsSymbolicNames { get; set; }
+
+        IQueryable<ILocalSymbolicName> ILocalDbContext.FsSymbolicNames => FsSymbolicNames;
+
+        IQueryable<IFsSymbolicName> IDbContext.FsSymbolicNames => FsSymbolicNames;
 
         public virtual DbSet<FileSystem> FileSystems { get; set; }
 
+        IQueryable<ILocalFileSystem> ILocalDbContext.FileSystems => FileSystems;
+
+        IQueryable<IFileSystem> IDbContext.FileSystems => FileSystems;
+
         public virtual DbSet<Volume> Volumes { get; set; }
+
+        IQueryable<ILocalVolume> ILocalDbContext.Volumes => Volumes;
+
+        IQueryable<IVolume> IDbContext.Volumes => Volumes;
 
         public virtual DbSet<FsDirectory> FsDirectories { get; set; }
 
-        public virtual DbSet<Comparison> Comparisons { get; set; }
-
-        public virtual DbSet<HashCalculation> HashCalculations { get; set; }
-
-        public virtual DbSet<Redundancy> Redundancies { get; set; }
-
-        public virtual DbSet<FsFile> FsFiles { get; set; }
-
-        public virtual DbSet<FileRelocateTask> FileRelocateTasks { get; set; }
-
-        public virtual DbSet<DirectoryRelocateTask> DirectoryRelocateTasks { get; set; }
-
-        IQueryable<IHashCalculation> IDbContext.Checksums => HashCalculations;
+        IQueryable<ILocalSubDirectory> ILocalDbContext.Subdirectories => FsDirectories;
 
         IQueryable<ISubDirectory> IDbContext.Subdirectories => FsDirectories;
 
+        public virtual DbSet<Comparison> Comparisons { get; set; }
+
+        IQueryable<ILocalFileComparison> ILocalDbContext.Comparisons => Comparisons;
+
         IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
 
-        IQueryable<IFile> IDbContext.Files => FsFiles;
+        public virtual DbSet<HashCalculation> HashCalculations { get; set; }
 
-        IQueryable<IVolume> IDbContext.Volumes => Volumes;
+        IQueryable<ILocalHashCalculation> ILocalDbContext.Checksums => HashCalculations;
+
+        IQueryable<IHashCalculation> IDbContext.Checksums => HashCalculations;
+
+        public virtual DbSet<Redundancy> Redundancies { get; set; }
+
+        IQueryable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies;
+
+        IQueryable<IRedundancy> IDbContext.Redundancies => Redundancies;
+
+        public virtual DbSet<FsFile> FsFiles { get; set; }
+
+        IQueryable<ILocalFile> ILocalDbContext.Files => FsFiles;
+
+        IQueryable<IFile> IDbContext.Files => FsFiles;
 
         private FsInfoCatContext(DbContextOptions options)
         {
@@ -74,8 +112,6 @@ namespace FsInfoCat.LocalDb
             modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
             modelBuilder.Entity<Comparison>(Comparison.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
-            modelBuilder.Entity<DirectoryRelocateTask>(DirectoryRelocateTask.BuildEntity);
-            modelBuilder.Entity<FileRelocateTask>(FileRelocateTask.BuildEntity);
             base.OnModelCreating(modelBuilder);
         }
     }
