@@ -121,7 +121,7 @@ namespace FsInfoCat.Desktop.Model
         /// <summary>
         /// Type of media currently present in the logical drive.
         /// </summary>
-        public WIN32_MEDIA_TYPE MediaType => _managementObject.ToEnumPropertyValue< WIN32_MEDIA_TYPE>(nameof(MediaType)).Value;
+        public WIN32_MEDIA_TYPE MediaType => _managementObject.ToEnumPropertyValue<WIN32_MEDIA_TYPE>(nameof(MediaType)).Value;
 
         /// <summary>
         /// Label by which the object is known. When subclassed, this property can be overridden to be a key property.

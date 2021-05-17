@@ -1,16 +1,10 @@
-using FsInfoCat.Desktop.Model;
 using FsInfoCat.Model.Remote;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.ComponentModel;
-using System.Data.Entity;
-using System.Data.SqlServerCe;
-using System.IO;
 using System.Linq;
 using System.Management;
 using System.Security.Principal;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 

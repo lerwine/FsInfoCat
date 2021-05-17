@@ -1,11 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model
 {
@@ -23,7 +19,8 @@ namespace FsInfoCat.Desktop.Model
     {
         public Win32_LogicalDiskRootDirectory(ManagementObject managementObject)
             : base(new Win32_LogicalDisk(new ManagementObject((string)(managementObject ?? throw new ArgumentNullException(nameof(managementObject)))[nameof(GroupComponent)])),
-                  new Win32_Directory(new ManagementObject((string)managementObject[nameof(PartComponent)]))) { }
+                  new Win32_Directory(new ManagementObject((string)managementObject[nameof(PartComponent)])))
+        { }
 
         public static List<Win32_LogicalDiskRootDirectory> GetLogicalDiskRootDirectories(ModalOperationStatusViewModel.Controller controller)
         {

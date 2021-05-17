@@ -10,9 +10,59 @@ namespace FsInfoCat.RemoteDb
 {
     public class UserProfile : IUserProfile
     {
-        public Guid Id { get; set; }
-
         private string _displayName = "";
+        private string _notes = "";
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<UserProfile> builder)
+        {
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedUserProfiles).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedUserProfiles).IsRequired();
+            throw new NotImplementedException();
+        }
+
+        public UserProfile()
+        {
+            AssignmentGroups = new HashSet<UserGroup>();
+            DirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
+            FileRelocationTasks = new HashSet<FileRelocateTask>();
+            CreatedSymbolicNames = new HashSet<SymbolicName>();
+            CreatedComparisons = new HashSet<FileComparison>();
+            CreatedDirectories = new HashSet<FsDirectory>();
+            CreatedFiles = new HashSet<FsFile>();
+            CreatedFileSystems = new HashSet<FileSystem>();
+            CreatedHashCalculations = new HashSet<HashCalculation>();
+            CreatedHostDevices = new HashSet<HostDevice>();
+            CreatedHostPlatforms = new HashSet<HostPlatform>();
+            CreatedRedundancies = new HashSet<Redundancy>();
+            CreatedUserProfiles = new HashSet<UserProfile>();
+            CreatedVolumes = new HashSet<Volume>();
+            CreatedDirectoryRelocateTasks = new HashSet<DirectoryRelocateTask>();
+            CreatedFileRelocateTasks = new HashSet<FileRelocateTask>();
+            CreatedUserGroups = new HashSet<UserGroup>();
+            ModifiedSymbolicNames = new HashSet<SymbolicName>();
+            ModifiedComparisons = new HashSet<FileComparison>();
+            ModifiedDirectories = new HashSet<FsDirectory>();
+            ModifiedFiles = new HashSet<FsFile>();
+            ModifiedFileSystems = new HashSet<FileSystem>();
+            ModifiedHashCalculations = new HashSet<HashCalculation>();
+            ModifiedHostDevices = new HashSet<HostDevice>();
+            ModifiedHostPlatforms = new HashSet<HostPlatform>();
+            ModifiedRedundancies = new HashSet<Redundancy>();
+            ModifiedUserProfiles = new HashSet<UserProfile>();
+            ModifiedVolumes = new HashSet<Volume>();
+            ModifiedDirectoryRelocateTasks = new HashSet<DirectoryRelocateTask>();
+            ModifiedFileRelocateTasks = new HashSet<FileRelocateTask>();
+            ModifiedUserGroups = new HashSet<UserGroup>();
+        }
+
+        #region Column Properties
+
+        public Guid Id { get; set; }
 
         [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
         [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
@@ -37,25 +87,39 @@ namespace FsInfoCat.RemoteDb
 
         public UserRole ExplicitRoles { get; set; }
 
-        private string _notes = "";
-
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
         public bool IsInactive { get; set; }
 
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
         public Guid CreatedById { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Required]
+        public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedById { get; set; }
 
+        #endregion
+
+        #region Navigation Properties
+
+        public HashSet<UserGroup> AssignmentGroups { get; set; }
+
+        public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
+
+        public HashSet<FileRelocateTask> FileRelocationTasks { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
+        [Required]
         public UserProfile CreatedBy { get; set; }
 
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
+        [Required]
         public UserProfile ModifiedBy { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
 
         public HashSet<SymbolicName> CreatedSymbolicNames { get; set; }
 
@@ -101,12 +165,6 @@ namespace FsInfoCat.RemoteDb
 
         public HashSet<FileComparison> ModifiedComparisons { get; set; }
 
-        public HashSet<UserGroup> AssignmentGroups { get; set; }
-
-        public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
-
-        public HashSet<FileRelocateTask> FileRelocationTasks { get; set; }
-
         public HashSet<DirectoryRelocateTask> CreatedDirectoryRelocateTasks { get; set; }
 
         public HashSet<FileRelocateTask> CreatedFileRelocateTasks { get; set; }
@@ -118,6 +176,10 @@ namespace FsInfoCat.RemoteDb
         public HashSet<FileRelocateTask> ModifiedFileRelocateTasks { get; set; }
 
         public HashSet<UserGroup> ModifiedUserGroups { get; set; }
+
+        #endregion
+
+        #region Explicit Members
 
         IReadOnlyCollection<byte> IUserProfile.SID => SID;
 
@@ -187,16 +249,6 @@ namespace FsInfoCat.RemoteDb
 
         IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void BuildEntity(EntityTypeBuilder<UserProfile> builder)
-        {
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedUserProfiles).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedUserProfiles).IsRequired();
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }

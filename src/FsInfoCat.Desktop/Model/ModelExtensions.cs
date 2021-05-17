@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Management;
-using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Desktop.Model
 {

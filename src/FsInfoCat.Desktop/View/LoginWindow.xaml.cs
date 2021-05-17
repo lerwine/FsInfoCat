@@ -1,7 +1,4 @@
-using FsInfoCat.Desktop.Model;
 using System;
-using System.Security.Principal;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.View

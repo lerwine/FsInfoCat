@@ -11,71 +11,10 @@ namespace FsInfoCat.LocalDb
 {
     public class Volume : ILocalVolume, IValidatableObject
     {
-
-        public Guid Id { get; set; }
-
         private string _displayName = "";
-
-        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
-        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
-
         private string _volumeName = "";
-
-        [DisplayName(Constants.DISPLAY_NAME_VOLUME_NAME)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_VOLUME_NAME, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_LENGTH)]
-        public string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
-
         private string _identifier = "";
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_IDENTIFIER, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_LENGTH)]
-        public string Identifier { get => _identifier; set => _identifier = value ?? ""; }
-
-        public Guid FileSystemId { get; set; }
-
-        public System.IO.DriveType Type { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
-        public bool? CaseSensitiveSearch { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
-        public bool? ReadOnly { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MAX_NAME_LENGTH)]
-        [Range(0, int.MaxValue, ErrorMessage = Constants.ERROR_MESSAGE_MAXNAMELENGTH)]
-        [DefaultValue(Constants.DEFAULT_VALUE_MAX_NAME_LENGTH)]
-        public long? MaxNameLength { get; set; } = Constants.DEFAULT_VALUE_MAX_NAME_LENGTH;
-
         private string _notes = "";
-
-        public string Notes { get => _notes; set => _notes = value ?? ""; }
-
-        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
-        public bool IsInactive { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_FILE_SYSTEM)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_SYSTEM)]
-        public virtual FileSystem FileSystem { get; set; }
-
-        IFileSystem IVolume.FileSystem => FileSystem;
-
-        [DisplayName(Constants.DISPLAY_NAME_ROOT_DIRECTORY)]
-        public virtual FsDirectory RootDirectory { get; set; }
-
-        ISubDirectory IVolume.RootDirectory => RootDirectory;
-
-        ILocalSubDirectory ILocalVolume.RootDirectory => RootDirectory;
-
-        ILocalFileSystem ILocalVolume.FileSystem => FileSystem;
 
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
@@ -103,5 +42,74 @@ namespace FsInfoCat.LocalDb
                 results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
             return results;
         }
+
+        #region Column Properties
+
+        public Guid Id { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
+        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
+
+        [DisplayName(Constants.DISPLAY_NAME_VOLUME_NAME)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_VOLUME_NAME, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_LENGTH)]
+        public string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_IDENTIFIER, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_LENGTH)]
+        public string Identifier { get => _identifier; set => _identifier = value ?? ""; }
+
+        public Guid FileSystemId { get; set; }
+
+        public System.IO.DriveType Type { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
+        public bool? CaseSensitiveSearch { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
+        public bool? ReadOnly { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MAX_NAME_LENGTH)]
+        [Range(0, int.MaxValue, ErrorMessage = Constants.ERROR_MESSAGE_MAXNAMELENGTH)]
+        [DefaultValue(Constants.DEFAULT_VALUE_MAX_NAME_LENGTH)]
+        public long? MaxNameLength { get; set; } = Constants.DEFAULT_VALUE_MAX_NAME_LENGTH;
+
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
+        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        public bool IsInactive { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        public DateTime CreatedOn { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        public DateTime ModifiedOn { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        [DisplayName(Constants.DISPLAY_NAME_FILE_SYSTEM)]
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_SYSTEM)]
+        public virtual FileSystem FileSystem { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_ROOT_DIRECTORY)]
+        public virtual FsDirectory RootDirectory { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        IFileSystem IVolume.FileSystem => FileSystem;
+
+        ISubDirectory IVolume.RootDirectory => RootDirectory;
+
+        ILocalSubDirectory ILocalVolume.RootDirectory => RootDirectory;
+
+        ILocalFileSystem ILocalVolume.FileSystem => FileSystem;
+
+        #endregion
     }
 }

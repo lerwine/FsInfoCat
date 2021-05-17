@@ -11,54 +11,8 @@ namespace FsInfoCat.RemoteDb
 {
     public class SymbolicName : IRemoteSymbolicName
     {
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILESYSTEM)]
-        [DisplayName(Constants.DISPLAY_NAME_FILESYSTEM)]
-        public FileSystem FileSystem { get; set; }
-
-        public HashSet<FileSystem> DefaultFileSystems { get; set; }
-
-        public Guid Id { get; set; }
-
-        private string _name = "";
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
-        public string Name { get => _name; set => _name = value ?? ""; }
-
-        public Guid FileSystemId { get; set; }
-
         private string _notes = "";
-
-        public string Notes { get => _notes; set => _notes = value ?? ""; }
-
-        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
-        public bool IsInactive { get; set; }
-
-        public Guid CreatedById { get; set; }
-
-        public Guid ModifiedById { get; set; }
-
-        public UserProfile CreatedBy { get; set; }
-
-        public UserProfile ModifiedBy { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        IFileSystem IFsSymbolicName.FileSystem => FileSystem;
-
-        IRemoteFileSystem IRemoteSymbolicName.FileSystem => FileSystem;
-
-        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => DefaultFileSystems;
-
-        IReadOnlyCollection<IRemoteFileSystem> IRemoteSymbolicName.DefaultFileSystems => DefaultFileSystems;
-
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
-
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+        private string _name = "";
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -79,5 +33,73 @@ namespace FsInfoCat.RemoteDb
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedSymbolicNames).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedSymbolicNames).IsRequired();
         }
+
+        public SymbolicName()
+        {
+            DefaultFileSystems = new HashSet<FileSystem>();
+        }
+
+        #region Column Properties
+
+        public Guid Id { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        public string Name { get => _name; set => _name = value ?? ""; }
+
+        public Guid FileSystemId { get; set; }
+
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
+        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        public bool IsInactive { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        public Guid CreatedById { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Required]
+        public DateTime ModifiedOn { get; set; }
+
+        public Guid ModifiedById { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILESYSTEM)]
+        [DisplayName(Constants.DISPLAY_NAME_FILESYSTEM)]
+        public FileSystem FileSystem { get; set; }
+
+        public HashSet<FileSystem> DefaultFileSystems { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
+        [Required]
+        public UserProfile CreatedBy { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
+        [Required]
+        public UserProfile ModifiedBy { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        IFileSystem IFsSymbolicName.FileSystem => FileSystem;
+
+        IRemoteFileSystem IRemoteSymbolicName.FileSystem => FileSystem;
+
+        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => DefaultFileSystems;
+
+        IReadOnlyCollection<IRemoteFileSystem> IRemoteSymbolicName.DefaultFileSystems => DefaultFileSystems;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        #endregion
     }
 }

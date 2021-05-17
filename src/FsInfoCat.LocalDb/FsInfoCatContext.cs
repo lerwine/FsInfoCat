@@ -14,6 +14,63 @@ namespace FsInfoCat.LocalDb
 {
     public class FsInfoCatContext : DbContext, ILocalDbContext
     {
+        public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
+
+        public virtual DbSet<FileSystem> FileSystems { get; set; }
+
+        public virtual DbSet<Volume> Volumes { get; set; }
+
+        public virtual DbSet<FsDirectory> Directories { get; set; }
+
+        public virtual DbSet<FileComparison> Comparisons { get; set; }
+
+        public virtual DbSet<HashCalculation> HashCalculations { get; set; }
+
+        public virtual DbSet<Redundancy> Redundancies { get; set; }
+
+        public virtual DbSet<FsFile> Files { get; set; }
+
+        #region Explicit Members
+
+        IQueryable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames;
+
+        IQueryable<IFsSymbolicName> IDbContext.SymbolicNames => SymbolicNames;
+
+        IQueryable<ILocalFileSystem> ILocalDbContext.FileSystems => FileSystems;
+
+        IQueryable<IFileSystem> IDbContext.FileSystems => FileSystems;
+
+        IQueryable<ILocalVolume> ILocalDbContext.Volumes => Volumes;
+
+        IQueryable<IVolume> IDbContext.Volumes => Volumes;
+
+        IQueryable<ILocalSubDirectory> ILocalDbContext.Subdirectories => Directories;
+
+        IQueryable<ISubDirectory> IDbContext.Subdirectories => Directories;
+
+        IQueryable<ILocalFileComparison> ILocalDbContext.Comparisons => Comparisons;
+
+        IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
+
+        IQueryable<ILocalHashCalculation> ILocalDbContext.HashCalculations => HashCalculations;
+
+        IQueryable<IHashCalculation> IDbContext.HashCalculations => HashCalculations;
+
+        IQueryable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies;
+
+        IQueryable<IRedundancy> IDbContext.Redundancies => Redundancies;
+
+        IQueryable<ILocalFile> ILocalDbContext.Files => Files;
+
+        IQueryable<IFile> IDbContext.Files => Files;
+
+        #endregion
+
+        private FsInfoCatContext(DbContextOptions options)
+        {
+
+        }
+
         public static Func<ILocalDbContext> GetContextFactory(string dbFileName, Assembly assembly)
         {
             AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
@@ -29,59 +86,6 @@ namespace FsInfoCat.LocalDb
                 Directory.CreateDirectory(path);
             path = Path.Combine(path, dbFileName ?? Services.DEFAULT_LOCAL_DB_FILENAME);
             return new Func<ILocalDbContext>(() => Open(path));
-        }
-
-        public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
-
-        IQueryable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames;
-
-        IQueryable<IFsSymbolicName> IDbContext.SymbolicNames => SymbolicNames;
-
-        public virtual DbSet<FileSystem> FileSystems { get; set; }
-
-        IQueryable<ILocalFileSystem> ILocalDbContext.FileSystems => FileSystems;
-
-        IQueryable<IFileSystem> IDbContext.FileSystems => FileSystems;
-
-        public virtual DbSet<Volume> Volumes { get; set; }
-
-        IQueryable<ILocalVolume> ILocalDbContext.Volumes => Volumes;
-
-        IQueryable<IVolume> IDbContext.Volumes => Volumes;
-
-        public virtual DbSet<FsDirectory> Directories { get; set; }
-
-        IQueryable<ILocalSubDirectory> ILocalDbContext.Subdirectories => Directories;
-
-        IQueryable<ISubDirectory> IDbContext.Subdirectories => Directories;
-
-        public virtual DbSet<FileComparison> Comparisons { get; set; }
-
-        IQueryable<ILocalFileComparison> ILocalDbContext.Comparisons => Comparisons;
-
-        IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
-
-        public virtual DbSet<HashCalculation> HashCalculations { get; set; }
-
-        IQueryable<ILocalHashCalculation> ILocalDbContext.HashCalculations => HashCalculations;
-
-        IQueryable<IHashCalculation> IDbContext.HashCalculations => HashCalculations;
-
-        public virtual DbSet<Redundancy> Redundancies { get; set; }
-
-        IQueryable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies;
-
-        IQueryable<IRedundancy> IDbContext.Redundancies => Redundancies;
-
-        public virtual DbSet<FsFile> Files { get; set; }
-
-        IQueryable<ILocalFile> ILocalDbContext.Files => Files;
-
-        IQueryable<IFile> IDbContext.Files => Files;
-
-        private FsInfoCatContext(DbContextOptions options)
-        {
-
         }
 
         public static FsInfoCatContext Open(string path)

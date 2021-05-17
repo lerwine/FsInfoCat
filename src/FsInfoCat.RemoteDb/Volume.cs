@@ -11,84 +11,10 @@ namespace FsInfoCat.RemoteDb
 {
     public class Volume : IRemoteVolume
     {
-        [DisplayName(Constants.DISPLAY_NAME_ROOT_DIRECTORY)]
-        public FsDirectory RootDirectory { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_FILE_SYSTEM)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_SYSTEM)]
-        public FileSystem FileSystem { get; set; }
-
-        public Guid Id { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
-        public bool? CaseSensitiveSearch { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
-        public bool? ReadOnly { get; set; }
-
         private string _displayName = "";
-
-        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
-        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
-
         private string _identifier = "";
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_IDENTIFIER, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_LENGTH)]
-        public string Identifier { get => _identifier; set => _identifier = value ?? ""; }
-
-        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
-        public bool IsInactive { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MAX_NAME_LENGTH)]
-        [Range(0, int.MaxValue, ErrorMessage = Constants.ERROR_MESSAGE_MAXNAMELENGTH)]
-        [DefaultValue(Constants.DEFAULT_VALUE_MAX_NAME_LENGTH)]
-        public long? MaxNameLength { get; set; } = Constants.DEFAULT_VALUE_MAX_NAME_LENGTH;
-
-        private string _notes = "";
-
-        public string Notes { get => _notes; set => _notes = value ?? ""; }
-
         private string _volumeName = "";
-
-        [DisplayName(Constants.DISPLAY_NAME_VOLUME_NAME)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_VOLUME_NAME, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_LENGTH)]
-        public string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
-
-        public Guid? HostDeviceId { get; set; }
-
-        public HostDevice HostDevice { get; set; }
-
-        public Guid CreatedById { get; set; }
-
-        public Guid ModifiedById { get; set; }
-
-        public UserProfile CreatedBy { get; set; }
-
-        public UserProfile ModifiedBy { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        ISubDirectory IVolume.RootDirectory => RootDirectory;
-
-        IRemoteSubDirectory IRemoteVolume.RootDirectory => RootDirectory;
-
-        IFileSystem IVolume.FileSystem => FileSystem;
-
-        IRemoteFileSystem IRemoteVolume.FileSystem => FileSystem;
-
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
-
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
-
-        IHostDevice IRemoteVolume.HostDevice => HostDevice;
+        private string _notes = "";
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -119,5 +45,94 @@ namespace FsInfoCat.RemoteDb
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedVolumes).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedVolumes).IsRequired();
         }
+
+        #region Column Properties
+
+        public Guid Id { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
+        public bool? CaseSensitiveSearch { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
+        public bool? ReadOnly { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
+        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_IDENTIFIER, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_LENGTH)]
+        public string Identifier { get => _identifier; set => _identifier = value ?? ""; }
+
+        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        public bool IsInactive { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MAX_NAME_LENGTH)]
+        [Range(0, int.MaxValue, ErrorMessage = Constants.ERROR_MESSAGE_MAXNAMELENGTH)]
+        [DefaultValue(Constants.DEFAULT_VALUE_MAX_NAME_LENGTH)]
+        public long? MaxNameLength { get; set; } = Constants.DEFAULT_VALUE_MAX_NAME_LENGTH;
+
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
+        [DisplayName(Constants.DISPLAY_NAME_VOLUME_NAME)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_VOLUME_NAME, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_LENGTH)]
+        public string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
+
+        public Guid? HostDeviceId { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        public Guid CreatedById { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Required]
+        public DateTime ModifiedOn { get; set; }
+
+        public Guid ModifiedById { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        [DisplayName(Constants.DISPLAY_NAME_ROOT_DIRECTORY)]
+        public FsDirectory RootDirectory { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_FILE_SYSTEM)]
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_SYSTEM)]
+        public FileSystem FileSystem { get; set; }
+
+        public HostDevice HostDevice { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
+        [Required]
+        public UserProfile CreatedBy { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
+        [Required]
+        public UserProfile ModifiedBy { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        ISubDirectory IVolume.RootDirectory => RootDirectory;
+
+        IRemoteSubDirectory IRemoteVolume.RootDirectory => RootDirectory;
+
+        IFileSystem IVolume.FileSystem => FileSystem;
+
+        IRemoteFileSystem IRemoteVolume.FileSystem => FileSystem;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        IHostDevice IRemoteVolume.HostDevice => HostDevice;
+
+        #endregion
     }
 }

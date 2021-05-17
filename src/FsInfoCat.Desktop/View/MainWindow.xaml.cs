@@ -1,7 +1,3 @@
-using FsInfoCat.Desktop.Model;
-using System;
-using System.Linq;
-using System.Security.Principal;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.View

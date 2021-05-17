@@ -12,74 +12,14 @@ namespace FsInfoCat.RemoteDb
 {
     public class FileSystem : IRemoteFileSystem
     {
-        public HashSet<Volume> Volumes { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_SYMBOLIC_NAMES)]
-        public HashSet<SymbolicName> SymbolicNames { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_DEFAULT_SYMBOLIC_NAME)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_DEFAULT_SYMBOLIC_NAME)]
-        public SymbolicName DefaultSymbolicName { get; set; }
-
-        public Guid Id { get; set; }
-
         private string _displayName = "";
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
-        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
-        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
-        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
-        public bool CaseSensitiveSearch { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
-        public bool ReadOnly { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MAX_NAME_LENGTH)]
-        [Range(0, int.MaxValue, ErrorMessage = Constants.ERROR_MESSAGE_MAXNAMELENGTH)]
-        public long MaxNameLength { get; set; }
-
-        public DriveType? DefaultDriveType { get; set; }
-
         private string _notes = "";
 
-        public string Notes { get => _notes; set => _notes = value ?? ""; }
-
-        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
-        public bool IsInactive { get; set; }
-
-        public Guid DefaultSymbolicNameId { get; set; }
-
-        public Guid CreatedById { get; set; }
-
-        public Guid ModifiedById { get; set; }
-
-        public UserProfile CreatedBy { get; set; }
-
-        public UserProfile ModifiedBy { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        IReadOnlyCollection<IVolume> IFileSystem.Volumes => Volumes;
-
-        IReadOnlyCollection<IRemoteVolume> IRemoteFileSystem.Volumes => Volumes;
-
-        IReadOnlyCollection<IFsSymbolicName> IFileSystem.SymbolicNames => SymbolicNames;
-
-        IReadOnlyCollection<IRemoteSymbolicName> IRemoteFileSystem.SymbolicNames => SymbolicNames;
-
-        IFsSymbolicName IFileSystem.DefaultSymbolicName => DefaultSymbolicName;
-
-        IRemoteSymbolicName IRemoteFileSystem.DefaultSymbolicName => DefaultSymbolicName;
-
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
-
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+        public FileSystem()
+        {
+            Volumes = new HashSet<Volume>();
+            SymbolicNames = new HashSet<SymbolicName>();
+        }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -102,5 +42,88 @@ namespace FsInfoCat.RemoteDb
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFileSystems).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFileSystems).IsRequired();
         }
+
+        #region Column Properties
+
+        public Guid Id { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
+        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
+        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
+        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
+        public bool CaseSensitiveSearch { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
+        public bool ReadOnly { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MAX_NAME_LENGTH)]
+        [Range(0, int.MaxValue, ErrorMessage = Constants.ERROR_MESSAGE_MAXNAMELENGTH)]
+        public long MaxNameLength { get; set; }
+
+        public DriveType? DefaultDriveType { get; set; }
+
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
+        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        public bool IsInactive { get; set; }
+
+        public Guid DefaultSymbolicNameId { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        public Guid CreatedById { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Required]
+        public DateTime ModifiedOn { get; set; }
+
+        public Guid ModifiedById { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        public HashSet<Volume> Volumes { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_DEFAULT_SYMBOLIC_NAME)]
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_DEFAULT_SYMBOLIC_NAME)]
+        public SymbolicName DefaultSymbolicName { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_SYMBOLIC_NAMES)]
+        public HashSet<SymbolicName> SymbolicNames { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
+        [Required]
+        public UserProfile CreatedBy { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
+        [Required]
+        public UserProfile ModifiedBy { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        IReadOnlyCollection<IVolume> IFileSystem.Volumes => Volumes;
+
+        IReadOnlyCollection<IRemoteVolume> IRemoteFileSystem.Volumes => Volumes;
+
+        IReadOnlyCollection<IFsSymbolicName> IFileSystem.SymbolicNames => SymbolicNames;
+
+        IReadOnlyCollection<IRemoteSymbolicName> IRemoteFileSystem.SymbolicNames => SymbolicNames;
+
+        IFsSymbolicName IFileSystem.DefaultSymbolicName => DefaultSymbolicName;
+
+        IRemoteSymbolicName IRemoteFileSystem.DefaultSymbolicName => DefaultSymbolicName;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        #endregion
     }
 }

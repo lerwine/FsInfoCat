@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat.Desktop.Model
 {
     [System.Obsolete("Use FsInfoCat.Model.AppTaskStatus")]

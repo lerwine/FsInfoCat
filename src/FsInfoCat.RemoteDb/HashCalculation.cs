@@ -11,43 +11,10 @@ namespace FsInfoCat.RemoteDb
 {
     public class HashCalculation : IRemoteHashCalculation
     {
-        public HashSet<FsFile> Files { get; set; }
-
-        [CustomValidation(typeof(Validators), nameof(Validators.IsValidMD5Hash), ErrorMessage = Constants.ERROR_MESSAGE_MD5_HASH)]
-        [DisplayName(Constants.DISPLAY_NAME_MD5_HASH)]
-        public byte[] Data { get; set; }
-
-        public Guid Id { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_FILE_LENGTH)]
-        [CustomValidation(typeof(Validators), nameof(Validators.IsValidFileLength), ErrorMessage = Constants.ERROR_MESSAGE_FILE_LENGTH)]
-        public long Length { get; set; }
-
-        public Guid CreatedById { get; set; }
-
-        public Guid ModifiedById { get; set; }
-
-        public UserProfile CreatedBy { get; set; }
-
-        public UserProfile ModifiedBy { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        IReadOnlyCollection<IFile> IHashCalculation.Files => Files;
-
-        IReadOnlyCollection<IRemoteFile> IRemoteHashCalculation.Files => Files;
-
-        IReadOnlyCollection<byte> IHashCalculation.Data => Data;
-
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
-
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
-
-        public bool TryGetMD5Checksum(out UInt128 result) => UInt128.TryCreate(Data, out result);
+        public HashCalculation()
+        {
+            Files = new HashSet<FsFile>();
+        }
 
         internal static void BuildEntity(EntityTypeBuilder<HashCalculation> builder)
         {
@@ -66,5 +33,61 @@ namespace FsInfoCat.RemoteDb
                 results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
             return results;
         }
+
+        public bool TryGetMD5Checksum(out UInt128 result) => UInt128.TryCreate(Data, out result);
+
+        #region Column Properties
+
+        [CustomValidation(typeof(Validators), nameof(Validators.IsValidMD5Hash), ErrorMessage = Constants.ERROR_MESSAGE_MD5_HASH)]
+        [DisplayName(Constants.DISPLAY_NAME_MD5_HASH)]
+        public byte[] Data { get; set; }
+
+        public Guid Id { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_FILE_LENGTH)]
+        [CustomValidation(typeof(Validators), nameof(Validators.IsValidFileLength), ErrorMessage = Constants.ERROR_MESSAGE_FILE_LENGTH)]
+        public long Length { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        public Guid CreatedById { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Required]
+        public DateTime ModifiedOn { get; set; }
+
+        public Guid ModifiedById { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        public HashSet<FsFile> Files { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
+        [Required]
+        public UserProfile CreatedBy { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
+        [Required]
+        public UserProfile ModifiedBy { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        IReadOnlyCollection<IFile> IHashCalculation.Files => Files;
+
+        IReadOnlyCollection<IRemoteFile> IRemoteHashCalculation.Files => Files;
+
+        IReadOnlyCollection<byte> IHashCalculation.Data => Data;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        #endregion
     }
 }

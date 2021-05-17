@@ -1,9 +1,7 @@
 using FsInfoCat.Desktop.Model.Bits;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace FsInfoCat.Test
 {

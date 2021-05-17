@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace FsInfoCat.ComponentSupport
 {
     internal class DisplayValue<TValue> : IDisplayValue<TValue>

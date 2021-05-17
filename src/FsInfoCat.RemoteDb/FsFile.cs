@@ -10,84 +10,13 @@ namespace FsInfoCat.RemoteDb
 {
     public class FsFile : IRemoteFile
     {
+        private string _name = "";
+
         public FsFile()
         {
             Comparisons1 = new HashSet<FileComparison>();
             Comparisons2 = new HashSet<FileComparison>();
         }
-
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_HASH_CALCULATION)]
-        [DisplayName(Constants.DISPLAY_NAME_HASH_CALCULATION)]
-        public HashCalculation HashCalculation { get; set; }
-
-        public Guid Id { get; set; }
-
-        public Guid ParentId { get; set; }
-
-        public Guid HashCalculationId { get; set; }
-
-        public Guid? FileRelocateTaskId { get; set; }
-
-        private string _name = "";
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_FS_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
-        public string Name { get => _name; set => _name = value ?? ""; }
-
-        public FileStatus Status { get; set; }
-
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_PARENT_DIRECTORY)]
-        [DisplayName(Constants.DISPLAY_NAME_PARENT_DIRECTORY)]
-        public FsDirectory Parent { get; set; }
-
-        public Guid? RedundancyId { get; set; }
-
-        public Redundancy Redundancy { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        public HashSet<FileComparison> Comparisons1 { get; set; }
-
-        public HashSet<FileComparison> Comparisons2 { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_FILE_RELOCATE_TASK)]
-        public virtual FileRelocateTask FileRelocateTask { get; set; }
-
-        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons1 => Comparisons1;
-
-        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons2 => Comparisons2;
-
-        IRemoteSubDirectory IRemoteFile.Parent => Parent;
-
-        IHashCalculation IFile.HashCalculation => HashCalculation;
-
-        IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
-
-        IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => Comparisons2;
-
-        ISubDirectory IFile.Parent => Parent;
-
-        public Guid CreatedById { get; set; }
-
-        public Guid ModifiedById { get; set; }
-
-        public UserProfile CreatedBy { get; set; }
-
-        public UserProfile ModifiedBy { get; set; }
-
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
-
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
-
-        IRemoteHashCalculation IRemoteFile.HashCalculation => HashCalculation;
-
-        IRemoteRedundancy IRemoteFile.Redundancy => Redundancy;
-
-        IRedundancy IFile.Redundancy => Redundancy;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -111,5 +40,94 @@ namespace FsInfoCat.RemoteDb
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFiles).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFiles).IsRequired();
         }
+
+        #region Column Properties
+
+        public Guid Id { get; set; }
+
+        public Guid ParentId { get; set; }
+
+        public Guid HashCalculationId { get; set; }
+
+        public Guid? FileRelocateTaskId { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_FS_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        public string Name { get => _name; set => _name = value ?? ""; }
+
+        public FileStatus Status { get; set; }
+
+        public Guid? RedundancyId { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        public Guid CreatedById { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Required]
+        public DateTime ModifiedOn { get; set; }
+
+        public Guid ModifiedById { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_HASH_CALCULATION)]
+        [DisplayName(Constants.DISPLAY_NAME_HASH_CALCULATION)]
+        public HashCalculation HashCalculation { get; set; }
+
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_PARENT_DIRECTORY)]
+        [DisplayName(Constants.DISPLAY_NAME_PARENT_DIRECTORY)]
+        public FsDirectory Parent { get; set; }
+
+        public Redundancy Redundancy { get; set; }
+
+        public HashSet<FileComparison> Comparisons1 { get; set; }
+
+        public HashSet<FileComparison> Comparisons2 { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_FILE_RELOCATE_TASK)]
+        public virtual FileRelocateTask FileRelocateTask { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
+        [Required]
+        public UserProfile CreatedBy { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
+        [Required]
+        public UserProfile ModifiedBy { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons1 => Comparisons1;
+
+        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons2 => Comparisons2;
+
+        IRemoteSubDirectory IRemoteFile.Parent => Parent;
+
+        IHashCalculation IFile.HashCalculation => HashCalculation;
+
+        IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
+
+        IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => Comparisons2;
+
+        ISubDirectory IFile.Parent => Parent;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        IRemoteHashCalculation IRemoteFile.HashCalculation => HashCalculation;
+
+        IRemoteRedundancy IRemoteFile.Redundancy => Redundancy;
+
+        IRedundancy IFile.Redundancy => Redundancy;
+
+        #endregion
     }
 }

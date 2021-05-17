@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace FsInfoCat
 {
@@ -224,7 +223,7 @@ namespace FsInfoCat
             IEqualityComparer IPropertyValueHandler.EqualityComparer => EqualityComparer.ToGeneralizable();
 
             public PropertyValueHandler(PropertyDescriptor descriptor)
-            {   
+            {
                 Converter = (_descriptor = descriptor).Converter;
                 IsReadOnly = descriptor.IsReadOnly;
                 IComparisonService comparisonService = Services.GetComparisonService();

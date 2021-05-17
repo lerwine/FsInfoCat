@@ -42,7 +42,7 @@ namespace FsInfoCat.ComponentSupport
             Collection<ModelPropertyDescriptor<TModel>> properties = new Collection<ModelPropertyDescriptor<TModel>>();
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(ModelType))
             {
-                PropertyBuilder<TModel>  builder = (PropertyBuilder<TModel>)Activator.CreateInstance(typeof(PropertyBuilder<,>).MakeGenericType(ModelType, propertyDescriptor.PropertyType), new object[] { owner, propertyDescriptor });
+                PropertyBuilder<TModel> builder = (PropertyBuilder<TModel>)Activator.CreateInstance(typeof(PropertyBuilder<,>).MakeGenericType(ModelType, propertyDescriptor.PropertyType), new object[] { owner, propertyDescriptor });
                 SetPropertyOptions(builder);
                 if (!builder.IgnoreProperty)
                     properties.Add(builder.Build());

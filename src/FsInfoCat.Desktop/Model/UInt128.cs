@@ -280,7 +280,7 @@ namespace FsInfoCat.Desktop.Model
         {
             get
             {
-                switch(index)
+                switch (index)
                 {
                     case 0:
                         return _b0;
@@ -673,7 +673,7 @@ namespace FsInfoCat.Desktop.Model
             if (obj is uint uint32)
                 return (_highBits > 0UL || _dword1 > 0) ? 1 : _dword0.CompareTo(uint32);
             if (obj is int int32)
-                return (int32 < 0L ||  _highBits > 0UL || _dword1 > 0) ? 1 : _dword0.CompareTo(int32);
+                return (int32 < 0L || _highBits > 0UL || _dword1 > 0) ? 1 : _dword0.CompareTo(int32);
             if (obj is ushort uint16)
                 return (_highBits > 0UL || _dword1 > 0 || _word1 > 0) ? 1 : _word0.CompareTo(uint16);
             if (obj is short int16)
@@ -752,7 +752,7 @@ namespace FsInfoCat.Desktop.Model
         }
         public static UInt128 operator >>(UInt128 value, int shift)
         {
-            if (shift< 0 || shift> 127)
+            if (shift < 0 || shift > 127)
                 shift &= 127;
             switch (shift)
             {
@@ -789,7 +789,7 @@ namespace FsInfoCat.Desktop.Model
         public static bool operator <=(UInt128 left, UInt128 right) => left._highBits < right._highBits || (left._highBits == right._highBits && left._lowBits <= right._lowBits);
         public static bool operator <=(UInt128 left, long right) => right >= 0 && left._highBits == 0UL && left._lowBits <= (ulong)right;
         public static bool operator <=(UInt128 left, ulong right) => left._highBits == 0UL && left._lowBits <= right;
-        public static bool operator <=(ulong left, UInt128 right) => right._highBits == 0UL || left < right._lowBits; 
+        public static bool operator <=(ulong left, UInt128 right) => right._highBits == 0UL || left < right._lowBits;
         public static bool operator <=(long left, UInt128 right) => left < 0 || right._highBits != 0UL || (ulong)left <= right._lowBits;
         public static bool operator >=(UInt128 left, ulong right) => left._highBits != 0UL || left._lowBits >= right;
         public static bool operator >=(long left, UInt128 right) => left >= 0 && right._highBits == 0UL && (ulong)left >= right._lowBits;

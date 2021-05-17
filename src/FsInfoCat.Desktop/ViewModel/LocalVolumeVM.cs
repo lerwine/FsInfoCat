@@ -4,11 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Management;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -298,7 +293,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public static IEnumerable<LocalVolumeVM> GetAllLocalVolumes(IEnumerable<ILocalVolume> dbVolumes, List<Win32_LogicalDiskRootDirectory> logicalDisks)
         {
             Dictionary<VolumeIdentifier, Win32_LogicalDiskRootDirectory> byVolumeIdentifer = new Dictionary<VolumeIdentifier, Win32_LogicalDiskRootDirectory>();
-            if (!(logicalDisks is  null))
+            if (!(logicalDisks is null))
                 foreach (Win32_LogicalDiskRootDirectory sv in logicalDisks)
                 {
                     if (VolumeIdentifier.TryCreate(sv, out VolumeIdentifier id))

@@ -1,11 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Sources;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -1030,7 +1026,7 @@ namespace FsInfoCat.Desktop.ViewModel
                             tokenSource.Cancel(true);
                         }
                         _asyncOperationTask.ContinueWith(t => tokenSource.Dispose());
-                        asyncOpTask = _asyncOperationTask.ContinueWith(t=> RaiseTaskStarted(function, token), token,
+                        asyncOpTask = _asyncOperationTask.ContinueWith(t => RaiseTaskStarted(function, token), token,
                             ToContinuationOptions(creationOptions), Scheduler);
                         RaiseAsyncOperationScheduled(asyncOpTask);
                     }

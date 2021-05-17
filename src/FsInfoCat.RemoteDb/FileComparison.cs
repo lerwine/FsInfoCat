@@ -11,47 +11,6 @@ namespace FsInfoCat.RemoteDb
 {
     public class FileComparison : IRemoteFileComparison
     {
-        [DisplayName(Constants.DISPLAY_NAME_FILE_1)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_1)]
-        public FsFile File1 { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_FILE_2)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_1)]
-        public FsFile File2 { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_ARE_EQUAL)]
-        public bool AreEqual { get; set; }
-
-        public Guid FileId1 { get; set; }
-
-        public Guid FileId2 { get; set; }
-
-        public Guid CreatedById { get; set; }
-
-        public Guid ModifiedById { get; set; }
-
-        public UserProfile CreatedBy { get; set; }
-
-        public UserProfile ModifiedBy { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        IFile IFileComparison.File1 => File1;
-
-        IRemoteFile IRemoteFileComparison.File1 => File1;
-
-        IFile IFileComparison.File2 => File2;
-
-        IRemoteFile IRemoteFileComparison.File2 => File2;
-
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
-
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
-
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             builder.HasKey(nameof(FileId1), nameof(FileId2));
@@ -72,5 +31,64 @@ namespace FsInfoCat.RemoteDb
                 results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
             return results;
         }
+
+        #region Column Properties
+
+        [DisplayName(Constants.DISPLAY_NAME_ARE_EQUAL)]
+        public bool AreEqual { get; set; }
+
+        public Guid FileId1 { get; set; }
+
+        public Guid FileId2 { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        public Guid CreatedById { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Required]
+        public DateTime ModifiedOn { get; set; }
+
+        public Guid ModifiedById { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        [DisplayName(Constants.DISPLAY_NAME_FILE_1)]
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_1)]
+        public FsFile File1 { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_FILE_2)]
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_1)]
+        public FsFile File2 { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
+        [Required]
+        public UserProfile CreatedBy { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
+        [Required]
+        public UserProfile ModifiedBy { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        IFile IFileComparison.File1 => File1;
+
+        IRemoteFile IRemoteFileComparison.File1 => File1;
+
+        IFile IFileComparison.File2 => File2;
+
+        IRemoteFile IRemoteFileComparison.File2 => File2;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        #endregion
     }
 }

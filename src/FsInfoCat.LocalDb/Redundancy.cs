@@ -1,6 +1,5 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Local;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -16,20 +15,6 @@ namespace FsInfoCat.LocalDb
             Files = new HashSet<FsFile>();
         }
 
-        public Guid Id { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        public virtual HashSet<FsFile> Files { get; set; }
-
-        IReadOnlyCollection<IFile> IRedundancy.Files => Files;
-
-        IReadOnlyCollection<ILocalFile> ILocalRedundancy.Files => Files;
-
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(Id));
@@ -44,5 +29,31 @@ namespace FsInfoCat.LocalDb
                 results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
             return results;
         }
+
+        #region Column Properties
+
+        public Guid Id { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        public DateTime CreatedOn { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        public DateTime ModifiedOn { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        public virtual HashSet<FsFile> Files { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        IReadOnlyCollection<IFile> IRedundancy.Files => Files;
+
+        IReadOnlyCollection<ILocalFile> ILocalRedundancy.Files => Files;
+
+        #endregion
     }
 }

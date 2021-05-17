@@ -35,7 +35,7 @@ namespace FsInfoCat.ComponentSupport
         /// Validation attributes to be used with property validation.
         /// </summary>
         /// This will be initially populated with the validation attributes that were declared with the property.
-        IList<ValidationAttribute>  ValidationAttributes { get; }
+        IList<ValidationAttribute> ValidationAttributes { get; }
     }
 
     /// <summary>

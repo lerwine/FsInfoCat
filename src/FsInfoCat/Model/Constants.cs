@@ -3,7 +3,9 @@ namespace FsInfoCat.Model
     public static class Constants
     {
         public const string DISPLAY_NAME_CREATED_ON = "Created On";
+        public const string DISPLAY_NAME_CREATED_BY = "Created By";
         public const string DISPLAY_NAME_MODIFIED_ON = "Modifed On";
+        public const string DISPLAY_NAME_MODIFIED_BY = "Modifed By";
         public const string DISPLAY_NAME_FILESYSTEM = "File System";
         public const int MAX_LENGTH_NAME = 128;
         public const int MAX_LENGTH_FS_NAME = 1024;

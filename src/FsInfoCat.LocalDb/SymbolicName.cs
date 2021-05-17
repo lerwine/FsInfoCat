@@ -11,47 +11,13 @@ namespace FsInfoCat.LocalDb
 {
     public class SymbolicName : ILocalSymbolicName
     {
+        private string _name = "";
+        private string _notes = "";
+
         public SymbolicName()
         {
             DefaultFileSystems = new HashSet<FileSystem>();
         }
-
-        public Guid Id { get; set; }
-
-        private string _name = "";
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
-        public string Name { get => _name; set => _name = value ?? ""; }
-
-        public Guid FileSystemId { get; set; }
-
-        private string _notes = "";
-
-        public string Notes { get => _notes; set => _notes = value ?? ""; }
-
-        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
-        public bool IsInactive { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        public DateTime CreatedOn { get; set; }
-
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        public DateTime ModifiedOn { get; set; }
-
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILESYSTEM)]
-        [DisplayName(Constants.DISPLAY_NAME_FILESYSTEM)]
-        public virtual FileSystem FileSystem { get; set; }
-
-        public virtual HashSet<FileSystem> DefaultFileSystems { get; set; }
-
-        ILocalFileSystem ILocalSymbolicName.FileSystem => FileSystem;
-
-        IReadOnlyCollection<ILocalFileSystem> ILocalSymbolicName.DefaultFileSystems => DefaultFileSystems;
-
-        IFileSystem IFsSymbolicName.FileSystem => FileSystem;
-
-        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => DefaultFileSystems;
 
         internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
         {
@@ -70,5 +36,50 @@ namespace FsInfoCat.LocalDb
                 results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
             return results;
         }
+
+        #region Column Properties
+
+        public Guid Id { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        public string Name { get => _name; set => _name = value ?? ""; }
+
+        public Guid FileSystemId { get; set; }
+
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
+        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        public bool IsInactive { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        public DateTime CreatedOn { get; set; }
+
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        public DateTime ModifiedOn { get; set; }
+
+        #endregion
+
+        #region Navigation Properties
+
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILESYSTEM)]
+        [DisplayName(Constants.DISPLAY_NAME_FILESYSTEM)]
+        public virtual FileSystem FileSystem { get; set; }
+
+        public virtual HashSet<FileSystem> DefaultFileSystems { get; set; }
+
+        #endregion
+
+        #region Explicit Members
+
+        ILocalFileSystem ILocalSymbolicName.FileSystem => FileSystem;
+
+        IReadOnlyCollection<ILocalFileSystem> ILocalSymbolicName.DefaultFileSystems => DefaultFileSystems;
+
+        IFileSystem IFsSymbolicName.FileSystem => FileSystem;
+
+        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => DefaultFileSystems;
+
+        #endregion
     }
 }

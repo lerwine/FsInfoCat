@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.RemoteDb
 {
@@ -14,75 +13,79 @@ namespace FsInfoCat.RemoteDb
     {
         public DbSet<HashCalculation> Checksums { get; set; }
 
+        public DbSet<FileComparison> Comparisons { get; set; }
+
+        public DbSet<FsFile> Files { get; set; }
+
+        public DbSet<FsDirectory> Subdirectories { get; set; }
+
+        public DbSet<Volume> Volumes { get; set; }
+
+        public DbSet<SymbolicName> FsSymbolicNames { get; set; }
+
+        public DbSet<FileSystem> FileSystems { get; set; }
+
+        public DbSet<HostDevice> HostDevices { get; set; }
+
+        public DbSet<HostPlatform> HostPlatforms { get; set; }
+
+        public DbSet<Redundancy> Redundancies { get; set; }
+
+        public DbSet<FileRelocateTask> FileRelocateTasks { get; set; }
+
+        #region Explicit Members
+
         IQueryable<IHashCalculation> IDbContext.HashCalculations => Checksums;
 
         IQueryable<IRemoteHashCalculation> IRemoteDbContext.HashCalculations => Checksums;
-
-        public DbSet<FileComparison> Comparisons { get; set; }
 
         IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
 
         IQueryable<IRemoteFileComparison> IRemoteDbContext.Comparisons => Comparisons;
 
-        public DbSet<FsFile> Files { get; set; }
-
         IQueryable<IFile> IDbContext.Files => Files;
 
         IQueryable<IRemoteFile> IRemoteDbContext.Files => Files;
-
-        public DbSet<FsDirectory> Subdirectories { get; set; }
 
         IQueryable<ISubDirectory> IDbContext.Subdirectories => Subdirectories;
 
         IQueryable<IRemoteSubDirectory> IRemoteDbContext.Subdirectories => Subdirectories;
 
-        public DbSet<Volume> Volumes { get; set; }
-
         IQueryable<IVolume> IDbContext.Volumes => Volumes;
 
         IQueryable<IRemoteVolume> IRemoteDbContext.Volumes => Volumes;
-
-        public DbSet<SymbolicName> FsSymbolicNames { get; set; }
 
         IQueryable<IFsSymbolicName> IDbContext.SymbolicNames => FsSymbolicNames;
 
         IQueryable<IRemoteSymbolicName> IRemoteDbContext.SymbolicNames => FsSymbolicNames;
 
-        public DbSet<FileSystem> FileSystems { get; set; }
-
         IQueryable<IFileSystem> IDbContext.FileSystems => FileSystems;
 
         IQueryable<IRemoteFileSystem> IRemoteDbContext.FileSystems => FileSystems;
 
-        public DbSet<HostDevice> HostDevices { get; set; }
-
         IQueryable<IHostDevice> IRemoteDbContext.HostDevices => HostDevices;
 
-        public DbSet<HostPlatform> HostPlatforms { get; set; }
-
         IQueryable<IHostPlatform> IRemoteDbContext.HostPlatforms => HostPlatforms;
-
-        public DbSet<Redundancy> Redundancies { get; set; }
 
         IQueryable<IRedundancy> IDbContext.Redundancies => Redundancies;
 
         IQueryable<IRemoteRedundancy> IRemoteDbContext.Redundancies => Redundancies;
 
-        public DbSet<FileRelocateTask> FileRelocateTasks { get; set; }
-
         IQueryable<IFileRelocateTask> IRemoteDbContext.FileRelocateTasks => FileRelocateTasks;
-
-        public DbSet<DirectoryRelocateTask> DirectoryRelocateTasks { get; set; }
 
         IQueryable<IDirectoryRelocateTask> IRemoteDbContext.DirectoryRelocateTasks => DirectoryRelocateTasks;
 
-        public DbSet<UserProfile> UserProfiles { get; set; }
-
         IQueryable<IUserProfile> IRemoteDbContext.UserProfiles => UserProfiles;
 
-        public DbSet<UserGroup> UserGroups { get; set; }
-
         IQueryable<IUserGroup> IRemoteDbContext.UserGroups => UserGroups;
+
+        #endregion
+
+        public DbSet<DirectoryRelocateTask> DirectoryRelocateTasks { get; set; }
+
+        public DbSet<UserProfile> UserProfiles { get; set; }
+
+        public DbSet<UserGroup> UserGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
