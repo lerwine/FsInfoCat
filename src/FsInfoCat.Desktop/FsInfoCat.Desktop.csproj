@@ -216,15 +216,6 @@
     <Compile Include="Model\Bits\Version2Domain.cs" />
     <Compile Include="Model\CimGroupPartComponent.cs" />
     <Compile Include="Model\CIM_PowerManagementCapability.cs" />
-    <Compile Include="Model\Test\Comparison.cs" />
-    <Compile Include="Model\Test\Directory.cs" />
-    <Compile Include="Model\Test\File.cs" />
-    <Compile Include="Model\Test\FileSystem.cs" />
-    <Compile Include="Model\Test\FsSymbolicName.cs" />
-    <Compile Include="Model\Test\HashCalculation.cs" />
-    <Compile Include="Model\Test\Model1.cs" />
-    <Compile Include="Model\Test\Redundancy.cs" />
-    <Compile Include="Model\Test\Volume.cs" />
     <Compile Include="Util\AttributeComparer.cs" />
     <Compile Include="Util\LinkedComponentList.cs" />
     <Compile Include="Util\RelayComparer.cs" />
@@ -497,6 +488,10 @@
     <ProjectReference Include="..\FsInfoCat.LocalDb\FsInfoCat.LocalDb.csproj">
       <Project>{d380d483-2dbd-4f00-bcbe-d275a43cd36b}</Project>
       <Name>FsInfoCat.LocalDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FsInfoCat.RemoteDb\FsInfoCat.RemoteDb.csproj">
+      <Project>{cc11f191-197d-4abc-b4e9-8edda9d75d34}</Project>
+      <Name>FsInfoCat.RemoteDb</Name>
     </ProjectReference>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj">
       <Project>{11023185-e105-44b2-8b49-acab053515da}</Project>
