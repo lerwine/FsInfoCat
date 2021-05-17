@@ -1,51 +1,67 @@
+using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
 {
     public class UserGroup : IUserGroup
     {
-        public Guid Id => throw new NotImplementedException();
+        public Guid Id { get; set; }
 
-        public string Name => throw new NotImplementedException();
+        private string _name = "";
 
-        public UserRole Roles => throw new NotImplementedException();
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        public string Name { get => _name; set => _name = value ?? ""; }
 
-        public string Notes => throw new NotImplementedException();
+        public UserRole Roles { get; set; }
 
-        public bool IsInactive => throw new NotImplementedException();
+        private string _notes = "";
 
-        public HashSet<UserProfile> Members => throw new NotImplementedException();
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks => throw new NotImplementedException();
+        public bool IsInactive { get; set; }
 
-        public HashSet<FileRelocateTask> FileRelocationTasks => throw new NotImplementedException();
+        public HashSet<UserProfile> Members { get; set; }
 
-        public Guid CreatedById => throw new NotImplementedException();
+        public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
 
-        public Guid ModifiedById => throw new NotImplementedException();
+        public HashSet<FileRelocateTask> FileRelocationTasks { get; set; }
 
-        public UserProfile CreatedBy => throw new NotImplementedException();
+        public Guid CreatedById { get; set; }
 
-        public UserProfile ModifiedBy => throw new NotImplementedException();
+        public Guid ModifiedById { get; set; }
 
-        public DateTime CreatedOn => throw new NotImplementedException();
+        public UserProfile CreatedBy { get; set; }
 
-        public DateTime ModifiedOn => throw new NotImplementedException();
+        public UserProfile ModifiedBy { get; set; }
 
-        IReadOnlyCollection<IUserProfile> IUserGroup.Members => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        public DateTime CreatedOn { get; set; }
 
-        IReadOnlyCollection<IDirectoryRelocateTask> IUserGroup.DirectoryRelocationTasks => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        public DateTime ModifiedOn { get; set; }
 
-        IReadOnlyCollection<IFileRelocateTask> IUserGroup.FileRelocationTasks => throw new NotImplementedException();
+        IReadOnlyCollection<IUserProfile> IUserGroup.Members => Members;
 
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+        IReadOnlyCollection<IDirectoryRelocateTask> IUserGroup.DirectoryRelocationTasks => DirectoryRelocationTasks;
 
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
+        IReadOnlyCollection<IFileRelocateTask> IUserGroup.FileRelocationTasks => FileRelocationTasks;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<UserGroup> obj)
         {
             throw new NotImplementedException();
         }

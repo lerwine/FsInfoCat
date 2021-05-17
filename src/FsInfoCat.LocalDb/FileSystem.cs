@@ -9,12 +9,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
 {
-    public class FileSystem : ILocalFileSystem, IValidatableObject
+    public class FileSystem : ILocalFileSystem
     {
         public FileSystem()
         {
             Volumes = new HashSet<Volume>();
-            SymbolicNames = new HashSet<FsSymbolicName>();
+            SymbolicNames = new HashSet<SymbolicName>();
         }
 
         public Guid Id { get; set; }
@@ -58,21 +58,21 @@ namespace FsInfoCat.LocalDb
         IReadOnlyCollection<IVolume> IFileSystem.Volumes => Volumes;
 
         [DisplayName(Constants.DISPLAY_NAME_SYMBOLIC_NAMES)]
-        public virtual HashSet<FsSymbolicName> SymbolicNames { get; set; }
+        public virtual HashSet<SymbolicName> SymbolicNames { get; set; }
 
         IReadOnlyCollection<IFsSymbolicName> IFileSystem.SymbolicNames => SymbolicNames;
 
         [DisplayName(Constants.DISPLAY_NAME_DEFAULT_SYMBOLIC_NAME)]
         [Required(ErrorMessage = Constants.ERROR_MESSAGE_DEFAULT_SYMBOLIC_NAME)]
-        public virtual FsSymbolicName DefaultSymbolicName { get; set; }
+        public virtual SymbolicName DefaultSymbolicName { get; set; }
 
         IFsSymbolicName IFileSystem.DefaultSymbolicName => DefaultSymbolicName;
 
-        IReadOnlyCollection<ILocalVolume> ILocalFileSystem.Volumes => throw new NotImplementedException();
+        IReadOnlyCollection<ILocalVolume> ILocalFileSystem.Volumes => Volumes;
 
-        IReadOnlyCollection<ILocalSymbolicName> ILocalFileSystem.SymbolicNames => throw new NotImplementedException();
+        IReadOnlyCollection<ILocalSymbolicName> ILocalFileSystem.SymbolicNames => SymbolicNames;
 
-        ILocalSymbolicName ILocalFileSystem.DefaultSymbolicName => throw new NotImplementedException();
+        ILocalSymbolicName ILocalFileSystem.DefaultSymbolicName => DefaultSymbolicName;
 
         internal static void BuildEntity(EntityTypeBuilder<FileSystem> builder)
         {

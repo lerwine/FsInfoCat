@@ -1,49 +1,67 @@
+using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
 {
     public class HostPlatform : IHostPlatform
     {
-        public Guid Id => throw new NotImplementedException();
+        public Guid Id { get; set; }
 
-        public string DisplayName => throw new NotImplementedException();
+        private string _displayName = "";
 
-        public PlatformType Type => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
+        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        public Guid? DefaultFsTypeId => throw new NotImplementedException();
+        public PlatformType Type { get; set; }
 
-        public string Notes => throw new NotImplementedException();
+        public Guid? DefaultFsTypeId { get; set; }
 
-        public bool IsInactive => throw new NotImplementedException();
+        private string _notes = "";
 
-        public FileSystem DefaultFSType => throw new NotImplementedException();
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        public HashSet<HostDevice> HostDevices => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        public bool IsInactive { get; set; }
 
-        public Guid CreatedById => throw new NotImplementedException();
+        public FileSystem DefaultFSType { get; set; }
 
-        public Guid ModifiedById => throw new NotImplementedException();
+        public HashSet<HostDevice> HostDevices { get; set; }
 
-        public UserProfile CreatedBy => throw new NotImplementedException();
+        public Guid CreatedById { get; set; }
 
-        public UserProfile ModifiedBy => throw new NotImplementedException();
+        public Guid ModifiedById { get; set; }
 
-        public DateTime CreatedOn => throw new NotImplementedException();
+        public UserProfile CreatedBy { get; set; }
 
-        public DateTime ModifiedOn => throw new NotImplementedException();
+        public UserProfile ModifiedBy { get; set; }
 
-        IRemoteFileSystem IHostPlatform.DefaultFSType => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        public DateTime CreatedOn { get; set; }
 
-        IReadOnlyCollection<IHostDevice> IHostPlatform.HostDevices => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        public DateTime ModifiedOn { get; set; }
 
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+        IRemoteFileSystem IHostPlatform.DefaultFSType => DefaultFSType;
 
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
+        IReadOnlyCollection<IHostDevice> IHostPlatform.HostDevices => HostDevices;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<HostPlatform> obj)
         {
             throw new NotImplementedException();
         }

@@ -9,9 +9,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
 {
-    public class FsSymbolicName : ILocalSymbolicName, IValidatableObject
+    public class SymbolicName : ILocalSymbolicName
     {
-        public FsSymbolicName()
+        public SymbolicName()
         {
             DefaultFileSystems = new HashSet<FileSystem>();
         }
@@ -33,7 +33,7 @@ namespace FsInfoCat.LocalDb
         [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
         public bool IsInactive { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
         public DateTime CreatedOn { get; set; }
 
         [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
@@ -45,15 +45,15 @@ namespace FsInfoCat.LocalDb
 
         public virtual HashSet<FileSystem> DefaultFileSystems { get; set; }
 
-        ILocalFileSystem ILocalSymbolicName.FileSystem => throw new NotImplementedException();
+        ILocalFileSystem ILocalSymbolicName.FileSystem => FileSystem;
 
-        IReadOnlyCollection<ILocalFileSystem> ILocalSymbolicName.DefaultFileSystems => throw new NotImplementedException();
+        IReadOnlyCollection<ILocalFileSystem> ILocalSymbolicName.DefaultFileSystems => DefaultFileSystems;
 
-        IFileSystem IFsSymbolicName.FileSystem => throw new NotImplementedException();
+        IFileSystem IFsSymbolicName.FileSystem => FileSystem;
 
-        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => throw new NotImplementedException();
+        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => DefaultFileSystems;
 
-        internal static void BuildEntity(EntityTypeBuilder<FsSymbolicName> builder)
+        internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_NAME).IsRequired();

@@ -1,54 +1,81 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
 {
     public class SymbolicName : IRemoteSymbolicName
     {
-        public FileSystem FileSystem => throw new NotImplementedException();
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILESYSTEM)]
+        [DisplayName(Constants.DISPLAY_NAME_FILESYSTEM)]
+        public FileSystem FileSystem { get; set; }
 
-        public HashSet<FileSystem> DefaultFileSystems => throw new NotImplementedException();
+        public HashSet<FileSystem> DefaultFileSystems { get; set; }
 
-        public Guid Id => throw new NotImplementedException();
+        public Guid Id { get; set; }
 
-        public string Name => throw new NotImplementedException();
+        private string _name = "";
 
-        public Guid FileSystemId => throw new NotImplementedException();
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        public string Name { get => _name; set => _name = value ?? ""; }
 
-        public string Notes => throw new NotImplementedException();
+        public Guid FileSystemId { get; set; }
 
-        public bool IsInactive => throw new NotImplementedException();
+        private string _notes = "";
 
-        public Guid CreatedById => throw new NotImplementedException();
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        public Guid ModifiedById => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        public bool IsInactive { get; set; }
 
-        public UserProfile CreatedBy => throw new NotImplementedException();
+        public Guid CreatedById { get; set; }
 
-        public UserProfile ModifiedBy => throw new NotImplementedException();
+        public Guid ModifiedById { get; set; }
 
-        public DateTime CreatedOn => throw new NotImplementedException();
+        public UserProfile CreatedBy { get; set; }
 
-        public DateTime ModifiedOn => throw new NotImplementedException();
+        public UserProfile ModifiedBy { get; set; }
 
-        IFileSystem IFsSymbolicName.FileSystem => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        public DateTime CreatedOn { get; set; }
 
-        IRemoteFileSystem IRemoteSymbolicName.FileSystem => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        public DateTime ModifiedOn { get; set; }
 
-        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => throw new NotImplementedException();
+        IFileSystem IFsSymbolicName.FileSystem => FileSystem;
 
-        IReadOnlyCollection<IRemoteFileSystem> IRemoteSymbolicName.DefaultFileSystems => throw new NotImplementedException();
+        IRemoteFileSystem IRemoteSymbolicName.FileSystem => FileSystem;
 
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => DefaultFileSystems;
 
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFileSystem> IRemoteSymbolicName.DefaultFileSystems => DefaultFileSystems;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            throw new NotImplementedException();
+            var results = new List<ValidationResult>();
+            Validator.TryValidateProperty(Name, new ValidationContext(this, null, null) { MemberName = nameof(Name) }, results);
+            Validator.TryValidateProperty(FileSystem, new ValidationContext(this, null, null) { MemberName = nameof(FileSystem) }, results);
+            if (CreatedOn.CompareTo(ModifiedOn) > 0)
+                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+            return results;
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
+        {
+            builder.HasKey(nameof(Id));
+            builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_NAME).IsRequired();
+            builder.Property(nameof(Notes)).HasDefaultValue("");
+            builder.HasOne(p => p.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
         }
     }
 }

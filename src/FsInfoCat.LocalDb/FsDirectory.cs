@@ -14,9 +14,6 @@ namespace FsInfoCat.LocalDb
         {
             SubDirectories = new HashSet<FsDirectory>();
             Files = new HashSet<FsFile>();
-            FileRelocationTasks = new HashSet<FileRelocateTask>();
-            TargetDirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
-            ICollectionsService collectionsService = Services.GetCollectionsService();
         }
 
         public Guid Id { get; set; }
@@ -31,13 +28,11 @@ namespace FsInfoCat.LocalDb
 
         public Guid? ParentId { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
         public DateTime CreatedOn { get; set; }
 
         [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
         public DateTime ModifiedOn { get; set; }
-
-        public Guid? SourceRelocationTaskId { get; set; }
 
         public virtual Volume Volume { get; set; }
 
@@ -56,29 +51,19 @@ namespace FsInfoCat.LocalDb
 
         IReadOnlyCollection<IFile> ISubDirectory.Files => Files;
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_SOURCE_RELOCATION_TASK)]
-        public virtual DirectoryRelocateTask SourceRelocationTask { get; set; }
+        ILocalSubDirectory ILocalSubDirectory.Parent => Parent;
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_RELOCATION_TASKS)]
-        public virtual HashSet<FileRelocateTask> FileRelocationTasks { get; set; }
+        ILocalVolume ILocalSubDirectory.Volume => Volume;
 
-        [DisplayName(Constants.DISPLAY_NAME_TARGET_DIRECTORY_RELOCATION_TASKS)]
-        public virtual HashSet<DirectoryRelocateTask> TargetDirectoryRelocationTasks { get; set; }
+        IReadOnlyCollection<ILocalFile> ILocalSubDirectory.Files => Files;
 
-        ILocalSubDirectory ILocalSubDirectory.Parent => throw new NotImplementedException();
-
-        ILocalVolume ILocalSubDirectory.Volume => throw new NotImplementedException();
-
-        IReadOnlyCollection<ILocalFile> ILocalSubDirectory.Files => throw new NotImplementedException();
-
-        IReadOnlyCollection<ILocalSubDirectory> ILocalSubDirectory.SubDirectories => throw new NotImplementedException();
+        IReadOnlyCollection<ILocalSubDirectory> ILocalSubDirectory.SubDirectories => SubDirectories;
 
         internal static void BuildEntity(EntityTypeBuilder<FsDirectory> builder)
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId));
-            builder.HasOne(p => p.SourceRelocationTask).WithMany(d => d.SourceDirectories).HasForeignKey(nameof(SourceRelocationTaskId));
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

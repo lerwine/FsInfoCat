@@ -1,47 +1,65 @@
+using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
 {
     public class HostDevice : IHostDevice
     {
-        public Guid Id => throw new NotImplementedException();
+        public Guid Id { get; set; }
 
-        public string DisplayName => throw new NotImplementedException();
+        private string _displayName = "";
 
-        public string MachineIdentifer => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
+        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        public string MachineName => throw new NotImplementedException();
+        public string MachineIdentifer { get; set; }
 
-        public Guid PlatformId => throw new NotImplementedException();
+        public string MachineName { get; set; }
 
-        public string Notes => throw new NotImplementedException();
+        public Guid PlatformId { get; set; }
 
-        public bool IsInactive => throw new NotImplementedException();
+        private string _notes = "";
 
-        public HashSet<Volume> Volumes => throw new NotImplementedException();
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        public Guid CreatedById => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        public bool IsInactive { get; set; }
 
-        public Guid ModifiedById => throw new NotImplementedException();
+        public HashSet<Volume> Volumes { get; set; }
 
-        public UserProfile CreatedBy => throw new NotImplementedException();
+        public Guid CreatedById { get; set; }
 
-        public UserProfile ModifiedBy => throw new NotImplementedException();
+        public Guid ModifiedById { get; set; }
 
-        public DateTime CreatedOn => throw new NotImplementedException();
+        public UserProfile CreatedBy { get; set; }
 
-        public DateTime ModifiedOn => throw new NotImplementedException();
+        public UserProfile ModifiedBy { get; set; }
 
-        IReadOnlyCollection<IRemoteVolume> IHostDevice.Volumes => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        public DateTime CreatedOn { get; set; }
 
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        public DateTime ModifiedOn { get; set; }
 
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteVolume> IHostDevice.Volumes => Volumes;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<HostDevice> obj)
         {
             throw new NotImplementedException();
         }

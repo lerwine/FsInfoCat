@@ -1,7 +1,10 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Local;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Data;
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
@@ -28,11 +31,11 @@ namespace FsInfoCat.LocalDb
             return new Func<ILocalDbContext>(() => Open(path));
         }
 
-        public virtual DbSet<FsSymbolicName> FsSymbolicNames { get; set; }
+        public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
 
-        IQueryable<ILocalSymbolicName> ILocalDbContext.FsSymbolicNames => FsSymbolicNames;
+        IQueryable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames;
 
-        IQueryable<IFsSymbolicName> IDbContext.FsSymbolicNames => FsSymbolicNames;
+        IQueryable<IFsSymbolicName> IDbContext.SymbolicNames => SymbolicNames;
 
         public virtual DbSet<FileSystem> FileSystems { get; set; }
 
@@ -46,11 +49,11 @@ namespace FsInfoCat.LocalDb
 
         IQueryable<IVolume> IDbContext.Volumes => Volumes;
 
-        public virtual DbSet<FsDirectory> FsDirectories { get; set; }
+        public virtual DbSet<FsDirectory> Directories { get; set; }
 
-        IQueryable<ILocalSubDirectory> ILocalDbContext.Subdirectories => FsDirectories;
+        IQueryable<ILocalSubDirectory> ILocalDbContext.Subdirectories => Directories;
 
-        IQueryable<ISubDirectory> IDbContext.Subdirectories => FsDirectories;
+        IQueryable<ISubDirectory> IDbContext.Subdirectories => Directories;
 
         public virtual DbSet<FileComparison> Comparisons { get; set; }
 
@@ -60,9 +63,9 @@ namespace FsInfoCat.LocalDb
 
         public virtual DbSet<HashCalculation> HashCalculations { get; set; }
 
-        IQueryable<ILocalHashCalculation> ILocalDbContext.Checksums => HashCalculations;
+        IQueryable<ILocalHashCalculation> ILocalDbContext.HashCalculations => HashCalculations;
 
-        IQueryable<IHashCalculation> IDbContext.Checksums => HashCalculations;
+        IQueryable<IHashCalculation> IDbContext.HashCalculations => HashCalculations;
 
         public virtual DbSet<Redundancy> Redundancies { get; set; }
 
@@ -70,11 +73,11 @@ namespace FsInfoCat.LocalDb
 
         IQueryable<IRedundancy> IDbContext.Redundancies => Redundancies;
 
-        public virtual DbSet<FsFile> FsFiles { get; set; }
+        public virtual DbSet<FsFile> Files { get; set; }
 
-        IQueryable<ILocalFile> ILocalDbContext.Files => FsFiles;
+        IQueryable<ILocalFile> ILocalDbContext.Files => Files;
 
-        IQueryable<IFile> IDbContext.Files => FsFiles;
+        IQueryable<IFile> IDbContext.Files => Files;
 
         private FsInfoCatContext(DbContextOptions options)
         {
@@ -105,7 +108,7 @@ namespace FsInfoCat.LocalDb
         {
             modelBuilder.HasDefaultSchema("dbo");
             modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
-            modelBuilder.Entity<FsSymbolicName>(FsSymbolicName.BuildEntity);
+            modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
             modelBuilder.Entity<HashCalculation>(HashCalculation.BuildEntity);
@@ -114,5 +117,201 @@ namespace FsInfoCat.LocalDb
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
             base.OnModelCreating(modelBuilder);
         }
+
+        public IDbContextTransaction BeginTransaction() => Database.BeginTransaction();
+
+        public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel) => Database.BeginTransaction(isolationLevel);
+
+        internal EntityEntry<HashCalculation> AddHashCalculation(HashCalculation hashCalculation)
+        {
+            HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashCalculations.Add(hashCalculation);
+        }
+
+        internal EntityEntry<HashCalculation> UpdateHashCalculation(HashCalculation hashCalculation)
+        {
+            HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashCalculations.Update(hashCalculation);
+        }
+
+        internal EntityEntry<HashCalculation> RemoveHashCalculation(HashCalculation hashCalculation)
+        {
+            HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashCalculations.Remove(hashCalculation);
+        }
+
+        internal EntityEntry<FileComparison> AddComparison(FileComparison fileComparison)
+        {
+            Comparisons.Attach(fileComparison ?? throw new ArgumentNullException(nameof(fileComparison)));
+            return Comparisons.Add(fileComparison);
+        }
+
+        internal EntityEntry<FileComparison> UpdateComparison(FileComparison fileComparison)
+        {
+            Comparisons.Attach(fileComparison ?? throw new ArgumentNullException(nameof(fileComparison)));
+            return Comparisons.Update(fileComparison);
+        }
+
+        internal EntityEntry<FileComparison> RemoveComparison(FileComparison fileComparison)
+        {
+            Comparisons.Attach(fileComparison ?? throw new ArgumentNullException(nameof(fileComparison)));
+            return Comparisons.Remove(fileComparison);
+        }
+
+        internal EntityEntry<FsFile> AddFile(FsFile file)
+        {
+            Files.Attach(file ?? throw new ArgumentNullException(nameof(file)));
+            return Files.Add(file);
+        }
+
+        internal EntityEntry<FsFile> UpdateFile(FsFile file)
+        {
+            Files.Attach(file ?? throw new ArgumentNullException(nameof(file)));
+            return Files.Update(file);
+        }
+
+        internal EntityEntry<FsFile> RemoveFile(FsFile file)
+        {
+            Files.Attach(file ?? throw new ArgumentNullException(nameof(file)));
+            return Files.Remove(file);
+        }
+
+        internal EntityEntry<FsDirectory> AddSubDirectory(FsDirectory subdirectory)
+        {
+            Directories.Attach(subdirectory ?? throw new ArgumentNullException(nameof(subdirectory)));
+            return Directories.Add(subdirectory);
+        }
+
+        internal EntityEntry<FsDirectory> UpdateSubDirectory(FsDirectory subdirectory)
+        {
+            Directories.Attach(subdirectory ?? throw new ArgumentNullException(nameof(subdirectory)));
+            return Directories.Update(subdirectory);
+        }
+
+        internal EntityEntry<FsDirectory> RemoveSubDirectory(FsDirectory subdirectory)
+        {
+            Directories.Attach(subdirectory ?? throw new ArgumentNullException(nameof(subdirectory)));
+            return Directories.Remove(subdirectory);
+        }
+
+        internal EntityEntry<Volume> AddVolume(Volume volume)
+        {
+            Volumes.Attach(volume ?? throw new ArgumentNullException(nameof(volume)));
+            return Volumes.Add(volume);
+        }
+
+        internal EntityEntry<Volume> UpdateVolume(Volume volume)
+        {
+            Volumes.Attach(volume ?? throw new ArgumentNullException(nameof(volume)));
+            return Volumes.Update(volume);
+        }
+
+        internal EntityEntry<Volume> RemoveVolume(Volume volume)
+        {
+            Volumes.Attach(volume ?? throw new ArgumentNullException(nameof(volume)));
+            return Volumes.Remove(volume);
+        }
+
+        internal EntityEntry<SymbolicName> AddSymbolicName(SymbolicName symbolicName)
+        {
+            SymbolicNames.Attach(symbolicName ?? throw new ArgumentNullException(nameof(symbolicName)));
+            return SymbolicNames.Add(symbolicName);
+        }
+
+        internal EntityEntry<SymbolicName> UpdateSymbolicName(SymbolicName symbolicName)
+        {
+            SymbolicNames.Attach(symbolicName ?? throw new ArgumentNullException(nameof(symbolicName)));
+            return SymbolicNames.Update(symbolicName);
+        }
+
+        internal EntityEntry<SymbolicName> RemoveSymbolicName(SymbolicName symbolicName)
+        {
+            SymbolicNames.Attach(symbolicName ?? throw new ArgumentNullException(nameof(symbolicName)));
+            return SymbolicNames.Remove(symbolicName);
+        }
+
+        internal EntityEntry<FileSystem> AddFileSystem(FileSystem fileSystem)
+        {
+            FileSystems.Attach(fileSystem ?? throw new ArgumentNullException(nameof(fileSystem)));
+            return FileSystems.Add(fileSystem);
+        }
+
+        internal EntityEntry<FileSystem> UpdateFileSystem(FileSystem fileSystem)
+        {
+            FileSystems.Attach(fileSystem ?? throw new ArgumentNullException(nameof(fileSystem)));
+            return FileSystems.Update(fileSystem);
+        }
+
+        internal EntityEntry<FileSystem> RemoveFileSystem(FileSystem fileSystem)
+        {
+            FileSystems.Attach(fileSystem ?? throw new ArgumentNullException(nameof(fileSystem)));
+            return FileSystems.Remove(fileSystem);
+        }
+
+        internal EntityEntry<Redundancy> AddRedundancy(Redundancy redundancy)
+        {
+            Redundancies.Attach(redundancy ?? throw new ArgumentNullException(nameof(redundancy)));
+            return Redundancies.Add(redundancy);
+        }
+
+        internal EntityEntry<Redundancy> UpdateRedundancy(Redundancy redundancy)
+        {
+            Redundancies.Attach(redundancy ?? throw new ArgumentNullException(nameof(redundancy)));
+            return Redundancies.Update(redundancy);
+        }
+
+        internal EntityEntry<Redundancy> RemoveRedundancy(Redundancy redundancy)
+        {
+            Redundancies.Attach(redundancy ?? throw new ArgumentNullException(nameof(redundancy)));
+            return Redundancies.Remove(redundancy);
+        }
+
+        void ILocalDbContext.AddHashCalculation(ILocalHashCalculation hashCalculation) => AddHashCalculation((HashCalculation)hashCalculation);
+
+        void ILocalDbContext.UpdateHashCalculation(ILocalHashCalculation hashCalculation) => UpdateHashCalculation((HashCalculation)hashCalculation);
+
+        void ILocalDbContext.RemoveHashCalculation(ILocalHashCalculation hashCalculation) => RemoveHashCalculation((HashCalculation)hashCalculation);
+
+        void ILocalDbContext.AddComparison(ILocalFileComparison fileComparison) => AddComparison((FileComparison)fileComparison);
+
+        void ILocalDbContext.UpdateComparison(ILocalFileComparison fileComparison) => UpdateComparison((FileComparison)fileComparison);
+
+        void ILocalDbContext.RemoveComparison(ILocalFileComparison fileComparison) => RemoveComparison((FileComparison)fileComparison);
+
+        void ILocalDbContext.AddFile(ILocalFile file) => AddFile((FsFile)file);
+
+        void ILocalDbContext.UpdateFile(ILocalFile file) => UpdateFile((FsFile)file);
+
+        void ILocalDbContext.RemoveFile(ILocalFile file) => RemoveFile((FsFile)file);
+
+        void ILocalDbContext.AddSubDirectory(ILocalSubDirectory subDirectory) => AddSubDirectory((FsDirectory)subDirectory);
+
+        void ILocalDbContext.UpdateSubDirectory(ILocalSubDirectory subDirectory) => UpdateSubDirectory((FsDirectory)subDirectory);
+
+        void ILocalDbContext.RemoveSubDirectory(ILocalSubDirectory subDirectory) => RemoveSubDirectory((FsDirectory)subDirectory);
+
+        void ILocalDbContext.AddVolume(ILocalVolume volume) => AddVolume((Volume)volume);
+
+        void ILocalDbContext.UpdateVolume(ILocalVolume volume) => UpdateVolume((Volume)volume);
+
+        void ILocalDbContext.RemoveVolume(ILocalVolume volume) => RemoveVolume((Volume)volume);
+
+        void ILocalDbContext.AddSymbolicName(ILocalSymbolicName symbolicName) => AddSymbolicName((SymbolicName)symbolicName);
+
+        void ILocalDbContext.UpdateSymbolicName(ILocalSymbolicName symbolicName) => UpdateSymbolicName((SymbolicName)symbolicName);
+
+        void ILocalDbContext.RemoveSymbolicName(ILocalSymbolicName symbolicName) => RemoveSymbolicName((SymbolicName)symbolicName);
+
+        void ILocalDbContext.AddFileSystem(ILocalFileSystem fileSystem) => AddFileSystem((FileSystem)fileSystem);
+
+        void ILocalDbContext.UpdateFileSystem(ILocalFileSystem fileSystem) => UpdateFileSystem((FileSystem)fileSystem);
+
+        void ILocalDbContext.RemoveFileSystem(ILocalFileSystem fileSystem) => RemoveFileSystem((FileSystem)fileSystem);
+
+        void ILocalDbContext.AddRedundancy(ILocalRedundancy redundancy) => AddRedundancy((Redundancy)redundancy);
+
+        void ILocalDbContext.UpdateRedundancy(ILocalRedundancy redundancy) => UpdateRedundancy((Redundancy)redundancy);
+
+        void ILocalDbContext.RemoveRedundancy(ILocalRedundancy redundancy) => RemoveRedundancy((Redundancy)redundancy);
     }
 }

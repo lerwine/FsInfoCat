@@ -1,7 +1,9 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
@@ -15,9 +17,20 @@ namespace FsInfoCat.RemoteDb
             Comparisons2 = new HashSet<FileComparison>();
         }
 
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_HASH_CALCULATION)]
+        [DisplayName(Constants.DISPLAY_NAME_HASH_CALCULATION)]
         public HashCalculation HashCalculation { get; set; }
 
         public Guid Id { get; set; }
+
+        // TODO: Put this in interface
+        public Guid ParentId { get; set; }
+
+        // TODO: Put this in interface
+        public Guid HashCalculationId { get; set; }
+
+        // TODO: Put this in interface
+        public Guid? FileRelocateTaskId { get; set; }
 
         private string _name = "";
 
@@ -27,10 +40,14 @@ namespace FsInfoCat.RemoteDb
 
         public FileStatus Status { get; set; }
 
+        [Required(ErrorMessage = Constants.ERROR_MESSAGE_PARENT_DIRECTORY)]
+        [DisplayName(Constants.DISPLAY_NAME_PARENT_DIRECTORY)]
         public FsDirectory Parent { get; set; }
 
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
         public DateTime CreatedOn { get; set; }
 
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
         public DateTime ModifiedOn { get; set; }
 
         public HashSet<Redundancy> Redundancies { get; private set; }
@@ -39,35 +56,53 @@ namespace FsInfoCat.RemoteDb
 
         public HashSet<FileComparison> Comparisons2 { get; set; }
 
-        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons1 => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_FILE_RELOCATE_TASK)]
+        public virtual FileRelocateTask FileRelocateTask { get; set; }
 
-        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons2 => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons1 => Comparisons1;
 
-        IRemoteSubDirectory IRemoteFile.Parent => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons2 => Comparisons2;
 
-        IHashCalculation IFile.HashCalculation => throw new NotImplementedException();
+        IRemoteSubDirectory IRemoteFile.Parent => Parent;
 
-        IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => throw new NotImplementedException();
+        IHashCalculation IFile.HashCalculation => HashCalculation;
 
-        IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => throw new NotImplementedException();
+        IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
 
-        ISubDirectory IFile.Parent => throw new NotImplementedException();
+        IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => Comparisons2;
 
-        public Guid CreatedById => throw new NotImplementedException();
+        ISubDirectory IFile.Parent => Parent;
 
-        public Guid ModifiedById => throw new NotImplementedException();
+        public Guid CreatedById { get; set; }
 
-        public UserProfile CreatedBy => throw new NotImplementedException();
+        public Guid ModifiedById { get; set; }
 
-        public UserProfile ModifiedBy => throw new NotImplementedException();
+        public UserProfile CreatedBy { get; set; }
 
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+        public UserProfile ModifiedBy { get; set; }
 
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            throw new NotImplementedException();
+            var results = new List<ValidationResult>();
+            Validator.TryValidateProperty(Name, new ValidationContext(this, null, null) { MemberName = nameof(Name) }, results);
+            Validator.TryValidateProperty(Parent, new ValidationContext(this, null, null) { MemberName = nameof(Parent) }, results);
+            Validator.TryValidateProperty(HashCalculation, new ValidationContext(this, null, null) { MemberName = nameof(HashCalculation) }, results);
+            if (CreatedOn.CompareTo(ModifiedOn) > 0)
+                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+            return results;
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<FsFile> builder)
+        {
+            builder.HasKey(nameof(Id));
+            builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
+            builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
+            builder.HasOne(p => p.HashCalculation).WithMany(d => d.Files).HasForeignKey(nameof(HashCalculationId)).IsRequired();
+            builder.HasOne(p => p.FileRelocateTask).WithMany(d => d.Files).HasForeignKey(nameof(FileRelocateTaskId));
         }
     }
 }

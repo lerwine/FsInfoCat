@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
 {
-    public class FileComparison : ILocalFileComparison, IValidatableObject
+    public class FileComparison : ILocalFileComparison
     {
         public Guid Id { get; set; }
 
@@ -38,9 +38,9 @@ namespace FsInfoCat.LocalDb
 
         IFile IFileComparison.File2 => File2;
 
-        ILocalFile ILocalFileComparison.File1 => throw new NotImplementedException();
+        ILocalFile ILocalFileComparison.File1 => File1;
 
-        ILocalFile ILocalFileComparison.File2 => throw new NotImplementedException();
+        ILocalFile ILocalFileComparison.File2 => File2;
 
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {

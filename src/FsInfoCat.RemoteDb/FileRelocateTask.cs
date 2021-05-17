@@ -47,33 +47,33 @@ namespace FsInfoCat.RemoteDb
         [Required(ErrorMessage = Constants.ERROR_MESSAGE_TARGET_DIRECTORY)]
         public virtual FsDirectory TargetDirectory { get; set; }
 
-        public Guid? AssignmentGroupId => throw new NotImplementedException();
+        public Guid? AssignmentGroupId { get; set; }
 
-        public Guid? AssignedToId => throw new NotImplementedException();
+        public Guid? AssignedToId { get; set; }
 
-        IReadOnlyCollection<IRemoteFile> IFileRelocateTask.Files => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFile> IFileRelocateTask.Files => Files;
 
-        IRemoteSubDirectory IFileRelocateTask.TargetDirectory => throw new NotImplementedException();
+        IRemoteSubDirectory IFileRelocateTask.TargetDirectory => TargetDirectory;
 
-        public UserGroup AssignmentGroup => throw new NotImplementedException();
+        public UserGroup AssignmentGroup { get; set; }
 
-        public UserProfile AssignedTo => throw new NotImplementedException();
+        public UserProfile AssignedTo { get; set; }
 
-        public Guid CreatedById => throw new NotImplementedException();
+        public Guid CreatedById { get; set; }
 
-        public Guid ModifiedById => throw new NotImplementedException();
+        public Guid ModifiedById { get; set; }
 
-        public UserProfile CreatedBy => throw new NotImplementedException();
+        public UserProfile CreatedBy { get; set; }
 
-        public UserProfile ModifiedBy => throw new NotImplementedException();
+        public UserProfile ModifiedBy { get; set; }
 
-        IUserGroup IFileRelocateTask.AssignmentGroup => throw new NotImplementedException();
+        IUserGroup IFileRelocateTask.AssignmentGroup => AssignmentGroup;
 
-        IUserProfile IFileRelocateTask.AssignedTo => throw new NotImplementedException();
+        IUserProfile IFileRelocateTask.AssignedTo => AssignedTo;
 
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
 
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
         internal static void BuildEntity(EntityTypeBuilder<FileRelocateTask> builder)
         {

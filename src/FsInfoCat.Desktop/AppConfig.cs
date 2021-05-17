@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Common;
-using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.IO;
@@ -59,114 +58,24 @@ namespace FsInfoCat.Desktop
             return DbProviderFactories.GetFactoryClasses().Select($"[AssemblyQualifiedName]='{typeof(TProvider).AssemblyQualifiedName}' AND [InvariantName]='{invariantName}'").Length > 0;
         }
 
-        public static string GetRemoteDbContainerConnectionString()
-        {
-            string name = nameof(Model.Remote.RemoteDbContainer);
-            string connectionString = GetConnectionString(name, out string providerName);
-            if (!(string.IsNullOrWhiteSpace(providerName) || TestProviderFactoryName<SqlClientFactory>(providerName)))
-                throw new InvalidOperationException($"Unsupported data provider type ({providerName})");
-            return connectionString;
-        }
-
         public static SqlConnectionStringBuilder GetRemoteDbContainerConnectionStringBuilder()
         {
-            string name = nameof(Model.Remote.RemoteDbContainer);
-            string connectionString = GetConnectionString(name, out string providerName);
-            if (string.IsNullOrWhiteSpace(connectionString))
-                return new SqlConnectionStringBuilder(DEFAULT_REMOTE_SQL_CONNECTION_STRING);
-            EntityConnectionStringBuilder builder = new EntityConnectionStringBuilder(connectionString);
-            if (!(string.IsNullOrWhiteSpace(providerName) || TestProviderFactoryName<SqlClientFactory>(builder.Provider)))
-                throw new InvalidOperationException($"Unsupported data provider type ({providerName})");
-            return new SqlConnectionStringBuilder(string.IsNullOrWhiteSpace(builder.ProviderConnectionString) ? DEFAULT_REMOTE_SQL_CONNECTION_STRING : builder.ProviderConnectionString);
-        }
-
-        //public static string GetLocalDbContainerConnectionString(out string providerName, out bool requiresInit)
-        //{
-        //    string connectionString = GetConnectionString(nameof(Model.Local.LocalDbContainer), out providerName);
-        //    if (string.IsNullOrWhiteSpace(connectionString))
-        //    {
-        //        Assembly assembly = Assembly.GetEntryAssembly();
-        //        AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-        //        string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
-        //        if (!Directory.Exists(path))
-        //            Directory.CreateDirectory(path);
-        //        AssemblyName name = assembly.GetName();
-        //        path = Path.Combine(path, name.Name);
-        //        if (!Directory.Exists(path))
-        //            Directory.CreateDirectory(path);
-        //        path = Path.Combine(path, name.Version.ToString());
-        //        if (!Directory.Exists(path))
-        //            Directory.CreateDirectory(path);
-        //        path = Path.Combine(path, Properties.Settings.Default.LocalDbFile ?? DEFAULT_LOCAL_DB_FILENAME);
-        //        providerName = GetProviderFactoryInvariantName<SqlClientFactory>();
-        //        SqlCeConnectionStringBuilder connectionStringBuilder = new SqlCeConnectionStringBuilder();
-        //        connectionStringBuilder.DataSource = path;
-        //        connectionStringBuilder.PersistSecurityInfo = true;
-        //        requiresInit = !File.Exists(path);
-        //        if (requiresInit)
-        //            using (SqlCeEngine engine = new SqlCeEngine(connectionStringBuilder.ConnectionString))
-        //            {
-        //                engine.CreateDatabase();
-        //                // TODO: Need to initialize db from model
-        //            }
-        //        return connectionStringBuilder.ConnectionString;
-        //    }
-        //    return connectionString;
-        //}
-
-        public static DbConnectionStringBuilder GetLocalDbContainerConnectionStringAlt(out string providerName)
-        {
-            string connectionString = GetConnectionString(nameof(Model.Local.LocalDbContainer), out providerName);
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                Assembly assembly = Assembly.GetEntryAssembly();
-                AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                AssemblyName name = assembly.GetName();
-                path = Path.Combine(path, name.Name);
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                path = Path.Combine(path, name.Version.ToString());
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                providerName = GetProviderFactoryInvariantName<SqlClientFactory>();
-                SqlCeConnectionStringBuilder sqlCeConnectionStringBuilder = new SqlCeConnectionStringBuilder();
-                sqlCeConnectionStringBuilder.DataSource = Path.Combine(path, Properties.Settings.Default.LocalDbFile ?? DEFAULT_LOCAL_DB_FILENAME);
-                sqlCeConnectionStringBuilder.PersistSecurityInfo = true;
-                return sqlCeConnectionStringBuilder;
-            }
-            DbConnectionStringBuilder connectionStringBuilder = DbProviderFactories.GetFactory(providerName).CreateConnectionStringBuilder();
-            connectionStringBuilder.ConnectionString = connectionString;
-            return connectionStringBuilder;
-        }
-
-        public static DbConnectionStringBuilder GetLocalDbContainerConnectionString(out string providerName)
-        {
-            Assembly assembly = Assembly.GetEntryAssembly();
-            AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            AssemblyName name = assembly.GetName();
-            path = Path.Combine(path, name.Name);
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            path = Path.Combine(path, name.Version.ToString());
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            providerName = GetProviderFactoryInvariantName<SqlCeProviderFactory>();
-            SqlCeConnectionStringBuilder sqlCeConnectionStringBuilder = new SqlCeConnectionStringBuilder();
-            sqlCeConnectionStringBuilder.DataSource = Path.Combine(path, Properties.Settings.Default.LocalDbFile ?? DEFAULT_LOCAL_DB_FILENAME);
-            sqlCeConnectionStringBuilder.PersistSecurityInfo = true;
-            return sqlCeConnectionStringBuilder;
+            throw new NotImplementedException();
+            //string name = nameof(Model.Remote.RemoteDbContainer);
+            //string connectionString = GetConnectionString(name, out string providerName);
+            //if (string.IsNullOrWhiteSpace(connectionString))
+            //    return new SqlConnectionStringBuilder(DEFAULT_REMOTE_SQL_CONNECTION_STRING);
+            //EntityConnectionStringBuilder builder = new EntityConnectionStringBuilder(connectionString);
+            //if (!(string.IsNullOrWhiteSpace(providerName) || TestProviderFactoryName<SqlClientFactory>(builder.Provider)))
+            //    throw new InvalidOperationException($"Unsupported data provider type ({providerName})");
+            //return new SqlConnectionStringBuilder(string.IsNullOrWhiteSpace(builder.ProviderConnectionString) ? DEFAULT_REMOTE_SQL_CONNECTION_STRING : builder.ProviderConnectionString);
         }
 
         internal static void SetRemoteDbContainerConnectionString(string connectionString, bool doNotRefreshConfigurationManager = false)
         {
-            SetConnectionString(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal), nameof(Model.Remote.RemoteDbContainer),
-                GetProviderFactoryInvariantName<SqlClientFactory>(), connectionString, doNotRefreshConfigurationManager);
+            throw new NotImplementedException();
+            //SetConnectionString(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal), nameof(Model.Remote.RemoteDbContainer),
+            //    GetProviderFactoryInvariantName<SqlClientFactory>(), connectionString, doNotRefreshConfigurationManager);
         }
     }
 }

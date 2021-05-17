@@ -1,5 +1,5 @@
 using FsInfoCat.Desktop.Model;
-using FsInfoCat.Desktop.Model.Local;
+using FsInfoCat.Model.Local;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -196,23 +196,24 @@ namespace FsInfoCat.Desktop.ViewModel
             private set { SetValue(StatusPropertyKey, value); }
         }
 
-        internal void InitializeFromModel(Volume volume)
+        internal void InitializeFromModel(ILocalVolume volume)
         {
             if (volume is null)
                 throw new ArgumentNullException(nameof(volume));
-            DisplayName = volume.DisplayName;
-            VolumeName = volume.VolumeName;
-            RootPathName = volume.GetRootPathName();
-            DriveType = volume.Type;
-            IsInactive = volume.IsInactive;
-            DriveFormat = volume.GetDriveFormat();
-            Identifier = VolumeIdentifier.TryCreate(volume.Identifier, out VolumeIdentifier volumeIdentifier) ? volumeIdentifier : VolumeIdentifier.Empty;
-            MaxNameLength = volume.GetEffectiveMaxNameLength();
-            CaseSensitive = volume.GetEffectiveCaseSensitiveSearch();
-            Id = volume.Id;
-            CreatedOn = volume.CreatedOn;
-            ModifiedOn = volume.ModifiedOn;
-            Notes = volume.Notes;
+            //DisplayName = volume.DisplayName;
+            //VolumeName = volume.VolumeName;
+            //RootPathName = volume.GetRootPathName();
+            //DriveType = volume.Type;
+            //IsInactive = volume.IsInactive;
+            //DriveFormat = volume.GetDriveFormat();
+            //Identifier = VolumeIdentifier.TryCreate(volume.Identifier, out VolumeIdentifier volumeIdentifier) ? volumeIdentifier : VolumeIdentifier.Empty;
+            //MaxNameLength = volume.GetEffectiveMaxNameLength();
+            //CaseSensitive = volume.GetEffectiveCaseSensitiveSearch();
+            //Id = volume.Id;
+            //CreatedOn = volume.CreatedOn;
+            //ModifiedOn = volume.ModifiedOn;
+            //Notes = volume.Notes;
+            throw new NotImplementedException();
             IsModified = false;
         }
 
@@ -294,7 +295,7 @@ namespace FsInfoCat.Desktop.ViewModel
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<LocalVolumeVM> GetAllLocalVolumes(IEnumerable<Volume> dbVolumes, List<Win32_LogicalDiskRootDirectory> logicalDisks)
+        public static IEnumerable<LocalVolumeVM> GetAllLocalVolumes(IEnumerable<ILocalVolume> dbVolumes, List<Win32_LogicalDiskRootDirectory> logicalDisks)
         {
             Dictionary<VolumeIdentifier, Win32_LogicalDiskRootDirectory> byVolumeIdentifer = new Dictionary<VolumeIdentifier, Win32_LogicalDiskRootDirectory>();
             if (!(logicalDisks is  null))
@@ -309,23 +310,24 @@ namespace FsInfoCat.Desktop.ViewModel
                     }
                 }
             if (!(dbVolumes is null))
-                foreach (Volume lv in dbVolumes)
+                foreach (ILocalVolume lv in dbVolumes)
                 {
                     if (lv is null)
                         continue;
                     LocalVolumeVM vm = new LocalVolumeVM();
                     vm.InitializeFromModel(lv);
-                    if (VolumeIdentifier.TryCreate(lv.Identifier, out VolumeIdentifier id) && byVolumeIdentifer.ContainsKey(id))
-                    {
-                        vm.UpdateFromModel(byVolumeIdentifer[id]);
-                        byVolumeIdentifer.Remove(id);
-                    }
-                    else
-                    {
-                        vm.Availability = Win32_DeviceAvailability.Other;
-                        vm.Status = "";
-                    }
-                    yield return vm;
+                    throw new NotImplementedException();
+                    //if (VolumeIdentifier.TryCreate(lv.Identifier, out VolumeIdentifier id) && byVolumeIdentifer.ContainsKey(id))
+                    //{
+                    //    vm.UpdateFromModel(byVolumeIdentifer[id]);
+                    //    byVolumeIdentifer.Remove(id);
+                    //}
+                    //else
+                    //{
+                    //    vm.Availability = Win32_DeviceAvailability.Other;
+                    //    vm.Status = "";
+                    //}
+                    //yield return vm;
                 }
             foreach (Win32_LogicalDiskRootDirectory sv in byVolumeIdentifer.Values)
             {

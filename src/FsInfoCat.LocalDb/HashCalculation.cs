@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
 {
-    public class HashCalculation : ILocalHashCalculation, IValidatableObject
+    public class HashCalculation : ILocalHashCalculation
     {
         public HashCalculation()
         {
@@ -30,7 +30,7 @@ namespace FsInfoCat.LocalDb
 
         IReadOnlyCollection<byte> IHashCalculation.Data => Data;
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
         public DateTime CreatedOn { get; set; }
 
         [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
@@ -40,7 +40,7 @@ namespace FsInfoCat.LocalDb
 
         IReadOnlyCollection<IFile> IHashCalculation.Files => Files;
 
-        IReadOnlyCollection<ILocalFile> ILocalHashCalculation.Files => throw new NotImplementedException();
+        IReadOnlyCollection<ILocalFile> ILocalHashCalculation.Files => Files;
 
         public bool TryGetMD5Checksum(out UInt128 result) => UInt128.TryCreate(Data, out result);
 

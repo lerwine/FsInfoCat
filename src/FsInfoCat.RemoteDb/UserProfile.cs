@@ -1,179 +1,196 @@
+using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
 {
     public class UserProfile : IUserProfile
     {
-        public Guid Id => throw new NotImplementedException();
+        public Guid Id { get; set; }
 
-        public string DisplayName => throw new NotImplementedException();
+        private string _displayName = "";
 
-        public string FirstName => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
+        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
+        public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        public string LastName => throw new NotImplementedException();
+        public string FirstName { get; set; }
 
-        public string MI => throw new NotImplementedException();
+        public string LastName { get; set; }
 
-        public string Suffix => throw new NotImplementedException();
+        public string MI { get; set; }
 
-        public string Title => throw new NotImplementedException();
+        public string Suffix { get; set; }
 
-        public int? DbPrincipalId => throw new NotImplementedException();
+        public string Title { get; set; }
 
-        public byte[] SID => throw new NotImplementedException();
+        public int? DbPrincipalId { get; set; }
 
-        public string LoginName => throw new NotImplementedException();
+        public byte[] SID { get; set; }
 
-        public UserRole ExplicitRoles => throw new NotImplementedException();
+        public string LoginName { get; set; }
 
-        public string Notes => throw new NotImplementedException();
+        public UserRole ExplicitRoles { get; set; }
 
-        public bool IsInactive => throw new NotImplementedException();
+        private string _notes = "";
 
-        public HashSet<SymbolicName> CreatedSymbolicNames => throw new NotImplementedException();
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        public HashSet<FileComparison> CreatedComparisons => throw new NotImplementedException();
+        public bool IsInactive { get; set; }
 
-        public HashSet<FsDirectory> CreatedDirectories => throw new NotImplementedException();
+        public Guid CreatedById { get; set; }
 
-        public HashSet<FsFile> CreatedFiles => throw new NotImplementedException();
+        public Guid ModifiedById { get; set; }
 
-        public HashSet<FileSystem> CreatedFileSystems => throw new NotImplementedException();
+        public UserProfile CreatedBy { get; set; }
 
-        public HashSet<HashCalculation> CreatedHashCalculations => throw new NotImplementedException();
+        public UserProfile ModifiedBy { get; set; }
 
-        public HashSet<HostDevice> CreatedHostDevices => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        public DateTime CreatedOn { get; set; }
 
-        public HashSet<HostPlatform> CreatedHostPlatforms => throw new NotImplementedException();
+        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        public DateTime ModifiedOn { get; set; }
 
-        public HashSet<Redundancy> CreatedRedundancies => throw new NotImplementedException();
+        public HashSet<SymbolicName> CreatedSymbolicNames { get; set; }
 
-        public HashSet<UserProfile> CreatedUserProfiles => throw new NotImplementedException();
+        public HashSet<FileComparison> CreatedComparisons { get; set; }
 
-        public HashSet<Volume> CreatedVolumes => throw new NotImplementedException();
+        public HashSet<FsDirectory> CreatedDirectories { get; set; }
 
-        public HashSet<Volume> ModifiedVolumes => throw new NotImplementedException();
+        public HashSet<FsFile> CreatedFiles { get; set; }
 
-        public HashSet<UserProfile> ModifiedUserProfiles => throw new NotImplementedException();
+        public HashSet<FileSystem> CreatedFileSystems { get; set; }
 
-        public HashSet<Redundancy> ModifiedRedundancies => throw new NotImplementedException();
+        public HashSet<HashCalculation> CreatedHashCalculations { get; set; }
 
-        public HashSet<HostPlatform> ModifiedHostPlatforms => throw new NotImplementedException();
+        public HashSet<HostDevice> CreatedHostDevices { get; set; }
 
-        public HashSet<HostDevice> ModifiedHostDevices => throw new NotImplementedException();
+        public HashSet<HostPlatform> CreatedHostPlatforms { get; set; }
 
-        public HashSet<HashCalculation> ModifiedHashCalculations => throw new NotImplementedException();
+        public HashSet<Redundancy> CreatedRedundancies { get; set; }
 
-        public HashSet<SymbolicName> ModifiedSymbolicNames => throw new NotImplementedException();
+        public HashSet<UserProfile> CreatedUserProfiles { get; set; }
 
-        public HashSet<FileSystem> ModifiedFileSystems => throw new NotImplementedException();
+        public HashSet<Volume> CreatedVolumes { get; set; }
 
-        public HashSet<FsFile> ModifiedFiles => throw new NotImplementedException();
+        public HashSet<Volume> ModifiedVolumes { get; set; }
 
-        public HashSet<FsDirectory> ModifiedDirectories => throw new NotImplementedException();
+        public HashSet<UserProfile> ModifiedUserProfiles { get; set; }
 
-        public HashSet<FileComparison> ModifiedComparisons => throw new NotImplementedException();
+        public HashSet<Redundancy> ModifiedRedundancies { get; set; }
 
-        public HashSet<UserGroup> AssignmentGroups => throw new NotImplementedException();
+        public HashSet<HostPlatform> ModifiedHostPlatforms { get; set; }
 
-        public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks => throw new NotImplementedException();
+        public HashSet<HostDevice> ModifiedHostDevices { get; set; }
 
-        public HashSet<FileRelocateTask> FileRelocationTasks => throw new NotImplementedException();
+        public HashSet<HashCalculation> ModifiedHashCalculations { get; set; }
 
-        public HashSet<DirectoryRelocateTask> CreatedDirectoryRelocateTasks => throw new NotImplementedException();
+        public HashSet<SymbolicName> ModifiedSymbolicNames { get; set; }
 
-        public HashSet<FileRelocateTask> CreatedFileRelocateTasks => throw new NotImplementedException();
+        public HashSet<FileSystem> ModifiedFileSystems { get; set; }
 
-        public HashSet<UserGroup> CreatedUserGroups => throw new NotImplementedException();
+        public HashSet<FsFile> ModifiedFiles { get; set; }
 
-        public HashSet<DirectoryRelocateTask> ModifiedDirectoryRelocateTasks => throw new NotImplementedException();
+        public HashSet<FsDirectory> ModifiedDirectories { get; set; }
 
-        public HashSet<FileRelocateTask> ModifiedFileRelocateTasks => throw new NotImplementedException();
+        public HashSet<FileComparison> ModifiedComparisons { get; set; }
 
-        public HashSet<UserGroup> ModifiedUserGroups => throw new NotImplementedException();
+        public HashSet<UserGroup> AssignmentGroups { get; set; }
 
-        public Guid CreatedById => throw new NotImplementedException();
+        public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
 
-        public Guid ModifiedById => throw new NotImplementedException();
+        public HashSet<FileRelocateTask> FileRelocationTasks { get; set; }
 
-        public UserProfile CreatedBy => throw new NotImplementedException();
+        public HashSet<DirectoryRelocateTask> CreatedDirectoryRelocateTasks { get; set; }
 
-        public UserProfile ModifiedBy => throw new NotImplementedException();
+        public HashSet<FileRelocateTask> CreatedFileRelocateTasks { get; set; }
 
-        public DateTime CreatedOn => throw new NotImplementedException();
+        public HashSet<UserGroup> CreatedUserGroups { get; set; }
 
-        public DateTime ModifiedOn => throw new NotImplementedException();
+        public HashSet<DirectoryRelocateTask> ModifiedDirectoryRelocateTasks { get; set; }
 
-        IReadOnlyCollection<byte> IUserProfile.SID => throw new NotImplementedException();
+        public HashSet<FileRelocateTask> ModifiedFileRelocateTasks { get; set; }
 
-        IReadOnlyCollection<IRemoteSymbolicName> IUserProfile.CreatedSymbolicNames => throw new NotImplementedException();
+        internal static void BuildEntity(EntityTypeBuilder<UserProfile> obj)
+        {
+            throw new NotImplementedException();
+        }
 
-        IReadOnlyCollection<IRemoteFileComparison> IUserProfile.CreatedComparisons => throw new NotImplementedException();
+        public HashSet<UserGroup> ModifiedUserGroups { get; set; }
 
-        IReadOnlyCollection<IRemoteSubDirectory> IUserProfile.CreatedDirectories => throw new NotImplementedException();
+        IReadOnlyCollection<byte> IUserProfile.SID => SID;
 
-        IReadOnlyCollection<IRemoteFile> IUserProfile.CreatedFiles => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteSymbolicName> IUserProfile.CreatedSymbolicNames => CreatedSymbolicNames;
 
-        IReadOnlyCollection<IRemoteFileSystem> IUserProfile.CreatedFileSystems => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFileComparison> IUserProfile.CreatedComparisons => CreatedComparisons;
 
-        IReadOnlyCollection<IRemoteHashCalculation> IUserProfile.CreatedHashCalculations => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteSubDirectory> IUserProfile.CreatedDirectories => CreatedDirectories;
 
-        IReadOnlyCollection<IHostDevice> IUserProfile.CreatedHostDevices => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFile> IUserProfile.CreatedFiles => CreatedFiles;
 
-        IReadOnlyCollection<IHostPlatform> IUserProfile.CreatedHostPlatforms => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFileSystem> IUserProfile.CreatedFileSystems => CreatedFileSystems;
 
-        IReadOnlyCollection<IRemoteRedundancy> IUserProfile.CreatedRedundancies => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteHashCalculation> IUserProfile.CreatedHashCalculations => CreatedHashCalculations;
 
-        IReadOnlyCollection<IUserProfile> IUserProfile.CreatedUserProfiles => throw new NotImplementedException();
+        IReadOnlyCollection<IHostDevice> IUserProfile.CreatedHostDevices => CreatedHostDevices;
 
-        IReadOnlyCollection<IRemoteVolume> IUserProfile.CreatedVolumes => throw new NotImplementedException();
+        IReadOnlyCollection<IHostPlatform> IUserProfile.CreatedHostPlatforms => CreatedHostPlatforms;
 
-        IReadOnlyCollection<IRemoteVolume> IUserProfile.ModifiedVolumes => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteRedundancy> IUserProfile.CreatedRedundancies => CreatedRedundancies;
 
-        IReadOnlyCollection<IUserProfile> IUserProfile.ModifiedUserProfiles => throw new NotImplementedException();
+        IReadOnlyCollection<IUserProfile> IUserProfile.CreatedUserProfiles => CreatedUserProfiles;
 
-        IReadOnlyCollection<IRemoteRedundancy> IUserProfile.ModifiedRedundancies => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteVolume> IUserProfile.CreatedVolumes => CreatedVolumes;
 
-        IReadOnlyCollection<IHostPlatform> IUserProfile.ModifiedHostPlatforms => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteVolume> IUserProfile.ModifiedVolumes => ModifiedVolumes;
 
-        IReadOnlyCollection<IHostDevice> IUserProfile.ModifiedHostDevices => throw new NotImplementedException();
+        IReadOnlyCollection<IUserProfile> IUserProfile.ModifiedUserProfiles => ModifiedUserProfiles;
 
-        IReadOnlyCollection<IRemoteHashCalculation> IUserProfile.ModifiedHashCalculations => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteRedundancy> IUserProfile.ModifiedRedundancies => ModifiedRedundancies;
 
-        IReadOnlyCollection<IRemoteSymbolicName> IUserProfile.ModifiedSymbolicNames => throw new NotImplementedException();
+        IReadOnlyCollection<IHostPlatform> IUserProfile.ModifiedHostPlatforms => ModifiedHostPlatforms;
 
-        IReadOnlyCollection<IRemoteFileSystem> IUserProfile.ModifiedFileSystems => throw new NotImplementedException();
+        IReadOnlyCollection<IHostDevice> IUserProfile.ModifiedHostDevices => ModifiedHostDevices;
 
-        IReadOnlyCollection<IRemoteFile> IUserProfile.ModifiedFiles => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteHashCalculation> IUserProfile.ModifiedHashCalculations => ModifiedHashCalculations;
 
-        IReadOnlyCollection<IRemoteSubDirectory> IUserProfile.ModifiedDirectories => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteSymbolicName> IUserProfile.ModifiedSymbolicNames => ModifiedSymbolicNames;
 
-        IReadOnlyCollection<IRemoteFileComparison> IUserProfile.ModifiedComparisons => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFileSystem> IUserProfile.ModifiedFileSystems => ModifiedFileSystems;
 
-        IReadOnlyCollection<IUserGroup> IUserProfile.AssignmentGroups => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFile> IUserProfile.ModifiedFiles => ModifiedFiles;
 
-        IReadOnlyCollection<IDirectoryRelocateTask> IUserProfile.DirectoryRelocationTasks => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteSubDirectory> IUserProfile.ModifiedDirectories => ModifiedDirectories;
 
-        IReadOnlyCollection<IFileRelocateTask> IUserProfile.FileRelocationTasks => throw new NotImplementedException();
+        IReadOnlyCollection<IRemoteFileComparison> IUserProfile.ModifiedComparisons => ModifiedComparisons;
 
-        IReadOnlyCollection<IDirectoryRelocateTask> IUserProfile.CreatedDirectoryRelocateTasks => throw new NotImplementedException();
+        IReadOnlyCollection<IUserGroup> IUserProfile.AssignmentGroups => AssignmentGroups;
 
-        IReadOnlyCollection<IFileRelocateTask> IUserProfile.CreatedFileRelocateTasks => throw new NotImplementedException();
+        IReadOnlyCollection<IDirectoryRelocateTask> IUserProfile.DirectoryRelocationTasks => DirectoryRelocationTasks;
 
-        IReadOnlyCollection<IUserGroup> IUserProfile.CreatedUserGroups => throw new NotImplementedException();
+        IReadOnlyCollection<IFileRelocateTask> IUserProfile.FileRelocationTasks => FileRelocationTasks;
 
-        IReadOnlyCollection<IDirectoryRelocateTask> IUserProfile.ModifiedDirectoryRelocateTasks => throw new NotImplementedException();
+        IReadOnlyCollection<IDirectoryRelocateTask> IUserProfile.CreatedDirectoryRelocateTasks => CreatedDirectoryRelocateTasks;
 
-        IReadOnlyCollection<IFileRelocateTask> IUserProfile.ModifiedFileRelocateTasks => throw new NotImplementedException();
+        IReadOnlyCollection<IFileRelocateTask> IUserProfile.CreatedFileRelocateTasks => CreatedFileRelocateTasks;
 
-        IReadOnlyCollection<IUserGroup> IUserProfile.ModifiedUserGroups => throw new NotImplementedException();
+        IReadOnlyCollection<IUserGroup> IUserProfile.CreatedUserGroups => CreatedUserGroups;
 
-        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+        IReadOnlyCollection<IDirectoryRelocateTask> IUserProfile.ModifiedDirectoryRelocateTasks => ModifiedDirectoryRelocateTasks;
 
-        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
+        IReadOnlyCollection<IFileRelocateTask> IUserProfile.ModifiedFileRelocateTasks => ModifiedFileRelocateTasks;
+
+        IReadOnlyCollection<IUserGroup> IUserProfile.ModifiedUserGroups => ModifiedUserGroups;
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

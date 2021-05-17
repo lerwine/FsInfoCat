@@ -31,13 +31,11 @@ namespace FsInfoCat.LocalDb
 
         public Guid HashCalculationId { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
         public DateTime CreatedOn { get; set; }
 
         [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
         public DateTime ModifiedOn { get; set; }
-
-        public Guid? FileRelocateTaskId { get; set; }
 
         [Required(ErrorMessage = Constants.ERROR_MESSAGE_HASH_CALCULATION)]
         [DisplayName(Constants.DISPLAY_NAME_HASH_CALCULATION)]
@@ -61,14 +59,11 @@ namespace FsInfoCat.LocalDb
 
         IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => Comparisons2;
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_RELOCATE_TASK)]
-        public virtual FileRelocateTask FileRelocateTask { get; set; }
+        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons1 => Comparisons1;
 
-        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons1 => throw new NotImplementedException();
+        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons2 => Comparisons2;
 
-        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons2 => throw new NotImplementedException();
-
-        ILocalSubDirectory ILocalFile.Parent => throw new NotImplementedException();
+        ILocalSubDirectory ILocalFile.Parent => Parent;
 
         internal static void BuildEntity(EntityTypeBuilder<FsFile> builder)
         {
@@ -76,7 +71,6 @@ namespace FsInfoCat.LocalDb
             builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
             builder.HasOne(p => p.HashCalculation).WithMany(d => d.Files).HasForeignKey(nameof(HashCalculationId)).IsRequired();
-            builder.HasOne(p => p.FileRelocateTask).WithMany(d => d.Files).HasForeignKey(nameof(FileRelocateTaskId));
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

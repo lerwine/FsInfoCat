@@ -73,9 +73,9 @@ namespace FsInfoCat.LocalDb
 
         ISubDirectory IVolume.RootDirectory => RootDirectory;
 
-        ILocalSubDirectory ILocalVolume.RootDirectory => throw new NotImplementedException();
+        ILocalSubDirectory ILocalVolume.RootDirectory => RootDirectory;
 
-        ILocalFileSystem ILocalVolume.FileSystem => throw new NotImplementedException();
+        ILocalFileSystem ILocalVolume.FileSystem => FileSystem;
 
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
