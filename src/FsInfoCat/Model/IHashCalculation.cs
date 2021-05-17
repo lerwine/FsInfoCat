@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Model
 {
-    // TODO: Move to FsInfoCat module
     public interface IHashCalculation : ITimeStampedEntity
     {
         IReadOnlyCollection<byte> Data { get; }

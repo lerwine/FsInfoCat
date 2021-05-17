@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-    // TODO: Move to FsInfoCat module
-    public interface IVolume : ITimeStampedEntity
+    public interface IVolume : ITimeStampedEntity, IValidatableObject
     {
         Guid Id { get; }
         bool? CaseSensitiveSearch { get; }
@@ -13,8 +13,8 @@ namespace FsInfoCat.Model
         bool IsInactive { get; }
         long? MaxNameLength { get; }
         string Notes { get; }
+        string VolumeName { get; }
         ISubDirectory RootDirectory { get; }
         IFileSystem FileSystem { get; }
-        string VolumeName { get; }
     }
 }

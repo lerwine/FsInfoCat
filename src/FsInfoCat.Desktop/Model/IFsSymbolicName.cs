@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.Desktop.Model
 {
-    // TODO: Move to FsInfoCat module
+    [System.Obsolete("Use FsInfoCat.Model.IFsSymbolicName")]
     public interface IFsSymbolicName
     {
         Guid Id { get; }

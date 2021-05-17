@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    [Obsolete]
+    [System.Obsolete("Use FsInfoCat.LocalDb.Volume or FsInfoCat.Model.Local.ILocalVolume")]
     public class Volume : IVolume
     {
         public Volume()

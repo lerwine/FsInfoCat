@@ -13,8 +13,8 @@ namespace FsInfoCat.LocalDb
         public FsFile()
         {
             Redundancies = new HashSet<Redundancy>();
-            Comparisons1 = new HashSet<Comparison>();
-            Comparisons2 = new HashSet<Comparison>();
+            Comparisons1 = new HashSet<FileComparison>();
+            Comparisons2 = new HashSet<FileComparison>();
         }
 
         public Guid Id { get; set; }
@@ -53,11 +53,11 @@ namespace FsInfoCat.LocalDb
 
         public virtual HashSet<Redundancy> Redundancies { get; set; }
 
-        public virtual HashSet<Comparison> Comparisons1 { get; set; }
+        public virtual HashSet<FileComparison> Comparisons1 { get; set; }
 
         IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
 
-        public virtual HashSet<Comparison> Comparisons2 { get; set; }
+        public virtual HashSet<FileComparison> Comparisons2 { get; set; }
 
         IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => Comparisons2;
 

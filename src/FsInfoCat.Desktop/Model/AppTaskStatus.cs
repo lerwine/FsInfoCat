@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.Desktop.Model
 {
-    [Obsolete]
+    [System.Obsolete("Use FsInfoCat.Model.AppTaskStatus")]
     public enum AppTaskStatus : byte
     {
         New = 0,

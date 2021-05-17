@@ -52,7 +52,7 @@ namespace FsInfoCat.LocalDb
 
         IQueryable<ISubDirectory> IDbContext.Subdirectories => FsDirectories;
 
-        public virtual DbSet<Comparison> Comparisons { get; set; }
+        public virtual DbSet<FileComparison> Comparisons { get; set; }
 
         IQueryable<ILocalFileComparison> ILocalDbContext.Comparisons => Comparisons;
 
@@ -110,7 +110,7 @@ namespace FsInfoCat.LocalDb
             modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
             modelBuilder.Entity<HashCalculation>(HashCalculation.BuildEntity);
             modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
-            modelBuilder.Entity<Comparison>(Comparison.BuildEntity);
+            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
             base.OnModelCreating(modelBuilder);
         }

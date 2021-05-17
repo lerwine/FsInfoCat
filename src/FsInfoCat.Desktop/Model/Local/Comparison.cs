@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    [Obsolete]
+    [System.Obsolete("Use FsInfoCat.LocalDb.FileComparison or FsInfoCat.Model.Local.ILocalFileComparison")]
     public class Comparison : IFileComparison
     {
         public Guid Id { get; set; }

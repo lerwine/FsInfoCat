@@ -1,14 +1,17 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-    // TODO: Move to FsInfoCat module
-    public interface IFsSymbolicName : ITimeStampedEntity
+    public interface IFsSymbolicName : ITimeStampedEntity, IValidatableObject
     {
         Guid Id { get; }
         string Name { get; }
         Guid FileSystemId { get; }
         string Notes { get; }
         bool IsInactive { get; }
+        IFileSystem FileSystem { get; }
+        IReadOnlyCollection<IFileSystem> DefaultFileSystems { get; }
     }
 }

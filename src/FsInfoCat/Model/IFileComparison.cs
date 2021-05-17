@@ -2,7 +2,6 @@ using System;
 
 namespace FsInfoCat.Model
 {
-    // TODO: Move to FsInfoCat module
     public interface IFileComparison : ITimeStampedEntity
     {
         bool AreEqual { get; }

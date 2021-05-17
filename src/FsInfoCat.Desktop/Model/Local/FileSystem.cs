@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    [Obsolete]
+    [System.Obsolete("Use FsInfoCat.LocalDb.FileSystem or FsInfoCat.Model.Local.ILocalFileSystem")]
     public class FileSystem : IFileSystem
     {
         public FileSystem()

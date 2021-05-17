@@ -2,7 +2,6 @@ using System.Linq;
 
 namespace FsInfoCat.Model
 {
-    // TODO: Move to FsInfoCat module
     public interface IDbContext
     {
         IQueryable<IHashCalculation> Checksums { get; }

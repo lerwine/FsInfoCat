@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    [System.Obsolete]
+    [System.Obsolete("Use FsInfoCat.LocalDb.FsInfoCatContext or FsInfoCat.Model.Local.ILocalDbContext")]
     public class LocalDbContainer : DbContext
     {
         // Your context has been configured to use a 'LocalDbContainer' connection string from your application's 

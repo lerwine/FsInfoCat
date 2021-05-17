@@ -185,7 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppTaskStatus.cs" />
-    <Compile Include="Comparison.cs" />
+    <Compile Include="FileComparison.cs" />
     <Compile Include="DirectoryCrawlFlags.cs" />
     <Compile Include="DirectoryRelocateTask.cs" />
     <Compile Include="FileRelocateTask.cs" />

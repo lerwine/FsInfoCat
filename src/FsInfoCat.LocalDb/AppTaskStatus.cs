@@ -1,5 +1,6 @@
-﻿namespace FsInfoCat.LocalDb
+namespace FsInfoCat.LocalDb
 {
+    [System.Obsolete("Use FsInfoCat.Model.Remote.AppTaskStatus")]
     public enum AppTaskStatus : byte
     {
         New = 0,

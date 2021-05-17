@@ -12,6 +12,7 @@ namespace FsInfoCat.Desktop.Model
     /// Represents a unsigned 128-bit numeric value.
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
+    [System.Obsolete("Use FsInfoCat.Model.UInt128")]
     public struct UInt128 : IComparable, IEquatable<UInt128>, IComparable<UInt128>, IReadOnlyList<byte>
     {
         private const decimal FIRST_HIGH_BIT_M = 18446744073709551616m;

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat.LocalDb
 {
+    [System.Obsolete("Use FsInfoCat.Model.DirectoryCrawlFlags")]
     [Flags]
     public enum DirectoryCrawlFlags : byte
     {

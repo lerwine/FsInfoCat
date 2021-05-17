@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.Model
 {
-    // TODO: Move to FsInfoCat module
+    [System.Obsolete("Use FsInfoCat.Model.IVolume")]
     public interface IVolume
     {
         Guid Id { get; }

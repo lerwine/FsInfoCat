@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
 {
-    public class Comparison : ILocalFileComparison, IValidatableObject
+    public class FileComparison : ILocalFileComparison, IValidatableObject
     {
         public Guid Id { get; set; }
 
@@ -38,12 +38,12 @@ namespace FsInfoCat.LocalDb
 
         IFile IFileComparison.File2 => File2;
 
-        internal static void BuildEntity(EntityTypeBuilder<Comparison> builder)
+        internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.ToTable($"{nameof(FsFile)}{nameof(Comparison)}1").HasOne(p => p.File1).WithMany(d => d.Comparisons1)
+            builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}1").HasOne(p => p.File1).WithMany(d => d.Comparisons1)
                 .HasForeignKey(f => f.FileId1).IsRequired();
-            builder.ToTable($"{nameof(FsFile)}{nameof(Comparison)}2").HasOne(p => p.File2).WithMany(d => d.Comparisons2)
+            builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}2").HasOne(p => p.File2).WithMany(d => d.Comparisons2)
                 .HasForeignKey(f => f.FileId2).IsRequired();
         }
 

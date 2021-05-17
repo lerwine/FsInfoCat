@@ -57,6 +57,8 @@ namespace FsInfoCat.Desktop.Model.Remote
         }
     }
 
+
+    [System.Obsolete("Use FsInfoCat.RemoteDb.RemoteDbContext or FsInfoCat.Model.Remote.IRemoteDbContext")]
     public partial class RemoteDbContainer : IDbContext
     {
         internal RemoteDbContainer(string connectionString) : base(connectionString) { }
@@ -72,6 +74,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         IQueryable<IVolume> IDbContext.Volumes => Volumes.Cast<IVolume>();
     }
 
+    [System.Obsolete("Use FsInfoCat.RemoteDb.HashCalculation or FsInfoCat.Model.Remote.IRemoteHashCalculation")]
     public partial class HashCalculation : IHashCalculation
     {
         private ReadOnlyCollectionDelegateWrapper<byte, byte> _checksumWrapper;
@@ -102,6 +105,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         public bool TryGetMD5Checksum(out UInt128 result) => UInt128.TryCreate(Data, out result);
     }
 
+    [System.Obsolete("Use FsInfoCat.RemoteDb.FileComparison or FsInfoCat.Model.Remote.IRemoteFileComparison")]
     public partial class Comparison : IFileComparison
     {
         IFile IFileComparison.File1 => File1;
@@ -109,6 +113,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         IFile IFileComparison.File2 => File2;
     }
 
+    [System.Obsolete("Use FsInfoCat.RemoteDb.FsFile or FsInfoCat.Model.Remote.IRemoteFile")]
     public partial class File : IFile
     {
         private ReadOnlyCollectionDelegateWrapper<Comparison, IFileComparison> _comparisonsWrapper1;
@@ -141,6 +146,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         ISubDirectory IFile.Parent => Parent;
     }
 
+    [System.Obsolete("Use FsInfoCat.RemoteDb.FsDirectory or FsInfoCat.Model.Remote.IRemoteSubDirectory")]
     public partial class Directory : ISubDirectory
     {
         private ReadOnlyCollectionDelegateWrapper<File, IFile> _filesWrapper;
@@ -173,6 +179,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         IVolume ISubDirectory.Volume => Volume;
     }
 
+    [System.Obsolete("Use FsInfoCat.RemoteDb.Volume or FsInfoCat.Model.Remote.IRemoteVolume")]
     public partial class Volume : IVolume
     {
         private ReadOnlyCollectionDelegateWrapper<Directory, ISubDirectory> _subdirectoriesWrapper;
@@ -182,6 +189,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         IFileSystem IVolume.FileSystem => FileSystem;
     }
 
+    [System.Obsolete("Use FsInfoCat.RemoteDb.FileSystem or FsInfoCat.Model.Remote.IRemoteFileSystem")]
     public partial class FileSystem : IFileSystem
     {
         private ReadOnlyCollectionDelegateWrapper<Volume, IVolume> _volumesWrapper;
@@ -212,6 +220,7 @@ namespace FsInfoCat.Desktop.Model.Remote
         IFsSymbolicName IFileSystem.DefaultSymbolicName => DefaultSymbolicName;
     }
 
+    [System.Obsolete("Use FsInfoCat.RemoteDb.SymbolicName or FsInfoCat.Model.Remote.IRemoteSymbolicName")]
     public partial class FsSymbolicName : IFsSymbolicName
     {
 

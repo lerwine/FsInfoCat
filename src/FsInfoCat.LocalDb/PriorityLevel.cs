@@ -1,5 +1,6 @@
-﻿namespace FsInfoCat.LocalDb
+namespace FsInfoCat.LocalDb
 {
+    [System.Obsolete("Use FsInfoCat.Model.Remote.PriorityLevel")]
     public enum PriorityLevel : byte
     {
         Deferred = 0,

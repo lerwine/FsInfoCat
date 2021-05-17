@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    [Obsolete]
+    [Obsolete("This is remote only")]
     public class FileRelocateTask
     {
         public FileRelocateTask()

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-    // TODO: Move to FsInfoCat module
-    public interface IFileSystem : ITimeStampedEntity
+    public interface IFileSystem : ITimeStampedEntity, IValidatableObject
     {
         Guid Id { get; }
         string DisplayName { get; }

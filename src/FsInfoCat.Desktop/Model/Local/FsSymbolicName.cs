@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    [Obsolete]
+    [System.Obsolete("Use FsInfoCat.LocalDb.SymbolicName or FsInfoCat.Model.Local.ILocalSymbolicName")]
     public class FsSymbolicName : IFsSymbolicName
     {
         public FsSymbolicName()

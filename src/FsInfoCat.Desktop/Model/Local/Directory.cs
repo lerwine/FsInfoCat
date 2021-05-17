@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
-    [Obsolete]
+    [System.Obsolete("Use FsInfoCat.LocalDb.FsDirectory or FsInfoCat.Model.Local.ILocalSubDirectory")]
     public class Directory : ISubDirectory
     {
         private readonly ReadOnlyCollectionDelegateWrapper<Directory, ISubDirectory> _subdirectoriesWrapper;

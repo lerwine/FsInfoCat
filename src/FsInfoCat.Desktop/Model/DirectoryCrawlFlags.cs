@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.Desktop.Model
 {
-    [Obsolete]
+    [System.Obsolete("Use FsInfoCat.Model.DirectoryCrawlFlags")]
     [Flags]
     public enum DirectoryCrawlFlags : byte
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.Model.Local
 {
+    [Obsolete("This is remote only")]
     public class DirectoryRelocateTask
     {
         public DirectoryRelocateTask()
