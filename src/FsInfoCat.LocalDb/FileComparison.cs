@@ -11,8 +11,6 @@ namespace FsInfoCat.LocalDb
 {
     public class FileComparison : ILocalFileComparison
     {
-        public Guid Id { get; set; }
-
         public Guid FileId1 { get; set; }
 
         public Guid FileId2 { get; set; }
@@ -44,7 +42,7 @@ namespace FsInfoCat.LocalDb
 
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
-            builder.HasKey(nameof(Id));
+            builder.HasKey(nameof(FileId1), nameof(FileId2));
             builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}1").HasOne(p => p.File1).WithMany(d => d.Comparisons1)
                 .HasForeignKey(f => f.FileId1).IsRequired();
             builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}2").HasOne(p => p.File2).WithMany(d => d.Comparisons2)

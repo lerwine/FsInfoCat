@@ -23,7 +23,6 @@ namespace FsInfoCat.RemoteDb
         [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
         public bool? CaseSensitiveSearch { get; set; }
 
-        // TODO: Put this in the interface
         [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
         public bool? ReadOnly { get; set; }
 

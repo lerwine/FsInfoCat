@@ -26,10 +26,8 @@ namespace FsInfoCat.RemoteDb
         [MaxLength(Constants.MAX_LENGTH_FS_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
         public string Name { get => _name; set => _name = value ?? ""; }
 
-        // TODO: Put this in interface
         public DirectoryCrawlFlags CrawlFlags { get; set; }
 
-        // TODO: Add this to interface
         public Guid? ParentId { get; set; }
 
         [DisplayName(Constants.DISPLAY_NAME_PARENT_DIRECTORY)]
@@ -47,10 +45,8 @@ namespace FsInfoCat.RemoteDb
 
         public HashSet<FsFile> Files { get; set; }
 
-        // TODO: Add this to interface
         public Guid? SourceRelocationTaskId { get; set; }
 
-        // TODO: Add this to interface
         [DisplayName(Constants.DISPLAY_NAME_FILE_SOURCE_RELOCATION_TASK)]
         public virtual DirectoryRelocateTask SourceRelocationTask { get; set; }
 
@@ -87,6 +83,8 @@ namespace FsInfoCat.RemoteDb
         IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
 
         IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        IDirectoryRelocateTask IRemoteSubDirectory.SourceRelocationTask => SourceRelocationTask;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

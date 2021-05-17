@@ -22,13 +22,10 @@ namespace FsInfoCat.RemoteDb
 
         public Guid Id { get; set; }
 
-        // TODO: Put this in interface
         public Guid ParentId { get; set; }
 
-        // TODO: Put this in interface
         public Guid HashCalculationId { get; set; }
 
-        // TODO: Put this in interface
         public Guid? FileRelocateTaskId { get; set; }
 
         private string _name = "";

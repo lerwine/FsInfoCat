@@ -12,6 +12,7 @@ namespace FsInfoCat.Model
         string Identifier { get; }
         bool IsInactive { get; }
         long? MaxNameLength { get; }
+        bool? ReadOnly { get; }
         string Notes { get; }
         string VolumeName { get; }
         ISubDirectory RootDirectory { get; }

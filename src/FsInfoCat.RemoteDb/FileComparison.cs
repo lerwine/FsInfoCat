@@ -11,9 +11,6 @@ namespace FsInfoCat.RemoteDb
 {
     public class FileComparison : IRemoteFileComparison
     {
-        // TODO: Add to interface
-        public Guid Id { get; set; }
-
         [DisplayName(Constants.DISPLAY_NAME_FILE_1)]
         [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_1)]
         public FsFile File1 { get; set; }
@@ -57,7 +54,7 @@ namespace FsInfoCat.RemoteDb
 
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
-            builder.HasKey(nameof(Id));
+            builder.HasKey(nameof(FileId1), nameof(FileId2));
             builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}1").HasOne(p => p.File1).WithMany(d => d.Comparisons1)
                 .HasForeignKey(f => f.FileId1).IsRequired();
             builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}2").HasOne(p => p.File2).WithMany(d => d.Comparisons2)

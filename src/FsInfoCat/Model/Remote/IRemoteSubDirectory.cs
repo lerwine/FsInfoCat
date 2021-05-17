@@ -6,6 +6,8 @@ namespace FsInfoCat.Model.Remote
     {
         new IRemoteSubDirectory Parent { get; }
 
+        IDirectoryRelocateTask SourceRelocationTask { get; }
+
         new IRemoteVolume Volume { get; }
 
         new IReadOnlyCollection<IRemoteFile> Files { get; }

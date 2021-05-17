@@ -9,6 +9,7 @@ namespace FsInfoCat.Model
         Guid Id { get; }
 
         string Name { get; }
+        DirectoryCrawlFlags CrawlFlags { get; }
 
         ISubDirectory Parent { get; }
 
