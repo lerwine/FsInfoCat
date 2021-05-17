@@ -38,6 +38,10 @@ namespace FsInfoCat.LocalDb
 
         IFile IFileComparison.File2 => File2;
 
+        ILocalFile ILocalFileComparison.File1 => throw new NotImplementedException();
+
+        ILocalFile ILocalFileComparison.File2 => throw new NotImplementedException();
+
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             builder.HasKey(nameof(Id));

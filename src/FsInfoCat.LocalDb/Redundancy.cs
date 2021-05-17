@@ -26,6 +26,10 @@ namespace FsInfoCat.LocalDb
 
         public virtual HashSet<FsFile> Files { get; set; }
 
+        IReadOnlyCollection<ILocalFile> ILocalRedundancy.Files => throw new NotImplementedException();
+
+        IReadOnlyCollection<IFile> IRedundancy.Files => throw new NotImplementedException();
+
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(Id));

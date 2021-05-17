@@ -14,7 +14,7 @@ namespace FsInfoCat.Model.Remote
         string Suffix { get; }
         string Title { get; }
         int? DbPrincipalId { get; }
-        byte[] SID { get; }
+        IReadOnlyCollection<byte> SID { get; }
         string LoginName { get; }
         UserRole ExplicitRoles { get; }
         string Notes { get; }

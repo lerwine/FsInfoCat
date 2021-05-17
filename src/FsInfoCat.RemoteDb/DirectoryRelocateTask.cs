@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
 {
-    public class DirectoryRelocateTask : IDirectoryRelocateTask, IValidatableObject
+    public class DirectoryRelocateTask : IDirectoryRelocateTask
     {
         public DirectoryRelocateTask()
         {
@@ -49,6 +49,34 @@ namespace FsInfoCat.RemoteDb
         [DisplayName(Constants.DISPLAY_NAME_TARGET_DIRECTORY)]
         [Required(ErrorMessage = Constants.ERROR_MESSAGE_TARGET_DIRECTORY)]
         public virtual FsDirectory TargetDirectory { get; set; }
+
+        public Guid? AssignmentGroupId => throw new NotImplementedException();
+
+        public Guid? AssignedToId => throw new NotImplementedException();
+
+        IReadOnlyCollection<IRemoteSubDirectory> IDirectoryRelocateTask.SourceDirectories => throw new NotImplementedException();
+
+        public UserGroup AssignmentGroup => throw new NotImplementedException();
+
+        public UserProfile AssignedTo => throw new NotImplementedException();
+
+        IRemoteSubDirectory IDirectoryRelocateTask.TargetDirectory => throw new NotImplementedException();
+
+        public Guid CreatedById => throw new NotImplementedException();
+
+        public Guid ModifiedById => throw new NotImplementedException();
+
+        public UserProfile CreatedBy => throw new NotImplementedException();
+
+        public UserProfile ModifiedBy => throw new NotImplementedException();
+
+        IUserGroup IDirectoryRelocateTask.AssignmentGroup => throw new NotImplementedException();
+
+        IUserProfile IDirectoryRelocateTask.AssignedTo => throw new NotImplementedException();
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
 
         internal static void BuildEntity(EntityTypeBuilder<DirectoryRelocateTask> builder)
         {

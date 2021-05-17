@@ -45,6 +45,14 @@ namespace FsInfoCat.LocalDb
 
         public virtual HashSet<FileSystem> DefaultFileSystems { get; set; }
 
+        ILocalFileSystem ILocalSymbolicName.FileSystem => throw new NotImplementedException();
+
+        IReadOnlyCollection<ILocalFileSystem> ILocalSymbolicName.DefaultFileSystems => throw new NotImplementedException();
+
+        IFileSystem IFsSymbolicName.FileSystem => throw new NotImplementedException();
+
+        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => throw new NotImplementedException();
+
         internal static void BuildEntity(EntityTypeBuilder<FsSymbolicName> builder)
         {
             builder.HasKey(nameof(Id));

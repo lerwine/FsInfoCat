@@ -38,5 +38,36 @@ namespace FsInfoCat.RemoteDb
         public HashSet<FileComparison> Comparisons1 { get; set; }
 
         public HashSet<FileComparison> Comparisons2 { get; set; }
+
+        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons1 => throw new NotImplementedException();
+
+        IReadOnlyCollection<IRemoteFileComparison> IRemoteFile.Comparisons2 => throw new NotImplementedException();
+
+        IRemoteSubDirectory IRemoteFile.Parent => throw new NotImplementedException();
+
+        IHashCalculation IFile.HashCalculation => throw new NotImplementedException();
+
+        IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => throw new NotImplementedException();
+
+        IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => throw new NotImplementedException();
+
+        ISubDirectory IFile.Parent => throw new NotImplementedException();
+
+        public Guid CreatedById => throw new NotImplementedException();
+
+        public Guid ModifiedById => throw new NotImplementedException();
+
+        public UserProfile CreatedBy => throw new NotImplementedException();
+
+        public UserProfile ModifiedBy => throw new NotImplementedException();
+
+        IUserProfile IRemoteTimeStampedEntity.CreatedBy => throw new NotImplementedException();
+
+        IUserProfile IRemoteTimeStampedEntity.ModifiedBy => throw new NotImplementedException();
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

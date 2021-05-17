@@ -40,6 +40,8 @@ namespace FsInfoCat.LocalDb
 
         IReadOnlyCollection<IFile> IHashCalculation.Files => Files;
 
+        IReadOnlyCollection<ILocalFile> ILocalHashCalculation.Files => throw new NotImplementedException();
+
         public bool TryGetMD5Checksum(out UInt128 result) => UInt128.TryCreate(Data, out result);
 
         internal static void BuildEntity(EntityTypeBuilder<HashCalculation> builder)

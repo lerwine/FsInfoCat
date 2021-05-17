@@ -64,6 +64,12 @@ namespace FsInfoCat.LocalDb
         [DisplayName(Constants.DISPLAY_NAME_FILE_RELOCATE_TASK)]
         public virtual FileRelocateTask FileRelocateTask { get; set; }
 
+        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons1 => throw new NotImplementedException();
+
+        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons2 => throw new NotImplementedException();
+
+        ILocalSubDirectory ILocalFile.Parent => throw new NotImplementedException();
+
         internal static void BuildEntity(EntityTypeBuilder<FsFile> builder)
         {
             builder.HasKey(nameof(Id));

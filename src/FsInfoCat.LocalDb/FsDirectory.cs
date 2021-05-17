@@ -65,6 +65,14 @@ namespace FsInfoCat.LocalDb
         [DisplayName(Constants.DISPLAY_NAME_TARGET_DIRECTORY_RELOCATION_TASKS)]
         public virtual HashSet<DirectoryRelocateTask> TargetDirectoryRelocationTasks { get; set; }
 
+        ILocalSubDirectory ILocalSubDirectory.Parent => throw new NotImplementedException();
+
+        ILocalVolume ILocalSubDirectory.Volume => throw new NotImplementedException();
+
+        IReadOnlyCollection<ILocalFile> ILocalSubDirectory.Files => throw new NotImplementedException();
+
+        IReadOnlyCollection<ILocalSubDirectory> ILocalSubDirectory.SubDirectories => throw new NotImplementedException();
+
         internal static void BuildEntity(EntityTypeBuilder<FsDirectory> builder)
         {
             builder.HasKey(nameof(Id));

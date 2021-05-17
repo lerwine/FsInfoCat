@@ -68,6 +68,12 @@ namespace FsInfoCat.LocalDb
 
         IFsSymbolicName IFileSystem.DefaultSymbolicName => DefaultSymbolicName;
 
+        IReadOnlyCollection<ILocalVolume> ILocalFileSystem.Volumes => throw new NotImplementedException();
+
+        IReadOnlyCollection<ILocalSymbolicName> ILocalFileSystem.SymbolicNames => throw new NotImplementedException();
+
+        ILocalSymbolicName ILocalFileSystem.DefaultSymbolicName => throw new NotImplementedException();
+
         internal static void BuildEntity(EntityTypeBuilder<FileSystem> builder)
         {
             builder.HasKey(nameof(Id));
