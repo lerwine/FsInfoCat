@@ -84,6 +84,10 @@ namespace FsInfoCat.RemoteDb
             builder.Property(nameof(ShortDescription)).HasMaxLength(Constants.MAX_LENGTH_SHORT_DESCRIPTION).IsRequired();
             builder.Property(nameof(Notes)).HasDefaultValue("");
             builder.HasOne(p => p.TargetDirectory).WithMany(d => d.TargetDirectoryRelocationTasks).IsRequired();
+            builder.HasOne(t => t.AssignmentGroup).WithMany(u => u.DirectoryRelocationTasks);
+            builder.HasOne(t => t.AssignedTo).WithMany(u => u.DirectoryRelocationTasks);
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedDirectoryRelocateTasks).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedDirectoryRelocateTasks).IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

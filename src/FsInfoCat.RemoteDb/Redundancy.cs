@@ -1,6 +1,5 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -29,13 +28,18 @@ namespace FsInfoCat.RemoteDb
         [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
         public DateTime ModifiedOn { get; set; }
 
-        IReadOnlyCollection<IFile> IRedundancy.Files => Files;
-
-        IReadOnlyCollection<IRemoteFile> IRemoteRedundancy.Files => Files;
-
         IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
 
         IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        IReadOnlyCollection<IRemoteFile> IRemoteRedundancy.Files => Files;
+
+        IReadOnlyCollection<IFile> IRedundancy.Files => Files;
+
+        public Redundancy()
+        {
+            Files = new HashSet<FsFile>();
+        }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -48,7 +52,8 @@ namespace FsInfoCat.RemoteDb
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.OwnsMany(p => p.Files).OwnsMany(f => f.Redundancies);
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedRedundancies).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedRedundancies).IsRequired();
             //builder.ToTable($"{nameof(Redundancy)}{nameof(FsFile)}").OwnsMany(p => p.Files).HasForeignKey(k => k.Id)
             //    .OwnsMany(d => d.Redundancies).HasForeignKey(d => d.Id);
         }

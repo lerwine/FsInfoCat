@@ -59,6 +59,10 @@ namespace FsInfoCat.RemoteDb
         [MaxLength(Constants.MAX_LENGTH_VOLUME_NAME, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_LENGTH)]
         public string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
 
+        public Guid? HostDeviceId { get; set; }
+
+        public HostDevice HostDevice { get; set; }
+
         public Guid CreatedById { get; set; }
 
         public Guid ModifiedById { get; set; }
@@ -85,6 +89,8 @@ namespace FsInfoCat.RemoteDb
 
         IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
+        IHostDevice IRemoteVolume.HostDevice => HostDevice;
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
@@ -110,6 +116,9 @@ namespace FsInfoCat.RemoteDb
             builder.Property(nameof(Notes)).HasDefaultValue("");
             builder.HasOne(p => p.FileSystem).WithMany(d => d.Volumes).IsRequired();
             builder.HasOne(p => p.RootDirectory).WithOne(d => d.Volume);
+            builder.HasOne(v => v.HostDevice).WithMany(h => h.Volumes);
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedVolumes).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedVolumes).IsRequired();
         }
     }
 }

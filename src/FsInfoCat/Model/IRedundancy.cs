@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-    public interface IRedundancy : IValidatableObject
+    public interface IRedundancy : ITimeStampedEntity, IValidatableObject
     {
         Guid Id { get; }
 
         IReadOnlyCollection<IFile> Files { get; }
+
     }
 }

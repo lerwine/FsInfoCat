@@ -76,6 +76,8 @@ namespace FsInfoCat.RemoteDb
             builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_NAME).IsRequired();
             builder.Property(nameof(Notes)).HasDefaultValue("");
             builder.HasOne(p => p.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedSymbolicNames).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedSymbolicNames).IsRequired();
         }
     }
 }

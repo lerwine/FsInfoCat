@@ -10,7 +10,7 @@ namespace FsInfoCat.Model.Remote
         string DisplayName { get; }
         string MachineIdentifer { get; }
         string MachineName { get; }
-        Guid PlatformId { get; }
+        IHostPlatform Platform { get; }
         string Notes { get; }
         bool IsInactive { get; }
 

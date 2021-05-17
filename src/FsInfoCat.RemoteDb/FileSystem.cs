@@ -99,6 +99,8 @@ namespace FsInfoCat.RemoteDb
             builder.Property(nameof(DefaultDriveType)).HasDefaultValue(System.IO.DriveType.Unknown);
             builder.Property(nameof(Notes)).HasDefaultValue("");
             builder.HasOne(fs => fs.DefaultSymbolicName).WithMany(d => d.DefaultFileSystems).HasForeignKey(nameof(DefaultSymbolicNameId)).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFileSystems).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFileSystems).IsRequired();
         }
     }
 }

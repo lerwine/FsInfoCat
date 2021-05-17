@@ -32,7 +32,7 @@ namespace FsInfoCat.RemoteDb
         [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
         public bool IsInactive { get; set; }
 
-        public HashSet<Volume> Volumes { get; set; }
+        public HostPlatform Platform { get; set; }
 
         public Guid CreatedById { get; set; }
 
@@ -48,19 +48,26 @@ namespace FsInfoCat.RemoteDb
         [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
         public DateTime ModifiedOn { get; set; }
 
+        public HashSet<Volume> Volumes { get; set; }
+
         IReadOnlyCollection<IRemoteVolume> IHostDevice.Volumes => Volumes;
 
         IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
 
         IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
+        IHostPlatform IHostDevice.Platform => Platform;
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             throw new NotImplementedException();
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<HostDevice> obj)
+        internal static void BuildEntity(EntityTypeBuilder<HostDevice> builder)
         {
+            builder.HasOne(d => d.Platform).WithMany(p => p.HostDevices).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedHostDevices).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedHostDevices).IsRequired();
             throw new NotImplementedException();
         }
     }

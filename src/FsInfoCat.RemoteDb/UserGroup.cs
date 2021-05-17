@@ -61,8 +61,10 @@ namespace FsInfoCat.RemoteDb
             throw new NotImplementedException();
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<UserGroup> obj)
+        internal static void BuildEntity(EntityTypeBuilder<UserGroup> builder)
         {
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedUserGroups).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedUserGroups).IsRequired();
             throw new NotImplementedException();
         }
     }

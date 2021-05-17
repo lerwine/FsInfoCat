@@ -9,5 +9,7 @@ namespace FsInfoCat.Model.Local
         new IReadOnlyCollection<ILocalFileComparison> Comparisons2 { get; }
 
         new ILocalSubDirectory Parent { get; }
+
+        new ILocalRedundancy Redundancy { get; }
     }
 }

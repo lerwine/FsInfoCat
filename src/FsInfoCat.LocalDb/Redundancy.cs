@@ -26,14 +26,13 @@ namespace FsInfoCat.LocalDb
 
         public virtual HashSet<FsFile> Files { get; set; }
 
-        IReadOnlyCollection<ILocalFile> ILocalRedundancy.Files => Files;
-
         IReadOnlyCollection<IFile> IRedundancy.Files => Files;
+
+        IReadOnlyCollection<ILocalFile> ILocalRedundancy.Files => Files;
 
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.OwnsMany(p => p.Files).OwnsMany(f => f.Redundancies);
             //builder.ToTable($"{nameof(Redundancy)}{nameof(FsFile)}").OwnsMany(p => p.Files).HasForeignKey(k => k.Id)
             //    .OwnsMany(d => d.Redundancies).HasForeignKey(d => d.Id);
         }

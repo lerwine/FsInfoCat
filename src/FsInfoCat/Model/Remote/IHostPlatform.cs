@@ -9,11 +9,10 @@ namespace FsInfoCat.Model.Remote
         Guid Id { get; }
         string DisplayName { get; }
         PlatformType Type { get; }
-        Guid? DefaultFsTypeId { get; }
         string Notes { get; }
         bool IsInactive { get; }
 
-        IRemoteFileSystem DefaultFSType { get; }
+        IRemoteFileSystem DefaultFsType { get; }
         IReadOnlyCollection<IHostDevice> HostDevices { get; }
     }
 }

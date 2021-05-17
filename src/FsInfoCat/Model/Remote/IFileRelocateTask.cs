@@ -10,9 +10,6 @@ namespace FsInfoCat.Model.Remote
         AppTaskStatus Status { get; }
         PriorityLevel Priority { get; }
         string ShortDescription { get; }
-        Guid TargetDirectoryId { get; }
-        Guid? AssignmentGroupId { get; }
-        Guid? AssignedToId { get; }
         string Notes { get; }
 
         IReadOnlyCollection<IRemoteFile> Files { get; }

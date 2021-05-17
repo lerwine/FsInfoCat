@@ -12,7 +12,6 @@ namespace FsInfoCat.LocalDb
     {
         public FsFile()
         {
-            Redundancies = new HashSet<Redundancy>();
             Comparisons1 = new HashSet<FileComparison>();
             Comparisons2 = new HashSet<FileComparison>();
         }
@@ -30,6 +29,10 @@ namespace FsInfoCat.LocalDb
         public Guid ParentId { get; set; }
 
         public Guid HashCalculationId { get; set; }
+
+        public Guid? RedundancyId { get; set; }
+
+        public Redundancy Redundancy { get; set; }
 
         [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
         public DateTime CreatedOn { get; set; }
@@ -49,8 +52,6 @@ namespace FsInfoCat.LocalDb
 
         ISubDirectory IFile.Parent => Parent;
 
-        public virtual HashSet<Redundancy> Redundancies { get; set; }
-
         public virtual HashSet<FileComparison> Comparisons1 { get; set; }
 
         IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
@@ -65,12 +66,17 @@ namespace FsInfoCat.LocalDb
 
         ILocalSubDirectory ILocalFile.Parent => Parent;
 
+        ILocalRedundancy ILocalFile.Redundancy => Redundancy;
+
+        IRedundancy IFile.Redundancy => Redundancy;
+
         internal static void BuildEntity(EntityTypeBuilder<FsFile> builder)
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
             builder.HasOne(p => p.HashCalculation).WithMany(d => d.Files).HasForeignKey(nameof(HashCalculationId)).IsRequired();
+            builder.HasOne(d => d.Redundancy).WithMany(r => r.Files);
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

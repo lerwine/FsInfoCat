@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.RemoteDb.DirectoryRelocateTask" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAyCABEACiACAAEgAAAAAUKAECiAACAAAABAABICAU=</HashCode>
+      <FileName>DirectoryRelocateTask.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.FileComparison" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACCBBACSCACAAAAACAAQBAAEACAAAAAgAAAABIAAE=</HashCode>
+      <FileName>FileComparison.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.FileRelocateTask" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EggyCABEACiACAAEgAAAAAQIAECCAAAEAAABAABICIU=</HashCode>
+      <FileName>FileRelocateTask.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.FileSystem" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAyGgBAACGRCARAAAAAAAQCQEACgAAAAAgIAEBKIAE=</HashCode>
+      <FileName>FileSystem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.FsDirectory" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACKABABSCACAAAACQAQMQAAEACAAAQAiIECCDIgIE=</HashCode>
+      <FileName>FsDirectory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.FsFile" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAiqABMAGGACAAAAAAAQAQBAGACAEAABgAACABIAAE=</HashCode>
+      <FileName>FsFile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.HashCalculation" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACCABAACCACAAAAAAAAEBAAEACABBABIAAAABIAIE=</HashCode>
+      <FileName>HashCalculation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.HostDevice" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAyGABAACWACIAAAAAAAAYCAEACAAAAAAAAAADIAAE=</HashCode>
+      <FileName>HostDevice.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.HostPlatform" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAyGABAACCACAQAAAAAACQCgEICAAAAAQAQAABIAAE=</HashCode>
+      <FileName>HostPlatform.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.Redundancy" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABACCABAACCACAAAAAAAAAAAAEACAAAAAAAAAABIIIE=</HashCode>
+      <FileName>Redundancy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.RemoteDbContext" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gYNYF0+XggHqMkZUJICIHyACOD5nCamEBoNNRlbAIOA=</HashCode>
+      <FileName>RemoteDbContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.SymbolicName" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAyKCDAACiECAAAAAIQAAQCAEACAAAAAAAAAABIAAE=</HashCode>
+      <FileName>SymbolicName.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.UserGroup" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAyKAFAACCACAAAAACAAAQCAsACAAAAAAAEAADIAAE=</HashCode>
+      <FileName>UserGroup.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.UserProfile" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>eFgyHFnqwCLgGGYAAEACWB4CEEBGQJQAAiBPPEB4Ah0=</HashCode>
+      <FileName>UserProfile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.Volume" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQyOADAACCACAAAAAAAgAYCAEACgAEAAAgIQBBIIAE=</HashCode>
+      <FileName>Volume.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.RemoteDbService" Collapsed="true">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABgEAAEAAAAAAAAAoAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>RemoteDbService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

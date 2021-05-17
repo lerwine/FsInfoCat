@@ -14,7 +14,6 @@ namespace FsInfoCat.Model
         System.IO.DriveType? DefaultDriveType { get; }
         string Notes { get; }
         bool IsInactive { get; }
-        Guid DefaultSymbolicNameId { get; }
         IReadOnlyCollection<IVolume> Volumes { get; }
         IReadOnlyCollection<IFsSymbolicName> SymbolicNames { get; }
         IFsSymbolicName DefaultSymbolicName { get; }

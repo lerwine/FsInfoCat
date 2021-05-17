@@ -62,6 +62,8 @@ namespace FsInfoCat.RemoteDb
                 .HasForeignKey(f => f.FileId1).IsRequired();
             builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}2").HasOne(p => p.File2).WithMany(d => d.Comparisons2)
                 .HasForeignKey(f => f.FileId2).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedComparisons).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedComparisons).IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

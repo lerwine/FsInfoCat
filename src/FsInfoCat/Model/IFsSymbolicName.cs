@@ -8,7 +8,6 @@ namespace FsInfoCat.Model
     {
         Guid Id { get; }
         string Name { get; }
-        Guid FileSystemId { get; }
         string Notes { get; }
         bool IsInactive { get; }
         IFileSystem FileSystem { get; }

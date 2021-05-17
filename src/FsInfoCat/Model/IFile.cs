@@ -15,5 +15,7 @@ namespace FsInfoCat.Model
         FileStatus Status { get; set; }
 
         ISubDirectory Parent { get; }
+
+        IRedundancy Redundancy { get; }
     }
 }

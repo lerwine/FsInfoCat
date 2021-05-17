@@ -53,6 +53,8 @@ namespace FsInfoCat.RemoteDb
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(Data)).HasMaxLength(UInt128.ByteSize).IsFixedLength();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedHashCalculations).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedHashCalculations).IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

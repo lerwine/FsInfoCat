@@ -12,7 +12,6 @@ namespace FsInfoCat.RemoteDb
     {
         public FsFile()
         {
-            Redundancies = new HashSet<Redundancy>();
             Comparisons1 = new HashSet<FileComparison>();
             Comparisons2 = new HashSet<FileComparison>();
         }
@@ -44,13 +43,15 @@ namespace FsInfoCat.RemoteDb
         [DisplayName(Constants.DISPLAY_NAME_PARENT_DIRECTORY)]
         public FsDirectory Parent { get; set; }
 
+        public Guid? RedundancyId { get; set; }
+
+        public Redundancy Redundancy { get; set; }
+
         [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
         public DateTime CreatedOn { get; set; }
 
         [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
         public DateTime ModifiedOn { get; set; }
-
-        public HashSet<Redundancy> Redundancies { get; private set; }
 
         public HashSet<FileComparison> Comparisons1 { get; set; }
 
@@ -85,6 +86,12 @@ namespace FsInfoCat.RemoteDb
 
         IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
 
+        IRemoteHashCalculation IRemoteFile.HashCalculation => HashCalculation;
+
+        IRemoteRedundancy IRemoteFile.Redundancy => Redundancy;
+
+        IRedundancy IFile.Redundancy => Redundancy;
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
@@ -102,7 +109,10 @@ namespace FsInfoCat.RemoteDb
             builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
             builder.HasOne(p => p.HashCalculation).WithMany(d => d.Files).HasForeignKey(nameof(HashCalculationId)).IsRequired();
+            builder.HasOne(d => d.Redundancy).WithMany(r => r.Files);
             builder.HasOne(p => p.FileRelocateTask).WithMany(d => d.Files).HasForeignKey(nameof(FileRelocateTaskId));
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFiles).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFiles).IsRequired();
         }
     }
 }

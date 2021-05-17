@@ -117,11 +117,6 @@ namespace FsInfoCat.RemoteDb
 
         public HashSet<FileRelocateTask> ModifiedFileRelocateTasks { get; set; }
 
-        internal static void BuildEntity(EntityTypeBuilder<UserProfile> obj)
-        {
-            throw new NotImplementedException();
-        }
-
         public HashSet<UserGroup> ModifiedUserGroups { get; set; }
 
         IReadOnlyCollection<byte> IUserProfile.SID => SID;
@@ -194,6 +189,13 @@ namespace FsInfoCat.RemoteDb
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            throw new NotImplementedException();
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<UserProfile> builder)
+        {
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedUserProfiles).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedUserProfiles).IsRequired();
             throw new NotImplementedException();
         }
     }

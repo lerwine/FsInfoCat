@@ -48,7 +48,7 @@ namespace FsInfoCat.RemoteDb
         [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
         public DateTime ModifiedOn { get; set; }
 
-        IRemoteFileSystem IHostPlatform.DefaultFSType => DefaultFSType;
+        IRemoteFileSystem IHostPlatform.DefaultFsType => DefaultFSType;
 
         IReadOnlyCollection<IHostDevice> IHostPlatform.HostDevices => HostDevices;
 
@@ -61,8 +61,10 @@ namespace FsInfoCat.RemoteDb
             throw new NotImplementedException();
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<HostPlatform> obj)
+        internal static void BuildEntity(EntityTypeBuilder<HostPlatform> builder)
         {
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedHostPlatforms).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedHostPlatforms).IsRequired();
             throw new NotImplementedException();
         }
     }

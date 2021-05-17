@@ -9,6 +9,9 @@ namespace FsInfoCat.Model.Remote
         new IReadOnlyCollection<IRemoteFileComparison> Comparisons2 { get; }
 
         new IRemoteSubDirectory Parent { get; }
+        new IRemoteHashCalculation HashCalculation { get; }
+
+        new IRemoteRedundancy Redundancy { get; }
 
     }
 }

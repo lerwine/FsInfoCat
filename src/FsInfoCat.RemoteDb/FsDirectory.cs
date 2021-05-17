@@ -105,6 +105,8 @@ namespace FsInfoCat.RemoteDb
             builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId));
             builder.HasOne(p => p.SourceRelocationTask).WithMany(d => d.SourceDirectories).HasForeignKey(nameof(SourceRelocationTaskId));
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedDirectories).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedDirectories).IsRequired();
         }
     }
 }
