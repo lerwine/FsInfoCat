@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace FsInfoCat.LocalDb
 {
-    public class FsInfoCatContext : DbContext, ILocalDbContext
+    public class LocalDbContext : DbContext, ILocalDbContext
     {
         public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
 
@@ -66,7 +66,7 @@ namespace FsInfoCat.LocalDb
 
         #endregion
 
-        private FsInfoCatContext(DbContextOptions options)
+        private LocalDbContext(DbContextOptions options)
         {
 
         }
@@ -88,7 +88,7 @@ namespace FsInfoCat.LocalDb
             return new Func<ILocalDbContext>(() => Open(path));
         }
 
-        public static FsInfoCatContext Open(string path)
+        public static LocalDbContext Open(string path)
         {
             SqlCeConnectionStringBuilder sqlCeConnectionStringBuilder = new SqlCeConnectionStringBuilder();
             sqlCeConnectionStringBuilder.DataSource = path;
