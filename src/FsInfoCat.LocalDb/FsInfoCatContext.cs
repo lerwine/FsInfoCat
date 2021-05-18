@@ -24,7 +24,7 @@ namespace FsInfoCat.LocalDb
 
         public virtual DbSet<FileComparison> Comparisons { get; set; }
 
-        public virtual DbSet<HashCalculation> HashCalculations { get; set; }
+        public virtual DbSet<ContentHash> HashCalculations { get; set; }
 
         public virtual DbSet<Redundancy> Redundancies { get; set; }
 
@@ -52,9 +52,9 @@ namespace FsInfoCat.LocalDb
 
         IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
 
-        IQueryable<ILocalHashCalculation> ILocalDbContext.HashCalculations => HashCalculations;
+        IQueryable<ILocalContentHash> ILocalDbContext.HashCalculations => HashCalculations;
 
-        IQueryable<IHashCalculation> IDbContext.HashCalculations => HashCalculations;
+        IQueryable<IContentHash> IDbContext.HashCalculations => HashCalculations;
 
         IQueryable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies;
 
@@ -115,7 +115,7 @@ namespace FsInfoCat.LocalDb
             modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
-            modelBuilder.Entity<HashCalculation>(HashCalculation.BuildEntity);
+            modelBuilder.Entity<ContentHash>(ContentHash.BuildEntity);
             modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
@@ -126,19 +126,19 @@ namespace FsInfoCat.LocalDb
 
         public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel) => Database.BeginTransaction(isolationLevel);
 
-        internal EntityEntry<HashCalculation> AddHashCalculation(HashCalculation hashCalculation)
+        internal EntityEntry<ContentHash> AddHashCalculation(ContentHash hashCalculation)
         {
             HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return HashCalculations.Add(hashCalculation);
         }
 
-        internal EntityEntry<HashCalculation> UpdateHashCalculation(HashCalculation hashCalculation)
+        internal EntityEntry<ContentHash> UpdateHashCalculation(ContentHash hashCalculation)
         {
             HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return HashCalculations.Update(hashCalculation);
         }
 
-        internal EntityEntry<HashCalculation> RemoveHashCalculation(HashCalculation hashCalculation)
+        internal EntityEntry<ContentHash> RemoveHashCalculation(ContentHash hashCalculation)
         {
             HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return HashCalculations.Remove(hashCalculation);
@@ -270,11 +270,11 @@ namespace FsInfoCat.LocalDb
             return Redundancies.Remove(redundancy);
         }
 
-        void ILocalDbContext.AddHashCalculation(ILocalHashCalculation hashCalculation) => AddHashCalculation((HashCalculation)hashCalculation);
+        void ILocalDbContext.AddHashCalculation(ILocalContentHash hashCalculation) => AddHashCalculation((ContentHash)hashCalculation);
 
-        void ILocalDbContext.UpdateHashCalculation(ILocalHashCalculation hashCalculation) => UpdateHashCalculation((HashCalculation)hashCalculation);
+        void ILocalDbContext.UpdateHashCalculation(ILocalContentHash hashCalculation) => UpdateHashCalculation((ContentHash)hashCalculation);
 
-        void ILocalDbContext.RemoveHashCalculation(ILocalHashCalculation hashCalculation) => RemoveHashCalculation((HashCalculation)hashCalculation);
+        void ILocalDbContext.RemoveHashCalculation(ILocalContentHash hashCalculation) => RemoveHashCalculation((ContentHash)hashCalculation);
 
         void ILocalDbContext.AddComparison(ILocalFileComparison fileComparison) => AddComparison((FileComparison)fileComparison);
 

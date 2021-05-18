@@ -6,7 +6,7 @@ namespace FsInfoCat.Model
 {
     public interface IFile : ITimeStampedEntity, IValidatableObject
     {
-        IHashCalculation HashCalculation { get; }
+        IContentHash HashCalculation { get; }
         IReadOnlyCollection<IFileComparison> Comparisons1 { get; }
         IReadOnlyCollection<IFileComparison> Comparisons2 { get; }
         Guid Id { get; }

@@ -4,7 +4,7 @@ namespace FsInfoCat.Model.Local
 {
     public interface ILocalDbContext : IDbContext
     {
-        new IQueryable<ILocalHashCalculation> HashCalculations { get; }
+        new IQueryable<ILocalContentHash> HashCalculations { get; }
         new IQueryable<ILocalFileComparison> Comparisons { get; }
         new IQueryable<ILocalFile> Files { get; }
         new IQueryable<ILocalSubDirectory> Subdirectories { get; }
@@ -13,9 +13,9 @@ namespace FsInfoCat.Model.Local
         new IQueryable<ILocalFileSystem> FileSystems { get; }
         new IQueryable<ILocalRedundancy> Redundancies { get; }
 
-        void AddHashCalculation(ILocalHashCalculation hashCalculation);
-        void UpdateHashCalculation(ILocalHashCalculation hashCalculation);
-        void RemoveHashCalculation(ILocalHashCalculation hashCalculation);
+        void AddHashCalculation(ILocalContentHash hashCalculation);
+        void UpdateHashCalculation(ILocalContentHash hashCalculation);
+        void RemoveHashCalculation(ILocalContentHash hashCalculation);
         void AddComparison(ILocalFileComparison fileComparison);
         void UpdateComparison(ILocalFileComparison fileComparison);
         void RemoveComparison(ILocalFileComparison fileComparison);

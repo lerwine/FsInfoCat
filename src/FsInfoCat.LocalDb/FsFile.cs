@@ -80,7 +80,7 @@ namespace FsInfoCat.LocalDb
 
         [Display(Name = nameof(ModelResources.DisplayName_HashCalculation), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_HashCalculationRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        public virtual HashCalculation HashCalculation { get; set; }
+        public virtual ContentHash HashCalculation { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ParentDirectoryRequired), ErrorMessageResourceType = typeof(ModelResources))]
@@ -94,7 +94,7 @@ namespace FsInfoCat.LocalDb
 
         #region Explicit Members
 
-        IHashCalculation IFile.HashCalculation => HashCalculation;
+        IContentHash IFile.HashCalculation => HashCalculation;
 
         ISubDirectory IFile.Parent => Parent;
 

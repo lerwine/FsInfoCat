@@ -34,7 +34,7 @@ namespace FsInfoCat.UpstreamDb
             CreatedDirectories = new HashSet<FsDirectory>();
             CreatedFiles = new HashSet<FsFile>();
             CreatedFileSystems = new HashSet<FileSystem>();
-            CreatedHashCalculations = new HashSet<HashCalculation>();
+            CreatedHashCalculations = new HashSet<ContentHash>();
             CreatedHostDevices = new HashSet<HostDevice>();
             CreatedHostPlatforms = new HashSet<HostPlatform>();
             CreatedRedundancies = new HashSet<Redundancy>();
@@ -48,7 +48,7 @@ namespace FsInfoCat.UpstreamDb
             ModifiedDirectories = new HashSet<FsDirectory>();
             ModifiedFiles = new HashSet<FsFile>();
             ModifiedFileSystems = new HashSet<FileSystem>();
-            ModifiedHashCalculations = new HashSet<HashCalculation>();
+            ModifiedHashCalculations = new HashSet<ContentHash>();
             ModifiedHostDevices = new HashSet<HostDevice>();
             ModifiedHostPlatforms = new HashSet<HostPlatform>();
             ModifiedRedundancies = new HashSet<Redundancy>();
@@ -147,7 +147,7 @@ namespace FsInfoCat.UpstreamDb
 
         public HashSet<FileSystem> CreatedFileSystems { get; set; }
 
-        public HashSet<HashCalculation> CreatedHashCalculations { get; set; }
+        public HashSet<ContentHash> CreatedHashCalculations { get; set; }
 
         public HashSet<HostDevice> CreatedHostDevices { get; set; }
 
@@ -169,7 +169,7 @@ namespace FsInfoCat.UpstreamDb
 
         public HashSet<HostDevice> ModifiedHostDevices { get; set; }
 
-        public HashSet<HashCalculation> ModifiedHashCalculations { get; set; }
+        public HashSet<ContentHash> ModifiedHashCalculations { get; set; }
 
         public HashSet<SymbolicName> ModifiedSymbolicNames { get; set; }
 
@@ -213,7 +213,7 @@ namespace FsInfoCat.UpstreamDb
 
         IReadOnlyCollection<IUpstreamFileSystem> IUserProfile.CreatedFileSystems => CreatedFileSystems;
 
-        IReadOnlyCollection<IUpstreamHashCalculation> IUserProfile.CreatedHashCalculations => CreatedHashCalculations;
+        IReadOnlyCollection<IUpstreamContentHash> IUserProfile.CreatedHashCalculations => CreatedHashCalculations;
 
         IReadOnlyCollection<IHostDevice> IUserProfile.CreatedHostDevices => CreatedHostDevices;
 
@@ -235,7 +235,7 @@ namespace FsInfoCat.UpstreamDb
 
         IReadOnlyCollection<IHostDevice> IUserProfile.ModifiedHostDevices => ModifiedHostDevices;
 
-        IReadOnlyCollection<IUpstreamHashCalculation> IUserProfile.ModifiedHashCalculations => ModifiedHashCalculations;
+        IReadOnlyCollection<IUpstreamContentHash> IUserProfile.ModifiedHashCalculations => ModifiedHashCalculations;
 
         IReadOnlyCollection<IUpstreamSymbolicName> IUserProfile.ModifiedSymbolicNames => ModifiedSymbolicNames;
 

@@ -18,7 +18,7 @@ namespace FsInfoCat.UpstreamDb
             modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
-            modelBuilder.Entity<HashCalculation>(HashCalculation.BuildEntity);
+            modelBuilder.Entity<ContentHash>(ContentHash.BuildEntity);
             modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             modelBuilder.Entity<HostDevice>(HostDevice.BuildEntity);
@@ -32,7 +32,7 @@ namespace FsInfoCat.UpstreamDb
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<HashCalculation> Checksums { get; set; }
+        public DbSet<ContentHash> Checksums { get; set; }
 
         public DbSet<FileComparison> Comparisons { get; set; }
 
@@ -64,9 +64,9 @@ namespace FsInfoCat.UpstreamDb
 
         #region Explicit Members
 
-        IQueryable<IHashCalculation> IDbContext.HashCalculations => Checksums;
+        IQueryable<IContentHash> IDbContext.HashCalculations => Checksums;
 
-        IQueryable<IUpstreamHashCalculation> IUpstreamDbContext.HashCalculations => Checksums;
+        IQueryable<IUpstreamContentHash> IUpstreamDbContext.HashCalculations => Checksums;
 
         IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
 
@@ -116,29 +116,29 @@ namespace FsInfoCat.UpstreamDb
 
         public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel) => Database.BeginTransaction(isolationLevel);
 
-        internal EntityEntry<HashCalculation> AddHashCalculation(HashCalculation hashCalculation)
+        internal EntityEntry<ContentHash> AddHashCalculation(ContentHash hashCalculation)
         {
             Checksums.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return Checksums.Add(hashCalculation);
         }
 
-        void IUpstreamDbContext.AddHashCalculation(IUpstreamHashCalculation hashCalculation) => AddHashCalculation((HashCalculation)hashCalculation);
+        void IUpstreamDbContext.AddHashCalculation(IUpstreamContentHash hashCalculation) => AddHashCalculation((ContentHash)hashCalculation);
 
-        internal EntityEntry<HashCalculation> UpdateHashCalculation(HashCalculation hashCalculation)
+        internal EntityEntry<ContentHash> UpdateHashCalculation(ContentHash hashCalculation)
         {
             Checksums.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return Checksums.Update(hashCalculation);
         }
 
-        void IUpstreamDbContext.UpdateHashCalculation(IUpstreamHashCalculation hashCalculation) => UpdateHashCalculation((HashCalculation)hashCalculation);
+        void IUpstreamDbContext.UpdateHashCalculation(IUpstreamContentHash hashCalculation) => UpdateHashCalculation((ContentHash)hashCalculation);
 
-        internal EntityEntry<HashCalculation> RemoveHashCalculation(HashCalculation hashCalculation)
+        internal EntityEntry<ContentHash> RemoveHashCalculation(ContentHash hashCalculation)
         {
             Checksums.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return Checksums.Remove(hashCalculation);
         }
 
-        void IUpstreamDbContext.RemoveHashCalculation(IUpstreamHashCalculation hashCalculation) => RemoveHashCalculation((HashCalculation)hashCalculation);
+        void IUpstreamDbContext.RemoveHashCalculation(IUpstreamContentHash hashCalculation) => RemoveHashCalculation((ContentHash)hashCalculation);
 
         internal EntityEntry<FileComparison> AddComparison(FileComparison fileComparison)
         {

@@ -86,7 +86,7 @@ namespace FsInfoCat.UpstreamDb
 
         [Display(Name = nameof(ModelResources.DisplayName_HashCalculation), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_HashCalculationRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        public HashCalculation HashCalculation { get; set; }
+        public ContentHash HashCalculation { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ParentDirectoryRequired), ErrorMessageResourceType = typeof(ModelResources))]
@@ -119,7 +119,7 @@ namespace FsInfoCat.UpstreamDb
 
         IUpstreamSubDirectory IUpstreamFile.Parent => Parent;
 
-        IHashCalculation IFile.HashCalculation => HashCalculation;
+        IContentHash IFile.HashCalculation => HashCalculation;
 
         IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
 
@@ -131,7 +131,7 @@ namespace FsInfoCat.UpstreamDb
 
         IUserProfile IUpstreamTimeStampedEntity.ModifiedBy => ModifiedBy;
 
-        IUpstreamHashCalculation IUpstreamFile.HashCalculation => HashCalculation;
+        IUpstreamContentHash IUpstreamFile.HashCalculation => HashCalculation;
 
         IUpstreamRedundancy IUpstreamFile.Redundancy => Redundancy;
 

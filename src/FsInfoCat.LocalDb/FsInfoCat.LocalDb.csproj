@@ -198,7 +198,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SymbolicName.cs" />
-    <Compile Include="HashCalculation.cs" />
+    <Compile Include="ContentHash.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Redundancy.cs" />
     <Compile Include="Volume.cs" />

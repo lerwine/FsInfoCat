@@ -9,7 +9,7 @@ namespace FsInfoCat.Model
 {
     public interface IDbContext : IDisposable
     {
-        IQueryable<IHashCalculation> HashCalculations { get; }
+        IQueryable<IContentHash> HashCalculations { get; }
         IQueryable<IFileComparison> Comparisons { get; }
         IQueryable<IFile> Files { get; }
         IQueryable<ISubDirectory> Subdirectories { get; }

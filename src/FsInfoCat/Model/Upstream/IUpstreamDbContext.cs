@@ -4,7 +4,7 @@ namespace FsInfoCat.Model.Upstream
 {
     public interface IUpstreamDbContext : IDbContext
     {
-        new IQueryable<IUpstreamHashCalculation> HashCalculations { get; }
+        new IQueryable<IUpstreamContentHash> HashCalculations { get; }
         new IQueryable<IUpstreamFileComparison> Comparisons { get; }
         new IQueryable<IUpstreamFile> Files { get; }
         new IQueryable<IUpstreamSubDirectory> Subdirectories { get; }
@@ -20,9 +20,9 @@ namespace FsInfoCat.Model.Upstream
         IQueryable<IUserGroup> UserGroups { get; }
         IQueryable<IUserGroupMembership> UserGroupMemberships { get; }
 
-        void AddHashCalculation(IUpstreamHashCalculation hashCalculation);
-        void UpdateHashCalculation(IUpstreamHashCalculation hashCalculation);
-        void RemoveHashCalculation(IUpstreamHashCalculation hashCalculation);
+        void AddHashCalculation(IUpstreamContentHash hashCalculation);
+        void UpdateHashCalculation(IUpstreamContentHash hashCalculation);
+        void RemoveHashCalculation(IUpstreamContentHash hashCalculation);
         void AddComparison(IUpstreamFileComparison fileComparison);
         void UpdateComparison(IUpstreamFileComparison fileComparison);
         void RemoveComparison(IUpstreamFileComparison fileComparison);
