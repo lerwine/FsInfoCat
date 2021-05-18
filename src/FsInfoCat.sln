@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat", "FsInfoCat\FsIn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.LocalDb", "FsInfoCat.LocalDb\FsInfoCat.LocalDb.csproj", "{D380D483-2DBD-4F00-BCBE-D275A43CD36B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.RemoteDb", "FsInfoCat.RemoteDb\FsInfoCat.RemoteDb.csproj", "{CC11F191-197D-4ABC-B4E9-8EDDA9D75D34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.UpstreamDb", "FsInfoCat.UpstreamDb\FsInfoCat.UpstreamDb.csproj", "{CC11F191-197D-4ABC-B4E9-8EDDA9D75D34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,5 @@
 using FsInfoCat.Model.Local;
-using FsInfoCat.Model.Remote;
+using FsInfoCat.Model.Upstream;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace FsInfoCat
             .AddTransient<ISuspendable, Internal.Suspendable>()
             .AddSingleton<ISuspendableService, Internal.SuspendableService>()
             .AddSingleton<ILocalDbService, Internal.LocalDbService>()
-            .AddSingleton<IRemoteDbService, Internal.RemoteDbService>()
+            .AddSingleton<IUpstreamDbService, Internal.UpstreamDbService>()
             .BuildServiceProvider();
 
         public static IThreadLockService GetThreadLockService() => ServiceProvider.GetService<IThreadLockService>();
@@ -40,7 +40,7 @@ namespace FsInfoCat
 
         public static ILocalDbService GetLocalDbService() => ServiceProvider.GetService<ILocalDbService>();
 
-        public static IRemoteDbService GetRemoteDbService() => ServiceProvider.GetService<IRemoteDbService>();
+        public static IUpstreamDbService GetUpstreamDbService() => ServiceProvider.GetService<IUpstreamDbService>();
 
         public static string ToCsTypeName(this Type type)
         {

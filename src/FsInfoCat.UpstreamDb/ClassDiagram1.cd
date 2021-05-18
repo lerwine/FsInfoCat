@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.UpstreamDb.DirectoryRelocateTask" BaseTypeListCollapsed="true">
+    <Position X="23.75" Y="0.5" Width="2" />
+    <Members>
+      <Property Name="IDirectoryRelocateTask.AssignedTo" Hidden="true" />
+      <Property Name="IDirectoryRelocateTask.AssignmentGroup" Hidden="true" />
+      <Property Name="IDirectoryRelocateTask.SourceDirectories" Hidden="true" />
+      <Property Name="IDirectoryRelocateTask.TargetDirectory" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAAyCABEACiACAAEgAAAAAUKAECiAACAAAABAABICAU=</HashCode>
+      <FileName>DirectoryRelocateTask.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssignmentGroup" />
+      <Property Name="AssignedTo" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.FileComparison" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="4.75" Width="1.5" />
+    <Members>
+      <Property Name="IFileComparison.File1" Hidden="true" />
+      <Property Name="IFileComparison.File2" Hidden="true" />
+      <Property Name="IUpstreamFileComparison.File1" Hidden="true" />
+      <Property Name="IUpstreamFileComparison.File2" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAACBBACSCACAAAAACAAQBAAEACAAAAAgAAAABIAAE=</HashCode>
+      <FileName>FileComparison.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.FileRelocateTask" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="IFileRelocateTask.AssignedTo" Hidden="true" />
+      <Property Name="IFileRelocateTask.AssignmentGroup" Hidden="true" />
+      <Property Name="IFileRelocateTask.Files" Hidden="true" />
+      <Property Name="IFileRelocateTask.TargetDirectory" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EggyCABEACiACAAEgAAAAAQIAECCAAAEAAABAABICIU=</HashCode>
+      <FileName>FileRelocateTask.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssignmentGroup" />
+      <Property Name="AssignedTo" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.FsDirectory" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="0.5" Width="2.5" />
+    <Members>
+      <Property Name="IUpstreamSubDirectory.Files" Hidden="true" />
+      <Property Name="IUpstreamSubDirectory.Parent" Hidden="true" />
+      <Property Name="IUpstreamSubDirectory.SourceRelocationTask" Hidden="true" />
+      <Property Name="IUpstreamSubDirectory.SubDirectories" Hidden="true" />
+      <Property Name="IUpstreamSubDirectory.Volume" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+      <Property Name="ISubDirectory.Files" Hidden="true" />
+      <Property Name="ISubDirectory.Parent" Hidden="true" />
+      <Property Name="ISubDirectory.SubDirectories" Hidden="true" />
+      <Property Name="ISubDirectory.Volume" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACKABABSCACAAAACQAQMQAAEACAAAQCiIECCDIgIE=</HashCode>
+      <FileName>FsDirectory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.FsFile" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="IFile.Comparisons1" Hidden="true" />
+      <Property Name="IFile.Comparisons2" Hidden="true" />
+      <Property Name="IFile.HashCalculation" Hidden="true" />
+      <Property Name="IFile.Parent" Hidden="true" />
+      <Property Name="IFile.Redundancy" Hidden="true" />
+      <Property Name="IUpstreamFile.Comparisons1" Hidden="true" />
+      <Property Name="IUpstreamFile.Comparisons2" Hidden="true" />
+      <Property Name="IUpstreamFile.HashCalculation" Hidden="true" />
+      <Property Name="IUpstreamFile.Parent" Hidden="true" />
+      <Property Name="IUpstreamFile.Redundancy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAAiqABMAGGACAAAAAAAQARBAEYCAEgABgAACABIAAE=</HashCode>
+      <FileName>FsFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HashCalculation" />
+      <Property Name="Parent" />
+      <Property Name="Redundancy" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.HashCalculation" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="IHashCalculation.Data" Hidden="true" />
+      <Property Name="IHashCalculation.Files" Hidden="true" />
+      <Property Name="IUpstreamHashCalculation.Files" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACCABAACCACAAAAAAAAEBAAEACABBABIAAAABIAIE=</HashCode>
+      <FileName>HashCalculation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.HostDevice" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Members>
+      <Property Name="IHostDevice.Platform" Hidden="true" />
+      <Property Name="IHostDevice.Volumes" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAzGABEACWACIAAAAAAAAYCAEACAABACAAAAADIAAE=</HashCode>
+      <FileName>HostDevice.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Platform" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.HostPlatform" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="6.75" Width="1.5" />
+    <Members>
+      <Property Name="IHostPlatform.DefaultFsType" Hidden="true" />
+      <Property Name="IHostPlatform.HostDevices" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAyGABAACCACAQAAAAAACQCgEACAAAAAQAQAABIAAM=</HashCode>
+      <FileName>HostPlatform.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.Redundancy" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="6.5" Width="1.5" />
+    <Members>
+      <Property Name="IRedundancy.Files" Hidden="true" />
+      <Property Name="IUpstreamRedundancy.Files" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>ABACCABAACCACAAAAAAAAAAAAEACAAAAAAAAAABIIIE=</HashCode>
+      <FileName>Redundancy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.UpstreamDbContext" BaseTypeListCollapsed="true">
+    <Position X="27.25" Y="0.5" Width="2.5" />
+    <Members>
+      <Property Name="IDbContext.Comparisons" Hidden="true" />
+      <Property Name="IDbContext.Files" Hidden="true" />
+      <Property Name="IDbContext.FileSystems" Hidden="true" />
+      <Property Name="IDbContext.HashCalculations" Hidden="true" />
+      <Property Name="IDbContext.Redundancies" Hidden="true" />
+      <Property Name="IDbContext.Subdirectories" Hidden="true" />
+      <Property Name="IDbContext.SymbolicNames" Hidden="true" />
+      <Property Name="IDbContext.Volumes" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddComparison" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddDirectoryRelocateTask" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddFile" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddFileRelocateTask" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddFileSystem" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddHashCalculation" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddHostDevice" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddHostPlatform" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddRedundancy" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddSubDirectory" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddSymbolicName" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddUserGroup" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddUserProfile" Hidden="true" />
+      <Method Name="IUpstreamDbContext.AddVolume" Hidden="true" />
+      <Property Name="IUpstreamDbContext.Comparisons" Hidden="true" />
+      <Property Name="IUpstreamDbContext.DirectoryRelocateTasks" Hidden="true" />
+      <Property Name="IUpstreamDbContext.FileRelocateTasks" Hidden="true" />
+      <Property Name="IUpstreamDbContext.Files" Hidden="true" />
+      <Property Name="IUpstreamDbContext.FileSystems" Hidden="true" />
+      <Property Name="IUpstreamDbContext.HashCalculations" Hidden="true" />
+      <Property Name="IUpstreamDbContext.HostDevices" Hidden="true" />
+      <Property Name="IUpstreamDbContext.HostPlatforms" Hidden="true" />
+      <Property Name="IUpstreamDbContext.Redundancies" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveComparison" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveDirectoryRelocateTask" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveFile" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveFileRelocateTask" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveFileSystem" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveHashCalculation" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveHostDevice" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveHostPlatform" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveRedundancy" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveSubDirectory" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveSymbolicName" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveUserGroup" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveUserProfile" Hidden="true" />
+      <Method Name="IUpstreamDbContext.RemoveVolume" Hidden="true" />
+      <Property Name="IUpstreamDbContext.Subdirectories" Hidden="true" />
+      <Property Name="IUpstreamDbContext.SymbolicNames" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateComparison" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateDirectoryRelocateTask" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateFile" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateFileRelocateTask" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateFileSystem" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateHashCalculation" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateHostDevice" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateHostPlatform" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateRedundancy" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateSubDirectory" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateSymbolicName" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateUserGroup" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateUserProfile" Hidden="true" />
+      <Method Name="IUpstreamDbContext.UpdateVolume" Hidden="true" />
+      <Property Name="IUpstreamDbContext.UserGroups" Hidden="true" />
+      <Property Name="IUpstreamDbContext.UserProfiles" Hidden="true" />
+      <Property Name="IUpstreamDbContext.Volumes" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>gYNYF0+XggHqMkZUJICIHyACOD5nCamEBoNNRlbAIOA=</HashCode>
+      <FileName>UpstreamDbContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.SymbolicName" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="7.5" Width="1.75" />
+    <Members>
+      <Property Name="IFsSymbolicName.DefaultFileSystems" Hidden="true" />
+      <Property Name="IFsSymbolicName.FileSystem" Hidden="true" />
+      <Property Name="IUpstreamSymbolicName.DefaultFileSystems" Hidden="true" />
+      <Property Name="IUpstreamSymbolicName.FileSystem" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAyKCDAACiECAAAAAIQAAQCAEACAAAAAAAAAABIAAE=</HashCode>
+      <FileName>SymbolicName.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.UserGroup" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="0.5" Width="3" />
+    <Members>
+      <Property Name="IUserGroup.DirectoryRelocationTasks" Hidden="true" />
+      <Property Name="IUserGroup.FileRelocationTasks" Hidden="true" />
+      <Property Name="IUserGroup.Members" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAyKAFAACCACAAAAACAAAQCAsACAAAAAAAEAADIAAE=</HashCode>
+      <FileName>UserGroup.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.UserProfile" BaseTypeListCollapsed="true">
+    <Position X="18.75" Y="6.5" Width="2.5" />
+    <Members>
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+      <Property Name="IsInactive" Hidden="true" />
+      <Property Name="IUserProfile.AssignmentGroups" Hidden="true" />
+      <Property Name="IUserProfile.CreatedComparisons" Hidden="true" />
+      <Property Name="IUserProfile.CreatedDirectories" Hidden="true" />
+      <Property Name="IUserProfile.CreatedDirectoryRelocateTasks" Hidden="true" />
+      <Property Name="IUserProfile.CreatedFileRelocateTasks" Hidden="true" />
+      <Property Name="IUserProfile.CreatedFiles" Hidden="true" />
+      <Property Name="IUserProfile.CreatedFileSystems" Hidden="true" />
+      <Property Name="IUserProfile.CreatedHashCalculations" Hidden="true" />
+      <Property Name="IUserProfile.CreatedHostDevices" Hidden="true" />
+      <Property Name="IUserProfile.CreatedHostPlatforms" Hidden="true" />
+      <Property Name="IUserProfile.CreatedRedundancies" Hidden="true" />
+      <Property Name="IUserProfile.CreatedSymbolicNames" Hidden="true" />
+      <Property Name="IUserProfile.CreatedUserGroups" Hidden="true" />
+      <Property Name="IUserProfile.CreatedUserProfiles" Hidden="true" />
+      <Property Name="IUserProfile.CreatedVolumes" Hidden="true" />
+      <Property Name="IUserProfile.DirectoryRelocationTasks" Hidden="true" />
+      <Property Name="IUserProfile.FileRelocationTasks" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedComparisons" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedDirectories" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedDirectoryRelocateTasks" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedFileRelocateTasks" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedFiles" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedFileSystems" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedHashCalculations" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedHostDevices" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedHostPlatforms" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedRedundancies" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedSymbolicNames" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedUserGroups" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedUserProfiles" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedVolumes" Hidden="true" />
+      <Property Name="IUserProfile.SID" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>eFgyHFnqwCLgGGYAAEACWB4CEEBGQJQAAiBPPEB4Ah0=</HashCode>
+      <FileName>UserProfile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.UpstreamDbService">
+    <Position X="12.75" Y="9" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABgEAAEAAAAAAAAAoAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>UpstreamDbService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.Volume" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+      <Property Name="IUpstreamVolume.FileSystem" Hidden="true" />
+      <Property Name="IUpstreamVolume.HostDevice" Hidden="true" />
+      <Property Name="IUpstreamVolume.RootDirectory" Hidden="true" />
+      <Property Name="IVolume.FileSystem" Hidden="true" />
+      <Property Name="IVolume.RootDirectory" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAQyOADACCCACAEAAAAAgAYCAEACgAMAAQgIQBBIIAE=</HashCode>
+      <FileName>Volume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HostDevice" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.UpstreamDb.FileSystem" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="7.5" Width="2" />
+    <Members>
+      <Property Name="IFileSystem.DefaultSymbolicName" Hidden="true" />
+      <Property Name="IFileSystem.SymbolicNames" Hidden="true" />
+      <Property Name="IFileSystem.Volumes" Hidden="true" />
+      <Property Name="IUpstreamFileSystem.DefaultSymbolicName" Hidden="true" />
+      <Property Name="IUpstreamFileSystem.SymbolicNames" Hidden="true" />
+      <Property Name="IUpstreamFileSystem.Volumes" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IUpstreamTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAyGgBAACGRCARAAAAAAAQCQEACgAAAAAgIAEBKIAE=</HashCode>
+      <FileName>FileSystem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

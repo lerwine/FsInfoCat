@@ -1,4 +1,4 @@
-using FsInfoCat.Model.Remote;
+using FsInfoCat.Model.Upstream;
 using System.Globalization;
 using System.Windows;
 

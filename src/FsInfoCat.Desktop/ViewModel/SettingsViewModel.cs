@@ -1,4 +1,4 @@
-using FsInfoCat.Model.Remote;
+using FsInfoCat.Model.Upstream;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -138,7 +138,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     {
                         string sidString = sid.ToString();
                         setMachineSid(sidString);
-                        using (IRemoteDbContext dbContext = Services.GetRemoteDbService().GetDbContext())
+                        using (IUpstreamDbContext dbContext = Services.GetUpstreamDbService().GetDbContext())
                             return await dbContext.HostDevices.FirstOrDefaultAsync(h => h.MachineIdentifer == sidString && h.MachineName == machineName);
                     }
                 }
@@ -165,7 +165,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private async Task<IHostDevice> ForceRegisterLocalMachineAsync(string sidString, string machineName)
         {
-            using (IRemoteDbContext dbContext = Services.GetRemoteDbService().GetDbContext())
+            using (IUpstreamDbContext dbContext = Services.GetUpstreamDbService().GetDbContext())
                 return await dbContext.HostDevices.FirstOrDefaultAsync(h => h.MachineIdentifer == sidString && h.MachineName == machineName);
         }
 
@@ -196,7 +196,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private async Task<IHostDevice> ForceUnregisterLocalMachineAsync(IHostDevice hostDeviceRegistration)
         {
-            using (IRemoteDbContext dbContext = Services.GetRemoteDbService().GetDbContext())
+            using (IUpstreamDbContext dbContext = Services.GetUpstreamDbService().GetDbContext())
             {
                 dbContext.RemoveHostDevice(hostDeviceRegistration);
                 await dbContext.SaveChangesAsync();

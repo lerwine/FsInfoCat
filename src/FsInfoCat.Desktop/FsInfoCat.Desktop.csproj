@@ -387,7 +387,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Model\Local\XMLFile1.xml" />
-    <Content Include="Model\Remote\RemoteDbModel.edmx.sql" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -404,14 +403,17 @@
       <Project>{d380d483-2dbd-4f00-bcbe-d275a43cd36b}</Project>
       <Name>FsInfoCat.LocalDb</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FsInfoCat.RemoteDb\FsInfoCat.RemoteDb.csproj">
+    <ProjectReference Include="..\FsInfoCat.UpstreamDb\FsInfoCat.UpstreamDb.csproj">
       <Project>{cc11f191-197d-4abc-b4e9-8edda9d75d34}</Project>
-      <Name>FsInfoCat.RemoteDb</Name>
+      <Name>FsInfoCat.UpstreamDb</Name>
     </ProjectReference>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj">
       <Project>{11023185-e105-44b2-8b49-acab053515da}</Project>
       <Name>FsInfoCat</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Model\Remote\UpstreaDbModel.edmx.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
