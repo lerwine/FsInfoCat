@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
@@ -38,27 +37,34 @@ namespace FsInfoCat.RemoteDb
 
         #region Column Properties
 
+        // TODO: [Id] uniqueidentifier  NOT NULL,
+        public Guid Id { get; set; }
+
+        // [Data] binary(16)  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_MD5Hash), ResourceType = typeof(ModelResources))]
         [CustomValidation(typeof(Validators), nameof(Validators.IsValidMD5Hash), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MD5HashLength), ErrorMessageResourceType = typeof(ModelResources))]
         public byte[] Data { get; set; }
 
-        public Guid Id { get; set; }
-
+        // [Length] bigint  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_FileLength), ResourceType = typeof(ModelResources))]
         [Required]
         [CustomValidation(typeof(Validators), nameof(Validators.IsValidFileLength), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
         public long Length { get; set; }
 
-                [Required]
+        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
+        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-                [Required]
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
+        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
@@ -42,44 +41,56 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
+        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
+
+        // [DisplayName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
         [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
+        // TODO: [CaseSensitiveSearch] bit  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(ModelResources))]
         public bool CaseSensitiveSearch { get; set; }
 
-        [Display( Name =nameof(ModelResources.DisplayName_ReadOnly), ResourceType = typeof(ModelResources))]
+        // TODO: [ReadOnly] bit  NOT NULL,
+        [Display(Name = nameof(ModelResources.DisplayName_ReadOnly), ResourceType = typeof(ModelResources))]
         public bool ReadOnly { get; set; }
 
+        // TODO: [MaxNameLength] bigint  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_MaxNameLength), ResourceType = typeof(ModelResources))]
         [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MaxNameLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
         [DefaultValueDbSettings(nameof(DBSettings.DefaultValue_MaxFileSystemNameLength))]
         public long MaxNameLength { get; set; } = DBSettings.Default.DefaultValue_MaxFileSystemNameLength;
 
+        // [DefaultDriveType] tinyint  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DefaultDriveType), ResourceType = typeof(ModelResources))]
         public System.IO.DriveType? DefaultDriveType { get; set; }
 
+        // TODO: [Notes] nvarchar(max)  NOT NULL,
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
+        // TODO: [IsInactive] bit  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
+        // TODO: [DefaultSymbolicNameId] uniqueidentifier  NOT NULL
         public Guid DefaultSymbolicNameId { get; set; }
-
-        [Required()]
-        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
-        public DateTime CreatedOn { get; set; }
-
-        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
-        [Required()]
-        public DateTime ModifiedOn { get; set; }
 
         public Guid? UpstreamId { get; set; }
 
         public DateTime? LastSynchronized { get; set; }
+
+        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
+        public DateTime CreatedOn { get; set; }
+
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
+        public DateTime ModifiedOn { get; set; }
 
         #endregion
 

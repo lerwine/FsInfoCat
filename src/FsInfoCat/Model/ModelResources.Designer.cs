@@ -214,6 +214,24 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Machine Identifier.
+        /// </summary>
+        public static string DisplayName_MachineIdentifer {
+            get {
+                return ResourceManager.GetString("DisplayName_MachineIdentifer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine Name.
+        /// </summary>
+        public static string DisplayName_MachineName {
+            get {
+                return ResourceManager.GetString("DisplayName_MachineName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximum Name Length.
         /// </summary>
         public static string DisplayName_MaxNameLength {
@@ -417,6 +435,42 @@ namespace FsInfoCat.Model {
         public static string ErrorMessage_HashCalculationRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_HashCalculationRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine Identifier is too long..
+        /// </summary>
+        public static string ErrorMessage_MachineIdentiferLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_MachineIdentiferLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine Identifier is required..
+        /// </summary>
+        public static string ErrorMessage_MachineIdentiferRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_MachineIdentiferRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine Name is too long..
+        /// </summary>
+        public static string ErrorMessage_MachineNameLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_MachineNameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine Name is required..
+        /// </summary>
+        public static string ErrorMessage_MachineNameRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_MachineNameRequired", resourceCulture);
             }
         }
         

@@ -3,7 +3,6 @@ using FsInfoCat.Model.Local;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
@@ -38,27 +37,33 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
+        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
+        // [Name] nvarchar(128)  NOT NULL,
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
         [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_FileSystemName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
+        // TODO: [CrawlFlags] tinyint  NOT NULL,
         public DirectoryCrawlFlags CrawlFlags { get; set; }
 
+        // [ParentId] uniqueidentifier  NULL,
         public Guid? ParentId { get; set; }
-
-        [Required()]
-        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
-        public DateTime CreatedOn { get; set; }
-
-        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
-        [Required()]
-        public DateTime ModifiedOn { get; set; }
 
         public Guid? UpstreamId { get; set; }
 
         public DateTime? LastSynchronized { get; set; }
+
+        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
+        public DateTime CreatedOn { get; set; }
+
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
+        public DateTime ModifiedOn { get; set; }
 
         #endregion
 

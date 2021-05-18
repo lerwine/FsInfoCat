@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
@@ -49,53 +48,71 @@ namespace FsInfoCat.RemoteDb
 
         #region Column Properties
 
+        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
+        // [CaseSensitiveSearch] bit  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(ModelResources))]
         public bool? CaseSensitiveSearch { get; set; }
 
+        // [ReadOnly] bit  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_ReadOnly), ResourceType = typeof(ModelResources))]
         public bool? ReadOnly { get; set; }
 
+        // [DisplayName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
         [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
+        // TODO: [IsInactive] bit  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
+        // [MaxNameLength] bigint  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_MaxNameLength), ResourceType = typeof(ModelResources))]
         [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MaxNameLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
         public long? MaxNameLength { get; set; }
 
+        // TODO: [FileSystemId] uniqueidentifier  NOT NULL,
+        public Guid FileSystemId { get; set; }
+
+        // TODO: [Type] tinyint  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DriveType), ResourceType = typeof(ModelResources))]
         public DriveType Type { get; set; }
 
+        // TODO: [Notes] nvarchar(max)  NOT NULL,
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
+        // [VolumeName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_VolumeName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_VolumeNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
         [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_VolumeName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
 
+        // [Identifier] nvarchar(1024)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_VolumeIdentifier), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_VolumeIdentifierRequired), ErrorMessageResourceType = typeof(ModelResources))]
         [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_VolumeIdentifier), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Identifier { get => _identifier; set => _identifier = value ?? ""; }
 
+        // [HostDeviceId] uniqueidentifier  NULL,
         public Guid? HostDeviceId { get; set; }
 
-                [Required]
+        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
+        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-                [Required]
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
+        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion

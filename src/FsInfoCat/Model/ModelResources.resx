@@ -168,6 +168,12 @@
   <data name="DisplayName_IsInactive" xml:space="preserve">
     <value>Is Inactive</value>
   </data>
+  <data name="DisplayName_MachineIdentifer" xml:space="preserve">
+    <value>Machine Identifier</value>
+  </data>
+  <data name="DisplayName_MachineName" xml:space="preserve">
+    <value>Machine Name</value>
+  </data>
   <data name="DisplayName_MaxNameLength" xml:space="preserve">
     <value>Maximum Name Length</value>
   </data>
@@ -236,6 +242,18 @@
   </data>
   <data name="ErrorMessage_HashCalculationRequired" xml:space="preserve">
     <value>MD5 Hash must be selected</value>
+  </data>
+  <data name="ErrorMessage_MachineIdentiferLength" xml:space="preserve">
+    <value>Machine Identifier is too long.</value>
+  </data>
+  <data name="ErrorMessage_MachineIdentiferRequired" xml:space="preserve">
+    <value>Machine Identifier is required.</value>
+  </data>
+  <data name="ErrorMessage_MachineNameLength" xml:space="preserve">
+    <value>Machine Name is too long.</value>
+  </data>
+  <data name="ErrorMessage_MachineNameRequired" xml:space="preserve">
+    <value>Machine Name is required.</value>
   </data>
   <data name="ErrorMessage_MaxNameLengthNegative" xml:space="preserve">
     <value>Maximum Name Length cannot be negative.</value>

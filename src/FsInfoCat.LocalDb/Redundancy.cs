@@ -3,7 +3,6 @@ using FsInfoCat.Model.Local;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
@@ -32,19 +31,22 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
+        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
-
-        [Required()]
-        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
-        public DateTime CreatedOn { get; set; }
-
-        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
-        [Required()]
-        public DateTime ModifiedOn { get; set; }
 
         public Guid? UpstreamId { get; set; }
 
         public DateTime? LastSynchronized { get; set; }
+
+        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
+        public DateTime CreatedOn { get; set; }
+
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
+        public DateTime ModifiedOn { get; set; }
 
         #endregion
 

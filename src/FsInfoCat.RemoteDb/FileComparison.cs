@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
@@ -34,23 +33,30 @@ namespace FsInfoCat.RemoteDb
 
         #region Column Properties
 
+        // TODO: [AreEqual] bit  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_AreEqual), ResourceType = typeof(ModelResources))]
         public bool AreEqual { get; set; }
 
+        // TODO: [FileId1] uniqueidentifier  NOT NULL,
         public Guid FileId1 { get; set; }
 
+        // TODO: [FileId2] uniqueidentifier  NOT NULL,
         public Guid FileId2 { get; set; }
 
-        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
+        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
+        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-                [Required]
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
+        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion

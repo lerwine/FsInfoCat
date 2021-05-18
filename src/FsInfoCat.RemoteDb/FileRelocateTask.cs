@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
@@ -43,35 +42,50 @@ namespace FsInfoCat.RemoteDb
 
         #region Column Properties
 
+        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
+        // TODO: [Status] tinyint  NOT NULL,
         public AppTaskStatus Status { get; set; }
 
+        // TODO: [Priority] tinyint  NOT NULL,
         public PriorityLevel Priority { get; set; }
 
+        // [ShortDescription] nvarchar(1024)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_ShortDescription), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ShortDescriptionRequired), ErrorMessageResourceType = typeof(ModelResources))]
         [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_ShortDescription), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string ShortDescription { get => _shortDescription; set => _shortDescription = value ?? ""; }
 
+        // TODO: [TargetDirectoryId] uniqueidentifier  NOT NULL,
         public Guid TargetDirectoryId { get; set; }
 
+        // TODO: [IsInactive] bit  NOT NULL,
+        public bool IsInactive { get; set; }
+
+        // TODO: [Notes] nvarchar(max)  NOT NULL,
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
+        // [AssignmentGroupId] uniqueidentifier  NULL,
         public Guid? AssignmentGroupId { get; set; }
 
+        // [AssignedToId] uniqueidentifier  NULL,
         public Guid? AssignedToId { get; set; }
 
-                [Required]
+        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
+        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-                [Required]
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
+        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion

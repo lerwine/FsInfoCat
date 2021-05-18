@@ -3,7 +3,6 @@ using FsInfoCat.Model.Remote;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.RemoteDb
@@ -62,45 +61,62 @@ namespace FsInfoCat.RemoteDb
 
         #region Column Properties
 
+        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
+        // [DisplayName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
         [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
+        // TODO: [FirstName] nvarchar(32)  NULL,
         public string FirstName { get; set; }
 
+        // TODO: [LastName] nvarchar(64)  NOT NULL,
         public string LastName { get; set; }
 
+        // TODO: [MI] nchar(1)  NULL,
         public string MI { get; set; }
 
+        // TODO: [Suffix] nvarchar(32)  NULL,
         public string Suffix { get; set; }
 
+        // TODO: [Title] nvarchar(32)  NULL,
         public string Title { get; set; }
 
+        // [DbPrincipalId] int  NULL,
         public int? DbPrincipalId { get; set; }
 
+        // TODO: [SID] varbinary(85)  NOT NULL,
         public byte[] SID { get; set; }
 
+        // TODO: [LoginName] nvarchar(128)  NOT NULL,
         public string LoginName { get; set; }
 
+        // TODO: [ExplicitRoles] tinyint  NOT NULL,
         public UserRole ExplicitRoles { get; set; }
 
+        // TODO: [Notes] nvarchar(max)  NOT NULL,
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
+        // TODO: [IsInactive] bit  NOT NULL,
         public bool IsInactive { get; set; }
 
-                [Required]
+        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
+        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-                [Required]
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
+        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion

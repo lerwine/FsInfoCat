@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.LocalDb
@@ -32,24 +31,29 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
+        // TODO: [FileId1] uniqueidentifier  NOT NULL,
         public Guid FileId1 { get; set; }
 
+        // TODO: [FileId2] uniqueidentifier  NOT NULL,
         public Guid FileId2 { get; set; }
 
+        // TODO: [AreEqual] bit  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_AreEqual), ResourceType = typeof(ModelResources))]
         public bool AreEqual { get; set; }
-
-        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
-        [Required()]
-        public DateTime CreatedOn { get; set; }
-
-        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
-        [Required()]
-        public DateTime ModifiedOn { get; set; }
 
         public Guid? UpstreamId { get; set; }
 
         public DateTime? LastSynchronized { get; set; }
+
+        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
+        public DateTime CreatedOn { get; set; }
+
+        // TODO: [ModifiedOn] datetime  NOT NULL
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
+        public DateTime ModifiedOn { get; set; }
 
         #endregion
 

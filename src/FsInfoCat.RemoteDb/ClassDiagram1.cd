@@ -10,6 +10,9 @@
       <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
       <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>EAAyCABEACiACAAEgAAAAAUKAECiAACAAAABAABICAU=</HashCode>
       <FileName>DirectoryRelocateTask.cs</FileName>
@@ -71,6 +74,9 @@
       <Property Name="ISubDirectory.SubDirectories" Hidden="true" />
       <Property Name="ISubDirectory.Volume" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAACKABABSCACAAAACQAQMQAAEACAAAQCiIECCDIgIE=</HashCode>
       <FileName>FsDirectory.cs</FileName>
@@ -93,6 +99,9 @@
       <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
       <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>EAAiqABMAGGACAAAAAAAQARBAEYCAEgABgAACABIAAE=</HashCode>
       <FileName>FsFile.cs</FileName>
@@ -127,8 +136,11 @@
       <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
       <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAzGABAACWACIAAAAAAAAYCAEACAAAACAAAAADIAAE=</HashCode>
+      <HashCode>AAAzGABEACWACIAAAAAAAAYCAEACAABACAAAAADIAAE=</HashCode>
       <FileName>HostDevice.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -144,6 +156,9 @@
       <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
       <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAAyGABAACCACAQAAAAAACQCgEACAAAAAQAQAABIAAM=</HashCode>
       <FileName>HostPlatform.cs</FileName>
@@ -248,6 +263,9 @@
       <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
       <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAAyKCDAACiECAAAAAIQAAQCAEACAAAAAAAAAABIAAE=</HashCode>
       <FileName>SymbolicName.cs</FileName>
@@ -261,6 +279,9 @@
       <Property Name="IUserGroup.FileRelocationTasks" Hidden="true" />
       <Property Name="IUserGroup.Members" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAAyKAFAACCACAAAAACAAAQCAsACAAAAAAAEAADIAAE=</HashCode>
       <FileName>UserGroup.cs</FileName>
@@ -330,6 +351,9 @@
       <Property Name="IVolume.FileSystem" Hidden="true" />
       <Property Name="IVolume.RootDirectory" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAQyOADACCCACAEAAAAAgAYCAEACgAMAAQgIQBBIIAE=</HashCode>
       <FileName>Volume.cs</FileName>
@@ -351,6 +375,9 @@
       <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
       <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AIAyGgBAACGRCARAAAAAAAQCQEACgAAAAAgIAEBKIAE=</HashCode>
       <FileName>FileSystem.cs</FileName>

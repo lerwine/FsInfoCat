@@ -85,5 +85,23 @@ namespace FsInfoCat {
                 return ((int)(this["DbColMaxLen_ShortDescription"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("128")]
+        public int DbColMaxLen_MachineIdentifer {
+            get {
+                return ((int)(this["DbColMaxLen_MachineIdentifer"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("128")]
+        public int DbColMaxLen_MachineName {
+            get {
+                return ((int)(this["DbColMaxLen_MachineName"]));
+            }
+        }
     }
 }
