@@ -19,14 +19,14 @@ namespace FsInfoCat.RemoteDb
 
         internal static void BuildEntity(EntityTypeBuilder<UserProfile> builder)
         {
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedUserProfiles).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedUserProfiles).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedUserProfiles).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedUserProfiles).HasForeignKey(nameof(ModifiedById)).IsRequired();
             throw new NotImplementedException();
         }
 
         public UserProfile()
         {
-            AssignmentGroups = new HashSet<UserGroup>();
+            AssignmentGroups = new HashSet<UserGroupMembership>();
             DirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
             FileRelocationTasks = new HashSet<FileRelocateTask>();
             CreatedSymbolicNames = new HashSet<SymbolicName>();
@@ -123,7 +123,7 @@ namespace FsInfoCat.RemoteDb
 
         #region Navigation Properties
 
-        public HashSet<UserGroup> AssignmentGroups { get; set; }
+        public HashSet<UserGroupMembership> AssignmentGroups { get; set; }
 
         public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
 
@@ -187,11 +187,15 @@ namespace FsInfoCat.RemoteDb
 
         public HashSet<UserGroup> CreatedUserGroups { get; set; }
 
+        public HashSet<UserGroupMembership> CreatedMemberships { get; set; }
+
         public HashSet<DirectoryRelocateTask> ModifiedDirectoryRelocateTasks { get; set; }
 
         public HashSet<FileRelocateTask> ModifiedFileRelocateTasks { get; set; }
 
         public HashSet<UserGroup> ModifiedUserGroups { get; set; }
+
+        public HashSet<UserGroupMembership> ModifiedMemberships { get; set; }
 
         #endregion
 
@@ -243,7 +247,7 @@ namespace FsInfoCat.RemoteDb
 
         IReadOnlyCollection<IRemoteFileComparison> IUserProfile.ModifiedComparisons => ModifiedComparisons;
 
-        IReadOnlyCollection<IUserGroup> IUserProfile.AssignmentGroups => AssignmentGroups;
+        IReadOnlyCollection<IUserGroupMembership> IUserProfile.AssignmentGroups => AssignmentGroups;
 
         IReadOnlyCollection<IDirectoryRelocateTask> IUserProfile.DirectoryRelocationTasks => DirectoryRelocationTasks;
 
@@ -264,6 +268,10 @@ namespace FsInfoCat.RemoteDb
         IUserProfile IRemoteTimeStampedEntity.CreatedBy => CreatedBy;
 
         IUserProfile IRemoteTimeStampedEntity.ModifiedBy => ModifiedBy;
+
+        IReadOnlyCollection<IUserGroupMembership> IUserProfile.CreatedMemberships => CreatedMemberships;
+
+        IReadOnlyCollection<IUserGroupMembership> IUserProfile.ModifiedMemberships => ModifiedMemberships;
 
         #endregion
     }

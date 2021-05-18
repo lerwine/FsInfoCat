@@ -17,6 +17,7 @@ namespace FsInfoCat.Model
         IQueryable<IFsSymbolicName> SymbolicNames { get; }
         IQueryable<IFileSystem> FileSystems { get; }
         IQueryable<IRedundancy> Redundancies { get; }
+        bool HasChanges();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         IDbContextTransaction BeginTransaction();

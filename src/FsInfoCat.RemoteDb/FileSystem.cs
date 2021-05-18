@@ -36,10 +36,10 @@ namespace FsInfoCat.RemoteDb
             builder.HasKey(nameof(Id));
             builder.Property(nameof(DisplayName)).HasMaxLength(DBSettings.Default.DbColMaxLen_DisplayName).IsRequired();
             builder.Property(nameof(DefaultDriveType)).HasDefaultValue(DriveType.Unknown);
-            builder.Property(nameof(Notes)).HasDefaultValue("");
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(fs => fs.DefaultSymbolicName).WithMany(d => d.DefaultFileSystems).HasForeignKey(nameof(DefaultSymbolicNameId)).IsRequired();
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFileSystems).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFileSystems).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFileSystems).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFileSystems).HasForeignKey(nameof(ModifiedById)).IsRequired();
         }
 
         #region Column Properties

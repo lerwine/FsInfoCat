@@ -11,6 +11,27 @@ namespace FsInfoCat.RemoteDb
 {
     public class RemoteDbContext : DbContext, IRemoteDbContext
     {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("dbo");
+            modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
+            modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
+            modelBuilder.Entity<Volume>(Volume.BuildEntity);
+            modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
+            modelBuilder.Entity<HashCalculation>(HashCalculation.BuildEntity);
+            modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
+            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
+            modelBuilder.Entity<HostDevice>(HostDevice.BuildEntity);
+            modelBuilder.Entity<HostPlatform>(HostPlatform.BuildEntity);
+            modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
+            modelBuilder.Entity<FileRelocateTask>(FileRelocateTask.BuildEntity);
+            modelBuilder.Entity<DirectoryRelocateTask>(DirectoryRelocateTask.BuildEntity);
+            modelBuilder.Entity<UserProfile>(UserProfile.BuildEntity);
+            modelBuilder.Entity<UserGroup>(UserGroup.BuildEntity);
+            modelBuilder.Entity<UserGroupMembership>(UserGroupMembership.BuildEntity);
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<HashCalculation> Checksums { get; set; }
 
         public DbSet<FileComparison> Comparisons { get; set; }
@@ -32,6 +53,14 @@ namespace FsInfoCat.RemoteDb
         public DbSet<Redundancy> Redundancies { get; set; }
 
         public DbSet<FileRelocateTask> FileRelocateTasks { get; set; }
+
+        public DbSet<DirectoryRelocateTask> DirectoryRelocateTasks { get; set; }
+
+        public DbSet<UserProfile> UserProfiles { get; set; }
+
+        public DbSet<UserGroup> UserGroups { get; set; }
+
+        public DbSet<UserGroupMembership> UserGroupMemberships { get; set; }
 
         #region Explicit Members
 
@@ -79,33 +108,9 @@ namespace FsInfoCat.RemoteDb
 
         IQueryable<IUserGroup> IRemoteDbContext.UserGroups => UserGroups;
 
+        IQueryable<IUserGroupMembership> IRemoteDbContext.UserGroupMemberships => throw new NotImplementedException();
+
         #endregion
-
-        public DbSet<DirectoryRelocateTask> DirectoryRelocateTasks { get; set; }
-
-        public DbSet<UserProfile> UserProfiles { get; set; }
-
-        public DbSet<UserGroup> UserGroups { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema("dbo");
-            modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
-            modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
-            modelBuilder.Entity<Volume>(Volume.BuildEntity);
-            modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
-            modelBuilder.Entity<HashCalculation>(HashCalculation.BuildEntity);
-            modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
-            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
-            modelBuilder.Entity<HostDevice>(HostDevice.BuildEntity);
-            modelBuilder.Entity<HostPlatform>(HostPlatform.BuildEntity);
-            modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
-            modelBuilder.Entity<FileRelocateTask>(FileRelocateTask.BuildEntity);
-            modelBuilder.Entity<DirectoryRelocateTask>(DirectoryRelocateTask.BuildEntity);
-            modelBuilder.Entity<UserProfile>(UserProfile.BuildEntity);
-            modelBuilder.Entity<UserGroup>(UserGroup.BuildEntity);
-            base.OnModelCreating(modelBuilder);
-        }
 
         public IDbContextTransaction BeginTransaction() => Database.BeginTransaction();
 
@@ -446,5 +451,7 @@ namespace FsInfoCat.RemoteDb
         }
 
         void IRemoteDbContext.RemoveUserGroup(IUserGroup userGroup) => RemoveUserGroup((UserGroup)userGroup);
+
+        public bool HasChanges() => ChangeTracker.HasChanges();
     }
 }

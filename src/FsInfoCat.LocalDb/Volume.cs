@@ -25,7 +25,7 @@ namespace FsInfoCat.LocalDb
             builder.Property(nameof(CaseSensitiveSearch)).HasDefaultValue(false);
             builder.Property(nameof(ReadOnly)).HasDefaultValue(false);
             builder.Property(nameof(MaxNameLength)).HasDefaultValue(DBSettings.Default.DefaultValue_MaxFileSystemNameLength);
-            builder.Property(nameof(Notes)).HasDefaultValue("");
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.FileSystem).WithMany(d => d.Volumes).IsRequired();
             builder.HasOne(p => p.RootDirectory).WithOne(d => d.Volume);
         }

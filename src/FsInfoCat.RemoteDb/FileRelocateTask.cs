@@ -22,12 +22,12 @@ namespace FsInfoCat.RemoteDb
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(ShortDescription)).HasMaxLength(DBSettings.Default.DbColMaxLen_ShortDescription).IsRequired();
-            builder.Property(nameof(Notes)).HasDefaultValue("");
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.TargetDirectory).WithMany(d => d.FileRelocationTasks).IsRequired();
             builder.HasOne(t => t.AssignmentGroup).WithMany(u => u.FileRelocationTasks);
             builder.HasOne(t => t.AssignedTo).WithMany(u => u.FileRelocationTasks);
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFileRelocateTasks).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFileRelocateTasks).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFileRelocateTasks).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFileRelocateTasks).HasForeignKey(nameof(ModifiedById)).IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

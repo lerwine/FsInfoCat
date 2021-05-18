@@ -12,7 +12,7 @@ namespace FsInfoCat.Model.Remote
         string Notes { get; }
         bool IsInactive { get; }
 
-        IReadOnlyCollection<IUserProfile> Members { get; }
+        IReadOnlyCollection<IUserGroupMembership> Members { get; }
         IReadOnlyCollection<IDirectoryRelocateTask> DirectoryRelocationTasks { get; }
         IReadOnlyCollection<IFileRelocateTask> FileRelocationTasks { get; }
     }

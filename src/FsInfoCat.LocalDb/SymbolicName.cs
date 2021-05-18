@@ -22,7 +22,7 @@ namespace FsInfoCat.LocalDb
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_SimpleName).IsRequired();
-            builder.Property(nameof(Notes)).HasDefaultValue("");
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
         }
 

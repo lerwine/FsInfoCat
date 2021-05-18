@@ -42,14 +42,16 @@ namespace FsInfoCat.Model.Remote
         IReadOnlyCollection<IRemoteFile> ModifiedFiles { get; }
         IReadOnlyCollection<IRemoteSubDirectory> ModifiedDirectories { get; }
         IReadOnlyCollection<IRemoteFileComparison> ModifiedComparisons { get; }
-        IReadOnlyCollection<IUserGroup> AssignmentGroups { get; }
+        IReadOnlyCollection<IUserGroupMembership> AssignmentGroups { get; }
         IReadOnlyCollection<IDirectoryRelocateTask> DirectoryRelocationTasks { get; }
         IReadOnlyCollection<IFileRelocateTask> FileRelocationTasks { get; }
         IReadOnlyCollection<IDirectoryRelocateTask> CreatedDirectoryRelocateTasks { get; }
         IReadOnlyCollection<IFileRelocateTask> CreatedFileRelocateTasks { get; }
         IReadOnlyCollection<IUserGroup> CreatedUserGroups { get; }
+        IReadOnlyCollection<IUserGroupMembership> CreatedMemberships { get; }
         IReadOnlyCollection<IDirectoryRelocateTask> ModifiedDirectoryRelocateTasks { get; }
         IReadOnlyCollection<IFileRelocateTask> ModifiedFileRelocateTasks { get; }
         IReadOnlyCollection<IUserGroup> ModifiedUserGroups { get; }
+        IReadOnlyCollection<IUserGroupMembership> ModifiedMemberships { get; }
     }
 }

@@ -38,12 +38,12 @@ namespace FsInfoCat.RemoteDb
             builder.Property(nameof(CaseSensitiveSearch)).HasDefaultValue(false);
             builder.Property(nameof(ReadOnly)).HasDefaultValue(false);
             builder.Property(nameof(MaxNameLength)).HasDefaultValue(DBSettings.Default.DefaultValue_MaxFileSystemNameLength);
-            builder.Property(nameof(Notes)).HasDefaultValue("");
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.FileSystem).WithMany(d => d.Volumes).IsRequired();
             builder.HasOne(p => p.RootDirectory).WithOne(d => d.Volume);
             builder.HasOne(v => v.HostDevice).WithMany(h => h.Volumes);
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedVolumes).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedVolumes).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedVolumes).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedVolumes).HasForeignKey(nameof(ModifiedById)).IsRequired();
         }
 
         #region Column Properties

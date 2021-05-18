@@ -317,5 +317,7 @@ namespace FsInfoCat.LocalDb
         void ILocalDbContext.UpdateRedundancy(ILocalRedundancy redundancy) => UpdateRedundancy((Redundancy)redundancy);
 
         void ILocalDbContext.RemoveRedundancy(ILocalRedundancy redundancy) => RemoveRedundancy((Redundancy)redundancy);
+
+        public bool HasChanges() => ChangeTracker.HasChanges();
     }
 }

@@ -18,6 +18,7 @@ namespace FsInfoCat.Model.Remote
         IQueryable<IDirectoryRelocateTask> DirectoryRelocateTasks { get; }
         IQueryable<IUserProfile> UserProfiles { get; }
         IQueryable<IUserGroup> UserGroups { get; }
+        IQueryable<IUserGroupMembership> UserGroupMemberships { get; }
 
         void AddHashCalculation(IRemoteHashCalculation hashCalculation);
         void UpdateHashCalculation(IRemoteHashCalculation hashCalculation);

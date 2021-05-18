@@ -36,8 +36,8 @@ namespace FsInfoCat.RemoteDb
             builder.HasOne(p => p.HashCalculation).WithMany(d => d.Files).HasForeignKey(nameof(HashCalculationId)).IsRequired();
             builder.HasOne(d => d.Redundancy).WithMany(r => r.Files);
             builder.HasOne(p => p.FileRelocateTask).WithMany(d => d.Files).HasForeignKey(nameof(FileRelocateTaskId));
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFiles).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFiles).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFiles).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFiles).HasForeignKey(nameof(ModifiedById)).IsRequired();
         }
 
         #region Column Properties

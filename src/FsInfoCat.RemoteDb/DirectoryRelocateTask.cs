@@ -22,7 +22,7 @@ namespace FsInfoCat.RemoteDb
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(ShortDescription)).HasMaxLength(DBSettings.Default.DbColMaxLen_ShortDescription).IsRequired();
-            builder.Property(nameof(Notes)).HasDefaultValue("");
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.TargetDirectory).WithMany(d => d.TargetDirectoryRelocationTasks).IsRequired();
             builder.HasOne(t => t.AssignmentGroup).WithMany(u => u.DirectoryRelocationTasks);
             builder.HasOne(t => t.AssignedTo).WithMany(u => u.DirectoryRelocationTasks);

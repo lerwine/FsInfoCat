@@ -25,8 +25,8 @@ namespace FsInfoCat.RemoteDb
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedRedundancies).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedRedundancies).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedRedundancies).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedRedundancies).HasForeignKey(nameof(ModifiedById)).IsRequired();
             //builder.ToTable($"{nameof(Redundancy)}{nameof(FsFile)}").OwnsMany(p => p.Files).HasForeignKey(k => k.Id)
             //    .OwnsMany(d => d.Redundancies).HasForeignKey(d => d.Id);
         }

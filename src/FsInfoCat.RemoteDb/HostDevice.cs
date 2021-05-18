@@ -1,5 +1,6 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,11 @@ namespace FsInfoCat.RemoteDb
         internal static void BuildEntity(EntityTypeBuilder<HostDevice> builder)
         {
             builder.HasOne(d => d.Platform).WithMany(p => p.HostDevices).IsRequired();
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedHostDevices).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedHostDevices).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedHostDevices).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedHostDevices).HasForeignKey(nameof(ModifiedById)).IsRequired();
             throw new NotImplementedException();
         }
 

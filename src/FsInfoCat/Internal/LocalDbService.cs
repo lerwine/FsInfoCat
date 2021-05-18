@@ -6,19 +6,21 @@ namespace FsInfoCat.Internal
 {
     internal class LocalDbService : ILocalDbService
     {
+        private Func<ILocalDbContext> _factory;
+
         public ILocalDbContext GetDbContext()
         {
             throw new NotImplementedException();
         }
 
+        IDbContext IDbService.GetDbContext() => GetDbContext();
+
         public void SetContextFactory(Func<ILocalDbContext> factory)
         {
-            throw new NotImplementedException();
-        }
-
-        IDbContext IDbService.GetDbContext()
-        {
-            throw new NotImplementedException();
+            if (_factory is null)
+                _factory = factory;
+            else
+                throw new InvalidOperationException();
         }
     }
 }

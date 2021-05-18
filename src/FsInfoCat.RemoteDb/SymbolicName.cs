@@ -27,10 +27,10 @@ namespace FsInfoCat.RemoteDb
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_SimpleName).IsRequired();
-            builder.Property(nameof(Notes)).HasDefaultValue("");
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedSymbolicNames).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedSymbolicNames).IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedSymbolicNames).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedSymbolicNames).HasForeignKey(nameof(ModifiedById)).IsRequired();
         }
 
         public SymbolicName()

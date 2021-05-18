@@ -1,5 +1,6 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Remote;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -19,14 +20,16 @@ namespace FsInfoCat.RemoteDb
 
         internal static void BuildEntity(EntityTypeBuilder<UserGroup> builder)
         {
-            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedUserGroups).IsRequired();
-            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedUserGroups).IsRequired();
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
+            builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedUserGroups).HasForeignKey(nameof(CreatedById)).IsRequired();
+            builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedUserGroups).HasForeignKey(nameof(ModifiedById)).IsRequired();
+
             throw new NotImplementedException();
         }
 
         public UserGroup()
         {
-            Members = new HashSet<UserProfile>();
+            Members = new HashSet<UserGroupMembership>();
             DirectoryRelocationTasks = new HashSet<DirectoryRelocateTask>();
             FileRelocationTasks = new HashSet<FileRelocateTask>();
         }
@@ -70,7 +73,7 @@ namespace FsInfoCat.RemoteDb
 
         #region Navigation Properties
 
-        public HashSet<UserProfile> Members { get; set; }
+        public HashSet<UserGroupMembership> Members { get; set; }
 
         public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
 
@@ -88,7 +91,7 @@ namespace FsInfoCat.RemoteDb
 
         #region Explicit Members
 
-        IReadOnlyCollection<IUserProfile> IUserGroup.Members => Members;
+        IReadOnlyCollection<IUserGroupMembership> IUserGroup.Members => Members;
 
         IReadOnlyCollection<IDirectoryRelocateTask> IUserGroup.DirectoryRelocationTasks => DirectoryRelocationTasks;
 
