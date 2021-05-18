@@ -21,7 +21,7 @@ namespace FsInfoCat.LocalDb
         internal static void BuildEntity(EntityTypeBuilder<FsDirectory> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_FileSystemName).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId));
         }
 
@@ -30,9 +30,9 @@ namespace FsInfoCat.LocalDb
             var results = new List<ValidationResult>();
             Validator.TryValidateProperty(Name, new ValidationContext(this, null, null) { MemberName = nameof(Name) }, results);
             if (Volume is null && Parent is null)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_VOLUME_PARENT_REQUIRED, new string[] { nameof(Volume), nameof(Parent) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_NoParentOrVolume, new string[] { nameof(ModifiedOn) }));
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
@@ -40,19 +40,25 @@ namespace FsInfoCat.LocalDb
 
         public Guid Id { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_FS_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_FileSystemName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
         public DirectoryCrawlFlags CrawlFlags { get; set; }
 
         public Guid? ParentId { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required()]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
+        [Required()]
         public DateTime ModifiedOn { get; set; }
+
+        public Guid? UpstreamId { get; set; }
+
+        public DateTime? LastSynchronized { get; set; }
 
         #endregion
 
@@ -62,7 +68,7 @@ namespace FsInfoCat.LocalDb
 
         public virtual HashSet<FsDirectory> SubDirectories { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_PARENT_DIRECTORY)]
+        [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         public virtual FsDirectory Parent { get; set; }
 
         public virtual HashSet<FsFile> Files { get; set; }

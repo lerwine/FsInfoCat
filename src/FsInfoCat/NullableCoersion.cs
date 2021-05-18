@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace FsInfoCat
 {
     internal class NullableCoersion<T> : Coersion<T?>

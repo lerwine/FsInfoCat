@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace FsInfoCat.Model
 {
@@ -14,6 +15,7 @@ namespace FsInfoCat.Model
         bool? ReadOnly { get; }
         string Notes { get; }
         string VolumeName { get; }
+        DriveType Type { get; }
         ISubDirectory RootDirectory { get; }
         IFileSystem FileSystem { get; }
     }

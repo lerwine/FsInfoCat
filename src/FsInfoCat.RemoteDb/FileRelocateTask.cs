@@ -22,7 +22,7 @@ namespace FsInfoCat.RemoteDb
         internal static void BuildEntity(EntityTypeBuilder<FileRelocateTask> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(ShortDescription)).HasMaxLength(Constants.MAX_LENGTH_SHORT_DESCRIPTION).IsRequired();
+            builder.Property(nameof(ShortDescription)).HasMaxLength(DBSettings.Default.DbColMaxLen_ShortDescription).IsRequired();
             builder.Property(nameof(Notes)).HasDefaultValue("");
             builder.HasOne(p => p.TargetDirectory).WithMany(d => d.FileRelocationTasks).IsRequired();
             builder.HasOne(t => t.AssignmentGroup).WithMany(u => u.FileRelocationTasks);
@@ -37,7 +37,7 @@ namespace FsInfoCat.RemoteDb
             Validator.TryValidateProperty(ShortDescription, new ValidationContext(this, null, null) { MemberName = nameof(ShortDescription) }, results);
             Validator.TryValidateProperty(TargetDirectory, new ValidationContext(this, null, null) { MemberName = nameof(TargetDirectory) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
@@ -49,9 +49,9 @@ namespace FsInfoCat.RemoteDb
 
         public PriorityLevel Priority { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_SHORT_DESCRIPTION)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_SHORT_DESCRIPTION)]
-        [MaxLength(Constants.MAX_LENGTH_SHORT_DESCRIPTION)]
+        [Display(Name = nameof(ModelResources.DisplayName_ShortDescription), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ShortDescriptionRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_ShortDescription), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string ShortDescription { get => _shortDescription; set => _shortDescription = value ?? ""; }
 
         public Guid TargetDirectoryId { get; set; }
@@ -62,14 +62,14 @@ namespace FsInfoCat.RemoteDb
 
         public Guid? AssignedToId { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedById { get; set; }
@@ -80,20 +80,20 @@ namespace FsInfoCat.RemoteDb
 
         public virtual HashSet<FsFile> Files { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_TARGET_DIRECTORY)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_TARGET_DIRECTORY)]
+        [Display(Name = nameof(ModelResources.DisplayName_TargetDirectory), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_TargetDirectory), ErrorMessageResourceType = typeof(ModelResources))]
         public virtual FsDirectory TargetDirectory { get; set; }
 
         public UserGroup AssignmentGroup { get; set; }
 
         public UserProfile AssignedTo { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile CreatedBy { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ModifiedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile ModifiedBy { get; set; }
 
         #endregion

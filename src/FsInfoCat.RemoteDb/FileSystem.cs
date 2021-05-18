@@ -28,15 +28,15 @@ namespace FsInfoCat.RemoteDb
             Validator.TryValidateProperty(MaxNameLength, new ValidationContext(this, null, null) { MemberName = nameof(MaxNameLength) }, results);
             Validator.TryValidateProperty(DefaultSymbolicName, new ValidationContext(this, null, null) { MemberName = nameof(DefaultSymbolicName) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
         internal static void BuildEntity(EntityTypeBuilder<FileSystem> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(DisplayName)).HasMaxLength(Constants.MAX_LENGTH_DISPLAY_NAME).IsRequired();
-            builder.Property(nameof(DefaultDriveType)).HasDefaultValue(System.IO.DriveType.Unknown);
+            builder.Property(nameof(DisplayName)).HasMaxLength(DBSettings.Default.DbColMaxLen_DisplayName).IsRequired();
+            builder.Property(nameof(DefaultDriveType)).HasDefaultValue(DriveType.Unknown);
             builder.Property(nameof(Notes)).HasDefaultValue("");
             builder.HasOne(fs => fs.DefaultSymbolicName).WithMany(d => d.DefaultFileSystems).HasForeignKey(nameof(DefaultSymbolicNameId)).IsRequired();
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFileSystems).IsRequired();
@@ -47,38 +47,40 @@ namespace FsInfoCat.RemoteDb
 
         public Guid Id { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
-        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
-        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
+        [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
+        [Display(Name = nameof(ModelResources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(ModelResources))]
         public bool CaseSensitiveSearch { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
+        [Display(Name = nameof(ModelResources.DisplayName_ReadOnly), ResourceType = typeof(ModelResources))]
         public bool ReadOnly { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MAX_NAME_LENGTH)]
-        [Range(0, int.MaxValue, ErrorMessage = Constants.ERROR_MESSAGE_MAXNAMELENGTH)]
-        public long MaxNameLength { get; set; }
+        [Display(Name = nameof(ModelResources.DisplayName_MaxNameLength), ResourceType = typeof(ModelResources))]
+        [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MaxNameLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
+        [DefaultValueDbSettings(nameof(DBSettings.DefaultValue_MaxFileSystemNameLength))]
+        public long MaxNameLength { get; set; } = DBSettings.Default.DefaultValue_MaxFileSystemNameLength;
 
+        [Display(Name = nameof(ModelResources.DisplayName_DefaultDriveType), ResourceType = typeof(ModelResources))]
         public DriveType? DefaultDriveType { get; set; }
 
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
         public Guid DefaultSymbolicNameId { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedById { get; set; }
@@ -89,19 +91,19 @@ namespace FsInfoCat.RemoteDb
 
         public HashSet<Volume> Volumes { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_DEFAULT_SYMBOLIC_NAME)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_DEFAULT_SYMBOLIC_NAME)]
+        [Display(Name = nameof(ModelResources.DisplayName_DefaultSymbolicName), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DefaultSymbolicNameRequired), ErrorMessageResourceType =typeof(ModelResources))]
         public SymbolicName DefaultSymbolicName { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_SYMBOLIC_NAMES)]
+        [Display(Name = nameof(ModelResources.DisplayName_SymbolicName), ResourceType = typeof(ModelResources))]
         public HashSet<SymbolicName> SymbolicNames { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile CreatedBy { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ModifiedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile ModifiedBy { get; set; }
 
         #endregion

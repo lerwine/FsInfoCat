@@ -192,6 +192,11 @@
     <Compile Include="FsFile.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="FsInfoCatContext.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SymbolicName.cs" />
     <Compile Include="HashCalculation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -202,6 +207,10 @@
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />

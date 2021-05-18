@@ -88,7 +88,7 @@
   <Interface Name="FsInfoCat.Model.Remote.IRemoteSubDirectory">
     <Position X="10" Y="5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAAIAAAAAAIA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAACAAQAAAAAAAAAAQAAIAAAAAAIA=</HashCode>
       <FileName>Model\Remote\IRemoteSubDirectory.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -105,7 +105,7 @@
   <Interface Name="FsInfoCat.Model.Remote.IRemoteVolume">
     <Position X="7" Y="5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAACACAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
       <FileName>Model\Remote\IRemoteVolume.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -182,7 +182,7 @@
   <Interface Name="FsInfoCat.Model.ISubDirectory">
     <Position X="10" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAQAQAAAAAAAAQAAIAAAAAAIA=</HashCode>
+      <HashCode>AAACAAAAAQAAAAAAAAAAQAQAAAAAAAAQAAIAAAAAAIA=</HashCode>
       <FileName>Model\ISubDirectory.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -192,7 +192,7 @@
   <Interface Name="FsInfoCat.Model.IVolume">
     <Position X="7" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAiEACAAAAAAAAAAAAAAAACAAAAgAEAAAgAQAAAIAA=</HashCode>
+      <HashCode>AAAiEACAAAAAAAAAAAAAAAACAAAAgAEAAQgIQAAAIAA=</HashCode>
       <FileName>Model\IVolume.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

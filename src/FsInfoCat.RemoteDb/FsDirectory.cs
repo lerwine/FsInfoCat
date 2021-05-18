@@ -25,16 +25,16 @@ namespace FsInfoCat.RemoteDb
             var results = new List<ValidationResult>();
             Validator.TryValidateProperty(Name, new ValidationContext(this, null, null) { MemberName = nameof(Name) }, results);
             if (Volume is null && Parent is null)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_VOLUME_PARENT_REQUIRED, new string[] { nameof(Volume), nameof(Parent) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_NoParentOrVolume, new string[] { nameof(ModifiedOn) }));
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
         internal static void BuildEntity(EntityTypeBuilder<FsDirectory> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_FileSystemName).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId));
             builder.HasOne(p => p.SourceRelocationTask).WithMany(d => d.SourceDirectories).HasForeignKey(nameof(SourceRelocationTaskId));
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedDirectories).IsRequired();
@@ -45,8 +45,8 @@ namespace FsInfoCat.RemoteDb
 
         public Guid Id { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_FS_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_FileSystemName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
         public DirectoryCrawlFlags CrawlFlags { get; set; }
@@ -55,14 +55,14 @@ namespace FsInfoCat.RemoteDb
 
         public Guid? SourceRelocationTaskId { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedById { get; set; }
@@ -71,30 +71,30 @@ namespace FsInfoCat.RemoteDb
 
         #region Navigation Properties
 
-        [DisplayName(Constants.DISPLAY_NAME_PARENT_DIRECTORY)]
+        [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         public FsDirectory Parent { get; set; }
 
         public Volume Volume { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_SOURCE_RELOCATION_TASK)]
+        [Display(Name = nameof(ModelResources.DisplayName_DirectoryRelocationTask), ResourceType = typeof(ModelResources))]
         public virtual DirectoryRelocateTask SourceRelocationTask { get; set; }
 
         public HashSet<FsFile> Files { get; set; }
 
         public HashSet<FsDirectory> SubDirectories { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_TARGET_DIRECTORY_RELOCATION_TASKS)]
+        [Display(Name = nameof(ModelResources.DisplayName_FileRelocationTasks), ResourceType = typeof(ModelResources))]
         public HashSet<FileRelocateTask> FileRelocationTasks { get; private set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_SOURCE_RELOCATION_TASK)]
+        [Display(Name = nameof(ModelResources.DisplayName_TargetDirectoryRelocationTasks), ResourceType = typeof(ModelResources))]
         public HashSet<DirectoryRelocateTask> TargetDirectoryRelocationTasks { get; private set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile CreatedBy { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ModifiedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile ModifiedBy { get; set; }
 
         #endregion

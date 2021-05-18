@@ -19,7 +19,7 @@ namespace FsInfoCat.RemoteDb
         {
             var results = new List<ValidationResult>();
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
@@ -36,14 +36,14 @@ namespace FsInfoCat.RemoteDb
 
         public Guid Id { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedById { get; set; }
@@ -54,12 +54,12 @@ namespace FsInfoCat.RemoteDb
 
         public HashSet<FsFile> Files { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile CreatedBy { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ModifiedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile ModifiedBy { get; set; }
 
         #endregion

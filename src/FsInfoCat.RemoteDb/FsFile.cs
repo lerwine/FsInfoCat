@@ -25,14 +25,14 @@ namespace FsInfoCat.RemoteDb
             Validator.TryValidateProperty(Parent, new ValidationContext(this, null, null) { MemberName = nameof(Parent) }, results);
             Validator.TryValidateProperty(HashCalculation, new ValidationContext(this, null, null) { MemberName = nameof(HashCalculation) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
         internal static void BuildEntity(EntityTypeBuilder<FsFile> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_FS_NAME).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_FileSystemName).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
             builder.HasOne(p => p.HashCalculation).WithMany(d => d.Files).HasForeignKey(nameof(HashCalculationId)).IsRequired();
             builder.HasOne(d => d.Redundancy).WithMany(r => r.Files);
@@ -51,22 +51,22 @@ namespace FsInfoCat.RemoteDb
 
         public Guid? FileRelocateTaskId { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_FS_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_FileSystemName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
         public FileStatus Status { get; set; }
 
         public Guid? RedundancyId { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedById { get; set; }
@@ -75,12 +75,12 @@ namespace FsInfoCat.RemoteDb
 
         #region Navigation Properties
 
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_HASH_CALCULATION)]
-        [DisplayName(Constants.DISPLAY_NAME_HASH_CALCULATION)]
+        [Display(Name = nameof(ModelResources.DisplayName_HashCalculation), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_HashCalculationRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public HashCalculation HashCalculation { get; set; }
 
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_PARENT_DIRECTORY)]
-        [DisplayName(Constants.DISPLAY_NAME_PARENT_DIRECTORY)]
+        [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ParentDirectoryRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public FsDirectory Parent { get; set; }
 
         public Redundancy Redundancy { get; set; }
@@ -89,15 +89,15 @@ namespace FsInfoCat.RemoteDb
 
         public HashSet<FileComparison> Comparisons2 { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_RELOCATE_TASK)]
+        [Display(Name = nameof(ModelResources.DisplayName_FileRelocationTask), ResourceType = typeof(ModelResources))]
         public virtual FileRelocateTask FileRelocateTask { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile CreatedBy { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ModifiedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile ModifiedBy { get; set; }
 
         #endregion

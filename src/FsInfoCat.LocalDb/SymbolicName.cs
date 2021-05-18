@@ -22,7 +22,7 @@ namespace FsInfoCat.LocalDb
         internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(Constants.MAX_LENGTH_NAME).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_SimpleName).IsRequired();
             builder.Property(nameof(Notes)).HasDefaultValue("");
             builder.HasOne(p => p.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
         }
@@ -33,7 +33,7 @@ namespace FsInfoCat.LocalDb
             Validator.TryValidateProperty(Name, new ValidationContext(this, null, null) { MemberName = nameof(Name) }, results);
             Validator.TryValidateProperty(FileSystem, new ValidationContext(this, null, null) { MemberName = nameof(FileSystem) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
@@ -41,29 +41,35 @@ namespace FsInfoCat.LocalDb
 
         public Guid Id { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_NAME, ErrorMessage = Constants.ERROR_MESSAGE_NAME_LENGTH)]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_SimpleName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
         public Guid FileSystemId { get; set; }
 
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Required()]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
+        [Required()]
         public DateTime ModifiedOn { get; set; }
+
+        public Guid? UpstreamId { get; set; }
+
+        public DateTime? LastSynchronized { get; set; }
 
         #endregion
 
         #region Navigation Properties
 
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILESYSTEM)]
-        [DisplayName(Constants.DISPLAY_NAME_FILESYSTEM)]
+        [Display(Name = nameof(ModelResources.DisplayName_FileSystem), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileSystemRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public virtual FileSystem FileSystem { get; set; }
 
         public virtual HashSet<FileSystem> DefaultFileSystems { get; set; }

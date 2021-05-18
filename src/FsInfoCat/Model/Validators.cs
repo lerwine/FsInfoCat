@@ -9,7 +9,7 @@ namespace FsInfoCat.Model
         {
             if (length < 0L)
             {
-                result = new ValidationResult(Constants.ERROR_MESSAGE_FILE_LENGTH);
+                result = new ValidationResult(ModelResources.ErrorMessage_FileLengthNegative);
                 return false;
             }
 

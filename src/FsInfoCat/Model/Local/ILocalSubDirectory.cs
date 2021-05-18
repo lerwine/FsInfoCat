@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Model.Local
 {
-    public interface ILocalSubDirectory : ISubDirectory
+    public interface ILocalSubDirectory : ISubDirectory, ILocalModel
     {
         new ILocalSubDirectory Parent { get; }
 

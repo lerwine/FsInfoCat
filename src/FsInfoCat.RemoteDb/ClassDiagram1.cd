@@ -1,131 +1,361 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="FsInfoCat.RemoteDb.DirectoryRelocateTask" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="3" Y="0.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.DirectoryRelocateTask" BaseTypeListCollapsed="true">
+    <Position X="23.75" Y="0.5" Width="2" />
+    <Members>
+      <Property Name="IDirectoryRelocateTask.AssignedTo" Hidden="true" />
+      <Property Name="IDirectoryRelocateTask.AssignmentGroup" Hidden="true" />
+      <Property Name="IDirectoryRelocateTask.SourceDirectories" Hidden="true" />
+      <Property Name="IDirectoryRelocateTask.TargetDirectory" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>EAAyCABEACiACAAEgAAAAAUKAECiAACAAAABAABICAU=</HashCode>
       <FileName>DirectoryRelocateTask.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssignmentGroup" />
+      <Property Name="AssignedTo" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.FileComparison" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="0.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.FileComparison" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="4.75" Width="1.5" />
+    <Members>
+      <Property Name="IFileComparison.File1" Hidden="true" />
+      <Property Name="IFileComparison.File2" Hidden="true" />
+      <Property Name="IRemoteFileComparison.File1" Hidden="true" />
+      <Property Name="IRemoteFileComparison.File2" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>AAACCBBACSCACAAAAACAAQBAAEACAAAAAgAAAABIAAE=</HashCode>
+      <HashCode>AAAACBBACSCACAAAAACAAQBAAEACAAAAAgAAAABIAAE=</HashCode>
       <FileName>FileComparison.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.FileRelocateTask" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="0.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.FileRelocateTask" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="IFileRelocateTask.AssignedTo" Hidden="true" />
+      <Property Name="IFileRelocateTask.AssignmentGroup" Hidden="true" />
+      <Property Name="IFileRelocateTask.Files" Hidden="true" />
+      <Property Name="IFileRelocateTask.TargetDirectory" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>EggyCABEACiACAAEgAAAAAQIAECCAAAEAAABAABICIU=</HashCode>
       <FileName>FileRelocateTask.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssignmentGroup" />
+      <Property Name="AssignedTo" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.FileSystem" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="0.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.FsDirectory" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="0.5" Width="2.5" />
+    <Members>
+      <Property Name="IRemoteSubDirectory.Files" Hidden="true" />
+      <Property Name="IRemoteSubDirectory.Parent" Hidden="true" />
+      <Property Name="IRemoteSubDirectory.SourceRelocationTask" Hidden="true" />
+      <Property Name="IRemoteSubDirectory.SubDirectories" Hidden="true" />
+      <Property Name="IRemoteSubDirectory.Volume" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+      <Property Name="ISubDirectory.Files" Hidden="true" />
+      <Property Name="ISubDirectory.Parent" Hidden="true" />
+      <Property Name="ISubDirectory.SubDirectories" Hidden="true" />
+      <Property Name="ISubDirectory.Volume" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>AIAyGgBAACGRCARAAAAAAAQCQEACgAAAAAgIAEBKIAE=</HashCode>
-      <FileName>FileSystem.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="FsInfoCat.RemoteDb.FsDirectory" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="3" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACKABABSCACAAAACQAQMQAAEACAAAQAiIECCDIgIE=</HashCode>
+      <HashCode>AAACKABABSCACAAAACQAQMQAAEACAAAQCiIECCDIgIE=</HashCode>
       <FileName>FsDirectory.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.FsFile" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="1.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.FsFile" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="IFile.Comparisons1" Hidden="true" />
+      <Property Name="IFile.Comparisons2" Hidden="true" />
+      <Property Name="IFile.HashCalculation" Hidden="true" />
+      <Property Name="IFile.Parent" Hidden="true" />
+      <Property Name="IFile.Redundancy" Hidden="true" />
+      <Property Name="IRemoteFile.Comparisons1" Hidden="true" />
+      <Property Name="IRemoteFile.Comparisons2" Hidden="true" />
+      <Property Name="IRemoteFile.HashCalculation" Hidden="true" />
+      <Property Name="IRemoteFile.Parent" Hidden="true" />
+      <Property Name="IRemoteFile.Redundancy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>EAAiqABMAGGACAAAAAAAQAQBAGACAEAABgAACABIAAE=</HashCode>
+      <HashCode>EAAiqABMAGGACAAAAAAAQARBAEYCAEgABgAACABIAAE=</HashCode>
       <FileName>FsFile.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HashCalculation" />
+      <Property Name="Parent" />
+      <Property Name="Redundancy" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.HashCalculation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="1.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.HashCalculation" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="IHashCalculation.Data" Hidden="true" />
+      <Property Name="IHashCalculation.Files" Hidden="true" />
+      <Property Name="IRemoteHashCalculation.Files" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>AAACCABAACCACAAAAAAAAEBAAEACABBABIAAAABIAIE=</HashCode>
       <FileName>HashCalculation.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.HostDevice" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="1.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.HostDevice" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Members>
+      <Property Name="IHostDevice.Platform" Hidden="true" />
+      <Property Name="IHostDevice.Volumes" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>AAAyGABAACWACIAAAAAAAAYCAEACAAAAAAAAAADIAAE=</HashCode>
+      <HashCode>AAAzGABAACWACIAAAAAAAAYCAEACAAAACAAAAADIAAE=</HashCode>
       <FileName>HostDevice.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Platform" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.HostPlatform" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="3" Y="2.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.HostPlatform" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="6.75" Width="1.5" />
+    <Members>
+      <Property Name="IHostPlatform.DefaultFsType" Hidden="true" />
+      <Property Name="IHostPlatform.HostDevices" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>AAAyGABAACCACAQAAAAAACQCgEICAAAAAQAQAABIAAE=</HashCode>
+      <HashCode>AAAyGABAACCACAQAAAAAACQCgEACAAAAAQAQAABIAAM=</HashCode>
       <FileName>HostPlatform.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.Redundancy" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="2.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.Redundancy" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="6.5" Width="1.5" />
+    <Members>
+      <Property Name="IRedundancy.Files" Hidden="true" />
+      <Property Name="IRemoteRedundancy.Files" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>ABACCABAACCACAAAAAAAAAAAAEACAAAAAAAAAABIIIE=</HashCode>
       <FileName>Redundancy.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.RemoteDbContext" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="2.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.RemoteDbContext" BaseTypeListCollapsed="true">
+    <Position X="27.25" Y="0.5" Width="2.5" />
+    <Members>
+      <Property Name="IDbContext.Comparisons" Hidden="true" />
+      <Property Name="IDbContext.Files" Hidden="true" />
+      <Property Name="IDbContext.FileSystems" Hidden="true" />
+      <Property Name="IDbContext.HashCalculations" Hidden="true" />
+      <Property Name="IDbContext.Redundancies" Hidden="true" />
+      <Property Name="IDbContext.Subdirectories" Hidden="true" />
+      <Property Name="IDbContext.SymbolicNames" Hidden="true" />
+      <Property Name="IDbContext.Volumes" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddComparison" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddDirectoryRelocateTask" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddFile" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddFileRelocateTask" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddFileSystem" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddHashCalculation" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddHostDevice" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddHostPlatform" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddRedundancy" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddSubDirectory" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddSymbolicName" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddUserGroup" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddUserProfile" Hidden="true" />
+      <Method Name="IRemoteDbContext.AddVolume" Hidden="true" />
+      <Property Name="IRemoteDbContext.Comparisons" Hidden="true" />
+      <Property Name="IRemoteDbContext.DirectoryRelocateTasks" Hidden="true" />
+      <Property Name="IRemoteDbContext.FileRelocateTasks" Hidden="true" />
+      <Property Name="IRemoteDbContext.Files" Hidden="true" />
+      <Property Name="IRemoteDbContext.FileSystems" Hidden="true" />
+      <Property Name="IRemoteDbContext.HashCalculations" Hidden="true" />
+      <Property Name="IRemoteDbContext.HostDevices" Hidden="true" />
+      <Property Name="IRemoteDbContext.HostPlatforms" Hidden="true" />
+      <Property Name="IRemoteDbContext.Redundancies" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveComparison" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveDirectoryRelocateTask" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveFile" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveFileRelocateTask" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveFileSystem" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveHashCalculation" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveHostDevice" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveHostPlatform" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveRedundancy" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveSubDirectory" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveSymbolicName" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveUserGroup" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveUserProfile" Hidden="true" />
+      <Method Name="IRemoteDbContext.RemoveVolume" Hidden="true" />
+      <Property Name="IRemoteDbContext.Subdirectories" Hidden="true" />
+      <Property Name="IRemoteDbContext.SymbolicNames" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateComparison" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateDirectoryRelocateTask" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateFile" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateFileRelocateTask" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateFileSystem" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateHashCalculation" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateHostDevice" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateHostPlatform" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateRedundancy" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateSubDirectory" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateSymbolicName" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateUserGroup" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateUserProfile" Hidden="true" />
+      <Method Name="IRemoteDbContext.UpdateVolume" Hidden="true" />
+      <Property Name="IRemoteDbContext.UserGroups" Hidden="true" />
+      <Property Name="IRemoteDbContext.UserProfiles" Hidden="true" />
+      <Property Name="IRemoteDbContext.Volumes" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>gYNYF0+XggHqMkZUJICIHyACOD5nCamEBoNNRlbAIOA=</HashCode>
       <FileName>RemoteDbContext.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.SymbolicName" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="3" Y="3.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.SymbolicName" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="7.5" Width="1.75" />
+    <Members>
+      <Property Name="IFsSymbolicName.DefaultFileSystems" Hidden="true" />
+      <Property Name="IFsSymbolicName.FileSystem" Hidden="true" />
+      <Property Name="IRemoteSymbolicName.DefaultFileSystems" Hidden="true" />
+      <Property Name="IRemoteSymbolicName.FileSystem" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>AAAyKCDAACiECAAAAAIQAAQCAEACAAAAAAAAAABIAAE=</HashCode>
       <FileName>SymbolicName.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.UserGroup" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="3.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.UserGroup" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="0.5" Width="3" />
+    <Members>
+      <Property Name="IUserGroup.DirectoryRelocationTasks" Hidden="true" />
+      <Property Name="IUserGroup.FileRelocationTasks" Hidden="true" />
+      <Property Name="IUserGroup.Members" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>AAAyKAFAACCACAAAAACAAAQCAsACAAAAAAAEAADIAAE=</HashCode>
       <FileName>UserGroup.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.UserProfile" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="3.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.UserProfile" BaseTypeListCollapsed="true">
+    <Position X="18.75" Y="6.5" Width="2.5" />
+    <Members>
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+      <Property Name="IsInactive" Hidden="true" />
+      <Property Name="IUserProfile.AssignmentGroups" Hidden="true" />
+      <Property Name="IUserProfile.CreatedComparisons" Hidden="true" />
+      <Property Name="IUserProfile.CreatedDirectories" Hidden="true" />
+      <Property Name="IUserProfile.CreatedDirectoryRelocateTasks" Hidden="true" />
+      <Property Name="IUserProfile.CreatedFileRelocateTasks" Hidden="true" />
+      <Property Name="IUserProfile.CreatedFiles" Hidden="true" />
+      <Property Name="IUserProfile.CreatedFileSystems" Hidden="true" />
+      <Property Name="IUserProfile.CreatedHashCalculations" Hidden="true" />
+      <Property Name="IUserProfile.CreatedHostDevices" Hidden="true" />
+      <Property Name="IUserProfile.CreatedHostPlatforms" Hidden="true" />
+      <Property Name="IUserProfile.CreatedRedundancies" Hidden="true" />
+      <Property Name="IUserProfile.CreatedSymbolicNames" Hidden="true" />
+      <Property Name="IUserProfile.CreatedUserGroups" Hidden="true" />
+      <Property Name="IUserProfile.CreatedUserProfiles" Hidden="true" />
+      <Property Name="IUserProfile.CreatedVolumes" Hidden="true" />
+      <Property Name="IUserProfile.DirectoryRelocationTasks" Hidden="true" />
+      <Property Name="IUserProfile.FileRelocationTasks" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedComparisons" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedDirectories" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedDirectoryRelocateTasks" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedFileRelocateTasks" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedFiles" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedFileSystems" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedHashCalculations" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedHostDevices" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedHostPlatforms" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedRedundancies" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedSymbolicNames" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedUserGroups" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedUserProfiles" Hidden="true" />
+      <Property Name="IUserProfile.ModifiedVolumes" Hidden="true" />
+      <Property Name="IUserProfile.SID" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>eFgyHFnqwCLgGGYAAEACWB4CEEBGQJQAAiBPPEB4Ah0=</HashCode>
       <FileName>UserProfile.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FsInfoCat.RemoteDb.Volume" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQyOADAACCACAAAAAAAgAYCAEACgAEAAAgIQBBIIAE=</HashCode>
-      <FileName>Volume.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="FsInfoCat.RemoteDb.RemoteDbService" Collapsed="true">
-    <Position X="8.25" Y="2.5" Width="1.5" />
+  <Class Name="FsInfoCat.RemoteDb.RemoteDbService">
+    <Position X="12.75" Y="9" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABgEAAEAAAAAAAAAoAAAAAAAAAAAAAAIAAAA=</HashCode>
       <FileName>RemoteDbService.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.Volume" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+      <Property Name="IRemoteVolume.FileSystem" Hidden="true" />
+      <Property Name="IRemoteVolume.HostDevice" Hidden="true" />
+      <Property Name="IRemoteVolume.RootDirectory" Hidden="true" />
+      <Property Name="IVolume.FileSystem" Hidden="true" />
+      <Property Name="IVolume.RootDirectory" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAQyOADACCCACAEAAAAAgAYCAEACgAMAAQgIQBBIIAE=</HashCode>
+      <FileName>Volume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HostDevice" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.RemoteDb.FileSystem" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="7.5" Width="2" />
+    <Members>
+      <Property Name="IFileSystem.DefaultSymbolicName" Hidden="true" />
+      <Property Name="IFileSystem.SymbolicNames" Hidden="true" />
+      <Property Name="IFileSystem.Volumes" Hidden="true" />
+      <Property Name="IRemoteFileSystem.DefaultSymbolicName" Hidden="true" />
+      <Property Name="IRemoteFileSystem.SymbolicNames" Hidden="true" />
+      <Property Name="IRemoteFileSystem.Volumes" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.CreatedBy" Hidden="true" />
+      <Property Name="IRemoteTimeStampedEntity.ModifiedBy" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAyGgBAACGRCARAAAAAAAQCQEACgAAAAAgIAEBKIAE=</HashCode>
+      <FileName>FileSystem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

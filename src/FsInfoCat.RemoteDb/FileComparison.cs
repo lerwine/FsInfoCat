@@ -28,27 +28,27 @@ namespace FsInfoCat.RemoteDb
             Validator.TryValidateProperty(File1, new ValidationContext(this, null, null) { MemberName = nameof(File1) }, results);
             Validator.TryValidateProperty(File2, new ValidationContext(this, null, null) { MemberName = nameof(File2) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
         #region Column Properties
 
-        [DisplayName(Constants.DISPLAY_NAME_ARE_EQUAL)]
+        [Display(Name = nameof(ModelResources.DisplayName_AreEqual), ResourceType = typeof(ModelResources))]
         public bool AreEqual { get; set; }
 
         public Guid FileId1 { get; set; }
 
         public Guid FileId2 { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         [Required]
         public DateTime CreatedOn { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedById { get; set; }
@@ -57,20 +57,20 @@ namespace FsInfoCat.RemoteDb
 
         #region Navigation Properties
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_1)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_1)]
+        [Display(Name = nameof(ModelResources.DisplayName_File1), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_File1Required), ErrorMessageResourceType = typeof(ModelResources))]
         public FsFile File1 { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_2)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_1)]
+        [Display(Name = nameof(ModelResources.DisplayName_File2), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_File2Required), ErrorMessageResourceType = typeof(ModelResources))]
         public FsFile File2 { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile CreatedBy { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ModifiedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile ModifiedBy { get; set; }
 
         #endregion

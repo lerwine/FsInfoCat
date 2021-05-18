@@ -1,3 +1,6 @@
+using System;
+using System.ComponentModel;
+
 namespace FsInfoCat
 {
     internal class ValueCoersion<T> : Coersion<T>

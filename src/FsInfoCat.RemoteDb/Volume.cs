@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace FsInfoCat.RemoteDb
 {
@@ -25,19 +26,19 @@ namespace FsInfoCat.RemoteDb
             Validator.TryValidateProperty(MaxNameLength, new ValidationContext(this, null, null) { MemberName = nameof(MaxNameLength) }, results);
             Validator.TryValidateProperty(FileSystem, new ValidationContext(this, null, null) { MemberName = nameof(FileSystem) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
-                results.Add(new ValidationResult(Constants.ERROR_MESSAGE_MODIFIED_ON, new string[] { nameof(ModifiedOn) }));
+                results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
         }
 
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(DisplayName)).HasMaxLength(Constants.MAX_LENGTH_DISPLAY_NAME).IsRequired();
-            builder.Property(nameof(VolumeName)).HasMaxLength(Constants.MAX_LENGTH_VOLUME_NAME).IsRequired();
-            builder.Property(nameof(Identifier)).HasMaxLength(Constants.MAX_LENGTH_IDENTIFIER).IsRequired();
+            builder.Property(nameof(DisplayName)).HasMaxLength(DBSettings.Default.DbColMaxLen_DisplayName).IsRequired();
+            builder.Property(nameof(VolumeName)).HasMaxLength(DBSettings.Default.DbColMaxLen_VolumeName).IsRequired();
+            builder.Property(nameof(Identifier)).HasMaxLength(DBSettings.Default.DbColMaxLen_VolumeIdentifier).IsRequired();
             builder.Property(nameof(CaseSensitiveSearch)).HasDefaultValue(false);
             builder.Property(nameof(ReadOnly)).HasDefaultValue(false);
-            builder.Property(nameof(MaxNameLength)).HasDefaultValue(Constants.DEFAULT_VALUE_MAX_NAME_LENGTH);
+            builder.Property(nameof(MaxNameLength)).HasDefaultValue(DBSettings.Default.DefaultValue_MaxFileSystemNameLength);
             builder.Property(nameof(Notes)).HasDefaultValue("");
             builder.HasOne(p => p.FileSystem).WithMany(d => d.Volumes).IsRequired();
             builder.HasOne(p => p.RootDirectory).WithOne(d => d.Volume);
@@ -50,46 +51,49 @@ namespace FsInfoCat.RemoteDb
 
         public Guid Id { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CASE_SENSITIVE_SEARCH)]
+        [Display(Name = nameof(ModelResources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(ModelResources))]
         public bool? CaseSensitiveSearch { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CASE_READ_ONLY)]
+        [Display(Name = nameof(ModelResources.DisplayName_ReadOnly), ResourceType = typeof(ModelResources))]
         public bool? ReadOnly { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_DISPLAY_NAME)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_DISPLAY_NAME, ErrorMessage = Constants.ERROR_MESSAGE_DISPAY_NAME_LENGTH)]
+        [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_IDENTIFIER, ErrorMessage = Constants.ERROR_MESSAGE_IDENTIFIER_LENGTH)]
-        public string Identifier { get => _identifier; set => _identifier = value ?? ""; }
-
-        [DisplayName(Constants.DISPLAY_NAME_IS_INACTIVE)]
+        [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MAX_NAME_LENGTH)]
-        [Range(0, int.MaxValue, ErrorMessage = Constants.ERROR_MESSAGE_MAXNAMELENGTH)]
-        [DefaultValue(Constants.DEFAULT_VALUE_MAX_NAME_LENGTH)]
-        public long? MaxNameLength { get; set; } = Constants.DEFAULT_VALUE_MAX_NAME_LENGTH;
+        [Display(Name = nameof(ModelResources.DisplayName_MaxNameLength), ResourceType = typeof(ModelResources))]
+        [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MaxNameLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
+        public long? MaxNameLength { get; set; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_DriveType), ResourceType = typeof(ModelResources))]
+        public DriveType Type { get; set; }
 
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        [DisplayName(Constants.DISPLAY_NAME_VOLUME_NAME)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_REQUIRED)]
-        [MaxLength(Constants.MAX_LENGTH_VOLUME_NAME, ErrorMessage = Constants.ERROR_MESSAGE_VOLUME_NAME_LENGTH)]
+        [Display(Name = nameof(ModelResources.DisplayName_VolumeName), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_VolumeNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_VolumeName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_VolumeIdentifier), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_VolumeIdentifierRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_VolumeIdentifier), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        public string Identifier { get => _identifier; set => _identifier = value ?? ""; }
 
         public Guid? HostDeviceId { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_ON)]
-        [Required]
+                [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
         public Guid ModifiedById { get; set; }
@@ -98,21 +102,21 @@ namespace FsInfoCat.RemoteDb
 
         #region Navigation Properties
 
-        [DisplayName(Constants.DISPLAY_NAME_ROOT_DIRECTORY)]
+        [Display(Name = nameof(ModelResources.DisplayName_RootDirectory), ResourceType = typeof(ModelResources))]
         public FsDirectory RootDirectory { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_FILE_SYSTEM)]
-        [Required(ErrorMessage = Constants.ERROR_MESSAGE_FILE_SYSTEM)]
+        [Display(Name = nameof(ModelResources.DisplayName_FileSystem), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileSystemRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public FileSystem FileSystem { get; set; }
 
         public HostDevice HostDevice { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_CREATED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile CreatedBy { get; set; }
 
-        [DisplayName(Constants.DISPLAY_NAME_MODIFIED_BY)]
-        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedBy), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ModifiedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile ModifiedBy { get; set; }
 
         #endregion
