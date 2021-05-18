@@ -6,6 +6,12 @@ namespace FsInfoCat.Model
 {
     public interface IFileSystem : ITimeStampedEntity, IValidatableObject
     {
+        /// <summary>
+        /// Gets the unique identifier.
+        /// </summary>
+        /// <value>
+        /// The unique identifier that is used as the prmary database key.
+        /// </value>
         Guid Id { get; }
         string DisplayName { get; }
         bool CaseSensitiveSearch { get; }

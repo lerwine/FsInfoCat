@@ -10,13 +10,16 @@ namespace FsInfoCat.UpstreamDb
 {
     public class FileComparison : IUpstreamFileComparison
     {
+        
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             builder.HasKey(nameof(FileId1), nameof(FileId2));
-            builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}1").HasOne(p => p.File1).WithMany(d => d.Comparisons1)
-                .HasForeignKey(f => f.FileId1).IsRequired();
-            builder.ToTable($"{nameof(FsFile)}{nameof(FileComparison)}2").HasOne(p => p.File2).WithMany(d => d.Comparisons2)
-                .HasForeignKey(f => f.FileId2).IsRequired();
+            //builder.ToTable($"{nameof(FileComparison)}{nameof(File1)}").HasOne(p => p.File1).WithMany(d => d.Comparisons1)
+            //    .HasForeignKey(f => f.FileId1).IsRequired();
+            //builder.ToTable($"{nameof(FileComparison)}{nameof(File1)}").HasOne(p => p.File2).WithMany(d => d.Comparisons2)
+            //    .HasForeignKey(f => f.FileId2).IsRequired();
+            builder.HasOne(p => p.File1).WithMany(d => d.Comparisons1).HasForeignKey(nameof(FileId1)).IsRequired();
+            builder.HasOne(p => p.File2).WithMany(d => d.Comparisons2).HasForeignKey(nameof(FileId2)).IsRequired();
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedComparisons).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedComparisons).IsRequired();
         }
@@ -33,30 +36,22 @@ namespace FsInfoCat.UpstreamDb
 
         #region Column Properties
 
-        // TODO: [AreEqual] bit  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_AreEqual), ResourceType = typeof(ModelResources))]
         public bool AreEqual { get; set; }
 
-        // TODO: [FileId1] uniqueidentifier  NOT NULL,
         public Guid FileId1 { get; set; }
-
-        // TODO: [FileId2] uniqueidentifier  NOT NULL,
         public Guid FileId2 { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion

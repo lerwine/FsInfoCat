@@ -38,57 +38,49 @@ namespace FsInfoCat.UpstreamDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [DisplayName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_DisplayName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        // [MachineIdentifer] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_MachineIdentifer), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MachineIdentiferRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_MachineIdentifer), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MachineIdentiferLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_MachineIdentifer, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MachineIdentiferLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string MachineIdentifer { get => _machineIdentifier; set => _machineIdentifier = value ?? ""; }
 
-        // [MachineName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_MachineName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MachineNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_MachineName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MachineNameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_MachineName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MachineNameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string MachineName { get => _machineName; set => _machineName = value ?? ""; }
 
-        // TODO: [PlatformId] uniqueidentifier  NOT NULL,
         public Guid PlatformId { get; set; }
 
-        // TODO: [Notes] nvarchar(max)  NOT NULL,
+        [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        // TODO: [IsInactive] bit  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion
 
         #region Navigation Properties
 
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_Platform), ErrorMessageResourceType = typeof(ModelResources))]
         public HostPlatform Platform { get; set; }
 
         public HashSet<Volume> Volumes { get; set; }

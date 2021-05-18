@@ -12,11 +12,6 @@ namespace FsInfoCat.LocalDb
     {
         private byte[] _data;
 
-        public ContentHash()
-        {
-            Files = new HashSet<FsFile>();
-        }
-
         internal static void BuildEntity(EntityTypeBuilder<ContentHash> builder)
         {
             builder.HasKey(nameof(Id));
@@ -33,32 +28,33 @@ namespace FsInfoCat.LocalDb
             return results;
         }
 
+        public ContentHash()
+        {
+            Files = new HashSet<FsFile>();
+        }
+
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [Length] bigint  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_FileLength), ResourceType = typeof(ModelResources))]
         [Required]
         [CustomValidation(typeof(Validators), nameof(Validators.IsValidFileLength), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
         public long Length { get; set; }
 
-        // [Data] binary(16)  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_MD5Hash), ResourceType = typeof(ModelResources))]
         [CustomValidation(typeof(Validators), nameof(Validators.IsValidMD5Hash), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MD5HashLength), ErrorMessageResourceType = typeof(ModelResources))]
         public byte[] Data { get => _data; set => _data = (value is null || value.Length == 0) ? null : value; }
 
         public Guid? UpstreamId { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_LastSynchronized), ResourceType = typeof(ModelResources))]
         public DateTime? LastSynchronized { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }

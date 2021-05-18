@@ -15,13 +15,13 @@ namespace FsInfoCat.LocalDb
 
         public SymbolicName()
         {
-            DefaultFileSystems = new HashSet<FileSystem>();
+            FileSystemDefaults = new HashSet<FileSystem>();
         }
 
         internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_SimpleName).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DbConstants.DbColMaxLen_SimpleName).IsRequired();
             builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
         }
@@ -38,34 +38,30 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [Name] nvarchar(128)  NOT NULL,
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_SimpleName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
-        // TODO: [FileSystemId] uniqueidentifier  NOT NULL,
         public Guid FileSystemId { get; set; }
 
-        // TODO: [Notes] nvarchar(max)  NOT NULL,
+        [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        // TODO: [IsInactive] bit  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
         public Guid? UpstreamId { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_LastSynchronized), ResourceType = typeof(ModelResources))]
         public DateTime? LastSynchronized { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
@@ -78,7 +74,8 @@ namespace FsInfoCat.LocalDb
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileSystemRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public virtual FileSystem FileSystem { get; set; }
 
-        public virtual HashSet<FileSystem> DefaultFileSystems { get; set; }
+        [Display(Name = nameof(ModelResources.DisplayName_FileSystemDefaults), ResourceType = typeof(ModelResources))]
+        public virtual HashSet<FileSystem> FileSystemDefaults { get; set; }
 
         #endregion
 
@@ -86,11 +83,11 @@ namespace FsInfoCat.LocalDb
 
         ILocalFileSystem ILocalSymbolicName.FileSystem => FileSystem;
 
-        IReadOnlyCollection<ILocalFileSystem> ILocalSymbolicName.DefaultFileSystems => DefaultFileSystems;
+        IReadOnlyCollection<ILocalFileSystem> ILocalSymbolicName.FileSystemDefaults => FileSystemDefaults;
 
         IFileSystem IFsSymbolicName.FileSystem => FileSystem;
 
-        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => DefaultFileSystems;
+        IReadOnlyCollection<IFileSystem> IFsSymbolicName.FileSystemDefaults => FileSystemDefaults;
 
         #endregion
     }

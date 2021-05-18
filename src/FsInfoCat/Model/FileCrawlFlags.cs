@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat.Model
 {
     [Flags]
-    public enum FileStatus
+    public enum FileCrawlFlags
     {
-        Normal = 0b0000_0000,
+        None = 0b0000_0000,
         DoNotCompare = 0b0000_0001,
         DoNotShow = 0b0000_0010,
         FlaggedForDeletion = 0b0000_0100,

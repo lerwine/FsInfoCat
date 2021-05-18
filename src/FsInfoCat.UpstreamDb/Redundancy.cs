@@ -1,5 +1,6 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Upstream;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,7 @@ namespace FsInfoCat.UpstreamDb
 {
     public class Redundancy : IUpstreamRedundancy
     {
-        public Redundancy()
-        {
-            Files = new HashSet<FsFile>();
-        }
+        private string _notes = "";
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -25,38 +23,50 @@ namespace FsInfoCat.UpstreamDb
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(Id));
+            builder.HasOne(d => d.TargetFile).WithOne(f => f.Redundancy).HasForeignKey(nameof(FileId)).IsRequired();
+            builder.HasOne(d => d.RedundantSet).WithMany(r => r.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired();
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedRedundancies).HasForeignKey(nameof(CreatedById)).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedRedundancies).HasForeignKey(nameof(ModifiedById)).IsRequired();
-            //builder.ToTable($"{nameof(Redundancy)}{nameof(FsFile)}").OwnsMany(p => p.Files).HasForeignKey(k => k.Id)
-            //    .OwnsMany(d => d.Redundancies).HasForeignKey(d => d.Id);
         }
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
+        public Guid RedundantSetId { get; set; }
+
+        public Guid FileId { get; set; }
+
+        [Required]
+        public FileRedundancyStatus Status { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion
 
         #region Navigation Properties
 
-        public HashSet<FsFile> Files { get; set; }
+        [Display(Name = nameof(ModelResources.DisplayName_TargetFile), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        public FsFile TargetFile { get; set; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_RedundancySet), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_RedundancySetRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        public RedundantSet RedundantSet => throw new NotImplementedException();
 
         [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
@@ -74,9 +84,13 @@ namespace FsInfoCat.UpstreamDb
 
         IUserProfile IUpstreamTimeStampedEntity.ModifiedBy => ModifiedBy;
 
-        IReadOnlyCollection<IUpstreamFile> IUpstreamRedundancy.Files => Files;
+        IUpstreamFile IUpstreamRedundancy.TargetFile => TargetFile;
 
-        IReadOnlyCollection<IFile> IRedundancy.Files => Files;
+        IFile IRedundancy.TargetFile => TargetFile;
+
+        IUpstreamRedundantSet IUpstreamRedundancy.RedundantSet => RedundantSet;
+
+        IRedundantSet IRedundancy.RedundantSet => RedundantSet;
 
         #endregion
     }

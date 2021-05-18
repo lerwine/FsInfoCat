@@ -1,15 +1,21 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Upstream;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.UpstreamDb
 {
+    [Table(TABLE_NAME)]
     public class FsFile : IUpstreamFile
     {
+        public const string TABLE_NAME = "Files";
+
         private string _name = "";
+        private string _notes = "";
 
         public FsFile()
         {
@@ -22,7 +28,7 @@ namespace FsInfoCat.UpstreamDb
             var results = new List<ValidationResult>();
             Validator.TryValidateProperty(Name, new ValidationContext(this, null, null) { MemberName = nameof(Name) }, results);
             Validator.TryValidateProperty(Parent, new ValidationContext(this, null, null) { MemberName = nameof(Parent) }, results);
-            Validator.TryValidateProperty(HashCalculation, new ValidationContext(this, null, null) { MemberName = nameof(HashCalculation) }, results);
+            Validator.TryValidateProperty(HashInfo, new ValidationContext(this, null, null) { MemberName = nameof(HashInfo) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
                 results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
@@ -31,10 +37,11 @@ namespace FsInfoCat.UpstreamDb
         internal static void BuildEntity(EntityTypeBuilder<FsFile> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_FileSystemName).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DbConstants.DbColMaxLen_FileSystemName).IsRequired();
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
-            builder.HasOne(p => p.HashCalculation).WithMany(d => d.Files).HasForeignKey(nameof(HashCalculationId)).IsRequired();
-            builder.HasOne(d => d.Redundancy).WithMany(r => r.Files);
+            builder.HasOne(p => p.HashInfo).WithMany(d => d.Files).HasForeignKey(nameof(ContentInfoId)).IsRequired();
+            builder.HasOne(d => d.Redundancy).WithOne(r => r.TargetFile).HasForeignKey(nameof(RedundancyId));
             builder.HasOne(p => p.FileRelocateTask).WithMany(d => d.Files).HasForeignKey(nameof(FileRelocateTaskId));
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFiles).HasForeignKey(nameof(CreatedById)).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFiles).HasForeignKey(nameof(ModifiedById)).IsRequired();
@@ -42,42 +49,48 @@ namespace FsInfoCat.UpstreamDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [ParentId] uniqueidentifier  NOT NULL,
         public Guid ParentId { get; set; }
 
-        // [HashCalculationId] uniqueidentifier  NOT NULL,
-        public Guid HashCalculationId { get; set; }
+        public Guid ContentInfoId { get; set; }
 
-        // [FileRelocateTaskId] uniqueidentifier  NULL
         public Guid? FileRelocateTaskId { get; set; }
 
-        // [Name] nvarchar(128)  NOT NULL,
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_FileSystemName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_FileSystemName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
-        // TODO: [Status] tinyint  NOT NULL,
-        public FileStatus Status { get; set; }
+        [Required]
+        public FileCrawlFlags Options { get; set; }
 
         public Guid? RedundancyId { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_LastAccessed), ResourceType = typeof(ModelResources))]
+        public DateTime LastAccessed { get; set; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_LastHashCalculation), ResourceType = typeof(ModelResources))]
+        public DateTime? LastHashCalculation { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
+        [Required]
+        public bool Deleted { get; set; }
+
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
+        [Required]
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
+        [Required]
         public Guid ModifiedById { get; set; }
 
         #endregion
@@ -86,7 +99,7 @@ namespace FsInfoCat.UpstreamDb
 
         [Display(Name = nameof(ModelResources.DisplayName_HashCalculation), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_HashCalculationRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        public ContentHash HashCalculation { get; set; }
+        public ContentHash HashInfo { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ParentDirectoryRequired), ErrorMessageResourceType = typeof(ModelResources))]
@@ -119,7 +132,7 @@ namespace FsInfoCat.UpstreamDb
 
         IUpstreamSubDirectory IUpstreamFile.Parent => Parent;
 
-        IContentHash IFile.HashCalculation => HashCalculation;
+        IContentHash IFile.HashInfo => HashInfo;
 
         IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
 
@@ -131,7 +144,7 @@ namespace FsInfoCat.UpstreamDb
 
         IUserProfile IUpstreamTimeStampedEntity.ModifiedBy => ModifiedBy;
 
-        IUpstreamContentHash IUpstreamFile.HashCalculation => HashCalculation;
+        IUpstreamContentHash IUpstreamFile.HashInfo => HashInfo;
 
         IUpstreamRedundancy IUpstreamFile.Redundancy => Redundancy;
 

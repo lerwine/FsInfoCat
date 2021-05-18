@@ -120,6 +120,12 @@
   <data name="DisplayName_AreEqual" xml:space="preserve">
     <value>Are Equal</value>
   </data>
+  <data name="DisplayName_AssignedTo" xml:space="preserve">
+    <value>Assigned To</value>
+  </data>
+  <data name="DisplayName_AssignmentGroup" xml:space="preserve">
+    <value>Assignment Group</value>
+  </data>
   <data name="DisplayName_CaseSensitiveSearch" xml:space="preserve">
     <value>Case-Sensitive Search</value>
   </data>
@@ -129,8 +135,14 @@
   <data name="DisplayName_CreatedOn" xml:space="preserve">
     <value>Created On</value>
   </data>
+  <data name="DisplayName_DbPrincipalId" xml:space="preserve">
+    <value>DB Principal ID</value>
+  </data>
   <data name="DisplayName_DefaultDriveType" xml:space="preserve">
     <value>Default Drive Type</value>
+  </data>
+  <data name="DisplayName_DefaultFSType" xml:space="preserve">
+    <value>Default File Sytem Type</value>
   </data>
   <data name="DisplayName_DefaultSymbolicName" xml:space="preserve">
     <value>Default Symbolic Name</value>
@@ -162,11 +174,41 @@
   <data name="DisplayName_FileSystem" xml:space="preserve">
     <value>File System</value>
   </data>
+  <data name="DisplayName_FileSystemDefaults" xml:space="preserve">
+    <value>File System Default References</value>
+  </data>
+  <data name="DisplayName_FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
   <data name="DisplayName_HashCalculation" xml:space="preserve">
     <value>MD5 Hash</value>
   </data>
+  <data name="DisplayName_HostDevice" xml:space="preserve">
+    <value>Host Device</value>
+  </data>
+  <data name="DisplayName_HostDevices" xml:space="preserve">
+    <value>Host Devices</value>
+  </data>
+  <data name="DisplayName_HostPlatformDefaults" xml:space="preserve">
+    <value>Host Platform Default References</value>
+  </data>
   <data name="DisplayName_IsInactive" xml:space="preserve">
     <value>Is Inactive</value>
+  </data>
+  <data name="DisplayName_LastAccessed" xml:space="preserve">
+    <value>Last Accessed</value>
+  </data>
+  <data name="DisplayName_LastHashCalculation" xml:space="preserve">
+    <value>Last Hash Calculation</value>
+  </data>
+  <data name="DisplayName_LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="DisplayName_LastSynchronized" xml:space="preserve">
+    <value>Last Synchronized with Remote DB</value>
+  </data>
+  <data name="DisplayName_LoginName" xml:space="preserve">
+    <value>Login Name</value>
   </data>
   <data name="DisplayName_MachineIdentifer" xml:space="preserve">
     <value>Machine Identifier</value>
@@ -192,14 +234,26 @@
   <data name="DisplayName_ReadOnly" xml:space="preserve">
     <value>Read-Only</value>
   </data>
+  <data name="DisplayName_RedundancySet" xml:space="preserve">
+    <value>Redundancy Set</value>
+  </data>
   <data name="DisplayName_RootDirectory" xml:space="preserve">
     <value>Root Directory</value>
   </data>
   <data name="DisplayName_ShortDescription" xml:space="preserve">
     <value>Short Description</value>
   </data>
+  <data name="DisplayName_SID" xml:space="preserve">
+    <value>Security Identifier</value>
+  </data>
   <data name="DisplayName_SourceDirectories" xml:space="preserve">
     <value>Source Directories</value>
+  </data>
+  <data name="DisplayName_SourceFiles" xml:space="preserve">
+    <value>Source Files</value>
+  </data>
+  <data name="DisplayName_SubDirectories" xml:space="preserve">
+    <value>Sub-directories</value>
   </data>
   <data name="DisplayName_SymbolicName" xml:space="preserve">
     <value>Symbolic Name</value>
@@ -209,6 +263,12 @@
   </data>
   <data name="DisplayName_TargetDirectoryRelocationTasks" xml:space="preserve">
     <value>Target Directory Relocation Tasks</value>
+  </data>
+  <data name="DisplayName_TargetFile" xml:space="preserve">
+    <value>Target File</value>
+  </data>
+  <data name="DisplayName_Title" xml:space="preserve">
+    <value>Title/Rank</value>
   </data>
   <data name="DisplayName_VolumeIdentifier" xml:space="preserve">
     <value>Volume Identifer</value>
@@ -237,11 +297,32 @@
   <data name="ErrorMessage_FileLengthNegative" xml:space="preserve">
     <value>File Length cannot be negative.</value>
   </data>
+  <data name="ErrorMessage_FileRequired" xml:space="preserve">
+    <value>Target File must be selected.</value>
+  </data>
   <data name="ErrorMessage_FileSystemRequired" xml:space="preserve">
     <value>File System must be selected.</value>
   </data>
+  <data name="ErrorMessage_FirstNameLength" xml:space="preserve">
+    <value>First Name too long.</value>
+  </data>
   <data name="ErrorMessage_HashCalculationRequired" xml:space="preserve">
     <value>MD5 Hash must be selected</value>
+  </data>
+  <data name="ErrorMessage_HostDeviceRequired" xml:space="preserve">
+    <value>Host Device is required.</value>
+  </data>
+  <data name="ErrorMessage_LastNameLength" xml:space="preserve">
+    <value>Last Name too long.</value>
+  </data>
+  <data name="ErrorMessage_LastNameRequired" xml:space="preserve">
+    <value>Last Name is required.</value>
+  </data>
+  <data name="ErrorMessage_LoginName" xml:space="preserve">
+    <value>Login Name is required.</value>
+  </data>
+  <data name="ErrorMessage_LoginNameLength" xml:space="preserve">
+    <value>Login Name too long.</value>
   </data>
   <data name="ErrorMessage_MachineIdentiferLength" xml:space="preserve">
     <value>Machine Identifier is too long.</value>
@@ -261,6 +342,9 @@
   <data name="ErrorMessage_MD5HashLength" xml:space="preserve">
     <value>Invalid hash length</value>
   </data>
+  <data name="ErrorMessage_MILength" xml:space="preserve">
+    <value>Middle Initial too long.</value>
+  </data>
   <data name="ErrorMessage_ModifiedBy" xml:space="preserve">
     <value>"Modified By" is not defined.</value>
   </data>
@@ -279,14 +363,32 @@
   <data name="ErrorMessage_ParentDirectoryRequired" xml:space="preserve">
     <value>Parent Directory must be selected.</value>
   </data>
+  <data name="ErrorMessage_Platform" xml:space="preserve">
+    <value>Platform must be selected.</value>
+  </data>
+  <data name="ErrorMessage_RedundancySetRequired" xml:space="preserve">
+    <value>Redundancy Set must be selected.</value>
+  </data>
   <data name="ErrorMessage_ShortDescriptionLength" xml:space="preserve">
     <value>Short Description is too long.</value>
   </data>
   <data name="ErrorMessage_ShortDescriptionRequired" xml:space="preserve">
     <value>Short Description is required.</value>
   </data>
+  <data name="ErrorMessage_SID" xml:space="preserve">
+    <value>Security Identifier required.</value>
+  </data>
+  <data name="ErrorMessage_SIDLength" xml:space="preserve">
+    <value>Security Identifier too long.</value>
+  </data>
+  <data name="ErrorMessage_SuffixLength" xml:space="preserve">
+    <value>Suffix too long.</value>
+  </data>
   <data name="ErrorMessage_TargetDirectory" xml:space="preserve">
     <value>Target directory must be selected.</value>
+  </data>
+  <data name="ErrorMessage_TitleLength" xml:space="preserve">
+    <value>Title/Rank too long</value>
   </data>
   <data name="ErrorMessage_VolumeIdentiferLength" xml:space="preserve">
     <value>Volume Identifer is too long.</value>

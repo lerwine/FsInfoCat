@@ -197,6 +197,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RedundantSet.cs" />
     <Compile Include="SymbolicName.cs" />
     <Compile Include="ContentHash.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

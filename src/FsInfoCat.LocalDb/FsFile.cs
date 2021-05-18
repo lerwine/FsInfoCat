@@ -1,15 +1,21 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Local;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.LocalDb
 {
+    [Table(TABLE_NAME)]
     public class FsFile : ILocalFile, IValidatableObject
     {
+        public const string TABLE_NAME = "Files";
+
         private string _name = "";
+        private string _notes = "";
 
         public FsFile()
         {
@@ -20,10 +26,11 @@ namespace FsInfoCat.LocalDb
         internal static void BuildEntity(EntityTypeBuilder<FsFile> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_FileSystemName).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DbConstants.DbColMaxLen_FileSystemName).IsRequired();
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
-            builder.HasOne(p => p.HashCalculation).WithMany(d => d.Files).HasForeignKey(nameof(HashCalculationId)).IsRequired();
-            builder.HasOne(d => d.Redundancy).WithMany(r => r.Files);
+            builder.HasOne(p => p.HashInfo).WithMany(d => d.Files).HasForeignKey(nameof(ContentInfoId)).IsRequired();
+            builder.HasOne(d => d.Redundancy).WithOne(r => r.TargetFile).HasForeignKey(nameof(RedundancyId));
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -31,7 +38,7 @@ namespace FsInfoCat.LocalDb
             var results = new List<ValidationResult>();
             Validator.TryValidateProperty(Name, new ValidationContext(this, null, null) { MemberName = nameof(Name) }, results);
             Validator.TryValidateProperty(Parent, new ValidationContext(this, null, null) { MemberName = nameof(Parent) }, results);
-            Validator.TryValidateProperty(HashCalculation, new ValidationContext(this, null, null) { MemberName = nameof(HashCalculation) }, results);
+            Validator.TryValidateProperty(HashInfo, new ValidationContext(this, null, null) { MemberName = nameof(HashInfo) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
                 results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
@@ -39,35 +46,43 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [Name] nvarchar(128)  NOT NULL,
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_FileSystemName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_FileSystemName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
-        // TODO: [Status] tinyint  NOT NULL,
-        public FileStatus Status { get; set; }
+        [Required]
+        public FileCrawlFlags Options { get; set; }
 
-        // [ParentId] uniqueidentifier  NOT NULL,
         public Guid ParentId { get; set; }
 
-        // [HashCalculationId] uniqueidentifier  NOT NULL,
-        public Guid HashCalculationId { get; set; }
+        public Guid ContentInfoId { get; set; }
 
         public Guid? RedundancyId { get; set; }
 
         public Guid? UpstreamId { get; set; }
-
+        
+        [Display(Name = nameof(ModelResources.DisplayName_LastSynchronized), ResourceType = typeof(ModelResources))]
         public DateTime? LastSynchronized { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
+        [Required]
+        [Display(Name = nameof(ModelResources.DisplayName_LastAccessed), ResourceType = typeof(ModelResources))]
+        public DateTime LastAccessed { get; set; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_LastHashCalculation), ResourceType = typeof(ModelResources))]
+        public DateTime? LastHashCalculation { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
+        [Required]
+        public bool Deleted { get; set; }
+
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
@@ -80,7 +95,7 @@ namespace FsInfoCat.LocalDb
 
         [Display(Name = nameof(ModelResources.DisplayName_HashCalculation), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_HashCalculationRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        public virtual ContentHash HashCalculation { get; set; }
+        public virtual ContentHash HashInfo { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ParentDirectoryRequired), ErrorMessageResourceType = typeof(ModelResources))]
@@ -94,7 +109,7 @@ namespace FsInfoCat.LocalDb
 
         #region Explicit Members
 
-        IContentHash IFile.HashCalculation => HashCalculation;
+        IContentHash IFile.HashInfo => HashInfo;
 
         ISubDirectory IFile.Parent => Parent;
 

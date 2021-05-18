@@ -36,18 +36,16 @@ namespace FsInfoCat.UpstreamDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [Name] nvarchar(128)  NOT NULL,
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_SimpleName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
-        // TODO: [Roles] tinyint  NOT NULL,
+        [Required]
         public UserRole Roles { get; set; }
 
-        // TODO: [Notes] nvarchar(max)  NOT NULL,
+        [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
         // TODO: [IsInactive] bit  NOT NULL,

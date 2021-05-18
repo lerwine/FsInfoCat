@@ -14,12 +14,6 @@ namespace FsInfoCat.UpstreamDb
         private string _displayName = "";
         private string _notes = "";
 
-        public FileSystem()
-        {
-            Volumes = new HashSet<Volume>();
-            SymbolicNames = new HashSet<SymbolicName>();
-        }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
@@ -34,67 +28,65 @@ namespace FsInfoCat.UpstreamDb
         internal static void BuildEntity(EntityTypeBuilder<FileSystem> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(DisplayName)).HasMaxLength(DBSettings.Default.DbColMaxLen_DisplayName).IsRequired();
+            builder.Property(nameof(DisplayName)).HasMaxLength(DbConstants.DbColMaxLen_DisplayName).IsRequired();
             builder.Property(nameof(DefaultDriveType)).HasDefaultValue(DriveType.Unknown);
             builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
-            builder.HasOne(fs => fs.DefaultSymbolicName).WithMany(d => d.DefaultFileSystems).HasForeignKey(nameof(DefaultSymbolicNameId)).IsRequired();
+            builder.HasOne(fs => fs.DefaultSymbolicName).WithMany(d => d.FileSystemDefaults).HasForeignKey(nameof(DefaultSymbolicNameId)).IsRequired();
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFileSystems).HasForeignKey(nameof(CreatedById)).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFileSystems).HasForeignKey(nameof(ModifiedById)).IsRequired();
         }
 
+        public FileSystem()
+        {
+            Volumes = new HashSet<Volume>();
+            SymbolicNames = new HashSet<SymbolicName>();
+        }
+
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [DisplayName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_DisplayName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        // TODO: [CaseSensitiveSearch] bit  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(ModelResources))]
         public bool CaseSensitiveSearch { get; set; }
 
-        // TODO: [ReadOnly] bit  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ReadOnly), ResourceType = typeof(ModelResources))]
         public bool ReadOnly { get; set; }
 
-        // TODO: [MaxNameLength] bigint  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_MaxNameLength), ResourceType = typeof(ModelResources))]
         [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MaxNameLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
         [DefaultValueDbSettings(nameof(DBSettings.DefaultValue_MaxFileSystemNameLength))]
-        public long MaxNameLength { get; set; } = DBSettings.Default.DefaultValue_MaxFileSystemNameLength;
+        public long MaxNameLength { get; set; } = DbConstants.DefaultValue_MaxFileSystemNameLength;
 
-        // [DefaultDriveType] tinyint  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DefaultDriveType), ResourceType = typeof(ModelResources))]
         public DriveType? DefaultDriveType { get; set; }
 
-        // TODO: [Notes] nvarchar(max)  NOT NULL,
+        [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        // TODO: [IsInactive] bit  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
-        // TODO: [DefaultSymbolicNameId] uniqueidentifier  NOT NULL
         public Guid DefaultSymbolicNameId { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion
@@ -109,6 +101,9 @@ namespace FsInfoCat.UpstreamDb
 
         [Display(Name = nameof(ModelResources.DisplayName_SymbolicName), ResourceType = typeof(ModelResources))]
         public HashSet<SymbolicName> SymbolicNames { get; set; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_HostPlatformDefaults), ResourceType = typeof(ModelResources))]
+        public HashSet<HostPlatform> HostPlatformDefaults { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]

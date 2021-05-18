@@ -1,5 +1,6 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Local;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,14 @@ namespace FsInfoCat.LocalDb
 {
     public class Redundancy : ILocalRedundancy
     {
-        public Redundancy()
-        {
-            Files = new HashSet<FsFile>();
-        }
+        private string _notes = "";
 
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(Id));
-            //builder.ToTable($"{nameof(Redundancy)}{nameof(FsFile)}").OwnsMany(p => p.Files).HasForeignKey(k => k.Id)
-            //    .OwnsMany(d => d.Redundancies).HasForeignKey(d => d.Id);
+            builder.HasOne(d => d.TargetFile).WithOne(f => f.Redundancy).HasForeignKey(nameof(FileId)).IsRequired();
+            builder.HasOne(d => d.RedundantSet).WithMany(r => r.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired();
+            builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -31,19 +30,27 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
+
+        public Guid RedundantSetId { get; set; }
+
+        public Guid FileId { get; set; }
+
+        [Required]
+        public FileRedundancyStatus Status { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
 
         public Guid? UpstreamId { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_LastSynchronized), ResourceType = typeof(ModelResources))]
         public DateTime? LastSynchronized { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
@@ -52,15 +59,25 @@ namespace FsInfoCat.LocalDb
 
         #region Navigation Properties
 
-        public virtual HashSet<FsFile> Files { get; set; }
+        [Display(Name = nameof(ModelResources.DisplayName_TargetFile), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        public FsFile TargetFile { get; set; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_RedundancySet), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_RedundancySetRequired), ErrorMessageResourceType = typeof(ModelResources))]
+        public RedundantSet RedundantSet { get; set; }
 
         #endregion
 
         #region Explicit Members
 
-        IReadOnlyCollection<IFile> IRedundancy.Files => Files;
+        ILocalFile ILocalRedundancy.TargetFile => TargetFile;
 
-        IReadOnlyCollection<ILocalFile> ILocalRedundancy.Files => Files;
+        IFile IRedundancy.TargetFile => TargetFile;
+
+        ILocalRedundantSet ILocalRedundancy.RedundantSet => RedundantSet;
+
+        IRedundantSet IRedundancy.RedundantSet => RedundantSet;
 
         #endregion
     }

@@ -70,6 +70,24 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assigned To.
+        /// </summary>
+        public static string DisplayName_AssignedTo {
+            get {
+                return ResourceManager.GetString("DisplayName_AssignedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assignment Group.
+        /// </summary>
+        public static string DisplayName_AssignmentGroup {
+            get {
+                return ResourceManager.GetString("DisplayName_AssignmentGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case-Sensitive Search.
         /// </summary>
         public static string DisplayName_CaseSensitiveSearch {
@@ -97,11 +115,29 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DB Principal ID.
+        /// </summary>
+        public static string DisplayName_DbPrincipalId {
+            get {
+                return ResourceManager.GetString("DisplayName_DbPrincipalId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Drive Type.
         /// </summary>
         public static string DisplayName_DefaultDriveType {
             get {
                 return ResourceManager.GetString("DisplayName_DefaultDriveType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default File Sytem Type.
+        /// </summary>
+        public static string DisplayName_DefaultFSType {
+            get {
+                return ResourceManager.GetString("DisplayName_DefaultFSType", resourceCulture);
             }
         }
         
@@ -196,6 +232,24 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File System Default References.
+        /// </summary>
+        public static string DisplayName_FileSystemDefaults {
+            get {
+                return ResourceManager.GetString("DisplayName_FileSystemDefaults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First Name.
+        /// </summary>
+        public static string DisplayName_FirstName {
+            get {
+                return ResourceManager.GetString("DisplayName_FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MD5 Hash.
         /// </summary>
         public static string DisplayName_HashCalculation {
@@ -205,11 +259,83 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Host Device.
+        /// </summary>
+        public static string DisplayName_HostDevice {
+            get {
+                return ResourceManager.GetString("DisplayName_HostDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host Devices.
+        /// </summary>
+        public static string DisplayName_HostDevices {
+            get {
+                return ResourceManager.GetString("DisplayName_HostDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host Platform Default References.
+        /// </summary>
+        public static string DisplayName_HostPlatformDefaults {
+            get {
+                return ResourceManager.GetString("DisplayName_HostPlatformDefaults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Is Inactive.
         /// </summary>
         public static string DisplayName_IsInactive {
             get {
                 return ResourceManager.GetString("DisplayName_IsInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Accessed.
+        /// </summary>
+        public static string DisplayName_LastAccessed {
+            get {
+                return ResourceManager.GetString("DisplayName_LastAccessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Hash Calculation.
+        /// </summary>
+        public static string DisplayName_LastHashCalculation {
+            get {
+                return ResourceManager.GetString("DisplayName_LastHashCalculation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Name.
+        /// </summary>
+        public static string DisplayName_LastName {
+            get {
+                return ResourceManager.GetString("DisplayName_LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Synchronized with Remote DB.
+        /// </summary>
+        public static string DisplayName_LastSynchronized {
+            get {
+                return ResourceManager.GetString("DisplayName_LastSynchronized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login Name.
+        /// </summary>
+        public static string DisplayName_LoginName {
+            get {
+                return ResourceManager.GetString("DisplayName_LoginName", resourceCulture);
             }
         }
         
@@ -286,6 +412,15 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Redundancy Set.
+        /// </summary>
+        public static string DisplayName_RedundancySet {
+            get {
+                return ResourceManager.GetString("DisplayName_RedundancySet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Root Directory.
         /// </summary>
         public static string DisplayName_RootDirectory {
@@ -304,11 +439,38 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Security Identifier.
+        /// </summary>
+        public static string DisplayName_SID {
+            get {
+                return ResourceManager.GetString("DisplayName_SID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Source Directories.
         /// </summary>
         public static string DisplayName_SourceDirectories {
             get {
                 return ResourceManager.GetString("DisplayName_SourceDirectories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Files.
+        /// </summary>
+        public static string DisplayName_SourceFiles {
+            get {
+                return ResourceManager.GetString("DisplayName_SourceFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sub-directories.
+        /// </summary>
+        public static string DisplayName_SubDirectories {
+            get {
+                return ResourceManager.GetString("DisplayName_SubDirectories", resourceCulture);
             }
         }
         
@@ -336,6 +498,24 @@ namespace FsInfoCat.Model {
         public static string DisplayName_TargetDirectoryRelocationTasks {
             get {
                 return ResourceManager.GetString("DisplayName_TargetDirectoryRelocationTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target File.
+        /// </summary>
+        public static string DisplayName_TargetFile {
+            get {
+                return ResourceManager.GetString("DisplayName_TargetFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title/Rank.
+        /// </summary>
+        public static string DisplayName_Title {
+            get {
+                return ResourceManager.GetString("DisplayName_Title", resourceCulture);
             }
         }
         
@@ -421,6 +601,15 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Target File must be selected..
+        /// </summary>
+        public static string ErrorMessage_FileRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FileRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File System must be selected..
         /// </summary>
         public static string ErrorMessage_FileSystemRequired {
@@ -430,11 +619,65 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to First Name too long..
+        /// </summary>
+        public static string ErrorMessage_FirstNameLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FirstNameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MD5 Hash must be selected.
         /// </summary>
         public static string ErrorMessage_HashCalculationRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_HashCalculationRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host Device is required..
+        /// </summary>
+        public static string ErrorMessage_HostDeviceRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_HostDeviceRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Name too long..
+        /// </summary>
+        public static string ErrorMessage_LastNameLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LastNameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Name is required..
+        /// </summary>
+        public static string ErrorMessage_LastNameRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LastNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login Name is required..
+        /// </summary>
+        public static string ErrorMessage_LoginName {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LoginName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login Name too long..
+        /// </summary>
+        public static string ErrorMessage_LoginNameLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LoginNameLength", resourceCulture);
             }
         }
         
@@ -493,6 +736,15 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Middle Initial too long..
+        /// </summary>
+        public static string ErrorMessage_MILength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_MILength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;Modified By&quot; is not defined..
         /// </summary>
         public static string ErrorMessage_ModifiedBy {
@@ -547,6 +799,24 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Platform must be selected..
+        /// </summary>
+        public static string ErrorMessage_Platform {
+            get {
+                return ResourceManager.GetString("ErrorMessage_Platform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redundancy Set must be selected..
+        /// </summary>
+        public static string ErrorMessage_RedundancySetRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_RedundancySetRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Short Description is too long..
         /// </summary>
         public static string ErrorMessage_ShortDescriptionLength {
@@ -565,11 +835,47 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Security Identifier required..
+        /// </summary>
+        public static string ErrorMessage_SID {
+            get {
+                return ResourceManager.GetString("ErrorMessage_SID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security Identifier too long..
+        /// </summary>
+        public static string ErrorMessage_SIDLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_SIDLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suffix too long..
+        /// </summary>
+        public static string ErrorMessage_SuffixLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_SuffixLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target directory must be selected..
         /// </summary>
         public static string ErrorMessage_TargetDirectory {
             get {
                 return ResourceManager.GetString("ErrorMessage_TargetDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title/Rank too long.
+        /// </summary>
+        public static string ErrorMessage_TitleLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_TitleLength", resourceCulture);
             }
         }
         

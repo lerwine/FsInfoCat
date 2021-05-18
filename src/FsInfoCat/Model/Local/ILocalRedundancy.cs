@@ -5,6 +5,8 @@ namespace FsInfoCat.Model.Local
 {
     public interface ILocalRedundancy : IRedundancy, ILocalModel
     {
-        new IReadOnlyCollection<ILocalFile> Files { get; }
+        new ILocalFile TargetFile { get; }
+
+        new ILocalRedundantSet RedundantSet { get; }
     }
 }

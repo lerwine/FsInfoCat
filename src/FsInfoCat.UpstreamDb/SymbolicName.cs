@@ -26,7 +26,7 @@ namespace FsInfoCat.UpstreamDb
         internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_SimpleName).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DbConstants.DbColMaxLen_SimpleName).IsRequired();
             builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedSymbolicNames).HasForeignKey(nameof(CreatedById)).IsRequired();
@@ -35,43 +35,36 @@ namespace FsInfoCat.UpstreamDb
 
         public SymbolicName()
         {
-            DefaultFileSystems = new HashSet<FileSystem>();
+            FileSystemDefaults = new HashSet<FileSystem>();
         }
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [Name] nvarchar(128)  NOT NULL,
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_SimpleName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
-        // TODO: [FileSystemId] uniqueidentifier  NOT NULL,
         public Guid FileSystemId { get; set; }
 
-        // TODO: [Notes] nvarchar(max)  NOT NULL,
+        [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        // TODO: [IsInactive] bit  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion
@@ -82,7 +75,8 @@ namespace FsInfoCat.UpstreamDb
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileSystemRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public FileSystem FileSystem { get; set; }
 
-        public HashSet<FileSystem> DefaultFileSystems { get; set; }
+        [Display(Name = nameof(ModelResources.DisplayName_FileSystemDefaults), ResourceType = typeof(ModelResources))]
+        public HashSet<FileSystem> FileSystemDefaults { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_CreatedBy), ErrorMessageResourceType = typeof(ModelResources))]
@@ -100,9 +94,9 @@ namespace FsInfoCat.UpstreamDb
 
         IUpstreamFileSystem IUpstreamSymbolicName.FileSystem => FileSystem;
 
-        IReadOnlyCollection<IFileSystem> IFsSymbolicName.DefaultFileSystems => DefaultFileSystems;
+        IReadOnlyCollection<IFileSystem> IFsSymbolicName.FileSystemDefaults => FileSystemDefaults;
 
-        IReadOnlyCollection<IUpstreamFileSystem> IUpstreamSymbolicName.DefaultFileSystems => DefaultFileSystems;
+        IReadOnlyCollection<IUpstreamFileSystem> IUpstreamSymbolicName.DefaultFileSystems => FileSystemDefaults;
 
         IUserProfile IUpstreamTimeStampedEntity.CreatedBy => CreatedBy;
 

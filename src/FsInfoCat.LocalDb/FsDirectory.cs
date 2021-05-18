@@ -10,6 +10,7 @@ namespace FsInfoCat.LocalDb
     public class FsDirectory : ILocalSubDirectory, IValidatableObject
     {
         private string _name = "";
+        private string _notes = "";
 
         public FsDirectory()
         {
@@ -20,7 +21,7 @@ namespace FsInfoCat.LocalDb
         internal static void BuildEntity(EntityTypeBuilder<FsDirectory> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(Name)).HasMaxLength(DBSettings.Default.DbColMaxLen_FileSystemName).IsRequired();
+            builder.Property(nameof(Name)).HasMaxLength(DbConstants.DbColMaxLen_FileSystemName).IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId));
         }
 
@@ -37,30 +38,32 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [Name] nvarchar(128)  NOT NULL,
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_FileSystemName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_FileSystemName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Name { get => _name; set => _name = value ?? ""; }
 
-        // TODO: [CrawlFlags] tinyint  NOT NULL,
-        public DirectoryCrawlFlags CrawlFlags { get; set; }
+        [Required]
+        public DirectoryCrawlFlags Options { get; set; }
 
-        // [ParentId] uniqueidentifier  NULL,
         public Guid? ParentId { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        public string Notes { get => _notes; set => _notes = value ?? ""; }
+
+        [Required]
+        public bool Deleted { get; set; }
 
         public Guid? UpstreamId { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_LastSynchronized), ResourceType = typeof(ModelResources))]
         public DateTime? LastSynchronized { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
@@ -68,14 +71,14 @@ namespace FsInfoCat.LocalDb
         #endregion
 
         #region Navigation Properties
-
         public virtual Volume Volume { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_SubDirectories), ResourceType = typeof(ModelResources))]
         public virtual HashSet<FsDirectory> SubDirectories { get; set; }
 
-        [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         public virtual FsDirectory Parent { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         public virtual HashSet<FsFile> Files { get; set; }
 
         #endregion

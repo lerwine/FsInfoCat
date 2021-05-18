@@ -61,62 +61,76 @@ namespace FsInfoCat.UpstreamDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [DisplayName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_DisplayName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        // TODO: [FirstName] nvarchar(32)  NULL,
+        [Display(Name = nameof(ModelResources.DisplayName_FirstName), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = true)]
+        [MaxLength(DbConstants.DbColMaxLen_FirstName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FirstNameLength),
+            ErrorMessageResourceType = typeof(ModelResources))]
         public string FirstName { get; set; }
 
-        // TODO: [LastName] nvarchar(64)  NOT NULL,
+        [Display(Name = nameof(ModelResources.DisplayName_LastName), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_LastNameRequired),
+            ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_LastName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_LastNameLength),
+            ErrorMessageResourceType = typeof(ModelResources))]
         public string LastName { get; set; }
 
-        // TODO: [MI] nchar(1)  NULL,
+        [Required(AllowEmptyStrings = true)]
+        [MaxLength(DbConstants.DbColMaxLen_MI, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MILength),
+            ErrorMessageResourceType = typeof(ModelResources))]
         public string MI { get; set; }
 
-        // TODO: [Suffix] nvarchar(32)  NULL,
+        [Required(AllowEmptyStrings = true)]
+        [MaxLength(DbConstants.DbColMaxLen_Suffix, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_SuffixLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Suffix { get; set; }
 
-        // TODO: [Title] nvarchar(32)  NULL,
+        [Display(Name = nameof(ModelResources.DisplayName_Title), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = true)]
+        [MaxLength(DbConstants.DbColMaxLen_Title, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_TitleLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Title { get; set; }
 
-        // [DbPrincipalId] int  NULL,
+        [Display(Name = nameof(ModelResources.DisplayName_DbPrincipalId), ResourceType = typeof(ModelResources))]
         public int? DbPrincipalId { get; set; }
 
-        // TODO: [SID] varbinary(85)  NOT NULL,
+        [Display(Name = nameof(ModelResources.DisplayName_SID), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_SID),
+            ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_SID, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_SIDLength),
+            ErrorMessageResourceType = typeof(ModelResources))]
         public byte[] SID { get; set; }
 
-        // TODO: [LoginName] nvarchar(128)  NOT NULL,
+        [Display(Name = nameof(ModelResources.DisplayName_LoginName), ResourceType = typeof(ModelResources))]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_LoginName),
+            ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_LoginName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_LoginNameLength),
+            ErrorMessageResourceType = typeof(ModelResources))]
         public string LoginName { get; set; }
 
-        // TODO: [ExplicitRoles] tinyint  NOT NULL,
+        [Required]
         public UserRole ExplicitRoles { get; set; }
 
-        // TODO: [Notes] nvarchar(max)  NOT NULL,
+        [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        // TODO: [IsInactive] bit  NOT NULL,
+        [Required]
         public bool IsInactive { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion

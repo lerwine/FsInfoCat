@@ -14,57 +14,20 @@ namespace FsInfoCat.LocalDb
 {
     public class LocalDbContext : DbContext, ILocalDbContext
     {
-        public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
-
-        public virtual DbSet<FileSystem> FileSystems { get; set; }
-
-        public virtual DbSet<Volume> Volumes { get; set; }
-
-        public virtual DbSet<FsDirectory> Directories { get; set; }
-
-        public virtual DbSet<FileComparison> Comparisons { get; set; }
-
-        public virtual DbSet<ContentHash> HashCalculations { get; set; }
-
-        public virtual DbSet<Redundancy> Redundancies { get; set; }
-
-        public virtual DbSet<FsFile> Files { get; set; }
-
-        #region Explicit Members
-
-        IQueryable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames;
-
-        IQueryable<IFsSymbolicName> IDbContext.SymbolicNames => SymbolicNames;
-
-        IQueryable<ILocalFileSystem> ILocalDbContext.FileSystems => FileSystems;
-
-        IQueryable<IFileSystem> IDbContext.FileSystems => FileSystems;
-
-        IQueryable<ILocalVolume> ILocalDbContext.Volumes => Volumes;
-
-        IQueryable<IVolume> IDbContext.Volumes => Volumes;
-
-        IQueryable<ILocalSubDirectory> ILocalDbContext.Subdirectories => Directories;
-
-        IQueryable<ISubDirectory> IDbContext.Subdirectories => Directories;
-
-        IQueryable<ILocalFileComparison> ILocalDbContext.Comparisons => Comparisons;
-
-        IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
-
-        IQueryable<ILocalContentHash> ILocalDbContext.HashCalculations => HashCalculations;
-
-        IQueryable<IContentHash> IDbContext.HashCalculations => HashCalculations;
-
-        IQueryable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies;
-
-        IQueryable<IRedundancy> IDbContext.Redundancies => Redundancies;
-
-        IQueryable<ILocalFile> ILocalDbContext.Files => Files;
-
-        IQueryable<IFile> IDbContext.Files => Files;
-
-        #endregion
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("dbo");
+            modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
+            modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
+            modelBuilder.Entity<Volume>(Volume.BuildEntity);
+            modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
+            modelBuilder.Entity<ContentHash>(ContentHash.BuildEntity);
+            modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
+            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
+            modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
+            modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
+            base.OnModelCreating(modelBuilder);
+        }
 
         private LocalDbContext(DbContextOptions options)
         {
@@ -108,19 +71,63 @@ namespace FsInfoCat.LocalDb
             optionsBuilder.UseSqlCe(@"Data Source=C:\data\Blogging.sdf");
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema("dbo");
-            modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
-            modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
-            modelBuilder.Entity<Volume>(Volume.BuildEntity);
-            modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
-            modelBuilder.Entity<ContentHash>(ContentHash.BuildEntity);
-            modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
-            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
-            modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
-            base.OnModelCreating(modelBuilder);
-        }
+        public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
+
+        public virtual DbSet<FileSystem> FileSystems { get; set; }
+
+        public virtual DbSet<Volume> Volumes { get; set; }
+
+        public virtual DbSet<FsDirectory> Directories { get; set; }
+
+        public virtual DbSet<FileComparison> Comparisons { get; set; }
+
+        public virtual DbSet<ContentHash> HashInfo { get; set; }
+
+        public virtual DbSet<Redundancy> Redundancies { get; set; }
+
+        public virtual DbSet<RedundantSet> RedundantSets { get; set; }
+
+        public virtual DbSet<FsFile> Files { get; set; }
+
+        #region Explicit Members
+
+        IQueryable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames;
+
+        IQueryable<IFsSymbolicName> IDbContext.SymbolicNames => SymbolicNames;
+
+        IQueryable<ILocalFileSystem> ILocalDbContext.FileSystems => FileSystems;
+
+        IQueryable<IFileSystem> IDbContext.FileSystems => FileSystems;
+
+        IQueryable<ILocalVolume> ILocalDbContext.Volumes => Volumes;
+
+        IQueryable<IVolume> IDbContext.Volumes => Volumes;
+
+        IQueryable<ILocalSubDirectory> ILocalDbContext.Subdirectories => Directories;
+
+        IQueryable<ISubDirectory> IDbContext.Subdirectories => Directories;
+
+        IQueryable<ILocalFileComparison> ILocalDbContext.Comparisons => Comparisons;
+
+        IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
+
+        IQueryable<ILocalContentHash> ILocalDbContext.HashInfo => HashInfo;
+
+        IQueryable<IContentHash> IDbContext.HashInfo => HashInfo;
+
+        IQueryable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies;
+
+        IQueryable<IRedundancy> IDbContext.Redundancies => Redundancies;
+
+        IQueryable<ILocalFile> ILocalDbContext.Files => Files;
+
+        IQueryable<IFile> IDbContext.Files => Files;
+
+        IQueryable<ILocalRedundantSet> ILocalDbContext.RedundantSets => RedundantSets;
+
+        IQueryable<IRedundantSet> IDbContext.RedundantSets => RedundantSets;
+
+        #endregion
 
         public IDbContextTransaction BeginTransaction() => Database.BeginTransaction();
 
@@ -128,20 +135,20 @@ namespace FsInfoCat.LocalDb
 
         internal EntityEntry<ContentHash> AddHashCalculation(ContentHash hashCalculation)
         {
-            HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return HashCalculations.Add(hashCalculation);
+            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashInfo.Add(hashCalculation);
         }
 
         internal EntityEntry<ContentHash> UpdateHashCalculation(ContentHash hashCalculation)
         {
-            HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return HashCalculations.Update(hashCalculation);
+            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashInfo.Update(hashCalculation);
         }
 
         internal EntityEntry<ContentHash> RemoveHashCalculation(ContentHash hashCalculation)
         {
-            HashCalculations.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return HashCalculations.Remove(hashCalculation);
+            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashInfo.Remove(hashCalculation);
         }
 
         internal EntityEntry<FileComparison> AddComparison(FileComparison fileComparison)

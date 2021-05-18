@@ -32,12 +32,12 @@ namespace FsInfoCat.UpstreamDb
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(DisplayName)).HasMaxLength(DBSettings.Default.DbColMaxLen_DisplayName).IsRequired();
-            builder.Property(nameof(VolumeName)).HasMaxLength(DBSettings.Default.DbColMaxLen_VolumeName).IsRequired();
-            builder.Property(nameof(Identifier)).HasMaxLength(DBSettings.Default.DbColMaxLen_VolumeIdentifier).IsRequired();
+            builder.Property(nameof(DisplayName)).HasMaxLength(DbConstants.DbColMaxLen_DisplayName).IsRequired();
+            builder.Property(nameof(VolumeName)).HasMaxLength(DbConstants.DbColMaxLen_VolumeName).IsRequired();
+            builder.Property(nameof(Identifier)).HasMaxLength(DbConstants.DbColMaxLen_VolumeIdentifier).IsRequired();
             builder.Property(nameof(CaseSensitiveSearch)).HasDefaultValue(false);
             builder.Property(nameof(ReadOnly)).HasDefaultValue(false);
-            builder.Property(nameof(MaxNameLength)).HasDefaultValue(DBSettings.Default.DefaultValue_MaxFileSystemNameLength);
+            builder.Property(nameof(MaxNameLength)).HasDefaultValue(DbConstants.DefaultValue_MaxFileSystemNameLength);
             builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.FileSystem).WithMany(d => d.Volumes).IsRequired();
             builder.HasOne(p => p.RootDirectory).WithOne(d => d.Volume);
@@ -48,71 +48,58 @@ namespace FsInfoCat.UpstreamDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // [CaseSensitiveSearch] bit  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(ModelResources))]
         public bool? CaseSensitiveSearch { get; set; }
 
-        // [ReadOnly] bit  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_ReadOnly), ResourceType = typeof(ModelResources))]
         public bool? ReadOnly { get; set; }
 
-        // [DisplayName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_DisplayName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_DisplayNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_DisplayName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_DisplayName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string DisplayName { get => _displayName; set => _displayName = value ?? ""; }
 
-        // TODO: [IsInactive] bit  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_IsInactive), ResourceType = typeof(ModelResources))]
         public bool IsInactive { get; set; }
 
-        // [MaxNameLength] bigint  NULL,
         [Display(Name = nameof(ModelResources.DisplayName_MaxNameLength), ResourceType = typeof(ModelResources))]
         [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MaxNameLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
         public long? MaxNameLength { get; set; }
 
-        // TODO: [FileSystemId] uniqueidentifier  NOT NULL,
         public Guid FileSystemId { get; set; }
 
-        // TODO: [Type] tinyint  NOT NULL,
+        [Required]
         [Display(Name = nameof(ModelResources.DisplayName_DriveType), ResourceType = typeof(ModelResources))]
         public DriveType Type { get; set; }
 
-        // TODO: [Notes] nvarchar(max)  NOT NULL,
+        [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        // [VolumeName] nvarchar(128)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_VolumeName), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_VolumeNameRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_VolumeName), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_VolumeName, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
 
-        // [Identifier] nvarchar(1024)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_VolumeIdentifier), ResourceType = typeof(ModelResources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_VolumeIdentifierRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_VolumeIdentifier), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_VolumeIdentifier, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string Identifier { get => _identifier; set => _identifier = value ?? ""; }
 
-        // [HostDeviceId] uniqueidentifier  NULL,
         public Guid? HostDeviceId { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion
@@ -126,6 +113,8 @@ namespace FsInfoCat.UpstreamDb
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_FileSystemRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public FileSystem FileSystem { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_HostDevice), ResourceType = typeof(ModelResources))]
+        [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_HostDeviceRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public HostDevice HostDevice { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]

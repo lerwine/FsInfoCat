@@ -24,6 +24,7 @@ namespace FsInfoCat.UpstreamDb
             modelBuilder.Entity<HostDevice>(HostDevice.BuildEntity);
             modelBuilder.Entity<HostPlatform>(HostPlatform.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
+            modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
             modelBuilder.Entity<FileRelocateTask>(FileRelocateTask.BuildEntity);
             modelBuilder.Entity<DirectoryRelocateTask>(DirectoryRelocateTask.BuildEntity);
             modelBuilder.Entity<UserProfile>(UserProfile.BuildEntity);
@@ -32,7 +33,7 @@ namespace FsInfoCat.UpstreamDb
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<ContentHash> Checksums { get; set; }
+        public DbSet<ContentHash> HashInfo { get; set; }
 
         public DbSet<FileComparison> Comparisons { get; set; }
 
@@ -62,11 +63,13 @@ namespace FsInfoCat.UpstreamDb
 
         public DbSet<UserGroupMembership> UserGroupMemberships { get; set; }
 
+        public DbSet<RedundantSet> RedundantSets { get; set; }
+
         #region Explicit Members
 
-        IQueryable<IContentHash> IDbContext.HashCalculations => Checksums;
+        IQueryable<IContentHash> IDbContext.HashInfo => HashInfo;
 
-        IQueryable<IUpstreamContentHash> IUpstreamDbContext.HashCalculations => Checksums;
+        IQueryable<IUpstreamContentHash> IUpstreamDbContext.HashCalculations => HashInfo;
 
         IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
 
@@ -108,7 +111,11 @@ namespace FsInfoCat.UpstreamDb
 
         IQueryable<IUserGroup> IUpstreamDbContext.UserGroups => UserGroups;
 
-        IQueryable<IUserGroupMembership> IUpstreamDbContext.UserGroupMemberships => throw new NotImplementedException();
+        IQueryable<IUserGroupMembership> IUpstreamDbContext.UserGroupMemberships => UserGroupMemberships;
+
+        IQueryable<IRedundantSet> IDbContext.RedundantSets => RedundantSets;
+
+        IQueryable<IUpstreamRedundantSet> IUpstreamDbContext.RedundantSets => RedundantSets;
 
         #endregion
 
@@ -118,24 +125,24 @@ namespace FsInfoCat.UpstreamDb
 
         internal EntityEntry<ContentHash> AddHashCalculation(ContentHash hashCalculation)
         {
-            Checksums.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return Checksums.Add(hashCalculation);
+            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashInfo.Add(hashCalculation);
         }
 
         void IUpstreamDbContext.AddHashCalculation(IUpstreamContentHash hashCalculation) => AddHashCalculation((ContentHash)hashCalculation);
 
         internal EntityEntry<ContentHash> UpdateHashCalculation(ContentHash hashCalculation)
         {
-            Checksums.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return Checksums.Update(hashCalculation);
+            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashInfo.Update(hashCalculation);
         }
 
         void IUpstreamDbContext.UpdateHashCalculation(IUpstreamContentHash hashCalculation) => UpdateHashCalculation((ContentHash)hashCalculation);
 
         internal EntityEntry<ContentHash> RemoveHashCalculation(ContentHash hashCalculation)
         {
-            Checksums.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return Checksums.Remove(hashCalculation);
+            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return HashInfo.Remove(hashCalculation);
         }
 
         void IUpstreamDbContext.RemoveHashCalculation(IUpstreamContentHash hashCalculation) => RemoveHashCalculation((ContentHash)hashCalculation);

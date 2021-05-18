@@ -19,6 +19,7 @@ namespace FsInfoCat.Model.Upstream
         IQueryable<IUserProfile> UserProfiles { get; }
         IQueryable<IUserGroup> UserGroups { get; }
         IQueryable<IUserGroupMembership> UserGroupMemberships { get; }
+        new IQueryable<IUpstreamRedundantSet> RedundantSets { get; }
 
         void AddHashCalculation(IUpstreamContentHash hashCalculation);
         void UpdateHashCalculation(IUpstreamContentHash hashCalculation);

@@ -21,7 +21,7 @@ namespace FsInfoCat.UpstreamDb
         internal static void BuildEntity(EntityTypeBuilder<FileRelocateTask> builder)
         {
             builder.HasKey(nameof(Id));
-            builder.Property(nameof(ShortDescription)).HasMaxLength(DBSettings.Default.DbColMaxLen_ShortDescription).IsRequired();
+            builder.Property(nameof(ShortDescription)).HasMaxLength(DbConstants.DbColMaxLen_ShortDescription).IsRequired();
             builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.TargetDirectory).WithMany(d => d.FileRelocationTasks).IsRequired();
             builder.HasOne(t => t.AssignmentGroup).WithMany(u => u.FileRelocationTasks);
@@ -42,64 +42,58 @@ namespace FsInfoCat.UpstreamDb
 
         #region Column Properties
 
-        // TODO: [Id] uniqueidentifier  NOT NULL,
         public Guid Id { get; set; }
 
-        // TODO: [Status] tinyint  NOT NULL,
+        [Required]
         public AppTaskStatus Status { get; set; }
 
-        // TODO: [Priority] tinyint  NOT NULL,
+        [Required]
         public PriorityLevel Priority { get; set; }
 
-        // [ShortDescription] nvarchar(1024)  NOT NULL,
         [Display(Name = nameof(ModelResources.DisplayName_ShortDescription), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ShortDescriptionRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        [LengthValidationDbSettings(nameof(DBSettings.DbColMaxLen_ShortDescription), ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
+        [MaxLength(DbConstants.DbColMaxLen_ShortDescription, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameLength), ErrorMessageResourceType = typeof(ModelResources))]
         public string ShortDescription { get => _shortDescription; set => _shortDescription = value ?? ""; }
 
-        // TODO: [TargetDirectoryId] uniqueidentifier  NOT NULL,
         public Guid TargetDirectoryId { get; set; }
 
-        // TODO: [IsInactive] bit  NOT NULL,
+        [Required]
         public bool IsInactive { get; set; }
 
-        // TODO: [Notes] nvarchar(max)  NOT NULL,
+        [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        // [AssignmentGroupId] uniqueidentifier  NULL,
         public Guid? AssignmentGroupId { get; set; }
 
-        // [AssignedToId] uniqueidentifier  NULL,
         public Guid? AssignedToId { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion
 
         #region Navigation Properties
 
+        [Display(Name = nameof(ModelResources.DisplayName_SourceFiles), ResourceType = typeof(ModelResources))]
         public virtual HashSet<FsFile> Files { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_TargetDirectory), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_TargetDirectory), ErrorMessageResourceType = typeof(ModelResources))]
         public virtual FsDirectory TargetDirectory { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_AssignmentGroup), ResourceType = typeof(ModelResources))]
         public UserGroup AssignmentGroup { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_AssignedTo), ResourceType = typeof(ModelResources))]
         public UserProfile AssignedTo { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]

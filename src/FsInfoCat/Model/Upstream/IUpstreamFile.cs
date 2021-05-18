@@ -9,7 +9,8 @@ namespace FsInfoCat.Model.Upstream
         new IReadOnlyCollection<IUpstreamFileComparison> Comparisons2 { get; }
 
         new IUpstreamSubDirectory Parent { get; }
-        new IUpstreamContentHash HashCalculation { get; }
+
+        new IUpstreamContentHash HashInfo { get; }
 
         new IUpstreamRedundancy Redundancy { get; }
 

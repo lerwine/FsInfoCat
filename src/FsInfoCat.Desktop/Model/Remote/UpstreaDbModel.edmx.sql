@@ -32,8 +32,8 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_FileSystemFsSymbolicName]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[FsSymbolicNames] DROP CONSTRAINT [FK_FileSystemFsSymbolicName];
 GO
-IF OBJECT_ID(N'[dbo].[FK_HashCalculationFile]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Files] DROP CONSTRAINT [FK_HashCalculationFile];
+IF OBJECT_ID(N'[dbo].[FK_ContentInfoFile]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Files] DROP CONSTRAINT [FK_ContentInfoFile];
 GO
 IF OBJECT_ID(N'[dbo].[FK_VolumeDirectory]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Volumes] DROP CONSTRAINT [FK_VolumeDirectory];
@@ -43,12 +43,6 @@ IF OBJECT_ID(N'[dbo].[FK_DirectoryParent]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_DirectoryFile]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Files] DROP CONSTRAINT [FK_DirectoryFile];
-GO
-IF OBJECT_ID(N'[dbo].[FK_RedundancyFile_Redundancy]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RedundancyFile] DROP CONSTRAINT [FK_RedundancyFile_Redundancy];
-GO
-IF OBJECT_ID(N'[dbo].[FK_RedundancyFile_File]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RedundancyFile] DROP CONSTRAINT [FK_RedundancyFile_File];
 GO
 IF OBJECT_ID(N'[dbo].[FK_FileComparison1]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Comparisons] DROP CONSTRAINT [FK_FileComparison1];
@@ -71,8 +65,8 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_CreatedByFileSystem]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[FileSystems] DROP CONSTRAINT [FK_CreatedByFileSystem];
 GO
-IF OBJECT_ID(N'[dbo].[FK_CreatedByHashCalculation]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[HashCalculations] DROP CONSTRAINT [FK_CreatedByHashCalculation];
+IF OBJECT_ID(N'[dbo].[FK_CreatedByContentInfo]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ContentInfos] DROP CONSTRAINT [FK_CreatedByContentInfo];
 GO
 IF OBJECT_ID(N'[dbo].[FK_CreatedByHostDevice]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[HostDevices] DROP CONSTRAINT [FK_CreatedByHostDevice];
@@ -104,8 +98,8 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_ModifiedByHostDevice]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[HostDevices] DROP CONSTRAINT [FK_ModifiedByHostDevice];
 GO
-IF OBJECT_ID(N'[dbo].[FK_ModifiedByHashCalculation]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[HashCalculations] DROP CONSTRAINT [FK_ModifiedByHashCalculation];
+IF OBJECT_ID(N'[dbo].[FK_ModifiedByContentInfo]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ContentInfos] DROP CONSTRAINT [FK_ModifiedByContentInfo];
 GO
 IF OBJECT_ID(N'[dbo].[FK_ModifiedByFsSymbolicName]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[FsSymbolicNames] DROP CONSTRAINT [FK_ModifiedByFsSymbolicName];
@@ -151,17 +145,17 @@ GO
 IF OBJECT_ID(N'[dbo].[FsSymbolicNames]', 'U') IS NOT NULL
     DROP TABLE [dbo].[FsSymbolicNames];
 GO
-IF OBJECT_ID(N'[dbo].[HashCalculations]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[HashCalculations];
+IF OBJECT_ID(N'[dbo].[ContentInfos]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ContentInfos];
 GO
 IF OBJECT_ID(N'[dbo].[Redundancies]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Redundancies];
 GO
+IF OBJECT_ID(N'[dbo].[RedundancySets]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[RedundancySets];
+GO
 IF OBJECT_ID(N'[dbo].[Comparisons]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Comparisons];
-GO
-IF OBJECT_ID(N'[dbo].[RedundancyFile]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[RedundancyFile];
 GO
 
 -- --------------------------------------------------
@@ -216,13 +210,15 @@ GO
 CREATE TABLE [dbo].[Directories] (
     [Id] uniqueidentifier  NOT NULL,
     [Name] nvarchar(128)  NOT NULL,
-    [CrawlFlags] tinyint  NOT NULL,
+    [Options] tinyint  NOT NULL,
+    [Notes] nvarchar(max)  NOT NULL,
+    [Deleted] bit  NOT NULL,
     [ParentId] uniqueidentifier  NULL,
+    [SourceRelocationTaskId] uniqueidentifier  NULL,
     [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL,
-    [SourceRelocationTaskId] uniqueidentifier  NULL
+    [ModifiedOn] datetime  NOT NULL
 );
 GO
 
@@ -230,14 +226,56 @@ GO
 CREATE TABLE [dbo].[Files] (
     [Id] uniqueidentifier  NOT NULL,
     [Name] nvarchar(128)  NOT NULL,
-    [HashCalculationId] uniqueidentifier  NOT NULL,
-    [ParentId] uniqueidentifier  NOT NULL,
+    [Options] tinyint  NOT NULL,
+    [LastAccessed] datetime  NOT NULL,
+    [LastHashCalculation] datetime NULL,
+    [Notes] nvarchar(max)  NOT NULL,
+    [Deleted] bit  NOT NULL,
+    [ContentHashId] uniqueidentifier  NOT NULL,
+    [RedundancyId] uniqueidentifier  NULL,
+    [FileRelocateTaskId] uniqueidentifier  NULL,
+    [ParentId] uniqueidentifier  NULL,
     [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+);
+GO
+
+-- Creating table 'ContentHashes'
+CREATE TABLE [dbo].[ContentHashes] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Length] bigint  NOT NULL,
+    [Data] binary(16)  NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedById] uniqueidentifier  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+);
+GO
+
+-- Creating table 'Redundancies'
+CREATE TABLE [dbo].[Redundancies] (
+    [Id] uniqueidentifier  NOT NULL,
     [Status] tinyint  NOT NULL,
-    [FileRelocateTaskId] uniqueidentifier  NULL
+    [Notes] nvarchar(max)  NOT NULL,
+    [FileId] uniqueidentifier  NOT NULL,
+    [RedundantSetId] uniqueidentifier  NOT NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedById] uniqueidentifier  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+);
+GO
+
+-- Creating table 'RedundantSets'
+CREATE TABLE [dbo].[RedundantSets] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Notes] nvarchar(max)  NOT NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedById] uniqueidentifier  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
 );
 GO
 
@@ -249,13 +287,13 @@ CREATE TABLE [dbo].[FileSystems] (
     [ReadOnly] bit  NOT NULL,
     [MaxNameLength] bigint  NOT NULL,
     [DefaultDriveType] tinyint  NULL,
+    [DefaultSymbolicNameId] uniqueidentifier  NOT NULL,
     [Notes] nvarchar(max)  NOT NULL,
     [IsInactive] bit  NOT NULL,
     [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL,
-    [DefaultSymbolicNameId] uniqueidentifier  NOT NULL
+    [ModifiedOn] datetime  NOT NULL
 );
 GO
 
@@ -297,28 +335,6 @@ CREATE TABLE [dbo].[FsSymbolicNames] (
     [FileSystemId] uniqueidentifier  NOT NULL,
     [Notes] nvarchar(max)  NOT NULL,
     [IsInactive] bit  NOT NULL,
-    [CreatedById] uniqueidentifier  NOT NULL,
-    [CreatedOn] datetime  NOT NULL,
-    [ModifiedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL
-);
-GO
-
--- Creating table 'HashCalculations'
-CREATE TABLE [dbo].[HashCalculations] (
-    [Id] uniqueidentifier  NOT NULL,
-    [Length] bigint  NOT NULL,
-    [Data] binary(16)  NULL,
-    [CreatedById] uniqueidentifier  NOT NULL,
-    [CreatedOn] datetime  NOT NULL,
-    [ModifiedById] uniqueidentifier  NOT NULL,
-    [ModifiedOn] datetime  NOT NULL
-);
-GO
-
--- Creating table 'Redundancies'
-CREATE TABLE [dbo].[Redundancies] (
-    [Id] uniqueidentifier  NOT NULL,
     [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
@@ -388,13 +404,6 @@ CREATE TABLE [dbo].[UserGroups] (
 );
 GO
 
--- Creating table 'RedundancyFile'
-CREATE TABLE [dbo].[RedundancyFile] (
-    [Redundancies_Id] uniqueidentifier  NOT NULL,
-    [Files_Id] uniqueidentifier  NOT NULL
-);
-GO
-
 -- Creating table 'UserGroupUserProfile'
 CREATE TABLE [dbo].[UserGroupUserProfile] (
     [AssignmentGroups_Id] uniqueidentifier  NOT NULL,
@@ -454,15 +463,21 @@ ADD CONSTRAINT [PK_FsSymbolicNames]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'HashCalculations'
-ALTER TABLE [dbo].[HashCalculations]
-ADD CONSTRAINT [PK_HashCalculations]
+-- Creating primary key on [Id] in table 'ContentInfo'
+ALTER TABLE [dbo].[ContentInfo]
+ADD CONSTRAINT [PK_ContentInfo]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
 -- Creating primary key on [Id] in table 'Redundancies'
 ALTER TABLE [dbo].[Redundancies]
 ADD CONSTRAINT [PK_Redundancies]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'RedundantSets'
+ALTER TABLE [dbo].[RedundantSets]
+ADD CONSTRAINT [PK_RedundantSets]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -488,12 +503,6 @@ GO
 ALTER TABLE [dbo].[UserGroups]
 ADD CONSTRAINT [PK_UserGroups]
     PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
-
--- Creating primary key on [Redundancies_Id], [Files_Id] in table 'RedundancyFile'
-ALTER TABLE [dbo].[RedundancyFile]
-ADD CONSTRAINT [PK_RedundancyFile]
-    PRIMARY KEY CLUSTERED ([Redundancies_Id], [Files_Id] ASC);
 GO
 
 -- Creating primary key on [AssignmentGroups_Id], [Members_Id] in table 'UserGroupUserProfile'
@@ -581,19 +590,19 @@ ON [dbo].[FsSymbolicNames]
     ([FileSystemId]);
 GO
 
--- Creating foreign key on [HashCalculationId] in table 'Files'
+-- Creating foreign key on [ContentInfoId] in table 'Files'
 ALTER TABLE [dbo].[Files]
-ADD CONSTRAINT [FK_HashCalculationFile]
-    FOREIGN KEY ([HashCalculationId])
-    REFERENCES [dbo].[HashCalculations]
+ADD CONSTRAINT [FK_ContentInfoFile]
+    FOREIGN KEY ([ContentInfoId])
+    REFERENCES [dbo].[ContentInfos]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating non-clustered index for FOREIGN KEY 'FK_HashCalculationFile'
-CREATE INDEX [IX_FK_HashCalculationFile]
+-- Creating non-clustered index for FOREIGN KEY 'FK_ContentInfoFile'
+CREATE INDEX [IX_FK_ContentInfoFile]
 ON [dbo].[Files]
-    ([HashCalculationId]);
+    ([ContentInfoId]);
 GO
 
 -- Creating foreign key on [RootDirectory_Id] in table 'Volumes'
@@ -639,30 +648,6 @@ GO
 CREATE INDEX [IX_FK_DirectoryFile]
 ON [dbo].[Files]
     ([ParentId]);
-GO
-
--- Creating foreign key on [Redundancies_Id] in table 'RedundancyFile'
-ALTER TABLE [dbo].[RedundancyFile]
-ADD CONSTRAINT [FK_RedundancyFile_Redundancy]
-    FOREIGN KEY ([Redundancies_Id])
-    REFERENCES [dbo].[Redundancies]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating foreign key on [Files_Id] in table 'RedundancyFile'
-ALTER TABLE [dbo].[RedundancyFile]
-ADD CONSTRAINT [FK_RedundancyFile_File]
-    FOREIGN KEY ([Files_Id])
-    REFERENCES [dbo].[Files]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_RedundancyFile_File'
-CREATE INDEX [IX_FK_RedundancyFile_File]
-ON [dbo].[RedundancyFile]
-    ([Files_Id]);
 GO
 
 -- Creating foreign key on [FileId1] in table 'Comparisons'
@@ -770,18 +755,18 @@ ON [dbo].[FileSystems]
     ([CreatedById]);
 GO
 
--- Creating foreign key on [CreatedById] in table 'HashCalculations'
-ALTER TABLE [dbo].[HashCalculations]
-ADD CONSTRAINT [FK_CreatedByHashCalculation]
+-- Creating foreign key on [CreatedById] in table 'ContentInfos'
+ALTER TABLE [dbo].[ContentInfos]
+ADD CONSTRAINT [FK_CreatedByContentInfo]
     FOREIGN KEY ([CreatedById])
     REFERENCES [dbo].[UserProfiles]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByHashCalculation'
-CREATE INDEX [IX_FK_CreatedByHashCalculation]
-ON [dbo].[HashCalculations]
+-- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByContentInfo'
+CREATE INDEX [IX_FK_CreatedByContentInfo]
+ON [dbo].[ContentInfos]
     ([CreatedById]);
 GO
 
@@ -935,18 +920,18 @@ ON [dbo].[HostDevices]
     ([ModifiedById]);
 GO
 
--- Creating foreign key on [ModifiedById] in table 'HashCalculations'
-ALTER TABLE [dbo].[HashCalculations]
-ADD CONSTRAINT [FK_ModifiedByHashCalculation]
+-- Creating foreign key on [ModifiedById] in table 'ContentInfos'
+ALTER TABLE [dbo].[ContentInfos]
+ADD CONSTRAINT [FK_ModifiedByContentInfo]
     FOREIGN KEY ([ModifiedById])
     REFERENCES [dbo].[UserProfiles]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByHashCalculation'
-CREATE INDEX [IX_FK_ModifiedByHashCalculation]
-ON [dbo].[HashCalculations]
+-- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByContentInfo'
+CREATE INDEX [IX_FK_ModifiedByContentInfo]
+ON [dbo].[ContentInfos]
     ([ModifiedById]);
 GO
 
@@ -1107,6 +1092,21 @@ GO
 CREATE INDEX [IX_FK_FileRelocateTaskFile]
 ON [dbo].[Files]
     ([FileRelocateTaskId]);
+GO
+
+-- Creating foreign key on [RedundancyId] in table 'Files'
+ALTER TABLE [dbo].[Files]
+ADD CONSTRAINT [FK_FileRedundancy]
+    FOREIGN KEY ([RedundancyId])
+    REFERENCES [dbo].[Redundancy]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_FileRedundancy'
+CREATE INDEX [IX_FK_FileRedundancy]
+ON [dbo].[Files]
+    ([Id]);
 GO
 
 -- Creating foreign key on [TargetDirectoryId] in table 'FileRelocateTasks'
