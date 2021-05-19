@@ -25,82 +25,19 @@ namespace FsInfoCat {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("128")]
-        public int DbColMaxLen_SimpleName {
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public int KeepLocalDbAlive {
             get {
-                return ((int)(this["DbColMaxLen_SimpleName"]));
+                return ((int)(this["KeepLocalDbAlive"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1024")]
-        public int DbColMaxLen_FileSystemName {
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public int KeepRemoteDbAlive {
             get {
-                return ((int)(this["DbColMaxLen_FileSystemName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("256")]
-        public int DbColMaxLen_DisplayName {
-            get {
-                return ((int)(this["DbColMaxLen_DisplayName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("128")]
-        public int DbColMaxLen_VolumeName {
-            get {
-                return ((int)(this["DbColMaxLen_VolumeName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("256")]
-        public int DbColMaxLen_VolumeIdentifier {
-            get {
-                return ((int)(this["DbColMaxLen_VolumeIdentifier"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("255")]
-        public int DefaultValue_MaxFileSystemNameLength {
-            get {
-                return ((int)(this["DefaultValue_MaxFileSystemNameLength"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1024")]
-        public int DbColMaxLen_ShortDescription {
-            get {
-                return ((int)(this["DbColMaxLen_ShortDescription"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("128")]
-        public int DbColMaxLen_MachineIdentifer {
-            get {
-                return ((int)(this["DbColMaxLen_MachineIdentifer"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("128")]
-        public int DbColMaxLen_MachineName {
-            get {
-                return ((int)(this["DbColMaxLen_MachineName"]));
+                return ((int)(this["KeepRemoteDbAlive"]));
             }
         }
     }

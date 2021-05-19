@@ -88,6 +88,15 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assignment Groups.
+        /// </summary>
+        public static string DisplayName_AssignmentGroups {
+            get {
+                return ResourceManager.GetString("DisplayName_AssignmentGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case-Sensitive Search.
         /// </summary>
         public static string DisplayName_CaseSensitiveSearch {
@@ -106,11 +115,155 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Created Comparisons.
+        /// </summary>
+        public static string DisplayName_CreatedComparisons {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedComparisons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Directories.
+        /// </summary>
+        public static string DisplayName_CreatedDirectories {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedDirectories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Directory Relocation Tasks.
+        /// </summary>
+        public static string DisplayName_CreatedDirectoryRelocateTasks {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedDirectoryRelocateTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created File Relocation Tasks.
+        /// </summary>
+        public static string DisplayName_CreatedFileRelocateTasks {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedFileRelocateTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Files.
+        /// </summary>
+        public static string DisplayName_CreatedFiles {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created File Systems.
+        /// </summary>
+        public static string DisplayName_CreatedFileSystems {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedFileSystems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Hash Calculations.
+        /// </summary>
+        public static string DisplayName_CreatedHashCalculations {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedHashCalculations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Host Devices.
+        /// </summary>
+        public static string DisplayName_CreatedHostDevices {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedHostDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Host Platforms.
+        /// </summary>
+        public static string DisplayName_CreatedHostPlatforms {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedHostPlatforms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Memberships.
+        /// </summary>
+        public static string DisplayName_CreatedMemberships {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedMemberships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Created On.
         /// </summary>
         public static string DisplayName_CreatedOn {
             get {
                 return ResourceManager.GetString("DisplayName_CreatedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Redundancies.
+        /// </summary>
+        public static string DisplayName_CreatedRedundancies {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedRedundancies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created RedundantS ets.
+        /// </summary>
+        public static string DisplayName_CreatedRedundantSets {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedRedundantSets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Symbolic Names.
+        /// </summary>
+        public static string DisplayName_CreatedSymbolicNames {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedSymbolicNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Groups.
+        /// </summary>
+        public static string DisplayName_CreatedUserGroups {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedUserGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created User Profiles.
+        /// </summary>
+        public static string DisplayName_CreatedUserProfiles {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedUserProfiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Volumes.
+        /// </summary>
+        public static string DisplayName_CreatedVolumes {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedVolumes", resourceCulture);
             }
         }
         
@@ -156,6 +309,15 @@ namespace FsInfoCat.Model {
         public static string DisplayName_DirectoryRelocationTask {
             get {
                 return ResourceManager.GetString("DisplayName_DirectoryRelocationTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Directory Relocation Tasks.
+        /// </summary>
+        public static string DisplayName_DirectoryRelocationTasks {
+            get {
+                return ResourceManager.GetString("DisplayName_DirectoryRelocationTasks", resourceCulture);
             }
         }
         
@@ -385,11 +547,155 @@ namespace FsInfoCat.Model {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modified Comparisons.
+        /// </summary>
+        public static string DisplayName_ModifiedComparisons {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedComparisons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Directories.
+        /// </summary>
+        public static string DisplayName_ModifiedDirectories {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedDirectories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Directory Relocation Tasks.
+        /// </summary>
+        public static string DisplayName_ModifiedDirectoryRelocateTasks {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedDirectoryRelocateTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified File Relocation Tasks.
+        /// </summary>
+        public static string DisplayName_ModifiedFileRelocateTasks {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedFileRelocateTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Files.
+        /// </summary>
+        public static string DisplayName_ModifiedFiles {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified File Systems.
+        /// </summary>
+        public static string DisplayName_ModifiedFileSystems {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedFileSystems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Hash Calculations.
+        /// </summary>
+        public static string DisplayName_ModifiedHashCalculations {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedHashCalculations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Host Devices.
+        /// </summary>
+        public static string DisplayName_ModifiedHostDevices {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedHostDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Host Platforms.
+        /// </summary>
+        public static string DisplayName_ModifiedHostPlatforms {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedHostPlatforms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Memberships.
+        /// </summary>
+        public static string DisplayName_ModifiedMemberships {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedMemberships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modified On.
         /// </summary>
         public static string DisplayName_ModifiedOn {
             get {
                 return ResourceManager.GetString("DisplayName_ModifiedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Redundancies.
+        /// </summary>
+        public static string DisplayName_ModifiedRedundancies {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedRedundancies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Redundant Sets.
+        /// </summary>
+        public static string DisplayName_ModifiedRedundantSets {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedRedundantSets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Symbolic Names.
+        /// </summary>
+        public static string DisplayName_ModifiedSymbolicNames {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedSymbolicNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Groups.
+        /// </summary>
+        public static string DisplayName_ModifiedUserGroups {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedUserGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified User Profiles.
+        /// </summary>
+        public static string DisplayName_ModifiedUserProfiles {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedUserProfiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified Volumes.
+        /// </summary>
+        public static string DisplayName_ModifiedVolumes {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedVolumes", resourceCulture);
             }
         }
         

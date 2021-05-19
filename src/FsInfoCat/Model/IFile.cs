@@ -70,12 +70,12 @@ namespace FsInfoCat.Model
         /// </value>
         ISubDirectory Parent { get; }
 
-        IContentHash HashInfo { get; }
+        IContentInfo HashInfo { get; }
 
         IRedundancy Redundancy { get; }
 
-        IReadOnlyCollection<IFileComparison> Comparisons1 { get; }
+        IReadOnlyCollection<IFileComparison> SourceComparisons { get; }
 
-        IReadOnlyCollection<IFileComparison> Comparisons2 { get; }
+        IReadOnlyCollection<IFileComparison> TargetComparisons { get; }
     }
 }

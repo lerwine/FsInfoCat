@@ -13,15 +13,15 @@ namespace FsInfoCat.Model
         /// The unique identifier that is used as the prmary database key.
         /// </value>
         Guid Id { get; }
-        bool? CaseSensitiveSearch { get; }
         string DisplayName { get; }
-        string Identifier { get; }
-        bool IsInactive { get; }
-        long? MaxNameLength { get; }
-        bool? ReadOnly { get; }
-        string Notes { get; }
         string VolumeName { get; }
+        string Identifier { get; }
         DriveType Type { get; }
+        bool? CaseSensitiveSearch { get; }
+        bool? ReadOnly { get; }
+        long? MaxNameLength { get; }
+        string Notes { get; }
+        bool IsInactive { get; }
         ISubDirectory RootDirectory { get; }
         IFileSystem FileSystem { get; }
     }

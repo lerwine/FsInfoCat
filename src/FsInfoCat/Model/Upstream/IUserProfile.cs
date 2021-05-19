@@ -25,7 +25,7 @@ namespace FsInfoCat.Model.Upstream
         IReadOnlyCollection<IUpstreamSubDirectory> CreatedDirectories { get; }
         IReadOnlyCollection<IUpstreamFile> CreatedFiles { get; }
         IReadOnlyCollection<IUpstreamFileSystem> CreatedFileSystems { get; }
-        IReadOnlyCollection<IUpstreamContentHash> CreatedHashCalculations { get; }
+        IReadOnlyCollection<IUpstreamContentInfo> CreatedHashCalculations { get; }
         IReadOnlyCollection<IHostDevice> CreatedHostDevices { get; }
         IReadOnlyCollection<IHostPlatform> CreatedHostPlatforms { get; }
         IReadOnlyCollection<IUpstreamRedundancy> CreatedRedundancies { get; }
@@ -36,7 +36,7 @@ namespace FsInfoCat.Model.Upstream
         IReadOnlyCollection<IUpstreamRedundancy> ModifiedRedundancies { get; }
         IReadOnlyCollection<IHostPlatform> ModifiedHostPlatforms { get; }
         IReadOnlyCollection<IHostDevice> ModifiedHostDevices { get; }
-        IReadOnlyCollection<IUpstreamContentHash> ModifiedHashCalculations { get; }
+        IReadOnlyCollection<IUpstreamContentInfo> ModifiedHashCalculations { get; }
         IReadOnlyCollection<IUpstreamSymbolicName> ModifiedSymbolicNames { get; }
         IReadOnlyCollection<IUpstreamFileSystem> ModifiedFileSystems { get; }
         IReadOnlyCollection<IUpstreamFile> ModifiedFiles { get; }

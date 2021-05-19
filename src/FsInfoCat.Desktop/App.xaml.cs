@@ -1,7 +1,13 @@
+using FsInfoCat.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using System;
+using System.Configuration;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 
 namespace FsInfoCat.Desktop
@@ -12,6 +18,7 @@ namespace FsInfoCat.Desktop
     public partial class App : Application
     {
         public static readonly LoggerFactory LoggerFactory;
+        private readonly ILogger<App> _logger;
 
         public static string GetAppDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 Desktop.Properties.Settings.Default.ApplicationDataFolderName);
@@ -30,8 +37,31 @@ namespace FsInfoCat.Desktop
         {
             LoggerFactory = new LoggerFactory();
             LoggerFactory.AddProvider(new DebugLoggerProvider());
-#warning Need to remove reference to EF6 and change to EF Core after remote db ported to new module
-            //Services.GetLocalDbService().SetContextFactory(LocalDb.FsInfoCatContext.GetContextFactory(Properties.Settings.Default.LocalDbFile, Assembly.GetEntryAssembly());
+        }
+
+        public App() { _logger = LoggerFactory.CreateLogger<App>(); }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            Assembly assembly = Assembly.GetEntryAssembly();
+            using (var scope = _logger.BeginScope("OnStartup"))
+            {
+                LocalDb.LocalDbContext.Initialize(Desktop.Properties.Settings.Default.LocalDbFile, assembly);
+                if (AppConfig.TryGetConnectionStringBuilder(nameof(UpstreamDb.UpstreamDbContext), out DbConnectionStringBuilder connectionStringBuilder, out string providerName))
+                {
+                    if (connectionStringBuilder is SqlConnectionStringBuilder)
+                        UpstreamDb.UpstreamDbContext.Initialize(connectionStringBuilder.ConnectionString, assembly.GetName());
+                    else
+                    {
+                        _logger.LogWarning($"Unsported provider type \"{{{nameof(ConnectionStringSettings.ProviderName)}}}\" specified in {nameof(ConnectionStringSettings)} \"{{{nameof(ConnectionStringSettings.Name)}}}\".",
+                            providerName, nameof(UpstreamDb.UpstreamDbContext));
+                        UpstreamDb.UpstreamDbContext.Initialize(null, assembly.GetName());
+                    }
+                }
+                else
+                    UpstreamDb.UpstreamDbContext.Initialize(null, assembly.GetName());
+                base.OnStartup(e);
+            }
         }
 
         public static ViewModel.MainViewModel GetMainVM() => ((App)Current).FindResource("MainVM") as ViewModel.MainViewModel;

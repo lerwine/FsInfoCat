@@ -22,5 +22,15 @@ namespace FsInfoCat.Internal
             else
                 throw new InvalidOperationException();
         }
+
+        public string GetConnectionString()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetConnectionString(string connectionString)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

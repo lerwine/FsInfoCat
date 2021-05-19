@@ -4,13 +4,13 @@ namespace FsInfoCat.Model.Upstream
 {
     public interface IUpstreamFile : IFile, IUpstreamTimeStampedEntity
     {
-        new IReadOnlyCollection<IUpstreamFileComparison> Comparisons1 { get; }
+        new IReadOnlyCollection<IUpstreamFileComparison> SourceComparisons { get; }
 
-        new IReadOnlyCollection<IUpstreamFileComparison> Comparisons2 { get; }
+        new IReadOnlyCollection<IUpstreamFileComparison> TargetComparisons { get; }
 
         new IUpstreamSubDirectory Parent { get; }
 
-        new IUpstreamContentHash HashInfo { get; }
+        new IUpstreamContentInfo HashInfo { get; }
 
         new IUpstreamRedundancy Redundancy { get; }
 

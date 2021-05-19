@@ -1,3 +1,5 @@
+using FsInfoCat.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Configuration;
 using System.Data.Common;
@@ -12,17 +14,80 @@ namespace FsInfoCat.Desktop
         internal const string DEFAULT_REMOTE_EDM_METADATA = "res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl";
         internal const string DEFAULT_LOCAL_EDM_METADATA = "res://*/Model.Local.LocalDbContainer.csdl|res://*/Model.Local.LocalDbContainer.ssdl|res://*/Model.Local.LocalDbContainer.msl";
 
-        private static string GetConnectionString(string name, out string providerName)
+        private static readonly ILogger<AppConfig> _logger = App.LoggerFactory.CreateLogger<AppConfig>();
+
+        public static string GetProviderFactoryInvariantName<TProvider>()
+            where TProvider : DbProviderFactory
         {
+            System.Data.DataRow[] dataRows = DbProviderFactories.GetFactoryClasses().Select($"[{DbConstants.ProviderFactories_AssemblyQualifiedName}]='{typeof(TProvider).AssemblyQualifiedName}'");
+            return (dataRows.Length > 0) ? dataRows[0][DbConstants.ProviderFactories_InvariantName] as string : null;
+        }
+
+        public static bool TryGetProviderFactoryInvariantName<TProvider>(out string invariantName)
+            where TProvider : DbProviderFactory
+        {
+            System.Data.DataRow[] dataRows = DbProviderFactories.GetFactoryClasses().Select($"[{DbConstants.ProviderFactories_AssemblyQualifiedName}]='{typeof(TProvider).AssemblyQualifiedName}'");
+            if (dataRows.Length > 0)
+            {
+                invariantName = dataRows[0][DbConstants.ProviderFactories_InvariantName] as string;
+                return true;
+            }
+            _logger.LogWarning($"No registered provider factory found for type {{{nameof(Type.AssemblyQualifiedName)}}}", typeof(TProvider).AssemblyQualifiedName);
+            invariantName = null;
+            return false;
+        }
+
+        public static bool TryGetConnectionStringBuilder(string name, out DbConnectionStringBuilder connectionStringBuilder, out string providerName)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentOutOfRangeException(nameof(name));
             ConnectionStringSettings connectionStringSettings = ConfigurationManager.ConnectionStrings[name];
             if (connectionStringSettings is null)
             {
+                _logger.LogWarning($"No connection string named \"{{{nameof(ConnectionStringSettings.Name)}}}\" found.", name);
+                connectionStringBuilder = null;
                 providerName = null;
-                return null;
+                return false;
             }
-            providerName = string.IsNullOrWhiteSpace(connectionStringSettings.ProviderName) ? GetProviderFactoryInvariantName<SqlClientFactory>() :
-                connectionStringSettings.ProviderName;
-            return connectionStringSettings.ConnectionString;
+            providerName = connectionStringSettings.ProviderName;
+            if (string.IsNullOrWhiteSpace(connectionStringSettings.ConnectionString))
+                _logger.LogWarning($"{nameof(ConnectionStringSettings)} \"{{{nameof(ConnectionStringSettings.Name)}}}\" does not have a {nameof(ConnectionStringSettings.ConnectionString)} specified.", name);
+            else
+            {
+                DbProviderFactory providerFactory;
+                if (string.IsNullOrWhiteSpace(providerName))
+                {
+                    _logger.LogWarning($"{nameof(ConnectionStringSettings)} \"{{{nameof(ConnectionStringSettings.Name)}}}\" does not have a {nameof(ConnectionStringSettings.ProviderName)} specified.",
+                        name);
+                    TryGetProviderFactoryInvariantName<SqlClientFactory>(out providerName);
+                    providerFactory = SqlClientFactory.Instance;
+                }
+                else
+                    try { providerFactory = DbProviderFactories.GetFactory(providerName); }
+                    catch (Exception exception)
+                    {
+                        _logger.LogCritical(exception, $"Failed to find a database provider factory for {nameof(ConnectionStringSettings)} \"{{{nameof(ConnectionStringSettings.Name)}}}\" using provider name \"{{{nameof(ConnectionStringSettings.ProviderName)}}}\".",
+                            name, providerName);
+                        connectionStringBuilder = null;
+                        return false;
+                    }
+                try
+                {
+                    (connectionStringBuilder = providerFactory.CreateConnectionStringBuilder()).ConnectionString = connectionStringSettings.ConnectionString;
+                    return true;
+                }
+                catch (Exception exception)
+                {
+                    if (string.IsNullOrWhiteSpace(providerName))
+                        _logger.LogCritical(exception, $"Failed to parse {nameof(ConnectionStringSettings.ConnectionString)} for {nameof(ConnectionStringSettings)} \"{{{nameof(ConnectionStringSettings.Name)}}}\".",
+                            name);
+                    else
+                        _logger.LogCritical(exception, $"Failed to parse {nameof(ConnectionStringSettings.ConnectionString)} for {nameof(ConnectionStringSettings)} \"{{{nameof(ConnectionStringSettings.Name)}}}\" using the \"{{{nameof(ConnectionStringSettings.ProviderName)}}}\" database provider.",
+                            name, providerName);
+                }
+            }
+            connectionStringBuilder = null;
+            return false;
         }
 
         private static void SetConnectionString(Configuration configuration, string name, string connectionString, string providerName, bool doNotRefreshConfigurationManager = false)
@@ -35,13 +100,6 @@ namespace FsInfoCat.Desktop
             }
             if (!doNotRefreshConfigurationManager)
                 ConfigurationManager.RefreshSection(configuration.ConnectionStrings.SectionInformation.Name);
-        }
-
-        public static string GetProviderFactoryInvariantName<TProvider>()
-            where TProvider : DbProviderFactory
-        {
-            System.Data.DataRow[] dataRows = DbProviderFactories.GetFactoryClasses().Select($"[AssemblyQualifiedName]='{typeof(TProvider).AssemblyQualifiedName}'");
-            return (dataRows.Length > 0) ? dataRows[0]["InvariantName"] as string : null;
         }
 
         public static bool TestProviderFactoryName<TProvider>(string invariantName)

@@ -25,16 +25,6 @@ namespace FsInfoCat.Desktop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=c868dbserver.database.windows.net;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;multipleactiveresultsets=True;connect timeout=30;encrypt=True;application name=EntityFramework""")]
-        public string RemoteEntityConnectionString {
-            get {
-                return ((string)(this["RemoteEntityConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCat.sdf")]
         public string LocalDbFile {
             get {
@@ -67,6 +57,16 @@ namespace FsInfoCat.Desktop.Properties {
         public string LocalEntityConnectionString {
             get {
                 return ((string)(this["LocalEntityConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=(localdb)\ProjectsV13;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;multipleactiveresultsets=True;connect timeout=30;encrypt=True;application name=EntityFramework""")]
+        public string RemoteEntityConnectionString {
+            get {
+                return ((string)(this["RemoteEntityConnectionString"]));
             }
         }
     }

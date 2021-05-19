@@ -12,19 +12,19 @@ namespace FsInfoCat.LocalDb
     {
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
-            builder.HasKey(nameof(FileId1), nameof(FileId2));
+            builder.HasKey(nameof(SourceFileId), nameof(TargetFileId));
             //builder.ToTable($"{nameof(FileComparison)}{nameof(File1)}").HasOne(p => p.File1).WithMany(d => d.Comparisons1)
             //    .HasForeignKey(f => f.FileId1).IsRequired();
             //builder.ToTable($"{nameof(FileComparison)}{nameof(File1)}").HasOne(p => p.File2).WithMany(d => d.Comparisons2)
             //    .HasForeignKey(f => f.FileId2).IsRequired();
-            builder.HasOne(p => p.File1).WithMany(d => d.Comparisons1).HasForeignKey(nameof(FileId1)).IsRequired();
-            builder.HasOne(p => p.File2).WithMany(d => d.Comparisons2).HasForeignKey(nameof(FileId2)).IsRequired();
+            builder.HasOne(p => p.SourceFile).WithMany(d => d.SourceComparisons).HasForeignKey(nameof(SourceFileId)).IsRequired();
+            builder.HasOne(p => p.File2).WithMany(d => d.TargetComparisons).HasForeignKey(nameof(TargetFileId)).IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            Validator.TryValidateProperty(File1, new ValidationContext(this, null, null) { MemberName = nameof(File1) }, results);
+            Validator.TryValidateProperty(SourceFile, new ValidationContext(this, null, null) { MemberName = nameof(SourceFile) }, results);
             Validator.TryValidateProperty(File2, new ValidationContext(this, null, null) { MemberName = nameof(File2) }, results);
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
                 results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
@@ -33,9 +33,9 @@ namespace FsInfoCat.LocalDb
 
         #region Column Properties
 
-        public Guid FileId1 { get; set; }
+        public Guid SourceFileId { get; set; }
 
-        public Guid FileId2 { get; set; }
+        public Guid TargetFileId { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_AreEqual), ResourceType = typeof(ModelResources))]
         public bool AreEqual { get; set; }
@@ -59,8 +59,9 @@ namespace FsInfoCat.LocalDb
 
         [Display(Name = nameof(ModelResources.DisplayName_File1), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_File1Required), ErrorMessageResourceType = typeof(ModelResources))]
-        public virtual FsFile File1 { get; set; }
+        public virtual FsFile SourceFile { get; set; }
 
+        // TODO: Rename to TargetFile
         [Display(Name = nameof(ModelResources.DisplayName_File2), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_File2Required), ErrorMessageResourceType = typeof(ModelResources))]
         public virtual FsFile File2 { get; set; }
@@ -69,13 +70,13 @@ namespace FsInfoCat.LocalDb
 
         #region Explicit Members
 
-        IFile IFileComparison.File1 => File1;
+        IFile IFileComparison.SourceFile => SourceFile;
 
-        IFile IFileComparison.File2 => File2;
+        IFile IFileComparison.TargetFile => File2;
 
-        ILocalFile ILocalFileComparison.File1 => File1;
+        ILocalFile ILocalFileComparison.SourceFile => SourceFile;
 
-        ILocalFile ILocalFileComparison.File2 => File2;
+        ILocalFile ILocalFileComparison.TargetFile => File2;
 
         #endregion
     }

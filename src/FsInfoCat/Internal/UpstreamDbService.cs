@@ -6,7 +6,17 @@ namespace FsInfoCat.Internal
 {
     internal class UpstreamDbService : IUpstreamDbService
     {
+        public string GetConnectionString()
+        {
+            throw new NotImplementedException();
+        }
+
         public IUpstreamDbContext GetDbContext()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetConnectionString(string connectionString)
         {
             throw new NotImplementedException();
         }

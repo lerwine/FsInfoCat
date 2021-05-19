@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-    public interface IContentHash : ITimeStampedEntity, IValidatableObject
+    public interface IContentInfo : ITimeStampedEntity, IValidatableObject
     {
         /// <summary>
         /// Gets the unique identifier.

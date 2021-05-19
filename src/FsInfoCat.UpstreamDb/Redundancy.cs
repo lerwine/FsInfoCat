@@ -22,7 +22,7 @@ namespace FsInfoCat.UpstreamDb
 
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
-            builder.HasKey(nameof(Id));
+            builder.HasKey(nameof(RedundantSetId), nameof(FileId));
             builder.HasOne(d => d.TargetFile).WithOne(f => f.Redundancy).HasForeignKey(nameof(FileId)).IsRequired();
             builder.HasOne(d => d.RedundantSet).WithMany(r => r.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired();
             builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
@@ -32,7 +32,7 @@ namespace FsInfoCat.UpstreamDb
 
         #region Column Properties
 
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
 
         public Guid RedundantSetId { get; set; }
 

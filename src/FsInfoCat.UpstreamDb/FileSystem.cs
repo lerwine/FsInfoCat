@@ -62,7 +62,7 @@ namespace FsInfoCat.UpstreamDb
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_MaxNameLength), ResourceType = typeof(ModelResources))]
         [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_MaxNameLengthNegative), ErrorMessageResourceType = typeof(ModelResources))]
-        [DefaultValueDbSettings(nameof(DBSettings.DefaultValue_MaxFileSystemNameLength))]
+        [DefaultValueDbSettings(nameof(DbConstants.DefaultValue_MaxFileSystemNameLength))]
         public long MaxNameLength { get; set; } = DbConstants.DefaultValue_MaxFileSystemNameLength;
 
         [Display(Name = nameof(ModelResources.DisplayName_DefaultDriveType), ResourceType = typeof(ModelResources))]

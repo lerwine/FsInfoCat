@@ -126,14 +126,65 @@
   <data name="DisplayName_AssignmentGroup" xml:space="preserve">
     <value>Assignment Group</value>
   </data>
+  <data name="DisplayName_AssignmentGroups" xml:space="preserve">
+    <value>Assignment Groups</value>
+  </data>
   <data name="DisplayName_CaseSensitiveSearch" xml:space="preserve">
     <value>Case-Sensitive Search</value>
   </data>
   <data name="DisplayName_CreatedBy" xml:space="preserve">
     <value>Created By</value>
   </data>
+  <data name="DisplayName_CreatedComparisons" xml:space="preserve">
+    <value>Created Comparisons</value>
+  </data>
+  <data name="DisplayName_CreatedDirectories" xml:space="preserve">
+    <value>Created Directories</value>
+  </data>
+  <data name="DisplayName_CreatedDirectoryRelocateTasks" xml:space="preserve">
+    <value>Created Directory Relocation Tasks</value>
+  </data>
+  <data name="DisplayName_CreatedFileRelocateTasks" xml:space="preserve">
+    <value>Created File Relocation Tasks</value>
+  </data>
+  <data name="DisplayName_CreatedFiles" xml:space="preserve">
+    <value>Created Files</value>
+  </data>
+  <data name="DisplayName_CreatedFileSystems" xml:space="preserve">
+    <value>Created File Systems</value>
+  </data>
+  <data name="DisplayName_CreatedHashCalculations" xml:space="preserve">
+    <value>Created Hash Calculations</value>
+  </data>
+  <data name="DisplayName_CreatedHostDevices" xml:space="preserve">
+    <value>Created Host Devices</value>
+  </data>
+  <data name="DisplayName_CreatedHostPlatforms" xml:space="preserve">
+    <value>Created Host Platforms</value>
+  </data>
+  <data name="DisplayName_CreatedMemberships" xml:space="preserve">
+    <value>Created Memberships</value>
+  </data>
   <data name="DisplayName_CreatedOn" xml:space="preserve">
     <value>Created On</value>
+  </data>
+  <data name="DisplayName_CreatedRedundancies" xml:space="preserve">
+    <value>Created Redundancies</value>
+  </data>
+  <data name="DisplayName_CreatedRedundantSets" xml:space="preserve">
+    <value>Created RedundantS ets</value>
+  </data>
+  <data name="DisplayName_CreatedSymbolicNames" xml:space="preserve">
+    <value>Created Symbolic Names</value>
+  </data>
+  <data name="DisplayName_CreatedUserGroups" xml:space="preserve">
+    <value>Created Groups</value>
+  </data>
+  <data name="DisplayName_CreatedUserProfiles" xml:space="preserve">
+    <value>Created User Profiles</value>
+  </data>
+  <data name="DisplayName_CreatedVolumes" xml:space="preserve">
+    <value>Created Volumes</value>
   </data>
   <data name="DisplayName_DbPrincipalId" xml:space="preserve">
     <value>DB Principal ID</value>
@@ -149,6 +200,9 @@
   </data>
   <data name="DisplayName_DirectoryRelocationTask" xml:space="preserve">
     <value>Directory Relocation Task</value>
+  </data>
+  <data name="DisplayName_DirectoryRelocationTasks" xml:space="preserve">
+    <value>Directory Relocation Tasks</value>
   </data>
   <data name="DisplayName_DisplayName" xml:space="preserve">
     <value>Display Name</value>
@@ -225,8 +279,56 @@
   <data name="DisplayName_ModifiedBy" xml:space="preserve">
     <value>Modified By</value>
   </data>
+  <data name="DisplayName_ModifiedComparisons" xml:space="preserve">
+    <value>Modified Comparisons</value>
+  </data>
+  <data name="DisplayName_ModifiedDirectories" xml:space="preserve">
+    <value>Modified Directories</value>
+  </data>
+  <data name="DisplayName_ModifiedDirectoryRelocateTasks" xml:space="preserve">
+    <value>Modified Directory Relocation Tasks</value>
+  </data>
+  <data name="DisplayName_ModifiedFileRelocateTasks" xml:space="preserve">
+    <value>Modified File Relocation Tasks</value>
+  </data>
+  <data name="DisplayName_ModifiedFiles" xml:space="preserve">
+    <value>Modified Files</value>
+  </data>
+  <data name="DisplayName_ModifiedFileSystems" xml:space="preserve">
+    <value>Modified File Systems</value>
+  </data>
+  <data name="DisplayName_ModifiedHashCalculations" xml:space="preserve">
+    <value>Modified Hash Calculations</value>
+  </data>
+  <data name="DisplayName_ModifiedHostDevices" xml:space="preserve">
+    <value>Modified Host Devices</value>
+  </data>
+  <data name="DisplayName_ModifiedHostPlatforms" xml:space="preserve">
+    <value>Modified Host Platforms</value>
+  </data>
+  <data name="DisplayName_ModifiedMemberships" xml:space="preserve">
+    <value>Modified Memberships</value>
+  </data>
   <data name="DisplayName_ModifiedOn" xml:space="preserve">
     <value>Modified On</value>
+  </data>
+  <data name="DisplayName_ModifiedRedundancies" xml:space="preserve">
+    <value>Modified Redundancies</value>
+  </data>
+  <data name="DisplayName_ModifiedRedundantSets" xml:space="preserve">
+    <value>Modified Redundant Sets</value>
+  </data>
+  <data name="DisplayName_ModifiedSymbolicNames" xml:space="preserve">
+    <value>Modified Symbolic Names</value>
+  </data>
+  <data name="DisplayName_ModifiedUserGroups" xml:space="preserve">
+    <value>Modified Groups</value>
+  </data>
+  <data name="DisplayName_ModifiedUserProfiles" xml:space="preserve">
+    <value>Modified User Profiles</value>
+  </data>
+  <data name="DisplayName_ModifiedVolumes" xml:space="preserve">
+    <value>Modified Volumes</value>
   </data>
   <data name="DisplayName_ParentDirectory" xml:space="preserve">
     <value>Parent Directory</value>

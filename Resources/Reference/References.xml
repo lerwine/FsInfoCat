@@ -54,12 +54,19 @@
             <Link Tag="NetCLI" />
             <Categories>
                 <Category Name="Entity Framework">
-                    <Link Tag="EfCodeFirst" />
-                    <Link Tag="Ef6CfNewDb" />
-                    <Link Tag="EF6Overview" />
+                    <Link Tag="EFCoreOverview" />
                     <Link Tag="SqCePKg"/>
                     <Link Tag="SqlCeNet"/>
+                    <Link Tag="EfWpf"/>
+                    <Link Tag="SqlCeDocs"/>
+                    <Link Tag="EfCodeFirstT" />
                     <Link Tag="IValidatableObject" />
+                    <Categories>
+                        <Category Name="EF6">
+                            <Link Tag="Ef6CfNewDb" />
+                            <Link Tag="EF6Overview" />
+                        </Category>
+                    </Categories>
                 </Category>
                 <Category Name="Testing">
                     <Link Tag="NUnit" />

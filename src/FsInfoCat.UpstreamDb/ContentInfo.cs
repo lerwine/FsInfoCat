@@ -8,11 +8,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.UpstreamDb
 {
-    public class ContentHash : IUpstreamContentHash
+    public class ContentInfo : IUpstreamContentInfo
     {
         private byte[] _data;
 
-        internal static void BuildEntity(EntityTypeBuilder<ContentHash> builder)
+        internal static void BuildEntity(EntityTypeBuilder<ContentInfo> builder)
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(Data)).HasMaxLength(UInt128.ByteSize).IsFixedLength();
@@ -30,7 +30,7 @@ namespace FsInfoCat.UpstreamDb
             return results;
         }
 
-        public ContentHash()
+        public ContentInfo()
         {
             Files = new HashSet<FsFile>();
         }
@@ -78,11 +78,11 @@ namespace FsInfoCat.UpstreamDb
 
         #region Explicit Members
 
-        IReadOnlyCollection<IFile> IContentHash.Files => Files;
+        IReadOnlyCollection<IFile> IContentInfo.Files => Files;
 
-        IReadOnlyCollection<IUpstreamFile> IUpstreamContentHash.Files => Files;
+        IReadOnlyCollection<IUpstreamFile> IUpstreamContentInfo.Files => Files;
 
-        IReadOnlyCollection<byte> IContentHash.Data => Data;
+        IReadOnlyCollection<byte> IContentInfo.Data => Data;
 
         IUserProfile IUpstreamTimeStampedEntity.CreatedBy => CreatedBy;
 

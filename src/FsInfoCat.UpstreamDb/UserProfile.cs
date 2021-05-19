@@ -34,10 +34,11 @@ namespace FsInfoCat.UpstreamDb
             CreatedDirectories = new HashSet<FsDirectory>();
             CreatedFiles = new HashSet<FsFile>();
             CreatedFileSystems = new HashSet<FileSystem>();
-            CreatedHashCalculations = new HashSet<ContentHash>();
+            CreatedHashCalculations = new HashSet<ContentInfo>();
             CreatedHostDevices = new HashSet<HostDevice>();
             CreatedHostPlatforms = new HashSet<HostPlatform>();
             CreatedRedundancies = new HashSet<Redundancy>();
+            CreatedRedundantSets = new HashSet<RedundantSet>();
             CreatedUserProfiles = new HashSet<UserProfile>();
             CreatedVolumes = new HashSet<Volume>();
             CreatedDirectoryRelocateTasks = new HashSet<DirectoryRelocateTask>();
@@ -48,10 +49,11 @@ namespace FsInfoCat.UpstreamDb
             ModifiedDirectories = new HashSet<FsDirectory>();
             ModifiedFiles = new HashSet<FsFile>();
             ModifiedFileSystems = new HashSet<FileSystem>();
-            ModifiedHashCalculations = new HashSet<ContentHash>();
+            ModifiedHashCalculations = new HashSet<ContentInfo>();
             ModifiedHostDevices = new HashSet<HostDevice>();
             ModifiedHostPlatforms = new HashSet<HostPlatform>();
             ModifiedRedundancies = new HashSet<Redundancy>();
+            ModifiedRedundantSets = new HashSet<RedundantSet>();
             ModifiedUserProfiles = new HashSet<UserProfile>();
             ModifiedVolumes = new HashSet<Volume>();
             ModifiedDirectoryRelocateTasks = new HashSet<DirectoryRelocateTask>();
@@ -137,10 +139,13 @@ namespace FsInfoCat.UpstreamDb
 
         #region Navigation Properties
 
+        [Display(Name = nameof(ModelResources.DisplayName_AssignmentGroups), ResourceType = typeof(ModelResources))]
         public HashSet<UserGroupMembership> AssignmentGroups { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_DirectoryRelocationTasks), ResourceType = typeof(ModelResources))]
         public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_FileRelocationTasks), ResourceType = typeof(ModelResources))]
         public HashSet<FileRelocateTask> FileRelocationTasks { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]
@@ -151,64 +156,100 @@ namespace FsInfoCat.UpstreamDb
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ModifiedBy), ErrorMessageResourceType = typeof(ModelResources))]
         public UserProfile ModifiedBy { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedSymbolicNames), ResourceType = typeof(ModelResources))]
         public HashSet<SymbolicName> CreatedSymbolicNames { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedComparisons), ResourceType = typeof(ModelResources))]
         public HashSet<FileComparison> CreatedComparisons { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedDirectories), ResourceType = typeof(ModelResources))]
         public HashSet<FsDirectory> CreatedDirectories { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedFiles), ResourceType = typeof(ModelResources))]
         public HashSet<FsFile> CreatedFiles { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedFileSystems), ResourceType = typeof(ModelResources))]
         public HashSet<FileSystem> CreatedFileSystems { get; set; }
 
-        public HashSet<ContentHash> CreatedHashCalculations { get; set; }
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedHashCalculations), ResourceType = typeof(ModelResources))]
+        public HashSet<ContentInfo> CreatedHashCalculations { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedHostDevices), ResourceType = typeof(ModelResources))]
         public HashSet<HostDevice> CreatedHostDevices { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedHostPlatforms), ResourceType = typeof(ModelResources))]
         public HashSet<HostPlatform> CreatedHostPlatforms { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedRedundancies), ResourceType = typeof(ModelResources))]
         public HashSet<Redundancy> CreatedRedundancies { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedRedundantSets), ResourceType = typeof(ModelResources))]
+        public HashSet<RedundantSet> CreatedRedundantSets { get; set; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedUserProfiles), ResourceType = typeof(ModelResources))]
         public HashSet<UserProfile> CreatedUserProfiles { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedVolumes), ResourceType = typeof(ModelResources))]
         public HashSet<Volume> CreatedVolumes { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedVolumes), ResourceType = typeof(ModelResources))]
         public HashSet<Volume> ModifiedVolumes { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedUserProfiles), ResourceType = typeof(ModelResources))]
         public HashSet<UserProfile> ModifiedUserProfiles { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedRedundancies), ResourceType = typeof(ModelResources))]
         public HashSet<Redundancy> ModifiedRedundancies { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedRedundantSets), ResourceType = typeof(ModelResources))]
+        public HashSet<RedundantSet> ModifiedRedundantSets { get; set; }
+
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedHostPlatforms), ResourceType = typeof(ModelResources))]
         public HashSet<HostPlatform> ModifiedHostPlatforms { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedHostDevices), ResourceType = typeof(ModelResources))]
         public HashSet<HostDevice> ModifiedHostDevices { get; set; }
 
-        public HashSet<ContentHash> ModifiedHashCalculations { get; set; }
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedHashCalculations), ResourceType = typeof(ModelResources))]
+        public HashSet<ContentInfo> ModifiedHashCalculations { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedSymbolicNames), ResourceType = typeof(ModelResources))]
         public HashSet<SymbolicName> ModifiedSymbolicNames { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedFileSystems), ResourceType = typeof(ModelResources))]
         public HashSet<FileSystem> ModifiedFileSystems { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedFiles), ResourceType = typeof(ModelResources))]
         public HashSet<FsFile> ModifiedFiles { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedDirectories), ResourceType = typeof(ModelResources))]
         public HashSet<FsDirectory> ModifiedDirectories { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedComparisons), ResourceType = typeof(ModelResources))]
         public HashSet<FileComparison> ModifiedComparisons { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedDirectoryRelocateTasks), ResourceType = typeof(ModelResources))]
         public HashSet<DirectoryRelocateTask> CreatedDirectoryRelocateTasks { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedFileRelocateTasks), ResourceType = typeof(ModelResources))]
         public HashSet<FileRelocateTask> CreatedFileRelocateTasks { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedUserGroups), ResourceType = typeof(ModelResources))]
         public HashSet<UserGroup> CreatedUserGroups { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_CreatedMemberships), ResourceType = typeof(ModelResources))]
         public HashSet<UserGroupMembership> CreatedMemberships { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedDirectoryRelocateTasks), ResourceType = typeof(ModelResources))]
         public HashSet<DirectoryRelocateTask> ModifiedDirectoryRelocateTasks { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedFileRelocateTasks), ResourceType = typeof(ModelResources))]
         public HashSet<FileRelocateTask> ModifiedFileRelocateTasks { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedUserGroups), ResourceType = typeof(ModelResources))]
         public HashSet<UserGroup> ModifiedUserGroups { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_ModifiedMemberships), ResourceType = typeof(ModelResources))]
         public HashSet<UserGroupMembership> ModifiedMemberships { get; set; }
 
         #endregion
@@ -227,7 +268,7 @@ namespace FsInfoCat.UpstreamDb
 
         IReadOnlyCollection<IUpstreamFileSystem> IUserProfile.CreatedFileSystems => CreatedFileSystems;
 
-        IReadOnlyCollection<IUpstreamContentHash> IUserProfile.CreatedHashCalculations => CreatedHashCalculations;
+        IReadOnlyCollection<IUpstreamContentInfo> IUserProfile.CreatedHashCalculations => CreatedHashCalculations;
 
         IReadOnlyCollection<IHostDevice> IUserProfile.CreatedHostDevices => CreatedHostDevices;
 
@@ -249,7 +290,7 @@ namespace FsInfoCat.UpstreamDb
 
         IReadOnlyCollection<IHostDevice> IUserProfile.ModifiedHostDevices => ModifiedHostDevices;
 
-        IReadOnlyCollection<IUpstreamContentHash> IUserProfile.ModifiedHashCalculations => ModifiedHashCalculations;
+        IReadOnlyCollection<IUpstreamContentInfo> IUserProfile.ModifiedHashCalculations => ModifiedHashCalculations;
 
         IReadOnlyCollection<IUpstreamSymbolicName> IUserProfile.ModifiedSymbolicNames => ModifiedSymbolicNames;
 

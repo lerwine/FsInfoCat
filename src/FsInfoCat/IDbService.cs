@@ -4,6 +4,8 @@ namespace FsInfoCat
 {
     public interface IDbService
     {
+        string GetConnectionString();
+        void SetConnectionString(string connectionString);
         Model.IDbContext GetDbContext();
     }
 

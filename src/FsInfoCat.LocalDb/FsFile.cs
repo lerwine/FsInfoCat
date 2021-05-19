@@ -19,8 +19,8 @@ namespace FsInfoCat.LocalDb
 
         public FsFile()
         {
-            Comparisons1 = new HashSet<FileComparison>();
-            Comparisons2 = new HashSet<FileComparison>();
+            SourceComparisons = new HashSet<FileComparison>();
+            TargetComparisons = new HashSet<FileComparison>();
         }
 
         internal static void BuildEntity(EntityTypeBuilder<FsFile> builder)
@@ -30,7 +30,7 @@ namespace FsInfoCat.LocalDb
             builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
             builder.HasOne(p => p.HashInfo).WithMany(d => d.Files).HasForeignKey(nameof(ContentInfoId)).IsRequired();
-            builder.HasOne(d => d.Redundancy).WithOne(r => r.TargetFile).HasForeignKey(nameof(RedundancyId));
+            //builder.HasOne(d => d.Redundancy).WithOne(r => r.TargetFile).HasForeignKey(nameof(RedundancyId));
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -59,7 +59,7 @@ namespace FsInfoCat.LocalDb
 
         public Guid ContentInfoId { get; set; }
 
-        public Guid? RedundancyId { get; set; }
+        //public Guid? RedundancyId { get; set; }
 
         public Guid? UpstreamId { get; set; }
         
@@ -95,31 +95,31 @@ namespace FsInfoCat.LocalDb
 
         [Display(Name = nameof(ModelResources.DisplayName_HashCalculation), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_HashCalculationRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        public virtual ContentHash HashInfo { get; set; }
+        public virtual ContentInfo HashInfo { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ParentDirectoryRequired), ErrorMessageResourceType = typeof(ModelResources))]
         public virtual FsDirectory Parent { get; set; }
 
-        public virtual HashSet<FileComparison> Comparisons1 { get; set; }
+        public virtual HashSet<FileComparison> SourceComparisons { get; set; }
 
-        public virtual HashSet<FileComparison> Comparisons2 { get; set; }
+        public virtual HashSet<FileComparison> TargetComparisons { get; set; }
 
         #endregion
 
         #region Explicit Members
 
-        IContentHash IFile.HashInfo => HashInfo;
+        IContentInfo IFile.HashInfo => HashInfo;
 
         ISubDirectory IFile.Parent => Parent;
 
-        IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
+        IReadOnlyCollection<IFileComparison> IFile.SourceComparisons => SourceComparisons;
 
-        IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => Comparisons2;
+        IReadOnlyCollection<IFileComparison> IFile.TargetComparisons => TargetComparisons;
 
-        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons1 => Comparisons1;
+        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons1 => SourceComparisons;
 
-        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons2 => Comparisons2;
+        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons2 => TargetComparisons;
 
         ILocalSubDirectory ILocalFile.Parent => Parent;
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
@@ -11,13 +10,9 @@ namespace FsInfoCat.Model
     /// <seealso cref="System.ComponentModel.DataAnnotations.IValidatableObject" />
     public interface IRedundancy : ITimeStampedEntity, IValidatableObject
     {
-        /// <summary>
-        /// Gets the unique identifier.
-        /// </summary>
-        /// <value>
-        /// The unique identifier that is used as the prmary database key.
-        /// </value>
-        Guid Id { get; }
+        Guid FileId { get; }
+
+        Guid RedundantSetId { get; }
 
         /// <summary>
         /// Gets the dispositional status of the of the file.

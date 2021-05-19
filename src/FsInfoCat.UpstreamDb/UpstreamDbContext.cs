@@ -1,11 +1,14 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Upstream;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 
 namespace FsInfoCat.UpstreamDb
 {
@@ -18,7 +21,7 @@ namespace FsInfoCat.UpstreamDb
             modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
-            modelBuilder.Entity<ContentHash>(ContentHash.BuildEntity);
+            modelBuilder.Entity<ContentInfo>(ContentInfo.BuildEntity);
             modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             modelBuilder.Entity<HostDevice>(HostDevice.BuildEntity);
@@ -33,7 +36,20 @@ namespace FsInfoCat.UpstreamDb
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<ContentHash> HashInfo { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        public static void Initialize(string connectionString, AssemblyName assemblyName)
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionString ?? "");
+            builder.ApplicationName = $"{assemblyName.Name}_{assemblyName.Version}";
+            builder.WorkstationID = Environment.MachineName;
+            Services.GetUpstreamDbService().SetConnectionString(builder.ConnectionString);
+        }
+
+        public DbSet<ContentInfo> HashInfo { get; set; }
 
         public DbSet<FileComparison> Comparisons { get; set; }
 
@@ -67,9 +83,9 @@ namespace FsInfoCat.UpstreamDb
 
         #region Explicit Members
 
-        IQueryable<IContentHash> IDbContext.HashInfo => HashInfo;
+        IQueryable<IContentInfo> IDbContext.HashInfo => HashInfo;
 
-        IQueryable<IUpstreamContentHash> IUpstreamDbContext.HashCalculations => HashInfo;
+        IQueryable<IUpstreamContentInfo> IUpstreamDbContext.HashCalculations => HashInfo;
 
         IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
 
@@ -123,29 +139,29 @@ namespace FsInfoCat.UpstreamDb
 
         public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel) => Database.BeginTransaction(isolationLevel);
 
-        internal EntityEntry<ContentHash> AddHashCalculation(ContentHash hashCalculation)
+        internal EntityEntry<ContentInfo> AddHashCalculation(ContentInfo hashCalculation)
         {
             HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return HashInfo.Add(hashCalculation);
         }
 
-        void IUpstreamDbContext.AddHashCalculation(IUpstreamContentHash hashCalculation) => AddHashCalculation((ContentHash)hashCalculation);
+        void IUpstreamDbContext.AddHashCalculation(IUpstreamContentInfo hashCalculation) => AddHashCalculation((ContentInfo)hashCalculation);
 
-        internal EntityEntry<ContentHash> UpdateHashCalculation(ContentHash hashCalculation)
+        internal EntityEntry<ContentInfo> UpdateHashCalculation(ContentInfo hashCalculation)
         {
             HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return HashInfo.Update(hashCalculation);
         }
 
-        void IUpstreamDbContext.UpdateHashCalculation(IUpstreamContentHash hashCalculation) => UpdateHashCalculation((ContentHash)hashCalculation);
+        void IUpstreamDbContext.UpdateHashCalculation(IUpstreamContentInfo hashCalculation) => UpdateHashCalculation((ContentInfo)hashCalculation);
 
-        internal EntityEntry<ContentHash> RemoveHashCalculation(ContentHash hashCalculation)
+        internal EntityEntry<ContentInfo> RemoveHashCalculation(ContentInfo hashCalculation)
         {
             HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
             return HashInfo.Remove(hashCalculation);
         }
 
-        void IUpstreamDbContext.RemoveHashCalculation(IUpstreamContentHash hashCalculation) => RemoveHashCalculation((ContentHash)hashCalculation);
+        void IUpstreamDbContext.RemoveHashCalculation(IUpstreamContentInfo hashCalculation) => RemoveHashCalculation((ContentInfo)hashCalculation);
 
         internal EntityEntry<FileComparison> AddComparison(FileComparison fileComparison)
         {

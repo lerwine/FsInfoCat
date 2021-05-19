@@ -48,23 +48,19 @@ namespace FsInfoCat.UpstreamDb
         [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes; set => _notes = value ?? ""; }
 
-        // TODO: [IsInactive] bit  NOT NULL,
+        [Required]
         public bool IsInactive { get; set; }
 
-        // TODO: [CreatedOn] datetime  NOT NULL,
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_CreatedOn), ResourceType = typeof(ModelResources))]
         public DateTime CreatedOn { get; set; }
 
-        // [CreatedById] uniqueidentifier  NOT NULL,
         public Guid CreatedById { get; set; }
 
-        // TODO: [ModifiedOn] datetime  NOT NULL
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_ModifiedOn), ResourceType = typeof(ModelResources))]
         public DateTime ModifiedOn { get; set; }
 
-        // [ModifiedById] uniqueidentifier  NOT NULL,
         public Guid ModifiedById { get; set; }
 
         #endregion
@@ -73,8 +69,10 @@ namespace FsInfoCat.UpstreamDb
 
         public HashSet<UserGroupMembership> Members { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_DirectoryRelocationTasks), ResourceType = typeof(ModelResources))]
         public HashSet<DirectoryRelocateTask> DirectoryRelocationTasks { get; set; }
 
+        [Display(Name = nameof(ModelResources.DisplayName_FileRelocationTasks), ResourceType = typeof(ModelResources))]
         public HashSet<FileRelocateTask> FileRelocationTasks { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_CreatedBy), ResourceType = typeof(ModelResources))]

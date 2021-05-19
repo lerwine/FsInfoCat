@@ -4,11 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.UpstreamDb
 {
+    [Table(TABLE_NAME)]
     public class FsDirectory : IUpstreamSubDirectory
     {
+        public const string TABLE_NAME = "Directories";
+
         private string _name = "";
         private string _notes = "";
 

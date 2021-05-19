@@ -6,6 +6,9 @@ namespace FsInfoCat.Model
 {
     public static class DbConstants
     {
+        public const string ProviderFactories_AssemblyQualifiedName = "AssemblyQualifiedName";
+        public const string ProviderFactories_InvariantName = "InvariantName";
+        public const string ProviderFactories_ = "";
         public const int DbColMaxLen_SimpleName = 128;
         public const int DbColMaxLen_FileSystemName = 1024;
         public const int DbColMaxLen_DisplayName = 256;

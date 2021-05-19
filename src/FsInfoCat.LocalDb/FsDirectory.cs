@@ -4,11 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.LocalDb
 {
+    [Table(TABLE_NAME)]
     public class FsDirectory : ILocalSubDirectory, IValidatableObject
     {
+        public const string TABLE_NAME = "Directories";
+
         private string _name = "";
         private string _notes = "";
 

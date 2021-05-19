@@ -19,8 +19,8 @@ namespace FsInfoCat.UpstreamDb
 
         public FsFile()
         {
-            Comparisons1 = new HashSet<FileComparison>();
-            Comparisons2 = new HashSet<FileComparison>();
+            SourceComparisons = new HashSet<FileComparison>();
+            TargetComparisons = new HashSet<FileComparison>();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -41,8 +41,8 @@ namespace FsInfoCat.UpstreamDb
             builder.Property(nameof(Notes)).HasDefaultValue("").HasColumnType("nvarchar(max)").IsRequired();
             builder.HasOne(p => p.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
             builder.HasOne(p => p.HashInfo).WithMany(d => d.Files).HasForeignKey(nameof(ContentInfoId)).IsRequired();
-            builder.HasOne(d => d.Redundancy).WithOne(r => r.TargetFile).HasForeignKey(nameof(RedundancyId));
             builder.HasOne(p => p.FileRelocateTask).WithMany(d => d.Files).HasForeignKey(nameof(FileRelocateTaskId));
+            //builder.HasOne(d => d.Redundancy).WithOne(r => r.TargetFile).HasForeignKey(nameof(RedundancyId));
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedFiles).HasForeignKey(nameof(CreatedById)).IsRequired();
             builder.HasOne(d => d.ModifiedBy).WithMany(u => u.ModifiedFiles).HasForeignKey(nameof(ModifiedById)).IsRequired();
         }
@@ -55,6 +55,8 @@ namespace FsInfoCat.UpstreamDb
 
         public Guid ContentInfoId { get; set; }
 
+        //public Guid? RedundancyId { get; set; }
+
         public Guid? FileRelocateTaskId { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_NameRequired), ErrorMessageResourceType = typeof(ModelResources))]
@@ -63,8 +65,6 @@ namespace FsInfoCat.UpstreamDb
 
         [Required]
         public FileCrawlFlags Options { get; set; }
-
-        public Guid? RedundancyId { get; set; }
 
         [Required]
         [Display(Name = nameof(ModelResources.DisplayName_LastAccessed), ResourceType = typeof(ModelResources))]
@@ -99,7 +99,7 @@ namespace FsInfoCat.UpstreamDb
 
         [Display(Name = nameof(ModelResources.DisplayName_HashCalculation), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_HashCalculationRequired), ErrorMessageResourceType = typeof(ModelResources))]
-        public ContentHash HashInfo { get; set; }
+        public ContentInfo HashInfo { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_ParentDirectory), ResourceType = typeof(ModelResources))]
         [Required(ErrorMessageResourceName = nameof(ModelResources.ErrorMessage_ParentDirectoryRequired), ErrorMessageResourceType = typeof(ModelResources))]
@@ -107,9 +107,9 @@ namespace FsInfoCat.UpstreamDb
 
         public Redundancy Redundancy { get; set; }
 
-        public HashSet<FileComparison> Comparisons1 { get; set; }
+        public HashSet<FileComparison> SourceComparisons { get; set; }
 
-        public HashSet<FileComparison> Comparisons2 { get; set; }
+        public HashSet<FileComparison> TargetComparisons { get; set; }
 
         [Display(Name = nameof(ModelResources.DisplayName_FileRelocationTask), ResourceType = typeof(ModelResources))]
         public virtual FileRelocateTask FileRelocateTask { get; set; }
@@ -126,17 +126,17 @@ namespace FsInfoCat.UpstreamDb
 
         #region Explicit Members
 
-        IReadOnlyCollection<IUpstreamFileComparison> IUpstreamFile.Comparisons1 => Comparisons1;
+        IReadOnlyCollection<IUpstreamFileComparison> IUpstreamFile.SourceComparisons => SourceComparisons;
 
-        IReadOnlyCollection<IUpstreamFileComparison> IUpstreamFile.Comparisons2 => Comparisons2;
+        IReadOnlyCollection<IUpstreamFileComparison> IUpstreamFile.TargetComparisons => TargetComparisons;
 
         IUpstreamSubDirectory IUpstreamFile.Parent => Parent;
 
-        IContentHash IFile.HashInfo => HashInfo;
+        IContentInfo IFile.HashInfo => HashInfo;
 
-        IReadOnlyCollection<IFileComparison> IFile.Comparisons1 => Comparisons1;
+        IReadOnlyCollection<IFileComparison> IFile.SourceComparisons => SourceComparisons;
 
-        IReadOnlyCollection<IFileComparison> IFile.Comparisons2 => Comparisons2;
+        IReadOnlyCollection<IFileComparison> IFile.TargetComparisons => TargetComparisons;
 
         ISubDirectory IFile.Parent => Parent;
 
@@ -144,7 +144,7 @@ namespace FsInfoCat.UpstreamDb
 
         IUserProfile IUpstreamTimeStampedEntity.ModifiedBy => ModifiedBy;
 
-        IUpstreamContentHash IUpstreamFile.HashInfo => HashInfo;
+        IUpstreamContentInfo IUpstreamFile.HashInfo => HashInfo;
 
         IUpstreamRedundancy IUpstreamFile.Redundancy => Redundancy;
 
