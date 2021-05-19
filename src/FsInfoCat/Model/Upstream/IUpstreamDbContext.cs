@@ -4,7 +4,7 @@ namespace FsInfoCat.Model.Upstream
 {
     public interface IUpstreamDbContext : IDbContext
     {
-        new IQueryable<IUpstreamContentInfo> HashCalculations { get; }
+        new IQueryable<IUpstreamContentInfo> ContentInfos { get; }
         new IQueryable<IUpstreamFileComparison> Comparisons { get; }
         new IQueryable<IUpstreamFile> Files { get; }
         new IQueryable<IUpstreamSubDirectory> Subdirectories { get; }

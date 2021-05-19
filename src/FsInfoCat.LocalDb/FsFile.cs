@@ -117,9 +117,9 @@ namespace FsInfoCat.LocalDb
 
         IReadOnlyCollection<IFileComparison> IFile.TargetComparisons => TargetComparisons;
 
-        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons1 => SourceComparisons;
+        IReadOnlyCollection<ILocalFileComparison> ILocalFile.SourceComparisons => SourceComparisons;
 
-        IReadOnlyCollection<ILocalFileComparison> ILocalFile.Comparisons2 => TargetComparisons;
+        IReadOnlyCollection<ILocalFileComparison> ILocalFile.TargetComparisons => TargetComparisons;
 
         ILocalSubDirectory ILocalFile.Parent => Parent;
 

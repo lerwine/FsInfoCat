@@ -4,9 +4,9 @@ namespace FsInfoCat.Model.Local
 {
     public interface ILocalFile : IFile, ILocalModel
     {
-        new IReadOnlyCollection<ILocalFileComparison> Comparisons1 { get; }
+        new IReadOnlyCollection<ILocalFileComparison> SourceComparisons { get; }
 
-        new IReadOnlyCollection<ILocalFileComparison> Comparisons2 { get; }
+        new IReadOnlyCollection<ILocalFileComparison> TargetComparisons { get; }
 
         new ILocalSubDirectory Parent { get; }
 

@@ -4,7 +4,7 @@ namespace FsInfoCat.Model.Local
 {
     public interface ILocalDbContext : IDbContext
     {
-        new IQueryable<ILocalContentInfo> HashInfo { get; }
+        new IQueryable<ILocalContentInfo> ContentInfos { get; }
         new IQueryable<ILocalFileComparison> Comparisons { get; }
         new IQueryable<ILocalFile> Files { get; }
         new IQueryable<ILocalSubDirectory> Subdirectories { get; }

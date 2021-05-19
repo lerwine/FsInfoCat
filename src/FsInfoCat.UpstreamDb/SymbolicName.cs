@@ -96,7 +96,7 @@ namespace FsInfoCat.UpstreamDb
 
         IReadOnlyCollection<IFileSystem> IFsSymbolicName.FileSystemDefaults => FileSystemDefaults;
 
-        IReadOnlyCollection<IUpstreamFileSystem> IUpstreamSymbolicName.DefaultFileSystems => FileSystemDefaults;
+        IReadOnlyCollection<IUpstreamFileSystem> IUpstreamSymbolicName.FileSystemDefaults => FileSystemDefaults;
 
         IUserProfile IUpstreamTimeStampedEntity.CreatedBy => CreatedBy;
 

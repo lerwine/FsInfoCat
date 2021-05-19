@@ -661,7 +661,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public RemoteConnectionConfigViewModel()
         {
-            _logger = App.LoggerFactory.CreateLogger<RemoteConnectionConfigViewModel>();
+            _logger = Services.GetLoggingService().CreateLogger<RemoteConnectionConfigViewModel>();
             try
             {
                 _backingBuilder = AppConfig.GetRemoteDbContainerConnectionStringBuilder();

@@ -55,7 +55,7 @@ namespace FsInfoCat.Model
         /// <value>
         /// The <see cref="IContentInfo"/> objects that contain unique file sizes and MD5 hash codes found among the files that were processed.
         /// </value>
-        IQueryable<IContentInfo> HashInfo { get; }
+        IQueryable<IContentInfo> ContentInfos { get; }
 
         /// <summary>
         /// Gets the database entities that contain the results of direct file comparisons.

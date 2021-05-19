@@ -49,7 +49,7 @@ namespace FsInfoCat.UpstreamDb
             Services.GetUpstreamDbService().SetConnectionString(builder.ConnectionString);
         }
 
-        public DbSet<ContentInfo> HashInfo { get; set; }
+        public DbSet<ContentInfo> ContentInfos { get; set; }
 
         public DbSet<FileComparison> Comparisons { get; set; }
 
@@ -83,9 +83,9 @@ namespace FsInfoCat.UpstreamDb
 
         #region Explicit Members
 
-        IQueryable<IContentInfo> IDbContext.HashInfo => HashInfo;
+        IQueryable<IContentInfo> IDbContext.ContentInfos => ContentInfos;
 
-        IQueryable<IUpstreamContentInfo> IUpstreamDbContext.HashCalculations => HashInfo;
+        IQueryable<IUpstreamContentInfo> IUpstreamDbContext.ContentInfos => ContentInfos;
 
         IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
 
@@ -141,24 +141,24 @@ namespace FsInfoCat.UpstreamDb
 
         internal EntityEntry<ContentInfo> AddHashCalculation(ContentInfo hashCalculation)
         {
-            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return HashInfo.Add(hashCalculation);
+            ContentInfos.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return ContentInfos.Add(hashCalculation);
         }
 
         void IUpstreamDbContext.AddHashCalculation(IUpstreamContentInfo hashCalculation) => AddHashCalculation((ContentInfo)hashCalculation);
 
         internal EntityEntry<ContentInfo> UpdateHashCalculation(ContentInfo hashCalculation)
         {
-            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return HashInfo.Update(hashCalculation);
+            ContentInfos.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return ContentInfos.Update(hashCalculation);
         }
 
         void IUpstreamDbContext.UpdateHashCalculation(IUpstreamContentInfo hashCalculation) => UpdateHashCalculation((ContentInfo)hashCalculation);
 
         internal EntityEntry<ContentInfo> RemoveHashCalculation(ContentInfo hashCalculation)
         {
-            HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return HashInfo.Remove(hashCalculation);
+            ContentInfos.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
+            return ContentInfos.Remove(hashCalculation);
         }
 
         void IUpstreamDbContext.RemoveHashCalculation(IUpstreamContentInfo hashCalculation) => RemoveHashCalculation((ContentInfo)hashCalculation);

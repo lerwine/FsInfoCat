@@ -13,7 +13,7 @@ namespace FsInfoCat.Desktop.Model
     [StructLayout(LayoutKind.Explicit)]
     public struct PwHash : IEquatable<PwHash>, IEquatable<string>
     {
-        private static readonly ILogger<PwHash> _logger = App.LoggerFactory.CreateLogger<PwHash>();
+        private static readonly ILogger<PwHash> _logger = Services.GetLoggingService().CreateLogger<PwHash>();
 
         private const int FIELD_OFFSET_1 = 8;
         private const int FIELD_OFFSET_2 = 16;

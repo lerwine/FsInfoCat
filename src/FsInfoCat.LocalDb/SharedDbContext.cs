@@ -75,7 +75,7 @@ namespace FsInfoCat.LocalDb
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public IQueryable<ILocalContentInfo> HashInfo => _instance.HashInfo;
+        public IQueryable<ILocalContentInfo> ContentInfos => _instance.ContentInfos;
 
         public IQueryable<ILocalFileComparison> Comparisons => _instance.Comparisons;
 
@@ -103,7 +103,7 @@ namespace FsInfoCat.LocalDb
 
         IQueryable<IFile> IDbContext.Files => Files;
 
-        IQueryable<IContentInfo> IDbContext.HashInfo => HashInfo;
+        IQueryable<IContentInfo> IDbContext.ContentInfos => ContentInfos;
 
         IQueryable<IFileComparison> IDbContext.Comparisons => Comparisons;
 
@@ -117,22 +117,22 @@ namespace FsInfoCat.LocalDb
 
         public bool HasChanges() => _instance.ChangeTracker.HasChanges();
 
-        internal EntityEntry<ContentInfo> AddHashCalculation(ContentInfo hashCalculation)
+        internal EntityEntry<ContentInfo> AddContentInfo(ContentInfo contentInfo)
         {
-            _instance.HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return _instance.HashInfo.Add(hashCalculation);
+            _instance.ContentInfos.Attach(contentInfo ?? throw new ArgumentNullException(nameof(contentInfo)));
+            return _instance.ContentInfos.Add(contentInfo);
         }
 
-        internal EntityEntry<ContentInfo> UpdateHashCalculation(ContentInfo hashCalculation)
+        internal EntityEntry<ContentInfo> UpdateContentInfo(ContentInfo contentInfo)
         {
-            _instance.HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return _instance.HashInfo.Update(hashCalculation);
+            _instance.ContentInfos.Attach(contentInfo ?? throw new ArgumentNullException(nameof(contentInfo)));
+            return _instance.ContentInfos.Update(contentInfo);
         }
 
-        internal EntityEntry<ContentInfo> RemoveHashCalculation(ContentInfo hashCalculation)
+        internal EntityEntry<ContentInfo> RemoveContentInfo(ContentInfo contentInfo)
         {
-            _instance.HashInfo.Attach(hashCalculation ?? throw new ArgumentNullException(nameof(hashCalculation)));
-            return _instance.HashInfo.Remove(hashCalculation);
+            _instance.ContentInfos.Attach(contentInfo ?? throw new ArgumentNullException(nameof(contentInfo)));
+            return _instance.ContentInfos.Remove(contentInfo);
         }
 
         internal EntityEntry<FileComparison> AddComparison(FileComparison fileComparison)

@@ -12,7 +12,7 @@ namespace FsInfoCat.Desktop.ViewModel
         private const string StatusMessage_Canceled = "Canceled";
         private const string StatusMessage_Finished = "Finished";
         private const string StatusMessage_Starting = "Starting";
-        private static readonly ILogger<AsyncOperationViewModel> _logger = App.LoggerFactory.CreateLogger<AsyncOperationViewModel>();
+        private static readonly ILogger<AsyncOperationViewModel> _logger = Services.GetLoggingService().CreateLogger<AsyncOperationViewModel>();
         private readonly object _syncRoot = new object();
         private CancellationTokenSource _cancellationTokenSource;
         private Task _asyncOperationTask;

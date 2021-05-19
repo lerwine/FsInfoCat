@@ -12,7 +12,7 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public sealed class SettingsViewModel : DependencyObject
     {
-        private static readonly ILogger<SettingsViewModel> _logger = App.LoggerFactory.CreateLogger<SettingsViewModel>();
+        private static readonly ILogger<SettingsViewModel> _logger = Services.GetLoggingService().CreateLogger<SettingsViewModel>();
         private Task<IHostDevice> _localMachineRegistrationTask = null;
         private const string RegisterLocalMachine_MenuItem_Text = "Register Local Machine";
         private const string UnregisterLocalMachine_MenuItem_Text = "Un-Register Local Machine";

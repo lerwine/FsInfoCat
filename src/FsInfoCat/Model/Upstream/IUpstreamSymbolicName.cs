@@ -5,6 +5,6 @@ namespace FsInfoCat.Model.Upstream
     public interface IUpstreamSymbolicName : IFsSymbolicName, IUpstreamTimeStampedEntity
     {
         new IUpstreamFileSystem FileSystem { get; }
-        new IReadOnlyCollection<IUpstreamFileSystem> DefaultFileSystems { get; }
+        new IReadOnlyCollection<IUpstreamFileSystem> FileSystemDefaults { get; }
     }
 }

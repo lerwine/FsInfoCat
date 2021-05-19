@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop
         internal const string DEFAULT_REMOTE_EDM_METADATA = "res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl";
         internal const string DEFAULT_LOCAL_EDM_METADATA = "res://*/Model.Local.LocalDbContainer.csdl|res://*/Model.Local.LocalDbContainer.ssdl|res://*/Model.Local.LocalDbContainer.msl";
 
-        private static readonly ILogger<AppConfig> _logger = App.LoggerFactory.CreateLogger<AppConfig>();
+        private static readonly ILogger<AppConfig> _logger = Services.GetLoggingService().CreateLogger<AppConfig>();
 
         public static string GetProviderFactoryInvariantName<TProvider>()
             where TProvider : DbProviderFactory

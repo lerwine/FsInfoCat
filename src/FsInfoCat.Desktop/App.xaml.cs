@@ -17,7 +17,6 @@ namespace FsInfoCat.Desktop
     /// </summary>
     public partial class App : Application
     {
-        public static readonly LoggerFactory LoggerFactory;
         private readonly ILogger<App> _logger;
 
         public static string GetAppDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -33,13 +32,7 @@ namespace FsInfoCat.Desktop
             return result;
         }
 
-        static App()
-        {
-            LoggerFactory = new LoggerFactory();
-            LoggerFactory.AddProvider(new DebugLoggerProvider());
-        }
-
-        public App() { _logger = LoggerFactory.CreateLogger<App>(); }
+        public App() { _logger = Services.GetLoggingService().CreateLogger<App>(); }
 
         protected override void OnStartup(StartupEventArgs e)
         {

@@ -83,7 +83,7 @@ namespace FsInfoCat.LocalDb
 
         public virtual DbSet<FileComparison> Comparisons { get; set; }
 
-        public virtual DbSet<ContentInfo> HashInfo { get; set; }
+        public virtual DbSet<ContentInfo> ContentInfos { get; set; }
 
         public virtual DbSet<Redundancy> Redundancies { get; set; }
 

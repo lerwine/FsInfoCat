@@ -19,6 +19,7 @@ namespace FsInfoCat
         public static readonly Regex BackslashEscapableLBPattern = new Regex(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
 
         public static readonly IServiceProvider ServiceProvider = new ServiceCollection()
+            .AddSingleton<ILoggingService, Internal.LoggingService>()
             .AddSingleton<IThreadLockService, Internal.ThreadLockService>()
             .AddSingleton<IComparisonService, Internal.ComparisonService>()
             .AddSingleton<ICollectionsService, Internal.CollectionsService>()
@@ -27,6 +28,8 @@ namespace FsInfoCat
             .AddSingleton<ILocalDbService, Internal.LocalDbService>()
             .AddSingleton<IUpstreamDbService, Internal.UpstreamDbService>()
             .BuildServiceProvider();
+
+        public static ILoggingService GetLoggingService() => ServiceProvider.GetService<ILoggingService>();
 
         public static IThreadLockService GetThreadLockService() => ServiceProvider.GetService<IThreadLockService>();
 

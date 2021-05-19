@@ -208,8 +208,8 @@ namespace FsInfoCat.Desktop.ViewModel
             //CreatedOn = volume.CreatedOn;
             //ModifiedOn = volume.ModifiedOn;
             //Notes = volume.Notes;
-            throw new NotImplementedException();
             IsModified = false;
+            throw new NotImplementedException();
         }
 
         internal void InitializeFromModel(Win32_LogicalDiskRootDirectory volume)

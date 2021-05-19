@@ -13,11 +13,6 @@ namespace FsInfoCat.LocalDb
         private string _name = "";
         private string _notes = "";
 
-        public SymbolicName()
-        {
-            FileSystemDefaults = new HashSet<FileSystem>();
-        }
-
         internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
         {
             builder.HasKey(nameof(Id));
@@ -34,6 +29,11 @@ namespace FsInfoCat.LocalDb
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
                 results.Add(new ValidationResult(ModelResources.ErrorMessage_ModifiedOn, new string[] { nameof(ModifiedOn) }));
             return results;
+        }
+
+        public SymbolicName()
+        {
+            FileSystemDefaults = new HashSet<FileSystem>();
         }
 
         #region Column Properties
