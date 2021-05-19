@@ -44,17 +44,33 @@ namespace FsInfoCat.LocalDb
             SqlCeConnectionStringBuilder builder = new SqlCeConnectionStringBuilder();
             builder.DataSource = path;
             builder.PersistSecurityInfo = true;
-            Services.GetLocalDbService().SetConnectionString(builder.ConnectionString);
-            if (!File.Exists(path))
-            {
-                using (SqlCeEngine engine = new SqlCeEngine(builder.ConnectionString))
-                    engine.CreateDatabase();
-            }
+            ILocalDbService localDbService = Services.GetLocalDbService();
+            localDbService.SetConnectionString(builder.ConnectionString);
+            localDbService.SetContextFactory(() => new SharedDbContext());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlCe(Services.GetLocalDbService().GetConnectionString());
+            string connectionString = Services.GetLocalDbService().GetConnectionString();
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new InvalidOperationException("Connection string not initialized");
+            SqlCeConnectionStringBuilder builder = new SqlCeConnectionStringBuilder(connectionString);
+            if (!File.Exists(builder.DataSource))
+            {
+                using (SqlCeEngine engine = new SqlCeEngine(builder.ConnectionString))
+                    engine.CreateDatabase();
+                using (SqlCeConnection connection = new SqlCeConnection())
+                {
+                    using (SqlCeCommand command = connection.CreateCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.Text;
+                        command.CommandText = Properties.Resources.DbInitialization;
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            optionsBuilder.UseSqlCe(connectionString);
         }
 
         public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
