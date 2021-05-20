@@ -216,7 +216,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="AsyncActionViewModel.cs" />
+    <Compile Include="AsyncFunctionViewModel.cs" />
+    <Compile Include="AsyncOperationViewModel.cs" />
     <Compile Include="Converters\AccountToStringConverter.cs" />
+    <Compile Include="IAsyncAction.cs" />
+    <Compile Include="IAsyncFunction.cs" />
+    <Compile Include="IAsyncOperation.cs" />
+    <Compile Include="IAsyncResult.cs" />
     <Compile Include="Model\Bits\Binary128.cs" />
     <Compile Include="Model\Bits\Binary16.cs" />
     <Compile Include="Model\Bits\Binary32.cs" />
