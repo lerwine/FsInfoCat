@@ -61,28 +61,46 @@ namespace FsInfoCat.LocalDb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ALTER TABLE [Files] DROP CONSTRAINT [FK_DirectoryFile];
-        ///GO
-        ///ALTER TABLE [Directories] DROP CONSTRAINT [FK_DirectoryParent];
-        ///GO
-        ///ALTER TABLE [Files] DROP CONSTRAINT [FK_ContentInfoFile];
-        ///GO
-        ///ALTER TABLE [Comparisons] DROP CONSTRAINT [FK_FileComparison1];
-        ///GO
-        ///ALTER TABLE [Comparisons] DROP CONSTRAINT [FK_FileComparison2];
-        ///GO
-        ///ALTER TABLE [SymbolicNames] DROP CONSTRAINT [FK_FileSystemSymbolicName];
-        ///GO
-        ///ALTER TABLE [Redundancies] DROP CONSTRAINT [FK_FileRedundancy];
-        ///GO
-        ///
-        ///DROP TABLE [Volumes];
-        ///GO
-        ///DROP  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to -- Creating table &apos;FileSystems&apos;
+        ///CREATE TABLE [FileSystems] (
+        ///    [Id] uniqueidentifier  NOT NULL,
+        ///    [DisplayName] nvarchar(128)  NOT NULL,
+        ///    [CaseSensitiveSearch] bit  NOT NULL,
+        ///    [ReadOnly] bit  NOT NULL,
+        ///    [MaxNameLength] bigint  NOT NULL,
+        ///    [DefaultDriveType] tinyint  NULL,
+        ///    [DefaultSymbolicNameId] uniqueidentifier  NOT NULL,
+        ///    [Notes] ntext  NOT NULL,
+        ///    [IsInactive] bit  NOT NULL,
+        ///    [UpstreamId] uniqueidentifier NULL,
+        ///    [LastSynchronized] datetime  NULL,
+        ///    [CreatedOn] [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbInitialization {
             get {
                 return ResourceManager.GetString("DbInitialization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;SqlCommands&gt;
+        ///    &lt;CreateTables&gt;
+        ///        &lt;Text Message=&quot;Creating table &apos;FileSystems&apos;&quot;&gt;
+        ///            &lt;![CDATA[CREATE TABLE [FileSystems] (
+        ///    [Id] uniqueidentifier  NOT NULL,
+        ///    [DisplayName] nvarchar(128)  NOT NULL,
+        ///    [CaseSensitiveSearch] bit  NOT NULL,
+        ///    [ReadOnly] bit  NOT NULL,
+        ///    [MaxNameLength] bigint  NOT NULL,
+        ///    [DefaultDriveType] tinyint  NULL,
+        ///    [DefaultSymbolicNameId] uniqueidentifier  NOT NULL,
+        ///    [Notes] ntext  NOT NULL,
+        ///    [IsIna [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SqlCommands {
+            get {
+                return ResourceManager.GetString("SqlCommands", resourceCulture);
             }
         }
     }

@@ -1,15 +1,19 @@
 using FsInfoCat.Model.Local;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Data.SqlServerCe;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace FsInfoCat.LocalDb
 {
 
     public class LocalDbContext : DbContext
     {
+        private static readonly ILogger<LocalDbContext> _logger = Services.GetLoggingService().CreateLogger<LocalDbContext>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("dbo");
@@ -45,6 +49,7 @@ namespace FsInfoCat.LocalDb
             builder.DataSource = path;
             builder.PersistSecurityInfo = true;
             ILocalDbService localDbService = Services.GetLocalDbService();
+            _logger.LogInformation($"Initializing {nameof(ILocalDbService)} with {{{nameof(SqlCeConnectionStringBuilder.ConnectionString)}}}", builder.ConnectionString);
             localDbService.SetConnectionString(builder.ConnectionString);
             localDbService.SetContextFactory(() => new SharedDbContext());
         }
@@ -55,21 +60,34 @@ namespace FsInfoCat.LocalDb
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new InvalidOperationException("Connection string not initialized");
             SqlCeConnectionStringBuilder builder = new SqlCeConnectionStringBuilder(connectionString);
-            if (!File.Exists(builder.DataSource))
+            if (File.Exists(builder.DataSource))
+                _logger.LogInformation($"Local database file found: {{{nameof(SqlCeConnectionStringBuilder.DataSource)}}}", builder.DataSource);
+            else
             {
+                _logger.LogInformation($"{{{nameof(SqlCeConnectionStringBuilder.DataSource)}}} does not exist. Creating database", builder.DataSource);
                 using (SqlCeEngine engine = new SqlCeEngine(builder.ConnectionString))
                     engine.CreateDatabase();
-                using (SqlCeConnection connection = new SqlCeConnection())
+                using (SqlCeConnection connection = new SqlCeConnection(builder.ConnectionString))
                 {
-                    using (SqlCeCommand command = connection.CreateCommand())
+                    XDocument document = XDocument.Parse(Properties.Resources.SqlCommands);
+                    _logger.LogInformation($"Opening {nameof(SqlCeConnection)}: {{{nameof(SqlCeConnectionStringBuilder.ConnectionString)}}}", builder.ConnectionString);
+                    connection.Open();
+                    foreach (XElement element in document.Root.Elements("CreateTables").Elements("Text").Where(e => !e.IsEmpty && e.Value.Trim().Length > 0))
                     {
-                        command.CommandType = System.Data.CommandType.Text;
-                        command.CommandText = Properties.Resources.DbInitialization;
-                        command.ExecuteNonQuery();
+                        string text = element.Value.Trim();
+                        _logger.LogInformation($"{element.Attributes("Message").Select(a => a.Value).DefaultIfEmpty("Executing SQL command").First()}: {{{nameof(SqlCeCommand.CommandText)}}}", text);
+                        using (SqlCeCommand command = connection.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.Text;
+                            command.CommandText = text;
+                            command.ExecuteNonQuery();
+                        }
                     }
+                    _logger.LogInformation($"Closing {nameof(SqlCeConnection)}", builder.ConnectionString);
                 }
             }
 
+            _logger.LogInformation($"Configuring {nameof(LocalDbContext)}: {{{nameof(SqlCeConnectionStringBuilder.ConnectionString)}}}", builder.ConnectionString);
             optionsBuilder.UseSqlCe(connectionString);
         }
 

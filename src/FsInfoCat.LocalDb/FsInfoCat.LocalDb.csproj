@@ -239,6 +239,7 @@
     <Content Include="Resources\DbInitialization.sql" />
     <Content Include="Resources\DropAllTables.sql" />
     <Content Include="Resources\SDDL.xml" />
+    <Content Include="Resources\SqlCommands.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
