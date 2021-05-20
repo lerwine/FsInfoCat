@@ -53,10 +53,11 @@ namespace FsInfoCat.Desktop.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Local.LocalDbContainer.csdl|res://*/Model.Local.LocalDbContainer.ssdl|res://*/Model.Local.LocalDbContainer.msl;provider=System.Data.SqlClient;provider connection string=""data source=(localdb)\ProjectsV13;initial catalog=FsInfoCatLocal;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework""")]
-        public string LocalEntityConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(localdb)\\ProjectsV13;Initial Catalog=FsInfoCat;Integrated Security=T" +
+            "rue;MultipleActiveResultSets=True;Application Name=EntityFramework")]
+        public string UpstreamDb {
             get {
-                return ((string)(this["LocalEntityConnectionString"]));
+                return ((string)(this["UpstreamDb"]));
             }
         }
         

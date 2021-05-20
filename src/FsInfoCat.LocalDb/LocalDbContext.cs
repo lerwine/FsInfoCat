@@ -17,11 +17,11 @@ namespace FsInfoCat.LocalDb
             modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<FsDirectory>(FsDirectory.BuildEntity);
-            modelBuilder.Entity<ContentInfo>(ContentInfo.BuildEntity);
             modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
-            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
-            modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
+            modelBuilder.Entity<ContentInfo>(ContentInfo.BuildEntity);
             modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
+            modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
+            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -90,6 +90,5 @@ namespace FsInfoCat.LocalDb
         public virtual DbSet<RedundantSet> RedundantSets { get; set; }
 
         public virtual DbSet<FsFile> Files { get; set; }
-
     }
 }

@@ -9,11 +9,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.UpstreamDb
 {
-    [Table(TABLE_NAME)]
+    [Table(DbConstants.TableName_FsFile)]
     public class FsFile : IUpstreamFile
     {
-        public const string TABLE_NAME = "Files";
-
         private string _name = "";
         private string _notes = "";
 

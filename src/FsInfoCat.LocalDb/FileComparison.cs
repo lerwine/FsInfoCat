@@ -1,13 +1,14 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Local;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.LocalDb
 {
+    [Table(DbConstants.TableName_FileComparison)]
     public class FileComparison : ILocalFileComparison
     {
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)

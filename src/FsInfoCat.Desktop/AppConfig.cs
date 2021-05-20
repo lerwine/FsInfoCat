@@ -108,6 +108,22 @@ namespace FsInfoCat.Desktop
             return DbProviderFactories.GetFactoryClasses().Select($"[AssemblyQualifiedName]='{typeof(TProvider).AssemblyQualifiedName}' AND [InvariantName]='{invariantName}'").Length > 0;
         }
 
+        public static bool TryGetUpstreamDbConnectionStringBuilder(out DbConnectionStringBuilder connectionStringBuilder, out string providerName)
+        {
+            if (TryGetConnectionStringBuilder($"{typeof(Properties.Settings).FullName}.{nameof(Properties.Settings.UpstreamDb)}", out connectionStringBuilder, out providerName))
+                return true;
+            connectionStringBuilder = new SqlConnectionStringBuilder(Properties.Settings.Default.UpstreamDb);
+            return false;
+        }
+
+        internal static void SetUpstreamDbContainerConnectionString(string connectionString, bool doNotRefreshConfigurationManager = false)
+        {
+            SetConnectionString(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal),
+                $"{typeof(Properties.Settings).FullName}.{nameof(Properties.Settings.UpstreamDb)}",
+                GetProviderFactoryInvariantName<SqlClientFactory>(), connectionString, doNotRefreshConfigurationManager);
+        }
+
+        [Obsolete("Use TryGetUpstreamDbConnectionStringBuilder")]
         public static SqlConnectionStringBuilder GetRemoteDbContainerConnectionStringBuilder()
         {
             throw new NotImplementedException();
@@ -121,6 +137,7 @@ namespace FsInfoCat.Desktop
             //return new SqlConnectionStringBuilder(string.IsNullOrWhiteSpace(builder.ProviderConnectionString) ? DEFAULT_REMOTE_SQL_CONNECTION_STRING : builder.ProviderConnectionString);
         }
 
+        [Obsolete("Use SetUpstreamDbContainerConnectionString")]
         internal static void SetRemoteDbContainerConnectionString(string connectionString, bool doNotRefreshConfigurationManager = false)
         {
             throw new NotImplementedException();

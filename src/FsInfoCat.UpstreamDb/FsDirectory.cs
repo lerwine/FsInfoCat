@@ -8,11 +8,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.UpstreamDb
 {
-    [Table(TABLE_NAME)]
+    [Table(DbConstants.TableName_FsDirectory)]
     public class FsDirectory : IUpstreamSubDirectory
     {
-        public const string TABLE_NAME = "Directories";
-
         private string _name = "";
         private string _notes = "";
 
@@ -56,7 +54,6 @@ namespace FsInfoCat.UpstreamDb
         [Required]
         public DirectoryCrawlFlags Options { get; set; }
 
-        // [ParentId] uniqueidentifier  NULL,
         public Guid? ParentId { get; set; }
 
         public Guid? SourceRelocationTaskId { get; set; }

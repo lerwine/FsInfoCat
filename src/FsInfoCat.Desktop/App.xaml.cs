@@ -40,7 +40,7 @@ namespace FsInfoCat.Desktop
             using (var scope = _logger.BeginScope("OnStartup"))
             {
                 LocalDb.LocalDbContext.Initialize(Desktop.Properties.Settings.Default.LocalDbFile, assembly);
-                if (AppConfig.TryGetConnectionStringBuilder(nameof(UpstreamDb.UpstreamDbContext), out DbConnectionStringBuilder connectionStringBuilder, out string providerName))
+                if (AppConfig.TryGetUpstreamDbConnectionStringBuilder(out DbConnectionStringBuilder connectionStringBuilder, out string providerName))
                 {
                     if (connectionStringBuilder is SqlConnectionStringBuilder)
                         UpstreamDb.UpstreamDbContext.Initialize(connectionStringBuilder.ConnectionString, assembly.GetName());

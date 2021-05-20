@@ -1,23 +1,19 @@
 using FsInfoCat.Model;
 using FsInfoCat.Model.Upstream;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.UpstreamDb
 {
+    [Table(DbConstants.TableName_FileComparison)]
     public class FileComparison : IUpstreamFileComparison
     {
-        
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             builder.HasKey(nameof(SourceFileId), nameof(TargetFileId));
-            //builder.ToTable($"{nameof(FileComparison)}{nameof(File1)}").HasOne(p => p.File1).WithMany(d => d.Comparisons1)
-            //    .HasForeignKey(f => f.FileId1).IsRequired();
-            //builder.ToTable($"{nameof(FileComparison)}{nameof(File1)}").HasOne(p => p.File2).WithMany(d => d.Comparisons2)
-            //    .HasForeignKey(f => f.FileId2).IsRequired();
             builder.HasOne(p => p.SourceFile).WithMany(d => d.SourceComparisons).HasForeignKey(nameof(SourceFileId)).IsRequired();
             builder.HasOne(p => p.TargetFile).WithMany(d => d.TargetComparisons).HasForeignKey(nameof(TargetFileId)).IsRequired();
             builder.HasOne(d => d.CreatedBy).WithMany(u => u.CreatedComparisons).IsRequired();
@@ -39,10 +35,8 @@ namespace FsInfoCat.UpstreamDb
         [Display(Name = nameof(ModelResources.DisplayName_AreEqual), ResourceType = typeof(ModelResources))]
         public bool AreEqual { get; set; }
 
-        // TODO: Rename to SourceFileId
         public Guid SourceFileId { get; set; }
 
-        // TODO: Rename to TargetFileId
         public Guid TargetFileId { get; set; }
 
         [Required]

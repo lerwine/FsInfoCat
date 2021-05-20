@@ -17,6 +17,11 @@ namespace FsInfoCat.UpstreamDb
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("dbo");
+            modelBuilder.Entity<UserProfile>(UserProfile.BuildEntity);
+            modelBuilder.Entity<UserGroup>(UserGroup.BuildEntity);
+            modelBuilder.Entity<UserGroupMembership>(UserGroupMembership.BuildEntity);
+            modelBuilder.Entity<HostDevice>(HostDevice.BuildEntity);
+            modelBuilder.Entity<HostPlatform>(HostPlatform.BuildEntity);
             modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
             modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
@@ -24,15 +29,10 @@ namespace FsInfoCat.UpstreamDb
             modelBuilder.Entity<ContentInfo>(ContentInfo.BuildEntity);
             modelBuilder.Entity<FsFile>(FsFile.BuildEntity);
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
-            modelBuilder.Entity<HostDevice>(HostDevice.BuildEntity);
-            modelBuilder.Entity<HostPlatform>(HostPlatform.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
             modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
             modelBuilder.Entity<FileRelocateTask>(FileRelocateTask.BuildEntity);
             modelBuilder.Entity<DirectoryRelocateTask>(DirectoryRelocateTask.BuildEntity);
-            modelBuilder.Entity<UserProfile>(UserProfile.BuildEntity);
-            modelBuilder.Entity<UserGroup>(UserGroup.BuildEntity);
-            modelBuilder.Entity<UserGroupMembership>(UserGroupMembership.BuildEntity);
             base.OnModelCreating(modelBuilder);
         }
 

@@ -9,11 +9,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FsInfoCat.LocalDb
 {
-    [Table(TABLE_NAME)]
+    [Table(DbConstants.TableName_FsFile)]
     public class FsFile : ILocalFile, IValidatableObject
     {
-        public const string TABLE_NAME = "Files";
-
         private string _name = "";
         private string _notes = "";
 
