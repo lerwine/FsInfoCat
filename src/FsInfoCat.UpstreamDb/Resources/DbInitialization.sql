@@ -44,10 +44,10 @@ GO
 CREATE TABLE [dbo].[UserGroups] (
     [Id] uniqueidentifier  NOT NULL,
     [Name] nvarchar(128)  NOT NULL,
-    [CreatedById] uniqueidentifier  NOT NULL,
     [Roles] tinyint  NOT NULL,
     [Notes] ntext  NOT NULL,
     [IsInactive] bit  NOT NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
     [ModifiedOn] datetime  NOT NULL
@@ -74,27 +74,47 @@ GO
 CREATE INDEX [FK_ModifiedByUserGroup] ON [dbo].[UserGroups] ([ModifiedById]);
 GO
 
--- Creating table 'UserGroupUserProfile'
-CREATE TABLE [dbo].[UserGroupUserProfile] (
-    [AssignmentGroups_Id] uniqueidentifier  NOT NULL,
-    [Members_Id] uniqueidentifier  NOT NULL
+-- Creating table 'UserGroupMemberships'
+CREATE TABLE [dbo].[UserGroupMemberships] (
+    [GroupId] uniqueidentifier  NOT NULL,
+    [UserId] uniqueidentifier  NOT NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedById] uniqueidentifier  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
 );
 GO
 
--- Creating primary key on [AssignmentGroups_Id], [Members_Id] in table 'UserGroupUserProfile'
-ALTER TABLE [dbo].[UserGroupUserProfile] ADD CONSTRAINT [PK_UserGroupUserProfile] PRIMARY KEY CLUSTERED ([AssignmentGroups_Id], [Members_Id] ASC);
+-- Creating primary key on [GroupId], [UserId] in table 'UserGroupMemberships'
+ALTER TABLE [dbo].[UserGroupMemberships] ADD CONSTRAINT [PK_UserGroupMemberships] PRIMARY KEY CLUSTERED ([GroupId], [UserId] ASC);
 GO
 
--- Creating foreign key on [AssignmentGroups_Id] in table 'UserGroupUserProfile'
-ALTER TABLE [dbo].[UserGroupUserProfile] ADD CONSTRAINT [FK_UserGroupUserProfile_UserGroup] FOREIGN KEY ([AssignmentGroups_Id]) REFERENCES [dbo].[UserGroups] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- Creating foreign key on [GroupId] in table 'UserGroupMemberships'
+ALTER TABLE [dbo].[UserGroupMemberships] ADD CONSTRAINT [FK_UserGroupMemberships_UserGroup] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[UserGroups] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [Members_Id] in table 'UserGroupUserProfile'
-ALTER TABLE [dbo].[UserGroupUserProfile] ADD CONSTRAINT [FK_UserGroupUserProfile_UserProfile] FOREIGN KEY ([Members_Id]) REFERENCES [dbo].[UserProfiles] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- Creating foreign key on [UserId] in table 'UserGroupMemberships'
+ALTER TABLE [dbo].[UserGroupMemberships] ADD CONSTRAINT [FK_UserGroupMemberships_UserProfile] FOREIGN KEY ([UserId]) REFERENCES [dbo].[UserProfiles] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating non-clustered index for FOREIGN KEY 'FK_UserGroupUserProfile_UserProfile'
-CREATE INDEX [IX_FK_UserGroupUserProfile_UserProfile] ON [dbo].[UserGroupUserProfile] ([Members_Id]);
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserGroupMemberships_UserProfile'
+CREATE INDEX [IX_FK_UserGroupMemberships_UserProfile] ON [dbo].[UserGroupMemberships] ([UserId]);
+GO
+
+-- Creating foreign key on [CreatedById] in table 'UserGroupMemberships'
+ALTER TABLE [dbo].[UserGroupMemberships] ADD CONSTRAINT [FK_CreatedByUserGroupMembership] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[UserProfiles] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CreatedByUserGroupMembership'
+CREATE INDEX [FK_CreatedByUserGroupMembership] ON [dbo].[UserGroupMemberships] ([CreatedById]);
+GO
+
+-- Creating foreign key on [ModifiedById] in table 'UserGroupMemberships'
+ALTER TABLE [dbo].[UserGroupMemberships] ADD CONSTRAINT [FK_ModifiedByUserGroupMembership] FOREIGN KEY ([ModifiedById]) REFERENCES [dbo].[UserProfiles] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ModifiedByUserGroupMembership'
+CREATE INDEX [FK_ModifiedByUserGroupMembership] ON [dbo].[UserGroupMemberships] ([ModifiedById]);
 GO
 
 -- Creating table 'HostPlatforms'
@@ -500,8 +520,8 @@ CREATE TABLE [dbo].[FileRelocateTasks] (
     [TargetDirectoryId] uniqueidentifier  NOT NULL,
     [AssignmentGroupId] uniqueidentifier  NULL,
     [AssignedToId] uniqueidentifier  NULL,
-    [CreatedById] uniqueidentifier  NOT NULL,
     [Notes] ntext  NOT NULL,
+    [CreatedById] uniqueidentifier  NOT NULL,
     [CreatedOn] datetime  NOT NULL,
     [ModifiedById] uniqueidentifier  NOT NULL,
     [ModifiedOn] datetime  NOT NULL
