@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SqlCommands>
+    <CreateTables>
+        <Text Message="Creating table 'FileSystems'">
+            <![CDATA[CREATE TABLE [FileSystems] (
+    [Id] uniqueidentifier  NOT NULL,
+    [DisplayName] nvarchar(128)  NOT NULL,
+    [CaseSensitiveSearch] bit  NOT NULL,
+    [ReadOnly] bit  NOT NULL,
+    [MaxNameLength] bigint  NOT NULL,
+    [DefaultDriveType] tinyint  NULL,
+    [DefaultSymbolicNameId] uniqueidentifier  NOT NULL,
+    [Notes] ntext  NOT NULL,
+    [IsInactive] bit  NOT NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'FileSystems'">
+            <![CDATA[ALTER TABLE [FileSystems] ADD CONSTRAINT [PK_FileSystems] PRIMARY KEY ([Id])]]>
+        </Text>
+        <Text Message="Creating table 'SymbolicNames'">
+            <![CDATA[CREATE TABLE [SymbolicNames] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Name] nvarchar(128)  NOT NULL,
+    [FileSystemId] uniqueidentifier  NOT NULL,
+    [Notes] ntext  NOT NULL,
+    [IsInactive] bit  NOT NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'SymbolicNames'">
+            <![CDATA[ALTER TABLE [SymbolicNames] ADD CONSTRAINT [PK_SymbolicNames] PRIMARY KEY ([Id])]]>
+        </Text>
+        <Text Message="Creating foreign key on [FileSystemId] in table 'SymbolicNames'">
+            <![CDATA[ALTER TABLE [SymbolicNames] ADD CONSTRAINT [FK_FileSystemSymbolicName] FOREIGN KEY ([FileSystemId]) REFERENCES [FileSystems] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_FileSystemSymbolicName'">
+            <![CDATA[CREATE INDEX [IX_FK_FileSystemSymbolicName] ON [SymbolicNames] ([FileSystemId])]]>
+        </Text>
+        <Text Message="Creating foreign key on [DefaultSymbolicNameId] in table 'FileSystems'">
+            <![CDATA[ALTER TABLE [FileSystems] ADD CONSTRAINT [FK_SymbolicNameFileSystem] FOREIGN KEY ([DefaultSymbolicNameId]) REFERENCES [SymbolicNames] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_SymbolicNameFileSystem'">
+            <![CDATA[CREATE INDEX [IX_FK_SymbolicNameFileSystem] ON [FileSystems] ([DefaultSymbolicNameId])]]>
+        </Text>
+        <Text Message="Creating table 'Volumes'">
+            <![CDATA[CREATE TABLE [Volumes] (
+    [Id] uniqueidentifier  NOT NULL,
+    [DisplayName] nvarchar(128)  NOT NULL,
+    [VolumeName] nvarchar(128)  NOT NULL,
+    [Identifier] nvarchar(1024)  NOT NULL,
+    [FileSystemId] uniqueidentifier  NOT NULL,
+    [RootDirectoryId] uniqueidentifier  NOT NULL,
+    [Type] tinyint  NOT NULL,
+    [CaseSensitiveSearch] bit  NULL,
+    [ReadOnly] bit  NULL,
+    [MaxNameLength] bigint  NULL,
+    [Notes] ntext  NOT NULL,
+    [IsInactive] bit  NOT NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'Volumes'">
+            <![CDATA[ALTER TABLE [Volumes] ADD CONSTRAINT [PK_Volumes] PRIMARY KEY ([Id])]]>
+        </Text>
+        <Text Message="Creating foreign key on [FileSystemId] in table 'Volumes'">
+            <![CDATA[ALTER TABLE [Volumes] ADD CONSTRAINT [FK_FileSystemVolume] FOREIGN KEY ([FileSystemId]) REFERENCES [FileSystems] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_FileSystemVolume'">
+            <![CDATA[CREATE INDEX [IX_FK_FileSystemVolume] ON [Volumes] ([FileSystemId])]]>
+        </Text>
+        <Text Message="Creating table 'Directories'">
+            <![CDATA[CREATE TABLE [Directories] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Name] nvarchar(128)  NOT NULL,
+    [Options] tinyint  NOT NULL,
+    [Notes] ntext  NOT NULL,
+    [Deleted] bit  NOT NULL,
+    [ParentId] uniqueidentifier  NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'Directories'">
+            <![CDATA[ALTER TABLE [Directories] ADD CONSTRAINT [PK_Directories] PRIMARY KEY ([Id])]]>
+        </Text>
+        <Text Message="Creating foreign key on [RootDirectoryId] in table 'Volumes'">
+            <![CDATA[ALTER TABLE [Volumes] ADD CONSTRAINT [FK_VolumeDirectory] FOREIGN KEY ([RootDirectoryId]) REFERENCES [Directories] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_VolumeDirectory'">
+            <![CDATA[CREATE INDEX [IX_FK_VolumeDirectory] ON [Volumes] ([RootDirectoryId])]]>
+        </Text>
+        <Text Message="Creating foreign key on [ParentId] in table 'Directories'">
+            <![CDATA[ALTER TABLE [Directories] ADD CONSTRAINT [FK_DirectoryParent] FOREIGN KEY ([ParentId]) REFERENCES [Directories] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_DirectoryParent'">
+            <![CDATA[CREATE INDEX [IX_FK_DirectoryParent] ON [Directories] ([ParentId])]]>
+        </Text>
+        <Text Message="Creating table 'Files'">
+            <![CDATA[CREATE TABLE [Files] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Name] nvarchar(128)  NOT NULL,
+    [Options] tinyint  NOT NULL,
+    [LastAccessed] datetime  NOT NULL,
+    [LastHashCalculation] datetime NULL,
+    [Notes] ntext  NOT NULL,
+    [Deleted] bit  NOT NULL,
+    [ContentInfoId] uniqueidentifier  NOT NULL,
+    [ParentId] uniqueidentifier  NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'Files'">
+            <![CDATA[ALTER TABLE [Files] ADD CONSTRAINT [PK_Files] PRIMARY KEY ([Id])]]>
+        </Text>
+        <Text Message="Creating foreign key on [ParentId] in table 'Files'">
+            <![CDATA[ALTER TABLE [Files] ADD CONSTRAINT [FK_DirectoryFile] FOREIGN KEY ([ParentId]) REFERENCES [Directories] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_DirectoryFile'">
+            <![CDATA[CREATE INDEX [IX_FK_DirectoryFile] ON [Files] ([ParentId])]]>
+        </Text>
+        <Text Message="Creating table 'ContentInfos'">
+            <![CDATA[CREATE TABLE [ContentInfos] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Length] bigint  NOT NULL,
+    [Data] binary(16)  NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'ContentInfo'">
+            <![CDATA[ALTER TABLE [ContentInfos] ADD CONSTRAINT [PK_ContentInfo] PRIMARY KEY ([Id])]]>
+        </Text>
+        <Text Message="Creating foreign key on [ContentInfoId] in table 'Files'">
+            <![CDATA[ALTER TABLE [Files] ADD CONSTRAINT [FK_ContentInfoFile] FOREIGN KEY ([ContentInfoId]) REFERENCES [ContentInfos] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_ContentInfoFile'">
+            <![CDATA[CREATE INDEX [IX_FK_ContentInfoFile] ON [Files] ([ContentInfoId])]]>
+        </Text>
+        <Text Message="Creating table 'RedundantSets'">
+            <![CDATA[CREATE TABLE [RedundantSets] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Notes] ntext  NOT NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'RedundantSets'">
+            <![CDATA[ALTER TABLE [RedundantSets] ADD CONSTRAINT [PK_RedundantSets] PRIMARY KEY ([Id])]]>
+        </Text>
+        <Text Message="Creating table 'Redundancies'">
+            <![CDATA[CREATE TABLE [Redundancies] (
+    [FileId] uniqueidentifier  NOT NULL,
+    [RedundantSetId] uniqueidentifier  NOT NULL,
+    [Status] tinyint  NOT NULL,
+    [Notes] ntext  NOT NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'Redundancies'">
+            <![CDATA[ALTER TABLE [Redundancies] ADD CONSTRAINT [PK_Redundancies] PRIMARY KEY ([FileId], [RedundantSetId])]]>
+        </Text>
+        <Text Message="Creating foreign key on [RedundantSetId] in table 'Redundancies'">
+            <![CDATA[ALTER TABLE [Redundancies] ADD CONSTRAINT [FK_RedundantSetRedundancy] FOREIGN KEY ([RedundantSetId]) REFERENCES [RedundantSets] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_RedundantSetRedundancy'">
+            <![CDATA[CREATE INDEX [IX_FK_RedundantSetRedundancy] ON [Redundancies] ([RedundantSetId])]]>
+        </Text>
+        <Text Message="Creating foreign key on [FileId] in table 'Redundancies'">
+            <![CDATA[ALTER TABLE [Redundancies] ADD CONSTRAINT [FK_FileRedundancy] FOREIGN KEY ([FileId]) REFERENCES [Files] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_FileRedundancy'">
+            <![CDATA[CREATE INDEX [IX_FK_FileRedundancy] ON [Redundancies] ([FileId])]]>
+        </Text>
+        <Text Message="Creating table 'Comparisons'">
+            <![CDATA[CREATE TABLE [Comparisons] (
+    [Id] uniqueidentifier  NOT NULL,
+    [SourceFileId] uniqueidentifier  NOT NULL,
+    [TargetFileId] uniqueidentifier  NOT NULL,
+    [AreEqual] bit  NOT NULL,
+    [UpstreamId] uniqueidentifier NULL,
+    [LastSynchronized] datetime  NULL,
+    [CreatedOn] datetime  NOT NULL,
+    [ModifiedOn] datetime  NOT NULL
+)]]>
+        </Text>
+        <Text Message="Creating primary key on [Id] in table 'Comparisons'">
+            <![CDATA[ALTER TABLE [Comparisons] ADD CONSTRAINT [PK_Comparisons] PRIMARY KEY ([Id])]]>
+        </Text>
+        <Text Message="Creating foreign key on [SourceFileId] in table 'Comparisons'">
+            <![CDATA[ALTER TABLE [Comparisons] ADD CONSTRAINT [FK_SourceFileComparison] FOREIGN KEY ([SourceFileId]) REFERENCES [Files] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_SourceFileComparison'">
+            <![CDATA[CREATE INDEX [IX_FK_SourceFileComparison] ON [Comparisons] ([SourceFileId])]]>
+        </Text>
+        <Text Message="Creating foreign key on [TargetFileId] in table 'Comparisons'">
+            <![CDATA[ALTER TABLE [Comparisons] ADD CONSTRAINT [FK_TargetFileComparison] FOREIGN KEY ([TargetFileId]) REFERENCES [Files] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION]]>
+        </Text>
+        <Text Message="Creating non-clustered index for FOREIGN KEY 'FK_TargetFileComparison'">
+            <![CDATA[CREATE INDEX [IX_FK_TargetFileComparison] ON [Comparisons] ([TargetFileId])]]>
+        </Text>
+    </CreateTables>
+    <DropTables>
+        <Text Message="Dropping foreign key constraint on [FileSystemId] in table 'SymbolicNames'">
+            <![CDATA[ALTER TABLE [SymbolicNames] DROP CONSTRAINT [FK_FileSystemSymbolicName]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [DefaultSymbolicNameId] in table 'FileSystems'">
+            <![CDATA[ALTER TABLE [FileSystems] DROP CONSTRAINT [FK_SymbolicNameFileSystem]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [FileSystemId] in table 'Volumes'">
+            <![CDATA[ALTER TABLE [Volumes] DROP CONSTRAINT [FK_FileSystemVolume]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [RootDirectoryId] in table 'Volumes'">
+            <![CDATA[ALTER TABLE [Volumes] DROP CONSTRAINT [FK_VolumeDirectory]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [ParentId] in table 'Directories'">
+            <![CDATA[ALTER TABLE [Directories] DROP CONSTRAINT [FK_DirectoryParent]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [ParentId] in table 'Files'">
+            <![CDATA[ALTER TABLE [Files] DROP CONSTRAINT [FK_DirectoryFile]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [ContentInfoId] in table 'Files'">
+            <![CDATA[ALTER TABLE [Files] DROP CONSTRAINT [FK_ContentInfoFile]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [RedundantSetId] in table 'Redundancies'">
+            <![CDATA[ALTER TABLE [Redundancies] DROP CONSTRAINT [FK_RedundantSetRedundancy]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [FileId] in table 'Redundancies'">
+            <![CDATA[ALTER TABLE [Redundancies] DROP CONSTRAINT [FK_FileRedundancy]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [SourceFileId] in table 'Comparisons'">
+            <![CDATA[ALTER TABLE [Comparisons] DROP CONSTRAINT [FK_SourceFileComparison]]]>
+        </Text>
+        <Text Message="Dropping foreign key constraint on [TargetFileId] in table 'Comparisons'">
+            <![CDATA[ALTER TABLE [Comparisons] DROP CONSTRAINT [FK_TargetFileComparison]]]>
+        </Text>
+        <Text Message="Dropping table 'Volumes'">
+            <![CDATA[DROP TABLE [Volumes]]]>
+        </Text>
+        <Text Message="Dropping table 'Directories'">
+            <![CDATA[DROP TABLE [Directories]]]>
+        </Text>
+        <Text Message="Dropping table 'Files'">
+            <![CDATA[DROP TABLE [Files]]]>
+        </Text>
+        <Text Message="Dropping table 'ContentInfos'">
+            <![CDATA[DROP TABLE [ContentInfos]]]>
+        </Text>
+        <Text Message="Dropping table 'Redundancies'">
+            <![CDATA[DROP TABLE [Redundancies]]]>
+        </Text>
+        <Text Message="Dropping table 'RedundantSets'">
+            <![CDATA[DROP TABLE [RedundantSets]]]>
+        </Text>
+        <Text Message="Dropping table 'FileSystems'">
+            <![CDATA[DROP TABLE [FileSystems]]]>
+        </Text>
+        <Text Message="Dropping table 'Comparisons'">
+            <![CDATA[DROP TABLE [Comparisons]]]>
+        </Text>
+        <Text Message="Dropping table 'SymbolicNames'">
+            <![CDATA[DROP TABLE [SymbolicNames]]]>
+        </Text>
+</DropTables>
+</SqlCommands>
