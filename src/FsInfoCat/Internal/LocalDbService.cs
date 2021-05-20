@@ -7,10 +7,14 @@ namespace FsInfoCat.Internal
     internal class LocalDbService : ILocalDbService
     {
         private Func<ILocalDbContext> _factory;
+        private string _connectionString;
 
         public ILocalDbContext GetDbContext()
         {
-            throw new NotImplementedException();
+            var factory = _factory;
+            if (factory is null)
+                throw new InvalidOperationException("ContextFactory not initialized");
+            return factory();
         }
 
         IDbContext IDbService.GetDbContext() => GetDbContext();
@@ -23,14 +27,8 @@ namespace FsInfoCat.Internal
                 throw new InvalidOperationException();
         }
 
-        public string GetConnectionString()
-        {
-            throw new NotImplementedException();
-        }
+        public string GetConnectionString() => _connectionString;
 
-        public void SetConnectionString(string connectionString)
-        {
-            throw new NotImplementedException();
-        }
+        public void SetConnectionString(string connectionString) => _connectionString = connectionString ?? "";
     }
 }

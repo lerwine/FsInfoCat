@@ -6,29 +6,28 @@ namespace FsInfoCat.Internal
 {
     internal class UpstreamDbService : IUpstreamDbService
     {
-        public string GetConnectionString()
-        {
-            throw new NotImplementedException();
-        }
+        private string _connectionString;
+        private Func<IUpstreamDbContext> _factory;
+        public string GetConnectionString() => _connectionString;
+
+        public void SetConnectionString(string connectionString) => _connectionString = connectionString ?? "";
 
         public IUpstreamDbContext GetDbContext()
         {
-            throw new NotImplementedException();
+            var factory = _factory;
+            if (factory is null)
+                throw new InvalidOperationException("ContextFactory not initialized");
+            return factory();
         }
 
-        public void SetConnectionString(string connectionString)
-        {
-            throw new NotImplementedException();
-        }
+        IDbContext IDbService.GetDbContext() => GetDbContext();
 
         public void SetContextFactory(Func<IUpstreamDbContext> factory)
         {
-            throw new NotImplementedException();
-        }
-
-        IDbContext IDbService.GetDbContext()
-        {
-            throw new NotImplementedException();
+            if (_factory is null)
+                _factory = factory;
+            else
+                throw new InvalidOperationException();
         }
     }
 }
