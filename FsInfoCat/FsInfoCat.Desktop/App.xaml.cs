@@ -1,4 +1,5 @@
-﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,17 @@ namespace FsInfoCat.Desktop
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Services.Initialize(ConfigureServices);
+
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            Local.LocalDbContext.ConfigureServices(services, GetType().Assembly, Desktop.Properties.Settings.Default.LocalDbfileName);
+            //services.AddSingleton<MainWindow>();
+        }
+
     }
 }

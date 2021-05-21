@@ -99,9 +99,36 @@ namespace FsInfoCat.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        public static string DisplayName_Identifier {
+            get {
+                return ResourceManager.GetString("DisplayName_Identifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_VolumeName {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         public static string ErrorMessage_DefaultSymbolicNameRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_DefaultSymbolicNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ErrorMessage_DisplayNameLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DisplayNameLength", resourceCulture);
             }
         }
         
@@ -124,6 +151,24 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ErrorMessage_IdentifierLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_IdentifierLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ErrorMessage_IdentifierRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_IdentifierRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Name too long..
         /// </summary>
         public static string ErrorMessage_NameLength {
@@ -138,6 +183,24 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_NameRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_NameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ErrorMessage_VolumeNameLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_VolumeNameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ErrorMessage_VolumeNameRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_VolumeNameRequired", resourceCulture);
             }
         }
     }

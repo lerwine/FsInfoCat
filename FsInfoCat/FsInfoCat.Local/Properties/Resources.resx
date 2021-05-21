@@ -117,52 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DisplayName_DefaultSymbolicName" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_DisplayName" xml:space="preserve">
-    <value>Display Name</value>
-  </data>
-  <data name="DisplayName_FileSystem" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_FileSystemDefaults" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_Identifier" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_VolumeName" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_DefaultSymbolicNameRequired" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_DisplayNameLength" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_DisplayNameRequired" xml:space="preserve">
-    <value>Display Name is required.</value>
-  </data>
-  <data name="ErrorMessage_FileSystemRequired" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_IdentifierLength" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_IdentifierRequired" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_NameLength" xml:space="preserve">
-    <value>Display Name too long.</value>
-  </data>
-  <data name="ErrorMessage_NameRequired" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_VolumeNameLength" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_VolumeNameRequired" xml:space="preserve">
-    <value />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DbCommands" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\dbcommands.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

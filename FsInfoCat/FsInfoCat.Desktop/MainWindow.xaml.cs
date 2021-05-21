@@ -23,17 +23,17 @@ namespace FsInfoCat.Desktop
         public MainWindow()
         {
             InitializeComponent();
-            using (Local.LocalDbContext context = new Local.LocalDbContext())
-            {
-                Local.SymbolicName sn = new Local.SymbolicName();
-                sn.Name = "Yes";
-                Local.FileSystem fs = new Local.FileSystem();
-                fs.DisplayName = "test";
-                fs.DefaultSymbolicName = sn;
-                context.FileSystems.Attach(fs);
-                context.Add(fs);
-                context.SaveChanges();
-            }
+            //using (Local.LocalDbContext context = new Local.LocalDbContext())
+            //{
+            //    Local.SymbolicName sn = new Local.SymbolicName();
+            //    sn.Name = "Yes";
+            //    Local.FileSystem fs = new Local.FileSystem();
+            //    fs.DisplayName = "test";
+            //    fs.DefaultSymbolicName = sn;
+            //    context.FileSystems.Attach(fs);
+            //    context.Add(fs);
+            //    context.SaveChanges();
+            //}
         }
     }
 }
