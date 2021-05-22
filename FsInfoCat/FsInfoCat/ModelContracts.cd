@@ -1,25 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Interface Name="FsInfoCat.IFileSystem">
-    <Position X="2" Y="0.75" Width="1.5" />
+    <Position X="3.75" Y="6.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAgEAAAAAEBAABAAAAAAAACAAAAgAAAAAAIAAAAIAA=</HashCode>
       <FileName>IFileSystem.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.ISymbolicName">
-    <Position X="7" Y="0.75" Width="1.5" />
+    <Position X="0.75" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAgAACAAAAAAAAEAAAAAAQCAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ISymbolicName.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
   </Interface>
-  <Interface Name="FsInfoCat.IDbEntity">
-    <Position X="4.5" Y="1.25" Width="1.5" />
+  <Interface Name="FsInfoCat.IComparison">
+    <Position X="9.75" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAABAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAAAAAA=</HashCode>
-      <FileName>IDbEntity.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>IComparison.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SourceFile" />
+      <Property Name="TargetFile" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IContentInfo">
+    <Position X="6.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAABAABAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>IContentInfo.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IFile">
+    <Position X="9.75" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAgAggAAAAAAgAAUAQAACQAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>IFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parent" />
+      <Property Name="Content" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IRedundancy">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAACEAAAAAAAAAACAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IRedundancy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="File" />
+      <Property Name="RedundantSet" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IRedundantSet">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAoAACAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IRedundantSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ContentInfo" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.ISubdirectory">
+    <Position X="9.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAUAQAAAQAAAAQAAIAAABAAIA=</HashCode>
+      <FileName>ISubdirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IVolume">
+    <Position X="6.75" Y="7" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgEACEAAAAAAAAAAAAAAAAAAAAgAAAAQgIQAAAIAA=</HashCode>
+      <FileName>IVolume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

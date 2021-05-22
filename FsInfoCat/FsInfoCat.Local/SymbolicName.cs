@@ -19,7 +19,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DateTime> _createdOn;
         private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
         private readonly IPropertyChangeTracker<FileSystem> _fileSystem;
-        private HashSet<FileSystem> _fileSystemDefaults = new HashSet<FileSystem>();
+        //private HashSet<FileSystem> _fileSystemDefaults = new HashSet<FileSystem>();
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id
@@ -39,6 +39,8 @@ namespace FsInfoCat.Local
 
         [Required]
         public bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
+
+        public int Priority { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Guid FileSystemId
         {
@@ -77,16 +79,15 @@ namespace FsInfoCat.Local
             }
         }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystemDefaults), ResourceType = typeof(Properties.Resources))]
-        public virtual HashSet<FileSystem> FileSystemDefaults
-        {
-            get => _fileSystemDefaults;
-            set => CheckHashSetChanged(_fileSystemDefaults, value, h => _fileSystemDefaults = h);
-        }
+        ILocalFileSystem ILocalSymbolicName.FileSystem { get => FileSystem; set => FileSystem = (FileSystem)value; }
+        IFileSystem ISymbolicName.FileSystem { get => FileSystem; set => FileSystem = (FileSystem)value; }
 
-        IEnumerable<ILocalFileSystem> ILocalSymbolicName.FileSystemDefaults => FileSystemDefaults.Cast<ILocalFileSystem>();
-
-        IEnumerable<IFileSystem> ISymbolicName.FileSystemDefaults => FileSystemDefaults.Cast<IFileSystem>();
+        //[Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystemDefaults), ResourceType = typeof(Properties.Resources))]
+        //public virtual HashSet<FileSystem> FileSystemDefaults
+        //{
+        //    get => _fileSystemDefaults;
+        //    set => CheckHashSetChanged(_fileSystemDefaults, value, h => _fileSystemDefaults = h);
+        //}
 
         public SymbolicName()
         {
@@ -96,7 +97,7 @@ namespace FsInfoCat.Local
             _isInactive = CreateChangeTracker(nameof(IsInactive), false);
             _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
             _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _fileSystemDefaults = new HashSet<FileSystem>();
+            //_fileSystemDefaults = new HashSet<FileSystem>();
             _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
             _fileSystemId = CreateChangeTracker(nameof(FileSystemId), Guid.Empty);
             _fileSystem = CreateChangeTracker<FileSystem>(nameof(FileSystem), null);

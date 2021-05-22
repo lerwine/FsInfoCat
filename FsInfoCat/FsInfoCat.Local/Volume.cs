@@ -18,11 +18,13 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<bool?> _readOnly;
         private readonly IPropertyChangeTracker<long?> _maxNameLength;
         private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<bool> _isInactive;
+        private readonly IPropertyChangeTracker<VolumeStatus> _status;
         private readonly IPropertyChangeTracker<Guid> _fileSystemId;
         private readonly IPropertyChangeTracker<Guid?> _upstreamId;
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
         private readonly IPropertyChangeTracker<DateTime> _createdOn;
+        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
+        private readonly IPropertyChangeTracker<FileSystem> _fileSystem;
 
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
@@ -33,8 +35,6 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.FileSystem).WithMany(d => d.Volumes).HasForeignKey(nameof(FileSystemId)).IsRequired();
         }
 
-        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
-        private readonly IPropertyChangeTracker<FileSystem> _fileSystem;
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id
@@ -65,6 +65,9 @@ namespace FsInfoCat.Local
         public string Identifier { get => _identifier.GetValue(); set => _identifier.SetValue(value); }
 
         [Required]
+        public VolumeStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
+
+        [Required]
         public DriveType Type { get => _type.GetValue(); set => _type.SetValue(value); }
 
         public bool? CaseSensitiveSearch { get => _caseSensitiveSearch.GetValue(); set => _caseSensitiveSearch.SetValue(value); }
@@ -75,9 +78,6 @@ namespace FsInfoCat.Local
 
         [Required(AllowEmptyStrings = true)]
         public string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
-
-        [Required]
-        public bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
 
         public Guid FileSystemId
         {
@@ -116,9 +116,8 @@ namespace FsInfoCat.Local
             }
         }
 
-        ILocalFileSystem ILocalVolume.FileSystem => FileSystem;
-
-        IFileSystem IVolume.FileSystem => FileSystem;
+        ILocalFileSystem ILocalVolume.FileSystem { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        IFileSystem IVolume.FileSystem { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Volume()
         {
@@ -131,7 +130,7 @@ namespace FsInfoCat.Local
             _maxNameLength = CreateChangeTracker<long?>(nameof(MaxNameLength), null);
             _type = CreateChangeTracker(nameof(Type), DriveType.Unknown);
             _notes = CreateChangeTracker(nameof(Notes), "", new NonNullStringCoersion());
-            _isInactive = CreateChangeTracker(nameof(IsInactive), false);
+            _status = CreateChangeTracker(nameof(Status), VolumeStatus.Unknown);
             _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
             _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
             _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());

@@ -13,5 +13,7 @@ namespace FsInfoCat.Upstream
         bool IsInactive { get; set; }
 
         IEnumerable<IGroupMembership> Members { get; }
+
+        IEnumerable<IMitigationTask> Tasks { get; }
     }
 }

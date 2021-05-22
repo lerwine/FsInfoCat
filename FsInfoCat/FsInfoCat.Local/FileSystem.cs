@@ -107,10 +107,6 @@ namespace FsInfoCat.Local
             set => CheckHashSetChanged(_symbolicNames, value, h => _symbolicNames = h);
         }
 
-        ILocalSymbolicName ILocalFileSystem.DefaultSymbolicName { get => DefaultSymbolicName; set => DefaultSymbolicName = (SymbolicName)value; }
-
-        ISymbolicName IFileSystem.DefaultSymbolicName { get => DefaultSymbolicName; set => DefaultSymbolicName = (SymbolicName)value; }
-
         IEnumerable<ILocalVolume> ILocalFileSystem.Volumes => _volumes.Cast<ILocalVolume>();
 
         IEnumerable<ILocalSymbolicName> ILocalFileSystem.SymbolicNames => _volumes.Cast<ILocalSymbolicName>();
@@ -142,7 +138,6 @@ namespace FsInfoCat.Local
         {
             builder.HasKey(nameof(Id));
             builder.Property(nameof(DisplayName)).HasMaxLength(DbConstants.DbColMaxLen_DisplayName).IsRequired();
-            builder.HasOne(fs => fs.DefaultSymbolicName).WithMany(d => d.FileSystemDefaults).HasForeignKey(nameof(DefaultSymbolicNameId)).IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

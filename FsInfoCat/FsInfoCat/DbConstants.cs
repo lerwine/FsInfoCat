@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat
 {
     public static class DbConstants

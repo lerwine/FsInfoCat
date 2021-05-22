@@ -1,131 +1,211 @@
 <DbCommands>
     <DbCreation>
         <Text Message="Creating table 'FileSystems'">
-            <![CDATA[CREATE TABLE [FileSystems] (
-    [Id] uniqueidentifier PRIMARY KEY NOT NULL,
-    [DisplayName] nvarchar(1024)  NOT NULL,
-    [CaseSensitiveSearch] bit NOT NULL,
-    [ReadOnly] bit NOT NULL,
-    [MaxNameLength] bigint NOT NULL,
-    [DefaultDriveType] tinyint NULL,
-    [Notes] text NOT NULL,
-    [IsInactive] bit NOT NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [LastSynchronizedOn] datetime NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL
+            <![CDATA[CREATE TABLE "FileSystems" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+	"DisplayName"	NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) UNIQUE COLLATE NOCASE,
+	"CaseSensitiveSearch"	BIT NOT NULL DEFAULT 0,
+	"ReadOnly"	BIT NOT NULL DEFAULT 0,
+	"MaxNameLength"	INT NOT NULL CHECK(MaxNameLength>=0) DEFAULT 255,
+	"DefaultDriveType"	TINYINT CHECK(DefaultDriveType IS NULL OR (DefaultDriveType>=0 AND DefaultDriveType<7)),
+	"Notes"	TEXT NOT NULL DEFAULT '',
+	"IsInactive"	BIT NOT NULL DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_FileSystems" PRIMARY KEY("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
         <Text Message="Creating table 'SymbolicNames'">
-            <![CDATA[CREATE TABLE [SymbolicNames] (
-    [Id] uniqueidentifier PRIMARY KEY NOT NULL,
-    [Name] nvarchar(256)  NOT NULL,
-    [Notes] text NOT NULL,
-    [IsInactive] bit NOT NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [LastSynchronizedOn] datetime NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL,
-    [FileSystemId] uniqueidentifier NOT NULL CONSTRAINT 'FK_SymbolicNameFileSystem' REFERENCES [FileSystems] ([Id])
+            <![CDATA[CREATE TABLE "SymbolicNames" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+	"Name"	NVARCHAR(256) NOT NULL CHECK(length(trim(Name))>0) UNIQUE COLLATE NOCASE,
+	"Notes"	TEXT NOT NULL DEFAULT '',
+	"IsInactive"	BIT NOT NULL DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL,
+	CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id"),
+	CONSTRAINT "FK_SymbolicNameFileSystem" FOREIGN KEY("FileSystemId") REFERENCES "FileSystems"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
         <Text Message="Creating table 'Volumes'">
-            <![CDATA[CREATE TABLE [Volumes] (
-    [Id] uniqueidentifier PRIMARY KEY NOT NULL,
-    [DisplayName] nvarchar(1024)  NOT NULL,
-    [VolumeName] nvarchar(128)  NOT NULL,
-    [Identifier] nvarchar(1024)  NOT NULL,
-    [CaseSensitiveSearch] bit NULL,
-    [ReadOnly] bit NULL,
-    [MaxNameLength] bigint NULL,
-    [Type] tinyint NOT NULL,
-    [Notes] text NOT NULL,
-    [Status] bit NOT NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [LastSynchronizedOn] datetime NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL,
-    [FileSystemId] uniqueidentifier NOT NULL CONSTRAINT 'FK_VolumeFileSystem' REFERENCES [FileSystems] ([Id])
+            <![CDATA[CREATE TABLE "Volumes" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE,
+    "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE,
+    "Identifier" NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE,
+    "CaseSensitiveSearch" BIT DEFAULT NULL,
+    "ReadOnly" BIT DEFAULT NULL,
+    "MaxNameLength" INT CHECK(MaxNameLength IS NULL OR MaxNameLength>=0) DEFAULT NULL,
+    "Type" TINYINT NOT NULL CHECK(Type>=0 AND Type<7) DEFAULT 0,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "Status" TINYINT NOT NULL CHECK(Type>=0 AND Type<6) DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL,
+	CONSTRAINT "PK_Volumes" PRIMARY KEY("Id"),
+	CONSTRAINT "FK_VolumeFileSystem" FOREIGN KEY("FileSystemId") REFERENCES "FileSystems"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
         <Text Message="Creating table 'Subdirectories'">
-            <![CDATA[CREATE TABLE [Subdirectories] (
-    [Id] uniqueidentifier PRIMARY KEY NOT NULL,
-    [Name] nvarchar(1024)  NOT NULL,
-    [Options] tinyint  NOT NULL,
-    [LastAccessed] datetime  NOT NULL,
-    [Notes] text NOT NULL,
-    [Deleted] bit NOT NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [LastSynchronizedOn] datetime NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL,
-    [ParentId] uniqueidentifier NULL CONSTRAINT 'FK_SubdirectoryParent' REFERENCES [Subdirectories] ([Id]),
-    [VolumeId] uniqueidentifier NULL CONSTRAINT 'FK_SubdirectoryVolume' REFERENCES [Volumes] ([Id])
+            <![CDATA[CREATE TABLE "Subdirectories" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
+    "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<64) DEFAULT 0,
+    "LastAccessed" DATETIME  NOT NULL,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "Deleted" BIT NOT NULL DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ParentId"	UNIQUEIDENTIFIER,
+	"VolumeId"	UNIQUEIDENTIFIER,
+	CONSTRAINT "PK_Subdirectoriess" PRIMARY KEY("Id"),
+	CONSTRAINT "FK_SubdirectoryParent" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
+	CONSTRAINT "FK_SubdirectoryVolume" FOREIGN KEY("VolumeId") REFERENCES "Volumes"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
+        ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
+        (ParentId IS NOT NULL AND VolumeId IS NULL AND length(trim(Name))>0)))
 )]]>
         </Text>
         <Text Message="Creating table 'Files'">
-            <![CDATA[CREATE TABLE [Files] (
-    [Id] uniqueidentifier PRIMARY KEY NOT NULL,
-    [Name] nvarchar(1024) NOT NULL,
-    [Options] tinyint NOT NULL,
-    [LastAccessed] datetime  NOT NULL,
-    [LastHashCalculation] datetime NULL,
-    [Notes] text NOT NULL,
-    [Deleted] bit NOT NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [LastSynchronizedOn] datetime NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL,
-    [ContentInfoId] uniqueidentifier NOT NULL CONSTRAINT 'FK_FileContentInfo' REFERENCES [ContentInfos] ([Id]),
-    [ParentId] uniqueidentifier NULL CONSTRAINT 'FK_FileParent' REFERENCES [Subdirectories] ([Id]),
-    [VolumeId] uniqueidentifier NULL CONSTRAINT 'FK_FileVolume' REFERENCES [Volumes] ([Id])
+            <![CDATA[CREATE TABLE "Files" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE,
+    "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<15) DEFAULT 0,
+    "LastAccessed" DATETIME  NOT NULL,
+    "LastHashCalculation" DATETIME DEFAULT NULL,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "Deleted" BIT NOT NULL DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
+	"ParentId"	UNIQUEIDENTIFIER NOT NULL,
+	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
+	CONSTRAINT "FK_FileSubdirectory" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
+	CONSTRAINT "FK_FileContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
         <Text Message="Creating table 'ContentInfos'">
-            <![CDATA[CREATE TABLE [ContentInfos] (
-    [Id] uniqueidentifier PRIMARY KEY NOT NULL,
-    [Length] bigint  NOT NULL,
-    [Hash] binary(16)  NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL
+            <![CDATA[CREATE TABLE "ContentInfos" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+	"Length"	BIGINT NOT NULL CHECK(Length>0),
+	"Hash"	BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_ContentInfo" PRIMARY KEY("Id"),
+	CONSTRAINT "UK_LengthHash" UNIQUE("Length","Hash"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
         <Text Message="Creating table 'RedundantSets'">
-            <![CDATA[CREATE TABLE [RedundantSets] (
-    [Id] uniqueidentifier PRIMARY KEY NOT NULL,
-    [Notes] ntext  NOT NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL
+            <![CDATA[CREATE TABLE "RedundantSets" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
+    "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
+	CONSTRAINT "FK_RedundantSeContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
         <Text Message="Creating table 'Redundancies'">
-            <![CDATA[CREATE TABLE [Redundancies] (
-    [FileId] uniqueidentifier NOT NULL CONSTRAINT 'FK_RedundancyFile' REFERENCES [Files] ([Id]),
-    [RedundantSetId] uniqueidentifier NOT NULL CONSTRAINT 'FK_RedundancyRedundantSet' REFERENCES [RedundantSets] ([Id]),
-    [Status] tinyint NOT NULL,
-    [Notes] ntext NOT NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL
+            <![CDATA[CREATE TABLE "Redundancies" (
+	"FileId"	UNIQUEIDENTIFIER NOT NULL,
+	"RedundantSetId"	UNIQUEIDENTIFIER NOT NULL,
+    "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
+	"Status"	TINYINT NOT NULL DEFAULT 0 CHECK(Status>=0 AND Status < 9),
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_Redundancies" PRIMARY KEY("FileId","RedundantSetId"),
+	CONSTRAINT "FK_RedundancyFile" FOREIGN KEY("FileId") REFERENCES "Files"("Id"),
+	CONSTRAINT "FK_RedundancyRedundantSet" FOREIGN KEY("RedundantSetId") REFERENCES "RedundantSets"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
-        </Text>
-        <Text Message="Creating foreign key on [RedundancyId] in table 'Files'">
-            <![CDATA[ALTER TABLE [Files] ADD COLUMN [RedundancyId] uniqueidentifier NULL CONSTRAINT 'FK_FileRedundancy' REFERENCES [Redundancies] ([Id])]]>
         </Text>
         <Text Message="Creating table 'Comparisons'">
-            <![CDATA[CREATE TABLE [Comparisons] (
-    [Id] uniqueidentifier NOT NULL,
-    [SourceFileId] uniqueidentifier NOT NULL CONSTRAINT 'FK_ComparisonSourceFile' REFERENCES [Files] ([Id]),
-    [TargetFileId] uniqueidentifier NOT NULL CONSTRAINT 'FK_ComparisonTargetFile' REFERENCES [Files] ([Id]),
-    [AreEqual] bit NOT NULL,
-    [UpstreamId] uniqueidentifier NULL,
-    [LastSynchronized] datetime NULL,
-    [CreatedOn] datetime NOT NULL,
-    [ModifiedOn] datetime NOT NULL
+            <![CDATA[CREATE TABLE "Comparisons" (
+    "SourceFileId" UNIQUEIDENTIFIER NOT NULL,
+    "TargetFileId" UNIQUEIDENTIFIER NOT NULL,
+    "AreEqual" BIT NOT NULL DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_Comparisons" PRIMARY KEY("SourceFileId","TargetFileId"),
+	CONSTRAINT "FK_ComparisonSourceFile" FOREIGN KEY("SourceFileId") REFERENCES "Files"("Id"),
+	CONSTRAINT "FK_ComparisonTargetFile" FOREIGN KEY("TargetFileId") REFERENCES "Files"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND SourceFileId<>TargetFileId AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
+        <Text Message="Creating trigger 'validate_new_redundancy'">
+            <![CDATA[CREATE TRIGGER validate_new_redundancy 
+   BEFORE INSERT
+   ON Redundancies
+   WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.ContentInfoId=r.ContentInfoId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
+BEGIN
+    SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
+END]]>
+        </Text>
     </DbCreation>
+    <DropTables>
+        <Text Message="Dropping table 'Comparisons'">
+            <![CDATA[DROP TABLE "Comparisons"]]>
+        </Text>
+        <Text Message="Dropping table 'Redundancies'">
+            <![CDATA[DROP TABLE "Redundancies"]]>
+        </Text>
+        <Text Message="Dropping table 'Files'">
+            <![CDATA[DROP TABLE "Files"]]>
+        </Text>
+        <Text Message="Dropping table 'RedundantSets'">
+            <![CDATA[DROP TABLE "RedundantSets"]]>
+        </Text>
+        <Text Message="Dropping table 'ContentInfos'">
+            <![CDATA[DROP TABLE "ContentInfos"]]>
+        </Text>
+        <Text Message="Dropping table 'Subdirectories'">
+            <![CDATA[DROP TABLE "Subdirectories"]]>
+        </Text>
+        <Text Message="Dropping table 'Volumes'">
+            <![CDATA[DROP TABLE "Volumes"]]>
+        </Text>
+        <Text Message="Dropping table 'SymbolicNames'">
+            <![CDATA[DROP TABLE "SymbolicNames"]]>
+        </Text>
+        <Text Message="Dropping table 'FileSystems'">
+            <![CDATA[DROP TABLE "FileSystems"]]>
+        </Text>
+    </DropTables>
 </DbCommands>

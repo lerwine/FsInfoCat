@@ -10,6 +10,8 @@ namespace FsInfoCat.Upstream
 
         TaskStatus Status { get; set; }
 
+        PriorityLevel Priority { get; }
+
         IUserGroup AssignmentGroup { get; set; }
 
         IUserProfile AssignedTo { get; set; }
