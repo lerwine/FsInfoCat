@@ -51,12 +51,6 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(Guid.Empty, item.Id);
                 dbContext.SymbolicNames.Add(item);
                 dbContext.FileSystems.Add(fileSystem);
-                /*Test method FsInfoCat.UnitTests.LocalDbUnitTest.SymbolicNameTestMethod threw exception: 
-    System.InvalidOperationException: Unable to save changes because a circular dependency was detected in the data to be saved: 'SymbolicName [Added] <-
-    FileSystemDefaults DefaultSymbolicName { 'DefaultSymbolicNameId' } FileSystem [Added] <-
-    SymbolicNames FileSystem { 'FileSystemId' } SymbolicName [Added]To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.'.
-                 */
-                // BUG: Unable to save changes because a circular dependency was detected in the data to be saved
                 dbContext.SaveChanges();
                 Assert.IsFalse(item.IsNew());
                 Assert.AreNotEqual(Guid.Empty, item.Id);
