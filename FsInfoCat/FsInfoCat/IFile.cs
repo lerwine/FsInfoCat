@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents a file in its hierarchical structure.
+    /// </summary>
+    /// <seealso cref="IDbEntity" />
     public interface IFile : IDbEntity
     {
         string Name { get; set; }
@@ -25,6 +29,8 @@ namespace FsInfoCat
 
         IEnumerable<IComparison> ComparisonTargets { get; }
 
-        IEnumerable<IRedundancy> Redundancies { get; }
+        IRedundancy Redundancy { get; }
+
+        Guid Id { get; set; }
     }
 }

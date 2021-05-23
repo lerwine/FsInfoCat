@@ -117,52 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DisplayName_DefaultSymbolicName" xml:space="preserve">
-    <value />
+  <data name="DisplayName_CaseSensitiveSearch" xml:space="preserve">
+    <value>Case-sensitive Search</value>
+  </data>
+  <data name="DisplayName_CreatedOn" xml:space="preserve">
+    <value>Created On</value>
   </data>
   <data name="DisplayName_DisplayName" xml:space="preserve">
     <value>Display Name</value>
   </data>
   <data name="DisplayName_FileSystem" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_FileSystemDefaults" xml:space="preserve">
-    <value />
+    <value>File System</value>
   </data>
   <data name="DisplayName_Identifier" xml:space="preserve">
-    <value />
+    <value>Volume Identifier</value>
+  </data>
+  <data name="DisplayName_LastSynchronizedOn" xml:space="preserve">
+    <value>Last Synchronized On</value>
+  </data>
+  <data name="DisplayName_MaxNameLength" xml:space="preserve">
+    <value>Maximum Name Length</value>
+  </data>
+  <data name="DisplayName_ModifiedOn" xml:space="preserve">
+    <value>Modified On</value>
+  </data>
+  <data name="DisplayName_ReadOnly" xml:space="preserve">
+    <value>Read-only</value>
+  </data>
+  <data name="DisplayName_RootDirectory" xml:space="preserve">
+    <value>Root Directory</value>
+  </data>
+  <data name="DisplayName_UpstreamId" xml:space="preserve">
+    <value>Remote DB Identifier</value>
   </data>
   <data name="DisplayName_VolumeName" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ErrorMessage_DefaultSymbolicNameRequired" xml:space="preserve">
-    <value />
+    <value>Volume Name</value>
   </data>
   <data name="ErrorMessage_DisplayNameLength" xml:space="preserve">
-    <value />
+    <value>Display Name too long.</value>
   </data>
   <data name="ErrorMessage_DisplayNameRequired" xml:space="preserve">
     <value>Display Name is required.</value>
   </data>
   <data name="ErrorMessage_FileSystemRequired" xml:space="preserve">
-    <value />
+    <value>File System is required.</value>
   </data>
   <data name="ErrorMessage_IdentifierLength" xml:space="preserve">
-    <value />
+    <value>Volume Identifier too long.</value>
   </data>
   <data name="ErrorMessage_IdentifierRequired" xml:space="preserve">
-    <value />
+    <value>Volume Identifier is required.</value>
   </data>
   <data name="ErrorMessage_NameLength" xml:space="preserve">
-    <value>Display Name too long.</value>
+    <value>Name too long.</value>
   </data>
   <data name="ErrorMessage_NameRequired" xml:space="preserve">
-    <value />
+    <value>Name is required.</value>
   </data>
   <data name="ErrorMessage_VolumeNameLength" xml:space="preserve">
-    <value />
+    <value>Volume Name too long.</value>
   </data>
   <data name="ErrorMessage_VolumeNameRequired" xml:space="preserve">
-    <value />
+    <value>Volume Name is required.</value>
   </data>
 </root>

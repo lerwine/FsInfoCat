@@ -61,11 +61,20 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Case-sensitive Search.
         /// </summary>
-        public static string DisplayName_DefaultSymbolicName {
+        public static string DisplayName_CaseSensitiveSearch {
             get {
-                return ResourceManager.GetString("DisplayName_DefaultSymbolicName", resourceCulture);
+                return ResourceManager.GetString("DisplayName_CaseSensitiveSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created On.
+        /// </summary>
+        public static string DisplayName_CreatedOn {
+            get {
+                return ResourceManager.GetString("DisplayName_CreatedOn", resourceCulture);
             }
         }
         
@@ -79,7 +88,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to File System.
         /// </summary>
         public static string DisplayName_FileSystem {
             get {
@@ -88,16 +97,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string DisplayName_FileSystemDefaults {
-            get {
-                return ResourceManager.GetString("DisplayName_FileSystemDefaults", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Volume Identifier.
         /// </summary>
         public static string DisplayName_Identifier {
             get {
@@ -106,7 +106,61 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Last Synchronized On.
+        /// </summary>
+        public static string DisplayName_LastSynchronizedOn {
+            get {
+                return ResourceManager.GetString("DisplayName_LastSynchronizedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum Name Length.
+        /// </summary>
+        public static string DisplayName_MaxNameLength {
+            get {
+                return ResourceManager.GetString("DisplayName_MaxNameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified On.
+        /// </summary>
+        public static string DisplayName_ModifiedOn {
+            get {
+                return ResourceManager.GetString("DisplayName_ModifiedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read-only.
+        /// </summary>
+        public static string DisplayName_ReadOnly {
+            get {
+                return ResourceManager.GetString("DisplayName_ReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Root Directory.
+        /// </summary>
+        public static string DisplayName_RootDirectory {
+            get {
+                return ResourceManager.GetString("DisplayName_RootDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote DB Identifier.
+        /// </summary>
+        public static string DisplayName_UpstreamId {
+            get {
+                return ResourceManager.GetString("DisplayName_UpstreamId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume Name.
         /// </summary>
         public static string DisplayName_VolumeName {
             get {
@@ -115,16 +169,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string ErrorMessage_DefaultSymbolicNameRequired {
-            get {
-                return ResourceManager.GetString("ErrorMessage_DefaultSymbolicNameRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Display Name too long..
         /// </summary>
         public static string ErrorMessage_DisplayNameLength {
             get {
@@ -142,7 +187,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to File System is required..
         /// </summary>
         public static string ErrorMessage_FileSystemRequired {
             get {
@@ -151,7 +196,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Volume Identifier too long..
         /// </summary>
         public static string ErrorMessage_IdentifierLength {
             get {
@@ -160,7 +205,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Volume Identifier is required..
         /// </summary>
         public static string ErrorMessage_IdentifierRequired {
             get {
@@ -169,7 +214,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Display Name too long..
+        ///   Looks up a localized string similar to Name too long..
         /// </summary>
         public static string ErrorMessage_NameLength {
             get {
@@ -178,7 +223,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Name is required..
         /// </summary>
         public static string ErrorMessage_NameRequired {
             get {
@@ -187,7 +232,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Volume Name too long..
         /// </summary>
         public static string ErrorMessage_VolumeNameLength {
             get {
@@ -196,7 +241,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Volume Name is required..
         /// </summary>
         public static string ErrorMessage_VolumeNameRequired {
             get {

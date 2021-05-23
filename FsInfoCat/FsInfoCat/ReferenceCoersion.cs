@@ -11,7 +11,7 @@ namespace FsInfoCat
 
         public override int GetHashCode(T obj) => (obj is null) ? 0 : _comparer.GetHashCode(obj);
 
-        public override bool TryCoerce(object obj, out T result)
+        public override bool TryCast(object obj, out T result)
         {
             if (obj is null)
                 result = null;

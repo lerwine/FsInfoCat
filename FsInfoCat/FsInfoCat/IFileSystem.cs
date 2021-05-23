@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat
@@ -21,5 +22,7 @@ namespace FsInfoCat
         IEnumerable<IVolume> Volumes { get; }
 
         IEnumerable<ISymbolicName> SymbolicNames { get; }
+
+        Guid Id { get; set; }
     }
 }

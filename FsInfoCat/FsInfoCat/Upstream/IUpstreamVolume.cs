@@ -5,6 +5,8 @@ namespace FsInfoCat.Upstream
         IHostDevice HostDevice { get; }
 
         new IUpstreamFileSystem FileSystem { get; set; }
+
+        new IUpstreamSubdirectory RootDirectory { get; }
     }
 
 }

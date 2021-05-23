@@ -1,7 +1,11 @@
+using System;
+
 namespace FsInfoCat
 {
     public interface IVolume : IDbEntity
     {
+        Guid Id { get; set; }
+
         string DisplayName { get; set; }
 
         string VolumeName { get; set; }
@@ -21,5 +25,7 @@ namespace FsInfoCat
         VolumeStatus Status { get; set; }
 
         IFileSystem FileSystem { get; set; }
+
+        ISubdirectory RootDirectory { get; }
     }
 }

@@ -11,5 +11,7 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalComparison> ComparisonSources { get; }
 
         new IEnumerable<ILocalComparison> ComparisonTargets { get; }
+
+        new ILocalRedundancy Redundancy { get; }
     }
 }

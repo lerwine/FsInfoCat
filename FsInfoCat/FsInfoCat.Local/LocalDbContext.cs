@@ -1,21 +1,31 @@
-using System;
-using System.IO;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
     public class LocalDbContext : DbContext
     {
-        public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
-
         public virtual DbSet<FileSystem> FileSystems { get; set; }
 
+        public virtual DbSet<SymbolicName> SymbolicNames { get; set; }
+
         public virtual DbSet<Volume> Volumes { get; set; }
+
+        public virtual DbSet<Subdirectory> Subdirectories { get; set; }
+
+        public virtual DbSet<DbFile> Files { get; set; }
+
+        public virtual DbSet<ContentInfo> ContentInfos { get; set; }
+
+        public virtual DbSet<FileComparison> Comparison { get; set; }
+
+        public virtual DbSet<RedundantSet> RedundantSets { get; set; }
+
+        public virtual DbSet<Redundancy> Redundancies { get; set; }
 
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
@@ -31,9 +41,15 @@ namespace FsInfoCat.Local
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("dbo");
+            //modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
             modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
-            modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
+            modelBuilder.Entity<Subdirectory>(Subdirectory.BuildEntity);
+            modelBuilder.Entity<DbFile>(DbFile.BuildEntity);
+            //modelBuilder.Entity<ContentInfo>(ContentInfo.BuildEntity);
+            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
+            modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
+            modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
         }
 
         public static void ConfigureServices(IServiceCollection services, Assembly assembly, string dbFileName)

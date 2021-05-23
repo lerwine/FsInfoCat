@@ -22,33 +22,20 @@ namespace FsInfoCat
                 else
                     Default = (Coersion<T>)Activator.CreateInstance(typeof(ValueCoersion<>).MakeGenericType(type));
             }
+            else if (type.IsArray && type.GetArrayRank() == 1)
+            {
+                type = typeof(ArrayCoersion<>).MakeGenericType(type.GetElementType());
+                Default = (Coersion<T>)type.GetField(nameof(ArrayCoersion<object>.Default)).GetValue(null);
+            }
             else
                 Default = (Coersion<T>)Activator.CreateInstance(typeof(ReferenceCoersion<>).MakeGenericType(type));
         }
 
         public virtual T Cast(object obj) => (T)obj;
 
-        public abstract bool TryCoerce(object obj, out T result);
-
-        object ICoersion.Cast(object obj) => Cast(obj);
-
-        bool ICoersion.TryCoerce(object obj, out object result)
+        public virtual bool TryCoerce(object obj, out T result)
         {
-            bool returnValue = TryCoerce(obj, out T t);
-            result = t;
-            return returnValue;
-        }
-
-        public virtual T Convert(object obj)
-        {
-            if (TryCoerce(obj, out T result))
-                return result;
-            return (T)Converter.ConvertFrom(obj);
-        }
-
-        public virtual bool TryConvert(object obj, out T result)
-        {
-            if (TryCoerce(obj, out result))
+            if (TryCast(obj, out result))
                 return true;
             if (obj is null)
             {
@@ -66,32 +53,29 @@ namespace FsInfoCat
             return false;
         }
 
-        object ICoersion.Convert(object obj) => Convert(obj);
+        object ICoersion.Cast(object obj) => Cast(obj);
 
-        bool ICoersion.TryConvert(object obj, out object result)
+        bool ICoersion.TryCoerce(object obj, out object result)
         {
-            bool returnValue = TryConvert(obj, out T t);
+            bool returnValue = TryCoerce(obj, out T t);
             result = t;
             return returnValue;
         }
 
-        public virtual bool TryCast(object obj, out T result)
+        public virtual T Coerce(object obj)
         {
-            try
-            {
-                result = (T)obj;
-                return true;
-            }
-            catch
-            {
-                result = default;
-                return false;
-            }
+            if (TryCast(obj, out T result))
+                return result;
+            return (T)Converter.ConvertFrom(obj);
         }
+
+        object ICoersion.Coerce(object obj) => Coerce(obj);
+
+        public abstract bool TryCast(object obj, out T result);
 
         bool ICoersion.TryCast(object obj, out object result)
         {
-            bool returnValue = TryConvert(obj, out T t);
+            bool returnValue = TryCast(obj, out T t);
             result = t;
             return returnValue;
         }

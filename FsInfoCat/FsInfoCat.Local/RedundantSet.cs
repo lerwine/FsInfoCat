@@ -2,23 +2,24 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SymbolicName : NotifyPropertyChanged, ILocalSymbolicName
+    public class RedundantSet : NotifyPropertyChanged, ILocalRedundantSet
     {
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<string> _name;
-        private readonly IPropertyChangeTracker<Guid> _fileSystemId;
+        private readonly IPropertyChangeTracker<string> _reference;
         private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<bool> _isInactive;
+        private readonly IPropertyChangeTracker<Guid> _contentInfoId;
         private readonly IPropertyChangeTracker<Guid?> _upstreamId;
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
         private readonly IPropertyChangeTracker<DateTime> _createdOn;
         private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
-        private readonly IPropertyChangeTracker<FileSystem> _fileSystem;
+        private readonly IPropertyChangeTracker<ContentInfo> _contentInfo;
+        private HashSet<Redundancy> _redundancies = new HashSet<Redundancy>();
 
         #endregion
 
@@ -27,30 +28,21 @@ namespace FsInfoCat.Local
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
-        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
-            ErrorMessageResourceType = typeof(Properties.Resources))]
-        [MaxLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
-            ErrorMessageResourceType = typeof(Properties.Resources))]
-        public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
+        public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
-        [Required]
-        public virtual bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
-
-        public virtual int Priority { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public virtual Guid FileSystemId
+        public virtual Guid ContentInfoId
         {
-            get => _fileSystemId.GetValue();
+            get => _contentInfoId.GetValue();
             set
             {
-                if (_fileSystemId.SetValue(value))
+                if (_contentInfoId.SetValue(value))
                 {
-                    FileSystem nav = _fileSystem.GetValue();
+                    ContentInfo nav = _contentInfo.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _fileSystem.SetValue(null);
+                        _contentInfo.SetValue(null);
                 }
             }
         }
@@ -69,54 +61,60 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
-        [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileSystemRequired),
-            ErrorMessageResourceType = typeof(Properties.Resources))]
-        public virtual FileSystem FileSystem
+        public virtual ContentInfo ContentInfo
         {
-            get => _fileSystem.GetValue();
+            get => _contentInfo.GetValue();
             set
             {
-                if (_fileSystem.SetValue(value))
+                if (_contentInfo.SetValue(value))
                 {
                     if (value is null)
-                        _fileSystemId.SetValue(Guid.Empty);
+                        _contentInfoId.SetValue(Guid.Empty);
                     else
-                        _fileSystemId.SetValue(value.Id);
+                        _contentInfoId.SetValue(value.Id);
                 }
             }
+        }
+
+        public virtual HashSet<Redundancy> Redundancies
+        {
+            get => _redundancies;
+            set => CheckHashSetChanged(_redundancies, value, h => _redundancies = h);
         }
 
         #endregion
 
         #region Explicit Members
 
-        ILocalFileSystem ILocalSymbolicName.FileSystem { get => FileSystem; set => FileSystem = (FileSystem)value; }
+        ILocalContentInfo ILocalRedundantSet.ContentInfo { get => ContentInfo; set => ContentInfo = (ContentInfo)value; }
 
-        IFileSystem ISymbolicName.FileSystem { get => FileSystem; set => FileSystem = (FileSystem)value; }
+        IContentInfo IRedundantSet.ContentInfo { get => ContentInfo; set => ContentInfo = (ContentInfo)value; }
+
+        IEnumerable<ILocalRedundancy> ILocalRedundantSet.Redundancies => Redundancies.Cast<ILocalRedundancy>();
+
+        IEnumerable<IRedundancy> IRedundantSet.Redundancies => Redundancies.Cast<IRedundancy>();
 
         #endregion
 
-        public SymbolicName()
+        public RedundantSet()
         {
             _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _name = CreateChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
+            _reference = CreateChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
             _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _isInactive = CreateChangeTracker(nameof(IsInactive), false);
+            _contentInfoId = CreateChangeTracker(nameof(ContentInfoId), Guid.Empty);
             _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
             _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
             _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _fileSystemId = CreateChangeTracker(nameof(FileSystemId), Guid.Empty);
-            _fileSystem = CreateChangeTracker<FileSystem>(nameof(FileSystem), null);
+            _contentInfo = CreateChangeTracker<ContentInfo>(nameof(ContentInfo), null);
         }
 
         public bool IsNew() => !_id.IsSet;
 
-        public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalSymbolicName entity && Id.Equals(entity.Id));
+        public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalRedundantSet entity && Id.Equals(entity.Id));
 
-        internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
+        internal static void BuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
-            builder.HasOne(sn => sn.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
+            builder.HasOne(sn => sn.ContentInfo).WithMany(d => d.RedundantSets).HasForeignKey(nameof(ContentInfoId)).IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -124,6 +122,7 @@ namespace FsInfoCat.Local
             List<ValidationResult> result = new List<ValidationResult>();
             if (_createdOn.GetValue().CompareTo(_modifiedOn.GetValue()) > 0)
                 result.Add(new ValidationResult($"{nameof(CreatedOn)} cannot be later than {nameof(ModifiedOn)}.", new string[] { nameof(CreatedOn) }));
+            // TODO: Complete validation
             return result;
         }
     }

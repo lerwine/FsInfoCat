@@ -13,5 +13,7 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamComparison> ComparisonSources { get; }
 
         new IEnumerable<IUpstreamComparison> ComparisonTargets { get; }
+
+        new IUpstreamRedundancy Redundancy { get; }
     }
 }

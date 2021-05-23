@@ -22,5 +22,7 @@ namespace FsInfoCat
         IEnumerable<IFile> Files { get; }
 
         IEnumerable<ISubdirectory> SubDirectories { get; }
+
+        Guid Id { get; set; }
     }
 }

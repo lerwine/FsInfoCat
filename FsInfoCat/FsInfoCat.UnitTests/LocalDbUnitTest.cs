@@ -44,8 +44,7 @@ namespace FsInfoCat.UnitTests
                 };
                 Local.FileSystem fileSystem = new Local.FileSystem
                 {
-                    DisplayName = "Again",
-                    DefaultSymbolicName = item
+                    DisplayName = "Again"
                 };
                 item.FileSystem = fileSystem;
                 Assert.IsTrue(item.IsNew());
