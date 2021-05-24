@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -10,10 +11,11 @@ using System.Threading;
 
 namespace FsInfoCat
 {
-    public class ValidationResultDictionary : ICollection<ValidationResult>, IDictionary<string, IEnumerable<string>>
+    public sealed class ValidationResultDictionary : ICollection<ValidationResult>, IDictionary<string, IEnumerable<string>>
     {
         private readonly object _syncroot = new();
-        private readonly Collection<ResultItem> _backingCollection = new();
+
+        public event PropertyChangedEventHandler MemberStateChanged;
 
         public ValidationResultDictionary()
         {
@@ -23,15 +25,30 @@ namespace FsInfoCat
 
         public IEnumerable<string> this[string key]
         {
-            get => _backingCollection.Where(i => i.MemberNames.Contains(key)).Select(i => i.Message);
+            get => _backingCollection.Where(i => i.MemberNames.Contains(key)).Select(i => i.ErrorMessage);
             set
             {
                 Monitor.Enter(_syncroot);
                 try
                 {
-
+                    var newValues = value.AsNonNullTrimmedValues().AsOrderedDistinct().EmptyIfNull();
+                    var oldItems = _backingCollection.ToIndexValuePairs(r => r).Where(kvp => kvp.Value.MemberNames.Contains(key));
+                    var toAdd = newValues.Where(t => !oldItems.Any(i => i.Value.ErrorMessage == t)).ToArray();
+                    var toRemove = oldItems.Where(p => !newValues.Contains(p.Value.ErrorMessage)).Reverse().ToArray();
+                    if (toAdd.Length == 0 && toRemove.Length == 0)
+                        return;
+                    foreach (var kvp in toRemove)
+                    {
+                        if (kvp.Value.MemberNames.Length == 1)
+                            _backingCollection.RemoveAt(kvp.Key);
+                        else
+                            _backingCollection[kvp.Key] = new ResultItem(kvp.Value.ErrorMessage, kvp.Value.MemberNames.Where(n => n != key));
+                    }
+                    foreach (string message in toAdd)
+                        _backingCollection.Add(new ResultItem(message, key));
                 }
                 finally { Monitor.Exit(_syncroot); }
+                RaiseMemberStateChanged(key);
             }
         }
 
@@ -39,11 +56,94 @@ namespace FsInfoCat
 
         public ICollection<IEnumerable<string>> Values { get; }
 
-        public int ValidationResultCount => _backingCollection.Count;
+        public int Count { get; private set; }
 
-        public int GetNameCount() => Keys.Count;
+        public int NameCount { get; private set; }
 
-        int ICollection<ValidationResult>.Count => _backingCollection.Count;
+        public void Add(ValidationResult item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(KeyValuePair<string, IEnumerable<string>> item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(string key, IEnumerable<string> value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Contains(ValidationResult item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Contains(KeyValuePair<string, IEnumerable<string>> item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ContainsKey(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyTo(ValidationResult[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyTo(KeyValuePair<string, IEnumerable<string>>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerator<ValidationResult> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator<KeyValuePair<string, IEnumerable<string>>> IEnumerable<KeyValuePair<string, IEnumerable<string>>>.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IGrouping<string, string>> GetMessagesByPropertyName() =>
+            _backingCollection.SelectMany(i => i.MemberNames.Select(n => (n, i.ErrorMessage))).GroupBy(a => a.n, a => a.ErrorMessage);
+
+        private void RaiseMemberStateChanged(string memberName) => MemberStateChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
+
+        public bool Remove(ValidationResult item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(KeyValuePair<string, IEnumerable<string>> item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetValue(string key, [MaybeNullWhen(false)] out IEnumerable<string> value)
+        {
+            throw new NotImplementedException();
+        }
 
         bool ICollection<ValidationResult>.IsReadOnly => false;
 
@@ -51,181 +151,235 @@ namespace FsInfoCat
 
         bool ICollection<KeyValuePair<string, IEnumerable<string>>>.IsReadOnly => false;
 
-        public IEnumerable<string> Add(ValidationResult item)
+        private LinkedList<ValidationResultBuilder> _validationResults = new();
+        private Collection<MemberNameItem> _memberNames = new();
+
+        private class ErrorMessageItem : IEquatable<ErrorMessageItem>
         {
-            if (item is null)
-                throw new ArgumentNullException(nameof(item));
-            Monitor.Enter(_syncroot);
-            try
+            internal string Value { get; private set; }
+
+            public bool Equals(ErrorMessageItem other) => !(other is null) && (ReferenceEquals(this, other) || Value.Equals(other.Value));
+
+            public override bool Equals(object obj) => obj is ErrorMessageItem other && Equals(other);
+
+            public override int GetHashCode() => Value.GetHashCode();
+        }
+
+        private class MemberNameItem : IEquatable<MemberNameItem>
+        {
+            public MemberNameItem([NotNull] string memberName) { Value = memberName; }
+
+            internal string Value { get; private set; }
+
+            public bool Equals(MemberNameItem other) => !(other is null) && (ReferenceEquals(this, other) || Value.Equals(other.Value));
+
+            public override bool Equals(object obj) => obj is MemberNameItem other && Equals(other);
+
+            public override int GetHashCode() => Value.GetHashCode();
+        }
+
+        private class ValidationResultBuilder : IEquatable<ValidationResultBuilder>
+        {
+            private readonly Collection<MemberNameItem> _memberNames = new();
+            private ValidationResult _validationResult;
+
+            internal string ErrorMessage { get; private set; }
+
+            internal ValidationResult ValidationResult
             {
-                if (Contains(item))
-                    return Array.Empty<string>();
-                ResultItem resultItem = new ResultItem(item);
-                foreach (var matching in _backingCollection.Select((r, i) => new { Index = i, Item = r })
-                    .Where(a => a.Item.Message == resultItem.Message && a.Item.MemberNames.Any(n => resultItem.MemberNames.Contains(n))).Reverse().ToArray())
+                get
                 {
-                    string[] remainder = matching.Item.MemberNames.Where(n => !resultItem.MemberNames.Contains(n)).ToArray();
-                    if (remainder.Length == 0)
-                        _backingCollection.RemoveAt(matching.Index);
-                    else
-                        _backingCollection[matching.Index] = new ResultItem(matching.Item.Message, remainder);
+                    ValidationResult validationResult = _validationResult;
+                    if (validationResult is null)
+                        _validationResult = validationResult = new ValidationResult(ErrorMessage, _memberNames.Select(m => m.Value).ToArray());
+                    return validationResult;
                 }
-                _backingCollection.Add(resultItem);
             }
-            finally { Monitor.Exit(_syncroot); }
-            throw new NotImplementedException();
-        }
 
-        public bool Add(string key, IEnumerable<string> value)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-                key = "";
-            Monitor.Enter(_syncroot);
-            try
+            internal static bool TryFindMatching([NotNull] ValidationResult validationResult, [NotNull] ValidationResultDictionary target, out ValidationResultBuilder result)
             {
-                IEnumerable<ResultItem> matching = _backingCollection.Where(i => i.MemberNames.Contains(key));
-                foreach (string message in value.Select(m => string.IsNullOrWhiteSpace(m) ? "" : m.Trim()).Where(m => !matching.Any(a => a.Message == m)))
-                    _backingCollection.Add(new ResultItem(message, key));
-                throw new NotImplementedException();
-            }
-            finally { Monitor.Exit(_syncroot); }
-        }
-
-        public bool Add(KeyValuePair<string, IEnumerable<string>> item) => Add(item.Key, item.Value);
-
-        public IEnumerable<string> Clear()
-        {
-            string[] result;
-            Monitor.Enter(_syncroot);
-            try
-            {
-                result = Keys.ToArray();
-                _backingCollection.Clear();
-            }
-            finally { Monitor.Exit(_syncroot); }
-            return result;
-        }
-
-        public bool Contains(ValidationResult item) => !(item is null) && (_backingCollection.Any(i => ReferenceEquals(i, item)) || _backingCollection.Contains(new ResultItem(item)));
-
-        public bool Contains(KeyValuePair<string, IEnumerable<string>> item)
-        {
-            string[] messages = _backingCollection.Where(i => i.MemberNames.Contains(item.Key)).Select(i => i.Message).ToArray();
-            if (messages.Length == 0)
-                return item.Value is null || !item.Value.Any();
-            if (item.Value is null)
-                return false;
-            return messages.OrderBy(m => m).SequenceEqual(item.Value.Select(m => (m is null) ? "" : m.Trim()).OrderBy(m => m));
-        }
-
-        public bool ContainsKey(string key) => _backingCollection.Any(i => i.MemberNames.Contains(key));
-
-        public void CopyTo(ValidationResult[] array, int arrayIndex) => _backingCollection.Select(i => i.Source).ToList().CopyTo(array, arrayIndex);
-
-        public void CopyTo(KeyValuePair<string, IEnumerable<string>>[] array, int arrayIndex) =>
-            GetMessagesByPropertyName().Select(g => new KeyValuePair<string, IEnumerable<string>>(g.Key, g));
-
-        public IEnumerable<IGrouping<string, string>> GetMessagesByPropertyName() =>
-            _backingCollection.SelectMany(i => i.MemberNames.Select(n => new { Name = n, i.Message })).GroupBy(a => a.Name, a => a.Message);
-
-        public IEnumerator<ValidationResult> GetEnumerator() => _backingCollection.Select(i => i.Source).GetEnumerator();
-
-        public IEnumerable<string> Remove(ValidationResult item)
-        {
-            if (item is null)
-                return Array.Empty<string>();
-            Monitor.Enter(_syncroot);
-            try
-            {
-                int index = _backingCollection.Select((r, i) => new { Index = i, r.Source }).Where(a => ReferenceEquals(a.Source, item)).Select(a => a.Index).DefaultIfEmpty(-1).First();
-                if (index < 0 && (index = _backingCollection.IndexOf(new ResultItem(item))) < 0)
-                    return Array.Empty<string>();
-                _backingCollection.RemoveAt(index);
-            }
-            finally { Monitor.Exit(_syncroot); }
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(string key)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-                key = "";
-            Monitor.Enter(_syncroot);
-            try
-            {
-                var toRemove = _backingCollection.Select((r, i) =>
+                lock (target._syncroot)
                 {
-                    if (r.MemberNames.Contains(key))
+                    if ((result = target._validationResults.FirstOrDefault(item => ReferenceEquals(item._validationResult, validationResult))) is null)
                     {
-                        if (r.MemberNames.Length == 1)
-                            return new { Index = i, Item = (ResultItem)null };
-                        return new { Index = i, Item = new ResultItem(r.Message, r.MemberNames.Where(n => n != key).ToArray()) };
+                        var item = new ValidationResultBuilder(validationResult);
+                        if ((result = target._validationResults.FirstOrDefault(e => e.Equals(item))) is null)
+                        {
+                            result = item;
+                            return false;
+                        }
                     }
-                    return null;
-                }).Where(a => !(a is null)).ToArray();
-                if (toRemove.Length == 0)
-                    return false;
-                foreach (var r in toRemove.Reverse())
-                    if (r.Item is null)
-                        _backingCollection.RemoveAt(r.Index);
-                    else
-                        _backingCollection[r.Index] = r.Item;
+                }
+                return true;
             }
-            finally { Monitor.Exit(_syncroot); }
-            return true;
-        }
 
-        public bool Remove(KeyValuePair<string, IEnumerable<string>> item)
-        {
-            Monitor.Enter(_syncroot);
-            try
+            internal static bool Set(string memberName, IEnumerable<string> errorMessages, [NotNull] ValidationResultDictionary target, bool appendOnly = false)
             {
-                throw new NotImplementedException();
+                memberName = memberName.EmptyIfNullOrWhiteSpace();
+                errorMessages = errorMessages.AsNonNullTrimmedValues().Distinct();
+                lock (target._syncroot)
+                {
+                    ValidationResultBuilder item = target._validationResults.FirstOrDefault(v => v.ErrorMessage == errorMessage);
+                    MemberNameItem memberItem = target._memberNames.FirstOrDefault(m => m.Value == memberName);
+
+                    if (item is null)
+                    {
+                        if (memberItem is null)
+                        {
+                            item = new ValidationResultBuilder(errorMessage, new MemberNameItem(memberName));
+                            target._memberNames.Add(item._memberNames[0]);
+                        }
+                        else
+                            item = new ValidationResultBuilder(errorMessage, memberItem);
+                    }
+                    else
+                    {
+                        if (memberItem is null)
+                        {
+                            target._memberNames.Add(new MemberNameItem(memberName));
+                            item._memberNames.Add(target._memberNames.Last());
+                        }
+                        else
+                        {
+                            if (item._memberNames.Contains(memberItem))
+                                return false;
+                            item._memberNames.Add(memberItem);
+                        }
+                    }
+                    if (appendOnly || memberItem is null)
+                        return true;
+                    var node = target._validationResults.First;
+                    while (!(node is null))
+                    {
+                        var next = node.Next;
+                        if (!node.Value.ErrorMessage.Equals(errorMessage) && node.Value._memberNames.Remove(memberItem))
+                            target._validationResults.Remove(node);
+                        node = next;
+                    }
+                }
+                return true;
             }
-            finally { Monitor.Exit(_syncroot); }
+
+            internal static bool Set(string memberName, string errorMessage, [NotNull] ValidationResultDictionary target, bool appendOnly = false)
+            {
+                memberName = memberName.EmptyIfNullOrWhiteSpace();
+                errorMessage = errorMessage.AsNonNullTrimmed();
+                lock (target._syncroot)
+                {
+                    ValidationResultBuilder item = target._validationResults.FirstOrDefault(v => v.ErrorMessage == errorMessage);
+                    MemberNameItem memberItem = target._memberNames.FirstOrDefault(m => m.Value == memberName);
+                    
+                    if (item is null)
+                    {
+                        if (memberItem is null)
+                        {
+                            item = new ValidationResultBuilder(errorMessage, new MemberNameItem(memberName));
+                            target._memberNames.Add(item._memberNames[0]);
+                        }
+                        else
+                            item = new ValidationResultBuilder(errorMessage, memberItem);
+                    }
+                    else
+                    {
+                        if (memberItem is null)
+                        {
+                            target._memberNames.Add(new MemberNameItem(memberName));
+                            item._memberNames.Add(target._memberNames.Last());
+                        }
+                        else
+                        {
+                            if (item._memberNames.Contains(memberItem))
+                                return false;
+                            item._memberNames.Add(memberItem);
+                        }
+                    }
+                    if (appendOnly || memberItem is null)
+                        return true;
+                    var node = target._validationResults.First;
+                    while (!(node is null))
+                    {
+                        var next = node.Next;
+                        if (!node.Value.ErrorMessage.Equals(errorMessage) && node.Value._memberNames.Remove(memberItem))
+                            target._validationResults.Remove(node);
+                        node = next;
+                    }
+                }
+                return true;
+            }
+
+            internal static IEnumerable<string> Upsert([NotNull] ValidationResult validationResult, [NotNull] ValidationResultDictionary target)
+            {
+                if (TryFindMatching(validationResult, target, out ValidationResultBuilder result))
+                    result._validationResult = validationResult;
+                else
+                {
+                    lock (target._syncroot)
+                    {
+                        for (int i = 0; i < result._memberNames.Count; i++)
+                        {
+                            var item = result._memberNames[i];
+                            int index = target._memberNames.IndexOf(item);
+                            if (index < 0)
+                            {
+                                target._memberNames.Add(item);
+                                yield return item.Value;
+                            }
+                            else
+                                result._memberNames[i] = target._memberNames[index];
+                        }
+                    }
+                }
+            }
+
+            public bool Equals(ValidationResultBuilder other) => !(other is null) && (ReferenceEquals(this, other) || (ErrorMessage.Equals(other.ErrorMessage) && _memberNames.SequenceEqual(other._memberNames)));
+
+            public override bool Equals(object obj) => obj is ValidationResultBuilder other && Equals(other);
+
+            public override int GetHashCode() => new string[] { ErrorMessage }.Concat(_memberNames.Select(m=> m.Value)).GetAggregateHashCode();
+
+            private ValidationResultBuilder([NotNull] ValidationResult validationResult)
+            {
+                ErrorMessage = (_validationResult = validationResult).ErrorMessage.AsNonNullTrimmed();
+                foreach (string memberName in validationResult.MemberNames.AsNonNullValues().EmptyIfNull().Distinct())
+                    _memberNames.Add(new MemberNameItem(memberName));
+            }
+
+            private ValidationResultBuilder(string errorMessage, MemberNameItem memberName)
+            {
+                ErrorMessage = errorMessage;
+                _memberNames.Add(memberName);
+            }
         }
 
-        public bool TryGetValue(string key, [MaybeNullWhen(false)] out IEnumerable<string> value)
+        private class ResultItem
         {
-            value = GetMessagesByPropertyName().FirstOrDefault(g => g.Key == key);
-            return !(value is null);
-        }
+            internal ResultItem Previous { get; private set; }
+            internal ResultItem Next { get; private set; }
+            internal static IEnumerable<ResultItem> GetItems([NotNull] ValidationResultDictionary target)
+            {
+                for (ResultItem item = target._firstResultItem; !(item is null); item = item.Next)
+                    yield return item;
+            }
+            void Append([NotNull] ValidationResult source, [NotNull] ValidationResultDictionary target)
+            {
+                lock (target._syncroot)
+                {
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_backingCollection.Select(i => i.Source)).GetEnumerator();
-
-        IEnumerator<KeyValuePair<string, IEnumerable<string>>> IEnumerable<KeyValuePair<string, IEnumerable<string>>>.GetEnumerator() =>
-            GetMessagesByPropertyName().Select(g => new KeyValuePair<string, IEnumerable<string>>(g.Key, g)).GetEnumerator();
-
-        private static string[] GetOrderedNames(IEnumerable<string> source) => (source is null) ? new string[] { "" } : source.Select(n => string.IsNullOrWhiteSpace(n) ? "" : n).Distinct().OrderBy(m => m).ToArray();
-
-        void ICollection<ValidationResult>.Add(ValidationResult item)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ICollection<ValidationResult>.Clear()
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ICollection<ValidationResult>.Remove(ValidationResult item)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IDictionary<string, IEnumerable<string>>.Add(string key, IEnumerable<string> value)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ICollection<KeyValuePair<string, IEnumerable<string>>>.Add(KeyValuePair<string, IEnumerable<string>> item)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ICollection<KeyValuePair<string, IEnumerable<string>>>.Clear()
-        {
-            throw new NotImplementedException();
+                }
+            }
+            internal ResultItem(ValidationResult source)
+            {
+                Source = source;
+                MemberNames = source.MemberNames.AsOrderedDistinct().EmptyIfNull().ToArray();
+                ErrorMessage = source.ErrorMessage.AsNonNullTrimmed();
+            }
+            internal ResultItem(string message, IEnumerable<string> memberNames) : this(new ValidationResult(message, memberNames)) { }
+            internal ResultItem(string message, params string[] memberNames) : this(new ValidationResult(message, memberNames)) { }
+            internal ValidationResult Source { get; }
+            internal string[] MemberNames { get; }
+            internal string ErrorMessage { get; }
+            public bool Equals(ResultItem other) => !(other is null) && (ReferenceEquals(this, other) ||
+                (ErrorMessage == other.ErrorMessage && MemberNames.SequenceEqual(other.MemberNames)));
         }
 
         class KeyCollection : ICollection<string>
@@ -268,10 +422,10 @@ namespace FsInfoCat
             {
                 if (item is null)
                     return false;
-                string[] ordered = GetOrderedNames(item);
+                string[] ordered = item.AsOrderedDistinct().EmptyIfNull().ToArray();
                 if (ordered.Length == 0)
                     return false;
-                return _source.GetMessagesByPropertyName().Any(m => ordered.SequenceEqual(GetOrderedNames(m)));
+                return _source.GetMessagesByPropertyName().Any(m => ordered.SequenceEqual(m.AsNonNullTrimmedValues().AsOrderedDistinct().EmptyIfNull()));
             }
 
             void ICollection<IEnumerable<string>>.CopyTo(IEnumerable<string>[] array, int arrayIndex) =>
@@ -283,23 +437,6 @@ namespace FsInfoCat
                 ((IEnumerable)_source.GetMessagesByPropertyName().Cast<IEnumerable<string>>()).GetEnumerator();
 
             bool ICollection<IEnumerable<string>>.Remove(IEnumerable<string> item) => throw new NotSupportedException();
-        }
-
-        class ResultItem : IEquatable<ResultItem>
-        {
-            internal ResultItem(ValidationResult source)
-            {
-                Source = source;
-                MemberNames = GetOrderedNames(source.MemberNames);
-                Message = string.IsNullOrWhiteSpace(source.ErrorMessage) ? "" : source.ErrorMessage.Trim();
-            }
-            internal ResultItem(string message, IEnumerable<string> memberNames) : this(new ValidationResult(message, memberNames)) { }
-            internal ResultItem(string message, params string[] memberNames) : this(new ValidationResult(message, memberNames)) { }
-            internal ValidationResult Source { get; }
-            internal string[] MemberNames { get; }
-            internal string Message { get; }
-            public bool Equals(ResultItem other) => !(other is null) && (ReferenceEquals(this, other) ||
-                (Message == other.Message && MemberNames.SequenceEqual(other.MemberNames)));
         }
     }
 }

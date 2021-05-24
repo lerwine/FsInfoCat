@@ -137,7 +137,7 @@ namespace FsInfoCat.Local
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(DefaultDriveType) }));
             string displayName = DisplayName;
             Guid id = Id;
-            if (dbContext.FileSystems.Any(fs => !id.Equals(fs.Id) && fs._displayName.IsEqualTo(displayName)))
+            if (dbContext.FileSystems.AsEnumerable().Any(fs => !id.Equals(fs.Id) && fs._displayName.IsEqualTo(displayName)))
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
         }
     }
