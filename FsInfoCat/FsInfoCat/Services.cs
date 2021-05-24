@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Globalization;
 using System.IO;
@@ -56,15 +57,33 @@ namespace FsInfoCat
         {
             if (!(ServiceProvider is null))
                 throw new InvalidOperationException();
-            ServiceProvider = new DummyServiceProvider();
-            ServiceCollection services = new ServiceCollection();
+            //ServiceProvider = new DummyServiceProvider();
+            ServiceCollection services = new();
+            services.AddLogging(b => b.AddDebug());
+            ServiceProvider = services.BuildServiceProvider();
             configureServices?.Invoke(services);
             ServiceProvider = services.BuildServiceProvider();
         }
 
-        private class DummyServiceProvider : IServiceProvider
-        {
-            public object GetService(Type serviceType) => null;
-        }
+        //private class DummyServiceProvider : IServiceProvider
+        //{
+        //    public object GetService(Type serviceType) => null;
+        //}
     }
+    //public interface ILoggingService
+    //{
+    //    ILogger<T> CreateLogger<T>();
+    //}
+    //internal class LoggingService : ILoggingService
+    //{
+    //    private static readonly LoggerFactory _loggerFactory;
+
+    //    static LoggingService()
+    //    {
+    //        _loggerFactory = new LoggerFactory();
+    //        _loggerFactory.AddProvider(new DebugLoggerProvider());
+    //    }
+
+    //    public ILogger<T> CreateLogger<T>() => _loggerFactory.CreateLogger<T>();
+    //}
 }

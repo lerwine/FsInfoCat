@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,6 +11,19 @@ namespace FsInfoCat.Local
 {
     public class ContentInfo : NotifyPropertyChanged, ILocalContentInfo
     {
+        /*
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+	"Length"	BIGINT NOT NULL CHECK(Length>0),
+	"Hash"	BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_ContentInfo" PRIMARY KEY("Id"),
+	CONSTRAINT "UK_LengthHash" UNIQUE("Length","Hash"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+         */
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
@@ -17,33 +33,61 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
         private readonly IPropertyChangeTracker<DateTime> _createdOn;
         private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
-        private HashSet<DbFile> _files = new HashSet<DbFile>();
-        private HashSet<RedundantSet> _redundantSets = new HashSet<RedundantSet>();
+        private HashSet<DbFile> _files = new();
+        private HashSet<RedundantSet> _redundantSets = new();
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
         [Required]
         public virtual long Length { get => _length.GetValue(); set => _length.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
         public virtual byte[] Hash { get => _hash.GetValue(); set => _hash.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(Properties.Resources))]
+        /// <summary></summary>
+        /// <remarks>UNIQUEIDENTIFIER DEFAULT NULL</remarks>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+        /// </remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+        /// </remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         public virtual HashSet<DbFile> Files
@@ -86,18 +130,13 @@ namespace FsInfoCat.Local
 
         public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalContentInfo entity && Id.Equals(entity.Id));
 
-        //internal static void BuildEntity(EntityTypeBuilder<ContentInfo> builder)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        private void OnValidate(EntityEntry<ContentInfo> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
-            List<ValidationResult> result = new List<ValidationResult>();
-            if (_createdOn.GetValue().CompareTo(_modifiedOn.GetValue()) > 0)
-                result.Add(new ValidationResult($"{nameof(CreatedOn)} cannot be later than {nameof(ModifiedOn)}.", new string[] { nameof(CreatedOn) }));
-            // TODO: Complete validation
-            return result;
+            // TODO: Finish validation
+            throw new NotImplementedException();
         }
     }
 }

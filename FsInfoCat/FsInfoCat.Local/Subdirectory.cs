@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +13,27 @@ namespace FsInfoCat.Local
 {
     public class Subdirectory : NotifyPropertyChanged, ILocalSubdirectory
     {
+        /*
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
+    "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<64) DEFAULT 0,
+    "LastAccessed" DATETIME  NOT NULL,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "Deleted" BIT NOT NULL DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ParentId"	UNIQUEIDENTIFIER,
+	"VolumeId"	UNIQUEIDENTIFIER,
+	CONSTRAINT "PK_Subdirectoriess" PRIMARY KEY("Id"),
+	CONSTRAINT "FK_SubdirectoryParent" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
+	CONSTRAINT "FK_SubdirectoryVolume" FOREIGN KEY("VolumeId") REFERENCES "Volumes"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
+        ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
+        (ParentId IS NOT NULL AND VolumeId IS NULL AND length(trim(Name))>0)))
+         */
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
@@ -26,8 +50,8 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid?> _volumeId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
         private readonly IPropertyChangeTracker<Volume> _volume;
-        private HashSet<DbFile> _files = new HashSet<DbFile>();
-        private HashSet<Subdirectory> _subDirectories = new HashSet<Subdirectory>();
+        private HashSet<DbFile> _files = new ();
+        private HashSet<Subdirectory> _subDirectories = new();
 
         #endregion
 
@@ -44,12 +68,14 @@ namespace FsInfoCat.Local
         [Required]
         public virtual DateTime LastAccessed { get => _lastAccessed.GetValue(); set => _lastAccessed.SetValue(value); }
 
+        /// <remarks>TEXT NOT NULL DEFAULT ''</remarks>
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
         [Required]
         public virtual bool Deleted { get => _deleted.GetValue(); set => _deleted.SetValue(value); }
 
+        /// <remarks>UNIQUEIDENTIFIER</remarks>
         public virtual Guid? ParentId
         {
             get => _parentId.GetValue();
@@ -64,6 +90,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <remarks>UNIQUEIDENTIFIER</remarks>
         public virtual Guid? VolumeId
         {
             get => _volumeId.GetValue();
@@ -78,18 +105,29 @@ namespace FsInfoCat.Local
             }
         }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(Properties.Resources))]
+        /// <remarks>UNIQUEIDENTIFIER DEFAULT NULL</remarks>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+        /// </remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+        /// </remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         public virtual Subdirectory Parent
@@ -180,16 +218,22 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<Subdirectory> builder)
         {
             builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId));
-            builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey(nameof(VolumeId));
+            builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId));//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnBeforeValidate, OnValidate);
+
+        private void OnBeforeValidate(EntityEntry<Subdirectory> entityEntry, LocalDbContext dbContext)
         {
-            List<ValidationResult> result = new List<ValidationResult>();
-            if (_createdOn.GetValue().CompareTo(_modifiedOn.GetValue()) > 0)
-                result.Add(new ValidationResult($"{nameof(CreatedOn)} cannot be later than {nameof(ModifiedOn)}.", new string[] { nameof(CreatedOn) }));
-            // TODO: Complete validation
-            return result;
+            // TODO: Finish validation
+            throw new NotImplementedException();
+        }
+
+        private void OnValidate(EntityEntry<Subdirectory> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
+        {
+            // TODO: Finish validation
+            throw new NotImplementedException();
         }
     }
 }

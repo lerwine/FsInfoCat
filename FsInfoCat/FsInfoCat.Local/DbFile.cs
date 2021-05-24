@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +13,26 @@ namespace FsInfoCat.Local
     [Table(TABLE_NAME)]
     public class DbFile : NotifyPropertyChanged, ILocalFile
     {
+        /*
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE,
+    "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<15) DEFAULT 0,
+    "LastAccessed" DATETIME  NOT NULL,
+    "LastHashCalculation" DATETIME DEFAULT NULL,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "Deleted" BIT NOT NULL DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
+	"ParentId"	UNIQUEIDENTIFIER NOT NULL,
+	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
+	CONSTRAINT "FK_FileSubdirectory" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
+	CONSTRAINT "FK_FileContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+         */
         #region Fields
 
         public const string TABLE_NAME = "Files";
@@ -30,13 +53,18 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
         private readonly IPropertyChangeTracker<ContentInfo> _content;
         private readonly IPropertyChangeTracker<Redundancy> _redundancy;
-        private HashSet<FileComparison> _comparisonSources = new HashSet<FileComparison>();
-        private HashSet<FileComparison> _comparisonTargets = new HashSet<FileComparison>();
+        private HashSet<FileComparison> _comparisonSources = new();
+        private HashSet<FileComparison> _comparisonTargets = new();
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// UNIQUEIDENTIFIER NOT NULL
+        /// </remarks>
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
@@ -50,12 +78,14 @@ namespace FsInfoCat.Local
 
         public virtual DateTime? LastHashCalculation { get => _lastHashCalculation.GetValue(); set => _lastHashCalculation.SetValue(value); }
 
+        /// <remarks>TEXT NOT NULL DEFAULT ''</remarks>
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
         [Required]
         public virtual bool Deleted { get => _deleted.GetValue(); set => _deleted.SetValue(value); }
 
+        /// <remarks>UNIQUEIDENTIFIER NOT NULL</remarks>
         public virtual Guid ParentId
         {
             get => _parentId.GetValue();
@@ -70,6 +100,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <remarks>UNIQUEIDENTIFIER NOT NULL</remarks>
         public virtual Guid ContentId
         {
             get => _contentId.GetValue();
@@ -84,18 +115,29 @@ namespace FsInfoCat.Local
             }
         }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(Properties.Resources))]
+        /// <remarks>UNIQUEIDENTIFIER DEFAULT NULL</remarks>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+        /// </remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+        /// </remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         public virtual ContentInfo Content
@@ -197,13 +239,19 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.Content).WithMany(d => d.Files).HasForeignKey(nameof(ContentId)).IsRequired();
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnBeforeValidate, OnValidate);
+
+        private void OnBeforeValidate(EntityEntry<DbFile> entityEntry, LocalDbContext dbContext)
         {
-            List<ValidationResult> result = new List<ValidationResult>();
-            if (_createdOn.GetValue().CompareTo(_modifiedOn.GetValue()) > 0)
-                result.Add(new ValidationResult($"{nameof(CreatedOn)} cannot be later than {nameof(ModifiedOn)}.", new string[] { nameof(CreatedOn) }));
-            // TODO: Complete validation
-            return result;
+            // TODO: Finish validation
+            throw new NotImplementedException();
+        }
+
+        private void OnValidate(EntityEntry<DbFile> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
+        {
+            // TODO: Finish validation
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.Local.ContentInfo" BaseTypeListCollapsed="true">
+    <Position X="1" Y="2.5" Width="1.75" />
+    <Members>
+      <Property Name="IContentInfo.Files" Hidden="true" />
+      <Property Name="IContentInfo.RedundantSets" Hidden="true" />
+      <Property Name="ILocalContentInfo.Files" Hidden="true" />
+      <Property Name="ILocalContentInfo.RedundantSets" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIACAABAAAKABECAgATAAABQABACAABgBEAIAAEAEIA=</HashCode>
+      <FileName>ContentInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Local.DbFile" BaseTypeListCollapsed="true">
+    <Position X="4" Y="6.75" Width="1.75" />
+    <Members>
+      <Property Name="IFile.ComparisonSources" Hidden="true" />
+      <Property Name="IFile.ComparisonTargets" Hidden="true" />
+      <Property Name="IFile.Content" Hidden="true" />
+      <Property Name="IFile.Parent" Hidden="true" />
+      <Property Name="IFile.Redundancy" Hidden="true" />
+      <Property Name="ILocalFile.ComparisonSources" Hidden="true" />
+      <Property Name="ILocalFile.ComparisonTargets" Hidden="true" />
+      <Property Name="ILocalFile.Content" Hidden="true" />
+      <Property Name="ILocalFile.Parent" Hidden="true" />
+      <Property Name="ILocalFile.Redundancy" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAyIADgA1igBEhBgghCUARQAASCAAEgUkEIAADAAII=</HashCode>
+      <FileName>DbFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parent" />
+      <Property Name="Content" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Local.FileComparison" BaseTypeListCollapsed="true">
+    <Position X="1" Y="7.5" Width="1.75" />
+    <Members>
+      <Property Name="IComparison.SourceFile" Hidden="true" />
+      <Property Name="IComparison.TargetFile" Hidden="true" />
+      <Property Name="ILocalComparison.SourceFile" Hidden="true" />
+      <Property Name="ILocalComparison.TargetFile" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAhYAACABMAEhAAAAiBUAAAiAQAhAEAIIAJAAAI=</HashCode>
+      <FileName>FileComparison.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SourceFile" />
+      <Property Name="TargetFile" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Local.FileSystem" BaseTypeListCollapsed="true">
+    <Position X="13" Y="1" Width="1.75" />
+    <Members>
+      <Property Name="IFileSystem.SymbolicNames" Hidden="true" />
+      <Property Name="IFileSystem.Volumes" Hidden="true" />
+      <Property Name="ILocalFileSystem.SymbolicNames" Hidden="true" />
+      <Property Name="ILocalFileSystem.Volumes" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgyEABgAAGBBERAgABAACQSQBgGgAEgAFAIAAAAoAA=</HashCode>
+      <FileName>FileSystem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Redundancy" BaseTypeListCollapsed="true">
+    <Position X="7" Y="7.5" Width="1.75" />
+    <Members>
+      <Property Name="ILocalRedundancy.File" Hidden="true" />
+      <Property Name="ILocalRedundancy.RedundantSet" Hidden="true" />
+      <Property Name="IRedundancy.File" Hidden="true" />
+      <Property Name="IRedundancy.RedundantSet" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AEAxgADEIECABEABgACAAAAQgBAWAAAgAEQIAAJAEAA=</HashCode>
+      <FileName>Redundancy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="File" />
+      <Property Name="RedundantSet" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Local.RedundantSet" BaseTypeListCollapsed="true">
+    <Position X="4" Y="1" Width="1.75" />
+    <Members>
+      <Property Name="ILocalRedundantSet.ContentInfo" Hidden="true" />
+      <Property Name="ILocalRedundantSet.Redundancies" Hidden="true" />
+      <Property Name="IRedundantSet.ContentInfo" Hidden="true" />
+      <Property Name="IRedundantSet.Redundancies" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAA6AADAAQCABEALkABQAAAQACACAAAgAEAKAABAAgA=</HashCode>
+      <FileName>RedundantSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ContentInfo" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Subdirectory" BaseTypeListCollapsed="true">
+    <Position X="7" Y="0.75" Width="1.75" />
+    <Members>
+      <Property Name="ILocalSubdirectory.Files" Hidden="true" />
+      <Property Name="ILocalSubdirectory.Parent" Hidden="true" />
+      <Property Name="ILocalSubdirectory.SubDirectories" Hidden="true" />
+      <Property Name="ILocalSubdirectory.Volume" Hidden="true" />
+      <Property Name="ISubdirectory.Files" Hidden="true" />
+      <Property Name="ISubdirectory.Parent" Hidden="true" />
+      <Property Name="ISubdirectory.SubDirectories" Hidden="true" />
+      <Property Name="ISubdirectory.Volume" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAyIABAAUCABEgAhARAUAQwAAWCAERwAkIIAADAEIA=</HashCode>
+      <FileName>Subdirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Local.SymbolicName" BaseTypeListCollapsed="true">
+    <Position X="16" Y="1.25" Width="1.75" />
+    <Members>
+      <Property Name="ILocalSymbolicName.FileSystem" Hidden="true" />
+      <Property Name="ISymbolicName.FileSystem" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAyIADAAACEBEAEgABAAAQSAAwCQAAgAEAIAABAgAA=</HashCode>
+      <FileName>SymbolicName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Volume" BaseTypeListCollapsed="true">
+    <Position X="10" Y="0.75" Width="1.75" />
+    <Members>
+      <Property Name="ILocalVolume.FileSystem" Hidden="true" />
+      <Property Name="ILocalVolume.RootDirectory" Hidden="true" />
+      <Property Name="IVolume.FileSystem" Hidden="true" />
+      <Property Name="IVolume.RootDirectory" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AEAyMADEAACEBFQAoABAgAYQAAQGgAEgAUgIQABAoAI=</HashCode>
+      <FileName>Volume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

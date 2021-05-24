@@ -11,7 +11,7 @@ namespace FsInfoCat
 
         bool ReadOnly { get; set; }
 
-        long MaxNameLength { get; set; }
+        int MaxNameLength { get; set; }
 
         System.IO.DriveType? DefaultDriveType { get; set; }
 

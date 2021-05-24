@@ -79,6 +79,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Drive Type.
+        /// </summary>
+        public static string DisplayName_DefaultDriveType {
+            get {
+                return ResourceManager.GetString("DisplayName_DefaultDriveType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Name.
         /// </summary>
         public static string DisplayName_DisplayName {
@@ -102,6 +111,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Identifier {
             get {
                 return ResourceManager.GetString("DisplayName_Identifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is Inactive.
+        /// </summary>
+        public static string DisplayName_IsInactive {
+            get {
+                return ResourceManager.GetString("DisplayName_IsInactive", resourceCulture);
             }
         }
         
@@ -142,11 +160,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Redundancy Set.
+        /// </summary>
+        public static string DisplayName_RedundantSet {
+            get {
+                return ResourceManager.GetString("DisplayName_RedundantSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Root Directory.
         /// </summary>
         public static string DisplayName_RootDirectory {
             get {
                 return ResourceManager.GetString("DisplayName_RootDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbolic Names.
+        /// </summary>
+        public static string DisplayName_SymbolicNames {
+            get {
+                return ResourceManager.GetString("DisplayName_SymbolicNames", resourceCulture);
             }
         }
         
@@ -169,6 +205,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Created On&quot; date cannot be later than the &quot;Modified On&quot; date..
+        /// </summary>
+        public static string ErrorMessage_CreatedOnAfterModifiedOn {
+            get {
+                return ResourceManager.GetString("ErrorMessage_CreatedOnAfterModifiedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Name too long..
         /// </summary>
         public static string ErrorMessage_DisplayNameLength {
@@ -183,6 +228,51 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_DisplayNameRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_DisplayNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drive Type is invalid..
+        /// </summary>
+        public static string ErrorMessage_DriveTypeInvalid {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DriveTypeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Name is already in use..
+        /// </summary>
+        public static string ErrorMessage_DuplicateDisplayName {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DuplicateDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identifier Name already in use..
+        /// </summary>
+        public static string ErrorMessage_DuplicateIdentifierName {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DuplicateIdentifierName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name is already in use..
+        /// </summary>
+        public static string ErrorMessage_DuplicateName {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DuplicateName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File must be selected..
+        /// </summary>
+        public static string ErrorMessage_FileRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FileRequired", resourceCulture);
             }
         }
         
@@ -214,6 +304,42 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File does not have the same content information as the target Redundancy Set..
+        /// </summary>
+        public static string ErrorMessage_InvalidFileInRedundantSet {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidFileInRedundantSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;&quot;Last Synchronized On&quot; date cannot be later than the &quot;Modified On&quot; date..
+        /// </summary>
+        public static string ErrorMessage_LastSynchronizedOnAfterModifiedOn {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LastSynchronizedOnAfterModifiedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Last Synchronized On&quot; date cannot be earlier than the &quot;Created On&quot; date..
+        /// </summary>
+        public static string ErrorMessage_LastSynchronizedOnBeforeCreatedOn {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LastSynchronizedOnBeforeCreatedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum Name Length cannot be negative..
+        /// </summary>
+        public static string ErrorMessage_MaxNameLengthNegative {
+            get {
+                return ResourceManager.GetString("ErrorMessage_MaxNameLengthNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name too long..
         /// </summary>
         public static string ErrorMessage_NameLength {
@@ -228,6 +354,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_NameRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_NameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redundancy Set must be selected..
+        /// </summary>
+        public static string ErrorMessage_RedundantSetRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_RedundantSetRequired", resourceCulture);
             }
         }
         

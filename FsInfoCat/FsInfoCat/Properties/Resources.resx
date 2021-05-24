@@ -123,6 +123,9 @@
   <data name="DisplayName_CreatedOn" xml:space="preserve">
     <value>Created On</value>
   </data>
+  <data name="DisplayName_DefaultDriveType" xml:space="preserve">
+    <value>Default Drive Type</value>
+  </data>
   <data name="DisplayName_DisplayName" xml:space="preserve">
     <value>Display Name</value>
   </data>
@@ -131,6 +134,9 @@
   </data>
   <data name="DisplayName_Identifier" xml:space="preserve">
     <value>Volume Identifier</value>
+  </data>
+  <data name="DisplayName_IsInactive" xml:space="preserve">
+    <value>Is Inactive</value>
   </data>
   <data name="DisplayName_LastSynchronizedOn" xml:space="preserve">
     <value>Last Synchronized On</value>
@@ -144,8 +150,14 @@
   <data name="DisplayName_ReadOnly" xml:space="preserve">
     <value>Read-only</value>
   </data>
+  <data name="DisplayName_RedundantSet" xml:space="preserve">
+    <value>Redundancy Set</value>
+  </data>
   <data name="DisplayName_RootDirectory" xml:space="preserve">
     <value>Root Directory</value>
+  </data>
+  <data name="DisplayName_SymbolicNames" xml:space="preserve">
+    <value>Symbolic Names</value>
   </data>
   <data name="DisplayName_UpstreamId" xml:space="preserve">
     <value>Remote DB Identifier</value>
@@ -153,11 +165,29 @@
   <data name="DisplayName_VolumeName" xml:space="preserve">
     <value>Volume Name</value>
   </data>
+  <data name="ErrorMessage_CreatedOnAfterModifiedOn" xml:space="preserve">
+    <value>"Created On" date cannot be later than the "Modified On" date.</value>
+  </data>
   <data name="ErrorMessage_DisplayNameLength" xml:space="preserve">
     <value>Display Name too long.</value>
   </data>
   <data name="ErrorMessage_DisplayNameRequired" xml:space="preserve">
     <value>Display Name is required.</value>
+  </data>
+  <data name="ErrorMessage_DriveTypeInvalid" xml:space="preserve">
+    <value>Drive Type is invalid.</value>
+  </data>
+  <data name="ErrorMessage_DuplicateDisplayName" xml:space="preserve">
+    <value>Display Name is already in use.</value>
+  </data>
+  <data name="ErrorMessage_DuplicateIdentifierName" xml:space="preserve">
+    <value>Identifier Name already in use.</value>
+  </data>
+  <data name="ErrorMessage_DuplicateName" xml:space="preserve">
+    <value>Name is already in use.</value>
+  </data>
+  <data name="ErrorMessage_FileRequired" xml:space="preserve">
+    <value>File must be selected.</value>
   </data>
   <data name="ErrorMessage_FileSystemRequired" xml:space="preserve">
     <value>File System is required.</value>
@@ -168,11 +198,26 @@
   <data name="ErrorMessage_IdentifierRequired" xml:space="preserve">
     <value>Volume Identifier is required.</value>
   </data>
+  <data name="ErrorMessage_InvalidFileInRedundantSet" xml:space="preserve">
+    <value>File does not have the same content information as the target Redundancy Set.</value>
+  </data>
+  <data name="ErrorMessage_LastSynchronizedOnAfterModifiedOn" xml:space="preserve">
+    <value>""Last Synchronized On" date cannot be later than the "Modified On" date.</value>
+  </data>
+  <data name="ErrorMessage_LastSynchronizedOnBeforeCreatedOn" xml:space="preserve">
+    <value>"Last Synchronized On" date cannot be earlier than the "Created On" date.</value>
+  </data>
+  <data name="ErrorMessage_MaxNameLengthNegative" xml:space="preserve">
+    <value>Maximum Name Length cannot be negative.</value>
+  </data>
   <data name="ErrorMessage_NameLength" xml:space="preserve">
     <value>Name too long.</value>
   </data>
   <data name="ErrorMessage_NameRequired" xml:space="preserve">
     <value>Name is required.</value>
+  </data>
+  <data name="ErrorMessage_RedundantSetRequired" xml:space="preserve">
+    <value>Redundancy Set must be selected.</value>
   </data>
   <data name="ErrorMessage_VolumeNameLength" xml:space="preserve">
     <value>Volume Name too long.</value>

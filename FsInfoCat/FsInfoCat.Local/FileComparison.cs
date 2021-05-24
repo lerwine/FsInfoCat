@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +12,20 @@ namespace FsInfoCat.Local
     [Table(TABLE_NAME)]
     public class FileComparison : NotifyPropertyChanged, ILocalComparison
     {
+        /*
+    "SourceFileId" UNIQUEIDENTIFIER NOT NULL,
+    "TargetFileId" UNIQUEIDENTIFIER NOT NULL,
+    "AreEqual" BIT NOT NULL DEFAULT 0,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_Comparisons" PRIMARY KEY("SourceFileId","TargetFileId"),
+	CONSTRAINT "FK_ComparisonSourceFile" FOREIGN KEY("SourceFileId") REFERENCES "Files"("Id"),
+	CONSTRAINT "FK_ComparisonTargetFile" FOREIGN KEY("TargetFileId") REFERENCES "Files"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND SourceFileId<>TargetFileId AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+         */
         #region Fields
 
         public const string TABLE_NAME = "Comparisons";
@@ -28,6 +45,7 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        /// <remarks>UNIQUEIDENTIFIER NOT NULL</remarks>
         public virtual Guid SourceFileId
         {
             get => _sourceFileId.GetValue();
@@ -42,6 +60,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <remarks>UNIQUEIDENTIFIER NOT NULL</remarks>
         public virtual Guid TargetFileId
         {
             get => _targetFileId.GetValue();
@@ -62,18 +81,29 @@ namespace FsInfoCat.Local
         [Required]
         public virtual DateTime ComparedOn { get => _comparedOn.GetValue(); set => _comparedOn.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(Properties.Resources))]
+        /// <remarks>UNIQUEIDENTIFIER DEFAULT NULL</remarks>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+        /// </remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+        /// </remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         public virtual DbFile SourceFile
@@ -145,13 +175,19 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.TargetFile).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(TargetFileId)).IsRequired();
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnBeforeValidate, OnValidate);
+
+        private void OnBeforeValidate(EntityEntry<FileComparison> entityEntry, LocalDbContext dbContext)
         {
-            List<ValidationResult> result = new List<ValidationResult>();
-            if (_createdOn.GetValue().CompareTo(_modifiedOn.GetValue()) > 0)
-                result.Add(new ValidationResult($"{nameof(CreatedOn)} cannot be later than {nameof(ModifiedOn)}.", new string[] { nameof(CreatedOn) }));
-            // TODO: Complete validation
-            return result;
+            // TODO: Finish validation
+            throw new NotImplementedException();
+        }
+
+        private void OnValidate(EntityEntry<FileComparison> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
+        {
+            // TODO: Finish validation
+            throw new NotImplementedException();
         }
     }
 }

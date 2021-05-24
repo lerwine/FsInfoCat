@@ -3,6 +3,7 @@ DROP TABLE "Redundancies";
 DROP TABLE "Files";
 DROP TABLE "RedundantSets";
 DROP TABLE "ContentInfos";
+--UPDATE "Volumes" SET "RootDirectoryId"=NULL;
 DROP TABLE "Subdirectories";
 DROP TABLE "Volumes";
 DROP TABLE "SymbolicNames";
@@ -82,6 +83,7 @@ CREATE TABLE "Subdirectories" (
         ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
         (ParentId IS NOT NULL AND VolumeId IS NULL AND length(trim(Name))>0)))
 );
+--ALTER TABLE "Volumes" ADD COLUMN "RootDirectoryId" UNIQUEIDENTIFIER CONSTRAINT "FK_VolumeSubDirectory" REFERENCES "Subdirectories"("Id");
 CREATE TABLE "Files" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE,
@@ -104,7 +106,7 @@ CREATE TABLE "Files" (
 );
 CREATE TABLE "ContentInfos" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"Length"	BIGINT NOT NULL CHECK(Length>0),
+	"Length"	BIGINT NOT NULL CHECK(Length>=0),
 	"Hash"	BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
@@ -186,6 +188,7 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "Type", 
 
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "VolumeId", "CreatedOn", "ModifiedOn")
     VALUES ('{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}', 'C:\', '2021-05-21 21:44:29', '{fb962360-518b-40f6-b6ae-afb67f2e2543}', '2021-05-21 21:44:29', '2021-05-21 21:44:29');
+--UPDATE "Volumes" SET "RootDirectoryId"='{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}' WHERE Id='{fb962360-518b-40f6-b6ae-afb67f2e2543}';
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{3c2684e7-e242-4a68-a06a-26b1cbde333d}', 'Users', '2021-05-21 21:44:38', '{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}', '2021-05-21 21:44:38', '2021-05-21 21:44:38');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")

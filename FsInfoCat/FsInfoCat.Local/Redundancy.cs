@@ -1,7 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -25,6 +29,7 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        [Required]
         public virtual Guid FileId
         {
             get => _fileId.GetValue();
@@ -39,6 +44,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [Required]
         public virtual Guid RedundantSetId
         {
             get => _redundantSetId.GetValue();
@@ -53,6 +59,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [Required(AllowEmptyStrings = true)]
         public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
 
         [Required]
@@ -61,20 +68,22 @@ namespace FsInfoCat.Local
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
+        [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DbFile File
         {
             get => _file.GetValue();
@@ -90,6 +99,9 @@ namespace FsInfoCat.Local
             }
         }
 
+        [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_RedundantSetRequired),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual RedundantSet RedundantSet
         {
             get => _redundantSet.GetValue();
@@ -142,17 +154,39 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(FileId), nameof(RedundantSetId));
-            builder.HasOne(sn => sn.File).WithOne(d => d.Redundancy).HasForeignKey(nameof(FileId)).IsRequired();
+            builder.HasOne(sn => sn.File).WithOne(d => d.Redundancy).HasForeignKey<Redundancy>(nameof(FileId)).IsRequired();
             builder.HasOne(sn => sn.RedundantSet).WithMany(d => d.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired();
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnBeforeValidate, OnValidate);
+
+        private void OnBeforeValidate(EntityEntry<Redundancy> entityEntry, LocalDbContext dbContext)
         {
-            List<ValidationResult> result = new List<ValidationResult>();
-            if (_createdOn.GetValue().CompareTo(_modifiedOn.GetValue()) > 0)
-                result.Add(new ValidationResult($"{nameof(CreatedOn)} cannot be later than {nameof(ModifiedOn)}.", new string[] { nameof(CreatedOn) }));
-            // TODO: Complete validation
-            return result;
+            RedundantSet redundantSet = RedundantSet;
+            if (redundantSet is null)
+                RedundantSet = dbContext.RedundantSets.FirstOrDefault(r => r.Id.Equals(RedundantSetId));
+            else if (!RedundantSetId.Equals(redundantSet.Id))
+                RedundantSetId = redundantSet.Id;
+            DbFile file = File;
+            if (file is null)
+                File = dbContext.Files.FirstOrDefault(f => f.Id.Equals(FileId));
+            else if (!FileId.Equals(file.Id))
+                FileId = file.Id;
+        }
+
+        private void OnValidate(EntityEntry<Redundancy> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
+        {
+            RedundantSet redundantSet = RedundantSet;
+            //if (redundantSet is null)
+            //    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_RedundantSetRequired, new string[] { nameof(RedundantSet) }));
+            DbFile file = File;
+            //if (file is null)
+            //    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired, new string[] { nameof(File) }));
+            //else if (!redundantSet.ContentInfoId.Equals(file.ContentId))
+            //    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileInRedundantSet, new string[] { nameof(File) }));
+            if (!(redundantSet is null || file is null || redundantSet.ContentInfoId.Equals(file.ContentId)))
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileInRedundantSet, new string[] { nameof(File) }));
         }
     }
 }

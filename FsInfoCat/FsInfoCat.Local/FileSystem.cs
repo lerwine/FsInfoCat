@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +18,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _displayName;
         private readonly IPropertyChangeTracker<bool> _caseSensitiveSearch;
         private readonly IPropertyChangeTracker<bool> _readOnly;
-        private readonly IPropertyChangeTracker<long> _maxNameLength;
+        private readonly IPropertyChangeTracker<int> _maxNameLength;
         private readonly IPropertyChangeTracker<DriveType?> _defaultDriveType;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<bool> _isInactive;
@@ -23,8 +26,8 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
         private readonly IPropertyChangeTracker<DateTime> _createdOn;
         private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
-        private HashSet<Volume> _volumes = new HashSet<Volume>();
-        private HashSet<SymbolicName> _symbolicNames = new HashSet<SymbolicName>();
+        private HashSet<Volume> _volumes = new();
+        private HashSet<SymbolicName> _symbolicNames = new();
 
         #endregion
 
@@ -33,42 +36,47 @@ namespace FsInfoCat.Local
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameRequired),
-            ErrorMessageResourceType = typeof(Properties.Resources))]
-        [MaxLength(DbConstants.DbColMaxLen_DisplayName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
-            ErrorMessageResourceType = typeof(Properties.Resources))]
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [MaxLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string DisplayName { get => _displayName.GetValue(); set => _displayName.SetValue(value); }
 
         [Required]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool CaseSensitiveSearch { get => _caseSensitiveSearch.GetValue(); set => _caseSensitiveSearch.SetValue(value); }
 
         [Required]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool ReadOnly { get => _readOnly.GetValue(); set => _readOnly.SetValue(value); }
 
         [Required]
-        public virtual long MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual int MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DefaultDriveType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DriveType? DefaultDriveType { get => _defaultDriveType.GetValue(); set => _defaultDriveType.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
         [Required]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         public virtual HashSet<Volume> Volumes
@@ -77,6 +85,7 @@ namespace FsInfoCat.Local
             set => CheckHashSetChanged(_volumes, value, h => _volumes = h);
         }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual HashSet<SymbolicName> SymbolicNames
         {
             get => _symbolicNames;
@@ -103,7 +112,7 @@ namespace FsInfoCat.Local
             _displayName = CreateChangeTracker(nameof(DisplayName), "", NonNullStringCoersion.Default);
             _caseSensitiveSearch = CreateChangeTracker(nameof(CaseSensitiveSearch), false);
             _readOnly = CreateChangeTracker(nameof(ReadOnly), false);
-            _maxNameLength = CreateChangeTracker(nameof(MaxNameLength), 0L);
+            _maxNameLength = CreateChangeTracker(nameof(MaxNameLength), DbConstants.DbColDefaultValue_MaxNameLength);
             _defaultDriveType = CreateChangeTracker<DriveType?>(nameof(DefaultDriveType), null);
             _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _isInactive = CreateChangeTracker(nameof(IsInactive), false);
@@ -116,19 +125,20 @@ namespace FsInfoCat.Local
 
         public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalSymbolicName entity && Id.Equals(entity.Id));
 
-        //internal static void BuildEntity(EntityTypeBuilder<FileSystem> builder)
-        //{
-        //    builder.HasKey(nameof(Id));
-        //    builder.Property(nameof(DisplayName)).HasMaxLength(DbConstants.DbColMaxLen_DisplayName).IsRequired();
-        //}
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        private void OnValidate(EntityEntry<FileSystem> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
-            List<ValidationResult> result = new List<ValidationResult>();
-            if (_createdOn.GetValue().CompareTo(_modifiedOn.GetValue()) > 0)
-                result.Add(new ValidationResult($"{nameof(CreatedOn)} cannot be later than {nameof(ModifiedOn)}.", new string[] { nameof(CreatedOn) }));
-            // TODO: Complete validation
-            return result;
+            if (MaxNameLength < 0)
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthNegative, new string[] { nameof(MaxNameLength) }));
+            var driveType = DefaultDriveType;
+            if (driveType.HasValue && !Enum.IsDefined(driveType.Value))
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(DefaultDriveType) }));
+            string displayName = DisplayName;
+            Guid id = Id;
+            if (dbContext.FileSystems.Any(fs => !id.Equals(fs.Id) && fs._displayName.IsEqualTo(displayName)))
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
         }
     }
 }
