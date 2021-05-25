@@ -1,9 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace FsInfoCat
 {
@@ -63,6 +66,83 @@ namespace FsInfoCat
             ServiceProvider = services.BuildServiceProvider();
             configureServices?.Invoke(services);
             ServiceProvider = services.BuildServiceProvider();
+        }
+
+        public static string AsNonNullTrimmed(this string text) => string.IsNullOrWhiteSpace(text) ? "" : text.Trim();
+
+        public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
+
+        public static string[] SplitLines(this string text) => (text is null) ? Array.Empty<string>() : NewLineRegex.Split(text);
+
+        public static string JoinWithNewLines(this IEnumerable<string> text) => (text is null || !text.Any()) ? null : string.Join(Environment.NewLine, text);
+
+        public static IEnumerable<string> AsNonNullTrimmedValues(this IEnumerable<string> text) => (text is null) ? null : text.Select(AsNonNullTrimmed);
+
+        public static IEnumerable<string> AsNonNullValues(this IEnumerable<string> text) => (text is null) ? null : text.Select(t => t ?? "");
+
+        public static IEnumerable<string> AsOrderedDistinct(this IEnumerable<string> text) => (text is null) ? null : text.Select(t => t ?? "").Distinct().OrderBy(t => t);
+
+        public static string EmptyIfNullOrWhiteSpace(this string source) => string.IsNullOrWhiteSpace(source) ? "" : source;
+
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => (source is null) ? Array.Empty<T>() : source;
+
+        public static IEnumerable<KeyValuePair<int, T>> ToIndexValuePairs<T>(this IEnumerable<T> source) => (source is null) ? null : source.Select((e, i) => new KeyValuePair<int, T>(i, e));
+
+        public static IEnumerable<KeyValuePair<int, TResult>> ToIndexValuePairs<TElement, TResult>(this IEnumerable<TElement> source, Func<TElement, TResult> transform)
+        {
+            if (transform is null)
+                throw new ArgumentNullException(nameof(transform));
+            return (source is null) ? null : source.Select((e, i) => new KeyValuePair<int, TResult>(i, transform(e)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, int, TKey> getKey, Func<TSource, int, TValue> getValue)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            if (getValue is null)
+                throw new ArgumentNullException(nameof(getValue));
+            return (source is null) ? null : source.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), getValue(e, i)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, int, TKey> getKey, Func<TSource, TValue> getValue)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            if (getValue is null)
+                throw new ArgumentNullException(nameof(getValue));
+            return (source is null) ? null : source.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), getValue(e)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> getKey, Func<TSource, int, TValue> getValue)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            if (getValue is null)
+                throw new ArgumentNullException(nameof(getValue));
+            return (source is null) ? null : source.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e), getValue(e, i)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> getKey, Func<TSource, TValue> getValue)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            if (getValue is null)
+                throw new ArgumentNullException(nameof(getValue));
+            return (source is null) ? null : source.Select(e => new KeyValuePair<TKey, TValue>(getKey(e), getValue(e)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, int, TKey> getKey)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            return (source is null) ? null : source.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), e));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> getKey)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            return (source is null) ? null : source.Select(e => new KeyValuePair<TKey, TValue>(getKey(e), e));
         }
 
         //private class DummyServiceProvider : IServiceProvider
