@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace FsInfoCat
 {
@@ -68,6 +69,12 @@ namespace FsInfoCat
         }
 
         public static string AsNonNullTrimmed(this string text) => string.IsNullOrWhiteSpace(text) ? "" : text.Trim();
+
+        public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
+
+        public static string[] SplitLines(this string text) => (text is null) ? Array.Empty<string>() : NewLineRegex.Split(text);
+
+        public static string JoinWithNewLines(this IEnumerable<string> text) => (text is null || !text.Any()) ? null : string.Join(Environment.NewLine, text);
 
         public static IEnumerable<string> AsNonNullTrimmedValues(this IEnumerable<string> text) => (text is null) ? null : text.Select(AsNonNullTrimmed);
 
