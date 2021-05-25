@@ -427,7 +427,54 @@ namespace FsInfoCat
             /// <returns>The names of the members where the validation has changed.</returns>
             internal static IEnumerable<string> Remove(ValidationResult item, ValidationResultDictionary target)
             {
-                throw new NotImplementedException();
+                MemberNameItem[] changed;
+                lock (target._syncroot)
+                {
+                    if (TryFindMatching(item, target, out ValidationResultBuilder result))
+                    {
+                        target._validationResults.Remove(result);
+                        if (target._validationResults.Count == 0)
+                        {
+                            changed = target._memberNames.ToArray();
+                            target._memberNames.Clear();
+                        }
+                        else
+                        {
+                            changed = result._memberNames.ToArray();
+                            foreach (var toRemove in changed.Where(n => !target._validationResults.Any(t => t._memberNames.Contains(n))).ToArray())
+                                target._memberNames.Remove(toRemove);
+                        }
+                    }
+                    else
+                    {
+                        changed = result._memberNames.Select(m => new
+                        {
+                            r = target._validationResults.Select(v => new { v, m = v._memberNames.FirstOrDefault(n => n.Value.Equals(m.Value)) }).Where(a =>
+                            {
+                                if (a.m is null)
+                                    return false;
+                                a.v._memberNames.Remove(a.m);
+                                return true;
+                            }).ToArray(),
+                            n = m.Value
+                        }).ToArray().Where(a =>
+                        {
+                            if (a.r.Length > 0)
+                            {
+                                foreach (var i in a.r)
+                                {
+                                    if (i.v._memberNames.Count == 0)
+                                        target._validationResults.Remove(i.v);
+                                }
+                                return true;
+                            }
+                            return false;
+                        }).Select(a => result._memberNames.First(m => m.Value.Equals(a.n))).ToArray();
+                        foreach (var removed in changed.Where(c => !target._validationResults.Any(t => t._memberNames.Contains(c))))
+                            target._memberNames.Remove(removed);
+                    }
+                }
+                return changed.Select(c => c.Value);
             }
 
             /// <summary>
@@ -438,7 +485,28 @@ namespace FsInfoCat
             /// <returns><see langword="true"/> if validation message(s) were changed for the specified <paramref name="memberName"/>; otherwise, <see langword="false"/>.</returns>
             internal static bool Remove(string memberName, ValidationResultDictionary target)
             {
-                throw new NotImplementedException();
+                memberName = memberName.EmptyIfNullOrWhiteSpace();
+                lock (target._syncroot)
+                {
+                    var memberItem = target._memberNames.FirstOrDefault(m => m.Value.Equals(memberName));
+                    if (memberName is null)
+                        return false;
+                    target._memberNames.Remove(memberItem);
+                    if (target._memberNames.Count == 0)
+                        target._validationResults.Clear();
+                    else
+                    {
+                        var node = target._validationResults.First;
+                        while (!(node is null))
+                        {
+                            var next = node.Next;
+                            if (node.Value._memberNames.Remove(memberItem) && node.Value._memberNames.Count == 0)
+                                target._validationResults.Remove(node);
+                            node = next;
+                        }
+                    }
+                }
+                return true;
             }
 
             /// <summary>
