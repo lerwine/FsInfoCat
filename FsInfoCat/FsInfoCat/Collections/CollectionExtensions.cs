@@ -149,15 +149,13 @@ namespace FsInfoCat.Collections
         public static int ToAggregateHashCode(this IEnumerable<int> hashCodes)
         {
             int[] arr = hashCodes.CoerceAsArray();
-            int prime = arr.Length;
-            if (prime == 0)
+            int seed = arr.Length;
+            if (seed == 0)
                 return 0;
             if (arr.Length == 1)
                 return arr[0];
-            int seed = FindPrimeNumber(prime);
-            for (int n = 1; n < prime; n++)
-                seed = FindPrimeNumber(seed + 1);
-            prime = FindPrimeNumber(seed + 1);
+            int prime = FindPrimeNumber(seed & 0xffff);
+            seed = FindPrimeNumber(prime + 1);
             return arr.Aggregate(seed, (a, i) =>
             {
                 unchecked { return (a * prime) ^ i; }

@@ -84,6 +84,8 @@ namespace FsInfoCat
 
         public static string EmptyIfNullOrWhiteSpace(this string source) => string.IsNullOrWhiteSpace(source) ? "" : source;
 
+        public static IEnumerable<string> ValuesEmptyIfNullOrWhiteSpace(this IEnumerable<string> source) => (source is null) ? null : source.Select(EmptyIfNullOrWhiteSpace);
+
         public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => (source is null) ? Array.Empty<T>() : source;
 
         public static IEnumerable<KeyValuePair<int, T>> ToIndexValuePairs<T>(this IEnumerable<T> source) => (source is null) ? null : source.Select((e, i) => new KeyValuePair<int, T>(i, e));
