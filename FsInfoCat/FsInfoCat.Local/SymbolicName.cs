@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace FsInfoCat.Local
@@ -121,28 +122,20 @@ namespace FsInfoCat.Local
 
         public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalSymbolicName entity && Id.Equals(entity.Id));
 
-        internal static void BuildEntity(EntityTypeBuilder<SymbolicName> builder)
+        internal static void BuildEntity([NotNull] EntityTypeBuilder<SymbolicName> builder)
         {
             builder.HasOne(sn => sn.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnBeforeValidate, OnValidate);
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
 
-        private void OnBeforeValidate(EntityEntry<SymbolicName> entityEntry, LocalDbContext dbContext)
+        private void OnValidate([NotNull] EntityEntry<SymbolicName> entityEntry, [NotNull] LocalDbContext dbContext, [NotNull] List<ValidationResult> validationResults)
         {
-            FileSystem fileSystem = FileSystem;
-            if (fileSystem is null)
-                FileSystem = dbContext.FileSystems.FirstOrDefault(fs => fs.Id.Equals(FileSystemId));
-            else if (!FileSystemId.Equals(fileSystem.Id))
-                FileSystemId = fileSystem.Id;
-        }
-
-        private void OnValidate(EntityEntry<SymbolicName> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
-        {
-            string nae = Name;
+            LocalDbContext.ValidateLocalDbEntity(this, validationResults);
+            string name = Name;
             Guid id = Id;
-            if (dbContext.SymbolicNames.Any(sn => !id.Equals(sn.Id) && sn._name.IsEqualTo(nae)))
+            if (dbContext.SymbolicNames.Any(sn => !id.Equals(sn.Id) && sn._name.IsEqualTo(name)))
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
     }

@@ -16,7 +16,10 @@ namespace FsInfoCat.Local
 {
     public class LocalDbContext : DbContext
     {
+        private static readonly object _syncRoot = new object();
+        private static bool _connectionStringValidated;
         private readonly ILogger<LocalDbContext> _logger;
+        private readonly IDisposable _loggerScope;
 
         public virtual DbSet<FileSystem> FileSystems { get; set; }
 
@@ -36,7 +39,6 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<Redundancy> Redundancies { get; set; }
 
-        private readonly IDisposable _loggerScope;
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
         {
@@ -44,6 +46,34 @@ namespace FsInfoCat.Local
             _loggerScope = _logger.BeginScope(ContextId);
             _logger.LogInformation($"Creating new {nameof(LocalDbContext)}: {nameof(DbContextId.InstanceId)}={{{nameof(DbContextId.InstanceId)}}}, {nameof(DbContextId.Lease)}={{{nameof(DbContextId.Lease)}}}",
                 ContextId.InstanceId, ContextId.Lease);
+            lock (_syncRoot)
+            {
+                if (!_connectionStringValidated)
+                {
+                    SqliteConnectionStringBuilder builder = new(Database.GetConnectionString());
+                    string connectionString = builder.ConnectionString;
+                    _logger.LogInformation($"Using {nameof(SqliteConnectionStringBuilder.ConnectionString)} {{{nameof(SqliteConnectionStringBuilder.ConnectionString)}}}",
+                        connectionString);
+                    if (!File.Exists(builder.DataSource))
+                    {
+                        builder.Mode = SqliteOpenMode.ReadWriteCreate;
+                        _logger.LogInformation("Initializing new database");
+                        using (SqliteConnection connection = new(builder.ConnectionString))
+                        {
+                            connection.Open();
+                            foreach (var element in XDocument.Parse(Properties.Resources.DbCommands).Root.Elements("DbCreation").Elements("Text"))
+                            {
+                                _logger.LogInformation($"{{Message}}; {nameof(SqliteCommand)}={{{nameof(SqliteCommand.CommandText)}}}",
+                                    element.Attributes("Message").Select(a => a.Value).DefaultIfEmpty("").First(), element.Value);
+                                using SqliteCommand command = connection.CreateCommand();
+                                command.CommandText = element.Value;
+                                command.CommandType = System.Data.CommandType.Text;
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize",
@@ -84,45 +114,7 @@ namespace FsInfoCat.Local
         internal delegate void EntityEntryValidationHandler<T>([NotNull] EntityEntry<T> entityEntry, [NotNull] LocalDbContext dbContext,
             [NotNull] List<ValidationResult> validationResults) where T : class, ILocalDbEntity;
 
-        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext,
-            [MaybeNull] EntityEntryNormalizationHandler<T> beforeValidate, [NotNull] EntityEntryValidationHandler<T> onValidate)
-            where T : class, ILocalDbEntity
-        {
-            List<ValidationResult> result;
-            if (!(validationContext is null) && validationContext.ObjectInstance is LocalDbContext dbContext)
-            {
-                result = GetBasicLocalDbEntityValidationResult(entity, dbContext, beforeValidate, out EntityEntry<T> entityEntry);
-                onValidate(entityEntry, dbContext, result);
-            }
-            else
-                using (dbContext = Services.ServiceProvider.GetService<LocalDbContext>())
-                {
-                    result = GetBasicLocalDbEntityValidationResult(entity, dbContext, beforeValidate, out EntityEntry<T> entityEntry);
-                    onValidate(entityEntry, dbContext, result);
-                }
-            return result;
-        }
-
-        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext,
-            [NotNull] EntityEntryValidationHandler<T> onValidate) where T : class, ILocalDbEntity =>
-            GetBasicLocalDbEntityValidationResult(entity, validationContext, null, onValidate);
-
-        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext,
-            [NotNull] out EntityEntry<T> entityEntry)
-            where T : class, ILocalDbEntity
-        {
-            if (!(validationContext is null) && validationContext.ObjectInstance is LocalDbContext dbContext)
-                return GetBasicLocalDbEntityValidationResult(entity, dbContext, out entityEntry);
-            using (dbContext = Services.ServiceProvider.GetService<LocalDbContext>())
-                return GetBasicLocalDbEntityValidationResult(entity, dbContext, out entityEntry);
-        }
-
-        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [NotNull] LocalDbContext dbContext,
-                [NotNull] out EntityEntry<T> entityEntry) where T : class, ILocalDbEntity =>
-            GetBasicLocalDbEntityValidationResult(entity, dbContext, null, out entityEntry);
-
-        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [NotNull] LocalDbContext dbContext,
-                [MaybeNull] EntityEntryNormalizationHandler<T> beforeValidate, [NotNull] out EntityEntry<T> entityEntry)
+        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [NotNull] LocalDbContext dbContext, [NotNull] out EntityEntry<T> entityEntry)
             where T : class, ILocalDbEntity
         {
             entityEntry = dbContext.Entry(entity);
@@ -146,7 +138,6 @@ namespace FsInfoCat.Local
                         entity.LastSynchronizedOn = entity.ModifiedOn;
                     break;
             }
-            beforeValidate?.Invoke(entityEntry, dbContext);
             if (entity.CreatedOn.CompareTo(entity.ModifiedOn) > 0)
                 result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.CreatedOn) }));
             DateTime? lastSynchronizedOn = entity.LastSynchronizedOn;
@@ -160,6 +151,52 @@ namespace FsInfoCat.Local
             return result;
         }
 
+        internal static void ValidateLocalDbEntity([NotNull] ILocalDbEntity entity, [NotNull] ICollection<ValidationResult> validationResults)
+        {
+            if (entity.CreatedOn.CompareTo(entity.ModifiedOn) > 0)
+            {
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.CreatedOn) }));
+                if (entity.UpstreamId.HasValue && !entity.LastSynchronizedOn.HasValue)
+                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+            }
+            else if (entity.LastSynchronizedOn.HasValue)
+            {
+                if (entity.LastSynchronizedOn.Value.CompareTo(entity.ModifiedOn) > 0)
+                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+                else if (entity.LastSynchronizedOn.Value.CompareTo(entity.CreatedOn) < 0)
+                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+            }
+            else if (entity.UpstreamId.HasValue)
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+        }
+
+        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext, [NotNull] EntityEntryValidationHandler<T> onValidate)
+            where T : class, ILocalDbEntity
+        {
+            List<ValidationResult> result;
+            if (!(validationContext is null) && validationContext.ObjectInstance is LocalDbContext dbContext)
+            {
+                result = GetBasicLocalDbEntityValidationResult(entity, dbContext, out EntityEntry<T> entityEntry);
+                onValidate(entityEntry, dbContext, result);
+            }
+            else
+                using (dbContext = Services.ServiceProvider.GetService<LocalDbContext>())
+                {
+                    result = GetBasicLocalDbEntityValidationResult(entity, dbContext, out EntityEntry<T> entityEntry);
+                    onValidate(entityEntry, dbContext, result);
+                }
+            return result;
+        }
+
+        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext, [NotNull] out EntityEntry<T> entityEntry)
+            where T : class, ILocalDbEntity
+        {
+            if (!(validationContext is null) && validationContext.ObjectInstance is LocalDbContext dbContext)
+                return GetBasicLocalDbEntityValidationResult(entity, dbContext, out entityEntry);
+            using (dbContext = Services.ServiceProvider.GetService<LocalDbContext>())
+                return GetBasicLocalDbEntityValidationResult(entity, dbContext, out entityEntry);
+        }
+
         public static void ConfigureServices(IServiceCollection services, Assembly assembly, string dbFileName)
         {
             string connectionString = GetConnectionString(assembly, dbFileName);
@@ -169,46 +206,26 @@ namespace FsInfoCat.Local
             });
         }
 
-        public static string GetConnectionString(Assembly assembly, string dbFileName, bool doNotCreate = false)
+        public static string GetConnectionString(Assembly assembly, string dbFileName)
         {
-            var logger = Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>();
+            // BUG: Cannot do this - Services not yet built.
+            //var logger = Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>();
             var builder = new SqliteConnectionStringBuilder
             {
-                DataSource = GetDbFilePath(assembly, dbFileName, doNotCreate),
+                DataSource = GetDbFilePath(assembly, dbFileName),
                 ForeignKeys = true,
                 Mode = SqliteOpenMode.ReadWrite
             };
-            string connectionString = builder.ConnectionString;
-            logger.LogInformation($"Using {nameof(SqliteConnectionStringBuilder.ConnectionString)} {{{nameof(SqliteConnectionStringBuilder.ConnectionString)}}}",
-                connectionString);
-            if (doNotCreate || File.Exists(builder.DataSource))
-                return connectionString;
-            builder.Mode = SqliteOpenMode.ReadWriteCreate;
-            logger.LogInformation("Initializing new database");
-            using (SqliteConnection connection = new(builder.ConnectionString))
-            {
-                connection.Open();
-                foreach (var element in XDocument.Parse(Properties.Resources.DbCommands).Root.Elements("DbCreation").Elements("Text"))
-                {
-                    logger.LogInformation($"{{Message}}; {nameof(SqliteCommand)}={{{nameof(SqliteCommand.CommandText)}}}",
-                        element.Attributes("Message").Select(a => a.Value).DefaultIfEmpty("").First(), element.Value);
-                    using SqliteCommand command = connection.CreateCommand();
-                    command.CommandText = element.Value;
-                    command.CommandType = System.Data.CommandType.Text;
-                    command.ExecuteNonQuery();
-                }
-            }
-            return connectionString;
+            return builder.ConnectionString;
         }
 
-        public static string GetDbFilePath(Assembly assembly, string dbFileName, bool doNotCreate = false)
+        public static string GetDbFilePath(Assembly assembly, string dbFileName)
         {
             if (string.IsNullOrWhiteSpace(dbFileName))
                 dbFileName = Services.DEFAULT_LOCAL_DB_FILENAME;
             if (Path.IsPathFullyQualified(dbFileName))
                 return Path.GetFullPath(dbFileName);
-
-            return Path.Combine(Services.GetAppDataPath(assembly, doNotCreate), dbFileName);
+            return Path.Combine(Services.GetAppDataPath(assembly), dbFileName);
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

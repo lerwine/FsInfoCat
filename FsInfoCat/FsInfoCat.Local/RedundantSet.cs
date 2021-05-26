@@ -149,13 +149,7 @@ namespace FsInfoCat.Local
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnBeforeValidate, OnValidate);
-
-        private void OnBeforeValidate(EntityEntry<RedundantSet> entityEntry, LocalDbContext dbContext)
-        {
-            // TODO: Finish validation
-            throw new NotImplementedException();
-        }
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
 
         private void OnValidate(EntityEntry<RedundantSet> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {

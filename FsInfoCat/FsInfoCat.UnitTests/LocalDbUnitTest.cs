@@ -63,7 +63,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.FileSystem.MaxNameLength), results[0].MemberNames.First());
-            Assert.ThrowsException<DbUpdateException>(() => dbContext.SaveChanges());
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
         }
 
         [TestMethod]

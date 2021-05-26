@@ -159,21 +159,7 @@ namespace FsInfoCat.Local
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnBeforeValidate, OnValidate);
-
-        private void OnBeforeValidate(EntityEntry<Redundancy> entityEntry, LocalDbContext dbContext)
-        {
-            RedundantSet redundantSet = RedundantSet;
-            if (redundantSet is null)
-                RedundantSet = dbContext.RedundantSets.FirstOrDefault(r => r.Id.Equals(RedundantSetId));
-            else if (!RedundantSetId.Equals(redundantSet.Id))
-                RedundantSetId = redundantSet.Id;
-            DbFile file = File;
-            if (file is null)
-                File = dbContext.Files.FirstOrDefault(f => f.Id.Equals(FileId));
-            else if (!FileId.Equals(file.Id))
-                FileId = file.Id;
-        }
+            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
 
         private void OnValidate(EntityEntry<Redundancy> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {

@@ -331,6 +331,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;LastSynchronizedOn&quot; date is required when &quot;Upstream Id&quot; is specified..
+        /// </summary>
+        public static string ErrorMessage_LastSynchronizedOnRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LastSynchronizedOnRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximum Name Length cannot be negative..
         /// </summary>
         public static string ErrorMessage_MaxNameLengthNegative {

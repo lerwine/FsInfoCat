@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 
 namespace FsInfoCat.UnitTests
@@ -6,7 +6,7 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class CollectionExtensionsTests
     {
-        private static readonly ReadOnlyCollection<int> PrimeNumbers = new(new int[] { 1, 3, 5, 7, 11, 13, 17, 19, 23, 29, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79,
+        private static readonly ReadOnlyCollection<int> PrimeNumbers = new(new int[] { 1, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79,
             83, 89, 97, 101, 103, 107, 109, 113, 127 });
 
         [TestMethod]
