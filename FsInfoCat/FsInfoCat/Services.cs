@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,7 +17,7 @@ namespace FsInfoCat
 
         public static IServiceProvider ServiceProvider { get; private set; }
 
-        private static string GetAppDataPath(string path, CultureInfo cultureInfo, bool doNotCreate)
+        private static string GetAppDataPath(string path, CultureInfo cultureInfo)
         {
             string name;
             int index;
@@ -24,36 +25,35 @@ namespace FsInfoCat
                     ((index = name.IndexOf("/")) >= 0 && (name = name.Substring(0, index).Trim()).Length == 0))
                 return path;
             path = Path.Combine(path, name);
-            if (!(doNotCreate || Directory.Exists(path)))
+            if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             return path;
         }
 
-        public static string GetAppDataPath(Assembly assembly, bool doNotCreate = false) => GetAppDataPath(assembly, AppDataPathLevel.CurrentVersion, doNotCreate);
+        public static string GetAppDataPath(Assembly assembly) => GetAppDataPath(assembly, AppDataPathLevel.CurrentVersion);
 
-        public static string GetAppDataPath(Assembly assembly, CultureInfo culture, bool doNotCreate = false) =>
-            GetAppDataPath(GetAppDataPath(assembly, AppDataPathLevel.CurrentVersion, doNotCreate), culture, doNotCreate);
+        public static string GetAppDataPath(Assembly assembly, CultureInfo culture) => GetAppDataPath(GetAppDataPath(assembly, AppDataPathLevel.CurrentVersion), culture);
 
-        public static string GetAppDataPath(Assembly assembly, AppDataPathLevel level, bool doNotCreate = false)
+        public static string GetAppDataPath(Assembly assembly, AppDataPathLevel level)
         {
             AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
-            if (!(doNotCreate || Directory.Exists(path)))
+            if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             if (level == AppDataPathLevel.Company)
                 return path;
             AssemblyName assemblyName = assembly.GetName();
             path = Path.Combine(path, assemblyName.Name);
-            if (!(doNotCreate || Directory.Exists(path)))
+            if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             if (level == AppDataPathLevel.Application)
                 return path;
             path = Path.Combine(path, assemblyName.Version.ToString());
-            if (!(doNotCreate || Directory.Exists(path)))
+            if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             if (level == AppDataPathLevel.CurrentVersion)
                 return path;
-            return GetAppDataPath(path, assemblyName.CultureInfo, doNotCreate);
+            return GetAppDataPath(path, assemblyName.CultureInfo);
         }
 
         public static void Initialize(Action<IServiceCollection> configureServices)
@@ -62,8 +62,12 @@ namespace FsInfoCat
                 throw new InvalidOperationException();
             //ServiceProvider = new DummyServiceProvider();
             ServiceCollection services = new();
-            services.AddLogging(b => b.AddDebug());
-            ServiceProvider = services.BuildServiceProvider();
+            services.AddLogging(b =>
+            {
+                b.AddDebug();
+                b.AddEventSourceLogger();
+            });
+            //ServiceProvider = services.BuildServiceProvider();
             configureServices?.Invoke(services);
             ServiceProvider = services.BuildServiceProvider();
         }

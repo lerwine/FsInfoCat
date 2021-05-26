@@ -207,6 +207,9 @@
   <data name="ErrorMessage_LastSynchronizedOnBeforeCreatedOn" xml:space="preserve">
     <value>"Last Synchronized On" date cannot be earlier than the "Created On" date.</value>
   </data>
+  <data name="ErrorMessage_LastSynchronizedOnRequired" xml:space="preserve">
+    <value>"LastSynchronizedOn" date is required when "Upstream Id" is specified.</value>
+  </data>
   <data name="ErrorMessage_MaxNameLengthNegative" xml:space="preserve">
     <value>Maximum Name Length cannot be negative.</value>
   </data>
