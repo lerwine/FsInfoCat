@@ -35,6 +35,10 @@ namespace FsInfoCat
             return new T[] { _backingCoersion.Coerce(obj) };
         }
 
+        public virtual IEnumerable<T> Normalize(IEnumerable<T> obj) => obj;
+
+        object ICoersion.Normalize(object obj) => Normalize((IEnumerable<T>)obj);
+
         public virtual bool Equals(IEnumerable<T> x, IEnumerable<T> y)
         {
             if (x is null)
@@ -141,6 +145,10 @@ namespace FsInfoCat
                 return result;
             return CreateFromEnumerable(_backingCoersion.Coerce(obj));
         }
+
+        public virtual TEnumerable Normalize(TEnumerable obj) => obj;
+
+        object ICoersion.Normalize(object obj) => Normalize((TEnumerable)obj);
 
         public virtual bool TryCast(object obj, out TEnumerable result)
         {

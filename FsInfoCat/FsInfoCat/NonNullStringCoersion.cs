@@ -23,6 +23,10 @@ namespace FsInfoCat
 
         public virtual string Coerce(object obj) => (obj is null) ? "" : ((obj is string text) ? text : obj.ToString());
 
+        public virtual string Normalize(string obj) => obj ?? "";
+
+        object ICoersion.Normalize(object obj) => Normalize((string)obj);
+
         bool IEqualityComparer.Equals(object x, object y) => TryCast(x, out string a) && TryCast(y, out string b) ? Equals(a, b) :
             Equals(x, y);
 

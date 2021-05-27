@@ -12,6 +12,8 @@ namespace FsInfoCat
 
         public override string Coerce(object obj) => base.Coerce(obj).Trim();
 
+        public override string Normalize(string obj) => (obj is null) ? "" : obj.Trim();
+
         public override bool TryCast(object obj, out string result)
         {
             if (base.TryCast(obj, out result))
