@@ -165,6 +165,9 @@
   <data name="DisplayName_VolumeName" xml:space="preserve">
     <value>Volume Name</value>
   </data>
+  <data name="ErrorMessage_ContentInfoRequired" xml:space="preserve">
+    <value>File Content Info must be selected</value>
+  </data>
   <data name="ErrorMessage_CreatedOnAfterModifiedOn" xml:space="preserve">
     <value>"Created On" date cannot be later than the "Modified On" date.</value>
   </data>
@@ -198,8 +201,26 @@
   <data name="ErrorMessage_IdentifierRequired" xml:space="preserve">
     <value>Volume Identifier is required.</value>
   </data>
+  <data name="ErrorMessage_InvalidDirectoryCrawlOption" xml:space="preserve">
+    <value>Directory Crawl Option is invalid.</value>
+  </data>
+  <data name="ErrorMessage_InvalidFileCrawlOption" xml:space="preserve">
+    <value>File Crawl Option is invalid.</value>
+  </data>
   <data name="ErrorMessage_InvalidFileInRedundantSet" xml:space="preserve">
     <value>File does not have the same content information as the target Redundancy Set.</value>
+  </data>
+  <data name="ErrorMessage_InvalidFileLength" xml:space="preserve">
+    <value>File Length cannot be negative.</value>
+  </data>
+  <data name="ErrorMessage_InvalidFileRedundancyStatus" xml:space="preserve">
+    <value>File Redundancy Status is invalid.</value>
+  </data>
+  <data name="ErrorMessage_InvalidHashLength" xml:space="preserve">
+    <value>Hash must be 16 bytes long.</value>
+  </data>
+  <data name="ErrorMessage_InvalidVolumeStatus" xml:space="preserve">
+    <value>Volume Status is invalid.</value>
   </data>
   <data name="ErrorMessage_LastSynchronizedOnAfterModifiedOn" xml:space="preserve">
     <value>""Last Synchronized On" date cannot be later than the "Modified On" date.</value>
@@ -210,8 +231,8 @@
   <data name="ErrorMessage_LastSynchronizedOnRequired" xml:space="preserve">
     <value>"LastSynchronizedOn" date is required when "Upstream Id" is specified.</value>
   </data>
-  <data name="ErrorMessage_MaxNameLengthNegative" xml:space="preserve">
-    <value>Maximum Name Length cannot be negative.</value>
+  <data name="ErrorMessage_MaxNameLengthInvalid" xml:space="preserve">
+    <value>Maximum Name Length must be greater than zero.</value>
   </data>
   <data name="ErrorMessage_NameLength" xml:space="preserve">
     <value>Name too long.</value>
@@ -219,13 +240,28 @@
   <data name="ErrorMessage_NameRequired" xml:space="preserve">
     <value>Name is required.</value>
   </data>
+  <data name="ErrorMessage_ParentRequired" xml:space="preserve">
+    <value>Parent Subdirectory must be selected.</value>
+  </data>
   <data name="ErrorMessage_RedundantSetRequired" xml:space="preserve">
     <value>Redundancy Set must be selected.</value>
+  </data>
+  <data name="ErrorMessage_ReferenceLength" xml:space="preserve">
+    <value>Reference too long.</value>
+  </data>
+  <data name="ErrorMessage_SourceFileRequired" xml:space="preserve">
+    <value>Source File must be selected.</value>
+  </data>
+  <data name="ErrorMessage_TargetFileRequired" xml:space="preserve">
+    <value>Target File must be selected.</value>
   </data>
   <data name="ErrorMessage_VolumeNameLength" xml:space="preserve">
     <value>Volume Name too long.</value>
   </data>
   <data name="ErrorMessage_VolumeNameRequired" xml:space="preserve">
     <value>Volume Name is required.</value>
+  </data>
+  <data name="ErrorMessage_VolumeOrParentRequired" xml:space="preserve">
+    <value>Volume or Parent Subdirectory must be selected.</value>
   </data>
 </root>

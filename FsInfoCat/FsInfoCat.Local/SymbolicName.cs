@@ -18,6 +18,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _name;
         private readonly IPropertyChangeTracker<Guid> _fileSystemId;
         private readonly IPropertyChangeTracker<string> _notes;
+        private readonly IPropertyChangeTracker<int> _priority;
         private readonly IPropertyChangeTracker<bool> _isInactive;
         private readonly IPropertyChangeTracker<Guid?> _upstreamId;
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
@@ -46,7 +47,8 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
 
-        public virtual int Priority { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        [Required]
+        public virtual int Priority { get => _priority.GetValue(); set => _priority.SetValue(value); }
 
         [Required]
         public virtual Guid FileSystemId
@@ -109,6 +111,7 @@ namespace FsInfoCat.Local
         {
             _id = CreateChangeTracker(nameof(Id), Guid.Empty);
             _name = CreateChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
+            _priority = CreateChangeTracker(nameof(Priority), 0);
             _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _isInactive = CreateChangeTracker(nameof(IsInactive), false);
             _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
@@ -132,10 +135,9 @@ namespace FsInfoCat.Local
 
         private void OnValidate([NotNull] EntityEntry<SymbolicName> entityEntry, [NotNull] LocalDbContext dbContext, [NotNull] List<ValidationResult> validationResults)
         {
-            LocalDbContext.ValidateLocalDbEntity(this, validationResults);
             string name = Name;
             Guid id = Id;
-            if (dbContext.SymbolicNames.Any(sn => !id.Equals(sn.Id) && sn._name.IsEqualTo(name)))
+            if (dbContext.SymbolicNames.Any(sn => id != sn.Id && sn.Name == name))
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
     }

@@ -205,6 +205,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Content Info must be selected.
+        /// </summary>
+        public static string ErrorMessage_ContentInfoRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ContentInfoRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;Created On&quot; date cannot be later than the &quot;Modified On&quot; date..
         /// </summary>
         public static string ErrorMessage_CreatedOnAfterModifiedOn {
@@ -304,11 +313,65 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Directory Crawl Option is invalid..
+        /// </summary>
+        public static string ErrorMessage_InvalidDirectoryCrawlOption {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidDirectoryCrawlOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Crawl Option is invalid..
+        /// </summary>
+        public static string ErrorMessage_InvalidFileCrawlOption {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidFileCrawlOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File does not have the same content information as the target Redundancy Set..
         /// </summary>
         public static string ErrorMessage_InvalidFileInRedundantSet {
             get {
                 return ResourceManager.GetString("ErrorMessage_InvalidFileInRedundantSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Length cannot be negative..
+        /// </summary>
+        public static string ErrorMessage_InvalidFileLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidFileLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Redundancy Status is invalid..
+        /// </summary>
+        public static string ErrorMessage_InvalidFileRedundancyStatus {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidFileRedundancyStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hash must be 16 bytes long..
+        /// </summary>
+        public static string ErrorMessage_InvalidHashLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidHashLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume Status is invalid..
+        /// </summary>
+        public static string ErrorMessage_InvalidVolumeStatus {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidVolumeStatus", resourceCulture);
             }
         }
         
@@ -340,11 +403,11 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Maximum Name Length cannot be negative..
+        ///   Looks up a localized string similar to Maximum Name Length must be greater than zero..
         /// </summary>
-        public static string ErrorMessage_MaxNameLengthNegative {
+        public static string ErrorMessage_MaxNameLengthInvalid {
             get {
-                return ResourceManager.GetString("ErrorMessage_MaxNameLengthNegative", resourceCulture);
+                return ResourceManager.GetString("ErrorMessage_MaxNameLengthInvalid", resourceCulture);
             }
         }
         
@@ -367,11 +430,47 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parent Subdirectory must be selected..
+        /// </summary>
+        public static string ErrorMessage_ParentRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ParentRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Redundancy Set must be selected..
         /// </summary>
         public static string ErrorMessage_RedundantSetRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_RedundantSetRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reference too long..
+        /// </summary>
+        public static string ErrorMessage_ReferenceLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ReferenceLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source File must be selected..
+        /// </summary>
+        public static string ErrorMessage_SourceFileRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_SourceFileRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target File must be selected..
+        /// </summary>
+        public static string ErrorMessage_TargetFileRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_TargetFileRequired", resourceCulture);
             }
         }
         
@@ -390,6 +489,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_VolumeNameRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_VolumeNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume or Parent Subdirectory must be selected..
+        /// </summary>
+        public static string ErrorMessage_VolumeOrParentRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_VolumeOrParentRequired", resourceCulture);
             }
         }
     }

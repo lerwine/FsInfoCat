@@ -1,39 +1,14 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
     public class Subdirectory : NotifyPropertyChanged, ILocalSubdirectory
     {
-        /*
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
-    "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<64) DEFAULT 0,
-    "LastAccessed" DATETIME  NOT NULL,
-    "Notes" TEXT NOT NULL DEFAULT '',
-    "Deleted" BIT NOT NULL DEFAULT 0,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-    "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ParentId"	UNIQUEIDENTIFIER,
-	"VolumeId"	UNIQUEIDENTIFIER,
-	CONSTRAINT "PK_Subdirectoriess" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_SubdirectoryParent" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
-	CONSTRAINT "FK_SubdirectoryVolume" FOREIGN KEY("VolumeId") REFERENCES "Volumes"("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
-        ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
-        (ParentId IS NOT NULL AND VolumeId IS NULL AND length(trim(Name))>0)))
-         */
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
@@ -50,7 +25,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid?> _volumeId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
         private readonly IPropertyChangeTracker<Volume> _volume;
-        private HashSet<DbFile> _files = new ();
+        private HashSet<DbFile> _files = new();
         private HashSet<Subdirectory> _subDirectories = new();
 
         #endregion

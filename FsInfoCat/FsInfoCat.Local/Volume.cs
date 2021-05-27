@@ -41,7 +41,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DriveType> _type;
         private readonly IPropertyChangeTracker<bool?> _caseSensitiveSearch;
         private readonly IPropertyChangeTracker<bool?> _readOnly;
-        private readonly IPropertyChangeTracker<long?> _maxNameLength;
+        private readonly IPropertyChangeTracker<int?> _maxNameLength;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<VolumeStatus> _status;
         private readonly IPropertyChangeTracker<Guid> _fileSystemId;
@@ -94,7 +94,7 @@ namespace FsInfoCat.Local
         public virtual bool? ReadOnly { get => _readOnly.GetValue(); set => _readOnly.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual long? MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
+        public virtual int? MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
 
         /// <remarks>TEXT NOT NULL DEFAULT ''</remarks>
         [Required(AllowEmptyStrings = true)]
@@ -210,7 +210,7 @@ namespace FsInfoCat.Local
             _identifier = CreateChangeTracker(nameof(Identifier), "", NonNullStringCoersion.Default);
             _caseSensitiveSearch = CreateChangeTracker<bool?>(nameof(CaseSensitiveSearch), null);
             _readOnly = CreateChangeTracker<bool?>(nameof(ReadOnly), null);
-            _maxNameLength = CreateChangeTracker<long?>(nameof(MaxNameLength), null);
+            _maxNameLength = CreateChangeTracker<int?>(nameof(MaxNameLength), null);
             _type = CreateChangeTracker(nameof(Type), DriveType.Unknown);
             _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _status = CreateChangeTracker(nameof(Status), VolumeStatus.Unknown);

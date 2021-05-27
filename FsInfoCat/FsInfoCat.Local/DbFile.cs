@@ -13,26 +13,6 @@ namespace FsInfoCat.Local
     [Table(TABLE_NAME)]
     public class DbFile : NotifyPropertyChanged, ILocalFile
     {
-        /*
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE,
-    "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<15) DEFAULT 0,
-    "LastAccessed" DATETIME  NOT NULL,
-    "LastHashCalculation" DATETIME DEFAULT NULL,
-    "Notes" TEXT NOT NULL DEFAULT '',
-    "Deleted" BIT NOT NULL DEFAULT 0,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-    "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
-	"ParentId"	UNIQUEIDENTIFIER NOT NULL,
-	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_FileSubdirectory" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
-	CONSTRAINT "FK_FileContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
-         */
         #region Fields
 
         public const string TABLE_NAME = "Files";

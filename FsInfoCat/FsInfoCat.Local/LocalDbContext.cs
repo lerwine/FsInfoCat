@@ -33,7 +33,7 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<ContentInfo> ContentInfos { get; set; }
 
-        public virtual DbSet<FileComparison> Comparison { get; set; }
+        public virtual DbSet<FileComparison> Comparisons { get; set; }
 
         public virtual DbSet<RedundantSet> RedundantSets { get; set; }
 
@@ -151,24 +151,24 @@ namespace FsInfoCat.Local
             return result;
         }
 
-        internal static void ValidateLocalDbEntity([NotNull] ILocalDbEntity entity, [NotNull] ICollection<ValidationResult> validationResults)
-        {
-            if (entity.CreatedOn.CompareTo(entity.ModifiedOn) > 0)
-            {
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.CreatedOn) }));
-                if (entity.UpstreamId.HasValue && !entity.LastSynchronizedOn.HasValue)
-                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
-            }
-            else if (entity.LastSynchronizedOn.HasValue)
-            {
-                if (entity.LastSynchronizedOn.Value.CompareTo(entity.ModifiedOn) > 0)
-                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
-                else if (entity.LastSynchronizedOn.Value.CompareTo(entity.CreatedOn) < 0)
-                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
-            }
-            else if (entity.UpstreamId.HasValue)
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
-        }
+        //internal static void ValidateLocalDbEntity([NotNull] ILocalDbEntity entity, [NotNull] ICollection<ValidationResult> validationResults)
+        //{
+        //    if (entity.CreatedOn.CompareTo(entity.ModifiedOn) > 0)
+        //    {
+        //        validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.CreatedOn) }));
+        //        if (entity.UpstreamId.HasValue && !entity.LastSynchronizedOn.HasValue)
+        //            validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+        //    }
+        //    else if (entity.LastSynchronizedOn.HasValue)
+        //    {
+        //        if (entity.LastSynchronizedOn.Value.CompareTo(entity.ModifiedOn) > 0)
+        //            validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+        //        else if (entity.LastSynchronizedOn.Value.CompareTo(entity.CreatedOn) < 0)
+        //            validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+        //    }
+        //    else if (entity.UpstreamId.HasValue)
+        //        validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+        //}
 
         internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext, [NotNull] EntityEntryValidationHandler<T> onValidate)
             where T : class, ILocalDbEntity
