@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat
+namespace FsInfoCat
 {
     public class NotEmptyOrNullValueArrayCoersion<T> : ArrayCoersion<T>
     {
@@ -11,6 +11,8 @@
         public override T[] Cast(object obj) => NullIfEmpty(base.Cast(obj));
 
         public override T[] Coerce(object obj) => NullIfEmpty(base.Coerce(obj));
+
+        public override T[] Normalize(T[] obj) => (obj is null || obj.Length == 0) ? null : obj;
 
         public override bool Equals(T[] x, T[] y)
         {

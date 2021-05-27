@@ -84,6 +84,10 @@ namespace FsInfoCat
         public abstract int GetHashCode(T obj);
         bool IEqualityComparer.Equals(object x, object y) => (x is T a && y is T b) ? Equals(a, b) : Equals(x, y);
         int IEqualityComparer.GetHashCode(object obj) => (obj is T t) ? GetHashCode(t) : ((obj is null) ? 0 : obj.GetHashCode());
+
+        public virtual T Normalize(T obj) => obj;
+
+        object ICoersion.Normalize(object obj) => Normalize((T)obj);
     }
 
 }

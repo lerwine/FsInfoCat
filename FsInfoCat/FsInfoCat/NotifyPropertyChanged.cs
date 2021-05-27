@@ -230,10 +230,10 @@ namespace FsInfoCat
 
             internal PropertyChangeTracker(NotifyPropertyChanged target, string propertyName, T initialValue, ICoersion<T> coersion)
             {
-                _value = initialValue;
+                Coersion = coersion ?? Coersion<T>.Default;
+                _value = Coersion.Normalize(initialValue);
                 _target = new WeakReference<NotifyPropertyChanged>(target);
                 PropertyName = propertyName;
-                Coersion = coersion ?? Coersion<T>.Default;
             }
 
             public string PropertyName { get; }
@@ -252,6 +252,7 @@ namespace FsInfoCat
             {
                 IsSet = true;
                 T oldValue = _value;
+                newValue = Coersion.Normalize(newValue);
                 if (Coersion.Equals(oldValue, newValue))
                     return false;
                 IsChanged = true;

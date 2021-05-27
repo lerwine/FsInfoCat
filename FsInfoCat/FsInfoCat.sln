@@ -9,9 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.Desktop", "FsInfo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.Local", "FsInfoCat.Local\FsInfoCat.Local.csproj", "{1907AF2A-B949-4741-9384-97CF3B681A43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.Upstream", "FsInfoCat.Upstream\FsInfoCat.Upstream.csproj", "{00365BEB-8036-4431-97DE-05069964F5F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.Upstream", "FsInfoCat.Upstream\FsInfoCat.Upstream.csproj", "{00365BEB-8036-4431-97DE-05069964F5F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.UnitTests", "FsInfoCat.UnitTests\FsInfoCat.UnitTests.csproj", "{C4D22FAB-2F3D-43B1-A3BB-8A4775A5838C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.UnitTests", "FsInfoCat.UnitTests\FsInfoCat.UnitTests.csproj", "{C4D22FAB-2F3D-43B1-A3BB-8A4775A5838C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{21DE209E-F2AD-48EC-A6BB-7C66EF73762F}"
+	ProjectSection(SolutionItems) = preProject
+		FsInfoCat.testsettings = FsInfoCat.testsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

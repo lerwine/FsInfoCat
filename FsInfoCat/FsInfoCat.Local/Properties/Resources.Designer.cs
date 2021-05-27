@@ -22,7 +22,7 @@ namespace FsInfoCat.Local.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace FsInfoCat.Local.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FsInfoCat.Local.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace FsInfoCat.Local.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,18 @@ namespace FsInfoCat.Local.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to &lt;DbCommands&gt;
+        ///    &lt;DbCreation&gt;
+        ///        &lt;Text Message=&quot;Creating table &apos;FileSystems&apos;&quot;&gt;
+        ///            &lt;![CDATA[CREATE TABLE &quot;FileSystems&quot; (
+        ///	&quot;Id&quot;	UNIQUEIDENTIFIER NOT NULL,
+        ///	&quot;DisplayName&quot;	NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)&gt;0) UNIQUE COLLATE NOCASE,
+        ///	&quot;CaseSensitiveSearch&quot;	BIT NOT NULL DEFAULT 0,
+        ///	&quot;ReadOnly&quot;	BIT NOT NULL DEFAULT 0,
+        ///	&quot;MaxNameLength&quot;	INT NOT NULL CHECK(MaxNameLength&gt;=1) DEFAULT 255,
+        ///	&quot;DefaultDriveType&quot;	TINYINT CHECK(DefaultDr [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string DbCommands {
+        public static string DbCommands {
             get {
                 return ResourceManager.GetString("DbCommands", resourceCulture);
             }
