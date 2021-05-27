@@ -43,6 +43,7 @@ namespace FsInfoCat.UnitTests
         public void FileSystemAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = "FileSystem Add/Remove Item";
             Local.FileSystem target = new() { DisplayName = expected };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.Entry(target);
@@ -81,8 +82,9 @@ namespace FsInfoCat.UnitTests
         public void FileSystemDefaultDriveTypeTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             DriveType expected = (DriveType)(object)-1;
-            Local.FileSystem target = new() { DefaultDriveType = expected };
+            Local.FileSystem target = new() { DefaultDriveType = expected, DisplayName = "FileSystem DefaultDriveType Item" };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
@@ -125,6 +127,7 @@ namespace FsInfoCat.UnitTests
         public void FileSystemDisplayNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = "";
             Local.FileSystem target = new() { DisplayName = null };
             Assert.AreEqual(expected, target.DisplayName);
@@ -219,6 +222,7 @@ namespace FsInfoCat.UnitTests
         public void FileSystemMaxNameLengthTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             int expected = 0;
             Local.FileSystem target = new() { DisplayName = "FileSystem MaxNameLength Item", MaxNameLength = expected };
             EntityEntry <Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
@@ -274,8 +278,13 @@ namespace FsInfoCat.UnitTests
         public void FileSystemCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            using var transaction = dbContext.Database.BeginTransaction();
+            Local.FileSystem target = new() { DisplayName = "FileSystem CreatedOn FileSystem" };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -288,7 +297,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -296,14 +305,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileSystem.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.FileSystems.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("FileSystem LastSynchronizedOn Validation Tests")]
@@ -312,7 +317,8 @@ namespace FsInfoCat.UnitTests
         public void FileSystemLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            using var transaction = dbContext.Database.BeginTransaction();
+            Local.FileSystem target = new() { DisplayName = "FileSystem LastSynchronizedOn FileSystem", UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
@@ -381,6 +387,7 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = "SymbolicNameAddRemove";
             Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -422,6 +429,7 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = "";
             Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -505,6 +513,7 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameFileSystemTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.FileSystem expected = null;
             Local.SymbolicName target = new() { Name = "SymbolicNameFileSystemTest", FileSystem = expected };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
@@ -554,8 +563,15 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.SymbolicName target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            using var transaction = dbContext.Database.BeginTransaction();
+            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName Add/Remove FileSystem" };
+            dbContext.FileSystems.Add(fileSystem);
+            Local.SymbolicName target = new() {  Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -568,7 +584,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -576,14 +592,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.SymbolicName.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.SymbolicNames.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("SymbolicName LastSynchronizedOn Validation Tests")]
@@ -592,6 +604,7 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.SymbolicName target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();
@@ -661,6 +674,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string displayName = "Volume Add/Remove Item", volumeName = "Volume_Add_Remove_Name", identifier = "VolumeAddRemoveIdentifier";
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -706,6 +720,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeIdentifierTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string displayName = "Volume Identifier Item", volumeName = "Volume_Identifier_Test";
             string expected = "";
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Identifier FileSystem" };
@@ -793,6 +808,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual("", target.Identifier);
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
+            dbContext.Volumes.Remove(target);
 
             fileSystem = new() { DisplayName = "Volume Identifier FileSystem 2" };
             dbContext.FileSystems.Add(fileSystem);
@@ -818,6 +834,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeVolumeNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = "";
             string displayName = "Volume VolumeName Item", identifier = "VolumeVolumeNameIdentifier";
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Name FileSystem" };
@@ -929,6 +946,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeDisplayNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = "";
             string volumeName = "Volume_DisplayName", identifier = "VolumeDisplayNameIdentifier";
             Local.FileSystem fileSystem = new() { DisplayName = "Volume DisplayName FileSystem" };
@@ -1040,6 +1058,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeTypeTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             DriveType expected = (DriveType)(object)-1;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Type FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -1087,6 +1106,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeFileSystemTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.FileSystem expected = null;
             string displayName = "Volume FileSystem Item", volumeName = "Volume_FileSystem_Name", identifier = "VolumeFileSystemIdentifier";
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = expected };
@@ -1153,6 +1173,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeStatusTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             VolumeStatus expected = (VolumeStatus)(object)-1;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Status FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -1200,6 +1221,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeMaxNameLengthTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             int expected = 0;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume MaxNameLength FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -1261,11 +1283,16 @@ namespace FsInfoCat.UnitTests
         public void VolumeCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.FileSystem fileSystem = new() { DisplayName = "Volume CreatedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume CreatedOn Item", volumeName = "Volume_CreatedOn_Name", identifier = "VolumeCreatedOnIdentifier";
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -1278,7 +1305,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -1286,14 +1313,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Volume.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Volumes.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("Volume LastSynchronizedOn Validation Tests")]
@@ -1302,6 +1325,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.FileSystem fileSystem = new() { DisplayName = "Volume LastSynchronizedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume LastSynchronizedOn Item", volumeName = "Volume_LastSynchronizedOn_Name", identifier = "VolumeLastSynchronizedOnIdentifier";
@@ -1375,6 +1399,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.Subdirectory target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(entityEntry.State, EntityState.Detached);
@@ -1412,6 +1437,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = default; // TODO: Set invalid value
             Local.Subdirectory target = new() { Name = expected };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
@@ -1449,6 +1475,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(entityEntry.State, EntityState.Modified);
             Assert.AreEqual(expected, target.Name);
+            dbContext.Subdirectories.Remove(target);
         }
 
         [TestMethod("Subdirectory Volume Validation Tests")]
@@ -1457,6 +1484,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.Volume expected = default; // TODO: Set invalid value
             Local.Subdirectory target = new() { Volume = expected };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
@@ -1494,6 +1522,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(entityEntry.State, EntityState.Modified);
             Assert.AreEqual(expected, target.Volume);
+            dbContext.Subdirectories.Remove(target);
         }
 
         [TestMethod("Subdirectory Parent Validation Tests")]
@@ -1502,6 +1531,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.Subdirectory expected = default; // TODO: Set invalid value
             Local.Subdirectory target = new() { Parent = expected };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
@@ -1539,6 +1569,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(entityEntry.State, EntityState.Modified);
             Assert.AreEqual(expected, target.Parent);
+            dbContext.Subdirectories.Remove(target);
         }
 
         [TestMethod("Subdirectory Options Validation Tests")]
@@ -1547,6 +1578,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             DirectoryCrawlOptions expected = default; // TODO: Set invalid value
             Local.Subdirectory target = new() { Options = expected };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
@@ -1584,6 +1616,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(entityEntry.State, EntityState.Modified);
             Assert.AreEqual(expected, target.Options);
+            dbContext.Subdirectories.Remove(target);
         }
 
         [TestMethod("Subdirectory CreatedOn Validation Tests")]
@@ -1592,8 +1625,13 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Subdirectory target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            using var transaction = dbContext.Database.BeginTransaction();
+            Local.Subdirectory target = new() {  /* TODO: Initialize properties */ };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -1606,7 +1644,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -1614,14 +1652,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Subdirectories.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("Subdirectory LastSynchronizedOn Validation Tests")]
@@ -1632,6 +1666,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Subdirectory target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            using var transaction = dbContext.Database.BeginTransaction();
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
@@ -1690,6 +1725,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.Subdirectories.Remove(target);
         }
 
         #endregion
@@ -1701,6 +1737,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.DbFile target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(entityEntry.State, EntityState.Detached);
@@ -1739,6 +1776,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.ContentInfo expected = default; // TODO: Set invalid value
             Local.DbFile target = new() { Content = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -1776,6 +1814,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(entityEntry.State, EntityState.Modified);
             Assert.AreEqual(expected, target.Content);
+            dbContext.Files.Remove(target);
         }
 
         [TestMethod("DbFile Name Validation Tests")]
@@ -1784,6 +1823,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = default; // TODO: Set invalid value
             Local.DbFile target = new() { Name = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -1821,6 +1861,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(entityEntry.State, EntityState.Modified);
             Assert.AreEqual(expected, target.Name);
+            dbContext.Files.Remove(target);
         }
 
         [TestMethod("DbFile Parent Validation Tests")]
@@ -1829,6 +1870,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.Subdirectory expected = default; // TODO: Set invalid value
             Local.DbFile target = new() { Parent = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -1866,6 +1908,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(entityEntry.State, EntityState.Modified);
             Assert.AreEqual(expected, target.Parent);
+            dbContext.Files.Remove(target);
         }
 
         [TestMethod("DbFile Options Validation Tests")]
@@ -1874,6 +1917,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             FileCrawlOptions expected = default; // TODO: Set invalid value
             Local.DbFile target = new() { Options = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -1919,8 +1963,13 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DbFile target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            using var transaction = dbContext.Database.BeginTransaction();
+            Local.DbFile target = new() {  /* TODO: Initialize properties */ };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -1933,7 +1982,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -1941,14 +1990,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DbFile.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Files.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("DbFile LastSynchronizedOn Validation Tests")]
@@ -1958,6 +2003,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.DbFile target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
@@ -2026,7 +2072,9 @@ namespace FsInfoCat.UnitTests
         [TestMethod("ContentInfo Add/Remove Tests")]
         public void ContentInfoAddRemoveTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.ContentInfo target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(entityEntry.State, EntityState.Detached);
@@ -2059,7 +2107,9 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "ContentInfo.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
         public void ContentInfoHashTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             byte[] expected = default; // TODO: Set invalid value
             Local.ContentInfo target = new() { Hash = expected };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
@@ -2074,8 +2124,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Hash);
 
             // TODO: Validate default values
-            Assert.Inconclusive("Create assertions for default values");
-
             target.Hash = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
@@ -2105,6 +2153,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "ContentInfo.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
         public void ContentInfoLengthTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             long expected = default; // TODO: Set invalid value
             Local.ContentInfo target = new() { Length = expected };
@@ -2149,9 +2198,15 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void ContentInfoCreatedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ContentInfo target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            using var transaction = dbContext.Database.BeginTransaction();
+            Local.ContentInfo target = new() {  /* TODO: Initialize properties */ };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -2164,7 +2219,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -2172,14 +2227,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ContentInfo.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.ContentInfos.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("ContentInfo LastSynchronizedOn Validation Tests")]
@@ -2187,7 +2238,9 @@ namespace FsInfoCat.UnitTests
             "ContentInfo.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void ContentInfoLastSynchronizedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.ContentInfo target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
             Collection<ValidationResult> results = new();
@@ -2258,6 +2311,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.RedundantSet target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(entityEntry.State, EntityState.Detached);
@@ -2293,6 +2347,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.ContentInfo expected = default; // TODO: Set invalid value
             Local.RedundantSet target = new() { ContentInfo = expected };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
@@ -2383,8 +2438,13 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.RedundantSet target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            Local.RedundantSet target = new() {  /* TODO: Initialize properties */ };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
+            using var transaction = dbContext.Database.BeginTransaction();
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -2397,7 +2457,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -2405,14 +2465,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RedundantSet.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.RedundantSets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("RedundantSet LastSynchronizedOn Validation Tests")]
@@ -2422,6 +2478,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.RedundantSet target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             Collection<ValidationResult> results = new();
@@ -2492,6 +2549,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.Redundancy target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(entityEntry.State, EntityState.Detached);
@@ -2527,6 +2585,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             string expected = default; // TODO: Set invalid value
             Local.Redundancy target = new() { Reference = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -2572,6 +2631,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             FileRedundancyStatus expected = default; // TODO: Set invalid value
             Local.Redundancy target = new() { Status = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -2617,6 +2677,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.RedundantSet expected = default; // TODO: Set invalid value
             Local.Redundancy target = new() { RedundantSet = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -2662,6 +2723,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.DbFile expected = default; // TODO: Set invalid value
             Local.Redundancy target = new() { File = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -2707,8 +2769,13 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Redundancy target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            using var transaction = dbContext.Database.BeginTransaction();
+            Local.Redundancy target = new() {  /* TODO: Initialize properties */ };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -2721,7 +2788,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -2729,14 +2796,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Redundancy.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Redundancies.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("Redundancy LastSynchronizedOn Validation Tests")]
@@ -2746,6 +2809,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.Redundancy target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
@@ -2816,6 +2880,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.FileComparison target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(entityEntry.State, EntityState.Detached);
@@ -2849,6 +2914,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.DbFile expected = default; // TODO: Set invalid value
             Local.FileComparison target = new() { SourceFile = expected };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
@@ -2894,6 +2960,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.DbFile expected = default; // TODO: Set invalid value
             Local.FileComparison target = new() { TargetFile = expected };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
@@ -2939,8 +3006,13 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileComparison target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
+            using var transaction = dbContext.Database.BeginTransaction();
+            Local.FileComparison target = new() {  /* TODO: Initialize properties */ };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
+            dbContext.SaveChanges();
+            entityEntry.Reload();
+            target.CreatedOn = target.ModifiedOn.AddSeconds(2);
+            dbContext.Update(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
             Assert.IsFalse(success);
@@ -2953,7 +3025,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
@@ -2961,14 +3033,10 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileComparison.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Comparisons.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            dbContext.SaveChanges();
         }
 
         [TestMethod("FileComparison LastSynchronizedOn Validation Tests")]
@@ -2978,6 +3046,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var transaction = dbContext.Database.BeginTransaction();
             Local.FileComparison target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             Collection<ValidationResult> results = new();

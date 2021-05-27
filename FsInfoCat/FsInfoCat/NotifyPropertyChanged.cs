@@ -238,8 +238,6 @@ namespace FsInfoCat
 
             public string PropertyName { get; }
 
-            public IEqualityComparer<T> EqualityComparer { get; }
-
             public ICoersion<T> Coersion { get; }
 
             public bool IsSet { get; private set; }
@@ -267,7 +265,7 @@ namespace FsInfoCat
 
             object IPropertyChangeTracker.GetValue() => GetValue();
 
-            public bool IsEqualTo(T other) => EqualityComparer.Equals(_value, other);
+            public bool IsEqualTo(T other) => Coersion.Equals(_value, other);
 
             bool IPropertyChangeTracker.IsEqualTo(object obj) => Coersion.TryCast(obj, out T t) && IsEqualTo(t);
         }

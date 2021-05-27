@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,19 +8,6 @@ namespace FsInfoCat.Local
 {
     public class ContentInfo : NotifyPropertyChanged, ILocalContentInfo
     {
-        /*
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"Length"	BIGINT NOT NULL CHECK(Length>0),
-	"Hash"	BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-    "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_ContentInfo" PRIMARY KEY("Id"),
-	CONSTRAINT "UK_LengthHash" UNIQUE("Length","Hash"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
-         */
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
@@ -135,8 +119,12 @@ namespace FsInfoCat.Local
 
         private void OnValidate(EntityEntry<ContentInfo> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
-            // TODO: Finish validation
-            throw new NotImplementedException();
+            if (Length < 0L)
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, new string[] { nameof(Length) }));
+
+            byte[] hash = Hash;
+            if (!(hash is null || hash.Length == MD5Hash.MD5ByteSize))
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidHashLength, new string[] { nameof(Hash) }));
         }
     }
 }

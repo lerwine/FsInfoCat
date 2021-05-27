@@ -19,9 +19,9 @@ namespace FsInfoCat
 
         private NonNullStringCoersion() : this(null) { }
 
-        public string Cast(object obj) => (string)obj ?? "";
+        public virtual string Cast(object obj) => (string)obj ?? "";
 
-        public string Coerce(object obj) => (obj is null) ? "" : ((obj is string text) ? text : obj.ToString());
+        public virtual string Coerce(object obj) => (obj is null) ? "" : ((obj is string text) ? text : obj.ToString());
 
         bool IEqualityComparer.Equals(object x, object y) => TryCast(x, out string a) && TryCast(y, out string b) ? Equals(a, b) :
             Equals(x, y);
@@ -32,7 +32,7 @@ namespace FsInfoCat
 
         int IEqualityComparer.GetHashCode(object obj) => TryCast(obj, out string text) ? GetHashCode(text) : ((obj is null) ? 0 : obj.GetHashCode());
 
-        public bool TryCast(object obj, out string result)
+        public virtual bool TryCast(object obj, out string result)
         {
             if (obj is null)
                 result = "";
@@ -53,7 +53,7 @@ namespace FsInfoCat
             return r;
         }
 
-        public bool TryCoerce(object obj, out string result)
+        public virtual bool TryCoerce(object obj, out string result)
         {
             if (obj is null)
                 result = "";

@@ -109,7 +109,7 @@ namespace FsInfoCat.Local
         public FileSystem()
         {
             _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _displayName = CreateChangeTracker(nameof(DisplayName), "", NonNullStringCoersion.Default);
+            _displayName = CreateChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
             _caseSensitiveSearch = CreateChangeTracker(nameof(CaseSensitiveSearch), false);
             _readOnly = CreateChangeTracker(nameof(ReadOnly), false);
             _maxNameLength = CreateChangeTracker(nameof(MaxNameLength), DbConstants.DbColDefaultValue_MaxNameLength);
@@ -131,7 +131,7 @@ namespace FsInfoCat.Local
         private void OnValidate(EntityEntry<FileSystem> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
             if (MaxNameLength < 0)
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthNegative, new string[] { nameof(MaxNameLength) }));
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid, new string[] { nameof(MaxNameLength) }));
             var driveType = DefaultDriveType;
             if (driveType.HasValue && !Enum.IsDefined(driveType.Value))
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(DefaultDriveType) }));
