@@ -1373,6 +1373,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Subdirectory Add/Remove Tests")]
         public void SubdirectoryAddRemoveTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Subdirectory target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Entry(target);
@@ -1388,6 +1389,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
+
             // TODO: Validate default values
             Assert.IsNull(target.LastAccessed);
             Assert.IsNull(target.Deleted);
@@ -1408,6 +1410,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
         public void SubdirectoryNameTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // TODO: Set invalid value
             Local.Subdirectory target = new() { Name = expected };
@@ -1452,6 +1455,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Subdirectory.Volume: UNIQUEIDENTIFIER FOREIGN REFERENCES Volume")]
         public void SubdirectoryVolumeTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Volume expected = default; // TODO: Set invalid value
             Local.Subdirectory target = new() { Volume = expected };
@@ -1496,6 +1500,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Subdirectory.Parent: UNIQUEIDENTIFIER ((ParentId IS NULL AND VolumeId IS NOT NULL) OR (ParentId IS NOT NULL AND VolumeId IS NULL)) FOREIGN REFERENCES Subdirectories")]
         public void SubdirectoryParentTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Subdirectory expected = default; // TODO: Set invalid value
             Local.Subdirectory target = new() { Parent = expected };
@@ -1540,6 +1545,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
         public void SubdirectoryOptionsTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             DirectoryCrawlOptions expected = default; // TODO: Set invalid value
             Local.Subdirectory target = new() { Options = expected };
@@ -1584,6 +1590,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
         public void SubdirectoryCreatedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Subdirectory target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
@@ -1622,6 +1629,7 @@ namespace FsInfoCat.UnitTests
             "Subdirectory.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void SubdirectoryLastSynchronizedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Subdirectory target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
@@ -1691,6 +1699,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("DbFile Add/Remove Tests")]
         public void DbFileAddRemoveTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Entry(target);
@@ -1706,6 +1715,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
+
             // TODO: Validate default values
             Assert.IsNull(target.LastAccessed);
             Assert.IsNull(target.Deleted);
@@ -1727,6 +1737,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "DbFile.Content: UNIQUEIDENTIFIER FOREIGN REFERENCES ContentInfos")]
         public void DbFileContentInfoTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.ContentInfo expected = default; // TODO: Set invalid value
             Local.DbFile target = new() { Content = expected };
@@ -1771,6 +1782,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
         public void DbFileNameTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // TODO: Set invalid value
             Local.DbFile target = new() { Name = expected };
@@ -1815,6 +1827,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "DbFile.Parent: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES Subdirectories")]
         public void DbFileParentTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Subdirectory expected = default; // TODO: Set invalid value
             Local.DbFile target = new() { Parent = expected };
@@ -1859,6 +1872,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "DbFile.Options: TINYINT  NOT NULL CHECK(Options>=0 AND Options<15)")]
         public void DbFileOptionsTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             FileCrawlOptions expected = default; // TODO: Set invalid value
             Local.DbFile target = new() { Options = expected };
@@ -1903,6 +1917,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "DbFile.CreatedOn: CreatedOn<=ModifiedOn")]
         public void DbFileCreatedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -1941,6 +1956,7 @@ namespace FsInfoCat.UnitTests
             "DbFile.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void DbFileLastSynchronizedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -2057,7 +2073,9 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Hash);
 
-            expected = default; // TODO: Set valid value
+            // TODO: Validate default values
+            Assert.Inconclusive("Create assertions for default values");
+
             target.Hash = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results);
@@ -2238,6 +2256,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("RedundantSet Add/Remove Tests")]
         public void RedundantSetAddRemoveTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.RedundantSet target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.Entry(target);
@@ -2253,6 +2272,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
+
             // TODO: Validate default values
             Assert.AreEqual("", target.Reference);
             Assert.AreEqual("", target.Notes);
@@ -2271,6 +2291,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "RedundantSet.ContentInfo: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES ContentInfos")]
         public void RedundantSetContentInfoTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.ContentInfo expected = default; // TODO: Set invalid value
             Local.RedundantSet target = new() { ContentInfo = expected };
@@ -2315,6 +2336,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
         public void RedundantSetReferenceTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // TODO: Set invalid value
             Local.RedundantSet target = new() { Reference = expected };
@@ -2359,6 +2381,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "RedundantSet.CreatedOn: CreatedOn<=ModifiedOn")]
         public void RedundantSetCreatedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.RedundantSet target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
@@ -2397,6 +2420,7 @@ namespace FsInfoCat.UnitTests
             "RedundantSet.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void RedundantSetLastSynchronizedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.RedundantSet target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
@@ -2466,6 +2490,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Redundancy Add/Remove Tests")]
         public void RedundancyAddRemoveTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Redundancy target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Entry(target);
@@ -2480,6 +2505,7 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
             entityEntry.Reload();
+
             // TODO: Validate default values
             Assert.AreEqual("", target.Reference);
             Assert.AreEqual(FileRedundancyStatus.NotRedundant, target.Status);
@@ -2499,6 +2525,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Redundancy.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
         public void RedundancyReferenceTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // TODO: Set invalid value
             Local.Redundancy target = new() { Reference = expected };
@@ -2543,6 +2570,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Redundancy.Status: TINYINT NOT NULL DEFAULT 0 CHECK(Status>=0 AND Status < 9)")]
         public void RedundancyStatusTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             FileRedundancyStatus expected = default; // TODO: Set invalid value
             Local.Redundancy target = new() { Status = expected };
@@ -2587,6 +2615,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Redundancy.RedundantSet: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES RedundantSets")]
         public void RedundancyRedundantSetTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.RedundantSet expected = default; // TODO: Set invalid value
             Local.Redundancy target = new() { RedundantSet = expected };
@@ -2631,6 +2660,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Redundancy.File: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
         public void RedundancyFileTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile expected = default; // TODO: Set invalid value
             Local.Redundancy target = new() { File = expected };
@@ -2675,6 +2705,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Redundancy.CreatedOn: CreatedOn<=ModifiedOn")]
         public void RedundancyCreatedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Redundancy target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -2713,6 +2744,7 @@ namespace FsInfoCat.UnitTests
             "Redundancy.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void RedundancyLastSynchronizedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Redundancy target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -2782,6 +2814,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("FileComparison Add/Remove Tests")]
         public void FileComparisonAddRemoveTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileComparison target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Entry(target);
@@ -2796,6 +2829,7 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
             Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
             entityEntry.Reload();
+
             // TODO: Validate default values
             Assert.IsFalse(target.AreEqual);
             Assert.IsNull(target.LastSynchronizedOn);
@@ -2813,6 +2847,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "FileComparison.SourceFile: UNIQUEIDENTIFIER NOT NULL (SourceFileId<>TargetFileId) FOREIGN REFERENCES DbFiles")]
         public void FileComparisonSourceFileTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile expected = default; // TODO: Set invalid value
             Local.FileComparison target = new() { SourceFile = expected };
@@ -2857,6 +2892,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "FileComparison.TargetFile: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
         public void FileComparisonTargetFileTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile expected = default; // TODO: Set invalid value
             Local.FileComparison target = new() { TargetFile = expected };
@@ -2901,6 +2937,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "FileComparison.CreatedOn: CreatedOn<=ModifiedOn")]
         public void FileComparisonCreatedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileComparison target = new() {  /* TODO: Initialize properties */ CreatedOn = DateTime.Now.AddDays(1), ModifiedOn = DateTime.Now };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
@@ -2939,6 +2976,7 @@ namespace FsInfoCat.UnitTests
             "FileComparison.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void FileComparisonLastSynchronizedOnTestMethod()
         {
+            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileComparison target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
