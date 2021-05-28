@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ namespace FsInfoCat.Local
 
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<long> _length;
-        private readonly IPropertyChangeTracker<byte[]> _hash;
+        private readonly IPropertyChangeTracker<MD5Hash?> _hash;
         private readonly IPropertyChangeTracker<Guid?> _upstreamId;
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
         private readonly IPropertyChangeTracker<DateTime> _createdOn;
@@ -24,52 +25,24 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
         [Required]
         public virtual long Length { get => _length.GetValue(); set => _length.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        public virtual byte[] Hash { get => _hash.GetValue(); set => _hash.SetValue(value); }
+        public virtual MD5Hash? Hash { get => _hash.GetValue(); set => _hash.SetValue(value); }
 
-        /// <summary></summary>
-        /// <remarks>UNIQUEIDENTIFIER DEFAULT NULL</remarks>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
-        /// </remarks>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
-        /// </remarks>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
@@ -104,7 +77,7 @@ namespace FsInfoCat.Local
         {
             _id = CreateChangeTracker(nameof(Id), Guid.Empty);
             _length = CreateChangeTracker(nameof(Length), 0L);
-            _hash = CreateChangeTracker(nameof(Hash), null, NotEmptyOrNullValueArrayCoersion<byte>.Default);
+            _hash = CreateChangeTracker<MD5Hash?>(nameof(Hash), null);
             _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
             _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
             _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
@@ -121,10 +94,11 @@ namespace FsInfoCat.Local
         {
             if (Length < 0L)
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, new string[] { nameof(Length) }));
+        }
 
-            byte[] hash = Hash;
-            if (!(hash is null || hash.Length == MD5Hash.MD5ByteSize))
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidHashLength, new string[] { nameof(Hash) }));
+        internal static void BuildEntity(EntityTypeBuilder<ContentInfo> obj)
+        {
+            obj.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
         }
     }
 }

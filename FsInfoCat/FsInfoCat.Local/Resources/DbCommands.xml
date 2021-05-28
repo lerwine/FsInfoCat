@@ -74,7 +74,7 @@
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ParentId"	UNIQUEIDENTIFIER,
 	"VolumeId"	UNIQUEIDENTIFIER,
-	CONSTRAINT "PK_Subdirectoriess" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_Subdirectories" PRIMARY KEY("Id"),
 	CONSTRAINT "FK_SubdirectoryParent" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
 	CONSTRAINT "FK_SubdirectoryVolume" FOREIGN KEY("VolumeId") REFERENCES "Volumes"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND

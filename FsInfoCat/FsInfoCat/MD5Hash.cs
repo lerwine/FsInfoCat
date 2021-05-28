@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,18 +12,21 @@ namespace FsInfoCat
     /// Represents a 128-bit MD5 checksumm value.
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
-    public struct MD5Hash : IEquatable<MD5Hash>
+    [Serializable]
+    public struct MD5Hash : IEquatable<MD5Hash>, IConvertible
     {
-        /// <summary>
-        ///
-        /// </summary>
-        public const int MD5ByteSize = 16;
-
         #region Fields
 
-        private static readonly Regex HexPattern = new Regex(@"\s*([^a-fA-F\d\s]+)?([a-fA-F\d][a-fA-F\d])\s*([\-:,;]\s*)?", RegexOptions.Compiled);
+        public const int MD5ByteSize = 16;
 
-        private static readonly Regex HexDigit = new Regex(@"(?:[\s\-:,;]|([a-fA-F\d])|\s*$)", RegexOptions.Compiled);
+        public static readonly ValueConverter<MD5Hash, byte[]> Converter = new(
+            v => v.GetBuffer(),
+            b => new MD5Hash(b)
+        );
+
+        private static readonly Regex HexPattern = new(@"\s*([^a-fA-F\d\s]+)?([a-fA-F\d][a-fA-F\d])\s*([\-:,;]\s*)?", RegexOptions.Compiled);
+
+        private static readonly Regex HexDigit = new(@"(?:[\s\-:,;]|([a-fA-F\d])|\s*$)", RegexOptions.Compiled);
 
         [FieldOffset(0)]
         private readonly long _lowBits;
@@ -302,5 +307,47 @@ namespace FsInfoCat
         }
 
         #endregion
+
+        TypeCode IConvertible.GetTypeCode() => TypeCode.String;
+        bool IConvertible.ToBoolean(IFormatProvider provider) => Convert.ToBoolean(ToString(), provider);
+        byte IConvertible.ToByte(IFormatProvider provider) => Convert.ToByte(ToString(), provider);
+        char IConvertible.ToChar(IFormatProvider provider) => Convert.ToChar(ToString(), provider);
+        DateTime IConvertible.ToDateTime(IFormatProvider provider) => Convert.ToDateTime(ToString(), provider);
+        decimal IConvertible.ToDecimal(IFormatProvider provider) => Convert.ToDecimal(ToString(), provider);
+        double IConvertible.ToDouble(IFormatProvider provider) => Convert.ToDouble(ToString(), provider);
+        short IConvertible.ToInt16(IFormatProvider provider) => Convert.ToInt16(ToString(), provider);
+        int IConvertible.ToInt32(IFormatProvider provider) => Convert.ToInt32(ToString(), provider);
+        long IConvertible.ToInt64(IFormatProvider provider) => Convert.ToInt64(ToString(), provider);
+        sbyte IConvertible.ToSByte(IFormatProvider provider) => Convert.ToSByte(ToString(), provider);
+        float IConvertible.ToSingle(IFormatProvider provider) => Convert.ToSingle(ToString(), provider);
+        string IConvertible.ToString(IFormatProvider provider) => ToString();
+        object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+        {
+            if (!(conversionType is null))
+            {
+                if (conversionType.Equals(typeof(MD5Hash)))
+                    return this;
+                if (conversionType.Equals(typeof(byte[])) || conversionType.Equals(typeof(IList<byte>)) || conversionType.Equals(typeof(ICollection<byte>)) ||
+                    conversionType.Equals(typeof(IEnumerable<byte>)))
+                    return GetBuffer();
+            }
+            return Convert.ChangeType(ToString(), conversionType, provider);
+        }
+
+        ushort IConvertible.ToUInt16(IFormatProvider provider) => Convert.ToUInt16(ToString(), provider);
+        uint IConvertible.ToUInt32(IFormatProvider provider) => Convert.ToUInt32(ToString(), provider);
+        ulong IConvertible.ToUInt64(IFormatProvider provider) => Convert.ToUInt64(ToString(), provider);
+
+        public static bool operator ==(MD5Hash left, MD5Hash right) => left.Equals(right);
+
+        public static bool operator !=(MD5Hash left, MD5Hash right) => !(left == right);
+
+        public static implicit operator MD5Hash(string text) => Parse(text);
+
+        public static implicit operator string(MD5Hash hash) => hash.ToString();
+
+        public static implicit operator MD5Hash(byte[] buffer) => new(buffer);
+
+        public static implicit operator byte[](MD5Hash hash) => hash.GetBuffer();
     }
 }

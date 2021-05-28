@@ -216,9 +216,6 @@
   <data name="ErrorMessage_InvalidFileRedundancyStatus" xml:space="preserve">
     <value>File Redundancy Status is invalid.</value>
   </data>
-  <data name="ErrorMessage_InvalidHashLength" xml:space="preserve">
-    <value>Hash must be 16 bytes long.</value>
-  </data>
   <data name="ErrorMessage_InvalidVolumeStatus" xml:space="preserve">
     <value>Volume Status is invalid.</value>
   </data>

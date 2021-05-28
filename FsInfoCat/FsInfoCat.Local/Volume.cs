@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 
@@ -16,7 +17,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _displayName;
         private readonly IPropertyChangeTracker<string> _volumeName;
-        private readonly IPropertyChangeTracker<string> _identifier;
+        private readonly IPropertyChangeTracker<VolumeIdentifier> _identifier;
         private readonly IPropertyChangeTracker<DriveType> _type;
         private readonly IPropertyChangeTracker<bool?> _caseSensitiveSearch;
         private readonly IPropertyChangeTracker<bool?> _readOnly;
@@ -55,9 +56,10 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Identifier), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [StringLength(DbConstants.DbColMaxLen_Identifier, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierLength),
-            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Identifier { get => _identifier.GetValue(); set => _identifier.SetValue(value); }
+        //[StringLength(DbConstants.DbColMaxLen_Identifier, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierLength),
+        //    ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        //[Column(TypeName = "nvarchar(1024)")]
+        public virtual VolumeIdentifier Identifier { get => _identifier.GetValue(); set => _identifier.SetValue(value); }
 
         [Required]
         public virtual VolumeStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
@@ -148,7 +150,7 @@ namespace FsInfoCat.Local
             _id = CreateChangeTracker(nameof(Id), Guid.Empty);
             _displayName = CreateChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
             _volumeName = CreateChangeTracker(nameof(VolumeName), "", TrimmedNonNullStringCoersion.Default);
-            _identifier = CreateChangeTracker(nameof(Identifier), "", TrimmedNonNullStringCoersion.Default);
+            _identifier = CreateChangeTracker<VolumeIdentifier>(nameof(Identifier), default);
             _caseSensitiveSearch = CreateChangeTracker<bool?>(nameof(CaseSensitiveSearch), null);
             _readOnly = CreateChangeTracker<bool?>(nameof(ReadOnly), null);
             _maxNameLength = CreateChangeTracker<int?>(nameof(MaxNameLength), null);
@@ -170,6 +172,7 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
             builder.HasOne(sn => sn.FileSystem).WithMany(d => d.Volumes).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
@@ -181,13 +184,18 @@ namespace FsInfoCat.Local
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
             if (!Enum.IsDefined(Status))
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidVolumeStatus, new string[] { nameof(Status) }));
-            string identifier = Identifier;
-            if (string.IsNullOrEmpty(identifier))
-                return;
-            Guid id = Id;
-            var entities = from v in dbContext.Volumes where id != v.Id && v.Identifier == identifier select v;
-            if (entities.Any())
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateVolumeIdentifier, new string[] { nameof(Identifier) }));
+            VolumeIdentifier identifier = Identifier;
+            if (identifier.IsEmpty())
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired, new string[] { nameof(Identifier) }));
+            else if (identifier.ToString().Length > DbConstants.DbColMaxLen_Identifier)
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierLength, new string[] { nameof(Identifier) }));
+            else
+            {
+                Guid id = Id;
+                var entities = from v in dbContext.Volumes where id != v.Id && v.Identifier == identifier select v;
+                if (entities.Any())
+                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateVolumeIdentifier, new string[] { nameof(Identifier) }));
+            }
         }
     }
 }

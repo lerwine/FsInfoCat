@@ -56,8 +56,6 @@ namespace FsInfoCat.UnitTests
             //}
         }
 
-        #region FileSystem Tests
-
         [TestMethod]
         public void LocalDbContextTestMethod()
         {
@@ -72,6 +70,8 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(dbContext.RedundantSets);
             Assert.IsNotNull(dbContext.Redundancies);
         }
+
+        #region FileSystem Tests
 
         [TestMethod("FileSystem Add/Remove Tests")]
         public void FileSystemAddRemoveTestMethod()
@@ -681,7 +681,8 @@ namespace FsInfoCat.UnitTests
         public void VolumeAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string displayName = "Volume Add/Remove Item", volumeName = "Volume_Add_Remove_Name", identifier = "VolumeAddRemoveIdentifier";
+            string displayName = "Volume Add/Remove Item", volumeName = "Volume_Add_Remove_Name";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
@@ -727,11 +728,11 @@ namespace FsInfoCat.UnitTests
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string displayName = "Volume Identifier Item", volumeName = "Volume_Identifier_Test";
-            string expected = "";
+            VolumeIdentifier expected = default;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Identifier FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             dbContext.SaveChanges();
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = null, FileSystem = fileSystem };
+            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = default, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.Identifier);
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
@@ -746,7 +747,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
 
-            expected = "VolumeIdentifierTest";
+            expected = new VolumeIdentifier(0xB04D955Du);
             target.Identifier = expected;
             Assert.AreEqual(expected, target.Identifier);
             results = new();
@@ -758,8 +759,31 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Identifier);
 
-            target.Identifier = $" {expected} ";
+            target.Identifier = new VolumeIdentifier(new Uri("urn:volume:id:B04D-955D", UriKind.Absolute));
             Assert.AreEqual(expected, target.Identifier);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
+            entityEntry.Reload();
+            Assert.AreEqual(expected, target.Identifier);
+
+            Guid id = Guid.NewGuid();
+            expected = new VolumeIdentifier(id);
+            target.Identifier = expected;
+            Assert.AreEqual(expected, target.Identifier);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
+            entityEntry.Reload();
+            Assert.AreEqual(expected, target.Identifier);
+
+            target.Identifier = new VolumeIdentifier(new Uri($"urn:uuid:{id:d}", UriKind.Absolute));
             Assert.AreEqual(expected, target.Identifier);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -772,7 +796,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
 
-            expected = $"{expected} {new string('X', 1023 - expected.Length)}";
+            expected = new VolumeIdentifier(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare"));
             target.Identifier = expected;
             Assert.AreEqual(expected, target.Identifier);
             results = new();
@@ -786,7 +810,22 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
 
-            string expected2 = $"{expected}X";
+
+            expected = new VolumeIdentifier(new Uri($"{expected} {new string('X', 1023 - expected.ToString().Length)}"));
+            target.Identifier = expected;
+            Assert.AreEqual(expected, target.Identifier);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
+            entityEntry.Reload();
+            Assert.AreEqual(expected, target.Identifier);
+            Assert.AreEqual(displayName, target.DisplayName);
+            Assert.AreEqual(volumeName, target.VolumeName);
+
+            VolumeIdentifier expected2 = new(new Uri($"{expected}X"));
             target.Identifier = expected2;
             Assert.AreEqual(expected2, target.Identifier);
             results = new();
@@ -803,22 +842,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
 
-            target.Identifier = new string(' ', 1025);
-            Assert.AreEqual("", target.Identifier);
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Volume.Identifier), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_IdentifierRequired, results[0].ErrorMessage);
-            entityEntry = dbContext.Volumes.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual("", target.Identifier);
-            Assert.AreEqual(displayName, target.DisplayName);
-            Assert.AreEqual(volumeName, target.VolumeName);
-            dbContext.Volumes.Remove(target);
+            target.Identifier = expected;
+            dbContext.SaveChanges();
 
             fileSystem = new() { DisplayName = "Volume Identifier FileSystem 2" };
             dbContext.FileSystems.Add(fileSystem);
@@ -837,7 +862,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
 
-            expected = $"_{expected[1..]}";
+            expected = new VolumeIdentifier(Guid.Empty);
             target.Identifier = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -856,7 +881,8 @@ namespace FsInfoCat.UnitTests
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
-            string displayName = "Volume VolumeName Item", identifier = "VolumeVolumeNameIdentifier";
+            string displayName = "Volume VolumeName Item";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Name FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             Local.Volume target = new() { DisplayName = displayName, VolumeName = null, Identifier = identifier, FileSystem = fileSystem };
@@ -951,7 +977,7 @@ namespace FsInfoCat.UnitTests
             target.VolumeName = expected;
             fileSystem = new() { DisplayName = "Volume Name FileSystem 2" };
             dbContext.FileSystems.Add(fileSystem);
-            identifier = $"{identifier}2";
+            identifier = new(Guid.NewGuid());
             target = new() { DisplayName = displayName, VolumeName = expected, Identifier = identifier, FileSystem = fileSystem };
             entityEntry = dbContext.Volumes.Add(target);
             results = new();
@@ -972,7 +998,8 @@ namespace FsInfoCat.UnitTests
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
-            string volumeName = "Volume_DisplayName", identifier = "VolumeDisplayNameIdentifier";
+            string volumeName = "Volume_DisplayName";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.FileSystem fileSystem = new() { DisplayName = "Volume DisplayName FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             Local.Volume target = new() { DisplayName = null, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
@@ -1067,7 +1094,7 @@ namespace FsInfoCat.UnitTests
             target.DisplayName = expected;
             fileSystem = new() { DisplayName = "Volume DisplayName FileSystem 2" };
             dbContext.FileSystems.Add(fileSystem);
-            identifier = $"{identifier}2";
+            identifier = new VolumeIdentifier(Guid.NewGuid());
             target = new() { DisplayName = expected, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.DisplayName);
             entityEntry = dbContext.Volumes.Add(target);
@@ -1091,7 +1118,8 @@ namespace FsInfoCat.UnitTests
             DriveType expected = (DriveType)(object)-1;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Type FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            string displayName = "Volume Type Item", volumeName = "VolumeType", identifier = "VolumeTypeIdentifier";
+            string displayName = "Volume Type Item", volumeName = "VolumeType";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, Type = expected };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
@@ -1136,7 +1164,8 @@ namespace FsInfoCat.UnitTests
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem expected = null;
-            string displayName = "Volume FileSystem Item", volumeName = "Volume_FileSystem_Name", identifier = "VolumeFileSystemIdentifier";
+            string displayName = "Volume FileSystem Item", volumeName = "Volume_FileSystem_Name";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = expected };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
@@ -1212,7 +1241,8 @@ namespace FsInfoCat.UnitTests
             VolumeStatus expected = (VolumeStatus)(object)(byte)255;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Status FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            string displayName = "Volume Status Item", volumeName = "Volume_Status_Name", identifier = "VolumeStatusIdentifier";
+            string displayName = "Volume Status Item", volumeName = "Volume_Status_Name";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, Status = expected };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
@@ -1259,7 +1289,8 @@ namespace FsInfoCat.UnitTests
             int expected = 0;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume MaxNameLength FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            string displayName = "Volume MaxNameLength Item", volumeName = "Volume_MaxNameLength_Name", identifier = "VolumeMaxNameLengthIdentifier";
+            string displayName = "Volume MaxNameLength Item", volumeName = "Volume_MaxNameLength_Name";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, MaxNameLength = expected };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
@@ -1319,7 +1350,8 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = new() { DisplayName = "Volume CreatedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            string displayName = "Volume CreatedOn Item", volumeName = "Volume_CreatedOn_Name", identifier = "VolumeCreatedOnIdentifier";
+            string displayName = "Volume CreatedOn Item", volumeName = "Volume_CreatedOn_Name";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             dbContext.SaveChanges();
@@ -1360,7 +1392,8 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = new() { DisplayName = "Volume LastSynchronizedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            string displayName = "Volume LastSynchronizedOn Item", volumeName = "Volume_LastSynchronizedOn_Name", identifier = "VolumeLastSynchronizedOnIdentifier";
+            string displayName = "Volume LastSynchronizedOn Item", volumeName = "Volume_LastSynchronizedOn_Name";
+            VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
@@ -1421,9 +1454,14 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Subdirectory Add/Remove Tests")]
         public void SubdirectoryAddRemoveTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Subdirectory target = new() { /* TODO: Initialize properties */ };
+            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
+            dbContext.FileSystems.Add(fileSystem);
+            Local.Volume volume = new() { DisplayName = "Subdirectory Add/Remove Item", VolumeName = "Subdirectory_Add_Remove_Name", Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem };
+            dbContext.Volumes.Add(volume);
+            string expectedName = "";
+            Local.Subdirectory target = new() { Volume = volume };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Subdirectories.Add(target);
@@ -1437,12 +1475,14 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
-
-            // TODO: Validate default values
-            Assert.IsNull(target.LastAccessed);
-            Assert.IsNull(target.Deleted);
-            Assert.AreEqual("DirectoryCrawlOptions.None", target.Options);
+            Assert.AreEqual(expectedName, target.Name);
+            Assert.IsFalse(target.Deleted);
             Assert.AreEqual("", target.Notes);
+            Assert.AreEqual(DirectoryCrawlOptions.None, target.Options);
+            Assert.IsNull(target.Parent);
+            Assert.IsNotNull(target.Volume);
+            Assert.AreEqual(volume.Id, target.VolumeId);
+            Assert.AreEqual(volume.Id, target.Volume.Id);
             Assert.IsNull(target.LastSynchronizedOn);
             Assert.IsNull(target.UpstreamId);
             Assert.IsTrue(target.CreatedOn >= now);
@@ -1458,104 +1498,22 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestProperty_Description, "Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
         public void SubdirectoryNameTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string expected = default; // TODO: Set invalid value
-            Local.Subdirectory target = new() { Name = expected };
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
-            Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.Name), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Name);
-
-            expected = default; // TODO: Set valid value
-            target.Name = expected;
-            Assert.AreEqual(expected, target.Name);
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
+            string expectedName = "";
+            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory NameTest FileSystem" };
+            dbContext.FileSystems.Add(fileSystem);
+            Local.Volume volume = new()
+            {
+                DisplayName = "Subdirectory NameTest Item",
+                VolumeName = "Subdirectory_NameTest_Name",
+                Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem
+            };
+            dbContext.Volumes.Add(volume);
+            Local.Subdirectory parent = new() { Volume = volume };
+            dbContext.Subdirectories.Add(parent);
             dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Name);
-
-            expected = default; // TODO: Set invalid value
-            target.Name = expected;
-            Assert.AreEqual(expected, target.Name);
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.Name), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
-            entityEntry = dbContext.Subdirectories.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Name);
-            dbContext.Subdirectories.Remove(target);
-        }
-
-        [TestMethod("Subdirectory Volume Validation Tests")]
-        [TestProperty(TestProperty_Description, "Subdirectory.Volume: UNIQUEIDENTIFIER FOREIGN REFERENCES Volume")]
-        public void SubdirectoryVolumeTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Volume expected = default; // TODO: Set invalid value
-            Local.Subdirectory target = new() { Volume = expected };
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
-            Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.Volume), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeOrParentRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Volume);
-
-            expected = default; // TODO: Set valid value
-            target.Volume = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Volume);
-
-            expected = default; // TODO: Set invalid value
-            target.Volume = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.Volume), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeOrParentRequired, results[0].ErrorMessage);
-            entityEntry = dbContext.Subdirectories.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Volume);
-            dbContext.Subdirectories.Remove(target);
-        }
-
-        [TestMethod("Subdirectory Parent Validation Tests")]
-        [TestProperty(TestProperty_Description, "Subdirectory.Parent: UNIQUEIDENTIFIER ((ParentId IS NULL AND VolumeId IS NOT NULL) OR (ParentId IS NOT NULL AND VolumeId IS NULL)) FOREIGN REFERENCES Subdirectories")]
-        public void SubdirectoryParentTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Subdirectory expected = default; // TODO: Set invalid value
-            Local.Subdirectory target = new() { Parent = expected };
+            Local.Subdirectory target = new();
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -1565,10 +1523,22 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(Local.Subdirectory.Parent), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeOrParentRequired, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Parent);
+            Assert.AreEqual(expectedName, target.Name);
 
-            expected = default; // TODO: Set valid value
-            target.Parent = expected;
+            target.Parent = parent;
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(Local.Subdirectory.Name), results[0].MemberNames.First());
+            Assert.AreEqual(Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.AreEqual(expectedName, target.Name);
+
+            expectedName = "Subdirectory NameTest Subdir";
+            target.Name = expectedName;
+            Assert.AreEqual(expectedName, target.Name);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
@@ -1576,32 +1546,134 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
-            Assert.AreEqual(expected, target.Parent);
+            Assert.AreEqual(expectedName, target.Name);
 
-            expected = default; // TODO: Set invalid value
-            target.Parent = expected;
+            expectedName = $"{expectedName} {new string('X', 1023 - expectedName.Length)}";
+            target.Name = expectedName;
+            Assert.AreEqual(expectedName, target.Name);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.Subdirectories.Update(target);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
+            entityEntry.Reload();
+            Assert.AreEqual(expectedName, target.Name);
+
+            string expectedName2 = $"{expectedName}X";
+            target.Name = expectedName2;
+            Assert.AreEqual(expectedName2, target.Name);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.Parent), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeOrParentRequired, results[0].ErrorMessage);
-            entityEntry = dbContext.Subdirectories.Update(target);
+            Assert.AreEqual(nameof(Local.Subdirectory.Name), results[0].MemberNames.First());
+            Assert.AreEqual(Properties.Resources.ErrorMessage_NameLength, results[0].ErrorMessage);
+            dbContext.Subdirectories.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Parent);
-            dbContext.Subdirectories.Remove(target);
+            Assert.AreEqual(expectedName2, target.Name);
+
+            target.Name = expectedName;
+            dbContext.SaveChanges();
+
+            volume = new()
+            {
+                DisplayName = "Subdirectory NameTest Item 2",
+                VolumeName = "Subdirectory_NameTest_Name 2",
+                Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem
+            };
+            Local.Volume volumeB = new()
+            {
+                DisplayName = "Subdirectory NameTest Item 3",
+                VolumeName = "Subdirectory_NameTest_Name 3",
+                Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem
+            };
+            dbContext.Volumes.Add(volume);
+            dbContext.Volumes.Add(volumeB);
+            dbContext.SaveChanges();
+
+            target = new() { Volume = volume, Name = expectedName };
+            Assert.AreEqual(expectedName, target.Name);
+            entityEntry = dbContext.Subdirectories.Add(target);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
+
+            target = new() { Parent = parent, Name = expectedName };
+            entityEntry = dbContext.Subdirectories.Add(target);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(Local.Subdirectory.Name), results[0].MemberNames.First());
+            Assert.AreEqual(Properties.Resources.ErrorMessage_DuplicateName, results[0].ErrorMessage);
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+
+            target.Name = $"{expectedName[1..]}2";
+            dbContext.SaveChanges();
+
+            expectedName = $"{expectedName[1..]}3";
+            target = new() { Volume = volume, Parent = parent, Name = expectedName };
+            entityEntry = dbContext.Subdirectories.Add(target);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(Local.Subdirectory.Volume), results[0].MemberNames.First());
+            Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeAndParent, results[0].ErrorMessage);
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.AreEqual(expectedName, target.Name);
+
+            target.Volume = null;
+            target.Parent = parent;
+            dbContext.SaveChanges();
+
+            target.Parent = null;
+            target.Volume = volume;
+            dbContext.Subdirectories.Update(target);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(Local.Subdirectory.Volume), results[0].MemberNames.First());
+            Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeHasRoot, results[0].ErrorMessage);
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.AreEqual(expectedName, target.Name);
+
+            target.Volume = null;
+            dbContext.Subdirectories.Update(target);
+            dbContext.SaveChanges();
         }
 
         [TestMethod("Subdirectory Options Validation Tests")]
         [TestProperty(TestProperty_Description, "Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
         public void SubdirectoryOptionsTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            DirectoryCrawlOptions expected = default; // TODO: Set invalid value
-            Local.Subdirectory target = new() { Options = expected };
+            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory OptionsTest FileSystem" };
+            dbContext.FileSystems.Add(fileSystem);
+            Local.Volume volume = new()
+            {
+                DisplayName = "Subdirectory OptionsTest Item",
+                VolumeName = "Subdirectory_OptionsTest_Name",
+                Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem
+            };
+            dbContext.Volumes.Add(volume);
+            Local.Subdirectory parent = new() { Volume = volume };
+            dbContext.Subdirectories.Add(parent);
+            dbContext.SaveChanges();
+            DirectoryCrawlOptions expected = (DirectoryCrawlOptions)(object)(byte)64;
+            Local.Subdirectory target = new() { Options = expected, Name = "OptionsTest Dir", Parent = parent };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -1613,7 +1685,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Options);
 
-            expected = default; // TODO: Set valid value
+            expected = DirectoryCrawlOptions.DoNotCompareFiles;
             target.Options = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -1623,30 +1695,27 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Options);
-
-            expected = default; // TODO: Set invalid value
-            target.Options = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.Options), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, results[0].ErrorMessage);
-            entityEntry = dbContext.Subdirectories.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Options);
-            dbContext.Subdirectories.Remove(target);
         }
 
         [TestMethod("Subdirectory CreatedOn Validation Tests")]
         [TestProperty(TestProperty_Description, "Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
         public void SubdirectoryCreatedOnTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Subdirectory target = new() {  /* TODO: Initialize properties */ };
+            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory CreatedOnTest FileSystem" };
+            dbContext.FileSystems.Add(fileSystem);
+            Local.Volume volume = new()
+            {
+                DisplayName = "Subdirectory CreatedOnTest Item",
+                VolumeName = "Subdirectory_CreatedOnTest_Name",
+                Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem
+            };
+            dbContext.Volumes.Add(volume);
+            Local.Subdirectory parent = new() { Volume = volume };
+            dbContext.Subdirectories.Add(parent);
+            dbContext.SaveChanges();
+            Local.Subdirectory target = new() { Name = "CreatedOnTest Dir", Parent = parent };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
@@ -1683,10 +1752,22 @@ namespace FsInfoCat.UnitTests
             "Subdirectory.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void SubdirectoryLastSynchronizedOnTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Subdirectory target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
+            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory LastSynchronizedOn FileSystem" };
+            dbContext.FileSystems.Add(fileSystem);
+            Local.Volume volume = new()
+            {
+                DisplayName = "Subdirectory LastSynchronizedOn Item",
+                VolumeName = "Subdirectory_LastSynchronizedOn_Name",
+                Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem
+            };
+            dbContext.Volumes.Add(volume);
+            Local.Subdirectory parent = new() { Volume = volume };
+            dbContext.Subdirectories.Add(parent);
+            dbContext.SaveChanges();
+            Local.Subdirectory target = new() { UpstreamId = Guid.NewGuid(), Parent = parent, Name = "LastSynchronizedOn Dir" };
+            EntityEntry <Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
@@ -2105,42 +2186,25 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            byte[] expected = default; // TODO: Set invalid value
-            Local.ContentInfo target = new() { Hash = expected };
+            Local.ContentInfo target = new() { Hash = null };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ContentInfo.Hash), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidHashLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Hash);
-
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
+            entityEntry.Reload();
+            Assert.IsNull(target.Hash);
             // TODO: Validate default values
+
+            MD5Hash? expected = new MD5Hash(Guid.NewGuid().ToByteArray());
             target.Hash = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Hash);
-
-            expected = default; // TODO: Set invalid value
-            target.Hash = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ContentInfo.Hash), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidHashLength, results[0].ErrorMessage);
-            entityEntry = dbContext.ContentInfos.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Hash);
         }
 

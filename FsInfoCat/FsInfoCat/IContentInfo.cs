@@ -25,7 +25,7 @@ namespace FsInfoCat
         /// <value>
         /// The MD5 hash of the file's contents or <see langword="null"/> if the hash has not yet been calculated.
         /// </value>
-        byte[] Hash { get; set; }
+        MD5Hash? Hash { get; set; }
 
         /// <summary>
         /// Gets the files which have the same length and cryptographic hash.

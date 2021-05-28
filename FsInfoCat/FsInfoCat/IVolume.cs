@@ -10,7 +10,7 @@ namespace FsInfoCat
 
         string VolumeName { get; set; }
 
-        string Identifier { get; set; }
+        VolumeIdentifier Identifier { get; set; }
 
         bool? CaseSensitiveSearch { get; set; }
 

@@ -358,15 +358,6 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hash must be 16 bytes long..
-        /// </summary>
-        public static string ErrorMessage_InvalidHashLength {
-            get {
-                return ResourceManager.GetString("ErrorMessage_InvalidHashLength", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Volume Status is invalid..
         /// </summary>
         public static string ErrorMessage_InvalidVolumeStatus {

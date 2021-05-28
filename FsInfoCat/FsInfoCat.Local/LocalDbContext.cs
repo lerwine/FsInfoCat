@@ -101,7 +101,7 @@ namespace FsInfoCat.Local
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<Subdirectory>(Subdirectory.BuildEntity);
             modelBuilder.Entity<DbFile>(DbFile.BuildEntity);
-            //modelBuilder.Entity<ContentInfo>(ContentInfo.BuildEntity);
+            modelBuilder.Entity<ContentInfo>(ContentInfo.BuildEntity);
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
