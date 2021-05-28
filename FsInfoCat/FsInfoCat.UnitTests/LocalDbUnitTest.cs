@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace FsInfoCat.UnitTests
 {
@@ -246,12 +245,12 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileSystem MaxNameLength Validation Tests")]
         [TestProperty(TestProperty_Description, "FileSystem: MaxNameLength CHECK(MaxNameLength IS NULL OR MaxNameLength>=0)")]
-        public void FileSystemMaxNameLengthTestMethod() 
+        public void FileSystemMaxNameLengthTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             int expected = 0;
             Local.FileSystem target = new() { DisplayName = "FileSystem MaxNameLength Item", MaxNameLength = expected };
-            EntityEntry <Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
+            EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -566,7 +565,7 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName CreatedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            Local.SymbolicName target = new() {  Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
+            Local.SymbolicName target = new() { Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
@@ -823,7 +822,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
 
-            expected = $"_{expected.Substring(1)}";
+            expected = $"_{expected[1..]}";
             target.Identifier = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -1149,7 +1148,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected.Id, target.FileSystemId);
             Assert.AreEqual(expected.Id, target.FileSystem.Id);
 
-            Local.FileSystem fs = new Local.FileSystem { DisplayName = "Volume FileSystem 2" };
+            Local.FileSystem fs = new() { DisplayName = "Volume FileSystem 2" };
             dbContext.FileSystems.Add(fs);
             dbContext.SaveChanges();
 

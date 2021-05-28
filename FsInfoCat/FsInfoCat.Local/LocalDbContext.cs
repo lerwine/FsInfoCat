@@ -16,7 +16,7 @@ namespace FsInfoCat.Local
 {
     public class LocalDbContext : DbContext
     {
-        private static readonly object _syncRoot = new object();
+        private static readonly object _syncRoot = new();
         private static bool _connectionStringValidated;
         private readonly ILogger<LocalDbContext> _logger;
         private readonly IDisposable _loggerScope;
@@ -50,6 +50,7 @@ namespace FsInfoCat.Local
             {
                 if (!_connectionStringValidated)
                 {
+                    _connectionStringValidated = true;
                     SqliteConnectionStringBuilder builder = new(Database.GetConnectionString());
                     string connectionString = builder.ConnectionString;
                     _logger.LogInformation($"Using {nameof(SqliteConnectionStringBuilder.ConnectionString)} {{{nameof(SqliteConnectionStringBuilder.ConnectionString)}}}",
@@ -58,18 +59,16 @@ namespace FsInfoCat.Local
                     {
                         builder.Mode = SqliteOpenMode.ReadWriteCreate;
                         _logger.LogInformation("Initializing new database");
-                        using (SqliteConnection connection = new(builder.ConnectionString))
+                        using SqliteConnection connection = new(builder.ConnectionString);
+                        connection.Open();
+                        foreach (var element in XDocument.Parse(Properties.Resources.DbCommands).Root.Elements("DbCreation").Elements("Text"))
                         {
-                            connection.Open();
-                            foreach (var element in XDocument.Parse(Properties.Resources.DbCommands).Root.Elements("DbCreation").Elements("Text"))
-                            {
-                                _logger.LogInformation($"{{Message}}; {nameof(SqliteCommand)}={{{nameof(SqliteCommand.CommandText)}}}",
-                                    element.Attributes("Message").Select(a => a.Value).DefaultIfEmpty("").First(), element.Value);
-                                using SqliteCommand command = connection.CreateCommand();
-                                command.CommandText = element.Value;
-                                command.CommandType = System.Data.CommandType.Text;
-                                command.ExecuteNonQuery();
-                            }
+                            _logger.LogInformation($"{{Message}}; {nameof(SqliteCommand)}={{{nameof(SqliteCommand.CommandText)}}}",
+                                element.Attributes("Message").Select(a => a.Value).DefaultIfEmpty("").First(), element.Value);
+                            using SqliteCommand command = connection.CreateCommand();
+                            command.CommandText = element.Value;
+                            command.CommandType = System.Data.CommandType.Text;
+                            command.ExecuteNonQuery();
                         }
                     }
                 }
