@@ -46,7 +46,7 @@ CREATE TABLE "Volumes" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) COLLATE NOCASE,
     "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName)) = length(VolumeName) AND length(VolumeName)>0) COLLATE NOCASE,
-    "Identifier" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(Identifier) AND length(Identifier)>0) UNIQUE COLLATE NOCASE,
+    "Identifier" NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier)) = length(Identifier) AND length(Identifier)>0) UNIQUE COLLATE NOCASE,
     "CaseSensitiveSearch" BIT DEFAULT NULL,
     "ReadOnly" BIT DEFAULT NULL,
     "MaxNameLength" INT CHECK(MaxNameLength IS NULL OR MaxNameLength>=1) DEFAULT NULL,

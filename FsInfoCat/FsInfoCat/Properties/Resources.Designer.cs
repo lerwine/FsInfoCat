@@ -259,20 +259,20 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Identifier Name already in use..
-        /// </summary>
-        public static string ErrorMessage_DuplicateIdentifierName {
-            get {
-                return ResourceManager.GetString("ErrorMessage_DuplicateIdentifierName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Name is already in use..
         /// </summary>
         public static string ErrorMessage_DuplicateName {
             get {
                 return ResourceManager.GetString("ErrorMessage_DuplicateName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume Identifier already in use..
+        /// </summary>
+        public static string ErrorMessage_DuplicateVolumeIdentifier {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DuplicateVolumeIdentifier", resourceCulture);
             }
         }
         
@@ -471,6 +471,24 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_TargetFileRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_TargetFileRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume and Parent Subdirectory cannot be selected at the same time..
+        /// </summary>
+        public static string ErrorMessage_VolumeAndParent {
+            get {
+                return ResourceManager.GetString("ErrorMessage_VolumeAndParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume already has another root directory specified..
+        /// </summary>
+        public static string ErrorMessage_VolumeHasRoot {
+            get {
+                return ResourceManager.GetString("ErrorMessage_VolumeHasRoot", resourceCulture);
             }
         }
         

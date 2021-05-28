@@ -11,20 +11,6 @@ namespace FsInfoCat.Local
 {
     public class RedundantSet : NotifyPropertyChanged, ILocalRedundantSet
     {
-        /*
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
-    "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
-    "Notes" TEXT NOT NULL DEFAULT '',
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-    "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_RedundantSeContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
-         */
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
@@ -46,6 +32,8 @@ namespace FsInfoCat.Local
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
+        [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
 
         /// <remarks>TEXT NOT NULL DEFAULT ''</remarks>
@@ -145,7 +133,7 @@ namespace FsInfoCat.Local
 
         internal static void BuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
-            builder.HasOne(sn => sn.ContentInfo).WithMany(d => d.RedundantSets).HasForeignKey(nameof(ContentInfoId)).IsRequired();
+            builder.HasOne(sn => sn.ContentInfo).WithMany(d => d.RedundantSets).HasForeignKey(nameof(ContentInfoId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>

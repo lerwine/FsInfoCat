@@ -48,6 +48,10 @@ namespace FsInfoCat.Local
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
 
         [Required]
@@ -215,8 +219,8 @@ namespace FsInfoCat.Local
 
         internal static void BuildEntity(EntityTypeBuilder<DbFile> builder)
         {
-            builder.HasOne(sn => sn.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired();
-            builder.HasOne(sn => sn.Content).WithMany(d => d.Files).HasForeignKey(nameof(ContentId)).IsRequired();
+            builder.HasOne(sn => sn.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.Content).WithMany(d => d.Files).HasForeignKey(nameof(ContentId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
@@ -224,8 +228,14 @@ namespace FsInfoCat.Local
 
         private void OnValidate(EntityEntry<DbFile> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
-            // TODO: Finish validation
-            throw new NotImplementedException();
+            string name = Name;
+            if (string.IsNullOrEmpty(name))
+                return;
+            Guid id = Id;
+            Guid parentId = ParentId;
+            var entities = from sn in dbContext.Files where id != sn.Id && sn.ParentId == parentId && sn.Name == name select sn;
+            if (entities.Any())
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
     }
 }

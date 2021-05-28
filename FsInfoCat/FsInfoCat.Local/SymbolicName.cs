@@ -35,7 +35,7 @@ namespace FsInfoCat.Local
 
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [MaxLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
+        [StringLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
 
@@ -110,7 +110,7 @@ namespace FsInfoCat.Local
         public SymbolicName()
         {
             _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _name = CreateChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
+            _name = CreateChangeTracker(nameof(Name), "", TrimmedNonNullStringCoersion.Default);
             _priority = CreateChangeTracker(nameof(Priority), 0);
             _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _isInactive = CreateChangeTracker(nameof(IsInactive), false);
@@ -127,7 +127,7 @@ namespace FsInfoCat.Local
 
         internal static void BuildEntity([NotNull] EntityTypeBuilder<SymbolicName> builder)
         {
-            builder.HasOne(sn => sn.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired();
+            builder.HasOne(sn => sn.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
@@ -137,7 +137,10 @@ namespace FsInfoCat.Local
         {
             string name = Name;
             Guid id = Id;
-            if (dbContext.SymbolicNames.Any(sn => id != sn.Id && sn.Name == name))
+            if (string.IsNullOrEmpty(name))
+                return;
+            var entities = from sn in dbContext.SymbolicNames where id != sn.Id && sn.Name == name select sn;
+            if (entities.Any())
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
     }

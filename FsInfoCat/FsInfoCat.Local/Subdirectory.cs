@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -35,6 +36,10 @@ namespace FsInfoCat.Local
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
 
         [Required]
@@ -192,8 +197,8 @@ namespace FsInfoCat.Local
 
         internal static void BuildEntity(EntityTypeBuilder<Subdirectory> builder)
         {
-            builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId));
-            builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId));//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
+            builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId)).OnDelete(DeleteBehavior.Restrict);//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
@@ -201,8 +206,34 @@ namespace FsInfoCat.Local
 
         private void OnValidate(EntityEntry<Subdirectory> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
-            // TODO: Finish validation
-            throw new NotImplementedException();
+            Guid id = Id;
+            Guid? parentId = ParentId;
+            Guid? volumeId = VolumeId;
+            if (parentId.HasValue)
+            {
+                if (volumeId.HasValue)
+                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
+                else
+                {
+                    string name = Name;
+                    if (string.IsNullOrEmpty(name))
+                        validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, new string[] { nameof(Name) }));
+                    else
+                    {
+                        var entities = from sn in dbContext.Subdirectories where id != sn.Id && sn.ParentId == parentId && sn.Name == name select sn;
+                        if (entities.Any())
+                            validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
+                    }
+                }
+            }
+            else if (volumeId.HasValue)
+            {
+                var entities = from sn in dbContext.Subdirectories where id != sn.Id && sn.VolumeId == volumeId select sn;
+                if (entities.Any())
+                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeHasRoot, new string[] { nameof(Volume) }));
+            }
+            else
+                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeOrParentRequired, new string[] { nameof(Parent) }));
         }
     }
 }

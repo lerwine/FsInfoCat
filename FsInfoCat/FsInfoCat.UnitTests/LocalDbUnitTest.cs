@@ -66,16 +66,16 @@ namespace FsInfoCat.UnitTests
             string expected = "FileSystem Add/Remove Item";
             Local.FileSystem target = new() { DisplayName = expected };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.FileSystems.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
@@ -91,9 +91,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("FileSystem DefaultDriveType Validation Tests")]
@@ -105,7 +105,7 @@ namespace FsInfoCat.UnitTests
             Local.FileSystem target = new() { DefaultDriveType = expected, DisplayName = "FileSystem DefaultDriveType Item" };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -117,18 +117,18 @@ namespace FsInfoCat.UnitTests
             expected = DriveType.Fixed;
             target.DefaultDriveType = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DefaultDriveType);
 
             expected = (DriveType)(object)7;
             target.DefaultDriveType = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -136,7 +136,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_DriveTypeInvalid, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.DefaultDriveType);
 
             target.DefaultDriveType = DriveType.Fixed;
@@ -153,7 +153,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DisplayName);
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -165,40 +165,41 @@ namespace FsInfoCat.UnitTests
             expected = "FileSystem DisplayName Item";
             target.DisplayName = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
 
             target.DisplayName = $" {expected} ";
             Assert.AreEqual(expected, target.DisplayName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
 
             expected = $"{expected} {new string('X', 1023 - expected.Length)}";
             target.DisplayName = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
 
             string expected2 = $"{expected}X";
             target.DisplayName = expected2;
+            Assert.AreEqual(expected2, target.DisplayName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -206,13 +207,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_DisplayNameLength, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected2, target.DisplayName);
 
             target.DisplayName = new string(' ', 1025);
             Assert.AreEqual("", target.DisplayName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -220,39 +221,39 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_DisplayNameRequired, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual("", target.DisplayName);
 
-            target.DisplayName = "FileSystem DisplayName Item";
+            target.DisplayName = expected = "FileSystem DisplayName Item";
+            dbContext.SaveChanges();
 
             target = new() { DisplayName = expected };
             entityEntry = dbContext.FileSystems.Add(target);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.FileSystem.DisplayName), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_DuplicateDisplayName, results[0].ErrorMessage);
-            entityEntry = dbContext.FileSystems.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Assert.AreEqual(expected, target.DisplayName);
 
-            target.DisplayName = "FileSystem DisplayName Item 2";
+            target.DisplayName = $"{expected} 2";
             dbContext.SaveChanges();
         }
 
         [TestMethod("FileSystem MaxNameLength Validation Tests")]
         [TestProperty(TestProperty_Description, "FileSystem: MaxNameLength CHECK(MaxNameLength IS NULL OR MaxNameLength>=0)")]
-        public void FileSystemMaxNameLengthTestMethod()
+        public void FileSystemMaxNameLengthTestMethod() 
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             int expected = 0;
             Local.FileSystem target = new() { DisplayName = "FileSystem MaxNameLength Item", MaxNameLength = expected };
             EntityEntry <Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -264,29 +265,29 @@ namespace FsInfoCat.UnitTests
             expected = 1;
             target.MaxNameLength = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.MaxNameLength);
 
             expected = int.MaxValue;
             target.MaxNameLength = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.MaxNameLength);
 
             expected = -1;
             target.MaxNameLength = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -294,7 +295,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_MaxNameLengthInvalid, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.MaxNameLength);
 
             target.MaxNameLength = 255;
@@ -313,7 +314,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -323,15 +324,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.FileSystems.Update(target);
@@ -347,59 +348,48 @@ namespace FsInfoCat.UnitTests
             Local.FileSystem target = new() { DisplayName = "FileSystem LastSynchronizedOn FileSystem", UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileSystem.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.FileSystems.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.FileSystems.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileSystem.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileSystem.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -421,16 +411,16 @@ namespace FsInfoCat.UnitTests
             dbContext.FileSystems.Add(fileSystem);
             Local.SymbolicName target = new() { Name = expected, FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.SymbolicNames.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Name);
@@ -447,9 +437,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("SymbolicName Name Validation Tests")]
@@ -458,13 +448,13 @@ namespace FsInfoCat.UnitTests
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
-            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName Add/Remove FileSystem" };
+            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicNameName FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             Local.SymbolicName target = new() { Name = null, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.Name);
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -476,40 +466,40 @@ namespace FsInfoCat.UnitTests
             expected = "SymbolicNameNameTest";
             target.Name = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Name);
 
             target.Name = $" {expected} ";
             Assert.AreEqual(expected, target.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Name);
 
             expected = $"{expected} {new string('X', 255 - expected.Length)}";
             target.Name = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Name);
 
             string expected2 = $"{expected}X";
             target.Name = expected2;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -517,13 +507,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_NameLength, results[0].ErrorMessage);
             entityEntry = dbContext.SymbolicNames.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected2, target.Name);
 
             target.Name = new string(' ', 257);
             Assert.AreEqual("", target.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -531,10 +521,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
             entityEntry = dbContext.SymbolicNames.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual("", target.Name);
 
-            target.Name = "SymbolicNameNameTest";
+            target.Name = "SymbolicNameNameTest2";
             dbContext.SaveChanges();
         }
 
@@ -547,7 +537,7 @@ namespace FsInfoCat.UnitTests
             Local.SymbolicName target = new() { Name = "SymbolicNameFileSystemTest", FileSystem = expected };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -556,39 +546,17 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.FileSystem);
 
-            expected = new() { DisplayName = "SymbolicName Add/Remove FileSystem" };
+            expected = new() { DisplayName = "SymbolicName Name FileSystem" };
             target.FileSystem = expected;
             dbContext.FileSystems.Add(expected);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.FileSystem);
-
-            target.FileSystemId = expected.Id;
-            dbContext.FileSystems.Remove(expected);
-            target.FileSystem = null;
-            Assert.AreEqual(Guid.Empty, target.FileSystemId);
-            target.FileSystemId = expected.Id;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.SymbolicName.FileSystem), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_FileSystemRequired, results[0].ErrorMessage);
-            entityEntry = dbContext.SymbolicNames.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
-            Assert.IsNull(target.FileSystem);
-            Assert.AreEqual(target.FileSystemId, expected.Id);
-
-            expected = new() { DisplayName = "SymbolicName Add/Remove FileSystem" };
-            target.FileSystem = expected;
-            dbContext.SaveChanges();
         }
 
         [TestMethod("SymbolicName CreatedOn Validation Tests")]
@@ -596,7 +564,7 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName Add/Remove FileSystem" };
+            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName CreatedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             Local.SymbolicName target = new() {  Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
@@ -605,7 +573,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -615,15 +583,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.SymbolicNames.Update(target);
@@ -636,62 +604,53 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.SymbolicName target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName LastSynchronizedOn FileSystem" };
+            dbContext.FileSystems.Add(fileSystem);
+            Local.SymbolicName target = new() { Name = "SymbolicName LastSynchronizedOn Item", FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.SymbolicName.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.SymbolicNames.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.SymbolicNames.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.SymbolicName.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.SymbolicNames.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.SymbolicName.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.SymbolicNames.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -713,16 +672,16 @@ namespace FsInfoCat.UnitTests
             dbContext.FileSystems.Add(fileSystem);
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
             EntityEntry<Local.Volume> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Volumes.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
             Assert.AreEqual(displayName, target.DisplayName);
@@ -743,9 +702,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("Volume Identifier Validation Tests")]
@@ -757,11 +716,12 @@ namespace FsInfoCat.UnitTests
             string expected = "";
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Identifier FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
+            dbContext.SaveChanges();
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = null, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.Identifier);
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -774,23 +734,25 @@ namespace FsInfoCat.UnitTests
 
             expected = "VolumeIdentifierTest";
             target.Identifier = expected;
+            Assert.AreEqual(expected, target.Identifier);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Identifier);
 
             target.Identifier = $" {expected} ";
             Assert.AreEqual(expected, target.Identifier);
+            Assert.AreEqual(expected, target.Identifier);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Identifier);
             Assert.AreEqual(displayName, target.DisplayName);
@@ -798,12 +760,13 @@ namespace FsInfoCat.UnitTests
 
             expected = $"{expected} {new string('X', 1023 - expected.Length)}";
             target.Identifier = expected;
+            Assert.AreEqual(expected, target.Identifier);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Identifier);
             Assert.AreEqual(displayName, target.DisplayName);
@@ -811,8 +774,9 @@ namespace FsInfoCat.UnitTests
 
             string expected2 = $"{expected}X";
             target.Identifier = expected2;
+            Assert.AreEqual(expected2, target.Identifier);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -820,7 +784,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_IdentifierLength, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected2, target.Identifier);
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
@@ -828,15 +792,15 @@ namespace FsInfoCat.UnitTests
             target.Identifier = new string(' ', 1025);
             Assert.AreEqual("", target.Identifier);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.Volume.Identifier), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_IdentifierLength, results[0].ErrorMessage);
+            Assert.AreEqual(Properties.Resources.ErrorMessage_IdentifierRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual("", target.Identifier);
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
@@ -847,15 +811,26 @@ namespace FsInfoCat.UnitTests
             target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = expected, FileSystem = fileSystem };
             entityEntry = dbContext.Volumes.Add(target);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.Volume.Identifier), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_DuplicateIdentifierName, results[0].ErrorMessage);
-            entityEntry = dbContext.Volumes.Update(target);
+            Assert.AreEqual(Properties.Resources.ErrorMessage_DuplicateVolumeIdentifier, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
+            Assert.AreEqual(expected, target.Identifier);
+            Assert.AreEqual(displayName, target.DisplayName);
+            Assert.AreEqual(volumeName, target.VolumeName);
+
+            expected = $"_{expected.Substring(1)}";
+            target.Identifier = expected;
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreEqual(expected, target.Identifier);
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
@@ -874,7 +849,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.VolumeName);
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -887,12 +862,13 @@ namespace FsInfoCat.UnitTests
 
             expected = "Volume_VolumeName";
             target.VolumeName = expected;
+            Assert.AreEqual(expected, target.VolumeName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.VolumeName);
             Assert.AreEqual(displayName, target.DisplayName);
@@ -901,11 +877,11 @@ namespace FsInfoCat.UnitTests
             target.VolumeName = $" {expected} ";
             Assert.AreEqual(expected, target.VolumeName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.VolumeName);
             Assert.AreEqual(displayName, target.DisplayName);
@@ -913,21 +889,23 @@ namespace FsInfoCat.UnitTests
 
             expected = $"{expected}_{new string('X', 127 - expected.Length)}";
             target.VolumeName = expected;
+            Assert.AreEqual(expected, target.VolumeName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.VolumeName);
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(identifier, target.Identifier);
 
             string expected2 = $"{expected}X";
-            target.VolumeName = expected;
+            target.VolumeName = expected2;
+            Assert.AreEqual(expected2, target.VolumeName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -935,7 +913,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeNameLength, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected2, target.VolumeName);
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(identifier, target.Identifier);
@@ -943,7 +921,7 @@ namespace FsInfoCat.UnitTests
             target.VolumeName = new string(' ', 129);
             Assert.AreEqual("", target.VolumeName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -951,21 +929,23 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeNameRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual("", target.VolumeName);
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(identifier, target.Identifier);
 
+            target.VolumeName = expected;
             fileSystem = new() { DisplayName = "Volume Name FileSystem 2" };
             dbContext.FileSystems.Add(fileSystem);
-            target = new() { DisplayName = displayName, VolumeName = expected, Identifier = $"{identifier}2", FileSystem = fileSystem };
+            identifier = $"{identifier}2";
+            target = new() { DisplayName = displayName, VolumeName = expected, Identifier = identifier, FileSystem = fileSystem };
             entityEntry = dbContext.Volumes.Add(target);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.VolumeName);
             Assert.AreEqual(displayName, target.DisplayName);
@@ -985,7 +965,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DisplayName);
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -998,24 +978,26 @@ namespace FsInfoCat.UnitTests
 
             expected = "Volume DisplayName Item";
             target.DisplayName = expected;
+            Assert.AreEqual(expected, target.DisplayName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
             Assert.AreEqual(identifier, target.Identifier);
 
             target.DisplayName = $" {expected} ";
+            Assert.AreEqual(expected, target.DisplayName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
@@ -1023,21 +1005,23 @@ namespace FsInfoCat.UnitTests
 
             expected = $"{expected} {new string('X', 1023 - expected.Length)}";
             target.DisplayName = expected;
+            Assert.AreEqual(expected, target.DisplayName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
             Assert.AreEqual(identifier, target.Identifier);
 
             string expected2 = $"{expected}X";
-            target.DisplayName = expected;
+            target.DisplayName = expected2;
+            Assert.AreEqual(expected2, target.DisplayName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1045,15 +1029,15 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_DisplayNameLength, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
-            Assert.AreEqual(expected, target.DisplayName);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
+            Assert.AreEqual(expected2, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
             Assert.AreEqual(identifier, target.Identifier);
 
             target.DisplayName = new string(' ', 1025);
             Assert.AreEqual("", target.DisplayName);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1061,22 +1045,24 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_DisplayNameRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual("", target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
             Assert.AreEqual(identifier, target.Identifier);
 
+            target.DisplayName = expected;
             fileSystem = new() { DisplayName = "Volume DisplayName FileSystem 2" };
             dbContext.FileSystems.Add(fileSystem);
-            target = new() { DisplayName = null, VolumeName = volumeName, Identifier = $"{identifier}2", FileSystem = fileSystem };
+            identifier = $"{identifier}2";
+            target = new() { DisplayName = expected, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.DisplayName);
             entityEntry = dbContext.Volumes.Add(target);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
@@ -1095,7 +1081,7 @@ namespace FsInfoCat.UnitTests
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, Type = expected };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1107,18 +1093,18 @@ namespace FsInfoCat.UnitTests
             expected = DriveType.Fixed;
             target.Type = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Type);
 
             expected = (DriveType)(object)7;
             target.Type = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1126,7 +1112,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_DriveTypeInvalid, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Type);
         }
 
@@ -1140,7 +1126,7 @@ namespace FsInfoCat.UnitTests
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = expected };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1153,11 +1139,11 @@ namespace FsInfoCat.UnitTests
             dbContext.FileSystems.Add(expected);
             target.FileSystem = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.IsNotNull(target.FileSystem);
             Assert.AreEqual(expected.Id, target.FileSystemId);
@@ -1167,18 +1153,29 @@ namespace FsInfoCat.UnitTests
             dbContext.FileSystems.Add(fs);
             dbContext.SaveChanges();
 
+            Guid fileSystemId = expected.Id;
+            dbContext.ChangeTracker.Clear();
+            //dbContext.SaveChanges();
+            //var vEntities = from v in dbContext.Volumes where v.Id == id select v;
+            //var fsEntities = from f in dbContext.FileSystems where f.Id == fileSystemId select f;
+            //Assert.IsTrue(vEntities.Any());
+            //Assert.IsTrue(fsEntities.Any());
+            //dbContext.Database.GetConnectionString()
+            Assert.ThrowsException<InvalidOperationException>(() => dbContext.Remove(expected));
+
             target.FileSystem = fs;
-            target.FileSystemId = fs.Id;
-            target.FileSystem = null;
-            Assert.AreEqual(Guid.Empty, target.FileSystemId);
+            Assert.AreEqual(fs.Id, target.FileSystemId);
 
             dbContext.Remove(expected);
             dbContext.SaveChanges();
 
-            target.FileSystemId = fs.Id;
+            target.FileSystem = null;
+            Assert.AreEqual(Guid.Empty, target.FileSystemId);
+
+            target.FileSystemId = fileSystemId;
 
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1186,13 +1183,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_FileSystemRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
-            Assert.AreEqual(expected, target.FileSystem);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
+            Assert.IsNull(target.FileSystem);
 
-            dbContext.Remove(expected);
-            Assert.ThrowsException<DbUpdateException>(() => dbContext.SaveChanges());
-
-            dbContext.Remove(target);
+            target.FileSystem = fs;
             dbContext.SaveChanges();
         }
 
@@ -1201,14 +1195,14 @@ namespace FsInfoCat.UnitTests
         public void VolumeStatusTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            VolumeStatus expected = (VolumeStatus)(object)-1;
+            VolumeStatus expected = (VolumeStatus)(object)(byte)255;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Status FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume Status Item", volumeName = "Volume_Status_Name", identifier = "VolumeStatusIdentifier";
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, Status = expected };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1220,18 +1214,18 @@ namespace FsInfoCat.UnitTests
             expected = VolumeStatus.Controlled;
             target.Status = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Status);
 
-            expected = (VolumeStatus)(object)6;
+            expected = (VolumeStatus)(object)(byte)6;
             target.Status = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1239,7 +1233,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidVolumeStatus, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Status);
         }
 
@@ -1255,7 +1249,7 @@ namespace FsInfoCat.UnitTests
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, MaxNameLength = expected };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1268,11 +1262,11 @@ namespace FsInfoCat.UnitTests
             expected = 1;
             target.MaxNameLength = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.IsTrue(target.MaxNameLength.HasValue);
             Assert.AreEqual(expected, target.MaxNameLength.Value);
@@ -1280,11 +1274,11 @@ namespace FsInfoCat.UnitTests
             expected = int.MaxValue;
             target.MaxNameLength = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.IsTrue(target.MaxNameLength.HasValue);
             Assert.AreEqual(expected, target.MaxNameLength.Value);
@@ -1292,7 +1286,7 @@ namespace FsInfoCat.UnitTests
             expected = -1;
             target.MaxNameLength = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1300,7 +1294,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_MaxNameLengthInvalid, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.MaxNameLength);
         }
 
@@ -1319,7 +1313,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1329,15 +1323,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Volumes.Update(target);
@@ -1356,59 +1350,48 @@ namespace FsInfoCat.UnitTests
             Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Volume.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Volumes.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Volumes.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Volume.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Volume.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -1428,16 +1411,16 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Subdirectory target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Subdirectories.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
 
@@ -1452,9 +1435,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("Subdirectory Name Validation Tests")]
@@ -1467,7 +1450,7 @@ namespace FsInfoCat.UnitTests
             Local.Subdirectory target = new() { Name = expected };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1478,19 +1461,21 @@ namespace FsInfoCat.UnitTests
 
             expected = default; // TODO: Set valid value
             target.Name = expected;
+            Assert.AreEqual(expected, target.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Name);
 
             expected = default; // TODO: Set invalid value
             target.Name = expected;
+            Assert.AreEqual(expected, target.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1498,7 +1483,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Name);
             dbContext.Subdirectories.Remove(target);
         }
@@ -1513,7 +1498,7 @@ namespace FsInfoCat.UnitTests
             Local.Subdirectory target = new() { Volume = expected };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1525,18 +1510,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Volume = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Volume);
 
             expected = default; // TODO: Set invalid value
             target.Volume = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1544,7 +1529,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeOrParentRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Volume);
             dbContext.Subdirectories.Remove(target);
         }
@@ -1559,7 +1544,7 @@ namespace FsInfoCat.UnitTests
             Local.Subdirectory target = new() { Parent = expected };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1571,18 +1556,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Parent = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Parent);
 
             expected = default; // TODO: Set invalid value
             target.Parent = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1590,7 +1575,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeOrParentRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Parent);
             dbContext.Subdirectories.Remove(target);
         }
@@ -1605,7 +1590,7 @@ namespace FsInfoCat.UnitTests
             Local.Subdirectory target = new() { Options = expected };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1617,18 +1602,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Options = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Options);
 
             expected = default; // TODO: Set invalid value
             target.Options = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1636,7 +1621,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Options);
             dbContext.Subdirectories.Remove(target);
         }
@@ -1654,7 +1639,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1664,15 +1649,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Subdirectories.Update(target);
@@ -1689,63 +1674,51 @@ namespace FsInfoCat.UnitTests
             Local.Subdirectory target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Subdirectories.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Subdirectories.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Subdirectory.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            dbContext.Subdirectories.Remove(target);
 
             target.LastSynchronizedOn = target.ModifiedOn;
             dbContext.SaveChanges();
@@ -1762,16 +1735,16 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Files.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
 
@@ -1787,9 +1760,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("DbFile Content Validation Tests")]
@@ -1802,7 +1775,7 @@ namespace FsInfoCat.UnitTests
             Local.DbFile target = new() { Content = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1814,18 +1787,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Content = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Content);
 
             expected = default; // TODO: Set invalid value
             target.Content = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1833,7 +1806,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_ContentInfoRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Files.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Content);
             dbContext.Files.Remove(target);
         }
@@ -1848,7 +1821,7 @@ namespace FsInfoCat.UnitTests
             Local.DbFile target = new() { Name = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1859,19 +1832,21 @@ namespace FsInfoCat.UnitTests
 
             expected = default; // TODO: Set valid value
             target.Name = expected;
+            Assert.AreEqual(expected, target.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Name);
 
             expected = default; // TODO: Set invalid value
             target.Name = expected;
+            Assert.AreEqual(expected, target.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1879,7 +1854,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Files.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Name);
             dbContext.Files.Remove(target);
         }
@@ -1894,7 +1869,7 @@ namespace FsInfoCat.UnitTests
             Local.DbFile target = new() { Parent = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1906,18 +1881,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Parent = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Parent);
 
             expected = default; // TODO: Set invalid value
             target.Parent = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1925,7 +1900,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_ParentRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Files.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Parent);
             dbContext.Files.Remove(target);
         }
@@ -1940,7 +1915,7 @@ namespace FsInfoCat.UnitTests
             Local.DbFile target = new() { Options = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1952,18 +1927,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Options = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Options);
 
             expected = default; // TODO: Set invalid value
             target.Options = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1971,7 +1946,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidFileCrawlOption, results[0].ErrorMessage);
             entityEntry = dbContext.Files.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Options);
         }
 
@@ -1988,7 +1963,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1998,15 +1973,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Files.Update(target);
@@ -2023,59 +1998,48 @@ namespace FsInfoCat.UnitTests
             Local.DbFile target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DbFile.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Files.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Files.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DbFile.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Files.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DbFile.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Files.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -2095,16 +2059,16 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.ContentInfo target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.ContentInfos.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
             // TODO: Validate default values
@@ -2116,9 +2080,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("ContentInfo Hash Validation Tests")]
@@ -2131,7 +2095,7 @@ namespace FsInfoCat.UnitTests
             Local.ContentInfo target = new() { Hash = expected };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2143,18 +2107,18 @@ namespace FsInfoCat.UnitTests
             // TODO: Validate default values
             target.Hash = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Hash);
 
             expected = default; // TODO: Set invalid value
             target.Hash = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2162,7 +2126,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidHashLength, results[0].ErrorMessage);
             entityEntry = dbContext.ContentInfos.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Hash);
         }
 
@@ -2176,7 +2140,7 @@ namespace FsInfoCat.UnitTests
             Local.ContentInfo target = new() { Length = expected };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2188,18 +2152,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Length = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Length);
 
             expected = default; // TODO: Set invalid value
             target.Length = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2207,7 +2171,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ContentInfos.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Length);
         }
 
@@ -2224,7 +2188,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2234,15 +2198,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.ContentInfos.Update(target);
@@ -2259,59 +2223,48 @@ namespace FsInfoCat.UnitTests
             Local.ContentInfo target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ContentInfo.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.ContentInfos.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.ContentInfos.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ContentInfo.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.ContentInfos.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ContentInfo.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.ContentInfos.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -2331,16 +2284,16 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.RedundantSet target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.RedundantSets.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
 
@@ -2353,9 +2306,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("RedundantSet ContentInfo Validation Tests")]
@@ -2368,7 +2321,7 @@ namespace FsInfoCat.UnitTests
             Local.RedundantSet target = new() { ContentInfo = expected };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2380,18 +2333,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.ContentInfo = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.ContentInfo);
 
             expected = default; // TODO: Set invalid value
             target.ContentInfo = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2399,7 +2352,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_ContentInfoRequired, results[0].ErrorMessage);
             entityEntry = dbContext.RedundantSets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.ContentInfo);
         }
 
@@ -2413,7 +2366,7 @@ namespace FsInfoCat.UnitTests
             Local.RedundantSet target = new() { Reference = expected };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2425,18 +2378,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Reference = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Reference);
 
             expected = default; // TODO: Set invalid value
             target.Reference = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2444,7 +2397,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_ReferenceLength, results[0].ErrorMessage);
             entityEntry = dbContext.RedundantSets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Reference);
         }
 
@@ -2461,7 +2414,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2471,15 +2424,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.RedundantSets.Update(target);
@@ -2496,59 +2449,48 @@ namespace FsInfoCat.UnitTests
             Local.RedundantSet target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RedundantSet.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.RedundantSets.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.RedundantSets.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RedundantSet.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.RedundantSets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RedundantSet.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.RedundantSets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -2568,16 +2510,16 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Redundancy target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Redundancies.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
 
             // TODO: Validate default values
@@ -2590,9 +2532,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("Redundancy Reference Validation Tests")]
@@ -2605,7 +2547,7 @@ namespace FsInfoCat.UnitTests
             Local.Redundancy target = new() { Reference = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2617,18 +2559,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Reference = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Reference);
 
             expected = default; // TODO: Set invalid value
             target.Reference = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2636,7 +2578,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_ReferenceLength, results[0].ErrorMessage);
             entityEntry = dbContext.Redundancies.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Reference);
         }
 
@@ -2650,7 +2592,7 @@ namespace FsInfoCat.UnitTests
             Local.Redundancy target = new() { Status = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2662,18 +2604,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.Status = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Status);
 
             expected = default; // TODO: Set invalid value
             target.Status = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2681,7 +2623,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_InvalidFileRedundancyStatus, results[0].ErrorMessage);
             entityEntry = dbContext.Redundancies.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Status);
         }
 
@@ -2695,7 +2637,7 @@ namespace FsInfoCat.UnitTests
             Local.Redundancy target = new() { RedundantSet = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2707,18 +2649,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.RedundantSet = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.RedundantSet);
 
             expected = default; // TODO: Set invalid value
             target.RedundantSet = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2726,7 +2668,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_RedundantSetRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Redundancies.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.RedundantSet);
         }
 
@@ -2740,7 +2682,7 @@ namespace FsInfoCat.UnitTests
             Local.Redundancy target = new() { File = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2752,18 +2694,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.File = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.File);
 
             expected = default; // TODO: Set invalid value
             target.File = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2771,7 +2713,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_FileRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Redundancies.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.File);
         }
 
@@ -2788,7 +2730,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2798,15 +2740,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Redundancies.Update(target);
@@ -2823,59 +2765,48 @@ namespace FsInfoCat.UnitTests
             Local.Redundancy target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Redundancy.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Redundancies.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Redundancies.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Redundancy.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Redundancies.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Redundancy.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Redundancies.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -2895,16 +2826,16 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileComparison target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Entry(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Comparisons.Add(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Added);
+            Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
 
             // TODO: Validate default values
@@ -2915,9 +2846,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             entityEntry = dbContext.Remove(target);
-            Assert.AreEqual(entityEntry.State, EntityState.Deleted);
+            Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Detached);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
         [TestMethod("FileComparison SourceFile Validation Tests")]
@@ -2930,7 +2861,7 @@ namespace FsInfoCat.UnitTests
             Local.FileComparison target = new() { SourceFile = expected };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2942,18 +2873,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.SourceFile = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.SourceFile);
 
             expected = default; // TODO: Set invalid value
             target.SourceFile = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2961,7 +2892,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_SourceFileRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Comparisons.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.SourceFile);
         }
 
@@ -2975,7 +2906,7 @@ namespace FsInfoCat.UnitTests
             Local.FileComparison target = new() { TargetFile = expected };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -2987,18 +2918,18 @@ namespace FsInfoCat.UnitTests
             expected = default; // TODO: Set valid value
             target.TargetFile = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(expected, target.TargetFile);
 
             expected = default; // TODO: Set invalid value
             target.TargetFile = expected;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -3006,7 +2937,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_TargetFileRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Comparisons.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(entityEntry.State, EntityState.Modified);
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.TargetFile);
         }
 
@@ -3023,7 +2954,7 @@ namespace FsInfoCat.UnitTests
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
             dbContext.Update(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -3033,15 +2964,15 @@ namespace FsInfoCat.UnitTests
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Comparisons.Update(target);
@@ -3058,59 +2989,48 @@ namespace FsInfoCat.UnitTests
             Local.FileComparison target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileComparison.CreatedOn), results[0].MemberNames.First());
-            Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
 
             target.CreatedOn = target.ModifiedOn.AddDays(-1);
-            target.LastSynchronizedOn = target.CreatedOn;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
-
             target.LastSynchronizedOn = target.CreatedOn.AddDays(0.5);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Comparisons.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
-            target.LastSynchronizedOn = target.ModifiedOn;
+            target.LastSynchronizedOn = target.CreatedOn;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
-            Assert.IsFalse(success);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             entityEntry = dbContext.Comparisons.Update(target);
             dbContext.SaveChanges();
-            Assert.AreEqual(entityEntry.State, EntityState.Unchanged);
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileComparison.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Comparisons.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileComparison.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Comparisons.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());

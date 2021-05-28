@@ -60,6 +60,8 @@ namespace FsInfoCat.Local
         }
 
         [Required(AllowEmptyStrings = true)]
+        [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
 
         [Required]
@@ -154,8 +156,8 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(FileId), nameof(RedundantSetId));
-            builder.HasOne(sn => sn.File).WithOne(d => d.Redundancy).HasForeignKey<Redundancy>(nameof(FileId)).IsRequired();
-            builder.HasOne(sn => sn.RedundantSet).WithMany(d => d.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired();
+            builder.HasOne(sn => sn.File).WithOne(d => d.Redundancy).HasForeignKey<Redundancy>(nameof(FileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.RedundantSet).WithMany(d => d.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>

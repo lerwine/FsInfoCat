@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,7 +36,7 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [MaxLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string DisplayName { get => _displayName.GetValue(); set => _displayName.SetValue(value); }
 
@@ -53,6 +50,8 @@ namespace FsInfoCat.Local
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual int MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DefaultDriveType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -130,14 +129,15 @@ namespace FsInfoCat.Local
 
         private void OnValidate(EntityEntry<FileSystem> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
-            if (MaxNameLength < 0)
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid, new string[] { nameof(MaxNameLength) }));
             var driveType = DefaultDriveType;
             if (driveType.HasValue && !Enum.IsDefined(driveType.Value))
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(DefaultDriveType) }));
             string displayName = DisplayName;
+            if (string.IsNullOrEmpty(displayName))
+                return;
             Guid id = Id;
-            if (dbContext.FileSystems.AsEnumerable().Any(fs => !id.Equals(fs.Id) && fs._displayName.IsEqualTo(displayName)))
+            var entities = from fs in dbContext.FileSystems where id != fs.Id && fs.DisplayName == displayName select fs;
+            if (entities.Any())
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
         }
     }

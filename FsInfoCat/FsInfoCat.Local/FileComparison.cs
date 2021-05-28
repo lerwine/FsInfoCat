@@ -12,20 +12,6 @@ namespace FsInfoCat.Local
     [Table(TABLE_NAME)]
     public class FileComparison : NotifyPropertyChanged, ILocalComparison
     {
-        /*
-    "SourceFileId" UNIQUEIDENTIFIER NOT NULL,
-    "TargetFileId" UNIQUEIDENTIFIER NOT NULL,
-    "AreEqual" BIT NOT NULL DEFAULT 0,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-    "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_Comparisons" PRIMARY KEY("SourceFileId","TargetFileId"),
-	CONSTRAINT "FK_ComparisonSourceFile" FOREIGN KEY("SourceFileId") REFERENCES "Files"("Id"),
-	CONSTRAINT "FK_ComparisonTargetFile" FOREIGN KEY("TargetFileId") REFERENCES "Files"("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND SourceFileId<>TargetFileId AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
-         */
         #region Fields
 
         public const string TABLE_NAME = "Comparisons";
@@ -171,8 +157,8 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             builder.HasKey(nameof(SourceFileId), nameof(TargetFileId));
-            builder.HasOne(sn => sn.SourceFile).WithMany(d => d.ComparisonSources).HasForeignKey(nameof(SourceFileId)).IsRequired();
-            builder.HasOne(sn => sn.TargetFile).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(TargetFileId)).IsRequired();
+            builder.HasOne(sn => sn.SourceFile).WithMany(d => d.ComparisonSources).HasForeignKey(nameof(SourceFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.TargetFile).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(TargetFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
