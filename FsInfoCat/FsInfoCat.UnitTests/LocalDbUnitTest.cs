@@ -58,6 +58,21 @@ namespace FsInfoCat.UnitTests
 
         #region FileSystem Tests
 
+        [TestMethod]
+        public void LocalDbContextTestMethod()
+        {
+            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            Assert.IsNotNull(dbContext.FileSystems);
+            Assert.IsNotNull(dbContext.SymbolicNames);
+            Assert.IsNotNull(dbContext.Volumes);
+            Assert.IsNotNull(dbContext.Subdirectories);
+            Assert.IsNotNull(dbContext.Files);
+            Assert.IsNotNull(dbContext.ContentInfos);
+            Assert.IsNotNull(dbContext.Comparisons);
+            Assert.IsNotNull(dbContext.RedundantSets);
+            Assert.IsNotNull(dbContext.Redundancies);
+        }
+
         [TestMethod("FileSystem Add/Remove Tests")]
         public void FileSystemAddRemoveTestMethod()
         {
