@@ -1455,40 +1455,40 @@ namespace FsInfoCat.UnitTests
         public void SubdirectoryAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
-            dbContext.FileSystems.Add(fileSystem);
-            Local.Volume volume = new() { DisplayName = "Subdirectory Add/Remove Item", VolumeName = "Subdirectory_Add_Remove_Name", Identifier = new(Guid.NewGuid()),
-                FileSystem = fileSystem };
-            dbContext.Volumes.Add(volume);
+            Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
+            dbContext.FileSystems.Add(fileSystem1);
+            Local.Volume volume1 = new() { DisplayName = "Subdirectory Add/Remove Item", VolumeName = "Subdirectory_Add_Remove_Name", Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem1 };
+            dbContext.Volumes.Add(volume1);
             string expectedName = "";
-            Local.Subdirectory target = new() { Volume = volume };
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Entry(target);
+            Local.Subdirectory target1 = new() { Volume = volume1 };
+            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Entry(target1);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
-            entityEntry = dbContext.Subdirectories.Add(target);
+            entityEntry = dbContext.Subdirectories.Add(target1);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            bool success = Validator.TryValidateObject(target1, new ValidationContext(target1), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             DateTime now = DateTime.Now;
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            Assert.AreNotEqual(Guid.Empty, target.Id);
+            Assert.AreNotEqual(Guid.Empty, target1.Id);
             entityEntry.Reload();
-            Assert.AreEqual(expectedName, target.Name);
-            Assert.IsFalse(target.Deleted);
-            Assert.AreEqual("", target.Notes);
-            Assert.AreEqual(DirectoryCrawlOptions.None, target.Options);
-            Assert.IsNull(target.Parent);
-            Assert.IsNotNull(target.Volume);
-            Assert.AreEqual(volume.Id, target.VolumeId);
-            Assert.AreEqual(volume.Id, target.Volume.Id);
-            Assert.IsNull(target.LastSynchronizedOn);
-            Assert.IsNull(target.UpstreamId);
-            Assert.IsTrue(target.CreatedOn >= now);
-            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(expectedName, target1.Name);
+            Assert.IsFalse(target1.Deleted);
+            Assert.AreEqual("", target1.Notes);
+            Assert.AreEqual(DirectoryCrawlOptions.None, target1.Options);
+            Assert.IsNull(target1.Parent);
+            Assert.IsNotNull(target1.Volume);
+            Assert.AreEqual(volume1.Id, target1.VolumeId);
+            Assert.AreEqual(volume1.Id, target1.Volume.Id);
+            Assert.IsNull(target1.LastSynchronizedOn);
+            Assert.IsNull(target1.UpstreamId);
+            Assert.IsTrue(target1.CreatedOn >= now);
+            Assert.AreEqual(target1.CreatedOn, target1.ModifiedOn);
 
-            entityEntry = dbContext.Remove(target);
+            entityEntry = dbContext.Remove(target1);
             Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -1500,115 +1500,116 @@ namespace FsInfoCat.UnitTests
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expectedName = "";
-            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory NameTest FileSystem" };
-            dbContext.FileSystems.Add(fileSystem);
-            Local.Volume volume = new()
+            Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory NameTest FileSystem" };
+            dbContext.FileSystems.Add(fileSystem1);
+            Local.Volume volume1 = new()
             {
                 DisplayName = "Subdirectory NameTest Item",
                 VolumeName = "Subdirectory_NameTest_Name",
                 Identifier = new(Guid.NewGuid()),
-                FileSystem = fileSystem
+                FileSystem = fileSystem1
             };
-            dbContext.Volumes.Add(volume);
-            Local.Subdirectory parent = new() { Volume = volume };
-            dbContext.Subdirectories.Add(parent);
+            dbContext.Volumes.Add(volume1);
+            Local.Subdirectory parent1 = new() { Volume = volume1 };
+            dbContext.Subdirectories.Add(parent1);
             dbContext.SaveChanges();
-            Local.Subdirectory target = new();
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
+            Local.Subdirectory target1 = new();
+            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target1);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            bool success = Validator.TryValidateObject(target1, new ValidationContext(target1), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.Subdirectory.Parent), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeOrParentRequired, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expectedName, target.Name);
+            Assert.AreEqual(expectedName, target1.Name);
 
-            target.Parent = parent;
+            target1.Parent = parent1;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target1, new ValidationContext(target1), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.Subdirectory.Name), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expectedName, target.Name);
+            Assert.AreEqual(expectedName, target1.Name);
 
             expectedName = "Subdirectory NameTest Subdir";
-            target.Name = expectedName;
-            Assert.AreEqual(expectedName, target.Name);
+            target1.Name = expectedName;
+            Assert.AreEqual(expectedName, target1.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target1, new ValidationContext(target1), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
-            Assert.AreEqual(expectedName, target.Name);
+            Assert.AreEqual(expectedName, target1.Name);
 
             expectedName = $"{expectedName} {new string('X', 1023 - expectedName.Length)}";
-            target.Name = expectedName;
-            Assert.AreEqual(expectedName, target.Name);
+            target1.Name = expectedName;
+            Assert.AreEqual(expectedName, target1.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target1, new ValidationContext(target1), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            dbContext.Subdirectories.Update(target);
+            dbContext.Subdirectories.Update(target1);
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
-            Assert.AreEqual(expectedName, target.Name);
+            Assert.AreEqual(expectedName, target1.Name);
 
             string expectedName2 = $"{expectedName}X";
-            target.Name = expectedName2;
-            Assert.AreEqual(expectedName2, target.Name);
+            target1.Name = expectedName2;
+            Assert.AreEqual(expectedName2, target1.Name);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target1, new ValidationContext(target1), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.Subdirectory.Name), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_NameLength, results[0].ErrorMessage);
-            dbContext.Subdirectories.Update(target);
+            dbContext.Subdirectories.Update(target1);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expectedName2, target.Name);
+            Assert.AreEqual(expectedName2, target1.Name);
 
-            target.Name = expectedName;
+            target1.Name = expectedName;
             dbContext.SaveChanges();
 
-            volume = new()
+            Local.Volume volume2 = new()
             {
                 DisplayName = "Subdirectory NameTest Item 2",
                 VolumeName = "Subdirectory_NameTest_Name 2",
                 Identifier = new(Guid.NewGuid()),
-                FileSystem = fileSystem
+                FileSystem = fileSystem1
             };
-            Local.Volume volumeB = new()
+            dbContext.Volumes.Add(volume2);
+            dbContext.SaveChanges();
+            Local.Volume volume3 = new()
             {
                 DisplayName = "Subdirectory NameTest Item 3",
                 VolumeName = "Subdirectory_NameTest_Name 3",
                 Identifier = new(Guid.NewGuid()),
-                FileSystem = fileSystem
+                FileSystem = fileSystem1
             };
-            dbContext.Volumes.Add(volume);
-            dbContext.Volumes.Add(volumeB);
+            dbContext.Volumes.Add(volume3);
             dbContext.SaveChanges();
 
-            target = new() { Volume = volume, Name = expectedName };
-            Assert.AreEqual(expectedName, target.Name);
-            entityEntry = dbContext.Subdirectories.Add(target);
+            Local.Subdirectory target2 = new() { Volume = volume2, Name = expectedName };
+            Assert.AreEqual(expectedName, target2.Name);
+            entityEntry = dbContext.Subdirectories.Add(target2);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target2, new ValidationContext(target2), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
 
-            target = new() { Parent = parent, Name = expectedName };
-            entityEntry = dbContext.Subdirectories.Add(target);
+            Local.Subdirectory target3 = new() { Parent = parent1, Name = expectedName };
+            entityEntry = dbContext.Subdirectories.Add(target3);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target3, new ValidationContext(target3), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
@@ -1616,41 +1617,42 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Properties.Resources.ErrorMessage_DuplicateName, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
-            target.Name = $"{expectedName[1..]}2";
+            target3.Name = $"{expectedName[1..]}2";
             dbContext.SaveChanges();
 
             expectedName = $"{expectedName[1..]}3";
-            target = new() { Volume = volume, Parent = parent, Name = expectedName };
-            entityEntry = dbContext.Subdirectories.Add(target);
+            Local.Subdirectory target4 = new() { Volume = volume3, Parent = parent1, Name = expectedName };
+            entityEntry = dbContext.Subdirectories.Add(target4);
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target4, new ValidationContext(target4), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.Subdirectory.Volume), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeAndParent, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expectedName, target.Name);
+            Assert.AreEqual(expectedName, target4.Name);
 
-            target.Volume = null;
-            target.Parent = parent;
+            target4.Volume = null;
+            target4.Parent = parent1;
             dbContext.SaveChanges();
 
-            target.Parent = null;
-            target.Volume = volume;
-            dbContext.Subdirectories.Update(target);
+            target4.Parent = null;
+            target4.Volume = volume2;
             results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target4, new ValidationContext(target4), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.Subdirectory.Volume), results[0].MemberNames.First());
             Assert.AreEqual(Properties.Resources.ErrorMessage_VolumeHasRoot, results[0].ErrorMessage);
+            dbContext.Subdirectories.Update(target4);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expectedName, target.Name);
+            Assert.AreEqual(expectedName, target4.Name);
 
-            target.Volume = null;
-            dbContext.Subdirectories.Update(target);
+            target4.Volume = volume3;
+            dbContext.Subdirectories.Update(target4);
+            target2.Volume = volume2;
             dbContext.SaveChanges();
         }
 
