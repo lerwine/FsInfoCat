@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace FsInfoCat.UnitTests
 {
@@ -26,6 +27,9 @@ namespace FsInfoCat.UnitTests
                 if (Directory.Exists(path))
                     Directory.Delete(path, true);
                 Services.Initialize(services => Local.LocalDbContext.ConfigureServices(services, typeof(LocalDbUnitTest).Assembly, null));
+                using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+                foreach (var element in XDocument.Parse(Local.Properties.Resources.DbCommands).Root.Elements("ExampleData").Elements("Text"))
+                    dbContext.Database.ExecuteSqlRaw(element.Value);
             }
         }
 
@@ -1825,11 +1829,47 @@ namespace FsInfoCat.UnitTests
 
         #region DbFile Tests
 
+        private class TestStructure
+        {
+            private readonly Local.LocalDbContext _dbContext;
+            private Local.FileSystem _fileSystemA;
+
+            public TestStructure(Local.LocalDbContext dbContext)
+            {
+                _dbContext = dbContext;
+            }
+
+            Local.FileSystem FileSystemA
+            {
+                get
+                {
+                    Local.FileSystem fileSystemA = _fileSystemA;
+                    if (fileSystemA is null)
+                        _fileSystemA = fileSystemA = new Local.FileSystem
+                        {
+                            
+                        };
+                    return fileSystemA;
+                }
+            }
+        }
+
         [TestMethod("DbFile Add/Remove Tests")]
         public void DbFileAddRemoveTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
+            dbContext.FileSystems.Add(fileSystem1);
+            Local.Volume volume1 = new()
+            {
+                DisplayName = "Subdirectory Add/Remove Item",
+                VolumeName = "Subdirectory_Add_Remove_Name",
+                Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem1
+            };
+            dbContext.Volumes.Add(volume1);
+            string expectedName = "";
+            Local.Subdirectory parent1 = new() { Volume = volume1 };
             Local.DbFile target = new() { /* TODO: Initialize properties */ };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
