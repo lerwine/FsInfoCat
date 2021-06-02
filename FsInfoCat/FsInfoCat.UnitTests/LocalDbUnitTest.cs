@@ -44,20 +44,20 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            //XDocument document = XDocument.Parse(Local.Properties.Resources.DbCommands);
+            XDocument document = XDocument.Parse(Local.Properties.Resources.DbCommands);
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.ChangeTracker.Clear();
-            //using var transaction = dbContext.Database.BeginTransaction();
-            //try
-            //{
-            //    foreach (XElement element in document.Root.Elements("DropTables").Elements("Text"))
-            //        dbContext.Database.ExecuteSqlRaw(element.Value);
-            //    transaction.Commit();
-            //}
-            //catch
-            //{
-            //    transaction.Rollback();
-            //}
+            using var transaction = dbContext.Database.BeginTransaction();
+            try
+            {
+                foreach (XElement element in document.Root.Elements("ExampleData").Elements("Text"))
+                    dbContext.Database.ExecuteSqlRaw(element.Value);
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+            }
         }
 
         [TestMethod]
@@ -425,8 +425,7 @@ namespace FsInfoCat.UnitTests
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "SymbolicNameAddRemove";
-            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName Add/Remove FileSystem" };
-            dbContext.FileSystems.Add(fileSystem);
+            Local.FileSystem fileSystem = GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = expected, FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -460,14 +459,19 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
+        private Local.FileSystem GetVFatFileSystem(Local.LocalDbContext dbContext)
+        {
+            Guid id = Guid.Parse("53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd");
+            return (from fs in dbContext.FileSystems where fs.Id == id select fs).FirstOrDefault();
+        }
+
         [TestMethod("SymbolicName Name Validation Tests")]
         [TestProperty(TestProperty_Description, "SymbolicName.Name: NVARCHAR(256) NOT NULL CHECK(length(trim(Name)) = length(Name) AND length(Name)>0) UNIQUE COLLATE NOCASE")]
         public void SymbolicNameNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
-            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicNameName FileSystem" };
-            dbContext.FileSystems.Add(fileSystem);
+            Local.FileSystem fileSystem = GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = null, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.Name);
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
@@ -564,6 +568,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.FileSystem);
 
+            expected = GetVFatFileSystem(dbContext);
             expected = new() { DisplayName = "SymbolicName Name FileSystem" };
             target.FileSystem = expected;
             dbContext.FileSystems.Add(expected);
@@ -582,8 +587,7 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName CreatedOn FileSystem" };
-            dbContext.FileSystems.Add(fileSystem);
+            Local.FileSystem fileSystem = GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             dbContext.SaveChanges();
@@ -622,8 +626,7 @@ namespace FsInfoCat.UnitTests
         public void SymbolicNameLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "SymbolicName LastSynchronizedOn FileSystem" };
-            dbContext.FileSystems.Add(fileSystem);
+            Local.FileSystem fileSystem = GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = "SymbolicName LastSynchronizedOn Item", FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();

@@ -45,7 +45,7 @@ CREATE TABLE "SymbolicNames" (
 CREATE TABLE "Volumes" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) COLLATE NOCASE,
-    "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName)) = length(VolumeName) AND length(VolumeName)>0) COLLATE NOCASE,
+    "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName)) = length(VolumeName)) COLLATE NOCASE,
     "Identifier" NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier)) = length(Identifier) AND length(Identifier)>0) UNIQUE COLLATE NOCASE,
     "CaseSensitiveSearch" BIT DEFAULT NULL,
     "ReadOnly" BIT DEFAULT NULL,
@@ -172,6 +172,8 @@ INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
     VALUES ('{bd64e811-2c25-4385-8b99-1494bbb24612}', 'Common Internet Filesystem', '2021-05-21 21:25:23', '2021-05-21 21:25:23');
 INSERT INTO "FileSystems" ("Id", "DisplayName", "ReadOnly", "CreatedOn", "ModifiedOn")
     VALUES ('{88a3cdb9-ed66-4778-a33b-437675a5ae38}', 'ISO 9660 optical disc media', 1, '2021-05-21 21:27:27', '2021-05-21 21:27:27');
+INSERT INTO "FileSystems" ("Id", "DisplayName", "ReadOnly", "CreatedOn", "ModifiedOn")
+    VALUES ('{0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd}', 'MAFS (Multi-volume Archive File System)', 0, '2021-05-21 21:27:27', '2021-05-21 21:27:27');
 
 INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "CreatedOn", "ModifiedOn")
     VALUES ('{74381ccb-d56d-444d-890f-3a8051bc18e6}', 'NTFS', '{bedb396b-2212-4149-9cad-7e437c47314c}', '2021-05-21 21:29:59', '2021-05-21 21:29:59');
@@ -183,9 +185,13 @@ INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "CreatedOn", "Modifie
     VALUES ('{0f54c5a9-5e48-48a4-8056-b01f68d682a6}', 'cifs', '{bd64e811-2c25-4385-8b99-1494bbb24612}', '2021-05-21 21:36:19', '2021-05-21 21:36:19');
 INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "CreatedOn", "ModifiedOn")
     VALUES ('{0989eb7a-d9db-4cef-9ac9-981fe11876b0}', 'iso9660', '{88a3cdb9-ed66-4778-a33b-437675a5ae38}', '2021-05-21 21:36:23', '2021-05-21 21:36:23');
+INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "CreatedOn", "ModifiedOn")
+    VALUES ('{e9717552-4286-4eeb-bea5-6a5267a2f223}', 'MAFS', '{0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd}', '2021-05-21 21:36:25', '2021-05-21 21:36:25');
 
 INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "Type", "FileSystemId", "CreatedOn", "ModifiedOn")
-    VALUES ('{fb962360-518b-40f6-b6ae-afb67f2e2543}', 'C:', 'OS', '9E497DE8', 3, '{bedb396b-2212-4149-9cad-7e437c47314c}', '2021-05-21 21:37:16', '2021-05-21 21:37:16');
+    VALUES ('{fb962360-518b-40f6-b6ae-afb67f2e2543}', 'C:', 'OS', 'urn:volume:id:9E49-7DE8', 3, '{bedb396b-2212-4149-9cad-7e437c47314c}', '2021-05-21 21:37:16', '2021-05-21 21:37:16');
+INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "Type", "FileSystemId", "CreatedOn", "ModifiedOn")
+    VALUES ('{2340260f-6984-4e32-98f5-66dac5100507}', '\\servicenowdiag479.file.core.windows.net\testazureshare', '', 'file://servicenowdiag479.file.core.windows.net/testazureshare', 4, '{0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd}', '2021-05-21 21:37:18', '2021-05-21 21:37:18');
 
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "VolumeId", "CreatedOn", "ModifiedOn")
     VALUES ('{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}', 'C:\', '2021-05-21 21:44:29', '{fb962360-518b-40f6-b6ae-afb67f2e2543}', '2021-05-21 21:44:29', '2021-05-21 21:44:29');
@@ -205,7 +211,6 @@ INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "Created
     
 INSERT INTO "ContentInfos" ("Id", "Length", "CreatedOn", "ModifiedOn")
     VALUES ('{6696e337-c4ad-4e03-b954-ee585270958d}', 77824, '2021-05-21 21:49:59', '2021-05-21 21:49:59');
-
 INSERT INTO "ContentInfos" ("Id", "Length", "CreatedOn", "ModifiedOn")
     VALUES ('{dc508120-8617-4d61-ba38-480ac35fcfe5}', 0, '2021-05-21 21:49:59', '2021-05-21 21:49:59');
 
@@ -213,7 +218,7 @@ INSERT INTO "Files" ("Id", "Name", "LastAccessed", "ContentInfoId", "ParentId", 
     VALUES ('{04863253-dc35-48ba-9662-c0c02556ae84}', 'Example.db', '2021-05-21 21:52:08', '{6696e337-c4ad-4e03-b954-ee585270958d}', '{04863253-dc35-48ba-9662-c0c02556ae84}',
     '2021-05-21 21:52:08', '2021-05-21 21:52:08');
 
-    INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")
+INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{e91871f5-76af-46b0-9381-9e411acd2fba}', 'AppData', '2021-05-21 21:45:17', '{6cb0fe90-f1e4-44c5-8571-d285079b3840}', '2021-05-21 21:45:17', '2021-05-21 21:45:17');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{5d2f0713-1857-4253-a69a-eb5e245ed553}', 'Local','2021-05-21 21:45:27', '{e91871f5-76af-46b0-9381-9e411acd2fba}', '2021-05-21 21:45:27', '2021-05-21 21:45:27');

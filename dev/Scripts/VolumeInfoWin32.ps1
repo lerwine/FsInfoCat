@@ -1,7 +1,8 @@
 ﻿Import-Module -Name 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat' -ErrorAction Stop;
 Import-Module -Name 'Microsoft.PowerShell.Management' -ErrorAction Stop;
-#$LogicalDisks = @(Get-CimInstance -ClassName 'Win32_LogicalDisk');
+$LogicalDisks = @(Get-CimInstance -ClassName 'Win32_LogicalDisk');
 $CIM_LogicalDisk = @(Get-CimInstance -ClassName 'CIM_LogicalDisk');
+(Get-CimInstance -ClassName 'Win32_FileSystem') | Out-GridView;
 <#
 @(Get-CimInstance -ClassName 'CIM_LogicalDisk') | ForEach-Object {
     @($_.CimInstanceProperties) | Out-GridView -Title "CIM_LogicalDisk $_";
@@ -44,7 +45,9 @@ $LogicalDisks | ForEach-Object { ($_.GetRelationships() | Select-Object -Propert
 ($LogicalDisks.Properties  | Select-Object -First 1) | Get-Member
 #>
 
-@((Get-CimInstance -Query 'SELECT * FROM CIM_Directory WHERE Name="c:\\"').CimInstanceProperties) | Out-GridView -Title "CIM_Directory";
+@((Get-CimInstance -Query 'SELECT * FROM CIM_Directory WHERE Name="z:\\"').CimInstanceProperties) | Out-GridView -Title "CIM_Directory";
+
+@((Get-CimInstance -Query 'SELECT * FROM Win32_FileSystem').CimInstanceProperties) | Out-GridView -Title "CIM_Directory";
 
 $LogicalDisks | ForEach-Object {
     $FsRoot = [FsInfoCat.Models.Crawl.FsRoot]::new();
@@ -77,8 +80,8 @@ $LogicalDisks | ForEach-Object {
         if ($null -eq $CIM_Directory -or [string]::IsNullOrWhiteSpace($CIM_Directory.Name)) {
             $FsRoot.Messages.Add([FsInfoCat.Models.Crawl.CrawlError]::new("Could not determine root directory",
                 [FsInfoCat.Models.Crawl.MessageId]::AttributesAccessError));
-        } else {
-            $FsRoot.RootPathName = $CIM_Directory.Name;
+        #} else {
+        #    $FsRoot.RootPathName = $CIM_Directory.Name;
         }
     }
     $FsRoot | Write-Output;
