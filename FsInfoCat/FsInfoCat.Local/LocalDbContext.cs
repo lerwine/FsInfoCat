@@ -256,7 +256,9 @@ namespace FsInfoCat.Local
             return result;
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext, [NotNull] EntityEntryValidationHandler<T> onValidate)
+#pragma warning restore IDE0060 // Remove unused parameter
             where T : class, ILocalDbEntity
         {
             List<ValidationResult> result;

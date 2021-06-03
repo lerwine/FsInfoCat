@@ -460,7 +460,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        private Local.FileSystem GetVFatFileSystem(Local.LocalDbContext dbContext)
+        private static Local.FileSystem GetVFatFileSystem(Local.LocalDbContext dbContext)
         {
             Guid id = Guid.Parse("53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd");
             return (from fs in dbContext.FileSystems where fs.Id == id select fs).FirstOrDefault();

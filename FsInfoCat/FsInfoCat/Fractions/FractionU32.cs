@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace FsInfoCat.Fractions
@@ -8,11 +8,13 @@ namespace FsInfoCat.Fractions
     {
         #region Fields
 
-        public static readonly FractionU32 Zero = new FractionU32(0, 0, 1);
+        public static readonly FractionU32 Zero = new(0, 0, 1);
+        private static readonly Coersion<uint> _coersion = Coersion<uint>.Default;
 
-        private uint _wholeNumber;
-        private uint _numerator;
-        private uint _denominator;
+
+        private readonly uint _wholeNumber;
+        private readonly uint _numerator;
+        private readonly uint _denominator;
 
         #endregion
 
@@ -50,8 +52,8 @@ namespace FsInfoCat.Fractions
 
         public FractionU32(IFraction fraction)
         {
-            uint numerator, denominator;
-            _wholeNumber = FractionExtensions.GetNormalizedRational(FractionExtensions.ToUInt32(fraction.WholeNumber), FractionExtensions.ToUInt32(fraction.Numerator), FractionExtensions.ToUInt32(fraction.Denominator, 1), out numerator, out denominator);
+            _wholeNumber = FractionExtensions.GetNormalizedRational(_coersion.Coerce(fraction.WholeNumber), _coersion.Coerce(fraction.Numerator),
+                _coersion.Coerce(fraction.Denominator).OneIfZero(), out uint numerator, out uint denominator);
             _numerator = numerator;
             _denominator = denominator;
         }
@@ -69,16 +71,14 @@ namespace FsInfoCat.Fractions
 
         public static FractionU32 Parse(string s)
         {
-            uint numerator, denominator;
-            uint wholeNumber = FractionExtensions.ParseU32(s, out numerator, out denominator);
+            uint wholeNumber = FractionExtensions.ParseU32(s, out uint numerator, out uint denominator);
             return new FractionU32(wholeNumber, numerator, denominator);
 
         }
 
         public static bool TryParse(string s, out FractionU32 value)
         {
-            uint wholeNumber, numerator, denominator;
-            if (FractionExtensions.TryParseU32(s, out wholeNumber, out numerator, out denominator))
+            if (FractionExtensions.TryParseU32(s, out uint wholeNumber, out uint numerator, out uint denominator))
             {
                 value = new FractionU32(wholeNumber, numerator, denominator);
                 return true;
@@ -124,8 +124,8 @@ namespace FsInfoCat.Fractions
             if (numerator == 0 && wholeNumber == 0)
                 return (_denominator == 0) ? FractionU32.Zero : this;
 
-            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2, n2 = numerator, d2 = denominator;
-            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out n2, out d2);
+            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
+            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
             FractionExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
             w1 = FractionExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
             return new FractionU32((uint)w1, (uint)n1, (uint)d1);
@@ -154,10 +154,10 @@ namespace FsInfoCat.Fractions
         IFraction<uint> IFraction<uint>.Add(IFraction<uint> other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
-            if (other is FractionU32)
-                return Add((FractionU32)other);
+            if (other is FractionU32 f)
+                return Add(f);
 
             return Add(other.WholeNumber, other.Numerator, other.Denominator);
         }
@@ -169,10 +169,10 @@ namespace FsInfoCat.Fractions
         public IFraction Add(IFraction other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
-            if (other is IFraction<uint>)
-                return Add((IFraction<uint>)other);
+            if (other is IFraction<uint> f)
+                return Add(f);
 
             if (other.Equals(0))
                 return this;
@@ -249,11 +249,10 @@ namespace FsInfoCat.Fractions
             if (other == null)
                 return 1;
 
-            if (other is FractionU32)
-                return CompareTo((FractionU32)other);
+            if (other is FractionU32 f)
+                return CompareTo(f);
 
-            uint n, d;
-            uint w = FractionExtensions.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out n, out d);
+            uint w = FractionExtensions.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out uint n, out uint d);
 
             int i = _wholeNumber.CompareTo(w);
             if (i != 0)
@@ -285,8 +284,8 @@ namespace FsInfoCat.Fractions
             if (other == null)
                 return 1;
 
-            if (other is IFraction<uint>)
-                return CompareTo((IFraction<uint>)other);
+            if (other is IFraction<uint> f)
+                return CompareTo(f);
 
             if (other.GetMaxUnderlyingValue().CompareTo(uint.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(0) >= 0)
                 return CompareTo(new FractionU32(Convert.ToUInt32(other.WholeNumber), Convert.ToUInt32(other.Numerator), Convert.ToUInt32(other.Denominator)));
@@ -308,8 +307,8 @@ namespace FsInfoCat.Fractions
             if (numerator == 0 && wholeNumber == 0)
                 throw new DivideByZeroException();
 
-            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2, n2, d2;
-            w2 = FractionExtensions.GetInvertedRational64(wholeNumber, numerator, denominator, out n2, out d2);
+            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
+            w2 = FractionExtensions.GetInvertedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
 
             if (n2 == 0 && w2 == 0)
                 throw new DivideByZeroException();
@@ -335,7 +334,7 @@ namespace FsInfoCat.Fractions
         IFraction<uint> IFraction<uint>.Divide(IFraction<uint> other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
             if (other.Numerator == 0 && other.WholeNumber == 0)
                 throw new DivideByZeroException();
@@ -349,10 +348,10 @@ namespace FsInfoCat.Fractions
         public IFraction Divide(IFraction other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
-            if (other is IFraction<uint>)
-                return Add((IFraction<uint>)other);
+            if (other is IFraction<uint> f)
+                return Add(f);
 
             if (other.Equals(0))
                 throw new DivideByZeroException();
@@ -387,11 +386,10 @@ namespace FsInfoCat.Fractions
             if (other == null)
                 return false;
 
-            if (other is FractionU32)
-                return Equals((FractionU32)other);
+            if (other is FractionU32 f)
+                return Equals(f);
 
-            uint n, d;
-            uint w = FractionExtensions.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out n, out d);
+            uint w = FractionExtensions.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out uint n, out uint d);
 
             if (_numerator == 0)
                 return n == 0 && _wholeNumber == w;
@@ -406,8 +404,8 @@ namespace FsInfoCat.Fractions
             if (other == null)
                 return false;
 
-            if (other is IFraction<uint>)
-                return Equals((IFraction<uint>)other);
+            if (other is IFraction<uint> f)
+                return Equals(f);
 
             if (other.GetMaxUnderlyingValue().CompareTo(uint.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(uint.MinValue) >= 0)
                 return Equals(new FractionU32(Convert.ToUInt32(other.WholeNumber), Convert.ToUInt32(other.Numerator), Convert.ToUInt32(other.Denominator)));
@@ -434,8 +432,8 @@ namespace FsInfoCat.Fractions
             if ((_numerator == 0 && _wholeNumber == 0) || (numerator == 0 && wholeNumber == 0))
                 return FractionU32.Zero;
 
-            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2, n2 = numerator, d2 = denominator;
-            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out n2, out d2);
+            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
+            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
 
             if (numerator == 0 && wholeNumber == 0)
                 return FractionU32.Zero;
@@ -464,10 +462,10 @@ namespace FsInfoCat.Fractions
         IFraction<uint> IFraction<uint>.Multiply(IFraction<uint> other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
-            if (other is FractionU32)
-                return Multiply((FractionU32)other);
+            if (other is FractionU32 f)
+                return Multiply(f);
 
             return Multiply(other.WholeNumber, other.Numerator, other.Denominator);
         }
@@ -479,10 +477,10 @@ namespace FsInfoCat.Fractions
         public IFraction Multiply(IFraction other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
-            if (other is IFraction<uint>)
-                return Add((IFraction<uint>)other);
+            if (other is IFraction<uint> f)
+                return Add(f);
 
             if (_numerator == 0 && _wholeNumber == 0)
                 return other;
@@ -505,8 +503,8 @@ namespace FsInfoCat.Fractions
             if (numerator == 0 && wholeNumber == 0)
                 return (_denominator == 0) ? FractionU32.Zero : this;
 
-            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2, n2 = numerator, d2 = denominator;
-            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out n2, out d2);
+            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
+            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
             FractionExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
             w1 = FractionExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
             return new FractionU32((uint)w1, (uint)n1, (uint)d1);
@@ -528,7 +526,7 @@ namespace FsInfoCat.Fractions
         IFraction<uint> IFraction<uint>.Subtract(IFraction<uint> other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
             return Subtract(other.WholeNumber, other.Numerator, other.Denominator);
         }
@@ -540,10 +538,10 @@ namespace FsInfoCat.Fractions
         public IFraction Subtract(IFraction other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
-            if (other is IFraction<uint>)
-                return Subtract((IFraction<uint>)other);
+            if (other is IFraction<uint> f)
+                return Subtract(f);
 
             if (other.GetMaxUnderlyingValue().CompareTo(uint.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(uint.MinValue) >= 0)
                 return Subtract(Convert.ToUInt32(other.WholeNumber), Convert.ToUInt32(other.Numerator), Convert.ToUInt32(other.Denominator));
