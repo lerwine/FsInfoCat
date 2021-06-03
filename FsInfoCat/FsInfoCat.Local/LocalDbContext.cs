@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -36,6 +35,8 @@ namespace FsInfoCat.Local
         public virtual DbSet<Subdirectory> Subdirectories { get; set; }
 
         public virtual DbSet<DbFile> Files { get; set; }
+
+        public virtual DbSet<ExtendedProperties> ExtendedProperties { get; set; }
 
         public virtual DbSet<ContentInfo> ContentInfos { get; set; }
 

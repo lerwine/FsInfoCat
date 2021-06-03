@@ -25,6 +25,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<bool> _deleted;
         private readonly IPropertyChangeTracker<Guid> _parentId;
         private readonly IPropertyChangeTracker<Guid> _contentId;
+        private readonly IPropertyChangeTracker<Guid?> _extendedPropertiesId;
         private readonly IPropertyChangeTracker<Guid?> _upstreamId;
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
         private readonly IPropertyChangeTracker<DateTime> _createdOn;
@@ -32,6 +33,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
         private readonly IPropertyChangeTracker<ContentInfo> _content;
         private readonly IPropertyChangeTracker<Redundancy> _redundancy;
+        private readonly IPropertyChangeTracker<ExtendedProperties> _extendedProperties;
         private HashSet<FileComparison> _comparisonSources = new();
         private HashSet<FileComparison> _comparisonTargets = new();
 
@@ -39,11 +41,6 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// UNIQUEIDENTIFIER NOT NULL
-        /// </remarks>
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
@@ -61,14 +58,12 @@ namespace FsInfoCat.Local
 
         public virtual DateTime? LastHashCalculation { get => _lastHashCalculation.GetValue(); set => _lastHashCalculation.SetValue(value); }
 
-        /// <remarks>TEXT NOT NULL DEFAULT ''</remarks>
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
         [Required]
         public virtual bool Deleted { get => _deleted.GetValue(); set => _deleted.SetValue(value); }
 
-        /// <remarks>UNIQUEIDENTIFIER NOT NULL</remarks>
         public virtual Guid ParentId
         {
             get => _parentId.GetValue();
@@ -83,7 +78,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        /// <remarks>UNIQUEIDENTIFIER NOT NULL</remarks>
         public virtual Guid ContentId
         {
             get => _contentId.GetValue();
@@ -98,27 +92,35 @@ namespace FsInfoCat.Local
             }
         }
 
-        /// <remarks>UNIQUEIDENTIFIER DEFAULT NULL</remarks>
+        public virtual Guid? ExtendedPropertiesId
+        {
+            get => _extendedPropertiesId.GetValue();
+            set
+            {
+                if (_extendedPropertiesId.SetValue(value))
+                {
+                    ExtendedProperties nav = _extendedProperties.GetValue();
+                    if (value.HasValue)
+                    {
+                        if (!(nav is null || nav.Id.Equals(value.Value)))
+                            _content.SetValue(null);
+                    }
+                    else if (!(nav is null))
+                        _content.SetValue(null);
+                }
+            }
+        }
+
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
-        /// </remarks>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
-        /// </remarks>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
@@ -154,6 +156,21 @@ namespace FsInfoCat.Local
         }
 
         public virtual Redundancy Redundancy { get => _redundancy.GetValue(); set => _redundancy.SetValue(value); }
+
+        public virtual ExtendedProperties ExtendedProperties
+        {
+            get => _extendedProperties.GetValue();
+            set
+            {
+                if (_extendedProperties.SetValue(value))
+                {
+                    if (value is null)
+                        _extendedPropertiesId.SetValue(null);
+                    else
+                        _extendedPropertiesId.SetValue(value.Id);
+                }
+            }
+        }
 
         public virtual HashSet<FileComparison> ComparisonSources
         {
@@ -191,6 +208,10 @@ namespace FsInfoCat.Local
 
         IEnumerable<IComparison> IFile.ComparisonTargets => ComparisonSources.Cast<IComparison>();
 
+        ILocalExtendedProperties ILocalFile.ExtendedProperties { get => ExtendedProperties; set => ExtendedProperties = (ExtendedProperties)value; }
+
+        IExtendedProperties IFile.ExtendedProperties { get => ExtendedProperties; set => ExtendedProperties = (ExtendedProperties)value; }
+
         #endregion
 
         public DbFile()
@@ -203,6 +224,7 @@ namespace FsInfoCat.Local
             _deleted = CreateChangeTracker(nameof(Deleted), false);
             _parentId = CreateChangeTracker(nameof(ParentId), Guid.Empty);
             _contentId = CreateChangeTracker(nameof(ContentId), Guid.Empty);
+            _extendedPropertiesId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
             _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
             _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
             _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
@@ -210,6 +232,7 @@ namespace FsInfoCat.Local
             _parent = CreateChangeTracker<Subdirectory>(nameof(Parent), null);
             _content = CreateChangeTracker<ContentInfo>(nameof(Content), null);
             _redundancy = CreateChangeTracker<Redundancy>(nameof(Redundancy), null);
+            _extendedProperties = CreateChangeTracker<ExtendedProperties>(nameof(ExtendedProperties), null);
         }
 
         public bool IsNew() => !_id.IsSet;
@@ -220,6 +243,7 @@ namespace FsInfoCat.Local
         {
             builder.HasOne(sn => sn.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(sn => sn.Content).WithMany(d => d.Files).HasForeignKey(nameof(ContentId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.ExtendedProperties).WithMany(d => d.Files).HasForeignKey(nameof(ExtendedPropertiesId)).OnDelete(DeleteBehavior.Restrict);
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>

@@ -6,6 +6,8 @@ namespace FsInfoCat.Upstream
     {
         new IUpstreamContentInfo Content { get; set; }
 
+        new IUpstreamExtendedProperties ExtendedProperties { get; set; }
+
         new IUpstreamSubdirectory Parent { get; set; }
 
         IEnumerable<IFileAction> FileActions { get; }

@@ -6,6 +6,8 @@ namespace FsInfoCat.Local
     {
         new ILocalContentInfo Content { get; set; }
 
+        new ILocalExtendedProperties ExtendedProperties { get; set; }
+
         new ILocalSubdirectory Parent { get; set; }
 
         new IEnumerable<ILocalComparison> ComparisonSources { get; }

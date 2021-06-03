@@ -9,6 +9,8 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     public interface IFile : IDbEntity
     {
+        Guid Id { get; set; }
+
         string Name { get; set; }
 
         FileCrawlOptions Options { get; set; }
@@ -23,6 +25,8 @@ namespace FsInfoCat
 
         IContentInfo Content { get; set; }
 
+        IExtendedProperties ExtendedProperties { get; set; }
+
         ISubdirectory Parent { get; set; }
 
         IEnumerable<IComparison> ComparisonSources { get; }
@@ -30,7 +34,5 @@ namespace FsInfoCat
         IEnumerable<IComparison> ComparisonTargets { get; }
 
         IRedundancy Redundancy { get; }
-
-        Guid Id { get; set; }
     }
 }

@@ -58,27 +58,16 @@ namespace FsInfoCat.Local
             }
         }
 
-        /// <remarks>UNIQUEIDENTIFIER DEFAULT NULL</remarks>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
-        /// </remarks>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
-        /// </remarks>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }

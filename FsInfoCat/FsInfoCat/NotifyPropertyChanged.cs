@@ -72,7 +72,7 @@ namespace FsInfoCat
                     Monitor.Enter(_syncroot);
                     try
                     {
-                        errorsChanged = _lastValidationResults.Remove(propertyName)? new DataErrorsChangedEventArgs[] { new DataErrorsChangedEventArgs(propertyName) } : Array.Empty<DataErrorsChangedEventArgs>();
+                        errorsChanged = _lastValidationResults.Remove(propertyName) ? new DataErrorsChangedEventArgs[] { new DataErrorsChangedEventArgs(propertyName) } : Array.Empty<DataErrorsChangedEventArgs>();
                     }
                     finally { Monitor.Exit(_syncroot); }
                 }

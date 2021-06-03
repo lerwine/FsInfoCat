@@ -3,7 +3,7 @@ DROP TABLE "Redundancies";
 DROP TABLE "Files";
 DROP TABLE "RedundantSets";
 DROP TABLE "ContentInfos";
---UPDATE "Volumes" SET "RootDirectoryId"=NULL;
+DROP TABLE "ExtendedProperties";
 DROP TABLE "Subdirectories";
 DROP TABLE "Volumes";
 DROP TABLE "SymbolicNames";
@@ -93,6 +93,7 @@ CREATE TABLE "Files" (
     "LastHashCalculation" DATETIME DEFAULT NULL,
     "Notes" TEXT NOT NULL DEFAULT '',
     "Deleted" BIT NOT NULL DEFAULT 0,
+    "ExtendedPropertyId" UNIQUEIDENTIFIER DEFAULT NULL,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -102,8 +103,46 @@ CREATE TABLE "Files" (
 	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
 	CONSTRAINT "FK_FileSubdirectory" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
 	CONSTRAINT "FK_FileContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
+	CONSTRAINT "FK_FileExtendedProperty" FOREIGN KEY("ExtendedPropertyId") REFERENCES "ExtendedProperties"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+);
+CREATE TABLE "ExtendedProperties" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+	"Width"	INT NOT NULL CHECK(Width>=0 AND Width<65536),
+    "Height" INT NOT NULL CHECK(Height>=0 AND Height<65536),
+    "Duration" BIGINT CHECK(Duration>=0) DEFAULT NULL,
+    "FrameCount" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "TrackNumber" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "Bitrate" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "FrameRate" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "SamplesPerPixel" INT CHECK(SamplesPerPixel>=0 AND SamplesPerPixel<65536) DEFAULT NULL,
+    "PixelPerUnitX" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "PixelPerUnitY" BIGINT CHECK(PixelPerUnitY>=0 AND PixelPerUnitY < 4294967296) DEFAULT NULL,
+    "Compression" INT CHECK(Compression>=0 AND Compression<65536)  DEFAULT NULL,
+    "XResNumerator" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "XResDenominator" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "YResNumerator" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "YResDenominator" BIGINT CHECK(PixelPerUnitX>=0 AND PixelPerUnitX < 4294967296) DEFAULT NULL,
+    "ResolutionXUnit" INT CHECK(ResolutionXUnit>=0 AND ResolutionXUnit<65536) DEFAULT NULL,
+    "ResolutionYUnit" INT CHECK(ResolutionYUnit>=0 AND ResolutionYUnit<65536) DEFAULT NULL,
+    "JPEGProc" INT CHECK(JPEGProc>=0 AND JPEGProc<65536) DEFAULT NULL,
+    "JPEGQuality" INT CHECK(JPEGQuality>=0 AND JPEGQuality<65536) DEFAULT NULL,
+    "DateTime" DateTime DEFAULT NULL,
+    "Title" NVARCHAR(1024) DEFAULT NULL,
+    "Description" TEXT DEFAULT NULL,
+    "Copyright" NVARCHAR(1024) DEFAULT NULL,
+    "SoftwareUsed" NVARCHAR(1024) DEFAULT NULL,
+    "Artist" NVARCHAR(1024) DEFAULT NULL,
+    "HostComputer" NVARCHAR(1024) DEFAULT NULL,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_ExtendedProperties" PRIMARY KEY("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
+        (XResNumerator IS NULL) = (XResDenominator IS NULL) AND (YResNumerator IS NULL) = (YResDenominator IS NULL))
 );
 CREATE TABLE "ContentInfos" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -237,7 +276,7 @@ INSERT INTO "Files" ("Id", "Name", "LastAccessed", "ContentInfoId", "ParentId", 
     VALUES ('{a3e8dab2-98fd-4059-8756-27db5fb80932}', 'Test.sdl', '2021-05-21 21:52:08', '{dc508120-8617-4d61-ba38-480ac35fcfe5}', '{9659ea19-ca72-419f-9b35-3b59e6cc89e0}',
     '2021-05-21 21:52:08', '2021-05-21 21:52:08');
 
-INSERT INTO RedundantSets ("Id", "ContentInfoId", "CreatedOn", "ModifiedOn")
+INSERT INTO "RedundantSets" ("Id", "ContentInfoId", "CreatedOn", "ModifiedOn")
 	VALUES ('{1ba4dd35-7a45-400b-8f20-57546c94afef}', '{6696e337-c4ad-4e03-b954-ee585270958d}', '2021-05-21 22:23:32', '2021-05-21 22:23:32');
     
 INSERT INTO "Redundancies" ("FileId", "RedundantSetId", "CreatedOn", "ModifiedOn")
