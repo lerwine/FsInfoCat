@@ -1,4 +1,5 @@
-﻿- [General](#general)
+- [General](#general)
+- [Graphics](#graphics)
 - [Library Repositories](#library-repositories)
 - [Linux Refrerences](#linux-refrerences)
 - [Languages, Formats and Markup](#languages-formats-and-markup)
@@ -7,6 +8,7 @@
 - [Client Side APIs](#client-side-apis)
 - [.NET Core API](#-net-core-api)
   - [Entity Framework](#entity-framework)
+    - [EF6](#ef6)
   - [Testing](#testing)
   - [WPF](#wpf)
   - [WMI](#wmi)
@@ -19,17 +21,19 @@
 - [Gists](#gists)
 - [Old Projects](#old-projects)
 
-## Uncategorized
-
-- [Privilege (Authorisation) Services | DCE 1.1: Authentication and Security Services](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm#tagcjh_08_02_01_01)
-
 ## General
 
-- [GDI+ Property Item Descriptions | Microsoft Docs](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-property-item-descriptions)
 - [Configuration Manager Client WMI Programming](https://msdn.microsoft.com/en-us/library/cc144081.aspx)
 - [Documentation for Visual Studio Code](https://code.visualstudio.com/docs)
 - [.NET Framework Reference Source Code](https://referencesource.microsoft.com/)
+- [Crawl your Android device attached via usb with PowerShell | GitHub Gist](https://gist.github.com/cveld/8fa339306f8504095815)
 - [Spell Checking](https://www.perrla.com/#/)
+
+## Graphics
+
+- [GDI+ Property Item Descriptions | Microsoft Docs](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-property-item-descriptions)
+- [Image Property Tag Type Constants | Microsoft Docs](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-image-property-tag-type-constants)
+- [Image Property Tag Constants | Microsoft Docs](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-constant-image-property-tag-constants)
 
 ## Library Repositories
 
@@ -50,6 +54,7 @@
 - [URLs and Fetching Resources | HTML Living Standard](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#urls)
 - [String - JavaScript | MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#string_primitives_and_string_objects)
 - [ECMAScript® 2022 Language Specification | TC39](https://tc39.es/ecma262/#sec-ecmascript-language-lexical-grammar-literals)
+- [Privilege (Authorisation) Services | DCE 1.1: Authentication and Security Services](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm#tagcjh_08_02_01_01)
 
 ### URI
 
@@ -86,16 +91,23 @@
 
 ### Entity Framework
 
+- [Overview of Entity Framework Core - EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/ef/core/)
+- [EntityFramework.SqlServerCompact 6.4.4 | NuGet Gallery](https://www.nuget.org/packages/EntityFramework.SqlServerCompact)
+ NuGet package website
+- [Using EF Core with SQL Server Compact in Traditional .NET Applications | Jensen, Erik Ejlskov](https://github.com/ErikEJ/EntityFramework.SqlServerCompact/wiki/Using-EF-Core-with-SQL-Server-Compact-in-Traditional-.NET-Applications)
+- [Get Started with WPF - EF Core | Microsoft Docs](https://docs.microsoft.com/en-us/ef/core/get-started/wpf)
+ Getting started tutorial for using WPF with Entity Framework Core
+- [SQL Server Compact Books Online Home Page | Microsoft Docs](https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2012/ms173053(v=sql.110))
 - [Code First DataAnnotations | Entity Framework Tutorial](https://entity-framework.programmingpedia.net/en/tutorial/4161/code-first-dataannotations)
- Code First DataAnnotations | Entity Framework Tutorial
+ Site was not accessible on 5/19/2021
+- [c# - How do I use IValidatableObject? | Stack Overflow](https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject)
+
+#### EF6
+
 - [Code First to a New Database | Microsoft Docs](https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database)
  Overview of creating and configuring a model with Entity Framework Core
 - [Overview of Entity Framework 6 | Microsoft Docs](https://docs.microsoft.com/en-us/ef/ef6/)
  General introductory overview of Entity Framework 6
-- [EntityFramework.SqlServerCompact 6.4.4 | NuGet Gallery](https://www.nuget.org/packages/EntityFramework.SqlServerCompact)
- NuGet package website
-- [Using EF Core with SQL Server Compact in Traditional .NET Applications | Jensen, Erik Ejlskov](https://github.com/ErikEJ/EntityFramework.SqlServerCompact/wiki/Using-EF-Core-with-SQL-Server-Compact-in-Traditional-.NET-Applications)
-- [c# - How do I use IValidatableObject? | Stack Overflow](https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject)
 
 ### Testing
 

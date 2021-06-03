@@ -2,11 +2,16 @@
 <References xmlns="http://git.erwinefamily.net/FsInfoCat/V1/References.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://git.erwinefamily.net/FsInfoCat/V1/References.xsd ./References.xsd">
     <Categories>
         <Category Name="General">
-            <Link Tag="GDIPlus" />
             <Link Tag="CfgMgrWmi" />
             <Link Tag="VsCode" />
             <Link Tag="RefSrc" />
+            <Link Tag="AndrPs" />
             <Link Tag="SpellChecking" />
+        </Category>
+        <Category Name="Graphics">
+            <Link Tag="GDIPlus" />
+            <Link Tag="ExifTags"/>
+            <Link Tag="ExifProp"/>
         </Category>
         <Category Name="Library Repositories">
             <Link Tag="NuGet" />
@@ -23,6 +28,7 @@
             <Link Tag="WHATWGURL2" />
             <Link Tag="MDNJsStr" />
             <Link Tag="ECMAScript" />
+            <Link Tag="DCE1_1" />
             <Categories>
                 <Category Name="URI">
                     <Link Tag="RFC3986" />
