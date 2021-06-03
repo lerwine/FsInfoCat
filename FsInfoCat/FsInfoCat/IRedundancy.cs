@@ -10,8 +10,6 @@ namespace FsInfoCat
 
         string Reference { get; set; }
 
-        FileRedundancyStatus Status { get; set; }
-
         string Notes { get; set; }
 
         IFile File { get; set; }

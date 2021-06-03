@@ -4,11 +4,13 @@ using System.Collections.Generic;
 namespace FsInfoCat
 {
     /// <summary>
-    /// Represents a set of files that are identical.
+    /// Represents a set of files that have the same size, Hash and remediation status.
     /// </summary>
     public interface IRedundantSet : IDbEntity
     {
         Guid Id { get; set; }
+
+        RedundancyRemediationStatus RemediationStatus { get; }
 
         string Reference { get; set; }
 

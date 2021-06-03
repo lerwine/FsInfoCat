@@ -121,6 +121,7 @@ CREATE TABLE "ContentInfos" (
 CREATE TABLE "RedundantSets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
+	"RemediationStatus"	TINYINT NOT NULL DEFAULT 1 CHECK(RemediationStatus>=0 AND RemediationStatus<9),
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
@@ -136,7 +137,6 @@ CREATE TABLE "Redundancies" (
 	"FileId"	UNIQUEIDENTIFIER NOT NULL,
 	"RedundantSetId"	UNIQUEIDENTIFIER NOT NULL,
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
-	"Status"	TINYINT NOT NULL DEFAULT 0 CHECK(Status>=0 AND Status < 9),
     "Notes" TEXT NOT NULL DEFAULT '',
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
@@ -191,11 +191,13 @@ INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "CreatedOn", "Modifie
 INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "Type", "FileSystemId", "CreatedOn", "ModifiedOn")
     VALUES ('{fb962360-518b-40f6-b6ae-afb67f2e2543}', 'C:', 'OS', 'urn:volume:id:9E49-7DE8', 3, '{bedb396b-2212-4149-9cad-7e437c47314c}', '2021-05-21 21:37:16', '2021-05-21 21:37:16');
 INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "Type", "FileSystemId", "CreatedOn", "ModifiedOn")
-    VALUES ('{2340260f-6984-4e32-98f5-66dac5100507}', '\\servicenowdiag479.file.core.windows.net\testazureshare', '', 'file://servicenowdiag479.file.core.windows.net/testazureshare', 4, '{0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd}', '2021-05-21 21:37:18', '2021-05-21 21:37:18');
+    VALUES ('{2340260f-6984-4e32-98f5-66dac5100507}', 'testazureshare (on servicenowdiag479.file.core.windows.net)', '', 'file://servicenowdiag479.file.core.windows.net/testazureshare', 4, '{0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd}', '2021-05-21 21:37:18', '2021-05-21 21:37:18');
+    
+INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "VolumeId", "CreatedOn", "ModifiedOn")
+    VALUES ('{a951b559-a895-4669-9bfb-ea547c4c24d4}', '//servicenowdiag479.file.core.windows.net/testazureshare/', '2021-05-21 21:37:18', '{2340260f-6984-4e32-98f5-66dac5100507}', '2021-05-21 21:37:18', '2021-05-21 21:37:18');
 
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}', 'C:\', '2021-05-21 21:44:29', '{fb962360-518b-40f6-b6ae-afb67f2e2543}', '2021-05-21 21:44:29', '2021-05-21 21:44:29');
---UPDATE "Volumes" SET "RootDirectoryId"='{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}' WHERE Id='{fb962360-518b-40f6-b6ae-afb67f2e2543}';
+    VALUES ('{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}', 'C:/', '2021-05-21 21:44:29', '{fb962360-518b-40f6-b6ae-afb67f2e2543}', '2021-05-21 21:44:29', '2021-05-21 21:44:29');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{3c2684e7-e242-4a68-a06a-26b1cbde333d}', 'Users', '2021-05-21 21:44:38', '{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}', '2021-05-21 21:44:38', '2021-05-21 21:44:38');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")

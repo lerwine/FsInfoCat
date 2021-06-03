@@ -15,7 +15,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.UnitTests", "FsIn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{21DE209E-F2AD-48EC-A6BB-7C66EF73762F}"
 	ProjectSection(SolutionItems) = preProject
+		..\Resources\Reference\CategorizedSources.xml = ..\Resources\Reference\CategorizedSources.xml
+		..\Resources\Reference\CategorizedSources.xslt = ..\Resources\Reference\CategorizedSources.xslt
+		..\Resources\Reference\CommentDoc.xml = ..\Resources\Reference\CommentDoc.xml
 		FsInfoCat.testsettings = FsInfoCat.testsettings
+		..\Resources\Reference\GDI+.pdf = ..\Resources\Reference\GDI+.pdf
+		..\Resources\Reference\Markdown.md = ..\Resources\Reference\Markdown.md
+		..\Resources\Reference\References.html = ..\Resources\Reference\References.html
+		..\Resources\Reference\References.xml = ..\Resources\Reference\References.xml
+		..\Resources\Reference\References.xsd = ..\Resources\Reference\References.xsd
+		..\Resources\Reference\References.xslt = ..\Resources\Reference\References.xslt
+		..\Resources\Reference\ToCommentDoc.xslt = ..\Resources\Reference\ToCommentDoc.xslt
+		..\Resources\Reference\ToHtml.xslt = ..\Resources\Reference\ToHtml.xslt
+		..\Resources\Reference\ToMarkdown.xslt = ..\Resources\Reference\ToMarkdown.xslt
 	EndProjectSection
 EndProject
 Global

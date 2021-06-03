@@ -16,7 +16,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid> _fileId;
         private readonly IPropertyChangeTracker<Guid> _redundantSetId;
         private readonly IPropertyChangeTracker<string> _reference;
-        private readonly IPropertyChangeTracker<FileRedundancyStatus> _status;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<Guid?> _upstreamId;
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
@@ -63,9 +62,6 @@ namespace FsInfoCat.Local
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
-
-        [Required]
-        public virtual FileRedundancyStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
@@ -138,7 +134,6 @@ namespace FsInfoCat.Local
             _fileId = CreateChangeTracker(nameof(FileId), Guid.Empty);
             _redundantSetId = CreateChangeTracker(nameof(RedundantSetId), Guid.Empty);
             _reference = CreateChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
-            _status = CreateChangeTracker(nameof(Status), FileRedundancyStatus.Unconfirmed);
             _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
             _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);

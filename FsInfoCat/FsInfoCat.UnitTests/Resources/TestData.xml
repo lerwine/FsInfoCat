@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="TestData.xsd">
+    <FileSystem Id="{bedb396b-2212-4149-9cad-7e437c47314c}" DisplayName="New Technology File System" DefaultDriveType="Fixed" CreatedOn="2004-08-19T14:51:06" ModifiedOn="2004-08-19T14:51:06">
+        <SymbolicName Id="{74381ccb-d56d-444d-890f-3a8051bc18e6}" Name="NTFS" Priority="0" CreatedOn="2021-05-21T21:29:59" ModifiedOn="2021-05-21T21:29:59" />
+        <Volume Id="{fb962360-518b-40f6-b6ae-afb67f2e2543}" DisplayName="C:" VolumeName="OS" Identifier="urn:volume:id:9E49-7DE8" Type="Fixed" Status="Controlled" CreatedOn="2021-05-21T21:37:16" ModifiedOn="2021-05-21T21:37:16">
+            <Rootdirectory Id="{baaa89ec-d047-4f82-b8b8-be8f00ea80f4}" Name="C:\" LastAccessed="2021-05-21T21:44:29" CreatedOn="2021-05-21T21:44:29" ModifiedOn="2021-05-21T21:44:29">
+                <Subdirectory Id="{3c2684e7-e242-4a68-a06a-26b1cbde333d}" Name="Users" LastAccessed="2021-05-21T21:44:38" CreatedOn="2021-05-21T21:44:38" ModifiedOn="2021-05-21T21:44:38">
+                    <Subdirectory Id="{6cb0fe90-f1e4-44c5-8571-d285079b3840}" Name="lerwi" LastAccessed="2021-05-21T21:45:02" CreatedOn="2021-05-21T21:45:02" ModifiedOn="2021-05-21T21:45:02">
+                        <Subdirectory Id="{b9e6fcc4-0ae5-47e2-beb6-c5813b4970fc}" Name="Git" LastAccessed="2021-05-21T21:45:17" CreatedOn="2021-05-21T21:45:17" ModifiedOn="2021-05-21T21:45:17">
+                            <Subdirectory Id="{7a90f629-9ad0-44b3-96d7-c60f51db8f7e}" Name="FsInfoCat" LastAccessed="2021-05-21T21:45:27" CreatedOn="2021-05-21T21:45:27" ModifiedOn="2021-05-21T21:45:27">
+                                <Subdirectory Id="{7f4e1340-2066-424b-a499-978f82ee0e50}" Name="FsInfoCat" LastAccessed="2021-05-21T21:45:35" CreatedOn="2021-05-21T21:45:35" ModifiedOn="2021-05-21T21:45:35">
+                                    <Subdirectory Id="{04863253-dc35-48ba-9662-c0c02556ae84}" Name="FsInfoCat.Local" LastAccessed="2021-05-21T21:46:53" CreatedOn="2021-05-21T21:46:53" ModifiedOn="2021-05-21T21:46:53">
+                                        <File Id="{04863253-dc35-48ba-9662-c0c02556ae84}" Name="Example.db" LastAccessed="2021-05-21T21:52:08" ContentInfoId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
+                                    </Subdirectory>
+                                </Subdirectory>
+                            </Subdirectory>
+                        </Subdirectory>
+                        <Subdirectory Id="{e91871f5-76af-46b0-9381-9e411acd2fba}" Name="AppData" LastAccessed="2021-05-21T21:45:17" CreatedOn="2021-05-21T21:45:17" ModifiedOn="2021-05-21T21:45:17">
+                            <Subdirectory Id="{5d2f0713-1857-4253-a69a-eb5e245ed553}" Name="Local" LastAccessed="2021-05-21T21:45:27" CreatedOn="2021-05-21T21:45:27" ModifiedOn="2021-05-21T21:45:27">
+                                <Subdirectory Id="{1b1ba34d-a703-4e65-a7bf-b37a13818c61}" Name="FsInfoCat.Desktop" LastAccessed="2021-05-21T21:45:35" CreatedOn="2021-05-21T21:45:35" ModifiedOn="2021-05-21T21:45:35">
+                                    <Subdirectory Id="{9659ea19-ca72-419f-9b35-3b59e6cc89e0}" Name="1.0.0.0" LastAccessed="2021-05-21T21:46:53" CreatedOn="2021-05-21T21:46:53" ModifiedOn="2021-05-21T21:46:53">
+                                        <File Id="{6219ddc4-5979-491e-8b76-5050b391f4d3}" Name="Test.db" LastAccessed="2021-05-21T21:52:08" ContentInfoId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
+                                        <File Id="{a3e8dab2-98fd-4059-8756-27db5fb80932}" Name="Test.sdl" LastAccessed="2021-05-21T21:52:08" ContentInfoId="{dc508120-8617-4d61-ba38-480ac35fcfe5}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
+                                    </Subdirectory>
+                                </Subdirectory>
+                            </Subdirectory>
+                        </Subdirectory>
+                    </Subdirectory>
+                </Subdirectory>
+            </Rootdirectory>
+        </Volume>
+    </FileSystem>
+    <FileSystem Id="{02070ea8-a2ba-4240-9596-bb6d355dd366}" DisplayName="Ext4 Journaling Filesystem" CaseSensitiveSearch="true" CreatedOn="2021-05-21T21:12:21" ModifiedOn="2021-05-21T21:12:21">
+        <SymbolicName Id="{e41dfef2-d6f1-4e8a-b81f-971a85b9be9b}" Name="ext4" Priority="0" CreatedOn="2021-05-21T21:30:01" ModifiedOn="2021-05-21T21:30:01" />
+    </FileSystem>
+    <FileSystem Id="{53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd}" DisplayName="Virtual File Allocation Table" CreatedOn="2021-05-21T21:15:54" ModifiedOn="2021-05-21T21:15:54">
+        <SymbolicName Id="{bbb162e7-9477-49e3-acce-aee45d58bc34}" Name="vfat" Priority="0" CreatedOn="2021-05-21T21:30:09" ModifiedOn="2021-05-21T21:30:09" />
+    </FileSystem>
+    <FileSystem Id="{bd64e811-2c25-4385-8b99-1494bbb24612}" DisplayName="Common Internet Filesystem" CreatedOn="2021-05-21T21:25:23" ModifiedOn="2021-05-21T21:25:23">
+        <SymbolicName Id="{0f54c5a9-5e48-48a4-8056-b01f68d682a6}" Name="cifs" Priority="0" CreatedOn="2021-05-21T21:36:19" ModifiedOn="2021-05-21T21:36:19" />
+    </FileSystem>
+    <FileSystem Id="{88a3cdb9-ed66-4778-a33b-437675a5ae38}" DisplayName="ISO 9660 optical disc media" ReadOnly="true" CreatedOn="2021-05-21T21:27:27" ModifiedOn="2021-05-21T21:27:27">
+        <SymbolicName Id="{0989eb7a-d9db-4cef-9ac9-981fe11876b0}" Name="iso9660" Priority="0" CreatedOn="2021-05-21T21:36:23" ModifiedOn="2021-05-21T21:36:23" />
+    </FileSystem>
+    <FileSystem Id="{0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd}" DisplayName="Multi-volume Archive File System" CreatedOn="2021-05-21T21:27:27" ModifiedOn="2021-05-21T21:27:27">
+        <SymbolicName Id="{e9717552-4286-4eeb-bea5-6a5267a2f223}" Name="MAFS" Priority="0" CreatedOn="2021-05-21T21:36:25" ModifiedOn="2021-05-21T21:36:25" />
+        <Volume Id="{2340260f-6984-4e32-98f5-66dac5100507}" DisplayName="testazureshare (on servicenowdiag479.file.core.windows.net)" Identifier="file://servicenowdiag479.file.core.windows.net/testazureshare" Type="Network" Status="Offline" CreatedOn="2021-05-21T21:37:18" ModifiedOn="2021-05-21T21:37:18">
+            <Rootdirectory Id="{a951b559-a895-4669-9bfb-ea547c4c24d4}" Name="\\servicenowdiag479.file.core.windows.net\testazureshare\" LastAccessed="2021-05-21T21:37:18" CreatedOn="2021-05-21T21:37:18" ModifiedOn="2021-05-21T21:37:18" />
+        </Volume>
+    </FileSystem>
+    <ContentInfo Id="{6696e337-c4ad-4e03-b954-ee585270958d}" Length="77824" CreatedOn="2021-05-21T21:49:59" ModifiedOn="2021-05-21T21:49:59">
+        <RedundantSet Id="{1ba4dd35-7a45-400b-8f20-57546c94afef}" RemediationStatus="Unconfirmed" CreatedOn="2021-05-21T22:23:32" ModifiedOn="2021-05-21T22:23:32">
+            <Redundancy FileId="{04863253-dc35-48ba-9662-c0c02556ae84}" CreatedOn="2021-05-21T22:23:32" ModifiedOn="2021-05-21T22:23:32" />
+            <Redundancy FileId="{6219ddc4-5979-491e-8b76-5050b391f4d3}" CreatedOn="2021-05-21T22:23:32" ModifiedOn="2021-05-21T22:23:32" />
+            <Redundancy FileId="{a3e8dab2-98fd-4059-8756-27db5fb80932}" CreatedOn="2021-05-21T22:23:32" ModifiedOn="2021-05-21T22:23:32" />
+        </RedundantSet>
+    </ContentInfo>
+    <ContentInfo Id="{dc508120-8617-4d61-ba38-480ac35fcfe5}" Length="0" CreatedOn="2021-05-21T21:49:59" ModifiedOn="2021-05-21T21:49:59" />
+</TestData>

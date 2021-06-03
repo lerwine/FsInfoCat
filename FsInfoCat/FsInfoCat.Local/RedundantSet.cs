@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +13,7 @@ namespace FsInfoCat.Local
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
+        private readonly IPropertyChangeTracker<RedundancyRemediationStatus> _remediationStatus;
         private readonly IPropertyChangeTracker<string> _reference;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<Guid> _contentInfoId;
@@ -30,6 +30,9 @@ namespace FsInfoCat.Local
 
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
+
+        [Required]
+        public virtual RedundancyRemediationStatus RemediationStatus { get => _remediationStatus.GetValue(); set => _remediationStatus.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
@@ -118,6 +121,7 @@ namespace FsInfoCat.Local
         public RedundantSet()
         {
             _id = CreateChangeTracker(nameof(Id), Guid.Empty);
+            _remediationStatus = CreateChangeTracker(nameof(RemediationStatus), RedundancyRemediationStatus.Unconfirmed);
             _reference = CreateChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
             _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _contentInfoId = CreateChangeTracker(nameof(ContentInfoId), Guid.Empty);
