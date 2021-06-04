@@ -1,12 +1,6 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop
@@ -16,30 +10,24 @@ namespace FsInfoCat.Desktop
     /// </summary>
     public partial class App : Application
     {
-        public App()
+        private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            Services.Initialize(ConfigureServices);
+            await Services.Initialize(ConfigureServices, e.Args);
+            var mainWindow = Services.ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
 
         private void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<ViewModel.MainVM>();
             Local.LocalDbContext.ConfigureServices(services, GetType().Assembly, Desktop.Properties.Settings.Default.LocalDbfileName);
-            //services.AddSingleton<MainWindow>();
         }
 
-        //private void Application_Startup(object sender, StartupEventArgs e)
-        //{
-        //    IHostBuilder host = Host.CreateDefaultBuilder(e.Args);
-        //    host.ConfigureHostConfiguration(configHost =>
-        //    {
-        //        configHost.SetBasePath(System.Reflection.Assembly.GetExecutingAssembly().Location);
-        //        configHost.AddJsonFile("hostsettings.json", optional: true);
-        //    });
-        //    host.ConfigureServices(services =>
-        //    {
-        //        Local.LocalDbContext.ConfigureServices(services, GetType().Assembly, Desktop.Properties.Settings.Default.LocalDbfileName);
-        //    });
-        //    host.Build().RunAsync();
-        //}
+        private async void Application_Exit(object sender, ExitEventArgs e)
+        {
+            using (Services.Host)
+                await Services.Host.StopAsync(TimeSpan.FromSeconds(5));
+        }
     }
 }

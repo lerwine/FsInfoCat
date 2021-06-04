@@ -15,10 +15,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.UnitTests", "FsIn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{21DE209E-F2AD-48EC-A6BB-7C66EF73762F}"
 	ProjectSection(SolutionItems) = preProject
+		FsInfoCat.runsettings = FsInfoCat.runsettings
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{0F4404B3-2A29-4956-8AC6-C36AD8D40B33}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{C24C3CB7-C5C3-46CA-999B-CEFE0DF7E2C8}"
+	ProjectSection(SolutionItems) = preProject
 		..\Resources\Reference\CategorizedSources.xml = ..\Resources\Reference\CategorizedSources.xml
 		..\Resources\Reference\CategorizedSources.xslt = ..\Resources\Reference\CategorizedSources.xslt
 		..\Resources\Reference\CommentDoc.xml = ..\Resources\Reference\CommentDoc.xml
-		FsInfoCat.testsettings = FsInfoCat.testsettings
 		..\Resources\Reference\GDI+.pdf = ..\Resources\Reference\GDI+.pdf
 		..\Resources\Reference\Markdown.md = ..\Resources\Reference\Markdown.md
 		..\Resources\Reference\References.html = ..\Resources\Reference\References.html
@@ -28,6 +34,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Resources\Reference\ToCommentDoc.xslt = ..\Resources\Reference\ToCommentDoc.xslt
 		..\Resources\Reference\ToHtml.xslt = ..\Resources\Reference\ToHtml.xslt
 		..\Resources\Reference\ToMarkdown.xslt = ..\Resources\Reference\ToMarkdown.xslt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLite", "SQLite", "{E4FEA3BF-50D9-4B1B-B702-F7A21468834E}"
+	ProjectSection(SolutionItems) = preProject
+		SQLite\LocalTest.sqbpro = SQLite\LocalTest.sqbpro
 	EndProjectSection
 EndProject
 Global
@@ -59,6 +70,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0F4404B3-2A29-4956-8AC6-C36AD8D40B33} = {21DE209E-F2AD-48EC-A6BB-7C66EF73762F}
+		{C24C3CB7-C5C3-46CA-999B-CEFE0DF7E2C8} = {0F4404B3-2A29-4956-8AC6-C36AD8D40B33}
+		{E4FEA3BF-50D9-4B1B-B702-F7A21468834E} = {21DE209E-F2AD-48EC-A6BB-7C66EF73762F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A32FEC3A-2731-4537-A4BB-A42B8A348734}

@@ -279,9 +279,12 @@ namespace FsInfoCat.Local
                 return GetBasicLocalDbEntityValidationResult(entity, dbContext, out entityEntry);
         }
 
-        public static void ConfigureServices(IServiceCollection services, Assembly assembly, string dbFileName)
+        public static void ConfigureServices(IServiceCollection services, Assembly assembly, string dbFileName) =>
+            ConfigureServices(services, GetDbFilePath(assembly, dbFileName));
+
+        public static void ConfigureServices(IServiceCollection services, string dbPath)
         {
-            string connectionString = GetConnectionString(assembly, dbFileName);
+            string connectionString = GetConnectionString(dbPath);
             services.AddDbContextPool<LocalDbContext>(options =>
             {
                 options.AddInterceptors(Interceptor.Instance);
@@ -289,13 +292,13 @@ namespace FsInfoCat.Local
             });
         }
 
-        public static string GetConnectionString(Assembly assembly, string dbFileName)
+        public static string GetConnectionString(Assembly assembly, string dbFileName) => GetConnectionString(GetDbFilePath(assembly, dbFileName));
+
+        public static string GetConnectionString(string dbPath)
         {
-            // BUG: Cannot do this - Services not yet built.
-            //var logger = Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>();
             var builder = new SqliteConnectionStringBuilder
             {
-                DataSource = GetDbFilePath(assembly, dbFileName),
+                DataSource = dbPath,
                 ForeignKeys = true,
                 Mode = SqliteOpenMode.ReadWrite
             };
@@ -310,11 +313,5 @@ namespace FsInfoCat.Local
                 return Path.GetFullPath(dbFileName);
             return Path.Combine(Services.GetAppDataPath(assembly), dbFileName);
         }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    base.OnConfiguring(optionsBuilder);
-        //    optionsBuilder.UseSqlite(connectionString);
-        //}
     }
 }

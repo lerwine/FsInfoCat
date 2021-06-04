@@ -343,7 +343,7 @@ namespace FsInfoCat.Fractions
 
         #region 16-bit Methods
 
-        public static short OneIfZero(this short value) => (value == 0) ? (short)1: value;
+        public static short OneIfZero(this short value) => (value == 0) ? (short)1 : value;
 
         public static short Parse16(string s, out short n, out short d) { return Parse(ValueHelper16.Instance, s, out n, out d); }
 
