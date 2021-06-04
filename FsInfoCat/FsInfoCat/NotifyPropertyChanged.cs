@@ -13,10 +13,11 @@ using System.Threading;
 
 namespace FsInfoCat
 {
-    public abstract class NotifyPropertyChanged : INotifyPropertyValueChanged, IDataErrorInfo, INotifyDataErrorInfo
+    public abstract class NotifyPropertyChanged : INotifyPropertyValueChanged, IDataErrorInfo, INotifyDataErrorInfo, IRevertibleChangeTracking
     {
         private readonly ILogger<NotifyPropertyChanged> _logger = Services.ServiceProvider.GetRequiredService<ILogger<NotifyPropertyChanged>>();
         private readonly object _syncroot = new();
+        private readonly Dictionary<string, IPropertyChangeTracker> _changeTrackers = new();
         private readonly Dictionary<string, string[]> _lastValidationResults = new();
 
         public event PropertyValueChangedEventHandler PropertyValueChanged;
@@ -46,9 +47,9 @@ namespace FsInfoCat
             }
         }
 
-        protected bool HasErrors => _lastValidationResults.Count > 0;
+        bool INotifyDataErrorInfo.HasErrors => HasErrors();
 
-        bool INotifyDataErrorInfo.HasErrors => HasErrors;
+        bool IChangeTracking.IsChanged => IsChanged();
 
         public string this[string columnName]
         {
@@ -58,6 +59,65 @@ namespace FsInfoCat
                 try { return _lastValidationResults.ContainsKey(columnName) ? _lastValidationResults[columnName].JoinWithNewLines() : null; }
                 finally { Monitor.Exit(_syncroot); }
             }
+        }
+
+        public virtual void AcceptChanges()
+        {
+            lock (_changeTrackers)
+            {
+                foreach (IPropertyChangeTracker tracker in _changeTrackers.Values)
+                    tracker.AcceptChanges();
+            }
+        }
+
+        protected IPropertyChangeTracker<T> AddChangeTracker<T>([DisallowNull] string propertyName, [AllowNull] T initialValue, ICoersion<T> coersion = null) =>
+            new PropertyChangeTracker<T>(this, propertyName, initialValue, coersion);
+
+        protected bool ClearError([NotNull] string propertyName)
+        {
+            Monitor.Enter(_syncroot);
+            try
+            {
+                throw new NotImplementedException();
+            }
+            finally { Monitor.Exit(_syncroot); }
+        }
+
+        IEnumerable INotifyDataErrorInfo.GetErrors(string propertyName)
+        {
+            if (_lastValidationResults.TryGetValue(propertyName, out string[] result))
+                return result;
+            return null;
+        }
+
+        public bool HasErrors() => _lastValidationResults.Count > 0;
+
+        public bool IsChanged() => _changeTrackers.Values.Any(t => t.IsChanged);
+
+        protected virtual void OnPropertyChanged(PropertyValueChangedEventArgs args)
+        {
+            try { PropertyValueChanged?.Invoke(this, args); }
+            finally { PropertyChanged?.Invoke(this, args); }
+        }
+
+        protected virtual void OnErrorsChanged(DataErrorsChangedEventArgs args) => ErrorsChanged?.Invoke(this, args);
+
+        protected virtual bool CheckHashSetChanged<T>(HashSet<T> oldValue, HashSet<T> newValue, Action<HashSet<T>> setter, [CallerMemberName] string propertyName = null)
+        {
+            if (newValue is null)
+            {
+                if (oldValue.Count == 0)
+                    return false;
+                setter(new HashSet<T>());
+            }
+            else
+            {
+                if (ReferenceEquals(oldValue, newValue))
+                    return false;
+                setter(newValue);
+            }
+            RaisePropertyChanged(oldValue, newValue, propertyName);
+            return true;
         }
 
         protected void RaisePropertyChanged<T>(T oldValue, T newValue, [CallerMemberName] string propertyName = null)
@@ -147,6 +207,26 @@ namespace FsInfoCat
                 OnErrorsChanged(item);
         }
 
+        public virtual void RejectChanges()
+        {
+            IPropertyChangeTracker[] changeTrackers = _changeTrackers.Values.ToArray();
+            foreach (IPropertyChangeTracker tracker in changeTrackers)
+                tracker.RejectChanges();
+        }
+
+        protected bool RemoveChangeTracker<T>(IPropertyChangeTracker<T> changeTracker)
+        {
+            lock (_changeTrackers)
+            {
+                if (_changeTrackers.TryGetValue(changeTracker.PropertyName, out IPropertyChangeTracker ct) && ReferenceEquals(ct, changeTracker))
+                {
+                    _changeTrackers.Remove(changeTracker.PropertyName);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         protected bool SetError(string propertyName, string message)
         {
             Monitor.Enter(_syncroot);
@@ -157,54 +237,10 @@ namespace FsInfoCat
             finally { Monitor.Exit(_syncroot); }
         }
 
-        protected bool ClearError([NotNull] string propertyName)
+        public interface IPropertyChangeTracker : IRevertibleChangeTracking
         {
-            Monitor.Enter(_syncroot);
-            try
-            {
-                throw new NotImplementedException();
-            }
-            finally { Monitor.Exit(_syncroot); }
-        }
+            string PropertyName { get; }
 
-        protected virtual void OnPropertyChanged(PropertyValueChangedEventArgs args)
-        {
-            try { PropertyValueChanged?.Invoke(this, args); }
-            finally { PropertyChanged?.Invoke(this, args); }
-        }
-
-        protected virtual void OnErrorsChanged(DataErrorsChangedEventArgs args) => ErrorsChanged?.Invoke(this, args);
-
-        protected virtual bool CheckHashSetChanged<T>(HashSet<T> oldValue, HashSet<T> newValue, Action<HashSet<T>> setter, [CallerMemberName] string propertyName = null)
-        {
-            if (newValue is null)
-            {
-                if (oldValue.Count == 0)
-                    return false;
-                setter(new HashSet<T>());
-            }
-            else
-            {
-                if (ReferenceEquals(oldValue, newValue))
-                    return false;
-                setter(newValue);
-            }
-            RaisePropertyChanged(oldValue, newValue, propertyName);
-            return true;
-        }
-
-        protected IPropertyChangeTracker<T> CreateChangeTracker<T>([DisallowNull] string propertyName, [AllowNull] T initialValue, ICoersion<T> coersion = null) =>
-            new PropertyChangeTracker<T>(this, propertyName, initialValue, coersion);
-
-        IEnumerable INotifyDataErrorInfo.GetErrors(string propertyName)
-        {
-            if (_lastValidationResults.TryGetValue(propertyName, out string[] result))
-                return result;
-            return null;
-        }
-
-        public interface IPropertyChangeTracker : IChangeTracking
-        {
             bool IsSet { get; }
 
             object GetValue();
@@ -226,10 +262,18 @@ namespace FsInfoCat
         private class PropertyChangeTracker<T> : IPropertyChangeTracker<T>
         {
             private readonly WeakReference<NotifyPropertyChanged> _target;
+            private bool _originalValueIsSet;
+            private T _originalValue;
             private T _value;
 
-            internal PropertyChangeTracker(NotifyPropertyChanged target, string propertyName, T initialValue, ICoersion<T> coersion)
+            internal PropertyChangeTracker([NotNull] NotifyPropertyChanged target, [NotNull] string propertyName, T initialValue, ICoersion<T> coersion)
             {
+                lock (target._changeTrackers)
+                {
+                    if (target._changeTrackers.ContainsKey(propertyName))
+                        throw new ArgumentOutOfRangeException(nameof(propertyName));
+                    target._changeTrackers.Add(propertyName, this);
+                }
                 Coersion = coersion ?? Coersion<T>.Default;
                 _value = Coersion.Normalize(initialValue);
                 _target = new WeakReference<NotifyPropertyChanged>(target);
@@ -242,9 +286,22 @@ namespace FsInfoCat
 
             public bool IsSet { get; private set; }
 
-            public bool IsChanged { get; private set; }
+            public bool IsChanged => !Coersion.Equals(_originalValue, _value);
 
-            public void AcceptChanges() => IsChanged = false;
+            public void AcceptChanges()
+            {
+                _originalValueIsSet = IsSet;
+                _originalValue = _value;
+            }
+
+            public void RejectChanges()
+            {
+                IsSet = _originalValueIsSet;
+                T oldValue = _value;
+                _value = _originalValue;
+                if (!Coersion.Equals(oldValue, _value) && _target.TryGetTarget(out NotifyPropertyChanged target) && target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker))
+                    target.RaisePropertyChanged(oldValue, _value, PropertyName);
+            }
 
             public T GetValue() => _value;
 
@@ -255,9 +312,8 @@ namespace FsInfoCat
                 newValue = Coersion.Normalize(newValue);
                 if (Coersion.Equals(oldValue, newValue))
                     return false;
-                IsChanged = true;
                 _value = newValue;
-                if (_target.TryGetTarget(out NotifyPropertyChanged target))
+                if (_target.TryGetTarget(out NotifyPropertyChanged target) && target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker))
                     target.RaisePropertyChanged(oldValue, newValue, PropertyName);
                 return true;
             }

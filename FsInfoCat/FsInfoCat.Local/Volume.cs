@@ -147,22 +147,22 @@ namespace FsInfoCat.Local
 
         public Volume()
         {
-            _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _displayName = CreateChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
-            _volumeName = CreateChangeTracker(nameof(VolumeName), "", TrimmedNonNullStringCoersion.Default);
-            _identifier = CreateChangeTracker<VolumeIdentifier>(nameof(Identifier), default);
-            _caseSensitiveSearch = CreateChangeTracker<bool?>(nameof(CaseSensitiveSearch), null);
-            _readOnly = CreateChangeTracker<bool?>(nameof(ReadOnly), null);
-            _maxNameLength = CreateChangeTracker<int?>(nameof(MaxNameLength), null);
-            _type = CreateChangeTracker(nameof(Type), DriveType.Unknown);
-            _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _status = CreateChangeTracker(nameof(Status), VolumeStatus.Unknown);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _fileSystemId = CreateChangeTracker(nameof(FileSystemId), Guid.Empty);
-            _fileSystem = CreateChangeTracker<FileSystem>(nameof(FileSystem), null);
-            _rootDirectory = CreateChangeTracker<Subdirectory>(nameof(RootDirectory), null);
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
+            _volumeName = AddChangeTracker(nameof(VolumeName), "", TrimmedNonNullStringCoersion.Default);
+            _identifier = AddChangeTracker<VolumeIdentifier>(nameof(Identifier), default);
+            _caseSensitiveSearch = AddChangeTracker<bool?>(nameof(CaseSensitiveSearch), null);
+            _readOnly = AddChangeTracker<bool?>(nameof(ReadOnly), null);
+            _maxNameLength = AddChangeTracker<int?>(nameof(MaxNameLength), null);
+            _type = AddChangeTracker(nameof(Type), DriveType.Unknown);
+            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _status = AddChangeTracker(nameof(Status), VolumeStatus.Unknown);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _fileSystemId = AddChangeTracker(nameof(FileSystemId), Guid.Empty);
+            _fileSystem = AddChangeTracker<FileSystem>(nameof(FileSystem), null);
+            _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
         }
 
         public bool IsNew() => !_id.IsSet;

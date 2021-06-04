@@ -10,10 +10,12 @@ namespace FsInfoCat.Local
 
         new ILocalSubdirectory Parent { get; set; }
 
+        new ILocalRedundancy Redundancy { get; }
+
         new IEnumerable<ILocalComparison> ComparisonSources { get; }
 
         new IEnumerable<ILocalComparison> ComparisonTargets { get; }
 
-        new ILocalRedundancy Redundancy { get; }
+        new IEnumerable<IAccessError<ILocalFile>> AccessErrors { get; }
     }
 }

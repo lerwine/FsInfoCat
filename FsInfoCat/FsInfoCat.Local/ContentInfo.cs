@@ -75,12 +75,12 @@ namespace FsInfoCat.Local
 
         public ContentInfo()
         {
-            _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _length = CreateChangeTracker(nameof(Length), 0L);
-            _hash = CreateChangeTracker<MD5Hash?>(nameof(Hash), null);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _length = AddChangeTracker(nameof(Length), 0L);
+            _hash = AddChangeTracker<MD5Hash?>(nameof(Hash), null);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
         }
 
         public bool IsNew() => !_id.IsSet;

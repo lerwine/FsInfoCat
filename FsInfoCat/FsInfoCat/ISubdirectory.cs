@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat
 {
     public interface ISubdirectory : IDbEntity
     {
+        Guid Id { get; set; }
+
         string Name { get; set; }
 
         DirectoryCrawlOptions Options { get; set; }
@@ -13,6 +15,7 @@ namespace FsInfoCat
 
         string Notes { get; set; }
 
+#warning Replace with status of Normal, AccessError, Deleted
         bool Deleted { get; set; }
 
         ISubdirectory Parent { get; set; }
@@ -23,6 +26,6 @@ namespace FsInfoCat
 
         IEnumerable<ISubdirectory> SubDirectories { get; }
 
-        Guid Id { get; set; }
+        IEnumerable<IAccessError<ISubdirectory>> AccessErrors { get; }
     }
 }

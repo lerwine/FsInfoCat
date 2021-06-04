@@ -21,6 +21,7 @@ namespace FsInfoCat
 
         string Notes { get; set; }
 
+#warning Replace with status of Normal, AccessError, Deleted
         bool Deleted { get; set; }
 
         IContentInfo Content { get; set; }
@@ -29,10 +30,12 @@ namespace FsInfoCat
 
         ISubdirectory Parent { get; set; }
 
+        IRedundancy Redundancy { get; }
+
         IEnumerable<IComparison> ComparisonSources { get; }
 
         IEnumerable<IComparison> ComparisonTargets { get; }
 
-        IRedundancy Redundancy { get; }
+        IEnumerable<IAccessError<IFile>> AccessErrors { get; }
     }
 }

@@ -12,7 +12,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalSymbolicNameUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [ClassInitialize]
@@ -22,11 +21,12 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SymbolicName Add/Remove Tests")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SymbolicNameAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "SymbolicNameAddRemove";
-            Local.FileSystem fileSystem = GetVFatFileSystem(dbContext);
+            Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = expected, FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -60,19 +60,14 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        private static Local.FileSystem GetVFatFileSystem(Local.LocalDbContext dbContext)
-        {
-            Guid id = Guid.Parse("{53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd}");
-            return dbContext.FileSystems.ToList().FirstOrDefault(fs => fs.Id.Equals(id));
-        }
-
         [TestMethod("SymbolicName Name Validation Tests")]
-        [TestProperty(TestProperty_Description, "SymbolicName.Name: NVARCHAR(256) NOT NULL CHECK(length(trim(Name)) = length(Name) AND length(Name)>0) UNIQUE COLLATE NOCASE")]
+        [TestProperty(TestHelper.TestProperty_Description, "SymbolicName.Name: NVARCHAR(256) NOT NULL CHECK(length(trim(Name)) = length(Name) AND length(Name)>0) UNIQUE COLLATE NOCASE")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SymbolicNameNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
-            Local.FileSystem fileSystem = GetVFatFileSystem(dbContext);
+            Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = null, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.Name);
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
@@ -152,7 +147,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SymbolicName FileSystem Validation Tests")]
-        [TestProperty(TestProperty_Description, "SymbolicName.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
+        [TestProperty(TestHelper.TestProperty_Description, "SymbolicName.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SymbolicNameFileSystemTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -169,7 +165,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.FileSystem);
 
-            expected = GetVFatFileSystem(dbContext);
+            expected = TestHelper.GetVFatFileSystem(dbContext);
             expected = new() { DisplayName = "SymbolicName Name FileSystem" };
             target.FileSystem = expected;
             dbContext.FileSystems.Add(expected);
@@ -184,11 +180,12 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SymbolicName CreatedOn Validation Tests")]
-        [TestProperty(TestProperty_Description, "SymbolicName.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "SymbolicName.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SymbolicNameCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = GetVFatFileSystem(dbContext);
+            Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             dbContext.SaveChanges();
@@ -222,12 +219,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SymbolicName LastSynchronizedOn Validation Tests")]
-        [TestProperty(TestProperty_Description,
+        [TestProperty(TestHelper.TestProperty_Description,
             "SymbolicName.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SymbolicNameLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = GetVFatFileSystem(dbContext);
+            Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = "SymbolicName LastSynchronizedOn Item", FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();

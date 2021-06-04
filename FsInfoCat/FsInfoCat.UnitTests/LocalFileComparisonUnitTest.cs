@@ -12,7 +12,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalFileComparisonUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [ClassInitialize]
@@ -54,7 +53,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileComparison SourceFile Validation Tests")]
-        [TestProperty(TestProperty_Description, "FileComparison.SourceFile: UNIQUEIDENTIFIER NOT NULL (SourceFileId<>TargetFileId) FOREIGN REFERENCES DbFiles")]
+        [TestProperty(TestHelper.TestProperty_Description, "FileComparison.SourceFile: UNIQUEIDENTIFIER NOT NULL (SourceFileId<>TargetFileId) FOREIGN REFERENCES DbFiles")]
         public void FileComparisonSourceFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -99,7 +98,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileComparison TargetFile Validation Tests")]
-        [TestProperty(TestProperty_Description, "FileComparison.TargetFile: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
+        [TestProperty(TestHelper.TestProperty_Description, "FileComparison.TargetFile: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
         public void FileComparisonTargetFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -144,7 +143,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileComparison CreatedOn Validation Tests")]
-        [TestProperty(TestProperty_Description, "FileComparison.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "FileComparison.CreatedOn: CreatedOn<=ModifiedOn")]
         public void FileComparisonCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -182,7 +181,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileComparison LastSynchronizedOn Validation Tests")]
-        [TestProperty(TestProperty_Description,
+        [TestProperty(TestHelper.TestProperty_Description,
             "FileComparison.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void FileComparisonLastSynchronizedOnTestMethod()
         {

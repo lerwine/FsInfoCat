@@ -17,5 +17,7 @@ namespace FsInfoCat.Upstream
         IEnumerable<ISubdirectoryAction> SubdirectoryActions { get; }
 
         IEnumerable<ISubdirectoryAction> SubdirectoryActionSources { get; }
+
+        new IEnumerable<IAccessError<IUpstreamSubdirectory>> AccessErrors { get; }
     }
 }

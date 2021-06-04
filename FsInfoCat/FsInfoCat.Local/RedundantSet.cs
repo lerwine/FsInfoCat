@@ -109,15 +109,15 @@ namespace FsInfoCat.Local
 
         public RedundantSet()
         {
-            _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _remediationStatus = CreateChangeTracker(nameof(RemediationStatus), RedundancyRemediationStatus.Unconfirmed);
-            _reference = CreateChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
-            _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _contentInfoId = CreateChangeTracker(nameof(ContentInfoId), Guid.Empty);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _contentInfo = CreateChangeTracker<ContentInfo>(nameof(ContentInfo), null);
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _remediationStatus = AddChangeTracker(nameof(RemediationStatus), RedundancyRemediationStatus.Unconfirmed);
+            _reference = AddChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _contentInfoId = AddChangeTracker(nameof(ContentInfoId), Guid.Empty);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _contentInfo = AddChangeTracker<ContentInfo>(nameof(ContentInfo), null);
         }
 
         public bool IsNew() => !_id.IsSet;

@@ -13,7 +13,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalVolumeUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [ClassInitialize]
@@ -23,6 +22,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume Add/Remove Tests")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -68,7 +68,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume Identifier Validation Tests")]
-        [TestProperty(TestProperty_Description, "Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeIdentifierTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -221,7 +222,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume VolumeName Validation Tests")]
-        [TestProperty(TestProperty_Description, "Volume.VolumeName: NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.VolumeName: NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeVolumeNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -338,7 +340,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume DisplayName Validation Tests")]
-        [TestProperty(TestProperty_Description, "Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeDisplayNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -456,7 +459,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume Type Validation Tests")]
-        [TestProperty(TestProperty_Description, "Volume.Type: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.Type: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeTypeTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -504,7 +508,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume FileSystem Validation Tests")]
-        [TestProperty(TestProperty_Description, "Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeFileSystemTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -579,7 +584,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume Status Validation Tests")]
-        [TestProperty(TestProperty_Description, "Volume.Status: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.Status: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeStatusTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -627,7 +633,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume MaxNameLength Validation Tests")]
-        [TestProperty(TestProperty_Description, "Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeMaxNameLengthTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -689,7 +696,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume CreatedOn Validation Tests")]
-        [TestProperty(TestProperty_Description, "Volume.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -730,8 +738,9 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume LastSynchronizedOn Validation Tests")]
-        [TestProperty(TestProperty_Description,
+        [TestProperty(TestHelper.TestProperty_Description,
             "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void VolumeLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
