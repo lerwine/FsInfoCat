@@ -107,17 +107,17 @@ namespace FsInfoCat.Local
 
         public FileSystem()
         {
-            _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _displayName = CreateChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
-            _caseSensitiveSearch = CreateChangeTracker(nameof(CaseSensitiveSearch), false);
-            _readOnly = CreateChangeTracker(nameof(ReadOnly), false);
-            _maxNameLength = CreateChangeTracker(nameof(MaxNameLength), DbConstants.DbColDefaultValue_MaxNameLength);
-            _defaultDriveType = CreateChangeTracker<DriveType?>(nameof(DefaultDriveType), null);
-            _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _isInactive = CreateChangeTracker(nameof(IsInactive), false);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
+            _caseSensitiveSearch = AddChangeTracker(nameof(CaseSensitiveSearch), false);
+            _readOnly = AddChangeTracker(nameof(ReadOnly), false);
+            _maxNameLength = AddChangeTracker(nameof(MaxNameLength), DbConstants.DbColDefaultValue_MaxNameLength);
+            _defaultDriveType = AddChangeTracker<DriveType?>(nameof(DefaultDriveType), null);
+            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _isInactive = AddChangeTracker(nameof(IsInactive), false);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
         }
 
         public bool IsNew() => !_id.IsSet;

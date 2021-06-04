@@ -12,7 +12,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalContentInfoUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [ClassInitialize]
@@ -55,7 +54,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ContentInfo Hash Validation Tests")]
-        [TestProperty(TestProperty_Description, "ContentInfo.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
         public void ContentInfoHashTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -83,7 +82,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ContentInfo Length Validation Tests")]
-        [TestProperty(TestProperty_Description, "ContentInfo.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
         public void ContentInfoLengthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -128,7 +127,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ContentInfo CreatedOn Validation Tests")]
-        [TestProperty(TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void ContentInfoCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -166,7 +165,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ContentInfo LastSynchronizedOn Validation Tests")]
-        [TestProperty(TestProperty_Description,
+        [TestProperty(TestHelper.TestProperty_Description,
             "ContentInfo.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void ContentInfoLastSynchronizedOnTestMethod()
         {

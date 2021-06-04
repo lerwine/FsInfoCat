@@ -109,16 +109,16 @@ namespace FsInfoCat.Local
 
         public SymbolicName()
         {
-            _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _name = CreateChangeTracker(nameof(Name), "", TrimmedNonNullStringCoersion.Default);
-            _priority = CreateChangeTracker(nameof(Priority), 0);
-            _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _isInactive = CreateChangeTracker(nameof(IsInactive), false);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _fileSystemId = CreateChangeTracker(nameof(FileSystemId), Guid.Empty);
-            _fileSystem = CreateChangeTracker<FileSystem>(nameof(FileSystem), null);
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _name = AddChangeTracker(nameof(Name), "", TrimmedNonNullStringCoersion.Default);
+            _priority = AddChangeTracker(nameof(Priority), 0);
+            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _isInactive = AddChangeTracker(nameof(IsInactive), false);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _fileSystemId = AddChangeTracker(nameof(FileSystemId), Guid.Empty);
+            _fileSystem = AddChangeTracker<FileSystem>(nameof(FileSystem), null);
         }
 
         public bool IsNew() => !_id.IsSet;

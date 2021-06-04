@@ -174,19 +174,19 @@ namespace FsInfoCat.Local
 
         public Subdirectory()
         {
-            _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _name = CreateChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
-            _options = CreateChangeTracker(nameof(Options), DirectoryCrawlOptions.None);
-            _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _deleted = CreateChangeTracker(nameof(Deleted), false);
-            _parentId = CreateChangeTracker<Guid?>(nameof(ParentId), null);
-            _volumeId = CreateChangeTracker<Guid?>(nameof(VolumeId), null);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _lastAccessed = CreateChangeTracker(nameof(LastAccessed), _createdOn.GetValue());
-            _parent = CreateChangeTracker<Subdirectory>(nameof(Parent), null);
-            _volume = CreateChangeTracker<Volume>(nameof(Volume), null);
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
+            _options = AddChangeTracker(nameof(Options), DirectoryCrawlOptions.None);
+            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _deleted = AddChangeTracker(nameof(Deleted), false);
+            _parentId = AddChangeTracker<Guid?>(nameof(ParentId), null);
+            _volumeId = AddChangeTracker<Guid?>(nameof(VolumeId), null);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _lastAccessed = AddChangeTracker(nameof(LastAccessed), _createdOn.GetValue());
+            _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
+            _volume = AddChangeTracker<Volume>(nameof(Volume), null);
         }
 
         public bool IsNew() => !_id.IsSet;

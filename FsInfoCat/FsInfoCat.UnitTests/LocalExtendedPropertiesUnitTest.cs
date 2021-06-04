@@ -12,7 +12,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalExtendedPropertiesUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [ClassInitialize]
@@ -79,7 +78,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ExtendedProperties Height Validation Tests")]
-        [TestProperty(TestProperty_Description, "ExtendedProperties.Height: INT NOT NULL CHECK(Height>=0 AND Height<65536)")]
+        [TestProperty(TestHelper.TestProperty_Description, "ExtendedProperties.Height: INT NOT NULL CHECK(Height>=0 AND Height<65536)")]
         public void ExtendedPropertiesHeightTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -107,7 +106,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ExtendedProperties Width Validation Tests")]
-        [TestProperty(TestProperty_Description, "ExtendedProperties.Width: INT NOT NULL CHECK(Height>=0 AND Height<65536)")]
+        [TestProperty(TestHelper.TestProperty_Description, "ExtendedProperties.Width: INT NOT NULL CHECK(Height>=0 AND Height<65536)")]
         public void ExtendedPropertiesWidthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -152,7 +151,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ExtendedProperties CreatedOn Validation Tests")]
-        [TestProperty(TestProperty_Description, "ExtendedProperties.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ExtendedProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void ExtendedPropertiesCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -190,7 +189,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ExtendedProperties LastSynchronizedOn Validation Tests")]
-        [TestProperty(TestProperty_Description,
+        [TestProperty(TestHelper.TestProperty_Description,
             "ExtendedProperties.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void ExtendedPropertiesLastSynchronizedOnTestMethod()
         {

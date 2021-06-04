@@ -138,15 +138,15 @@ namespace FsInfoCat.Local
 
         public FileComparison()
         {
-            _sourceFileId = CreateChangeTracker(nameof(SourceFileId), Guid.Empty);
-            _targetFileId = CreateChangeTracker(nameof(TargetFileId), Guid.Empty);
-            _areEqual = CreateChangeTracker(nameof(AreEqual), false);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _comparedOn = CreateChangeTracker(nameof(ComparedOn), _createdOn.GetValue());
-            _sourceFile = CreateChangeTracker<DbFile>(nameof(SourceFile), null);
-            _targetFile = CreateChangeTracker<DbFile>(nameof(TargetFile), null);
+            _sourceFileId = AddChangeTracker(nameof(SourceFileId), Guid.Empty);
+            _targetFileId = AddChangeTracker(nameof(TargetFileId), Guid.Empty);
+            _areEqual = AddChangeTracker(nameof(AreEqual), false);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _comparedOn = AddChangeTracker(nameof(ComparedOn), _createdOn.GetValue());
+            _sourceFile = AddChangeTracker<DbFile>(nameof(SourceFile), null);
+            _targetFile = AddChangeTracker<DbFile>(nameof(TargetFile), null);
         }
 
         public bool IsNew() => !(_sourceFileId.IsSet & _targetFileId.IsSet);

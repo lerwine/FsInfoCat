@@ -90,36 +90,36 @@ namespace FsInfoCat.Local
 
         public ExtendedProperties()
         {
-            _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _width = CreateChangeTracker(nameof(Width), (ushort)0);
-            _height = CreateChangeTracker(nameof(Height), (ushort)0);
-            _duration = CreateChangeTracker(nameof(Duration), (ulong?)null);
-            _frameCount = CreateChangeTracker(nameof(FrameCount), (uint?)null);
-            _trackNumber = CreateChangeTracker(nameof(TrackNumber), (uint?)null);
-            _bitrate = CreateChangeTracker(nameof(Bitrate), (uint?)null);
-            _frameRate = CreateChangeTracker(nameof(FrameRate), (uint?)null);
-            _samplesPerPixel = CreateChangeTracker(nameof(SamplesPerPixel), (ushort?)null);
-            _pixelPerUnitX = CreateChangeTracker(nameof(PixelPerUnitX), (uint?)null);
-            _pixelPerUnitY = CreateChangeTracker(nameof(PixelPerUnitY), (uint?)null);
-            _compression = CreateChangeTracker(nameof(Compression), (ushort?)null);
-            _xResNumerator = CreateChangeTracker(nameof(XResNumerator), (uint?)null);
-            _xResDenominator = CreateChangeTracker(nameof(XResDenominator), (uint?)null);
-            _yResNumerator = CreateChangeTracker(nameof(YResNumerator), (uint?)null);
-            _yResDenominator = CreateChangeTracker(nameof(YResDenominator), (uint?)null);
-            _resolutionXUnit = CreateChangeTracker(nameof(ResolutionXUnit), (ushort?)null);
-            _resolutionYUnit = CreateChangeTracker(nameof(ResolutionYUnit), (ushort?)null);
-            _jpegProc = CreateChangeTracker(nameof(JPEGProc), (ushort?)null);
-            _jpegQuality = CreateChangeTracker(nameof(JPEGQuality), (ushort?)null);
-            _dateTime = CreateChangeTracker(nameof(DateTime), (DateTime?)null);
-            _title = CreateChangeTracker(nameof(Title), (string)null);
-            _description = CreateChangeTracker(nameof(Description), (string)null);
-            _copyright = CreateChangeTracker(nameof(Copyright), (string)null);
-            _softwareUsed = CreateChangeTracker(nameof(SoftwareUsed), (string)null);
-            _artist = CreateChangeTracker(nameof(Artist), (string)null);
-            _hostComputer = CreateChangeTracker(nameof(HostComputer), (string)null);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), System.DateTime.Now)).GetValue());
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _width = AddChangeTracker(nameof(Width), (ushort)0);
+            _height = AddChangeTracker(nameof(Height), (ushort)0);
+            _duration = AddChangeTracker(nameof(Duration), (ulong?)null);
+            _frameCount = AddChangeTracker(nameof(FrameCount), (uint?)null);
+            _trackNumber = AddChangeTracker(nameof(TrackNumber), (uint?)null);
+            _bitrate = AddChangeTracker(nameof(Bitrate), (uint?)null);
+            _frameRate = AddChangeTracker(nameof(FrameRate), (uint?)null);
+            _samplesPerPixel = AddChangeTracker(nameof(SamplesPerPixel), (ushort?)null);
+            _pixelPerUnitX = AddChangeTracker(nameof(PixelPerUnitX), (uint?)null);
+            _pixelPerUnitY = AddChangeTracker(nameof(PixelPerUnitY), (uint?)null);
+            _compression = AddChangeTracker(nameof(Compression), (ushort?)null);
+            _xResNumerator = AddChangeTracker(nameof(XResNumerator), (uint?)null);
+            _xResDenominator = AddChangeTracker(nameof(XResDenominator), (uint?)null);
+            _yResNumerator = AddChangeTracker(nameof(YResNumerator), (uint?)null);
+            _yResDenominator = AddChangeTracker(nameof(YResDenominator), (uint?)null);
+            _resolutionXUnit = AddChangeTracker(nameof(ResolutionXUnit), (ushort?)null);
+            _resolutionYUnit = AddChangeTracker(nameof(ResolutionYUnit), (ushort?)null);
+            _jpegProc = AddChangeTracker(nameof(JPEGProc), (ushort?)null);
+            _jpegQuality = AddChangeTracker(nameof(JPEGQuality), (ushort?)null);
+            _dateTime = AddChangeTracker(nameof(DateTime), (DateTime?)null);
+            _title = AddChangeTracker(nameof(Title), (string)null);
+            _description = AddChangeTracker(nameof(Description), (string)null);
+            _copyright = AddChangeTracker(nameof(Copyright), (string)null);
+            _softwareUsed = AddChangeTracker(nameof(SoftwareUsed), (string)null);
+            _artist = AddChangeTracker(nameof(Artist), (string)null);
+            _hostComputer = AddChangeTracker(nameof(HostComputer), (string)null);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), System.DateTime.Now)).GetValue());
         }
 
         public bool IsNew()

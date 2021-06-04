@@ -216,23 +216,23 @@ namespace FsInfoCat.Local
 
         public DbFile()
         {
-            _id = CreateChangeTracker(nameof(Id), Guid.Empty);
-            _name = CreateChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
-            _options = CreateChangeTracker(nameof(FileCrawlOptions), FileCrawlOptions.None);
-            _lastHashCalculation = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _deleted = CreateChangeTracker(nameof(Deleted), false);
-            _parentId = CreateChangeTracker(nameof(ParentId), Guid.Empty);
-            _contentId = CreateChangeTracker(nameof(ContentId), Guid.Empty);
-            _extendedPropertiesId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _lastAccessed = CreateChangeTracker(nameof(LastAccessed), _createdOn.GetValue());
-            _parent = CreateChangeTracker<Subdirectory>(nameof(Parent), null);
-            _content = CreateChangeTracker<ContentInfo>(nameof(Content), null);
-            _redundancy = CreateChangeTracker<Redundancy>(nameof(Redundancy), null);
-            _extendedProperties = CreateChangeTracker<ExtendedProperties>(nameof(ExtendedProperties), null);
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
+            _options = AddChangeTracker(nameof(FileCrawlOptions), FileCrawlOptions.None);
+            _lastHashCalculation = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _deleted = AddChangeTracker(nameof(Deleted), false);
+            _parentId = AddChangeTracker(nameof(ParentId), Guid.Empty);
+            _contentId = AddChangeTracker(nameof(ContentId), Guid.Empty);
+            _extendedPropertiesId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _lastAccessed = AddChangeTracker(nameof(LastAccessed), _createdOn.GetValue());
+            _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
+            _content = AddChangeTracker<ContentInfo>(nameof(Content), null);
+            _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
+            _extendedProperties = AddChangeTracker<ExtendedProperties>(nameof(ExtendedProperties), null);
         }
 
         public bool IsNew() => !_id.IsSet;

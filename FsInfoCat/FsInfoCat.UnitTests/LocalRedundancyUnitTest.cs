@@ -12,7 +12,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalRedundancyUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [ClassInitialize]
@@ -55,7 +54,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy Reference Validation Tests")]
-        [TestProperty(TestProperty_Description, "Redundancy.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
+        [TestProperty(TestHelper.TestProperty_Description, "Redundancy.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
         public void RedundancyReferenceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -100,7 +99,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy RedundantSet Validation Tests")]
-        [TestProperty(TestProperty_Description, "Redundancy.RedundantSet: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES RedundantSets")]
+        [TestProperty(TestHelper.TestProperty_Description, "Redundancy.RedundantSet: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES RedundantSets")]
         public void RedundancyRedundantSetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -145,7 +144,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy File Validation Tests")]
-        [TestProperty(TestProperty_Description, "Redundancy.File: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
+        [TestProperty(TestHelper.TestProperty_Description, "Redundancy.File: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
         public void RedundancyFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -190,7 +189,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy CreatedOn Validation Tests")]
-        [TestProperty(TestProperty_Description, "Redundancy.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "Redundancy.CreatedOn: CreatedOn<=ModifiedOn")]
         public void RedundancyCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -228,7 +227,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy LastSynchronizedOn Validation Tests")]
-        [TestProperty(TestProperty_Description,
+        [TestProperty(TestHelper.TestProperty_Description,
             "Redundancy.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void RedundancyLastSynchronizedOnTestMethod()
         {

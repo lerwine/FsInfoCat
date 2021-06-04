@@ -12,7 +12,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalSubdirectoryUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [ClassInitialize]
@@ -22,6 +21,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory Add/Remove Tests")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SubdirectoryAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -65,7 +65,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory Name Validation Tests")]
-        [TestProperty(TestProperty_Description, "Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
+        [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SubdirectoryNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -227,7 +228,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory Options Validation Tests")]
-        [TestProperty(TestProperty_Description, "Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
+        [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SubdirectoryOptionsTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -270,7 +272,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory CreatedOn Validation Tests")]
-        [TestProperty(TestProperty_Description, "Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SubdirectoryCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -320,8 +323,9 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory LastSynchronizedOn Validation Tests")]
-        [TestProperty(TestProperty_Description,
+        [TestProperty(TestHelper.TestProperty_Description,
             "Subdirectory.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
         public void SubdirectoryLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();

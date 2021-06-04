@@ -129,15 +129,15 @@ namespace FsInfoCat.Local
 
         public Redundancy()
         {
-            _fileId = CreateChangeTracker(nameof(FileId), Guid.Empty);
-            _redundantSetId = CreateChangeTracker(nameof(RedundantSetId), Guid.Empty);
-            _reference = CreateChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
-            _notes = CreateChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _upstreamId = CreateChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = CreateChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = CreateChangeTracker(nameof(ModifiedOn), (_createdOn = CreateChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _file = CreateChangeTracker<DbFile>(nameof(File), null);
-            _redundantSet = CreateChangeTracker<RedundantSet>(nameof(RedundantSet), null);
+            _fileId = AddChangeTracker(nameof(FileId), Guid.Empty);
+            _redundantSetId = AddChangeTracker(nameof(RedundantSetId), Guid.Empty);
+            _reference = AddChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+            _file = AddChangeTracker<DbFile>(nameof(File), null);
+            _redundantSet = AddChangeTracker<RedundantSet>(nameof(RedundantSet), null);
         }
 
         public bool IsNew() => !(_fileId.IsSet & _redundantSetId.IsSet);

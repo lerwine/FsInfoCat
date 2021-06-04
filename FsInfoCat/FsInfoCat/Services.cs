@@ -1,9 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -83,6 +85,11 @@ namespace FsInfoCat
                 options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId;
             })).Build();
             await Host.StartAsync();
+        }
+
+        public static void RejectChanges<T>(this DbSet<T> dbSet) where T : class, IRevertibleChangeTracking
+        {
+            throw new NotImplementedException();
         }
 
         public static string AsNonNullTrimmed(this string text) => string.IsNullOrWhiteSpace(text) ? "" : text.Trim();

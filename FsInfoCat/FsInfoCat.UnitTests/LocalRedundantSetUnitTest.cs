@@ -12,7 +12,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalRedundantSetUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [ClassInitialize]
@@ -56,7 +55,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet ContentInfo Validation Tests")]
-        [TestProperty(TestProperty_Description, "RedundantSet.ContentInfo: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES ContentInfos")]
+        [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.ContentInfo: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES ContentInfos")]
         public void RedundantSetContentInfoTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -101,7 +100,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet Reference Validation Tests")]
-        [TestProperty(TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
+        [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
         public void RedundantSetRemediationStatusTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -146,7 +145,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet Reference Validation Tests")]
-        [TestProperty(TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
+        [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
         public void RedundantSetReferenceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -191,7 +190,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet CreatedOn Validation Tests")]
-        [TestProperty(TestProperty_Description, "RedundantSet.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.CreatedOn: CreatedOn<=ModifiedOn")]
         public void RedundantSetCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -229,7 +228,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet LastSynchronizedOn Validation Tests")]
-        [TestProperty(TestProperty_Description,
+        [TestProperty(TestHelper.TestProperty_Description,
             "RedundantSet.LastSynchronizedOn: (UpstreamId IS NULL -OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void RedundantSetLastSynchronizedOnTestMethod()
         {

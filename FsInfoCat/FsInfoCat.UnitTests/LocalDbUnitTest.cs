@@ -9,7 +9,6 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalDbUnitTest
     {
-        private const string TestProperty_Description = "Description";
         private static TestContext _testContext;
 
         [AssemblyInitialize()]
