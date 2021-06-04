@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Local
 {
@@ -11,5 +11,7 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalFile> Files { get; }
 
         new IEnumerable<ILocalSubdirectory> SubDirectories { get; }
+
+        new IEnumerable<IAccessError<ILocalSubdirectory>> AccessErrors { get; }
     }
 }

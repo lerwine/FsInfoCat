@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace FsInfoCat
 {
@@ -27,5 +28,7 @@ namespace FsInfoCat
         IFileSystem FileSystem { get; set; }
 
         ISubdirectory RootDirectory { get; }
+
+        IEnumerable<IAccessError<IVolume>> AccessErrors { get; }
     }
 }
