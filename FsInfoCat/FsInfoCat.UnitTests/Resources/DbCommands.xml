@@ -30,9 +30,8 @@
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL,
+	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SymbolicNameFileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_SymbolicNameFileSystem" FOREIGN KEY("FileSystemId") REFERENCES "FileSystems"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
@@ -41,7 +40,7 @@
             <![CDATA[CREATE TABLE "Volumes" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) COLLATE NOCASE,
-    "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName)) = length(VolumeName) AND length(VolumeName)>0) COLLATE NOCASE,
+    "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName)) = length(VolumeName)) COLLATE NOCASE,
     "Identifier" NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier)) = length(Identifier) AND length(Identifier)>0) UNIQUE COLLATE NOCASE,
     "CaseSensitiveSearch" BIT DEFAULT NULL,
     "ReadOnly" BIT DEFAULT NULL,
@@ -53,9 +52,8 @@
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL,
+	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_VolumeFileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_Volumes" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_VolumeFileSystem" FOREIGN KEY("FileSystemId") REFERENCES "FileSystems"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
@@ -72,11 +70,9 @@
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ParentId"	UNIQUEIDENTIFIER,
-	"VolumeId"	UNIQUEIDENTIFIER,
+	"ParentId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryParent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
+	"VolumeId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryVolume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_Subdirectories" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_SubdirectoryParent" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
-	CONSTRAINT "FK_SubdirectoryVolume" FOREIGN KEY("VolumeId") REFERENCES "Volumes"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
         ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
@@ -95,17 +91,14 @@
     "LastHashCalculation" DATETIME DEFAULT NULL,
     "Notes" TEXT NOT NULL DEFAULT '',
     "Deleted" BIT NOT NULL DEFAULT 0,
-    "ExtendedPropertyId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "ExtendedPropertyId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileExtendedProperty" REFERENCES "ExtendedProperties"("Id") ON DELETE RESTRICT,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
-	"ParentId"	UNIQUEIDENTIFIER NOT NULL,
+	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileContentInfo" REFERENCES "ContentInfos"("Id") ON DELETE RESTRICT,
+	"ParentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileSubdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_FileSubdirectory" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
-	CONSTRAINT "FK_FileContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
-	CONSTRAINT "FK_FileExtendedProperty" FOREIGN KEY("ExtendedPropertyId") REFERENCES "ExtendedProperties"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
@@ -147,7 +140,7 @@
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
         (XResNumerator IS NULL) = (XResDenominator IS NULL) AND (YResNumerator IS NULL) = (YResDenominator IS NULL))
-);]]>
+)]]>
         </Text>
         <Text Message="Creating table 'ContentInfos'">
             <![CDATA[CREATE TABLE "ContentInfos" (
@@ -167,7 +160,7 @@
         <Text Message="Creating table 'RedundantSets'">
             <![CDATA[CREATE TABLE "RedundantSets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
+	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSeContentInfo" REFERENCES "ContentInfos"("Id") ON DELETE RESTRICT,
 	"RemediationStatus"	TINYINT NOT NULL DEFAULT 1 CHECK(RemediationStatus>=0 AND RemediationStatus<9),
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
@@ -176,15 +169,14 @@
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_RedundantSeContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
         <Text Message="Creating table 'Redundancies'">
             <![CDATA[CREATE TABLE "Redundancies" (
-	"FileId"	UNIQUEIDENTIFIER NOT NULL,
-	"RedundantSetId"	UNIQUEIDENTIFIER NOT NULL,
+	"FileId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
+	"RedundantSetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyRedundantSet" REFERENCES "RedundantSets"("Id") ON DELETE RESTRICT,
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
@@ -192,24 +184,20 @@
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_Redundancies" PRIMARY KEY("FileId","RedundantSetId"),
-	CONSTRAINT "FK_RedundancyFile" FOREIGN KEY("FileId") REFERENCES "Files"("Id"),
-	CONSTRAINT "FK_RedundancyRedundantSet" FOREIGN KEY("RedundantSetId") REFERENCES "RedundantSets"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
         <Text Message="Creating table 'Comparisons'">
             <![CDATA[CREATE TABLE "Comparisons" (
-    "SourceFileId" UNIQUEIDENTIFIER NOT NULL,
-    "TargetFileId" UNIQUEIDENTIFIER NOT NULL,
+    "SourceFileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonSourceFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
+    "TargetFileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonTargetFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
     "AreEqual" BIT NOT NULL DEFAULT 0,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_Comparisons" PRIMARY KEY("SourceFileId","TargetFileId"),
-	CONSTRAINT "FK_ComparisonSourceFile" FOREIGN KEY("SourceFileId") REFERENCES "Files"("Id"),
-	CONSTRAINT "FK_ComparisonTargetFile" FOREIGN KEY("TargetFileId") REFERENCES "Files"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND SourceFileId<>TargetFileId AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
@@ -240,11 +228,17 @@ END]]>
         <Text Message="Dropping table 'ContentInfos'">
             <![CDATA[DROP TABLE "ContentInfos"]]>
         </Text>
-        <Text Message="Removing related 'Subdirectories' from table 'Volumes'">
-            <![CDATA[UPDATE "Volumes" SET "RootDirectoryId"=NULL]]>
+        <Text Message="Dropping table 'ExtendedProperties'">
+            <![CDATA[DROP TABLE "ExtendedProperties"]]>
+        </Text>
+        <Text Message="Turning foreign_keys OFF">
+            <![CDATA[PRAGMA foreign_keys = OFF]]>
         </Text>
         <Text Message="Dropping table 'Subdirectories'">
             <![CDATA[DROP TABLE "Subdirectories"]]>
+        </Text>
+        <Text Message="Turning foreign_keys back ON">
+            <![CDATA[PRAGMA foreign_keys = ON]]>
         </Text>
         <Text Message="Dropping table 'Volumes'">
             <![CDATA[DROP TABLE "Volumes"]]>

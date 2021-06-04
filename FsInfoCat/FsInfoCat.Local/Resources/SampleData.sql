@@ -4,7 +4,9 @@ DROP TABLE "Files";
 DROP TABLE "RedundantSets";
 DROP TABLE "ContentInfos";
 DROP TABLE "ExtendedProperties";
+PRAGMA foreign_keys = OFF;
 DROP TABLE "Subdirectories";
+PRAGMA foreign_keys = ON;
 DROP TABLE "Volumes";
 DROP TABLE "SymbolicNames";
 DROP TABLE "FileSystems";
@@ -36,9 +38,8 @@ CREATE TABLE "SymbolicNames" (
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL,
+	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SymbolicNameFileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_SymbolicNameFileSystem" FOREIGN KEY("FileSystemId") REFERENCES "FileSystems"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
@@ -57,9 +58,8 @@ CREATE TABLE "Volumes" (
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL,
+	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_VolumeFileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_Volumes" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_VolumeFileSystem" FOREIGN KEY("FileSystemId") REFERENCES "FileSystems"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
@@ -74,11 +74,9 @@ CREATE TABLE "Subdirectories" (
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ParentId"	UNIQUEIDENTIFIER,
-	"VolumeId"	UNIQUEIDENTIFIER,
+	"ParentId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryParent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
+	"VolumeId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryVolume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_Subdirectories" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_SubdirectoryParent" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
-	CONSTRAINT "FK_SubdirectoryVolume" FOREIGN KEY("VolumeId") REFERENCES "Volumes"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
         ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
@@ -93,17 +91,14 @@ CREATE TABLE "Files" (
     "LastHashCalculation" DATETIME DEFAULT NULL,
     "Notes" TEXT NOT NULL DEFAULT '',
     "Deleted" BIT NOT NULL DEFAULT 0,
-    "ExtendedPropertyId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "ExtendedPropertyId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileExtendedProperty" REFERENCES "ExtendedProperties"("Id") ON DELETE RESTRICT,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
-	"ParentId"	UNIQUEIDENTIFIER NOT NULL,
+	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileContentInfo" REFERENCES "ContentInfos"("Id") ON DELETE RESTRICT,
+	"ParentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileSubdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_FileSubdirectory" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
-	CONSTRAINT "FK_FileContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
-	CONSTRAINT "FK_FileExtendedProperty" FOREIGN KEY("ExtendedPropertyId") REFERENCES "ExtendedProperties"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
@@ -159,7 +154,7 @@ CREATE TABLE "ContentInfos" (
 );
 CREATE TABLE "RedundantSets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
+	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSeContentInfo" REFERENCES "ContentInfos"("Id") ON DELETE RESTRICT,
 	"RemediationStatus"	TINYINT NOT NULL DEFAULT 1 CHECK(RemediationStatus>=0 AND RemediationStatus<9),
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
@@ -168,13 +163,12 @@ CREATE TABLE "RedundantSets" (
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
-	CONSTRAINT "FK_RedundantSeContentInfo" FOREIGN KEY("ContentInfoId") REFERENCES "ContentInfos"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 CREATE TABLE "Redundancies" (
-	"FileId"	UNIQUEIDENTIFIER NOT NULL,
-	"RedundantSetId"	UNIQUEIDENTIFIER NOT NULL,
+	"FileId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
+	"RedundantSetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyRedundantSet" REFERENCES "RedundantSets"("Id") ON DELETE RESTRICT,
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
@@ -182,25 +176,28 @@ CREATE TABLE "Redundancies" (
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_Redundancies" PRIMARY KEY("FileId","RedundantSetId"),
-	CONSTRAINT "FK_RedundancyFile" FOREIGN KEY("FileId") REFERENCES "Files"("Id"),
-	CONSTRAINT "FK_RedundancyRedundantSet" FOREIGN KEY("RedundantSetId") REFERENCES "RedundantSets"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 CREATE TABLE "Comparisons" (
-    "SourceFileId" UNIQUEIDENTIFIER NOT NULL,
-    "TargetFileId" UNIQUEIDENTIFIER NOT NULL,
+    "SourceFileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonSourceFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
+    "TargetFileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonTargetFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
     "AreEqual" BIT NOT NULL DEFAULT 0,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_Comparisons" PRIMARY KEY("SourceFileId","TargetFileId"),
-	CONSTRAINT "FK_ComparisonSourceFile" FOREIGN KEY("SourceFileId") REFERENCES "Files"("Id"),
-	CONSTRAINT "FK_ComparisonTargetFile" FOREIGN KEY("TargetFileId") REFERENCES "Files"("Id"),
     CHECK(CreatedOn<=ModifiedOn AND SourceFileId<>TargetFileId AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+CREATE TRIGGER validate_new_redundancy 
+   BEFORE INSERT
+   ON Redundancies
+   WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.ContentInfoId=r.ContentInfoId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
+BEGIN
+    SELECT RAISE (ABORT,'File does not have same content info as the redundancy set.');
+END;
 INSERT INTO "FileSystems" ("Id", "DisplayName", "MaxNameLength", "DefaultDriveType", "CreatedOn", "ModifiedOn")
     VALUES ('{bedb396b-2212-4149-9cad-7e437c47314c}', 'New Technology File System)', 255, 3, '2004-08-19 14:51:06', '2004-08-19 14:51:06');
 INSERT INTO "FileSystems" ("Id", "DisplayName", "CaseSensitiveSearch", "MaxNameLength", "CreatedOn", "ModifiedOn")
@@ -273,7 +270,7 @@ INSERT INTO "Files" ("Id", "Name", "LastAccessed", "ContentInfoId", "ParentId", 
     '2021-05-21 21:52:08', '2021-05-21 21:52:08');
 
 INSERT INTO "Files" ("Id", "Name", "LastAccessed", "ContentInfoId", "ParentId", "CreatedOn", "ModifiedOn")
-    VALUES ('{a3e8dab2-98fd-4059-8756-27db5fb80932}', 'Test.sdl', '2021-05-21 21:52:08', '{dc508120-8617-4d61-ba38-480ac35fcfe5}', '{9659ea19-ca72-419f-9b35-3b59e6cc89e0}',
+    VALUES ('{a3e8dab2-98fd-4059-8756-27db5fb80932}', 'Test.sdl', '2021-05-21 21:52:08', '{6696e337-c4ad-4e03-b954-ee585270958d}', '{9659ea19-ca72-419f-9b35-3b59e6cc89e0}',
     '2021-05-21 21:52:08', '2021-05-21 21:52:08');
 
 INSERT INTO "RedundantSets" ("Id", "ContentInfoId", "CreatedOn", "ModifiedOn")
