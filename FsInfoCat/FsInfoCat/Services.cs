@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -87,9 +88,43 @@ namespace FsInfoCat
             await Host.StartAsync();
         }
 
-        public static void RejectChanges<T>(this DbSet<T> dbSet) where T : class, IRevertibleChangeTracking
+        public static void RejectChanges<T>(this DbSet<T> dbSet, Func<T, EntityEntry<T>> getEntry) where T : class, IRevertibleChangeTracking
         {
-            throw new NotImplementedException();
+            if (getEntry is null)
+                throw new ArgumentNullException(nameof(getEntry));
+            if (dbSet is null)
+                return;
+            T[] items = dbSet.Local.ToArray();
+            foreach (T t in items)
+            {
+                EntityEntry<T> entry = getEntry(t);
+                if (entry is null)
+                    t.RejectChanges();
+                else
+                    RejectChanges(entry);
+            }
+        }
+
+        public static void RejectChanges<T>(this EntityEntry<T> entry) where T : class, IRevertibleChangeTracking
+        {
+            if (entry is null)
+                return;
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.RejectChanges();
+                    entry.Context.Remove(entry.Entity);
+                    break;
+                case EntityState.Deleted:
+                    entry.Entity.RejectChanges();
+                    entry.State = entry.Entity.IsChanged ? EntityState.Modified : EntityState.Unchanged;
+                    break;
+                case EntityState.Unchanged:
+                    break;
+                default:
+                    entry.Entity.RejectChanges();
+                    break;
+            }
         }
 
         public static string AsNonNullTrimmed(this string text) => string.IsNullOrWhiteSpace(text) ? "" : text.Trim();
