@@ -13,6 +13,14 @@ namespace FsInfoCat.Desktop
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             await Services.Initialize(ConfigureServices, e.Args);
+            if (Dispatcher.CheckAccess())
+                ShowMainWindow();
+            else
+                Dispatcher.Invoke(ShowMainWindow);
+        }
+
+        private void ShowMainWindow()
+        {
             var mainWindow = Services.ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
