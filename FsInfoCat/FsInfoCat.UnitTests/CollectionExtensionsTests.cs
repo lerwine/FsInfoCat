@@ -10,6 +10,7 @@ namespace FsInfoCat.UnitTests
             83, 89, 97, 101, 103, 107, 109, 113, 127 });
 
         [TestMethod]
+        [Ignore]
         public void IsPrimeNumberTestMethod()
         {
             int start = 0;

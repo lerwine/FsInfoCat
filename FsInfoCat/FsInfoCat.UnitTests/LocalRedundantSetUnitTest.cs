@@ -22,7 +22,6 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet Add/Remove Tests")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void RedundantSetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -58,7 +57,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("RedundantSet ContentInfo Validation Tests")]
         [TestProperty(TestProperty_Description, "RedundantSet.ContentInfo: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES ContentInfos")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void RedundantSetContentInfoTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -104,7 +102,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("RedundantSet Reference Validation Tests")]
         [TestProperty(TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void RedundantSetRemediationStatusTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -150,7 +147,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("RedundantSet Reference Validation Tests")]
         [TestProperty(TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void RedundantSetReferenceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -196,7 +192,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("RedundantSet CreatedOn Validation Tests")]
         [TestProperty(TestProperty_Description, "RedundantSet.CreatedOn: CreatedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void RedundantSetCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -236,7 +231,6 @@ namespace FsInfoCat.UnitTests
         [TestMethod("RedundantSet LastSynchronizedOn Validation Tests")]
         [TestProperty(TestProperty_Description,
             "RedundantSet.LastSynchronizedOn: (UpstreamId IS NULL -OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void RedundantSetLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

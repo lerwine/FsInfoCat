@@ -22,7 +22,6 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ContentInfo Add/Remove Tests")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void ContentInfoAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -57,7 +56,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ContentInfo Hash Validation Tests")]
         [TestProperty(TestProperty_Description, "ContentInfo.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void ContentInfoHashTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -86,7 +84,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ContentInfo Length Validation Tests")]
         [TestProperty(TestProperty_Description, "ContentInfo.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void ContentInfoLengthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -132,7 +129,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ContentInfo CreatedOn Validation Tests")]
         [TestProperty(TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void ContentInfoCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -172,7 +168,6 @@ namespace FsInfoCat.UnitTests
         [TestMethod("ContentInfo LastSynchronizedOn Validation Tests")]
         [TestProperty(TestProperty_Description,
             "ContentInfo.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void ContentInfoLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

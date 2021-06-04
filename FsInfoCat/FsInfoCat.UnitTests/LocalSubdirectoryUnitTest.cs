@@ -22,7 +22,6 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory Add/Remove Tests")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SubdirectoryAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -67,7 +66,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("Subdirectory Name Validation Tests")]
         [TestProperty(TestProperty_Description, "Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SubdirectoryNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -230,7 +228,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("Subdirectory Options Validation Tests")]
         [TestProperty(TestProperty_Description, "Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SubdirectoryOptionsTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -274,7 +271,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("Subdirectory CreatedOn Validation Tests")]
         [TestProperty(TestProperty_Description, "Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SubdirectoryCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -326,7 +322,6 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Subdirectory LastSynchronizedOn Validation Tests")]
         [TestProperty(TestProperty_Description,
             "Subdirectory.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SubdirectoryLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();

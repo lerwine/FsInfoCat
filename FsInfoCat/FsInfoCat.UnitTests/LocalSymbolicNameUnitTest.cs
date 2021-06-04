@@ -22,7 +22,6 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SymbolicName Add/Remove Tests")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SymbolicNameAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -63,13 +62,12 @@ namespace FsInfoCat.UnitTests
 
         private static Local.FileSystem GetVFatFileSystem(Local.LocalDbContext dbContext)
         {
-            Guid id = Guid.Parse("53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd");
-            return (from fs in dbContext.FileSystems where fs.Id == id select fs).FirstOrDefault();
+            Guid id = Guid.Parse("{53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd}");
+            return dbContext.FileSystems.ToList().FirstOrDefault(fs => fs.Id.Equals(id));
         }
 
         [TestMethod("SymbolicName Name Validation Tests")]
         [TestProperty(TestProperty_Description, "SymbolicName.Name: NVARCHAR(256) NOT NULL CHECK(length(trim(Name)) = length(Name) AND length(Name)>0) UNIQUE COLLATE NOCASE")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SymbolicNameNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -155,7 +153,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("SymbolicName FileSystem Validation Tests")]
         [TestProperty(TestProperty_Description, "SymbolicName.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SymbolicNameFileSystemTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -188,7 +185,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("SymbolicName CreatedOn Validation Tests")]
         [TestProperty(TestProperty_Description, "SymbolicName.CreatedOn: CreatedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SymbolicNameCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -228,7 +224,6 @@ namespace FsInfoCat.UnitTests
         [TestMethod("SymbolicName LastSynchronizedOn Validation Tests")]
         [TestProperty(TestProperty_Description,
             "SymbolicName.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void SymbolicNameLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();

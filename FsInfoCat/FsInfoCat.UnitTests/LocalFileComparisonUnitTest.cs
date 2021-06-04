@@ -22,7 +22,6 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileComparison Add/Remove Tests")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void FileComparisonAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -56,7 +55,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileComparison SourceFile Validation Tests")]
         [TestProperty(TestProperty_Description, "FileComparison.SourceFile: UNIQUEIDENTIFIER NOT NULL (SourceFileId<>TargetFileId) FOREIGN REFERENCES DbFiles")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void FileComparisonSourceFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -102,7 +100,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileComparison TargetFile Validation Tests")]
         [TestProperty(TestProperty_Description, "FileComparison.TargetFile: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void FileComparisonTargetFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -148,7 +145,6 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileComparison CreatedOn Validation Tests")]
         [TestProperty(TestProperty_Description, "FileComparison.CreatedOn: CreatedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void FileComparisonCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -188,7 +184,6 @@ namespace FsInfoCat.UnitTests
         [TestMethod("FileComparison LastSynchronizedOn Validation Tests")]
         [TestProperty(TestProperty_Description,
             "FileComparison.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        [DeploymentItem(TestHelper.TEST_DB_PATH)]
         public void FileComparisonLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
