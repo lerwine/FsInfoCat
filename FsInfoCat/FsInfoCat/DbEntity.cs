@@ -30,16 +30,6 @@ namespace FsInfoCat
             _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
         }
 
-        public bool IsNew()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsSameDbRow(IDbEntity other)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> results = new List<ValidationResult>();
