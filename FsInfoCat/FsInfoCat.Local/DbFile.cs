@@ -218,12 +218,12 @@ namespace FsInfoCat.Local
             _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
             _options = AddChangeTracker(nameof(FileCrawlOptions), FileCrawlOptions.None);
             _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
-            _lastHashCalculation = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+            _lastHashCalculation = AddChangeTracker<DateTime?>(nameof(LastHashCalculation), null);
             _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _deleted = AddChangeTracker(nameof(Deleted), false);
             _parentId = AddChangeTracker(nameof(ParentId), Guid.Empty);
             _contentId = AddChangeTracker(nameof(ContentId), Guid.Empty);
-            _extendedPropertiesId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
+            _extendedPropertiesId = AddChangeTracker<Guid?>(nameof(ExtendedPropertiesId), null);
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
             _content = AddChangeTracker<ContentInfo>(nameof(Content), null);
             _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
