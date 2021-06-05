@@ -84,8 +84,7 @@ namespace FsInfoCat.Local
             }
         }
 
-        [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize",
-            Justification = "Inherited class would have called SuppressFinalize if it were necessary")]
+        [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "Inherited class will have called SuppressFinalize if necessary.")]
         public override void Dispose()
         {
             _logger.LogInformation($"Disposing {nameof(LocalDbContext)}: {nameof(DbContextId.InstanceId)}={{{nameof(DbContextId.InstanceId)}}}, {nameof(DbContextId.Lease)}={{{nameof(DbContextId.Lease)}}}",
@@ -96,15 +95,22 @@ namespace FsInfoCat.Local
 
         public override int SaveChanges()
         {
-            var entities = from e in ChangeTracker.Entries() where e.State == EntityState.Added || e.State == EntityState.Modified select e.Entity;
-            foreach (var e in entities)
+            var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+            foreach (var e in entries)
             {
-                ValidationContext validationContext = new(e, new DbContextServiceProvider(this, e), null);
-                if (e is IDbEntity dbEntity)
+                ValidationContext validationContext = new(e.Entity, new DbContextServiceProvider(this, e), null);
+                if (e.Entity is IDbEntity dbEntity)
                     dbEntity.BeforeSave(validationContext);
-                Validator.ValidateObject(e, validationContext, true);
+                Validator.ValidateObject(e.Entity, validationContext, true);
             }
-            return base.SaveChanges();
+            int result = base.SaveChanges();
+            foreach (var e in entries)
+            {
+                if (e.State == EntityState.Unchanged && e.Entity is IDbEntity dbEntity)
+                    dbEntity.AcceptChanges();
+
+            }
+            return result;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
