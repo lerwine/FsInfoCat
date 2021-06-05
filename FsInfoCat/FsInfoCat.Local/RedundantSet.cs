@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class RedundantSet : NotifyDataErrorInfo, ILocalRedundantSet
+    public class RedundantSet : LocalDbEntity, ILocalRedundantSet
     {
         #region Fields
 
@@ -17,10 +17,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _reference;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<Guid> _contentInfoId;
-        private readonly IPropertyChangeTracker<Guid?> _upstreamId;
-        private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
-        private readonly IPropertyChangeTracker<DateTime> _createdOn;
-        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
         private readonly IPropertyChangeTracker<ContentInfo> _contentInfo;
         private HashSet<Redundancy> _redundancies = new();
 
@@ -57,20 +53,6 @@ namespace FsInfoCat.Local
                 }
             }
         }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         public virtual ContentInfo ContentInfo
         {
@@ -114,27 +96,18 @@ namespace FsInfoCat.Local
             _reference = AddChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
             _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _contentInfoId = AddChangeTracker(nameof(ContentInfoId), Guid.Empty);
-            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
             _contentInfo = AddChangeTracker<ContentInfo>(nameof(ContentInfo), null);
         }
-
-        public bool IsNew() => !_id.IsSet;
-
-        public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalRedundantSet entity && Id.Equals(entity.Id));
 
         internal static void BuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
             builder.HasOne(sn => sn.ContentInfo).WithMany(d => d.RedundantSets).HasForeignKey(nameof(ContentInfoId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
-
-        private void OnValidate(EntityEntry<RedundantSet> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
+        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
-            // TODO: Implement OnValidate(EntityEntry{RedundantSet}, LocalDbContext, List{ValidationResult})
-            throw new NotImplementedException();
+            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
+            base.OnValidate(validationContext, results);
         }
     }
 }

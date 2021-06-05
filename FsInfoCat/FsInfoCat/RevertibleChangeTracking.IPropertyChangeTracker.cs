@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 
 namespace FsInfoCat
@@ -7,6 +8,8 @@ namespace FsInfoCat
     {
         public interface IPropertyChangeTracker : IRevertibleChangeTracking
         {
+            event EventHandler ValueChanged;
+
             string PropertyName { get; }
 
             bool IsSet { get; }

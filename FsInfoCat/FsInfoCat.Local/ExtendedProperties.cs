@@ -5,8 +5,10 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class ExtendedProperties : NotifyDataErrorInfo, ILocalExtendedProperties
+    public class ExtendedProperties : LocalDbEntity, ILocalExtendedProperties
     {
+        #region Fields
+
         private HashSet<DbFile> _files = new();
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<ushort> _width;
@@ -35,58 +37,80 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _softwareUsed;
         private readonly IPropertyChangeTracker<string> _artist;
         private readonly IPropertyChangeTracker<string> _hostComputer;
-        private readonly IPropertyChangeTracker<Guid?> _upstreamId;
-        private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
-        private readonly IPropertyChangeTracker<DateTime> _createdOn;
-        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
+
+        #endregion
+
+        #region Properties
 
         public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
+
         public ushort Width { get => _width.GetValue(); set => _width.SetValue(value); }
+
         public ushort Height { get => _height.GetValue(); set => _height.SetValue(value); }
+
         public ulong? Duration { get => _duration.GetValue(); set => _duration.SetValue(value); }
+
         public uint? FrameCount { get => _frameCount.GetValue(); set => _frameCount.SetValue(value); }
+
         public uint? TrackNumber { get => _trackNumber.GetValue(); set => _trackNumber.SetValue(value); }
+
         public uint? Bitrate { get => _bitrate.GetValue(); set => _bitrate.SetValue(value); }
+
         public uint? FrameRate { get => _frameRate.GetValue(); set => _frameRate.SetValue(value); }
+
         public ushort? SamplesPerPixel { get => _samplesPerPixel.GetValue(); set => _samplesPerPixel.SetValue(value); }
+
         public uint? PixelPerUnitX { get => _pixelPerUnitX.GetValue(); set => _pixelPerUnitX.SetValue(value); }
+
         public uint? PixelPerUnitY { get => _pixelPerUnitY.GetValue(); set => _pixelPerUnitY.SetValue(value); }
+
         public ushort? Compression { get => _compression.GetValue(); set => _compression.SetValue(value); }
+
         public uint? XResNumerator { get => _xResNumerator.GetValue(); set => _xResNumerator.SetValue(value); }
+
         public uint? XResDenominator { get => _xResDenominator.GetValue(); set => _xResDenominator.SetValue(value); }
+
         public uint? YResNumerator { get => _yResNumerator.GetValue(); set => _yResNumerator.SetValue(value); }
+
         public uint? YResDenominator { get => _yResDenominator.GetValue(); set => _yResDenominator.SetValue(value); }
+
         public ushort? ResolutionXUnit { get => _resolutionXUnit.GetValue(); set => _resolutionXUnit.SetValue(value); }
+
         public ushort? ResolutionYUnit { get => _resolutionYUnit.GetValue(); set => _resolutionYUnit.SetValue(value); }
+
         public ushort? JPEGProc { get => _jpegProc.GetValue(); set => _jpegProc.SetValue(value); }
+
         public ushort? JPEGQuality { get => _jpegQuality.GetValue(); set => _jpegQuality.SetValue(value); }
+
         public DateTime? DateTime { get => _dateTime.GetValue(); set => _dateTime.SetValue(value); }
+
         public string Title { get => _title.GetValue(); set => _title.SetValue(value); }
+
         public string Description { get => _description.GetValue(); set => _description.SetValue(value); }
+
         public string Copyright { get => _copyright.GetValue(); set => _copyright.SetValue(value); }
+
         public string SoftwareUsed { get => _softwareUsed.GetValue(); set => _softwareUsed.SetValue(value); }
+
         public string Artist { get => _artist.GetValue(); set => _artist.SetValue(value); }
+
         public string HostComputer { get => _hostComputer.GetValue(); set => _hostComputer.SetValue(value); }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         public HashSet<DbFile> Files
         {
             get => _files;
             set => CheckHashSetChanged(_files, value, h => _files = h);
         }
+
+        #endregion
+
+        #region Explicit Members
+
+        IEnumerable<IFile> IExtendedProperties.Files => Files.Cast<IFile>();
+
+        IEnumerable<ILocalFile> ILocalExtendedProperties.Files => Files.Cast<ILocalFile>();
+
+        #endregion
 
         public ExtendedProperties()
         {
@@ -117,29 +141,12 @@ namespace FsInfoCat.Local
             _softwareUsed = AddChangeTracker(nameof(SoftwareUsed), (string)null);
             _artist = AddChangeTracker(nameof(Artist), (string)null);
             _hostComputer = AddChangeTracker(nameof(HostComputer), (string)null);
-            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), System.DateTime.Now)).GetValue());
         }
 
-        public bool IsNew()
+        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
-            throw new NotImplementedException();
+            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
+            base.OnValidate(validationContext, results);
         }
-
-        public bool IsSameDbRow(IDbEntity other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            // TODO: Implement Validate(ValidationContext)
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<IFile> IExtendedProperties.Files => Files.Cast<IFile>();
-
-        IEnumerable<ILocalFile> ILocalExtendedProperties.Files => Files.Cast<ILocalFile>();
     }
 }

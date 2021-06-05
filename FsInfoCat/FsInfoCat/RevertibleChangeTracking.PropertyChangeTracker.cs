@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat
@@ -12,6 +12,8 @@ namespace FsInfoCat
             private bool _originalValueIsSet;
             private T _originalValue;
             private T _value;
+
+            public event EventHandler ValueChanged;
 
             internal PropertyChangeTracker([NotNull] RevertibleChangeTracking target, [NotNull] string propertyName, T initialValue, ICoersion<T> coersion)
             {
@@ -52,23 +54,28 @@ namespace FsInfoCat
 
             public void RejectChanges()
             {
+                T oldValue, newValue;
                 if (_target.TryGetTarget(out RevertibleChangeTracking target))
                 {
-                    T oldValue, newValue;
                     lock (target.SyncRoot)
                     {
                         IsSet = _originalValueIsSet;
                         oldValue = _value;
                         _value = newValue = _originalValue;
-                        if (Coersion.Equals(oldValue, _value) || !(target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker)))
+                        if (Coersion.Equals(oldValue, newValue) || !(target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker)))
                             return;
                     }
-                    target.RaisePropertyChanged(oldValue, newValue, PropertyName);
+                    try { ValueChanged?.Invoke(this, EventArgs.Empty); }
+                    finally { target.RaisePropertyChanged(oldValue, newValue, PropertyName); }
                 }
                 else
                 {
+                    oldValue = _value;
+                    _value = newValue = _originalValue;
                     IsSet = _originalValueIsSet;
                     _value = _originalValue;
+                    if (!Coersion.Equals(oldValue, newValue))
+                        ValueChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
 
@@ -76,28 +83,30 @@ namespace FsInfoCat
 
             public bool SetValue(T newValue)
             {
+                T oldValue;
                 if (_target.TryGetTarget(out RevertibleChangeTracking target))
                 {
-                    T oldValue;
                     lock (target.SyncRoot)
                     {
                         IsSet = true;
                         oldValue = _value;
-                        newValue = Coersion.Normalize(newValue);
+                        _value = newValue = Coersion.Normalize(newValue);
                         if (Coersion.Equals(oldValue, newValue))
                             return false;
-                        _value = newValue;
                         if (!(target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker)))
                             return true;
                     }
-                    target.RaisePropertyChanged(oldValue, newValue, PropertyName);
+                    try { ValueChanged?.Invoke(this, EventArgs.Empty); }
+                    finally { target.RaisePropertyChanged(oldValue, newValue, PropertyName); }
                 }
                 else
                 {
-                    newValue = Coersion.Normalize(newValue);
-                    if (Coersion.Equals(_value, newValue))
+                    IsSet = true;
+                    oldValue = _value;
+                    _value = newValue = Coersion.Normalize(newValue);
+                    if (Coersion.Equals(oldValue, newValue))
                         return false;
-                    _value = newValue;
+                    ValueChanged?.Invoke(this, EventArgs.Empty);
                 }
                 return true;
             }

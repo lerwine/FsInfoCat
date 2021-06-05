@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class VolumeAccessError : NotifyDataErrorInfo, IAccessError<Volume>, IAccessError<ILocalVolume>, IAccessError<IVolume>
+    public class VolumeAccessError : DbEntity, IAccessError<Volume>, IAccessError<ILocalVolume>, IAccessError<IVolume>
     {
         #region Fields
 
@@ -16,8 +16,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _details;
         private readonly IPropertyChangeTracker<Guid> _targetId;
         private readonly IPropertyChangeTracker<Volume> _target;
-        private readonly IPropertyChangeTracker<DateTime> _createdOn;
-        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
 
         #endregion
 
@@ -68,14 +66,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
-
         #endregion
 
         #region Explicit Members
@@ -95,21 +85,14 @@ namespace FsInfoCat.Local
             _message = AddChangeTracker(nameof(Message), "", NonNullStringCoersion.Default);
             _details = AddChangeTracker(nameof(Details), "", NonNullStringCoersion.Default);
             _targetId = AddChangeTracker(nameof(TargetId), Guid.Empty);
-            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
             _target = AddChangeTracker<Volume>(nameof(Target), null);
         }
 
-        public bool IsNew()
+        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
-            throw new NotImplementedException();
+            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
+            base.OnValidate(validationContext, results);
         }
-
-        public bool IsSameDbRow(IDbEntity other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
 
         private void OnValidate(EntityEntry<VolumeAccessError> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {

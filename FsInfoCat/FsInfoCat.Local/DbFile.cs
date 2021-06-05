@@ -10,7 +10,7 @@ using System.Linq;
 namespace FsInfoCat.Local
 {
     [Table(TABLE_NAME)]
-    public class DbFile : NotifyDataErrorInfo, ILocalFile
+    public class DbFile : LocalDbEntity, ILocalFile
     {
         #region Fields
 
@@ -26,10 +26,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid> _parentId;
         private readonly IPropertyChangeTracker<Guid> _contentId;
         private readonly IPropertyChangeTracker<Guid?> _extendedPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _upstreamId;
-        private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
-        private readonly IPropertyChangeTracker<DateTime> _createdOn;
-        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
         private readonly IPropertyChangeTracker<ContentInfo> _content;
         private readonly IPropertyChangeTracker<Redundancy> _redundancy;
@@ -111,20 +107,6 @@ namespace FsInfoCat.Local
                 }
             }
         }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         public virtual ContentInfo Content
         {
@@ -240,19 +222,11 @@ namespace FsInfoCat.Local
             _parentId = AddChangeTracker(nameof(ParentId), Guid.Empty);
             _contentId = AddChangeTracker(nameof(ContentId), Guid.Empty);
             _extendedPropertiesId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-            _lastAccessed = AddChangeTracker(nameof(LastAccessed), _createdOn.GetValue());
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
             _content = AddChangeTracker<ContentInfo>(nameof(Content), null);
             _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
             _extendedProperties = AddChangeTracker<ExtendedProperties>(nameof(ExtendedProperties), null);
         }
-
-        public bool IsNew() => !_id.IsSet;
-
-        public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalFile entity && Id.Equals(entity.Id));
 
         internal static void BuildEntity(EntityTypeBuilder<DbFile> builder)
         {
@@ -261,7 +235,11 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.ExtendedProperties).WithMany(d => d.Files).HasForeignKey(nameof(ExtendedPropertiesId)).OnDelete(DeleteBehavior.Restrict);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
+        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+        {
+            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
+            base.OnValidate(validationContext, results);
+        }
 
         private void OnValidate(EntityEntry<DbFile> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {

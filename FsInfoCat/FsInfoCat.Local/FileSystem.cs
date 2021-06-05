@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class FileSystem : NotifyDataErrorInfo, ILocalFileSystem
+    public class FileSystem : LocalDbEntity, ILocalFileSystem
     {
         #region Fields
 
@@ -19,10 +19,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DriveType?> _defaultDriveType;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<bool> _isInactive;
-        private readonly IPropertyChangeTracker<Guid?> _upstreamId;
-        private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
-        private readonly IPropertyChangeTracker<DateTime> _createdOn;
-        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
         private HashSet<Volume> _volumes = new();
         private HashSet<SymbolicName> _symbolicNames = new();
 
@@ -64,20 +60,6 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
-
         public virtual HashSet<Volume> Volumes
         {
             get => _volumes;
@@ -115,16 +97,15 @@ namespace FsInfoCat.Local
             _defaultDriveType = AddChangeTracker<DriveType?>(nameof(DefaultDriveType), null);
             _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _isInactive = AddChangeTracker(nameof(IsInactive), false);
-            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
         }
 
-        public bool IsNew() => !_id.IsSet;
-
-        public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalSymbolicName entity && Id.Equals(entity.Id));
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
+        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+        {
+            base.OnValidate(validationContext, results);
+            var driveType = DefaultDriveType;
+            if (driveType.HasValue && !Enum.IsDefined(driveType.Value))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(DefaultDriveType) }));
+        }
 
         private void OnValidate(EntityEntry<FileSystem> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {

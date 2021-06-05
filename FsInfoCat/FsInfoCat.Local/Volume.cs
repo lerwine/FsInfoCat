@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class Volume : NotifyDataErrorInfo, ILocalVolume
+    public class Volume : LocalDbEntity, ILocalVolume
     {
         #region Fields
 
@@ -25,10 +25,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<VolumeStatus> _status;
         private readonly IPropertyChangeTracker<Guid> _fileSystemId;
-        private readonly IPropertyChangeTracker<Guid?> _upstreamId;
-        private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
-        private readonly IPropertyChangeTracker<DateTime> _createdOn;
-        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
         private readonly IPropertyChangeTracker<FileSystem> _fileSystem;
         private readonly IPropertyChangeTracker<Subdirectory> _rootDirectory;
         private HashSet<VolumeAccessError> _accessErrors = new();
@@ -97,20 +93,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
-
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileSystemRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -169,17 +151,10 @@ namespace FsInfoCat.Local
             _type = AddChangeTracker(nameof(Type), DriveType.Unknown);
             _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _status = AddChangeTracker(nameof(Status), VolumeStatus.Unknown);
-            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
             _fileSystemId = AddChangeTracker(nameof(FileSystemId), Guid.Empty);
             _fileSystem = AddChangeTracker<FileSystem>(nameof(FileSystem), null);
             _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
         }
-
-        public bool IsNew() => !_id.IsSet;
-
-        public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalVolume entity && Id.Equals(entity.Id));
 
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
@@ -187,7 +162,19 @@ namespace FsInfoCat.Local
             builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
+        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+        {
+            base.OnValidate(validationContext, results);
+            if (!Enum.IsDefined(Type))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
+            if (!Enum.IsDefined(Status))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidVolumeStatus, new string[] { nameof(Status) }));
+            VolumeIdentifier identifier = Identifier;
+            if (identifier.IsEmpty())
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired, new string[] { nameof(Identifier) }));
+            else if (identifier.ToString().Length > DbConstants.DbColMaxLen_Identifier)
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierLength, new string[] { nameof(Identifier) }));
+        }
 
         private void OnValidate(EntityEntry<Volume> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
