@@ -21,7 +21,15 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
+        [TestInitialize]
+        public void OnTestInitialize()
+        {
+            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            dbContext.RejectChanges();
+        }
+
         [TestMethod("FileSystem Add/Remove Tests")]
+        [Ignore]
         public void FileSystemAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -60,6 +68,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileSystem DefaultDriveType Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "FileSystem.DefaultDriveType: CHECK(DefaultDriveType IS NULL OR (DefaultDriveType>=0 AND DefaultDriveType<7))")]
+        [Ignore]
         public void FileSystemDefaultDriveTypeTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -107,6 +116,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileSystem DisplayName Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "FileSystem: DisplayName NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) UNIQUE COLLATE NOCASE")]
+        [Ignore]
         public void FileSystemDisplayNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -208,6 +218,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileSystem MaxNameLength Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "FileSystem: MaxNameLength CHECK(MaxNameLength IS NULL OR MaxNameLength>=0)")]
+        [Ignore]
         public void FileSystemMaxNameLengthTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -266,6 +277,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileSystem CreatedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "FileSystem.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Ignore]
         public void FileSystemCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -304,6 +316,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("FileSystem LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "FileSystem.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [Ignore]
         public void FileSystemLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();

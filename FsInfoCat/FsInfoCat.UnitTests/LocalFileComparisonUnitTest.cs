@@ -20,7 +20,15 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
+        [TestInitialize]
+        public void OnTestInitialize()
+        {
+            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            dbContext.RejectChanges();
+        }
+
         [TestMethod("FileComparison Add/Remove Tests")]
+        [Ignore]
         public void FileComparisonAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -54,6 +62,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileComparison SourceFile Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "FileComparison.SourceFile: UNIQUEIDENTIFIER NOT NULL (SourceFileId<>TargetFileId) FOREIGN REFERENCES DbFiles")]
+        [Ignore]
         public void FileComparisonSourceFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -99,6 +108,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileComparison TargetFile Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "FileComparison.TargetFile: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
+        [Ignore]
         public void FileComparisonTargetFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -144,6 +154,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("FileComparison CreatedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "FileComparison.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Ignore]
         public void FileComparisonCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -183,6 +194,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("FileComparison LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "FileComparison.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [Ignore]
         public void FileComparisonLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

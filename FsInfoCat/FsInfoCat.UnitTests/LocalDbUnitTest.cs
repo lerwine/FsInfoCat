@@ -11,25 +11,6 @@ namespace FsInfoCat.UnitTests
     {
         private static TestContext _testContext;
 
-        [AssemblyInitialize()]
-#pragma warning disable IDE0060 // Remove unused parameter
-        public static void AssemblyInit(TestContext context)
-#pragma warning restore IDE0060 // Remove unused parameter
-        {
-            Services.Initialize(services =>
-            {
-                string dbPath = Path.Combine(AppContext.BaseDirectory, TestHelper.TEST_DB_PATH);
-                Local.LocalDbContext.ConfigureServices(services, dbPath);
-            }).Wait();
-        }
-
-        [AssemblyCleanup()]
-        public static void AssemblyCleanup()
-        {
-            using (Services.Host)
-                Services.Host.StopAsync(TimeSpan.FromSeconds(5)).Wait();
-        }
-
         [ClassInitialize]
         public static void OnClassInitialize(TestContext testContext)
         {
@@ -37,6 +18,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         public void LocalDbContextTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();

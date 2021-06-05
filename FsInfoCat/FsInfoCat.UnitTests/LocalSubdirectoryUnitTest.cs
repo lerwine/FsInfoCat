@@ -20,8 +20,16 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
+        [TestInitialize]
+        public void OnTestInitialize()
+        {
+            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            dbContext.RejectChanges();
+        }
+
         [TestMethod("Subdirectory Add/Remove Tests")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void SubdirectoryAddRemoveTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -67,6 +75,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Subdirectory Name Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void SubdirectoryNameTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -230,6 +239,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Subdirectory Options Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void SubdirectoryOptionsTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -274,6 +284,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Subdirectory CreatedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void SubdirectoryCreatedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
@@ -326,6 +337,7 @@ namespace FsInfoCat.UnitTests
         [TestProperty(TestHelper.TestProperty_Description,
             "Subdirectory.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void SubdirectoryLastSynchronizedOnTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();

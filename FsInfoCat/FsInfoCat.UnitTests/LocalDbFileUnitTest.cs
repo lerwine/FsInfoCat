@@ -20,7 +20,15 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
+        [TestInitialize]
+        public void OnTestInitialize()
+        {
+            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            dbContext.RejectChanges();
+        }
+
         [TestMethod("DbFile Add/Remove Tests")]
+        [Ignore]
         public void DbFileAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -71,6 +79,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("DbFile Content Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "DbFile.Content: UNIQUEIDENTIFIER FOREIGN REFERENCES ContentInfos")]
+        [Ignore]
         public void DbFileContentInfoTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -117,6 +126,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("DbFile Name Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
+        [Ignore]
         public void DbFileNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -165,6 +175,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("DbFile Parent Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "DbFile.Parent: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES Subdirectories")]
+        [Ignore]
         public void DbFileParentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -211,6 +222,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("DbFile Options Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "DbFile.Options: TINYINT  NOT NULL CHECK(Options>=0 AND Options<15)")]
+        [Ignore]
         public void DbFileOptionsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -256,6 +268,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("DbFile CreatedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "DbFile.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Ignore]
         public void DbFileCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -295,6 +308,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("DbFile LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "DbFile.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [Ignore]
         public void DbFileLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

@@ -20,7 +20,15 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
+        [TestInitialize]
+        public void OnTestInitialize()
+        {
+            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            dbContext.RejectChanges();
+        }
+
         [TestMethod("ContentInfo Add/Remove Tests")]
+        [Ignore]
         public void ContentInfoAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -55,6 +63,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ContentInfo Hash Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
+        [Ignore]
         public void ContentInfoHashTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -83,6 +92,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ContentInfo Length Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
+        [Ignore]
         public void ContentInfoLengthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -128,6 +138,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ContentInfo CreatedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Ignore]
         public void ContentInfoCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -167,6 +178,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("ContentInfo LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "ContentInfo.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [Ignore]
         public void ContentInfoLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

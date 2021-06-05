@@ -20,7 +20,15 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
+        [TestInitialize]
+        public void OnTestInitialize()
+        {
+            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            dbContext.RejectChanges();
+        }
+
         [TestMethod("ExtendedProperties Add/Remove Tests")]
+        [Ignore]
         public void ExtendedPropertiesAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -79,6 +87,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ExtendedProperties Height Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "ExtendedProperties.Height: INT NOT NULL CHECK(Height>=0 AND Height<65536)")]
+        [Ignore]
         public void ExtendedPropertiesHeightTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -107,6 +116,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ExtendedProperties Width Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "ExtendedProperties.Width: INT NOT NULL CHECK(Height>=0 AND Height<65536)")]
+        [Ignore]
         public void ExtendedPropertiesWidthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -152,6 +162,7 @@ namespace FsInfoCat.UnitTests
 
         [TestMethod("ExtendedProperties CreatedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "ExtendedProperties.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Ignore]
         public void ExtendedPropertiesCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -191,6 +202,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("ExtendedProperties LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "ExtendedProperties.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [Ignore]
         public void ExtendedPropertiesLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
