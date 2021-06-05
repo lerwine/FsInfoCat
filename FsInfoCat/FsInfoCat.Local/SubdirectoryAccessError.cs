@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryAccessError : NotifyPropertyChanged, IAccessError<Subdirectory>, IAccessError<ILocalSubdirectory>, IAccessError<ISubdirectory>
+    public class SubdirectoryAccessError : NotifyDataErrorInfo, IAccessError<Subdirectory>, IAccessError<ILocalSubdirectory>, IAccessError<ISubdirectory>
     {
         #region Fields
 

@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class Volume : NotifyPropertyChanged, ILocalVolume
+    public class Volume : NotifyDataErrorInfo, ILocalVolume
     {
         #region Fields
 

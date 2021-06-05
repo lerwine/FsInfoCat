@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SymbolicName : NotifyPropertyChanged, ILocalSymbolicName
+    public class SymbolicName : NotifyDataErrorInfo, ILocalSymbolicName
     {
         #region Fields
 

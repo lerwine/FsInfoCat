@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class ContentInfo : NotifyPropertyChanged, ILocalContentInfo
+    public class ContentInfo : NotifyDataErrorInfo, ILocalContentInfo
     {
         #region Fields
 

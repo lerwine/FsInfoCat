@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FsInfoCat.Local
 {
     [Table(TABLE_NAME)]
-    public class FileComparison : NotifyPropertyChanged, ILocalComparison
+    public class FileComparison : NotifyDataErrorInfo, ILocalComparison
     {
         #region Fields
 

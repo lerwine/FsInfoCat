@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class ExtendedProperties : NotifyPropertyChanged, ILocalExtendedProperties
+    public class ExtendedProperties : NotifyDataErrorInfo, ILocalExtendedProperties
     {
         private HashSet<DbFile> _files = new();
         private readonly IPropertyChangeTracker<Guid> _id;

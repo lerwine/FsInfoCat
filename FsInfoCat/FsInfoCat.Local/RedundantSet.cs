@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class RedundantSet : NotifyPropertyChanged, ILocalRedundantSet
+    public class RedundantSet : NotifyDataErrorInfo, ILocalRedundantSet
     {
         #region Fields
 

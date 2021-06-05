@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public class FileAccessError : NotifyPropertyChanged, IAccessError<DbFile>, IAccessError<ILocalFile>, IAccessError<IFile>
+    public class FileAccessError : NotifyDataErrorInfo, IAccessError<DbFile>, IAccessError<ILocalFile>, IAccessError<IFile>
     {
         #region Fields
 

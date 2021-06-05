@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class Subdirectory : NotifyPropertyChanged, ILocalSubdirectory
+    public class Subdirectory : NotifyDataErrorInfo, ILocalSubdirectory
     {
         #region Fields
 

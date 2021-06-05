@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class VolumeAccessError : NotifyPropertyChanged, IAccessError<Volume>, IAccessError<ILocalVolume>, IAccessError<IVolume>
+    public class VolumeAccessError : NotifyDataErrorInfo, IAccessError<Volume>, IAccessError<ILocalVolume>, IAccessError<IVolume>
     {
         #region Fields
 

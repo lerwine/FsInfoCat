@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class FileSystem : NotifyPropertyChanged, ILocalFileSystem
+    public class FileSystem : NotifyDataErrorInfo, ILocalFileSystem
     {
         #region Fields
 

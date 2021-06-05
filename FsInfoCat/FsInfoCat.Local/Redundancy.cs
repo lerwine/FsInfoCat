@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public class Redundancy : NotifyPropertyChanged, ILocalRedundancy
+    public class Redundancy : NotifyDataErrorInfo, ILocalRedundancy
     {
         #region Fields
 

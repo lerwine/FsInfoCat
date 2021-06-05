@@ -10,7 +10,7 @@ using System.Linq;
 namespace FsInfoCat.Local
 {
     [Table(TABLE_NAME)]
-    public class DbFile : NotifyPropertyChanged, ILocalFile
+    public class DbFile : NotifyDataErrorInfo, ILocalFile
     {
         #region Fields
 
