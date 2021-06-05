@@ -1,6 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -88,8 +90,24 @@ namespace FsInfoCat.Local
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
-            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
             base.OnValidate(validationContext, results);
+            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
+                switch (validationContext.MemberName)
+                {
+                    case nameof(Message):
+                    case nameof(ErrorCode):
+                        break;
+                    default:
+                        return;
+                }
+            string name = Message;
+            LocalDbContext dbContext;
+            if (string.IsNullOrEmpty(name) || (dbContext = validationContext.GetService<LocalDbContext>()) is null)
+                return;
+            Guid id = Id;
+            AccessErrorCode errorCode = ErrorCode;
+            if (dbContext.SubdirectoryAccessErrors.Any(e => e.ErrorCode == errorCode && e.Message == name && id != e.Id))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateMessage, new string[] { nameof(Message) }));
         }
     }
 }

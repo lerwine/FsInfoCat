@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -165,35 +166,53 @@ namespace FsInfoCat.Local
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);
-            if (!Enum.IsDefined(Type))
-                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
-            if (!Enum.IsDefined(Status))
-                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidVolumeStatus, new string[] { nameof(Status) }));
+            if (string.IsNullOrWhiteSpace(validationContext.MemberName))
+            {
+                ValidateType(results);
+                ValidateStatus(results);
+                ValidateIdentifier(validationContext, results);
+            }
+            else
+                switch (validationContext.MemberName)
+                {
+                    case nameof(Type):
+                        ValidateType(results);
+                        break;
+                    case nameof(Status):
+                        ValidateStatus(results);
+                        break;
+                    case nameof(Identifier):
+                        ValidateIdentifier(validationContext, results);
+                        break;
+                }
+        }
+
+        private void ValidateIdentifier(ValidationContext validationContext, List<ValidationResult> results)
+        {
             VolumeIdentifier identifier = Identifier;
+            LocalDbContext dbContext;
             if (identifier.IsEmpty())
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired, new string[] { nameof(Identifier) }));
             else if (identifier.ToString().Length > DbConstants.DbColMaxLen_Identifier)
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierLength, new string[] { nameof(Identifier) }));
-        }
-
-        private void OnValidate(EntityEntry<Volume> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
-        {
-            if (!Enum.IsDefined(Type))
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
-            if (!Enum.IsDefined(Status))
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidVolumeStatus, new string[] { nameof(Status) }));
-            VolumeIdentifier identifier = Identifier;
-            if (identifier.IsEmpty())
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired, new string[] { nameof(Identifier) }));
-            else if (identifier.ToString().Length > DbConstants.DbColMaxLen_Identifier)
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierLength, new string[] { nameof(Identifier) }));
-            else
+            else if ((dbContext = validationContext.GetService<LocalDbContext>()) is not null)
             {
                 Guid id = Id;
-                var entities = from v in dbContext.Volumes where id != v.Id && v.Identifier == identifier select v;
-                if (entities.Any())
-                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateVolumeIdentifier, new string[] { nameof(Identifier) }));
+                if (dbContext.Volumes.Any(v => id != v.Id && v.Identifier == identifier))
+                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateVolumeIdentifier, new string[] { nameof(Identifier) }));
             }
+        }
+
+        private void ValidateStatus(List<ValidationResult> results)
+        {
+            if (!Enum.IsDefined(Status))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidVolumeStatus, new string[] { nameof(Status) }));
+        }
+
+        private void ValidateType(List<ValidationResult> results)
+        {
+            if (!Enum.IsDefined(Type))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
         }
     }
 }

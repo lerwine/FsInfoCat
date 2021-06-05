@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,9 +32,51 @@ namespace FsInfoCat.Local
             _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
         }
 
+        protected override void BeforeSave(ValidationContext validationContext)
+        {
+            base.BeforeSave(validationContext);
+            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
+                switch (validationContext.MemberName)
+                {
+                    case nameof(ModifiedOn):
+                    case nameof(CreatedOn):
+                    case nameof(LastSynchronizedOn):
+                    case nameof(UpstreamId):
+                        break;
+                    default:
+                        return;
+                }
+            EntityEntry entry = validationContext.GetService<EntityEntry>();
+            if (entry is null)
+                return;
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    if (UpstreamId.HasValue && !LastSynchronizedOn.HasValue)
+                        LastSynchronizedOn = CreatedOn;
+                    break;
+                case EntityState.Modified:
+                    Guid? id = UpstreamId;
+                    if (id.HasValue && entry.Property(nameof(UpstreamId)).IsModified)
+                        LastSynchronizedOn = ModifiedOn;
+                    break;
+            }
+        }
+
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);
+            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
+                switch (validationContext.MemberName)
+                {
+                    case nameof(ModifiedOn):
+                    case nameof(CreatedOn):
+                    case nameof(LastSynchronizedOn):
+                    case nameof(UpstreamId):
+                        break;
+                    default:
+                        return;
+                }
             lock (SyncRoot)
             {
                 if (LastSynchronizedOn.HasValue)

@@ -177,6 +177,9 @@
   <data name="DisplayName_VolumeName" xml:space="preserve">
     <value>Volume Name</value>
   </data>
+  <data name="ErrorMessage_CircularReference" xml:space="preserve">
+    <value>Circular subdirectory hierarchy reference not allowed.</value>
+  </data>
   <data name="ErrorMessage_ContentInfoRequired" xml:space="preserve">
     <value>File Content Info must be selected</value>
   </data>
@@ -233,6 +236,15 @@
   </data>
   <data name="ErrorMessage_InvalidVolumeStatus" xml:space="preserve">
     <value>Volume Status is invalid.</value>
+  </data>
+  <data name="ErrorMessage_LastHashCalculationAfterModifiedOn" xml:space="preserve">
+    <value>""Last Hash Calulation Date" cannot be later than the "Modified On" date.</value>
+  </data>
+  <data name="ErrorMessage_LastHashCalculationBeforeCreatedOn" xml:space="preserve">
+    <value>"Last Hash Calulation Date" cannot be earlier than the "Created On" date.</value>
+  </data>
+  <data name="ErrorMessage_LastHashCalculationRequired" xml:space="preserve">
+    <value>Last Hash Calculation Date Required</value>
   </data>
   <data name="ErrorMessage_LastSynchronizedOnAfterModifiedOn" xml:space="preserve">
     <value>""Last Synchronized On" date cannot be later than the "Modified On" date.</value>

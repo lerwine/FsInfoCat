@@ -107,19 +107,17 @@ namespace FsInfoCat.Local
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
-            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
             base.OnValidate(validationContext, results);
-        }
-        
-        private void OnValidate([NotNull] EntityEntry<SymbolicName> entityEntry, [NotNull] LocalDbContext dbContext, [NotNull] List<ValidationResult> validationResults)
-        {
-            string name = Name;
-            Guid id = Id;
-            if (string.IsNullOrEmpty(name))
-                return;
-            var entities = from sn in dbContext.SymbolicNames where id != sn.Id && sn.Name == name select sn;
-            if (entities.Any())
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
+            if (string.IsNullOrWhiteSpace(validationContext.MemberName) || validationContext.MemberName == nameof(Name))
+            {
+                string name = Name;
+                LocalDbContext dbContext;
+                if (string.IsNullOrEmpty(name) || (dbContext = validationContext.GetService<LocalDbContext>()) is null)
+                    return;
+                Guid id = Id;
+                if (dbContext.SymbolicNames.Any(sn => id != sn.Id && sn.Name == name))
+                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
+            }
         }
     }
 }

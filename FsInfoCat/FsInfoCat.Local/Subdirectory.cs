@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -175,60 +176,80 @@ namespace FsInfoCat.Local
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);
-            if (!Enum.IsDefined(Options))
-                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
-            Guid id = Id;
+            if (string.IsNullOrWhiteSpace(validationContext.MemberName))
+            {
+                ValidateOptions(results);
+                ValidateParentAndVolume(validationContext, results);
+            }
+            else
+                switch (validationContext.MemberName)
+                {
+                    case nameof(Options):
+                        ValidateOptions(results);
+                        break;
+                    case nameof(Parent):
+                    case nameof(Volume):
+                    case nameof(Name):
+                        ValidateParentAndVolume(validationContext, results);
+                        break;
+                }
+        }
+
+        private void ValidateParentAndVolume(ValidationContext validationContext, List<ValidationResult> results)
+        {
             Subdirectory parent = Parent;
             Volume volume = Volume;
+            Guid id = Id;
+            LocalDbContext dbContext;
             if (parent is null)
             {
                 if (volume is null)
                     results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeOrParentRequired, new string[] { nameof(Parent) }));
+                else if ((dbContext = validationContext.GetService<LocalDbContext>()) is not null)
+                {
+                    Guid volumeId = volume.Id;
+                    var entities = from sn in dbContext.Subdirectories where id != sn.Id && sn.VolumeId == volumeId select sn;
+                    if (entities.Any())
+                        results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeHasRoot, new string[] { nameof(Volume) }));
+                }
             }
             else if (volume is null)
             {
-                string name = Name;
-                if (string.IsNullOrEmpty(name))
-                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, new string[] { nameof(Name) }));
+                if (Id.Equals(parent.Id))
+                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CircularReference, new string[] { nameof(Name) }));
+                else if ((dbContext = validationContext.GetService<LocalDbContext>()) is not null)
+                {
+                    string name = Name;
+                    if (string.IsNullOrEmpty(name))
+                        results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, new string[] { nameof(Name) }));
+                    else
+                    {
+                        Guid parentId = parent.Id;
+                        var entities = from sn in dbContext.Subdirectories where id != sn.Id && sn.ParentId == parentId && sn.Name == name select sn;
+                        if (entities.Any())
+                            results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
+                        else
+                            while (parent.ParentId.HasValue)
+                            {
+                                if (parent.ParentId.Value.Equals(Id))
+                                {
+                                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CircularReference, new string[] { nameof(Name) }));
+                                    break;
+                                }
+                                if ((parent = dbContext.Subdirectories.Find(parent.ParentId)) is null)
+                                    break;
+                            }
+                    }
+                }
             }
             else
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
         }
 
-        private void OnValidate(EntityEntry<Subdirectory> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
+        private void ValidateOptions(List<ValidationResult> results)
         {
             if (!Enum.IsDefined(Options))
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
-            Guid id = Id;
-            Subdirectory parent = Parent;
-            Volume volume = Volume;
-            if (parent is null)
-            {
-                if (volume is null)
-                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeOrParentRequired, new string[] { nameof(Parent) }));
-                else
-                {
-                    Guid volumeId = volume.Id;
-                    var entities = from sn in dbContext.Subdirectories where id != sn.Id && sn.VolumeId == volumeId select sn;
-                    if (entities.Any())
-                        validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeHasRoot, new string[] { nameof(Volume) }));
-                }
-            }
-            else if (volume is null)
-            {
-                string name = Name;
-                if (string.IsNullOrEmpty(name))
-                    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, new string[] { nameof(Name) }));
-                else
-                {
-                    Guid parentId = parent.Id;
-                    var entities = from sn in dbContext.Subdirectories where id != sn.Id && sn.ParentId == parentId && sn.Name == name select sn;
-                    if (entities.Any())
-                        validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
-                }
-            }
-            else
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
         }
     }
 }

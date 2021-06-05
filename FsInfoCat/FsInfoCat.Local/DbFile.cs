@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -216,6 +217,7 @@ namespace FsInfoCat.Local
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
             _options = AddChangeTracker(nameof(FileCrawlOptions), FileCrawlOptions.None);
+            _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
             _lastHashCalculation = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
             _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _deleted = AddChangeTracker(nameof(Deleted), false);
@@ -235,22 +237,68 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.ExtendedProperties).WithMany(d => d.Files).HasForeignKey(nameof(ExtendedPropertiesId)).OnDelete(DeleteBehavior.Restrict);
         }
 
-        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+        private void ValidateLastHashCalculation(List<ValidationResult> results)
         {
-            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
-            base.OnValidate(validationContext, results);
+            if (CreatedOn.CompareTo(ModifiedOn) > 0)
+                return;
+            DateTime? dateTime = LastHashCalculation;
+            if (dateTime.HasValue)
+            {
+                if (dateTime.Value.CompareTo(CreatedOn) < 0)
+                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastHashCalculationBeforeCreatedOn, new string[] { nameof(LastHashCalculation) }));
+                else if (dateTime.Value.CompareTo(ModifiedOn) > 0)
+                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastHashCalculationAfterModifiedOn, new string[] { nameof(LastHashCalculation) }));
+            }
+            else if (!(Content is null || Content.Hash is null))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastHashCalculationRequired, new string[] { nameof(LastHashCalculation) }));
         }
 
-        private void OnValidate(EntityEntry<DbFile> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
+        private void ValidateName(ValidationContext validationContext, List<ValidationResult> results)
         {
             string name = Name;
-            if (string.IsNullOrEmpty(name))
+            EntityEntry entry;
+            LocalDbContext dbContext;
+            if (string.IsNullOrEmpty(name) || (entry = validationContext.GetService<EntityEntry>()) is null ||
+                (dbContext = validationContext.GetService<LocalDbContext>()) is null)
                 return;
-            Guid id = Id;
             Guid parentId = ParentId;
-            // TODO: Need to test whether this fails to skip an item where the id matches
-            if (dbContext.Files.Any(sn => sn.ParentId == parentId && sn.Name == name && id != sn.Id))
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
+            if (entry.State == EntityState.Added)
+            {
+                if (!dbContext.Files.Any(sn => sn.ParentId == parentId && sn.Name == name))
+                    return;
+            }
+            else
+            {
+                Guid id = Id;
+                // TODO: Need to test whether this fails to skip an item where the id matches
+                if (!dbContext.Files.Any(sn => sn.ParentId == parentId && sn.Name == name && id != sn.Id))
+                    return;
+            }
+            results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
+        }
+
+        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+        {
+            base.OnValidate(validationContext, results);
+            if (string.IsNullOrWhiteSpace(validationContext.MemberName))
+            {
+                ValidateLastHashCalculation(results);
+                ValidateName(validationContext, results);
+            }
+            else
+                switch (validationContext.MemberName)
+                {
+                    case nameof(CreatedOn):
+                    case nameof(ModifiedOn):
+                    case nameof(LastHashCalculation):
+                        ValidateLastHashCalculation(results);
+                        break;
+                    case nameof(Parent):
+                    case nameof(Name):
+                        ValidateName(validationContext, results);
+                        break;
+                }
+
         }
     }
 }

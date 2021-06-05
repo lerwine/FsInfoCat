@@ -241,6 +241,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Circular subdirectory hierarchy reference not allowed..
+        /// </summary>
+        public static string ErrorMessage_CircularReference {
+            get {
+                return ResourceManager.GetString("ErrorMessage_CircularReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Content Info must be selected.
         /// </summary>
         public static string ErrorMessage_ContentInfoRequired {
@@ -408,6 +417,33 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_InvalidVolumeStatus {
             get {
                 return ResourceManager.GetString("ErrorMessage_InvalidVolumeStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;&quot;Last Hash Calulation Date&quot; cannot be later than the &quot;Modified On&quot; date..
+        /// </summary>
+        public static string ErrorMessage_LastHashCalculationAfterModifiedOn {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LastHashCalculationAfterModifiedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Last Hash Calulation Date&quot; cannot be earlier than the &quot;Created On&quot; date..
+        /// </summary>
+        public static string ErrorMessage_LastHashCalculationBeforeCreatedOn {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LastHashCalculationBeforeCreatedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Hash Calculation Date Required.
+        /// </summary>
+        public static string ErrorMessage_LastHashCalculationRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_LastHashCalculationRequired", resourceCulture);
             }
         }
         

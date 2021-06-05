@@ -142,11 +142,5 @@ namespace FsInfoCat.Local
             _artist = AddChangeTracker(nameof(Artist), (string)null);
             _hostComputer = AddChangeTracker(nameof(HostComputer), (string)null);
         }
-
-        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
-        {
-            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
-            base.OnValidate(validationContext, results);
-        }
     }
 }

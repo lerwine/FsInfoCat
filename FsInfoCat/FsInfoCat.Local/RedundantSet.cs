@@ -35,11 +35,9 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
 
-        /// <remarks>TEXT NOT NULL DEFAULT ''</remarks>
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
-        /// <remarks>UNIQUEIDENTIFIER NOT NULL</remarks>
         public virtual Guid ContentInfoId
         {
             get => _contentInfoId.GetValue();
@@ -102,12 +100,6 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
             builder.HasOne(sn => sn.ContentInfo).WithMany(d => d.RedundantSets).HasForeignKey(nameof(ContentInfoId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-        }
-
-        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
-        {
-            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
-            base.OnValidate(validationContext, results);
         }
     }
 }

@@ -121,11 +121,5 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.SourceFile).WithMany(d => d.ComparisonSources).HasForeignKey(nameof(SourceFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(sn => sn.TargetFile).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(TargetFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
-
-        protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
-        {
-            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
-            base.OnValidate(validationContext, results);
-        }
     }
 }

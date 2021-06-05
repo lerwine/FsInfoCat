@@ -1,10 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public abstract class DbEntity : NotifyDataErrorInfo, IDbEntity
+    public abstract partial class DbEntity : NotifyDataErrorInfo, IDbEntity
     {
         #region Fields
 
@@ -32,16 +35,50 @@ namespace FsInfoCat
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            List<ValidationResult> results = new List<ValidationResult>();
+            List<ValidationResult> results = new();
             OnValidate(validationContext, results);
             return results.ToArray();
         }
 
         protected virtual void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
+            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
+                switch (validationContext.MemberName)
+                {
+                    case nameof(CreatedOn):
+                    case nameof(ModifiedOn):
+                        break;
+                    default:
+                        return;
+                }
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
+                results.Add(new ValidationResult(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(CreatedOn) }));
+        }
+
+        void IDbEntity.BeforeSave(ValidationContext validationContext) => BeforeSave(validationContext);
+
+        protected virtual void BeforeSave(ValidationContext validationContext)
+        {
+            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
+                switch (validationContext.MemberName)
+                {
+                    case nameof(CreatedOn):
+                    case nameof(ModifiedOn):
+                        break;
+                    default:
+                        return;
+                }
+            EntityEntry entry = validationContext.GetService<EntityEntry>();
+            if (entry is null)
+                return;
+            switch (entry.State)
             {
-                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(CreatedOn) }));
+                case EntityState.Added:
+                    CreatedOn = ModifiedOn = DateTime.Now;
+                    break;
+                case EntityState.Modified:
+                    ModifiedOn = DateTime.Now;
+                    break;
             }
         }
     }

@@ -129,24 +129,19 @@ namespace FsInfoCat.Local
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);
+            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
+                switch (validationContext.MemberName)
+                {
+                    case nameof(RedundantSet):
+                    case nameof(File):
+                        break;
+                    default:
+                        return;
+                }
             RedundantSet redundantSet = RedundantSet;
             DbFile file = File;
             if (!(redundantSet is null || file is null || redundantSet.ContentInfoId.Equals(file.ContentId)))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileInRedundantSet, new string[] { nameof(File) }));
-        }
-
-        private void OnValidate(EntityEntry<Redundancy> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
-        {
-            RedundantSet redundantSet = RedundantSet;
-            //if (redundantSet is null)
-            //    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_RedundantSetRequired, new string[] { nameof(RedundantSet) }));
-            DbFile file = File;
-            //if (file is null)
-            //    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired, new string[] { nameof(File) }));
-            //else if (!redundantSet.ContentInfoId.Equals(file.ContentId))
-            //    validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileInRedundantSet, new string[] { nameof(File) }));
-            if (!(redundantSet is null || file is null || redundantSet.ContentInfoId.Equals(file.ContentId)))
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileInRedundantSet, new string[] { nameof(File) }));
         }
     }
 }

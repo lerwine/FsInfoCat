@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -90,19 +92,24 @@ namespace FsInfoCat.Local
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
-            // TODO: Implement OnValidate(ValidationContext, List{ValidationResult})
             base.OnValidate(validationContext, results);
-        }
-
-        private void OnValidate(EntityEntry<VolumeAccessError> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
-        {
-            string name = Message;
-            if (string.IsNullOrEmpty(name))
+            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
+                switch (validationContext.MemberName)
+                {
+                    case nameof(ErrorCode):
+                    case nameof(Message):
+                        break;
+                    default:
+                        return;
+                }
+            string message = Message;
+            LocalDbContext dbContext;
+            if (string.IsNullOrEmpty(Message) || (dbContext = validationContext.GetService<LocalDbContext>()) is null)
                 return;
             Guid id = Id;
             AccessErrorCode errorCode = ErrorCode;
-            if (dbContext.VolumeAccessErrors.Any(e => e.ErrorCode == errorCode && e.Message == name && id != e.Id))
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateMessage, new string[] { nameof(Message) }));
+            if (dbContext.VolumeAccessErrors.Any(e => e.ErrorCode == errorCode && e.Message == message && id != e.Id))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateMessage, new string[] { nameof(Message) }));
         }
     }
 }

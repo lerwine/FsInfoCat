@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -102,23 +103,42 @@ namespace FsInfoCat.Local
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);
+            if (string.IsNullOrWhiteSpace(validationContext.MemberName))
+            {
+                ValidateDriveType(results);
+                ValidateDisplayName(validationContext, results);
+            }
+            else
+                switch (validationContext.MemberName)
+                {
+                    case nameof(DefaultDriveType):
+                        ValidateDriveType(results);
+                        break;
+                    case nameof(DisplayName):
+                        ValidateDisplayName(validationContext, results);
+                        break;
+                }
+        }
+
+        private void ValidateDriveType(List<ValidationResult> results)
+        {
             var driveType = DefaultDriveType;
             if (driveType.HasValue && !Enum.IsDefined(driveType.Value))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(DefaultDriveType) }));
         }
 
-        private void OnValidate(EntityEntry<FileSystem> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
+        private void ValidateDisplayName(ValidationContext validationContext, List<ValidationResult> results)
         {
-            var driveType = DefaultDriveType;
-            if (driveType.HasValue && !Enum.IsDefined(driveType.Value))
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(DefaultDriveType) }));
             string displayName = DisplayName;
             if (string.IsNullOrEmpty(displayName))
                 return;
             Guid id = Id;
-            var entities = from fs in dbContext.FileSystems where id != fs.Id && fs.DisplayName == displayName select fs;
-            if (entities.Any())
-                validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
+            LocalDbContext dbContext = validationContext.GetService<LocalDbContext>();
+            if (dbContext is not null)
+            {
+                if (dbContext.FileSystems.Any(fs => id != fs.Id && fs.DisplayName == displayName))
+                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
+            }
         }
     }
 }
