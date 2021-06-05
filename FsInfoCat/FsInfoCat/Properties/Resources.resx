@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DisplayName_AccessErrors" xml:space="preserve">
+    <value>Access Errors</value>
+  </data>
   <data name="DisplayName_CaseSensitiveSearch" xml:space="preserve">
     <value>Case-sensitive Search</value>
+  </data>
+  <data name="DisplayName_ComparisonSources" xml:space="preserve">
+    <value>Comparisons (as source)</value>
+  </data>
+  <data name="DisplayName_ComparisonTargets" xml:space="preserve">
+    <value>Comparisons (as target)</value>
   </data>
   <data name="DisplayName_CreatedOn" xml:space="preserve">
     <value>Created On</value>
@@ -128,6 +137,9 @@
   </data>
   <data name="DisplayName_DisplayName" xml:space="preserve">
     <value>Display Name</value>
+  </data>
+  <data name="DisplayName_ExtendedProperties" xml:space="preserve">
+    <value>Extended Properties</value>
   </data>
   <data name="DisplayName_FileSystem" xml:space="preserve">
     <value>File System</value>
@@ -182,6 +194,9 @@
   </data>
   <data name="ErrorMessage_DuplicateDisplayName" xml:space="preserve">
     <value>Display Name is already in use.</value>
+  </data>
+  <data name="ErrorMessage_DuplicateMessage" xml:space="preserve">
+    <value>Duplicate message with same error code.</value>
   </data>
   <data name="ErrorMessage_DuplicateName" xml:space="preserve">
     <value>Name is already in use.</value>

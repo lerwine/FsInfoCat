@@ -61,11 +61,38 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access Errors.
+        /// </summary>
+        public static string DisplayName_AccessErrors {
+            get {
+                return ResourceManager.GetString("DisplayName_AccessErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case-sensitive Search.
         /// </summary>
         public static string DisplayName_CaseSensitiveSearch {
             get {
                 return ResourceManager.GetString("DisplayName_CaseSensitiveSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comparisons (as source).
+        /// </summary>
+        public static string DisplayName_ComparisonSources {
+            get {
+                return ResourceManager.GetString("DisplayName_ComparisonSources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comparisons (as target).
+        /// </summary>
+        public static string DisplayName_ComparisonTargets {
+            get {
+                return ResourceManager.GetString("DisplayName_ComparisonTargets", resourceCulture);
             }
         }
         
@@ -93,6 +120,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_DisplayName {
             get {
                 return ResourceManager.GetString("DisplayName_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extended Properties.
+        /// </summary>
+        public static string DisplayName_ExtendedProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_ExtendedProperties", resourceCulture);
             }
         }
         
@@ -255,6 +291,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_DuplicateDisplayName {
             get {
                 return ResourceManager.GetString("ErrorMessage_DuplicateDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate message with same error code..
+        /// </summary>
+        public static string ErrorMessage_DuplicateMessage {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DuplicateMessage", resourceCulture);
             }
         }
         
