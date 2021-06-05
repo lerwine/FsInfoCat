@@ -13,6 +13,7 @@ using System.Threading;
 
 namespace FsInfoCat
 {
+    // TODO: Make inherited class which implements IRevertibleChangeTracking, and yet another which implements IDataErrorInfo and INotifyDataErrorInfo
     public abstract class NotifyPropertyChanged : INotifyPropertyValueChanged, IDataErrorInfo, INotifyDataErrorInfo, IRevertibleChangeTracking
     {
         private readonly ILogger<NotifyPropertyChanged> _logger = Services.ServiceProvider.GetRequiredService<ILogger<NotifyPropertyChanged>>();
@@ -78,6 +79,7 @@ namespace FsInfoCat
             Monitor.Enter(_syncroot);
             try
             {
+                // TODO: Implement ClearError(string)
                 throw new NotImplementedException();
             }
             finally { Monitor.Exit(_syncroot); }
@@ -232,6 +234,7 @@ namespace FsInfoCat
             Monitor.Enter(_syncroot);
             try
             {
+                // TODO: Implement SetError(string, string)
                 throw new NotImplementedException();
             }
             finally { Monitor.Exit(_syncroot); }

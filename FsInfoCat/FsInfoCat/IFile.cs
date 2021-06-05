@@ -21,7 +21,7 @@ namespace FsInfoCat
 
         string Notes { get; set; }
 
-#warning Replace with status of Normal, AccessError, Deleted
+        // BUG: Replace with status of Normal, AccessError, Deleted
         bool Deleted { get; set; }
 
         IContentInfo Content { get; set; }

@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ContentInfo target = new() { /* TODO: Initialize properties */ };
+            Local.ContentInfo target = new() { /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.ContentInfos.Add(target);
@@ -39,7 +39,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
-            // TODO: Validate default values
+            // DEFERRED: Validate default values
             Assert.AreEqual(0L, target.Length);
             Assert.IsNull(target.Hash);
             Assert.IsNull(target.LastSynchronizedOn);
@@ -69,7 +69,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.IsNull(target.Hash);
-            // TODO: Validate default values
+            // DEFERRED: Validate default values
 
             MD5Hash? expected = new MD5Hash(Guid.NewGuid().ToByteArray());
             target.Hash = expected;
@@ -87,7 +87,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            long expected = default; // TODO: Set invalid value
+            long expected = default; // DEFERRED: Set invalid value
             Local.ContentInfo target = new() { Length = expected };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
             Collection<ValidationResult> results = new();
@@ -100,7 +100,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Length);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.Length = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -111,7 +111,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Length);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.Length = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -132,7 +132,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ContentInfo target = new() {  /* TODO: Initialize properties */ };
+            Local.ContentInfo target = new() {  /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
@@ -171,7 +171,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ContentInfo target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            Local.ContentInfo target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.ContentInfo> entityEntry = dbContext.ContentInfos.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);

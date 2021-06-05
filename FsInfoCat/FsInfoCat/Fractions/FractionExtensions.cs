@@ -268,12 +268,14 @@ namespace FsInfoCat.Fractions
         public static bool EqualTo<T>(IFraction<T> fraction, object obj)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
+            // TODO: Implement EqualTo{T}(IFraction{T}, object)
             throw new NotImplementedException();
         }
 
         public static int Compare<T>(IFraction<T> fraction, object obj)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
+            // TODO: Implement Compare{T}(IFraction{T}, object)
             throw new NotImplementedException();
         }
 

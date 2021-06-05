@@ -12,7 +12,9 @@ namespace FsInfoCat.UnitTests
         private static TestContext _testContext;
 
         [AssemblyInitialize()]
+#pragma warning disable IDE0060 // Remove unused parameter
         public static void AssemblyInit(TestContext context)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             Services.Initialize(services =>
             {

@@ -37,7 +37,7 @@ namespace FsInfoCat.UnitTests
             dbContext.Volumes.Add(volume1);
             string expectedName = "";
             Local.Subdirectory parent1 = new() { Volume = volume1 };
-            Local.DbFile target = new() { /* TODO: Initialize properties */ };
+            Local.DbFile target = new() { /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Files.Add(target);
@@ -52,7 +52,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
 
-            // TODO: Validate default values
+            // DEFERRED: Validate default values
             Assert.IsNull(target.LastAccessed);
             Assert.IsNull(target.Deleted);
             Assert.IsNull(target.LastHashCalculation);
@@ -75,7 +75,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ContentInfo expected = default; // TODO: Set invalid value
+            Local.ContentInfo expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { Content = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
@@ -88,7 +88,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Content);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.Content = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -99,7 +99,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Content);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.Content = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -121,7 +121,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string expected = default; // TODO: Set invalid value
+            string expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { Name = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
@@ -134,7 +134,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Name);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.Name = expected;
             Assert.AreEqual(expected, target.Name);
             results = new();
@@ -146,7 +146,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Name);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.Name = expected;
             Assert.AreEqual(expected, target.Name);
             results = new();
@@ -169,7 +169,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Subdirectory expected = default; // TODO: Set invalid value
+            Local.Subdirectory expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { Parent = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
@@ -182,7 +182,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Parent);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.Parent = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -193,7 +193,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Parent);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.Parent = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -215,7 +215,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            FileCrawlOptions expected = default; // TODO: Set invalid value
+            FileCrawlOptions expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { Options = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
@@ -228,7 +228,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Options);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.Options = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -239,7 +239,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Options);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.Options = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -260,7 +260,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DbFile target = new() {  /* TODO: Initialize properties */ };
+            Local.DbFile target = new() {  /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
@@ -299,7 +299,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DbFile target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            Local.DbFile target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);

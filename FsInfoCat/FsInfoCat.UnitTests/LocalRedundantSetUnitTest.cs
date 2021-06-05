@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.RedundantSet target = new() { /* TODO: Initialize properties */ };
+            Local.RedundantSet target = new() { /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.RedundantSets.Add(target);
@@ -40,7 +40,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
 
-            // TODO: Validate default values
+            // DEFERRED: Validate default values
             Assert.AreEqual("", target.Reference);
             Assert.AreEqual("", target.Notes);
             Assert.IsNull(target.LastSynchronizedOn);
@@ -60,7 +60,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ContentInfo expected = default; // TODO: Set invalid value
+            Local.ContentInfo expected = default; // DEFERRED: Set invalid value
             Local.RedundantSet target = new() { ContentInfo = expected };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             Collection<ValidationResult> results = new();
@@ -73,7 +73,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.ContentInfo);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.ContentInfo = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -84,7 +84,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.ContentInfo);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.ContentInfo = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -105,7 +105,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            RedundancyRemediationStatus expected = default; // TODO: Set invalid value
+            RedundancyRemediationStatus expected = default; // DEFERRED: Set invalid value
             Local.RedundantSet target = new() { RemediationStatus = expected };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             Collection<ValidationResult> results = new();
@@ -118,7 +118,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Reference);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.RemediationStatus = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -129,7 +129,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Reference);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.RemediationStatus = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -150,7 +150,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string expected = default; // TODO: Set invalid value
+            string expected = default; // DEFERRED: Set invalid value
             Local.RedundantSet target = new() { Reference = expected };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             Collection<ValidationResult> results = new();
@@ -163,7 +163,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Reference);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.Reference = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -174,7 +174,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Reference);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.Reference = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -195,7 +195,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.RedundantSet target = new() {  /* TODO: Initialize properties */ };
+            Local.RedundantSet target = new() {  /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
@@ -234,7 +234,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.RedundantSet target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            Local.RedundantSet target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);

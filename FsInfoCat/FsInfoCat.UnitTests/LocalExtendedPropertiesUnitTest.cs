@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ExtendedProperties target = new() { /* TODO: Initialize properties */ };
+            Local.ExtendedProperties target = new() { /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.ExtendedProperties> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.ExtendedProperties.Add(target);
@@ -39,7 +39,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
-            // TODO: Validate default values
+            // DEFERRED: Validate default values
             Assert.AreEqual(0, target.Height);
             Assert.AreEqual(0, target.Width);
             Assert.IsNull(target.Duration);
@@ -93,7 +93,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
             Assert.AreEqual(0, target.Height);
-            // TODO: Validate default values
+            // DEFERRED: Validate default values
 
             ushort expected = 12;
             target.Height = expected;
@@ -111,7 +111,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            ushort expected = default; // TODO: Set invalid value
+            ushort expected = default; // DEFERRED: Set invalid value
             Local.ExtendedProperties target = new() { Width = expected };
             EntityEntry<Local.ExtendedProperties> entityEntry = dbContext.ExtendedProperties.Add(target);
             Collection<ValidationResult> results = new();
@@ -124,7 +124,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Width);
 
-            expected = default; // TODO: Set valid value
+            expected = default; // DEFERRED: Set valid value
             target.Width = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -135,7 +135,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.Width);
 
-            expected = default; // TODO: Set invalid value
+            expected = default; // DEFERRED: Set invalid value
             target.Width = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -156,7 +156,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ExtendedProperties target = new() {  /* TODO: Initialize properties */ };
+            Local.ExtendedProperties target = new() {  /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.ExtendedProperties> entityEntry = dbContext.ExtendedProperties.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
@@ -195,7 +195,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ExtendedProperties target = new() {  /* TODO: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            Local.ExtendedProperties target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.ExtendedProperties> entityEntry = dbContext.ExtendedProperties.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
