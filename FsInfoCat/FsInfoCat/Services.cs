@@ -20,6 +20,10 @@ namespace FsInfoCat
     {
         public const string DEFAULT_LOCAL_DB_FILENAME = "FsInfoCat.db";
 
+        public static readonly Regex BackslashEscapablePattern = new Regex(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
+
+        public static readonly Regex BackslashEscapableLBPattern = new Regex(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
+
         public static IHost Host { get; private set; }
 
         public static IServiceProvider ServiceProvider => Host.Services;
@@ -105,24 +109,49 @@ namespace FsInfoCat
             }
         }
 
-        public static void RejectChanges<T>(this EntityEntry<T> entry) where T : class, IRevertibleChangeTracking
+        public static void RejectChanges(this DbContext dbContext)
+        {
+            if (dbContext is null)
+                return;
+            EntityEntry[] entityEntries = dbContext.ChangeTracker.Entries().ToArray();
+            foreach (EntityEntry entry in entityEntries)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        dbContext.Remove(entry.Entity);
+                        break;
+                    case EntityState.Modified:
+                        if (entry.Entity is IDbEntity dbEntity)
+                            dbEntity.RejectChanges();
+                        break;
+                }
+            }
+        }
+
+        public static void RejectChanges(this EntityEntry entry)
         {
             if (entry is null)
                 return;
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.RejectChanges();
+                    //if (entry.Entity is IRevertibleChangeTracking rct)
+                    //    rct.RejectChanges();
                     entry.Context.Remove(entry.Entity);
                     break;
                 case EntityState.Deleted:
-                    entry.Entity.RejectChanges();
-                    entry.State = entry.Entity.IsChanged ? EntityState.Modified : EntityState.Unchanged;
+                    if (entry.Entity is IRevertibleChangeTracking rct2)
+                    {
+                        rct2.RejectChanges();
+                        entry.State = rct2.IsChanged ? EntityState.Modified : EntityState.Unchanged;
+                    }
                     break;
                 case EntityState.Unchanged:
                     break;
                 default:
-                    entry.Entity.RejectChanges();
+                    if (entry.Entity is IRevertibleChangeTracking rct3)
+                        rct3.RejectChanges();
                     break;
             }
         }
@@ -204,6 +233,249 @@ namespace FsInfoCat
             if (getKey is null)
                 throw new ArgumentNullException(nameof(getKey));
             return source?.Select(e => new KeyValuePair<TKey, TValue>(getKey(e), e));
+        }
+
+        public static bool IsNullableType(this Type type) => (type ?? throw new ArgumentNullException(nameof(type))).IsValueType && type.IsGenericType &&
+            typeof(Nullable<>).Equals(type.GetGenericTypeDefinition());
+
+        public static bool IsNullAssignable(this Type type) => !(type ?? throw new ArgumentNullException(nameof(type))).IsValueType || type.IsNullableType();
+
+        public static string ToCsTypeName(this Type type, bool omitNamespaces = false)
+        {
+            if (type is null)
+                return "null";
+            if (type.IsGenericParameter)
+                return type.Name;
+            if (type.IsPointer)
+                return $"{ToCsTypeName(type.GetElementType(), omitNamespaces)}*";
+            if (type.IsByRef)
+                return $"{ToCsTypeName(type.GetElementType(), omitNamespaces)}&";
+            if (type.IsArray)
+            {
+                int rank = type.GetArrayRank();
+                if (rank < 2)
+                    return $"{ToCsTypeName(type.GetElementType(), omitNamespaces)}[]";
+                if (rank == 2)
+                    return $"{ToCsTypeName(type.GetElementType(), omitNamespaces)}[,]";
+                return $"{ToCsTypeName(type.GetElementType(), omitNamespaces)}[{new string(',', rank - 1)}]";
+            }
+            if (type.IsNullableType())
+                return $"{ToCsTypeName(Nullable.GetUnderlyingType(type), omitNamespaces)}?";
+
+            if (type.IsValueType)
+            {
+                if (type.Equals(typeof(void)))
+                    return "void";
+                if (type.Equals(typeof(char)))
+                    return "char";
+                if (type.Equals(typeof(bool)))
+                    return "bool";
+                if (type.Equals(typeof(byte)))
+                    return "byte";
+                if (type.Equals(typeof(sbyte)))
+                    return "sbyte";
+                if (type.Equals(typeof(short)))
+                    return "short";
+                if (type.Equals(typeof(ushort)))
+                    return "ushort";
+                if (type.Equals(typeof(int)))
+                    return "int";
+                if (type.Equals(typeof(uint)))
+                    return "uint";
+                if (type.Equals(typeof(long)))
+                    return "long";
+                if (type.Equals(typeof(ulong)))
+                    return "ulong";
+                if (type.Equals(typeof(float)))
+                    return "float";
+                if (type.Equals(typeof(double)))
+                    return "double";
+                if (type.Equals(typeof(decimal)))
+                    return "decimal";
+            }
+            else
+            {
+                if (type.Equals(typeof(string)))
+                    return "string";
+                if (type.Equals(typeof(object)))
+                    return "object";
+            }
+            string n = type.Name;
+            string ns;
+            if (type.IsNested)
+                ns = ToCsTypeName(type.DeclaringType, omitNamespaces);
+            else if (omitNamespaces || (ns = type.Namespace) is null || ns == "System")
+                ns = "";
+
+            if (type.IsGenericType)
+            {
+                int i = n.IndexOf("`");
+                if (i > 0)
+                    n = n.Substring(0, i);
+                if (ns.Length > 0)
+                    return $"{ns}.{n}<{string.Join(",", type.GetGenericArguments().Select(a => a.ToCsTypeName(omitNamespaces)))}>";
+                return $"{n}<{string.Join(",", type.GetGenericArguments().Select(a => a.ToCsTypeName(omitNamespaces)))}>";
+            }
+            return (ns.Length > 0) ? $"{ns}.{n}" : n;
+        }
+
+        public static string ToPseudoCsText(object obj)
+        {
+            if (obj is null)
+                return "null";
+            if (obj is string s)
+                return $"\"{EscapeCsString(s)}\"";
+            if (obj is char c)
+                return c switch
+                {
+                    '\'' => "'\\''",
+                    '"' => "'\"'",
+                    _ => $"'{EscapeCsString(new string(new char[] { c }))}'",
+                };
+            if (obj is bool bv)
+                return bv ? "true" : "false";
+            if (obj is byte bn)
+                return bn.ToString("X2");
+            if (obj is sbyte sb)
+                return $"(sbyte){sb:X2}";
+            if (obj is short sv)
+                return sv.ToString("X4");
+            if (obj is ushort us)
+                return $"(ushort){us:X4}";
+            if (obj is int i)
+                return i.ToString("X8");
+            if (obj is uint ui)
+                return $"{ui:X8}U";
+            if (obj is long l)
+                return l.ToString("X16");
+            if (obj is ulong ul)
+                return $"{ul:16}UL";
+            if (obj is float fv)
+                return $"{fv}f";
+            if (obj is double d)
+                return d.ToString();
+            if (obj is decimal m)
+                return $"{m}m";
+            if (obj is DateTime dt)
+                return dt.ToString();
+            if (obj is DBNull)
+                return "DBNull";
+            if (obj is Type t)
+                return t.ToCsTypeName();
+            if (obj is IFormattable fm)
+                fm.ToString();
+            if (obj is IConvertible cv)
+            {
+                switch (cv.GetTypeCode())
+                {
+                    case TypeCode.Boolean:
+                        return ToPseudoCsText(cv.ToBoolean(null));
+                    case TypeCode.Byte:
+                        return ToPseudoCsText(cv.ToByte(null));
+                    case TypeCode.Char:
+                        return ToPseudoCsText(cv.ToChar(null));
+                    case TypeCode.DateTime:
+                        return ToPseudoCsText(cv.ToDateTime(null));
+                    case TypeCode.DBNull:
+                        return "DBNull";
+                    case TypeCode.Decimal:
+                        return ToPseudoCsText(cv.ToDecimal(null));
+                    case TypeCode.Double:
+                        return ToPseudoCsText(cv.ToDouble(null));
+                    case TypeCode.Int16:
+                        return ToPseudoCsText(cv.ToInt16(null));
+                    case TypeCode.Int32:
+                        return ToPseudoCsText(cv.ToInt32(null));
+                    case TypeCode.Int64:
+                        return ToPseudoCsText(cv.ToInt64(null));
+                    case TypeCode.SByte:
+                        return ToPseudoCsText(cv.ToSByte(null));
+                    case TypeCode.Single:
+                        return ToPseudoCsText(cv.ToSingle(null));
+                    case TypeCode.String:
+                        return ToPseudoCsText(cv.ToString(null));
+                    case TypeCode.UInt16:
+                        return ToPseudoCsText(cv.ToUInt16(null));
+                    case TypeCode.UInt32:
+                        return ToPseudoCsText(cv.ToUInt32(null));
+                    case TypeCode.UInt64:
+                        return ToPseudoCsText(cv.ToUInt64(null));
+                }
+            }
+            return obj.ToString();
+        }
+
+        public static string EscapeCsString(string source, bool keepLineBreaks = false)
+        {
+            if (string.IsNullOrEmpty(source) || !BackslashEscapablePattern.IsMatch(source))
+                return source;
+            if (keepLineBreaks)
+                return BackslashEscapableLBPattern.Replace(source, m =>
+                {
+                    if (m.Groups["l"].Success)
+                        return $"\\{m.Value}";
+                    Group g = m.Groups["n"];
+                    if (g.Success)
+                        return g.Value switch
+                        {
+                            "\r" => "\\r\r",
+                            "\n" => "\\n\n",
+                            _ => "\\r\\n\r\n",
+                        };
+                    char c = m.Value[0];
+                    switch (c)
+                    {
+                        case '\0':
+                            return "\\0";
+                        case '\a':
+                            return "\\a";
+                        case '\b':
+                            return "\\b";
+                        case '\f':
+                            return "\\f";
+                        case '\t':
+                            return "\\t";
+                        case '\v':
+                            return "\\v";
+                        default:
+                            g = m.Groups["x"];
+                            uint i = (uint)c;
+                            if (g.Success)
+                                return $"\\x{i:x4}{g.Value}";
+                            return (i > 0xff) ? $"\\x{i:x4}" : $"\\x{i:x2}";
+                    }
+                });
+            return BackslashEscapablePattern.Replace(source, m =>
+            {
+                if (m.Groups["l"].Success)
+                    return $"\\{m.Value}";
+                char c = m.Value[0];
+                switch (c)
+                {
+                    case '\0':
+                        return "\\0";
+                    case '\a':
+                        return "\\a";
+                    case '\b':
+                        return "\\b";
+                    case '\f':
+                        return "\\f";
+                    case '\n':
+                        return "\\n";
+                    case '\r':
+                        return "\\r";
+                    case '\t':
+                        return "\\t";
+                    case '\v':
+                        return "\\v";
+                    default:
+                        Group g = m.Groups["x"];
+                        uint i = (uint)c;
+                        if (g.Success)
+                            return $"\\x{i:x4}{g.Value}";
+                        return (i > 0xff) ? $"\\x{i:x4}" : $"\\x{i:x2}";
+                }
+            });
         }
 
         //private class DummyServiceProvider : IServiceProvider
