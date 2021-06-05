@@ -34,6 +34,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<ContentInfo> _content;
         private readonly IPropertyChangeTracker<Redundancy> _redundancy;
         private readonly IPropertyChangeTracker<ExtendedProperties> _extendedProperties;
+        private HashSet<FileAccessError> _accessErrors = new();
         private HashSet<FileComparison> _comparisonSources = new();
         private HashSet<FileComparison> _comparisonTargets = new();
 
@@ -157,6 +158,7 @@ namespace FsInfoCat.Local
 
         public virtual Redundancy Redundancy { get => _redundancy.GetValue(); set => _redundancy.SetValue(value); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ExtendedProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual ExtendedProperties ExtendedProperties
         {
             get => _extendedProperties.GetValue();
@@ -172,12 +174,21 @@ namespace FsInfoCat.Local
             }
         }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual HashSet<FileAccessError> AccessErrors
+        {
+            get => _accessErrors;
+            set => CheckHashSetChanged(_accessErrors, value, h => _accessErrors = h);
+        }
+
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ComparisonSources), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual HashSet<FileComparison> ComparisonSources
         {
             get => _comparisonSources;
             set => CheckHashSetChanged(_comparisonSources, value, h => _comparisonSources = h);
         }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ComparisonTargets), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual HashSet<FileComparison> ComparisonTargets
         {
             get => _comparisonTargets;
@@ -211,6 +222,10 @@ namespace FsInfoCat.Local
         ILocalExtendedProperties ILocalFile.ExtendedProperties { get => ExtendedProperties; set => ExtendedProperties = (ExtendedProperties)value; }
 
         IExtendedProperties IFile.ExtendedProperties { get => ExtendedProperties; set => ExtendedProperties = (ExtendedProperties)value; }
+
+        IEnumerable<IAccessError<ILocalFile>> ILocalFile.AccessErrors => AccessErrors.Cast<IAccessError<ILocalFile>>();
+
+        IEnumerable<IAccessError<IFile>> IFile.AccessErrors => AccessErrors.Cast<IAccessError<IFile>>();
 
         #endregion
 
@@ -246,8 +261,7 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.ExtendedProperties).WithMany(d => d.Files).HasForeignKey(nameof(ExtendedPropertiesId)).OnDelete(DeleteBehavior.Restrict);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
 
         private void OnValidate(EntityEntry<DbFile> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
@@ -256,8 +270,8 @@ namespace FsInfoCat.Local
                 return;
             Guid id = Id;
             Guid parentId = ParentId;
-            var entities = from sn in dbContext.Files where id != sn.Id && sn.ParentId == parentId && sn.Name == name select sn;
-            if (entities.Any())
+            // TODO: Need to test whether this fails to skip an item where the id matches
+            if (dbContext.Files.Any(sn => sn.ParentId == parentId && sn.Name == name && id != sn.Id))
                 validationResults.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
     }

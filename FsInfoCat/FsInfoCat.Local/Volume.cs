@@ -31,6 +31,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
         private readonly IPropertyChangeTracker<FileSystem> _fileSystem;
         private readonly IPropertyChangeTracker<Subdirectory> _rootDirectory;
+        private HashSet<VolumeAccessError> _accessErrors = new();
 
         #endregion
 
@@ -131,6 +132,13 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Subdirectory RootDirectory { get => _rootDirectory.GetValue(); set => _rootDirectory.SetValue(value); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual HashSet<VolumeAccessError> AccessErrors
+        {
+            get => _accessErrors;
+            set => CheckHashSetChanged(_accessErrors, value, h => _accessErrors = h);
+        }
+
         #endregion
 
         #region Explicit Members
@@ -142,6 +150,10 @@ namespace FsInfoCat.Local
         ILocalSubdirectory ILocalVolume.RootDirectory => RootDirectory;
 
         ISubdirectory IVolume.RootDirectory => RootDirectory;
+
+        IEnumerable<IAccessError<ILocalVolume>> ILocalVolume.AccessErrors => AccessErrors.Cast<IAccessError<ILocalVolume>>();
+
+        IEnumerable<IAccessError<IVolume>> IVolume.AccessErrors => AccessErrors.Cast<IAccessError<IVolume>>();
 
         #endregion
 
@@ -175,8 +187,7 @@ namespace FsInfoCat.Local
             builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
 
         private void OnValidate(EntityEntry<Volume> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {

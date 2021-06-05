@@ -87,8 +87,7 @@ namespace FsInfoCat.Local
 
         public bool IsSameDbRow(IDbEntity other) => IsNew() ? ReferenceEquals(this, other) : (other is ILocalContentInfo entity && Id.Equals(entity.Id));
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
 
         private void OnValidate(EntityEntry<ContentInfo> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {

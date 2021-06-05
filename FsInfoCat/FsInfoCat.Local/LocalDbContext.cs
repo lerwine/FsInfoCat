@@ -32,9 +32,15 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<Volume> Volumes { get; set; }
 
+        public virtual DbSet<VolumeAccessError> VolumeAccessErrors { get; set; }
+
         public virtual DbSet<Subdirectory> Subdirectories { get; set; }
 
+        public virtual DbSet<SubdirectoryAccessError> SubdirectoryAccessErrors { get; set; }
+
         public virtual DbSet<DbFile> Files { get; set; }
+
+        public virtual DbSet<FileAccessError> FileAccessErrors { get; set; }
 
         public virtual DbSet<ExtendedProperties> ExtendedProperties { get; set; }
 
@@ -96,6 +102,7 @@ namespace FsInfoCat.Local
         {
             var entities = from e in ChangeTracker.Entries() where e.State == EntityState.Added || e.State == EntityState.Modified select e.Entity;
             foreach (var e in entities)
+                // BUG: Relying primarily on IValidatableObject is less than optimal - current implementation gets a DbContext which could possible occur at an inopportune time.
                 Validator.ValidateObject(e, new ValidationContext(e), true);
             return base.SaveChanges();
         }
@@ -187,14 +194,17 @@ namespace FsInfoCat.Local
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
         }
 
+        // TODO: Separate normalization initiated by IValidatableObject.Validate(ValidationContext) from normalization within a database context.
         internal delegate void EntityEntryNormalizationHandler<T>([NotNull] EntityEntry<T> entityEntry, [NotNull] LocalDbContext dbContext)
-            where T : class, ILocalDbEntity;
+            where T : class, IDbEntity;
 
+        // TODO: Separate validation invoked by IValidatableObject.Validate(ValidationContext) from validation within a database context.
         internal delegate void EntityEntryValidationHandler<T>([NotNull] EntityEntry<T> entityEntry, [NotNull] LocalDbContext dbContext,
-            [NotNull] List<ValidationResult> validationResults) where T : class, ILocalDbEntity;
+            [NotNull] List<ValidationResult> validationResults) where T : class, IDbEntity;
 
+        // TODO: Separate validation invoked by IValidatableObject.Validate(ValidationContext) from validation within a database context.
         internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [NotNull] LocalDbContext dbContext, [NotNull] out EntityEntry<T> entityEntry)
-            where T : class, ILocalDbEntity
+            where T : class, IDbEntity
         {
             entityEntry = dbContext.Entry(entity);
             List<ValidationResult> result = new();
@@ -215,51 +225,57 @@ namespace FsInfoCat.Local
                         entity.CreatedOn = (entity.ModifiedOn > now) ? now : entity.ModifiedOn;
                     else
                         entity.CreatedOn = entity.ModifiedOn = now;
-                    if (entity.UpstreamId.HasValue && !entityEntry.Property(nameof(ILocalDbEntity.LastSynchronizedOn)).IsModified &&
-                            entity.CreatedOn <= entity.ModifiedOn)
-                        entity.LastSynchronizedOn = (entity.CreatedOn > now) ? entity.CreatedOn : ((entity.ModifiedOn < now) ? entity.ModifiedOn : now);
+                    if (entity is ILocalDbEntity localEntity1 && localEntity1.UpstreamId.HasValue &&
+                        !entityEntry.Property(nameof(ILocalDbEntity.LastSynchronizedOn)).IsModified && localEntity1.CreatedOn <= localEntity1.ModifiedOn)
+                        localEntity1.LastSynchronizedOn = (localEntity1.CreatedOn > now) ? localEntity1.CreatedOn :
+                            ((localEntity1.ModifiedOn < now) ? localEntity1.ModifiedOn : now);
                     break;
                 default:
                     if (!entityEntry.Property(nameof(ILocalDbEntity.ModifiedOn)).IsModified)
                         entity.ModifiedOn = (entity.CreatedOn > now) ? entity.CreatedOn : now;
-                    if (entityEntry.Property(nameof(ILocalDbEntity.UpstreamId)).IsModified &&
+                    if (entity is ILocalDbEntity localEntity2 && entityEntry.Property(nameof(ILocalDbEntity.UpstreamId)).IsModified &&
                             !entityEntry.Property(nameof(ILocalDbEntity.LastSynchronizedOn)).IsModified)
-                        entity.LastSynchronizedOn = (entity.CreatedOn > now) ? entity.CreatedOn : ((entity.ModifiedOn < now) ? entity.ModifiedOn : now);
+                        localEntity2.LastSynchronizedOn = (localEntity2.CreatedOn > now) ? localEntity2.CreatedOn :
+                            ((localEntity2.ModifiedOn < now) ? localEntity2.ModifiedOn : now);
                     break;
             }
-            DateTime? lastSynchronizedOn = entity.LastSynchronizedOn;
-            if (entity.CreatedOn.CompareTo(entity.ModifiedOn) > 0)
+            if (entity is ILocalDbEntity localEntity3)
             {
-                result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.CreatedOn) }));
-                if (entity.UpstreamId.HasValue && !lastSynchronizedOn.HasValue)
-                    result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired,
-                        new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
-                return result;
-            }
-            if (entity.UpstreamId.HasValue)
-            {
-                if (!lastSynchronizedOn.HasValue)
+                DateTime? lastSynchronizedOn = localEntity3.LastSynchronizedOn;
+                if (localEntity3.CreatedOn.CompareTo(localEntity3.ModifiedOn) > 0)
                 {
-                    result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired,
-                        new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+                    result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.CreatedOn) }));
+                    if (localEntity3.UpstreamId.HasValue && !lastSynchronizedOn.HasValue)
+                        result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired,
+                            new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
                     return result;
                 }
+                if (localEntity3.UpstreamId.HasValue)
+                {
+                    if (!lastSynchronizedOn.HasValue)
+                    {
+                        result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired,
+                            new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+                        return result;
+                    }
+                }
+                else if (!lastSynchronizedOn.HasValue)
+                    return result;
+                if (lastSynchronizedOn.Value.CompareTo(localEntity3.CreatedOn) < 0)
+                    result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn,
+                        new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+                if (lastSynchronizedOn.Value.CompareTo(localEntity3.ModifiedOn) > 0)
+                    result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn,
+                        new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
             }
-            else if (!lastSynchronizedOn.HasValue)
-                return result;
-            if (lastSynchronizedOn.Value.CompareTo(entity.CreatedOn) < 0)
-                result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn,
-                    new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
-            if (lastSynchronizedOn.Value.CompareTo(entity.ModifiedOn) > 0)
-                result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn,
-                    new string[] { nameof(ILocalDbEntity.LastSynchronizedOn) }));
+            else if (entity.CreatedOn.CompareTo(entity.ModifiedOn) > 0)
+                result.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(ILocalDbEntity.CreatedOn) }));
             return result;
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
-        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext, [NotNull] EntityEntryValidationHandler<T> onValidate)
-#pragma warning restore IDE0060 // Remove unused parameter
-            where T : class, ILocalDbEntity
+        // BUG: Bad idea to use DbContext on something called by IValidatableObject.Validate(ValidationContext) since it can't always be controlled when and how often validation might occur.
+        internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [NotNull] EntityEntryValidationHandler<T> onValidate)
+            where T : class, IDbEntity
         {
             List<ValidationResult> result;
             using (LocalDbContext dbContext = Services.ServiceProvider.GetService<LocalDbContext>())
@@ -270,9 +286,11 @@ namespace FsInfoCat.Local
             return result;
         }
 
+        // BUG: Bad idea to use DbContext on something called by IValidatableObject.Validate(ValidationContext) since it can't always be controlled when and how often validation might occur.
         internal static List<ValidationResult> GetBasicLocalDbEntityValidationResult<T>([NotNull] T entity, [MaybeNull] ValidationContext validationContext, [NotNull] out EntityEntry<T> entityEntry)
-            where T : class, ILocalDbEntity
+            where T : class, IDbEntity
         {
+            // BUG: ValidationContext.ObjectInstance should never be a DbContext object
             if (!(validationContext is null) && validationContext.ObjectInstance is LocalDbContext dbContext)
                 return GetBasicLocalDbEntityValidationResult(entity, dbContext, out entityEntry);
             using (dbContext = Services.ServiceProvider.GetService<LocalDbContext>())

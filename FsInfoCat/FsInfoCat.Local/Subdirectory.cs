@@ -28,6 +28,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Volume> _volume;
         private HashSet<DbFile> _files = new();
         private HashSet<Subdirectory> _subDirectories = new();
+        private HashSet<SubdirectoryAccessError> _accessErrors = new();
 
         #endregion
 
@@ -46,14 +47,12 @@ namespace FsInfoCat.Local
         [Required]
         public virtual DateTime LastAccessed { get => _lastAccessed.GetValue(); set => _lastAccessed.SetValue(value); }
 
-        /// <remarks>TEXT NOT NULL DEFAULT ''</remarks>
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
         [Required]
         public virtual bool Deleted { get => _deleted.GetValue(); set => _deleted.SetValue(value); }
 
-        /// <remarks>UNIQUEIDENTIFIER</remarks>
         public virtual Guid? ParentId
         {
             get => _parentId.GetValue();
@@ -68,7 +67,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        /// <remarks>UNIQUEIDENTIFIER</remarks>
         public virtual Guid? VolumeId
         {
             get => _volumeId.GetValue();
@@ -83,27 +81,16 @@ namespace FsInfoCat.Local
             }
         }
 
-        /// <remarks>UNIQUEIDENTIFIER DEFAULT NULL</remarks>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
-        /// </remarks>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
-        /// <summary>
-        /// </summary>
-        /// <remarks>
-        /// DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
-        /// </remarks>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
@@ -150,6 +137,13 @@ namespace FsInfoCat.Local
             set => CheckHashSetChanged(_subDirectories, value, h => _subDirectories = h);
         }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual HashSet<SubdirectoryAccessError> AccessErrors
+        {
+            get => _accessErrors;
+            set => CheckHashSetChanged(_accessErrors, value, h => _accessErrors = h);
+        }
+
         #endregion
 
         #region Explicit Members
@@ -169,6 +163,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalSubdirectory> ILocalSubdirectory.SubDirectories => SubDirectories.Cast<ILocalSubdirectory>();
 
         IEnumerable<ISubdirectory> ISubdirectory.SubDirectories => SubDirectories.Cast<ISubdirectory>();
+
+        IEnumerable<IAccessError<ILocalSubdirectory>> ILocalSubdirectory.AccessErrors => AccessErrors.Cast<IAccessError<ILocalSubdirectory>>();
+
+        IEnumerable<IAccessError<ISubdirectory>> ISubdirectory.AccessErrors => AccessErrors.Cast<IAccessError<ISubdirectory>>();
 
         #endregion
 
@@ -199,8 +197,7 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId)).OnDelete(DeleteBehavior.Restrict);//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
 
         private void OnValidate(EntityEntry<Subdirectory> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {

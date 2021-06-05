@@ -130,8 +130,7 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
 
         private void OnValidate([NotNull] EntityEntry<SymbolicName> entityEntry, [NotNull] LocalDbContext dbContext, [NotNull] List<ValidationResult> validationResults)
         {

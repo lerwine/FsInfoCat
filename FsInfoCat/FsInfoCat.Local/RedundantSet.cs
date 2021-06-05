@@ -129,12 +129,11 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.ContentInfo).WithMany(d => d.RedundantSets).HasForeignKey(nameof(ContentInfoId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
 
         private void OnValidate(EntityEntry<RedundantSet> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
-            // TODO: Finish validation
+            // TODO: Implement OnValidate(EntityEntry{RedundantSet}, LocalDbContext, List{ValidationResult})
             throw new NotImplementedException();
         }
     }

@@ -161,12 +161,11 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.TargetFile).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(TargetFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-            LocalDbContext.GetBasicLocalDbEntityValidationResult(this, validationContext, OnValidate);
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => LocalDbContext.GetBasicLocalDbEntityValidationResult(this, OnValidate);
 
         private void OnValidate(EntityEntry<FileComparison> entityEntry, LocalDbContext dbContext, List<ValidationResult> validationResults)
         {
-            // TODO: Finish validation
+            // TODO: Implement OnValidate(EntityEntry{FileComparison}, LocalDbContext, List{ValidationResult})
             throw new NotImplementedException();
         }
     }
