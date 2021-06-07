@@ -2,11 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -277,6 +281,36 @@ namespace FsInfoCat.Local
             results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
 
+        internal XElement Export(bool includeParentId = false)
+        {
+            XElement result = new(nameof(TABLE_NAME),
+                new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
+                new XAttribute(nameof(Name), Name),
+                new XAttribute(nameof(ContentId), XmlConvert.ToString(ContentId))
+            );
+            if (includeParentId)
+            {
+                Guid parentId = ParentId;
+                if (!parentId.Equals(Guid.Empty))
+                    result.SetAttributeValue(nameof(ParentId), XmlConvert.ToString(parentId));
+            }
+            FileCrawlOptions options = Options;
+            if (options != FileCrawlOptions.None)
+                result.SetAttributeValue(nameof(Options), Enum.GetName(typeof(FileCrawlOptions), Options));
+            if (Deleted)
+                result.SetAttributeValue(nameof(Deleted), Deleted);
+            DateTime? lastHashCalculation = LastHashCalculation;
+            if (lastHashCalculation.HasValue)
+                result.SetAttributeValue(nameof(LastHashCalculation), XmlConvert.ToString(lastHashCalculation.Value, XmlDateTimeSerializationMode.RoundtripKind));
+            result.SetAttributeValue(nameof(LastAccessed), XmlConvert.ToString(LastAccessed, XmlDateTimeSerializationMode.RoundtripKind));
+            AddExportAttributes(result);
+            if (Notes.Length > 0)
+                result.Add(new XElement(nameof(Notes), new XCData(Notes)));
+            foreach (FileAccessError accessError in AccessErrors)
+                result.Add(accessError.Export());
+            return result;
+        }
+
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);
@@ -299,6 +333,18 @@ namespace FsInfoCat.Local
                         break;
                 }
 
+        }
+
+        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid parentId, XElement fileElement)
+        {
+            XName n = nameof(DbFile.Id);
+            Guid fileId = fileElement.GetAttributeGuid(n).Value;
+            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.Files)).Append("\" (\"").Append(nameof(DbFile.Id)).Append("\" , \"").Append(nameof(DbFile.ParentId)).Append('"');
+            List<object> values = new();
+            values.Add(fileId);
+            values.Add(parentId);
+            // TODO: Implement Import(LocalDbContext, ILogger{LocalDbContext}, Guid, XElement)
+            throw new NotImplementedException();
         }
     }
 }

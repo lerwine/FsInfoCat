@@ -105,14 +105,15 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Guid Id")]
         public void IdTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid Id
-
-            ExtendedProperties target = default; // TODO: Create and initialize ExtendedProperties instance
-            Guid expectedValue = default;
-            target.Id = default;
+            ExtendedProperties target = new();
+            Guid expectedValue = Guid.NewGuid();
+            target.Id = expectedValue;
             Guid actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
+            target.Id = expectedValue;
+            actualValue = target.Id;
+            Assert.AreEqual(expectedValue, actualValue);
+            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [TestMethod("ushort Width")]
@@ -480,6 +481,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime? LastSynchronizedOn")]
+        [TestProperty(TestHelper.TestProperty_Description,
+            "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void LastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -493,6 +496,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,12 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
+
 namespace FsInfoCat.UnitTests
 {
     [TestClass]
@@ -29,8 +34,22 @@ namespace FsInfoCat.UnitTests
             Services.Initialize(services =>
             {
                 string dbPath = Path.Combine(AppContext.BaseDirectory, TestHelper.TEST_DB_PATH);
-                Local.LocalDbContext.ConfigureServices(services, dbPath);
+                LocalDbContext.ConfigureServices(services, dbPath);
             }).Wait();
+            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            XDocument document = XDocument.Parse(Properties.Resources.DbCommands);
+            var logger = Services.ServiceProvider.GetService<ILogger<LocalDbContextTests>>();
+            foreach (XElement element in document.Root.Element("DropTables").Elements("Text"))
+            {
+                logger.LogInformation(element.Attribute("Message").Value);
+                dbContext.Database.ExecuteSqlRaw(element.Value.Trim());
+            }
+            foreach (XElement element in document.Root.Element("DbCreation").Elements("Text"))
+            {
+                logger.LogInformation(element.Attribute("Message").Value);
+                dbContext.Database.ExecuteSqlRaw(element.Value.Trim());
+            }
+            dbContext.Import(XDocument.Parse(Properties.Resources.TestData));
         }
 
         [AssemblyCleanup()]

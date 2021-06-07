@@ -4,7 +4,7 @@ namespace FsInfoCat
 {
     public class TrimmedNonNullStringCoersion : NonNullStringCoersion
     {
-        public static new readonly TrimmedNonNullStringCoersion Default = new TrimmedNonNullStringCoersion(null);
+        public static new readonly TrimmedNonNullStringCoersion Default = new(null);
 
         public TrimmedNonNullStringCoersion(IEqualityComparer<string> comparer) : base(comparer) { }
 

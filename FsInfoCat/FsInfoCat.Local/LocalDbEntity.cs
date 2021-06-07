@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -11,6 +13,7 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        internal const string ElementName_AccessError = "AccessError";
         private readonly IPropertyChangeTracker<Guid?> _upstreamId;
         private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
 
@@ -30,6 +33,16 @@ namespace FsInfoCat.Local
         {
             _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
             _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
+        }
+
+        protected override void AddExportAttributes(XElement element)
+        {
+            Guid? upstreamId = UpstreamId;
+            DateTime? lastSynchronizedOn = LastSynchronizedOn;
+            if (upstreamId.HasValue)
+                element.SetAttributeValue(nameof(UpstreamId), XmlConvert.ToString(upstreamId.Value));
+            if (lastSynchronizedOn.HasValue)
+                element.SetAttributeValue(nameof(LastSynchronizedOn), XmlConvert.ToString(lastSynchronizedOn.Value, XmlDateTimeSerializationMode.RoundtripKind));
         }
 
         protected override void BeforeSave(ValidationContext validationContext)

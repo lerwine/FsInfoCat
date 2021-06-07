@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat
 {
@@ -31,6 +33,12 @@ namespace FsInfoCat
         public DbEntity()
         {
             _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
+        }
+
+        protected virtual void AddExportAttributes(XElement element)
+        {
+            element.SetAttributeValue(nameof(CreatedOn), XmlConvert.ToString(CreatedOn, XmlDateTimeSerializationMode.RoundtripKind));
+            element.SetAttributeValue(nameof(ModifiedOn), XmlConvert.ToString(ModifiedOn, XmlDateTimeSerializationMode.RoundtripKind));
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

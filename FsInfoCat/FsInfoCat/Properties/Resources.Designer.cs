@@ -574,20 +574,20 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Volume Name is required..
-        /// </summary>
-        public static string ErrorMessage_VolumeNameRequired {
-            get {
-                return ResourceManager.GetString("ErrorMessage_VolumeNameRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Volume or Parent Subdirectory must be selected..
         /// </summary>
         public static string ErrorMessage_VolumeOrParentRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_VolumeOrParentRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ExportSchema {
+            get {
+                return ResourceManager.GetString("ExportSchema", resourceCulture);
             }
         }
     }

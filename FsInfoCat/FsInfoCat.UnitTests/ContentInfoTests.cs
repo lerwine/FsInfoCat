@@ -60,17 +60,19 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Guid Id")]
         public void IdTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid Id
-
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
-            Guid expectedValue = default;
-            target.Id = default;
+            ContentInfo target = new();
+            Guid expectedValue = Guid.NewGuid();
+            target.Id = expectedValue;
             Guid actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
+            target.Id = expectedValue;
+            actualValue = target.Id;
+            Assert.AreEqual(expectedValue, actualValue);
+            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [TestMethod("long Length")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
         public void LengthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -84,6 +86,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MD5Hash? Hash")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
         public void HashTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -136,6 +139,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime? LastSynchronizedOn")]
+        [TestProperty(TestHelper.TestProperty_Description,
+            "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void LastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -149,6 +154,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

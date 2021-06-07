@@ -6,10 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 using System.IO;
+using System.Linq;
+using System.Xml.Linq;
+
 namespace FsInfoCat.UnitTests
 {
     [TestClass]
@@ -83,147 +87,256 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Guid Id")]
         public void IdTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid Id
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            Guid expectedValue = default;
-            target.Id = default;
+            Volume target = new();
+            Guid expectedValue = Guid.NewGuid();
+            target.Id = expectedValue;
             Guid actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
+            target.Id = expectedValue;
+            actualValue = target.Id;
+            Assert.AreEqual(expectedValue, actualValue);
+            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("string DisplayName")]
-        public void DisplayNameTestMethod()
+        [DataTestMethod]
+        [DynamicData(nameof(GetDisplayNameTestData), DynamicDataSourceType.Method)]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
+        public void DisplayNameTestMethod(string displayName, string expected, string errorMessage)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string DisplayName
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            string expectedValue = default;
-            target.DisplayName = default;
+            Volume target = new() { FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            target.DisplayName = displayName;
             string actualValue = target.DisplayName;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.IsNotNull(actualValue);
+            Assert.AreEqual(expected, actualValue);
+            Collection<ValidationResult> validationResults = new();
+            bool isValid = Validator.TryValidateObject(target, new ValidationContext(target), validationResults, true);
+            if (string.IsNullOrWhiteSpace(errorMessage))
+                Assert.IsTrue(isValid);
+            else
+            {
+                Assert.IsFalse(isValid);
+                Assert.AreEqual(1, validationResults.Count);
+                Assert.AreEqual(validationResults[0].ErrorMessage, errorMessage);
+                string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
+                Assert.IsNotNull(actualMemberName);
+                Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
+                Assert.AreEqual(nameof(Volume.DisplayName), actualMemberName);
+            }
         }
 
-        [TestMethod("string VolumeName")]
-        public void VolumeNameTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string VolumeName
+        public static IEnumerable<object[]> GetDisplayNameTestData() =>
+            XDocument.Parse(Properties.Resources.DisplayName1024).Root.Elements("Row").Select(row =>
+            {
+                XElement a = row.Element("Argument");
+                XElement e = row.Element("Expected");
+                XAttribute m = row.Attribute("ErrorMessage");
+                return new object[] { a.IsEmpty ? null : a.Value, e.Value, (m is null) ? "" : m.Value };
+            });
 
-            Volume target = default; // TODO: Create and initialize Volume instance
-            string expectedValue = default;
-            target.VolumeName = default;
+        public static IEnumerable<object[]> GetVolumeNameTestData() =>
+            XDocument.Parse(Properties.Resources.VolumeName128).Root.Elements("Row").Select(row =>
+            {
+                XElement a = row.Element("Argument");
+                XElement e = row.Element("Expected");
+                XAttribute m = row.Attribute("ErrorMessage");
+                return new object[] { a.IsEmpty ? null : a.Value, e.Value, (m is null) ? "" : m.Value };
+            });
+
+        public static IEnumerable<object[]> GetIdentifierTestData() =>
+            XDocument.Parse(Properties.Resources.VolumeIdentifier1024).Root.Elements("Row").Select(row =>
+            {
+                XElement a = row.Element("Argument");
+                XElement e = row.Element("Expected");
+                XAttribute m = row.Attribute("ErrorMessage");
+                return new object[] { a.IsEmpty ? null : a.Value, e.Value, (m is null) ? "" : m.Value };
+            });
+
+        [DataTestMethod]
+        [DynamicData(nameof(GetVolumeNameTestData), DynamicDataSourceType.Method)]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.VolumeName: NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE")]
+        public void VolumeNameTestMethod(string volumeName, string expected, string errorMessage)
+        {
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            target.VolumeName = volumeName;
             string actualValue = target.VolumeName;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.IsNotNull(actualValue);
+            Assert.AreEqual(expected, actualValue);
+            Collection<ValidationResult> validationResults = new();
+            bool isValid = Validator.TryValidateObject(target, new ValidationContext(target), validationResults, true);
+            if (string.IsNullOrWhiteSpace(errorMessage))
+                Assert.IsTrue(isValid);
+            else
+            {
+                Assert.IsFalse(isValid);
+                Assert.AreEqual(1, validationResults.Count);
+                Assert.AreEqual(validationResults[0].ErrorMessage, errorMessage);
+                string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
+                Assert.IsNotNull(actualMemberName);
+                Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
+                Assert.AreEqual(nameof(Volume.VolumeName), actualMemberName);
+            }
         }
 
-        [TestMethod("VolumeIdentifier Identifier")]
-        public void IdentifierTestMethod()
+        [DataTestMethod]
+        [DynamicData(nameof(GetIdentifierTestData), DynamicDataSourceType.Method)]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
+        public void IdentifierTestMethod(string identifier, string expected, string errorMessage)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for VolumeIdentifier Identifier
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            VolumeIdentifier expectedValue = default;
-            target.Identifier = default;
+            Volume target = new() { DisplayName = "Test", FileSystem = new() };
+            VolumeIdentifier expectedValue = string.IsNullOrWhiteSpace(expected) ? default : VolumeIdentifier.Parse(expected);
+            target.Identifier = string.IsNullOrWhiteSpace(identifier) ? default : VolumeIdentifier.Parse(identifier);
             VolumeIdentifier actualValue = target.Identifier;
             Assert.AreEqual(expectedValue, actualValue);
+            Collection<ValidationResult> validationResults = new();
+            bool isValid = Validator.TryValidateObject(target, new ValidationContext(target), validationResults, true);
+            if (string.IsNullOrWhiteSpace(errorMessage))
+                Assert.IsTrue(isValid);
+            else
+            {
+                Assert.IsFalse(isValid);
+                Assert.AreEqual(1, validationResults.Count);
+                Assert.AreEqual(validationResults[0].ErrorMessage, errorMessage);
+                string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
+                Assert.IsNotNull(actualMemberName);
+                Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
+                Assert.AreEqual(nameof(Volume.Identifier), actualMemberName);
+            }
         }
 
-        [TestMethod("VolumeStatus Status")]
-        public void StatusTestMethod()
+        [DataTestMethod]
+        [DataRow(VolumeStatus.Unknown, null, DisplayName = "VolumeStatus Status = Unknown")]
+        [DataRow(VolumeStatus.Controlled, null, DisplayName = "VolumeStatus Status = Controlled")]
+        [DataRow(VolumeStatus.Uncontrolled, null, DisplayName = "VolumeStatus Status = Uncontrolled")]
+        [DataRow(VolumeStatus.Offline, null, DisplayName = "VolumeStatus Status = Offline")]
+        [DataRow(VolumeStatus.Relinquished, null, DisplayName = "VolumeStatus Status = Relinquished")]
+        [DataRow(VolumeStatus.Destroyed, null, DisplayName = "VolumeStatus Status = Destroyed")]
+        [DataRow(6, "Volume Status is invalid.", DisplayName = "VolumeStatus Status = 6")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.Type: TINYINT NOT NULL CHECK(Status>=0 AND Status<6)")]
+        public void StatusTestMethod(VolumeStatus value, string errorMessage)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for VolumeStatus Status
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            VolumeStatus expectedValue = default;
-            target.Status = default;
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            target.Status = value;
             VolumeStatus actualValue = target.Status;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.AreEqual(value, actualValue);
+            Collection<ValidationResult> validationResults = new();
+            bool isValid = Validator.TryValidateObject(target, new ValidationContext(target), validationResults, true);
+            if (string.IsNullOrWhiteSpace(errorMessage))
+                Assert.IsTrue(isValid);
+            else
+            {
+                Assert.IsFalse(isValid);
+                Assert.AreEqual(1, validationResults.Count);
+                Assert.AreEqual(validationResults[0].ErrorMessage, errorMessage);
+                string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
+                Assert.IsNotNull(actualMemberName);
+                Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
+                Assert.AreEqual(nameof(Volume.Identifier), actualMemberName);
+            }
         }
 
-        [TestMethod("DriveType Type")]
-        public void TypeTestMethod()
+        [DataTestMethod]
+        [DataRow(DriveType.Unknown, null, DisplayName = "DriveType Type = Unknown")]
+        [DataRow(DriveType.NoRootDirectory, null, DisplayName = "DriveType Type = NoRootDirectory")]
+        [DataRow(DriveType.Removable, null, DisplayName = "DriveType Type = Removable")]
+        [DataRow(DriveType.Fixed, null, DisplayName = "DriveType Type = Fixed")]
+        [DataRow(DriveType.Network, null, DisplayName = "DriveType Type = Network")]
+        [DataRow(DriveType.CDRom, null, DisplayName = "DriveType Type = CDRom")]
+        [DataRow(DriveType.Ram, null, DisplayName = "DriveType Type = Ram")]
+        [DataRow(7, "Drive Type is invalid.", DisplayName = "DriveType Type = 7")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.Type: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
+        public void TypeTestMethod(DriveType value, string errorMessage)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DriveType Type
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            DriveType expectedValue = default;
-            target.Type = default;
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            target.Type = value;
             DriveType actualValue = target.Type;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.AreEqual(value, actualValue);
+            Collection<ValidationResult> validationResults = new();
+            bool isValid = Validator.TryValidateObject(target, new ValidationContext(target), validationResults, true);
+            if (string.IsNullOrWhiteSpace(errorMessage))
+                Assert.IsTrue(isValid);
+            else
+            {
+                Assert.IsFalse(isValid);
+                Assert.AreEqual(1, validationResults.Count);
+                Assert.AreEqual(validationResults[0].ErrorMessage, errorMessage);
+                string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
+                Assert.IsNotNull(actualMemberName);
+                Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
+                Assert.AreEqual(nameof(Volume.Identifier), actualMemberName);
+            }
         }
 
-        [TestMethod("bool? CaseSensitiveSearch")]
-        public void CaseSensitiveSearchTestMethod()
+        [DataTestMethod]
+        [DataRow(null, DisplayName = "bool? CaseSensitiveSearch = null")]
+        [DataRow(true, DisplayName = "bool? CaseSensitiveSearch = true")]
+        [DataRow(false, DisplayName = "bool? CaseSensitiveSearch = false")]
+        public void CaseSensitiveSearchTestMethod(bool? value)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool? CaseSensitiveSearch
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            bool? expectedValue = default;
-            target.CaseSensitiveSearch = default;
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            target.CaseSensitiveSearch = value;
             bool? actualValue = target.CaseSensitiveSearch;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.AreEqual(value, actualValue);
         }
 
-        [TestMethod("bool? ReadOnly")]
-        public void ReadOnlyTestMethod()
+        [DataTestMethod]
+        [DataRow(null, DisplayName = "bool? ReadOnly = null")]
+        [DataRow(true, DisplayName = "bool? ReadOnly = true")]
+        [DataRow(false, DisplayName = "bool? ReadOnly = false")]
+        public void ReadOnlyTestMethod(bool? value)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool? ReadOnly
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            bool? expectedValue = default;
-            target.ReadOnly = default;
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            target.ReadOnly = value;
             bool? actualValue = target.ReadOnly;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.AreEqual(value, actualValue);
         }
 
+        [DataTestMethod]
+        [DataRow(null, null, DisplayName = "int? MaxNameLength = null")]
+        [DataRow(1, null, DisplayName = "int? MaxNameLength = 1")]
+        [DataRow(int.MaxValue, null, DisplayName = "int? MaxNameLength = int.MaxValue")]
+        [DataRow(0, "Maximum Name Length must be greater than zero.", DisplayName = "int ? MaxNameLength = 0")]
+        [DataRow(-1, "Maximum Name Length must be greater than zero.", DisplayName = "int ? MaxNameLength = -1")]
         [TestMethod("int? MaxNameLength")]
-        public void MaxNameLengthTestMethod()
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
+        public void MaxNameLengthTestMethod(int? value, string errorMessage)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for int? MaxNameLength
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            int? expectedValue = default;
-            target.MaxNameLength = default;
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            target.MaxNameLength = value;
             int? actualValue = target.MaxNameLength;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.AreEqual(value, actualValue);
+            Collection<ValidationResult> validationResults = new();
+            bool isValid = Validator.TryValidateObject(target, new ValidationContext(target), validationResults, true);
+            if (string.IsNullOrWhiteSpace(errorMessage))
+                Assert.IsTrue(isValid);
+            else
+            {
+                Assert.IsFalse(isValid);
+                Assert.AreEqual(1, validationResults.Count);
+                Assert.AreEqual(validationResults[0].ErrorMessage, errorMessage);
+                string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
+                Assert.IsNotNull(actualMemberName);
+                Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
+                Assert.AreEqual(nameof(Volume.MaxNameLength), actualMemberName);
+            }
         }
 
-        [TestMethod("string Notes")]
-        public void NotesTestMethod()
+        [DataTestMethod]
+        [DataRow(null, "", DisplayName = "string Notes = null")]
+        [DataRow("", "", DisplayName = "string Notes = \"\"")]
+        [DataRow("\n\r", "", DisplayName = "string Notes = \"\\n\\r\"")]
+        [DataRow("Test", "Test", DisplayName = "string Notes = \"Test\"")]
+        [DataRow("\n Test \r", "\n Test \r", DisplayName = "string Notes = \"\\n Test \\r\"")]
+        public void NotesTestMethod(string notes, string expected)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Notes
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            string expectedValue = default;
-            target.Notes = default;
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            target.Notes = notes;
             string actualValue = target.Notes;
-            Assert.AreEqual(expectedValue, actualValue);
-        }
-
-        [TestMethod("Guid FileSystemId")]
-        public void FileSystemIdTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid FileSystemId
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            Guid expectedValue = default;
-            target.FileSystemId = default;
-            Guid actualValue = target.FileSystemId;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.IsNotNull(actualValue);
+            Assert.AreEqual(expected, actualValue);
         }
 
         [TestMethod("FileSystem FileSystem")]
+        [TestProperty(TestHelper.TestProperty_Description, "Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
         public void FileSystemTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -236,65 +349,45 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Subdirectory RootDirectory")]
-        public void RootDirectoryTestMethod()
+        [DataTestMethod]
+        [DataRow(null, null, null, DisplayName = "string UpstreamId = null; LastSynchronizedOn = null")]
+        [DataRow("81217ede-7cb8-43b8-ace5-8ae10e861303", null, "\"LastSynchronizedOn\" date is required when \"Upstream Id\" is specified.", DisplayName = "string UpstreamId = \"81217ede-7cb8-43b8-ace5-8ae10e861303\"; LastSynchronizedOn = null")]
+        [DataRow(null, "6/5/2021 11:48:58 PM", null, DisplayName = "string UpstreamId = null; LastSynchronizedOn = \"6/5/2021 11:48:58 PM\"")]
+        [DataRow("81217ede-7cb8-43b8-ace5-8ae10e861303", "6/5/2021 11:48:58 PM", "\"LastSynchronizedOn\" date is required when \"Upstream Id\" is specified.", DisplayName = "string UpstreamId = \"81217ede-7cb8-43b8-ace5-8ae10e861303\"; LastSynchronizedOn = \"6/5/2021 11:48:58 PM\"")]
+        [TestProperty(TestHelper.TestProperty_Description,
+            "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        public void LastSynchronizedOnTestMethod(string dateTime, string id, string errorMessage)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Subdirectory RootDirectory
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            Subdirectory expectedValue = default;
-            target.RootDirectory = default;
-            Subdirectory actualValue = target.RootDirectory;
-            Assert.AreEqual(expectedValue, actualValue);
-        }
-
-        [TestMethod("HashSet<VolumeAccessError> AccessErrors")]
-        public void AccessErrorsTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for HashSet<VolumeAccessError> AccessErrors
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            HashSet<VolumeAccessError> expectedValue = default;
-            target.AccessErrors = default;
-            HashSet<VolumeAccessError> actualValue = target.AccessErrors;
-            Assert.AreEqual(expectedValue, actualValue);
-        }
-
-        [TestMethod("Guid? UpstreamId")]
-        public void UpstreamIdTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? UpstreamId
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            Guid? expectedValue = default;
-            target.UpstreamId = default;
-            Guid? actualValue = target.UpstreamId;
-            Assert.AreEqual(expectedValue, actualValue);
-        }
-
-        [TestMethod("DateTime? LastSynchronizedOn")]
-        public void LastSynchronizedOnTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime? LastSynchronizedOn
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            DateTime? expectedValue = default;
-            target.LastSynchronizedOn = default;
-            DateTime? actualValue = target.LastSynchronizedOn;
-            Assert.AreEqual(expectedValue, actualValue);
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
+            DateTime? expectedDateTime = string.IsNullOrWhiteSpace(dateTime) ? null : DateTime.Parse(dateTime);
+            Guid? expectedGuid = string.IsNullOrWhiteSpace(id) ? null : Guid.Parse(id);
+            target.UpstreamId = expectedGuid;
+            target.LastSynchronizedOn = expectedDateTime;
+            DateTime? actualDateTime = target.LastSynchronizedOn;
+            Assert.AreEqual(expectedDateTime, actualDateTime);
+            Guid? actualGuid = target.UpstreamId;
+            Assert.AreEqual(expectedGuid, actualGuid);
+            Collection<ValidationResult> validationResults = new();
+            bool isValid = Validator.TryValidateObject(target, new ValidationContext(target), validationResults, true);
+            if (string.IsNullOrWhiteSpace(errorMessage))
+                Assert.IsTrue(isValid);
+            else
+            {
+                Assert.IsFalse(isValid);
+                Assert.AreEqual(1, validationResults.Count);
+                Assert.AreEqual(validationResults[0].ErrorMessage, errorMessage);
+                string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
+                Assert.IsNotNull(actualMemberName);
+                Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
+                Assert.AreEqual(nameof(Volume.LastSynchronizedOn), actualMemberName);
+            }
         }
 
         [TestMethod("DateTime CreatedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime CreatedOn
-
-            Volume target = default; // TODO: Create and initialize Volume instance
+            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
             DateTime expectedValue = default;
             target.CreatedOn = default;
             DateTime actualValue = target.CreatedOn;

@@ -59,40 +59,45 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Guid Id")]
         public void IdTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid Id
-
-            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
-            Guid expectedValue = default;
-            target.Id = default;
+            SubdirectoryAccessError target = new();
+            Guid expectedValue = Guid.NewGuid();
+            target.Id = expectedValue;
             Guid actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
+            target.Id = expectedValue;
+            actualValue = target.Id;
+            Assert.AreEqual(expectedValue, actualValue);
+            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("string Message")]
-        public void MessageTestMethod()
+        [DataTestMethod]
+        [DataRow(null, "", DisplayName = "string Message = null")]
+        [DataRow("", "", DisplayName = "string Message = \"\"")]
+        [DataRow("\n\r", "", DisplayName = "string Message = \"\\n\\r\"")]
+        [DataRow("Test", "Test", DisplayName = "string Message = \"Test\"")]
+        [DataRow("\n Test \r", "Test", DisplayName = "string Message = \"\\n Test \\r\"")]
+        public void MessageTestMethod(string message, string expected)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Message
-
-            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
-            string expectedValue = default;
-            target.Message = default;
+            SubdirectoryAccessError target = new();
+            target.Message = message;
             string actualValue = target.Message;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.IsNotNull(actualValue);
+            Assert.AreEqual(expected, actualValue);
         }
 
-        [TestMethod("string Details")]
-        public void DetailsTestMethod()
+        [DataTestMethod]
+        [DataRow(null, "", DisplayName = "string Details = null")]
+        [DataRow("", "", DisplayName = "string Details = \"\"")]
+        [DataRow("\n\r", "", DisplayName = "string Details = \"\\n\\r\"")]
+        [DataRow("Test", "Test", DisplayName = "string Details = \"Test\"")]
+        [DataRow("\n Test \r", "\n Test \r", DisplayName = "string Details = \"\\n Test \\r\"")]
+        public void DetailsTestMethod(string details, string expected)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Details
-
-            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
-            string expectedValue = default;
-            target.Details = default;
+            SubdirectoryAccessError target = new();
+            target.Details = details;
             string actualValue = target.Details;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.IsNotNull(actualValue);
+            Assert.AreEqual(expected, actualValue);
         }
 
         [TestMethod("AccessErrorCode ErrorCode")]
@@ -135,6 +140,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

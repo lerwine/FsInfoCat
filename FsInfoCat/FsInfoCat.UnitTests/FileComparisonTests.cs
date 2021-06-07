@@ -148,6 +148,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime? LastSynchronizedOn")]
+        [TestProperty(TestHelper.TestProperty_Description,
+            "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void LastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -161,6 +163,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

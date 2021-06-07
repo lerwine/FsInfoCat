@@ -9,7 +9,7 @@ namespace FsInfoCat
 {
     public class EnumerableCoersion<T> : ICoersion<IEnumerable<T>>
     {
-        public static readonly EnumerableCoersion<T> Default = new EnumerableCoersion<T>();
+        public static readonly EnumerableCoersion<T> Default = new();
 
         private readonly ICoersion<T> _backingCoersion;
 
@@ -72,7 +72,7 @@ namespace FsInfoCat
                 result = new T[] { e };
             else if (obj is IEnumerable g)
             {
-                LinkedList<T> items = new LinkedList<T>();
+                LinkedList<T> items = new();
                 if (g.Cast<object>().All(o =>
                 {
                     if (_backingCoersion.TryCoerce(o, out e))

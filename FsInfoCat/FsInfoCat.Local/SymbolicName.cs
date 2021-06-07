@@ -2,11 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -35,7 +39,6 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
 
-        /// <remarks>TEXT NOT NULL DEFAULT ''</remarks>
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
@@ -118,6 +121,69 @@ namespace FsInfoCat.Local
                 if (dbContext.SymbolicNames.Any(sn => id != sn.Id && sn.Name == name))
                     results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
             }
+        }
+
+        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement symbolicNameElement)
+        {
+            XName n = nameof(Id);
+            Guid symbolicNameId = symbolicNameElement.GetAttributeGuid(n).Value;
+            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.SymbolicNames)).Append("\" (\"").Append(nameof(Id)).Append("\" , \"").Append(nameof(FileSystemId)).Append('"');
+            List<object> values = new();
+            values.Add(symbolicNameId);
+            values.Add(fileSystemId);
+            foreach (XAttribute attribute in symbolicNameElement.Attributes().Where(a => a.Name != n))
+            {
+                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
+                switch (attribute.Name.LocalName)
+                {
+                    case nameof(Name):
+                        // TODO: Change all notes to an element
+                    case nameof(Notes):
+                        values.Add(attribute.Value);
+                        break;
+                    case nameof(IsInactive):
+                        values.Add(XmlConvert.ToBoolean(attribute.Value));
+                        break;
+                    case nameof(Priority):
+                        values.Add(XmlConvert.ToInt32(attribute.Value));
+                        break;
+                    case nameof(CreatedOn):
+                    case nameof(ModifiedOn):
+                    case nameof(LastSynchronizedOn):
+                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
+                        break;
+                    case nameof(UpstreamId):
+                        values.Add(XmlConvert.ToGuid(attribute.Value));
+                        break;
+                    default:
+                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(SymbolicName)}");
+                }
+            }
+            sql.Append(") Values({0}");
+            for (int i = 1; i < values.Count; i++)
+                sql.Append(", {").Append(i).Append('}');
+            logger.LogInformation($"Inserting {nameof(SymbolicName)} with Id {{Id}}", symbolicNameId);
+            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+        }
+
+        internal XElement Export(bool includeFileSystemId = false)
+        {
+            XElement result = new(nameof(FileSystem),
+                   new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
+                   new XAttribute(nameof(Name), Name)
+               );
+            if (includeFileSystemId)
+            {
+                Guid fileSystemId = FileSystemId;
+                if (!fileSystemId.Equals(Guid.Empty))
+                    result.SetAttributeValue(nameof(fileSystemId), XmlConvert.ToString(fileSystemId));
+            }
+            if (IsInactive)
+                result.SetAttributeValue(nameof(IsInactive), IsInactive);
+            if (Priority != 0)
+                result.SetAttributeValue(nameof(Priority), Priority);
+            AddExportAttributes(result);
+            return result;
         }
     }
 }

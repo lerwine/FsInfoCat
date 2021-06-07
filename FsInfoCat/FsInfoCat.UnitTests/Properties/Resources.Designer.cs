@@ -77,5 +77,115 @@ namespace FsInfoCat.UnitTests.Properties {
                 return ResourceManager.GetString("DbCommands", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;TestData&gt;
+        ///  &lt;Row ErrorMessage=&quot;Display Name is required.&quot;&gt;
+        ///    &lt;Argument /&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row ErrorMessage=&quot;Display Name is required.&quot;&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row ErrorMessage=&quot;Display Name is required.&quot;&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[ ]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row ErrorMessage=&quot;Display Name is required.&quot;&gt;
+        ///    &lt;Argument&gt;&lt;! [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DisplayName1024 {
+            get {
+                return ResourceManager.GetString("DisplayName1024", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;TestData&gt;
+        ///  &lt;Row ErrorMessage=&quot;Name is required.&quot;&gt;
+        ///    &lt;Argument /&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row ErrorMessage=&quot;Name is required.&quot;&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row ErrorMessage=&quot;Name is required.&quot;&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[ ]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row ErrorMessage=&quot;Name is required.&quot;&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[
+        ///                        [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Name1024 {
+            get {
+                return ResourceManager.GetString("Name1024", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;TestData xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;TestData.xsd&quot;&gt;
+        ///    &lt;FileSystem Id=&quot;{bedb396b-2212-4149-9cad-7e437c47314c}&quot; DisplayName=&quot;New Technology File System&quot; DefaultDriveType=&quot;Fixed&quot; CreatedOn=&quot;2004-08-19T14:51:06&quot; ModifiedOn=&quot;2004-08-19T14:51:06&quot;&gt;
+        ///        &lt;SymbolicName Id=&quot;{74381ccb-d56d-444d-890f-3a8051bc18e6}&quot; Name=&quot;NTFS&quot; Priority=&quot;0&quot; CreatedOn=&quot;2021-05-21T21:29:59&quot; ModifiedOn=&quot;2021-05-21T21:29:59&quot; /&gt;
+        ///         [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TestData {
+            get {
+                return ResourceManager.GetString("TestData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;TestData&gt;
+        ///  &lt;Row ErrorMessage=&quot;Volume Identifier is required.&quot;&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[urn:volume:id:8378-6B24]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[urn:volume:id:8378-6B24]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[urn:uuid:62a9f77e-9bfe-435c-a5f5-177b0f8ecd83]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[urn:uuid:62a9f77e-9bfe-435c-a5f5-177b0f8ecd83]]&gt;&lt;/Expected [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string VolumeIdentifier1024 {
+            get {
+                return ResourceManager.GetString("VolumeIdentifier1024", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;TestData&gt;
+        ///  &lt;Row&gt;
+        ///    &lt;Argument /&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[ ]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expected&gt;&lt;![CDATA[]]&gt;&lt;/Expected&gt;
+        ///  &lt;/Row&gt;
+        ///  &lt;Row&gt;
+        ///    &lt;Argument&gt;&lt;![CDATA[
+        ///                                                                                                                               
+        ///]]&gt;&lt;/Argument&gt;
+        ///    &lt;Expec [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string VolumeName128 {
+            get {
+                return ResourceManager.GetString("VolumeName128", resourceCulture);
+            }
+        }
     }
 }

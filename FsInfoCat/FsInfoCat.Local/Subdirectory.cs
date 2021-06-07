@@ -2,10 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -246,10 +250,96 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
         }
 
+        internal XElement Export(bool includeParentId = false)
+        {
+            Guid? parentId = VolumeId;
+            XElement result = new(parentId.HasValue ? nameof(Volume.RootDirectory) : nameof(Subdirectory),
+                new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
+                new XAttribute(nameof(Name), Name)
+            );
+            if (includeParentId)
+            {
+                if (parentId.HasValue)
+                    result.SetAttributeValue(nameof(VolumeId), XmlConvert.ToString(parentId.Value));
+                else if ((parentId = ParentId).HasValue)
+                    result.SetAttributeValue(nameof(ParentId), XmlConvert.ToString(parentId.Value));
+            }
+            DirectoryCrawlOptions options = Options;
+            if (options != DirectoryCrawlOptions.None)
+                result.SetAttributeValue(nameof(Options), Enum.GetName(typeof(DirectoryCrawlOptions), Options));
+            if (Deleted)
+                result.SetAttributeValue(nameof(Deleted), Deleted);
+            result.SetAttributeValue(nameof(LastAccessed), XmlConvert.ToString(LastAccessed, XmlDateTimeSerializationMode.RoundtripKind));
+            AddExportAttributes(result);
+            if (Notes.Length > 0)
+                result.Add(new XElement(nameof(Notes), new XCData(Notes)));
+            foreach (Subdirectory subdirectory in SubDirectories)
+                result.Add(subdirectory.Export());
+            foreach (DbFile file in Files)
+                result.Add(file.Export());
+            foreach (SubdirectoryAccessError accessError in AccessErrors)
+                result.Add(accessError.Export());
+            return result;
+        }
+
         private void ValidateOptions(List<ValidationResult> results)
         {
             if (!Enum.IsDefined(Options))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
+        }
+
+        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid? volumeId, Guid? parentId, XElement subDirectoryElement)
+        {
+            XName n = nameof(Id);
+            Guid subDirectoryId = subDirectoryElement.GetAttributeGuid(n).Value;
+            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.Subdirectories)).Append("\" (\"").Append(nameof(Id)).Append("\" , \"").Append(nameof(VolumeId)).Append("\" , \"")
+                .Append(nameof(ParentId)).Append('"');
+            List<object> values = new();
+            values.Add(subDirectoryId);
+            values.Add(volumeId);
+            values.Add(parentId);
+            foreach (XAttribute attribute in subDirectoryElement.Attributes().Where(a => a.Name != n))
+            {
+                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
+                switch (attribute.Name.LocalName)
+                {
+                    case nameof(Name):
+                    case nameof(Notes):
+                        values.Add(attribute.Value);
+                        break;
+                    case nameof(Options):
+                        values.Add(Enum.ToObject(typeof(DirectoryCrawlOptions), Enum.Parse<DirectoryCrawlOptions>(attribute.Value)));
+                        break;
+                    case nameof(Deleted):
+                        if (string.IsNullOrWhiteSpace(attribute.Value))
+                            values.Add(null);
+                        else
+                            values.Add(XmlConvert.ToBoolean(attribute.Value));
+                        break;
+                    case nameof(LastAccessed):
+                    case nameof(CreatedOn):
+                    case nameof(ModifiedOn):
+                    case nameof(LastSynchronizedOn):
+                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
+                        break;
+                    case nameof(UpstreamId):
+                        values.Add(XmlConvert.ToGuid(attribute.Value));
+                        break;
+                    default:
+                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(Subdirectory)}");
+                }
+            }
+            sql.Append(") Values({0}");
+            for (int i = 1; i < values.Count; i++)
+                sql.Append(", {").Append(i).Append('}');
+            logger.LogInformation($"Inserting {nameof(Subdirectory)} with Id {{Id}}", volumeId);
+            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+            foreach (XElement element in subDirectoryElement.Elements(nameof(Subdirectory)))
+                Import(dbContext, logger, null, subDirectoryId, element);
+            foreach (XElement element in subDirectoryElement.Elements(DbFile.TABLE_NAME))
+                DbFile.Import(dbContext, logger, subDirectoryId, element);
+            foreach (XElement accessErrorElement in subDirectoryElement.Elements(ElementName_AccessError))
+                SubdirectoryAccessError.Import(dbContext, logger, subDirectoryId, accessErrorElement);
         }
     }
 }

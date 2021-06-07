@@ -51,6 +51,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\DisplayName1024.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestLocal.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Data.Common;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -80,6 +83,182 @@ namespace FsInfoCat.Local
                     command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode, eventData.Exception.Message);
                 return base.CommandFailedAsync(command, eventData, cancellationToken);
             }
+        }
+
+        public void Import(XDocument document)
+        {
+            if (document is null)
+                throw new ArgumentNullException(nameof(document));
+
+            var redundancySets = document.Root.Elements(nameof(ContentInfo)).Select(e => ContentInfo.Import(this, _logger, e)).SelectMany(rs => rs).ToArray();
+            foreach (XElement fileSystemElement in document.Root.Elements(nameof(FileSystem)))
+                FileSystem.Import(this, _logger, fileSystemElement);
+            foreach (var (redundantSetId, redundancies) in redundancySets)
+                foreach (XElement element in redundancies)
+                    Redundancy.Import(this, _logger, redundantSetId, element);
+        }
+
+        public void ForceDeleteContentInfo(ContentInfo target)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            var redundantSets = target.RedundantSets.AsEnumerable().ToArray();
+            if (redundantSets.Length > 0)
+            {
+                foreach (var r in redundantSets)
+                    ForceDeleteRedundantSet(r);
+                SaveChanges();
+            }
+            var files = target.Files.AsEnumerable().ToArray();
+            if (files.Length > 0)
+            {
+                var extendedProperties = files.Select(f => f.ExtendedProperties).Distinct().ToArray();
+                foreach (var f in files)
+                {
+                    var comparisons = f.ComparisonSources.AsEnumerable().Concat(f.ComparisonTargets.AsEnumerable()).ToArray();
+                    if (comparisons.Length > 0)
+                    {
+                        Comparisons.RemoveRange(comparisons);
+                        SaveChanges();
+                    }
+                    var accessErrors = f.AccessErrors.AsEnumerable().ToArray();
+                    if (accessErrors.Length > 0)
+                    {
+                        FileAccessErrors.RemoveRange(accessErrors);
+                        SaveChanges();
+                    }
+                    Files.Remove(f);
+                }
+                SaveChanges();
+                extendedProperties = extendedProperties.Where(e => e.Files.Count == 0).ToArray();
+                if (extendedProperties.Length > 0)
+                {
+                    ExtendedProperties.RemoveRange(extendedProperties);
+                    SaveChanges();
+                }
+            }
+            ContentInfos.Remove(target);
+        }
+
+        public void ForceDeleteRedundantSet(RedundantSet target)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            var redundancies = target.Redundancies.AsEnumerable().ToArray();
+            if (redundancies.Length > 0)
+            {
+                Redundancies.RemoveRange(redundancies);
+                SaveChanges();
+            }
+            RedundantSets.Remove(target);
+        }
+
+        public void ForceDeleteFileSystem(FileSystem target)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            var symbolicNames = target.SymbolicNames.AsEnumerable().ToArray();
+            if (symbolicNames.Length > 0)
+            {
+                SymbolicNames.RemoveRange(symbolicNames);
+                SaveChanges();
+            }
+            var volumes = target.Volumes.AsEnumerable().ToArray();
+            if (volumes.Length > 0)
+            {
+                foreach (var v in volumes)
+                    ForceDeleteVolume(v);
+                SaveChanges();
+            }
+            FileSystems.Remove(target);
+        }
+
+        private void ForceDeleteVolume(Volume target)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            if (target.RootDirectory is not null)
+            {
+                ForceDeleteSubdirectory(target.RootDirectory);
+                SaveChanges();
+            }
+            var accessErrors = target.AccessErrors.AsEnumerable().ToArray();
+            if (accessErrors.Length > 0)
+            {
+                VolumeAccessErrors.RemoveRange(accessErrors);
+                SaveChanges();
+            }
+            Volumes.Remove(target);
+        }
+
+        private void ForceDeleteSubdirectory(Subdirectory target)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            var subdirectories = target.SubDirectories.AsEnumerable().ToArray();
+            if (subdirectories.Length > 0)
+            {
+                foreach (var s in subdirectories)
+                    ForceDeleteSubdirectory(s);
+                SaveChanges();
+            }
+            var files = target.Files.AsEnumerable().ToArray();
+            if (files.Length > 0)
+            {
+                foreach (var f in files)
+                    ForceDeleteFile(f);
+                SaveChanges();
+            }
+            var accessErrors = target.AccessErrors.AsEnumerable().ToArray();
+            if (accessErrors.Length > 0)
+            {
+                SubdirectoryAccessErrors.RemoveRange(accessErrors);
+                SaveChanges();
+            }
+            Subdirectories.Remove(target);
+        }
+
+        private void ForceDeleteFile(DbFile target)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            if (target.Redundancy is not null)
+            {
+                ForceDeleteRedundancy(target.Redundancy);
+                SaveChanges();
+            }
+            var comparisons = target.ComparisonSources.AsEnumerable().Concat(target.ComparisonTargets.AsEnumerable()).ToArray();
+            if (comparisons.Length > 0)
+            {
+                Comparisons.RemoveRange(comparisons);
+                SaveChanges();
+            }
+
+            var accessErrors = target.AccessErrors.AsEnumerable().ToArray();
+            if (accessErrors.Length > 0)
+            {
+                FileAccessErrors.RemoveRange(accessErrors);
+                SaveChanges();
+            }
+            var content = target.Content;
+            var extendedProperties = target.ExtendedProperties;
+            Files.Remove(target);
+            SaveChanges();
+            if (content.Files.Count == 0)
+                ContentInfos.Remove(content);
+            if (extendedProperties is not null && extendedProperties.Files.Count == 0)
+                ExtendedProperties.Remove(extendedProperties);
+        }
+
+        private void ForceDeleteRedundancy(Redundancy target)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            var redundantSet = target.RedundantSet;
+            Redundancies.Remove(target);
+            SaveChanges();
+            if (redundantSet.Redundancies.Count == 0)
+                RedundantSets.Remove(redundantSet);
         }
     }
 }

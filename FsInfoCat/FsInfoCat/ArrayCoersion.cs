@@ -6,7 +6,7 @@ namespace FsInfoCat
 {
     public class ArrayCoersion<T> : EnumerableCoersion<T, T[]>
     {
-        public static readonly ArrayCoersion<T> Default = new ArrayCoersion<T>();
+        public static readonly ArrayCoersion<T> Default = new();
 
         public ArrayCoersion(ICoersion<T> elementCoersion) : base(elementCoersion) { }
 

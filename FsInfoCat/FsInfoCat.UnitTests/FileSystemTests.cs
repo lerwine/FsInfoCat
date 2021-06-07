@@ -82,27 +82,30 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Guid Id")]
         public void IdTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid Id
-
-            FileSystem target = default; // TODO: Create and initialize FileSystem instance
-            Guid expectedValue = default;
-            target.Id = default;
+            FileSystem target = new();
+            Guid expectedValue = Guid.NewGuid();
+            target.Id = expectedValue;
             Guid actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
+            target.Id = expectedValue;
+            actualValue = target.Id;
+            Assert.AreEqual(expectedValue, actualValue);
+            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("string DisplayName")]
-        public void DisplayNameTestMethod()
+        [DataTestMethod]
+        [DataRow(null, "", DisplayName = "string DisplayName = null")]
+        [DataRow("", "", DisplayName = "string DisplayName = \"\"")]
+        [DataRow("\n\r", "", DisplayName = "string DisplayName = \"\\n\\r\"")]
+        [DataRow("Test", "Test", DisplayName = "string DisplayName = \"Test\"")]
+        [DataRow("\n Test \r", "Test", DisplayName = "string DisplayName = \"\\n Test \\r\"")]
+        public void DisplayNameTestMethod(string displayName, string expected)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string DisplayName
-
-            FileSystem target = default; // TODO: Create and initialize FileSystem instance
-            string expectedValue = default;
-            target.DisplayName = default;
+            FileSystem target = new();
+            target.DisplayName = displayName;
             string actualValue = target.DisplayName;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.IsNotNull(actualValue);
+            Assert.AreEqual(expected, actualValue);
         }
 
         [TestMethod("bool CaseSensitiveSearch")]
@@ -157,17 +160,19 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("string Notes")]
-        public void NotesTestMethod()
+        [DataTestMethod]
+        [DataRow(null, "", DisplayName = "string Notes = null")]
+        [DataRow("", "", DisplayName = "string Notes = \"\"")]
+        [DataRow("\n\r", "", DisplayName = "string Notes = \"\\n\\r\"")]
+        [DataRow("Test", "Test", DisplayName = "string Notes = \"Test\"")]
+        [DataRow("\n Test \r", "\n Test \r", DisplayName = "string Notes = \"\\n Test \\r\"")]
+        public void NotesTestMethod(string notes, string expected)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Notes
-
-            FileSystem target = default; // TODO: Create and initialize FileSystem instance
-            string expectedValue = default;
-            target.Notes = default;
+            FileSystem target = new();
+            target.Notes = notes;
             string actualValue = target.Notes;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.IsNotNull(actualValue);
+            Assert.AreEqual(expected, actualValue);
         }
 
         [TestMethod("bool IsInactive")]
@@ -223,6 +228,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime? LastSynchronizedOn")]
+        [TestProperty(TestHelper.TestProperty_Description,
+            "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void LastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -236,6 +243,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

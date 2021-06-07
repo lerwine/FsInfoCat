@@ -1,8 +1,13 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -108,6 +113,68 @@ namespace FsInfoCat.Local
             AccessErrorCode errorCode = ErrorCode;
             if (dbContext.FileAccessErrors.Any(e => e.ErrorCode == errorCode && e.Message == name && id != e.Id))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateMessage, new string[] { nameof(Message) }));
+        }
+
+        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid volumeId, XElement accessErrorElement)
+        {
+            XName n = nameof(Id);
+            Guid accessErrorId = accessErrorElement.GetAttributeGuid(n).Value;
+            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.FileAccessErrors)).Append("\" (\"").Append(nameof(Id)).Append("\" , \"").Append(nameof(TargetId)).Append('"');
+            List<object> values = new();
+            values.Add(accessErrorId);
+            values.Add(volumeId);
+            foreach (XAttribute attribute in accessErrorElement.Attributes().Where(a => a.Name != n))
+            {
+                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
+                switch (attribute.Name.LocalName)
+                {
+                    case nameof(Message):
+                        values.Add(attribute.Value);
+                        break;
+                    case nameof(ErrorCode):
+                        values.Add(Enum.ToObject(typeof(AccessErrorCode), Enum.Parse<AccessErrorCode>(attribute.Value)));
+                        break;
+                    case nameof(CreatedOn):
+                    case nameof(ModifiedOn):
+                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
+                        break;
+                    default:
+                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(FileAccessError)}");
+                }
+            }
+            if (!accessErrorElement.IsEmpty)
+            {
+                string details = accessErrorElement.Value;
+                if (details.Trim().Length > 0)
+                {
+                    sql.Append(", \"").Append(nameof(Details)).Append('"');
+                    values.Add(details);
+                }
+            }
+            sql.Append(") Values({0}");
+            for (int i = 1; i < values.Count; i++)
+                sql.Append(", {").Append(i).Append('}');
+            logger.LogInformation($"Inserting {nameof(FileAccessError)} with Id {{Id}}", volumeId);
+            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+        }
+
+        internal XElement Export(bool includeTargetId = false)
+        {
+            XElement result = new(LocalDbEntity.ElementName_AccessError,
+                new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
+                new XAttribute(nameof(Message), Message),
+                new XAttribute(nameof(ErrorCode), Enum.GetName(ErrorCode))
+            );
+            if (includeTargetId)
+            {
+                Guid targetId = TargetId;
+                if (!targetId.Equals(Guid.Empty))
+                    result.SetAttributeValue(nameof(TargetId), XmlConvert.ToString(targetId));
+            }
+            AddExportAttributes(result);
+            if (Details.Trim().Length > 0)
+                result.Add(new XCData(Details));
+            return result;
         }
     }
 }

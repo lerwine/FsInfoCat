@@ -1,9 +1,14 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -72,6 +77,44 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<ContentInfo> obj)
         {
             obj.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
+        }
+
+        internal static (Guid redundantSetId, XElement[] redundancies)[] Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, XElement contentInfoElement)
+        {
+            XName n = nameof(Id);
+            Guid contentInfoId = contentInfoElement.GetAttributeGuid(n).Value;
+            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.ContentInfos)).Append("\" (\"").Append(nameof(Id)).Append('"');
+            List<object> values = new();
+            values.Add(contentInfoId);
+            foreach (XAttribute attribute in contentInfoElement.Attributes().Where(a => a.Name != n))
+            {
+                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
+                switch (attribute.Name.LocalName)
+                {
+                    case nameof(Length):
+                        values.Add(XmlConvert.ToInt64(attribute.Value));
+                        break;
+                    case nameof(Hash):
+                        values.Add(MD5Hash.Parse(attribute.Value).GetBuffer());
+                        break;
+                    case nameof(CreatedOn):
+                    case nameof(ModifiedOn):
+                    case nameof(LastSynchronizedOn):
+                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
+                        break;
+                    case nameof(UpstreamId):
+                        values.Add(XmlConvert.ToGuid(attribute.Value));
+                        break;
+                    default:
+                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(ContentInfo)}");
+                }
+            }
+            sql.Append(") Values({0}");
+            for (int i = 1; i < values.Count; i++)
+                sql.Append(", {").Append(i).Append('}');
+            logger.LogInformation($"Inserting {nameof(ContentInfo)} with Id {{Id}}", contentInfoId);
+            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+            return contentInfoElement.Elements(nameof(RedundantSet)).Select(e => RedundantSet.Import(dbContext, logger, contentInfoId, e)).ToArray();
         }
     }
 }

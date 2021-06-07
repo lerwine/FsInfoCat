@@ -1,0 +1,302 @@
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:ex="http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd" targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd">
+    <xs:simpleType name="GUID">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="^(?i)(\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\}|[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}|[a-f\d]{32})$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DriveType">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="Unknown" />
+            <xs:enumeration value="NoRootDirectory" />
+            <xs:enumeration value="Removable" />
+            <xs:enumeration value="Fixed" />
+            <xs:enumeration value="Network" />
+            <xs:enumeration value="CDRom" />
+            <xs:enumeration value="Ram" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="VolumeStatus">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="Unknown" />
+            <xs:enumeration value="Controlled" />
+            <xs:enumeration value="Offline" />
+            <xs:enumeration value="Uncontrolled" />
+            <xs:enumeration value="Relinquished" />
+            <xs:enumeration value="Destroyed" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RedundancyRemediationStatus">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="NotRedundant" />
+            <xs:enumeration value="Unconfirmed" />
+            <xs:enumeration value="PendingValidation" />
+            <xs:enumeration value="Deferred" />
+            <xs:enumeration value="Justified" />
+            <xs:enumeration value="Insupportable" />
+            <xs:enumeration value="Violation" />
+            <xs:enumeration value="Attrition" />
+            <xs:enumeration value="Deleted" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileCrawlOptionValue">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="DoNotCompare" />
+            <xs:enumeration value="DoNotShow" />
+            <xs:enumeration value="FlaggedForDeletion" />
+            <xs:enumeration value="FlaggedForRescan" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Name">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="^(\S+(\s+\S+)*)?$"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ShortName">
+        <xs:restriction base="Name">
+            <xs:maxLength value="128"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RequiredShortName">
+        <xs:restriction base="ShortName">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleName">
+        <xs:restriction base="Name">
+            <xs:maxLength value="256"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RequiredSimpleName">
+        <xs:restriction base="SimpleName">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="LongName">
+        <xs:restriction base="Name">
+            <xs:maxLength value="1024"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RequiredLongName">
+        <xs:restriction base="LongName">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="IDeviceUri">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="RequiredLongName">
+                    <xs:pattern value="^urn:volume:id:(?i)[a-f\d]{4}-[a-f\d]{4}$"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="RequiredLongName">
+                    <xs:pattern value="^urn:uuid:(?i)(\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\}|[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}|[a-f\d]{32})$"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="IUncUri">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="RequiredLongName">
+                    <xs:pattern value="^file://((?&lt;!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?&lt;!\.)/([!$=&amp;-.:;=@[\]\w]+|%([01346-9a-f][\da-f]|2[\da-e]|5[\dabd-f]))+$"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="RequiredLongName">
+                    <xs:pattern value="^file://\[([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?\]/([!$=&amp;-.:;=@[\]\w]+|%([01346-9a-f][\da-f]|2[\da-e]|5[\dabd-f]))+$"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="RequiredLongName">
+                    <xs:pattern value="^file://[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?/([!$=&amp;-.:;=@[\]\w]+|%([01346-9a-f][\da-f]|2[\da-e]|5[\dabd-f]))+$"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="NonNegativeInt">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileCrawlOptions">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:NMTOKEN">
+                    <xs:enumeration value="None"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:list itemType="FileCrawlOptionValue"/>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="DirectoryCrawlOptionValue">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="SkipSubdirectories" />
+            <xs:enumeration value="Skip" />
+            <xs:enumeration value="DoNotCompareFiles" />
+            <xs:enumeration value="DoNotShow" />
+            <xs:enumeration value="FlaggedForDeletion" />
+            <xs:enumeration value="FlaggedForRescan" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DirectoryCrawlOptions">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:NMTOKEN">
+                    <xs:enumeration value="None"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:list itemType="DirectoryCrawlOptionValue"/>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    
+    <xs:attributeGroup name="IDbEntity">
+        <xs:attribute name="CreatedOn" type="xs:dateTime" use="required" />
+        <xs:attribute name="ModifiedOn" type="xs:dateTime" use="required" />
+    </xs:attributeGroup>
+    <xs:attributeGroup name="ILocalDbEntity">
+        <xs:attribute name="UpstreamId" type="GUID" use="optional" />
+        <xs:attribute name="LastSynchronizedOn" type="xs:dateTime" use="optional" />
+    </xs:attributeGroup>
+    <xs:attributeGroup name="IUpstreamDbEntity">
+        <xs:attribute name="CreatedById" type="GUID" use="required" />
+        <xs:attribute name="ModifiedById" type="GUID" use="required" />
+    </xs:attributeGroup>
+    <xs:attributeGroup name="ISymbolicName">
+        <xs:attribute name="Id" type="GUID" use="required" />
+        <xs:attribute name="Name" type="RequiredSimpleName" use="required" />
+        <xs:attribute name="IsInactive" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="Priority" type="NonNegativeInt" use="optional" default="0"/>
+        <xs:attributeGroup ref="IDbEntity"/>
+    </xs:attributeGroup>
+    <xs:complexType name="ILocalSymbolicName" mixed="true">
+        <xs:attributeGroup ref="ILocalDbEntity"/>
+        <xs:attributeGroup ref="ISymbolicName"/>
+    </xs:complexType>
+    <xs:complexType name="IUpstreamSymbolicName" mixed="true">
+        <xs:attributeGroup ref="IUpstreamDbEntity"/>
+        <xs:attributeGroup ref="ISymbolicName"/>
+    </xs:complexType>
+    <xs:complexType name="IAccessError">
+    </xs:complexType>
+    <xs:complexType name="IFile">
+    </xs:complexType>
+    <xs:complexType name="IRootSubdirectory">
+    </xs:complexType>
+    <xs:attributeGroup name="IVolume">
+        <xs:attribute name="Id" type="GUID" use="required" />
+        <xs:attribute name="DisplayName" type="RequiredLongName" use="required" />
+        <xs:attribute name="VolumeName" type="ShortName" use="optional" default=""/>
+        <xs:attribute name="IsInactive" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="Priority" type="NonNegativeInt" use="optional" default="0"/>
+        <xs:attributeGroup ref="IDbEntity"/>
+    </xs:attributeGroup>
+    <xs:complexType name="ILocalVolume">
+        <xs:sequence>
+            <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="RootSubdirectory" type="IRootSubdirectory" minOccurs="0" maxOccurs="1"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="AccessError" type="IAccessError"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="ILocalDbEntity"/>
+        <xs:attributeGroup ref="IVolume"/>
+        <xs:attribute name="Identifier" use="required">
+            <xs:simpleType>
+                <xs:union memberTypes="IDeviceUri IUncUri" />
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="IUpstreamVolume">
+        <xs:sequence>
+            <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="RootSubdirectory" type="IRootSubdirectory" minOccurs="0" maxOccurs="1"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="AccessError" type="IAccessError"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="IUpstreamDbEntity"/>
+        <xs:attributeGroup ref="IVolume"/>
+    </xs:complexType>
+    <xs:complexType name="IUpstreamUncVolume">
+        <xs:complexContent>
+            <xs:extension base="IUpstreamVolume">
+        <xs:attribute name="Identifier" type="IUncUri" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IUpstreamDeviceVolume">
+        <xs:complexContent>
+            <xs:extension base="IUpstreamVolume">
+                <xs:attribute name="Identifier" type="IDeviceUri" use="required" />
+                <xs:attribute name="FileSystemId" type="GUID" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:attributeGroup name="IFileSystem">
+        <xs:attribute name="Id" type="GUID" use="required" />
+        <xs:attribute name="DisplayName" type="RequiredLongName" use="required" />
+        <xs:attribute name="CaseSensitiveSearch" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="ReadOnly" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="MaxNameLength" type="NonNegativeInt" use="optional" default="0"/>
+        <xs:attribute name="DefaultDriveType" type="DriveType" use="optional"/>
+        <xs:attribute name="IsInactive" type="xs:boolean" use="optional" default="false"/>
+        <xs:attributeGroup ref="IDbEntity"/>
+    </xs:attributeGroup>
+    <xs:complexType name="ILocalFileSystem">
+        <xs:sequence>
+            <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="SymbolicName" type="ILocalSymbolicName"/>
+                <xs:element name="Volume" type="ILocalVolume"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attributeGroup ref="ILocalDbEntity"/>
+        <xs:attributeGroup ref="IFileSystem"/>
+    </xs:complexType>
+    <xs:complexType name="IUpstreamFileSystem">
+        <xs:sequence>
+            <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="SymbolicName" type="IUpstreamSymbolicName"/>
+                <xs:element name="Volume" type="IUpstreamUncVolume"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attributeGroup ref="IUpstreamDbEntity"/>
+        <xs:attributeGroup ref="IFileSystem"/>
+    </xs:complexType>
+    
+    <xs:element name="Local">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="FileSystem" type="ILocalFileSystem"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="IHostDevice">
+        <xs:sequence>
+            <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Volume" type="IUpstreamDeviceVolume"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IHostPlatform">
+        <xs:sequence>
+            <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="HostDevice" type="IHostDevice"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Upstream">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="FileSystem" type="IUpstreamFileSystem"/>
+                <xs:element name="HostPlatform" type="IHostPlatform" />
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

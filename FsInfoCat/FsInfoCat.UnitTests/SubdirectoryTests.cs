@@ -83,14 +83,15 @@ namespace FsInfoCat.UnitTests
         [TestMethod("Guid Id")]
         public void IdTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid Id
-
-            Subdirectory target = default; // TODO: Create and initialize Subdirectory instance
-            Guid expectedValue = default;
-            target.Id = default;
+            Subdirectory target = new();
+            Guid expectedValue = Guid.NewGuid();
+            target.Id = expectedValue;
             Guid actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
+            target.Id = expectedValue;
+            actualValue = target.Id;
+            Assert.AreEqual(expectedValue, actualValue);
+            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [TestMethod("string Name")]
@@ -132,17 +133,19 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("string Notes")]
-        public void NotesTestMethod()
+        [DataTestMethod]
+        [DataRow(null, "", DisplayName = "string Notes = null")]
+        [DataRow("", "", DisplayName = "string Notes = \"\"")]
+        [DataRow("\n\r", "", DisplayName = "string Notes = \"\\n\\r\"")]
+        [DataRow("Test", "Test", DisplayName = "string Notes = \"Test\"")]
+        [DataRow("\n Test \r", "\n Test \r", DisplayName = "string Notes = \"\\n Test \\r\"")]
+        public void NotesTestMethod(string notes, string expected)
         {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Notes
-
-            Subdirectory target = default; // TODO: Create and initialize Subdirectory instance
-            string expectedValue = default;
-            target.Notes = default;
+            Subdirectory target = new();
+            target.Notes = notes;
             string actualValue = target.Notes;
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.IsNotNull(actualValue);
+            Assert.AreEqual(expected, actualValue);
         }
 
         [TestMethod("bool Deleted")]
@@ -263,6 +266,8 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime? LastSynchronizedOn")]
+        [TestProperty(TestHelper.TestProperty_Description,
+            "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void LastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -276,6 +281,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

@@ -2,12 +2,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -45,8 +49,7 @@ namespace FsInfoCat.Local
         public virtual string DisplayName { get => _displayName.GetValue(); set => _displayName.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VolumeName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_VolumeNameRequired),
-            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_VolumeNameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string VolumeName { get => _volumeName.GetValue(); set => _volumeName.SetValue(value); }
@@ -157,6 +160,46 @@ namespace FsInfoCat.Local
             _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
         }
 
+        internal XElement Export(bool includeFileSystemId = false)
+        {
+            XElement result = new(nameof(Volume),
+                new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
+                new XAttribute(nameof(DisplayName), DisplayName),
+                new XAttribute(nameof(Identifier), Identifier.ToString())
+            );
+            string volumeName = VolumeName;
+            if (volumeName.Length > 0)
+                result.SetAttributeValue(nameof(VolumeName), volumeName);
+            if (includeFileSystemId)
+            {
+                Guid fileSystemId = FileSystemId;
+                if (!fileSystemId.Equals(Guid.Empty))
+                    result.SetAttributeValue(nameof(fileSystemId), XmlConvert.ToString(fileSystemId));
+            }
+            bool? value = CaseSensitiveSearch;
+            if (value.HasValue)
+                result.SetAttributeValue(nameof(CaseSensitiveSearch), value.Value);
+            value = ReadOnly;
+            if (value.HasValue)
+                result.SetAttributeValue(nameof(ReadOnly), value.Value);
+            int? maxNameLength = MaxNameLength;
+            if (maxNameLength.HasValue)
+                result.SetAttributeValue(nameof(MaxNameLength), maxNameLength.Value);
+            if (Type != DriveType.Unknown)
+                result.SetAttributeValue(nameof(Type), Enum.GetName(typeof(DriveType), Type));
+            if (Status != VolumeStatus.Unknown)
+                result.SetAttributeValue(nameof(Status), Enum.GetName(typeof(VolumeStatus), Status));
+            AddExportAttributes(result);
+            if (Notes.Length > 0)
+                result.Add(new XElement(nameof(Notes), new XCData(Notes)));
+            var rootDirectory = RootDirectory;
+            if (rootDirectory is not null)
+                result.Add(rootDirectory.Export());
+            foreach (VolumeAccessError accessError in AccessErrors)
+                result.Add(accessError.Export());
+            return result;
+        }
+
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
             builder.HasOne(sn => sn.FileSystem).WithMany(d => d.Volumes).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
@@ -185,6 +228,68 @@ namespace FsInfoCat.Local
                         ValidateIdentifier(validationContext, results);
                         break;
                 }
+        }
+
+        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement volumeElement)
+        {
+            XName n = nameof(Id);
+            Guid volumeId = volumeElement.GetAttributeGuid(n).Value;
+            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.Volumes)).Append("\" (\"").Append(nameof(Id)).Append("\" , \"").Append(nameof(FileSystemId)).Append('"');
+            List<object> values = new();
+            values.Add(volumeId);
+            values.Add(fileSystemId);
+            foreach (XAttribute attribute in volumeElement.Attributes().Where(a => a.Name != n))
+            {
+                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
+                switch (attribute.Name.LocalName)
+                {
+                    case nameof(DisplayName):
+                    case nameof(VolumeName):
+                    case nameof(Identifier):
+                    case nameof(Notes):
+                        values.Add(attribute.Value);
+                        break;
+                    case nameof(Status):
+                        values.Add(Enum.ToObject(typeof(VolumeStatus), Enum.Parse<VolumeStatus>(attribute.Value)));
+                        break;
+                    case nameof(Type):
+                        values.Add(Enum.ToObject(typeof(DriveType), Enum.Parse<DriveType>(attribute.Value)));
+                        break;
+                    case nameof(CaseSensitiveSearch):
+                    case nameof(ReadOnly):
+                        if (string.IsNullOrWhiteSpace(attribute.Value))
+                            values.Add(null);
+                        else
+                            values.Add(XmlConvert.ToBoolean(attribute.Value));
+                        break;
+                    case nameof(MaxNameLength):
+                        if (string.IsNullOrWhiteSpace(attribute.Value))
+                            values.Add(null);
+                        else
+                            values.Add(XmlConvert.ToInt32(attribute.Value));
+                        break;
+                    case nameof(CreatedOn):
+                    case nameof(ModifiedOn):
+                    case nameof(LastSynchronizedOn):
+                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
+                        break;
+                    case nameof(UpstreamId):
+                        values.Add(XmlConvert.ToGuid(attribute.Value));
+                        break;
+                    default:
+                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(Volume)}");
+                }
+            }
+            sql.Append(") Values({0}");
+            for (int i = 1; i < values.Count; i++)
+                sql.Append(", {").Append(i).Append('}');
+            logger.LogInformation($"Inserting {nameof(Volume)} with Id {{Id}}", volumeId);
+            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+            XElement rootDirectoryElement = volumeElement.Element(nameof(RootDirectory));
+            if (rootDirectoryElement is not null)
+                Subdirectory.Import(dbContext, logger, volumeId, null, rootDirectoryElement);
+            foreach (XElement accessErrorElement in volumeElement.Elements(ElementName_AccessError))
+                VolumeAccessError.Import(dbContext, logger, volumeId, accessErrorElement);
         }
 
         private void ValidateIdentifier(ValidationContext validationContext, List<ValidationResult> results)

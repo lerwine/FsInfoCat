@@ -288,10 +288,11 @@
   <data name="ErrorMessage_VolumeNameLength" xml:space="preserve">
     <value>Volume Name too long.</value>
   </data>
-  <data name="ErrorMessage_VolumeNameRequired" xml:space="preserve">
-    <value>Volume Name is required.</value>
-  </data>
   <data name="ErrorMessage_VolumeOrParentRequired" xml:space="preserve">
     <value>Volume or Parent Subdirectory must be selected.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ExportSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\exportschema.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

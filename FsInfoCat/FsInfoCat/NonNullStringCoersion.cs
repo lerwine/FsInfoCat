@@ -6,7 +6,7 @@ namespace FsInfoCat
 {
     public class NonNullStringCoersion : ICoersion<string>
     {
-        public static readonly NonNullStringCoersion Default = new NonNullStringCoersion();
+        public static readonly NonNullStringCoersion Default = new();
 
         IEqualityComparer<string> _backingComparer;
 
