@@ -31,7 +31,7 @@ namespace FsInfoCat.Local
 
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Message { get => _message.GetValue(); set => _message.SetValue(value); }
 
@@ -86,7 +86,7 @@ namespace FsInfoCat.Local
         public SubdirectoryAccessError()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _errorCode = AddChangeTracker(nameof(AccessErrorCode), AccessErrorCode.OpenError);
+            _errorCode = AddChangeTracker(nameof(AccessErrorCode), AccessErrorCode.UnexpectedError);
             _message = AddChangeTracker(nameof(Message), "", NonNullStringCoersion.Default);
             _details = AddChangeTracker(nameof(Details), "", NonNullStringCoersion.Default);
             _targetId = AddChangeTracker(nameof(TargetId), Guid.Empty);

@@ -15,8 +15,10 @@ namespace FsInfoCat
 
         string Notes { get; set; }
 
-        // BUG: Replace with status of Normal, AccessError, Deleted
+        [Obsolete("Use Status")]
         bool Deleted { get; set; }
+
+        DirectoryStatus Status { get; set; }
 
         ISubdirectory Parent { get; set; }
 

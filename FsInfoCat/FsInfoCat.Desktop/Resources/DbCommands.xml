@@ -1,9 +1,4 @@
-<Database xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-    <Table Name="FileSystems">
-        <InsertFunction>
-            <
-        </InsertFunction>
-    </Table>    
+<DbCommands>
     <DbCreation>
         <Text Message="Creating table 'FileSystems'">
             <![CDATA[CREATE TABLE "FileSystems" (
@@ -104,7 +99,7 @@
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ContentId"	UNIQUEIDENTIFIER NOT NULL,
+	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL,
 	"ParentId"	UNIQUEIDENTIFIER NOT NULL,
 	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
 	CONSTRAINT "FK_FileSubdirectory" FOREIGN KEY("ParentId") REFERENCES "Subdirectories"("Id"),
@@ -364,4 +359,4 @@ END]]>
             <![CDATA[DROP TABLE "FileSystems"]]>
         </Text>
     </DropTables>
-</Database>
+</DbCommands>

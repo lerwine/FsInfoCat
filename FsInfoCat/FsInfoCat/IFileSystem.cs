@@ -5,6 +5,8 @@ namespace FsInfoCat
 {
     public interface IFileSystem : IDbEntity
     {
+        Guid Id { get; set; }
+
         string DisplayName { get; set; }
 
         bool CaseSensitiveSearch { get; set; }
@@ -22,7 +24,5 @@ namespace FsInfoCat
         IEnumerable<IVolume> Volumes { get; }
 
         IEnumerable<ISymbolicName> SymbolicNames { get; }
-
-        Guid Id { get; set; }
     }
 }
