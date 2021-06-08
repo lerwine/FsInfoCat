@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Local xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd">
+<Local xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd">
     <FileSystem Id="{bedb396b-2212-4149-9cad-7e437c47314c}" DisplayName="New Technology File System" DefaultDriveType="Fixed" CreatedOn="2004-08-19T14:51:06" ModifiedOn="2004-08-19T14:51:06">
         <SymbolicName Id="{74381ccb-d56d-444d-890f-3a8051bc18e6}" Name="NTFS" Priority="0" CreatedOn="2021-05-21T21:29:59" ModifiedOn="2021-05-21T21:29:59" />
         <Volume Id="{fb962360-518b-40f6-b6ae-afb67f2e2543}" DisplayName="C:" VolumeName="OS" Identifier="urn:volume:id:9E49-7DE8" Type="Fixed" Status="Controlled" CreatedOn="2021-05-21T21:37:16" ModifiedOn="2021-05-21T21:37:16">

@@ -1,6 +1,6 @@
 <xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified"
-           xmlns:ex="http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd" targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd">
+           xmlns:ex="http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd" targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd">
     <xs:simpleType name="UUID">
         <xs:restriction base="xs:token">
             <xs:pattern value="^(?i)\s*(\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\}|[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}|[a-f\d]{32})\s*$"/>
@@ -80,6 +80,7 @@
         <xs:restriction base="xs:NMTOKEN">
             <xs:enumeration value="Unknown"/>
             <xs:enumeration value="Controlled"/>
+            <xs:enumeration value="AccessError"/>
             <xs:enumeration value="Offline"/>
             <xs:enumeration value="Uncontrolled"/>
             <xs:enumeration value="Relinquished"/>
@@ -387,6 +388,7 @@
                 <xs:attribute name="Artist" type="LongName" use="optional"/>
                 <xs:attribute name="HostComputer" type="LongName" use="optional"/>
                 <xs:attributeGroup ref="IDbEntity" />
+                <xs:attributeGroup ref="ILocalDbEntity" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

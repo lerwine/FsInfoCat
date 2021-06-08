@@ -1,9 +1,6 @@
 {
     "folders": [
 		{
-			"path": "..\\..\\OneDrive\\Documents\\Visual Studio 2019\\Code Snippets\\Visual C#\\My Code Snippets"
-		},
-		{
 			"path": "Resources"
 		},
 		{
@@ -14,6 +11,21 @@
 		},
 		{
 			"path": "..\\LErwineExamples"
+		},
+		{
+			"path": "..\\..\\..\\OneDrive\\Documents\\Visual Studio 2019\\Code Snippets"
+		},
+		{
+			"path": "..\\..\\..\\..\\..\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional"
+		},
+		{
+			"path": "dev\\Scripts"
+		},
+		{
+			"path": "src"
+		},
+		{
+			"path": "..\\PowerShell-Modules"
 		}
 	],
     "settings": {}

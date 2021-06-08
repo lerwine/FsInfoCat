@@ -583,11 +583,16 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to &lt;xs:schema xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;qualified&quot;
+        ///           xmlns:ex=&quot;http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd&quot; targetNamespace=&quot;http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd&quot;
+        ///           xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns=&quot;http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd&quot;&gt;
+        ///    &lt;xs:simpleType name=&quot;UUID&quot;&gt;
+        ///        &lt;xs:restriction base=&quot;xs:token&quot;&gt;
+        ///            &lt;xs:pattern v [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string ExportSchema {
+        public static string FsInfoCatExport {
             get {
-                return ResourceManager.GetString("ExportSchema", resourceCulture);
+                return ResourceManager.GetString("FsInfoCatExport", resourceCulture);
             }
         }
     }
