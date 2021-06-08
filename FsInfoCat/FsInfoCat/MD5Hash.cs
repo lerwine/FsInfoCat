@@ -17,7 +17,17 @@ namespace FsInfoCat
     {
         #region Fields
 
+        public const int StringLength_BinHex = 32;
+        public const int StringLength_Base64 = 24;
+        public const int StringLength_Serialized = 22;
         public const int MD5ByteSize = 16;
+
+
+        public static readonly Regex Base64SequenceRegex = new(@"^\s*(([a-z\d+/]\s*){4})*((?<c>[a-z\d+/\s]+(==?)?)|(?<e>[^a-z\d+/=]))?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex BinHexSequenceRegex = new(@"^\s*([a-f\d\s]+$|[a-f\d\s]*(?<e>[^a-f\d\s]))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex BraceUuidRegex = new(@"^\s*(\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\}\s*$|(?<e>\{[a-f\d]{8}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{12}\}?|[a-f\d]{0,12})\s*|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,7}))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex DashUuidRegex = new(@"^\s*([a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\s*$|(?<e>[a-f\d]{8}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{12}|[a-f\d]{0,12})\s*|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,7}))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex WsRegex = new(@"[\s\r\n]+", RegexOptions.Compiled);
 
         public static readonly ValueConverter<MD5Hash, byte[]> Converter = new(
             v => v.GetBuffer(),
@@ -221,7 +231,7 @@ namespace FsInfoCat
         /// Gets a hexidecimal string representation of the <see cref="MD5Hash"/>.
         /// </summary>
         /// <returns>A hexidecimal string representation of the <see cref="MD5Hash"/>.</returns>
-        public override string ToString() => _highBits.ToString("x16") + _lowBits.ToString("x16");
+        public override string ToString() => Convert.ToBase64String(GetBuffer()).Substring(0, StringLength_Serialized);
 
         /// <summary>
         /// Parses a hexidecimal string into a <see cref="MD5Hash"/> object.
@@ -231,79 +241,120 @@ namespace FsInfoCat
         /// <exception cref="FormatException"><paramref name="s"/> contains an invalid hexidecmal pair or does not represent a 128-bit hexidecimal value.</exception>
         public static MD5Hash Parse(string s)
         {
-            if (s == null || (s = s.TrimStart()).Length == 0)
+            if (string.IsNullOrWhiteSpace(s))
                 return new MD5Hash();
-            int startAt = 0;
+            Match match;
 
-            StringBuilder sb = new();
-            while (startAt < s.Length)
+            if (s.TrimStart().StartsWith('{'))
+                match = BraceUuidRegex.Match(s);
+            else if (s.Contains("-"))
+                match = DashUuidRegex.Match(s);
+            else
             {
-                Match m = HexPattern.Match(s, startAt);
-                if (!m.Success || m.Groups[1].Success)
+                Match bMatch;
+                if ((match = Base64SequenceRegex.Match(s)).Success)
                 {
-                    if (sb.Length == 32)
+                    if (match.Groups["e"].Success)
                     {
-                        m = HexDigit.Match(s, startAt);
-                        if (m.Success && !m.Groups[1].Success)
-                            break;
+                        if (!(bMatch = BinHexSequenceRegex.Match(s)).Success)
+                        {
+                            if (match.Length == s.Length)
+                                throw new FormatException("Base-64 character sequence does not represent 16 bytes.");
+                            throw new FormatException($"Invalid Base-64 character at index {match.Groups["e"].Index}");
+                        }
                     }
-                    throw new FormatException("Invalid hexidecimal pair at offset " + startAt.ToString());
+                    else
+                        return new MD5Hash(Convert.FromBase64String(s.Trim()));
                 }
-                if (sb.Length == 32 && m.Groups[2].Index == startAt)
-                    throw new FormatException("Too many hexidecimal characters at offset " + startAt.ToString());
-                sb.Append(m.Groups[2].Value);
-                startAt = m.Index + m.Length;
+                else if (!(bMatch = BinHexSequenceRegex.Match(s)).Success)
+                    throw new FormatException("Input string is not a valid Base-64, BinHex or UUID character sequence.");
+                if (bMatch.Groups["e"].Success)
+                    throw new FormatException($"Invalid BinHex character at index {bMatch.Groups["e"].Index}");
+                if ((s = WsRegex.Replace(s, "")).Length == StringLength_BinHex)
+                    return new MD5Hash(BitConverter.GetBytes(long.Parse(s[MD5ByteSize..], System.Globalization.NumberStyles.HexNumber))
+                        .Concat(BitConverter.GetBytes(long.Parse(s[0..MD5ByteSize], System.Globalization.NumberStyles.HexNumber))).ToArray());
+                if (s.Length < StringLength_BinHex)
+                    throw new FormatException("Not enough BinHex character pairs.");
+                throw new FormatException("Too many BinHex character pairs.");
             }
-            if (sb.Length < 32)
-                throw new FormatException("Expected 16 hexidecimal pairs; Actual: " + (sb.Length / 2).ToString());
-
-            return new MD5Hash(BitConverter.GetBytes(long.Parse(sb.ToString(MD5ByteSize, MD5ByteSize), System.Globalization.NumberStyles.HexNumber)).Concat(BitConverter.GetBytes(long.Parse(sb.ToString(0, MD5ByteSize), System.Globalization.NumberStyles.HexNumber))).ToArray());
+            if (match.Success)
+            {
+                if (match.Groups["e"].Success)
+                {
+                    if (match.Length < s.Length)
+                        throw new FormatException($"Invalid UUID character at index {match.Length}");
+                }
+                else if (Guid.TryParse(s.Trim(), out Guid g))
+                    return new MD5Hash(g.ToByteArray());
+            }
+            else
+            {
+                if (s.Trim().Length > 1)
+                    throw new FormatException("Invalid UUID character at index 1");
+            }
+            throw new FormatException("Incomplete UUID string");
         }
 
         /// <summary>
         /// Attempts to parses a hexidecimal string into a <see cref="MD5Hash"/> object.
         /// </summary>
         /// <param name="s">Hexidecimal string to parse.</param>
-        /// <param name="value">The parsed <see cref="MD5Hash"/>.</param>
+        /// <param name="result">The parsed <see cref="MD5Hash"/>.</param>
         /// <returns><c>true</c> if <paramref name="s"/> could be parsed as a <see cref="MD5Hash"/>; otherwise, false.</returns>
-        public static bool TryParse(string s, out MD5Hash value)
+        public static bool TryParse(string s, out MD5Hash result)
         {
-            if (s == null || (s = s.TrimStart()).Length == 0)
+            if (string.IsNullOrWhiteSpace(s))
             {
-                value = new MD5Hash();
-                return false;
+                result = new MD5Hash();
+                return true;
             }
-            int startAt = 0;
-            StringBuilder sb = new();
-            while (startAt < s.Length)
+
+            Match match;
+
+            if (s.TrimStart().StartsWith('{'))
+                match = BraceUuidRegex.Match(s);
+            else if (s.Contains("-"))
+                match = DashUuidRegex.Match(s);
+            else
             {
-                Match m = HexPattern.Match(s, startAt);
-                if (!m.Success || m.Groups[1].Success)
+                Match bMatch;
+                if ((match = Base64SequenceRegex.Match(s)).Success)
                 {
-                    if (sb.Length == 32)
+                    if (match.Groups["e"].Success)
                     {
-                        m = HexDigit.Match(s, startAt);
-                        if (m.Success && !m.Groups[1].Success)
-                            break;
+                        if (!(bMatch = BinHexSequenceRegex.Match(s)).Success || bMatch.Groups["e"].Success)
+                        {
+                            result = default;
+                            return false;
+                        }
                     }
-                    value = new MD5Hash();
-                    return false;
+                    else
+                    {
+                        result = new MD5Hash(Convert.FromBase64String(s.Trim()));
+                        return true;
+                    }
                 }
-                if (sb.Length == 32 && m.Groups[2].Index == startAt)
+                else if (!(bMatch = BinHexSequenceRegex.Match(s)).Success || bMatch.Groups["e"].Success)
                 {
-                    value = new MD5Hash();
+                    result = default;
                     return false;
                 }
-                sb.Append(m.Groups[2].Value);
-                startAt = m.Index + m.Length;
-            }
-            if (sb.Length < 32)
-            {
-                value = new MD5Hash();
+                if ((s = WsRegex.Replace(s, "")).Length == StringLength_BinHex)
+                {
+                    result = new MD5Hash(BitConverter.GetBytes(long.Parse(s[MD5ByteSize..], System.Globalization.NumberStyles.HexNumber))
+                        .Concat(BitConverter.GetBytes(long.Parse(s[0..MD5ByteSize], System.Globalization.NumberStyles.HexNumber))).ToArray());
+                    return true;
+                }
+                result = default;
                 return false;
             }
-            value = new MD5Hash(BitConverter.GetBytes(long.Parse(sb.ToString(MD5ByteSize, MD5ByteSize), System.Globalization.NumberStyles.HexNumber)).Concat(BitConverter.GetBytes(long.Parse(sb.ToString(0, MD5ByteSize), System.Globalization.NumberStyles.HexNumber))).ToArray());
-            return true;
+            if (match.Success && !match.Groups["e"].Success && Guid.TryParse(s.Trim(), out Guid g))
+            {
+                result = new MD5Hash(g.ToByteArray());
+                return true;
+            }
+            result = default;
+            return false;
         }
 
         #endregion
