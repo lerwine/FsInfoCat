@@ -138,6 +138,7 @@ namespace FsInfoCat.Local
                 options.AddInterceptors(Interceptor.Instance);
                 options.UseSqlite(connectionString);
             });
+            // this.Model.GetDefaultSchema();
         }
 
         public static string GetConnectionString(Assembly assembly, string dbFileName) => GetConnectionString(GetDbFilePath(assembly, dbFileName));

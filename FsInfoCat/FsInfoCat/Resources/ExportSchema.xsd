@@ -144,7 +144,7 @@
     </xs:simpleType>
     <xs:simpleType name="NotesField">
         <xs:restriction base="xs:string">
-            <xs:maxLength value="4000"/>
+            <xs:maxLength value="1000000000"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="IDeviceUri">
@@ -268,12 +268,19 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+    <xs:complexType name="ILocalRedundancy">
+        <xs:complexContent>
+            <xs:extension base="IRedundancy">
+                <xs:attributeGroup ref="ILocalDbEntity" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="IAccessError" mixed="true">
         <xs:simpleContent>
             <xs:extension base="NotesField">
                 <xs:attribute name="Id" type="EntityId" use="required"/>
                 <xs:attribute name="ErrorCode" type="AccessErrorCode" use="optional" default="UnexpectedError"/>
-                <xs:attribute name="Message" type="LongName" use="required"/>
+                <xs:attribute name="Message" type="RequiredLongName" use="required"/>
                 <xs:attributeGroup ref="IDbEntity" />
             </xs:extension>
         </xs:simpleContent>
@@ -290,6 +297,13 @@
                 <xs:attribute name="AreEqual" type="xs:boolean" use="optional" default="true"/>
                 <xs:attribute name="ComparedOn" type="xs:dateTime" use="required"/>
                 <xs:attributeGroup ref="IDbEntity" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="ILocalComparison">
+        <xs:simpleContent>
+            <xs:extension base="IComparison">
+                <xs:attributeGroup ref="ILocalDbEntity" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -349,7 +363,7 @@
                 <xs:attribute name="Id" type="EntityId" use="required"/>
                 <xs:attribute name="Width" type="xs:unsignedShort" use="required"/>
                 <xs:attribute name="Height" type="xs:unsignedShort" use="required"/>
-                <xs:attribute name="Duration" type="xs:unsignedLong" use="optional"/>
+                <xs:attribute name="Duration" type="NonNegativeLong" use="optional"/>
                 <xs:attribute name="FrameCount" type="xs:unsignedInt" use="optional"/>
                 <xs:attribute name="TrackNumber" type="xs:unsignedInt" use="optional"/>
                 <xs:attribute name="Bitrate" type="xs:unsignedInt" use="optional"/>
@@ -379,26 +393,42 @@
     <xs:complexType name="IRedundantSet">
         <xs:sequence>
             <xs:element name="Notes" type="NotesField" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="Redundancy" type="IRedundancy" minOccurs="0" maxOccurs="unbounded">
-                    <xs:keyref name="FK_RedundancyFile" refer="PK_File">
-                        <xs:selector xpath="."/>
-                        <xs:field xpath="FileId"/>
-                    </xs:keyref>
-            </xs:element>
         </xs:sequence>
         <xs:attribute name="Id" type="EntityId" use="required"/>
         <xs:attribute name="RemediationStatus" type="RedundancyRemediationStatus" use="optional" default="Unconfirmed"/>
         <xs:attribute name="Reference" type="ShortName" use="optional" default=""/>
         <xs:attributeGroup ref="IDbEntity" />
     </xs:complexType>
+    <xs:complexType name="ILocalRedundantSet">
+        <xs:complexContent>
+            <xs:extension base="IRedundantSet">
+                <xs:sequence>
+                    <xs:element name="Redundancy" type="ILocalRedundancy" minOccurs="0" maxOccurs="unbounded">
+                        <xs:keyref name="FK_RedundancyFile" refer="PK_File">
+                            <xs:selector xpath="."/>
+                            <xs:field xpath="FileId"/>
+                        </xs:keyref>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attributeGroup ref="ILocalDbEntity" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="IContentInfo">
-        <xs:sequence>
-            <xs:element name="RedundantSet" type="IRedundantSet" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
         <xs:attribute name="Id" type="EntityId" use="required"/>
         <xs:attribute name="Length" type="NonNegativeLong" use="required"/>
         <xs:attribute name="Hash" type="MD5Hash" use="optional"/>
         <xs:attributeGroup ref="IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="ILocalContentInfo">
+        <xs:complexContent>
+            <xs:extension base="IContentInfo">
+                <xs:sequence>
+                    <xs:element name="RedundantSet" type="ILocalRedundantSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="ILocalDbEntity" />
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="ISubdirectory">
         <xs:sequence>
@@ -516,7 +546,7 @@
         <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="FileSystem" type="ILocalFileSystem" />
-                <xs:element name="ContentInfo" type="IContentInfo" />
+                <xs:element name="ContentInfo" type="ILocalContentInfo" />
                 <xs:element name="ExtendedProperties" type="IExtendedProperties" />
             </xs:choice>
         </xs:complexType>

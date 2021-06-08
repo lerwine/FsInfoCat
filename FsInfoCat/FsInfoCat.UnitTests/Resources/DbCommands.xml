@@ -58,6 +58,20 @@
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>
+        <Text Message="Creating table 'VolumeAccessErrors'">
+            <![CDATA[CREATE TABLE "VolumeAccessErrors" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) COLLATE NOCASE,
+    "Details" TEXT NOT NULL DEFAULT '',
+    "AccessErrorCode" INT NOT NULL,
+	"TargetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessErrorVolume" REFERENCES "Volume"("Id") ON DELETE RESTRICT,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_VolumeAccessErrors" PRIMARY KEY("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+)]]>
+        </Text>
         <Text Message="Creating table 'Subdirectories'">
             <![CDATA[CREATE TABLE "Subdirectories" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -79,9 +93,20 @@
         (ParentId IS NOT NULL AND VolumeId IS NULL AND length(trim(Name))>0)))
 )]]>
         </Text>
-        <!--<Text Message="Adding column to table 'Volumes'">
-            <![CDATA[ALTER TABLE "Volumes" ADD COLUMN "RootDirectoryId" UNIQUEIDENTIFIER CONSTRAINT "FK_VolumeSubDirectory" REFERENCES "Subdirectories"("Id")]]>
-        </Text>-->
+        <Text Message="Creating table 'SubdirectoryAccessErrors'">
+            <![CDATA[CREATE TABLE "SubdirectoryAccessErrors" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) COLLATE NOCASE,
+    "Details" TEXT NOT NULL DEFAULT '',
+    "AccessErrorCode" INT NOT NULL,
+	"TargetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessErrorSubdirectory" REFERENCES "Subdirectory"("Id") ON DELETE RESTRICT,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_SubdirectoryccessErrors" PRIMARY KEY("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+)]]>
+        </Text>
         <Text Message="Creating table 'Files'">
             <![CDATA[CREATE TABLE "Files" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -99,6 +124,20 @@
 	"ContentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileContentInfo" REFERENCES "ContentInfos"("Id") ON DELETE RESTRICT,
 	"ParentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileSubdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+)]]>
+        </Text>
+        <Text Message="Creating table 'FileAccessErrors'">
+            <![CDATA[CREATE TABLE "FileAccessErrors" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) COLLATE NOCASE,
+    "Details" TEXT NOT NULL DEFAULT '',
+    "AccessErrorCode" INT NOT NULL,
+	"TargetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessErrorFile" REFERENCES "File"("Id") ON DELETE RESTRICT,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_FileccessErrors" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>

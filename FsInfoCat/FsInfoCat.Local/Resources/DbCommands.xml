@@ -1,9 +1,5 @@
-<Database xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-    <Table Name="FileSystems">
-        <InsertFunction>
-            <
-        </InsertFunction>
-    </Table>    
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="FsInfoCat.Local" Provider="">
+    
     <DbCreation>
         <Text Message="Creating table 'FileSystems'">
             <![CDATA[CREATE TABLE "FileSystems" (
@@ -96,7 +92,7 @@
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE,
     "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<15) DEFAULT 0,
-    "LastAccessed" DATETIME  NOT NULL,
+    "LastAccessed" DATETIME  NOT NULL,  
     "LastHashCalculation" DATETIME DEFAULT NULL,
     "Notes" TEXT NOT NULL DEFAULT '',
     "Deleted" BIT NOT NULL DEFAULT 0,
@@ -364,4 +360,4 @@ END]]>
             <![CDATA[DROP TABLE "FileSystems"]]>
         </Text>
     </DropTables>
-</Database>
+</Schema>

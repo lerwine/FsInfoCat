@@ -20,6 +20,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _name;
         private readonly IPropertyChangeTracker<DirectoryCrawlOptions> _options;
+        private readonly IPropertyChangeTracker<DirectoryStatus> _status;
         private readonly IPropertyChangeTracker<DateTime> _lastAccessed;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<bool> _deleted;
@@ -52,6 +53,9 @@ namespace FsInfoCat.Local
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
         [Required]
+        public DirectoryStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
+
+        [Obsolete("Use Status")]
         public virtual bool Deleted { get => _deleted.GetValue(); set => _deleted.SetValue(value); }
 
         public virtual Guid? ParentId
@@ -162,6 +166,7 @@ namespace FsInfoCat.Local
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
             _options = AddChangeTracker(nameof(Options), DirectoryCrawlOptions.None);
+            _status = AddChangeTracker(nameof(Status), DirectoryStatus.Incomplete);
             _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _deleted = AddChangeTracker(nameof(Deleted), false);
             _parentId = AddChangeTracker<Guid?>(nameof(ParentId), null);
