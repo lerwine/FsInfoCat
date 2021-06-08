@@ -21,6 +21,11 @@
                                     <Subdirectory Id="{9659ea19-ca72-419f-9b35-3b59e6cc89e0}" Name="1.0.0.0" LastAccessed="2021-05-21T21:46:53" CreatedOn="2021-05-21T21:46:53" ModifiedOn="2021-05-21T21:46:53">
                                         <File Id="{6219ddc4-5979-491e-8b76-5050b391f4d3}" Name="Test.db" LastAccessed="2021-05-21T21:52:08" ContentId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
                                         <File Id="{a3e8dab2-98fd-4059-8756-27db5fb80932}" Name="Test.sdl" LastAccessed="2021-05-21T21:52:08" ContentId="{dc508120-8617-4d61-ba38-480ac35fcfe5}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
+                                        <File Id="{d52ea636-e1fb-41b4-81ec-3b396d4e6ca4}" Name="Test.tmp" LastAccessed="2021-05-21T21:52:08" ContentId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08">
+                                            <AccessError Id="{2a36dcad-8ae8-46f8-b085-0dbfbc3c0442}" ErrorCode="ReadError" Message="asdf" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08">
+                                                <![CDATA[Stack Trace:]]>
+                                            </AccessError>
+                                        </File>
                                     </Subdirectory>
                                 </Subdirectory>
                             </Subdirectory>

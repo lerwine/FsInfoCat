@@ -414,18 +414,18 @@
                         <xs:field xpath="ExtendedPropertyId"/>
                     </xs:keyref>
                     <xs:unique name="IDX_FileAccessError">
-                        <xs:selector xpath="AccessError"/>
+                        <xs:selector xpath="ex:AccessError"/>
                         <xs:field xpath="@ErrorCode"/>
                         <xs:field xpath="@Message"/>
                     </xs:unique>
                 </xs:element>
                 <xs:element name="Subdirectory" type="ISubdirectory">
                     <xs:unique name="IDX_Subdirectory">
-                        <xs:selector xpath="Subdirectory|File"/>
+                        <xs:selector xpath="ex:Subdirectory|ex:File"/>
                         <xs:field xpath="@Name"/>
                     </xs:unique>
                     <xs:unique name="IDX_SubdirectoryAccessError">
-                        <xs:selector xpath="AccessError"/>
+                        <xs:selector xpath="ex:AccessError"/>
                         <xs:field xpath="@ErrorCode"/>
                         <xs:field xpath="@Message"/>
                     </xs:unique>
@@ -501,7 +501,7 @@
                         <xs:element name="SymbolicName" type="ISymbolicName"/>
                         <xs:element name="Volume" type="IVolume">
                             <xs:unique name="IDX_VolumeAccessError">
-                                <xs:selector xpath="AccessError"/>
+                                <xs:selector xpath="ex:AccessError"/>
                                 <xs:field xpath="@ErrorCode"/>
                                 <xs:field xpath="@Message"/>
                             </xs:unique>
@@ -521,64 +521,64 @@
             </xs:choice>
         </xs:complexType>
         <xs:key name="PK_Comparison">
-            <xs:selector xpath=".//Comparison"/>
+            <xs:selector xpath=".//ex:Comparison"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:key name="PK_Redundancy">
-            <xs:selector xpath=".//Redundancy"/>
-            <xs:field xpath="@Id"/>
+            <xs:selector xpath=".//ex:Redundancy"/>
+            <xs:field xpath="@FileId"/>
         </xs:key>
         <xs:key name="PK_RedundantSet">
-            <xs:selector xpath=".//RedundantSet"/>
+            <xs:selector xpath=".//ex:RedundantSet"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:key name="PK_AccessError">
-            <xs:selector xpath=".//AccessError"/>
+            <xs:selector xpath=".//ex:AccessError"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:key name="PK_File">
-            <xs:selector xpath=".//File"/>
+            <xs:selector xpath=".//ex:File"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:key name="PK_Subdirectory">
-            <xs:selector xpath="FileSystem/Volume/RootDirectory|.//Subdirectory"/>
+            <xs:selector xpath="ex:FileSystem/ex:Volume/ex:RootDirectory|.//ex:Subdirectory"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:key name="PK_Volume">
-            <xs:selector xpath="FileSystem/Volume"/>
+            <xs:selector xpath="ex:FileSystem/ex:Volume"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:unique name="IDX_VolumeIdentifier">
-            <xs:selector xpath="FileSystem/Volume"/>
+            <xs:selector xpath="ex:FileSystem/ex:Volume"/>
             <xs:field xpath="@Identifier"/>
         </xs:unique>
         <xs:key name="PK_SymbolicName">
-            <xs:selector xpath="FileSystem/SymbolicName"/>
+            <xs:selector xpath="ex:FileSystem/ex:SymbolicName"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:unique name="IDX_SymbolicName">
-            <xs:selector xpath="FileSystem/SymbolicName"/>
+            <xs:selector xpath="ex:FileSystem/ex:SymbolicName"/>
             <xs:field xpath="@Name"/>
         </xs:unique>
         <xs:key name="PK_FileSystem">
-            <xs:selector xpath="FileSystem"/>
+            <xs:selector xpath="ex:FileSystem"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:unique name="IDX_FileSystemDisplayName">
-            <xs:selector xpath="FileSystem"/>
+            <xs:selector xpath="ex:FileSystem"/>
             <xs:field xpath="@DisplayName"/>
         </xs:unique>
         <xs:key name="PK_ContentInfo">
-            <xs:selector xpath="ContentInfo"/>
+            <xs:selector xpath="ex:ContentInfo"/>
             <xs:field xpath="@Id"/>
         </xs:key>
         <xs:unique name="IDX_ContentInfo">
-            <xs:selector xpath="ContentInfo"/>
+            <xs:selector xpath="ex:ContentInfo"/>
             <xs:field xpath="@Length"/>
             <xs:field xpath="@Hash"/>
         </xs:unique>
         <xs:key name="PK_ExtendedProperties">
-            <xs:selector xpath="ExtendedProperties"/>
+            <xs:selector xpath="ex:ExtendedProperties"/>
             <xs:field xpath="@Id"/>
         </xs:key>
     </xs:element>
