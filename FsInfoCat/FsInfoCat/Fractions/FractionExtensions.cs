@@ -268,15 +268,95 @@ namespace FsInfoCat.Fractions
         public static bool EqualTo<T>(IFraction<T> fraction, object obj)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
-            // TODO: Implement EqualTo{T}(IFraction{T}, object)
-            throw new NotImplementedException();
+            if (obj == null)
+                return false;
+
+            if (obj is IFraction n)
+                return fraction.Equals(n);
+
+            if (obj is double d)
+                return fraction.ToDouble().Equals(d);
+
+            if (obj is float f)
+                return fraction.ToSingle().Equals(f);
+
+            if (obj is decimal m)
+                return fraction.ToDecimal().Equals(m);
+
+            if (obj is string s)
+                return fraction.ToString().Equals(s);
+
+            if (obj is IComparable c)
+                return c.CompareTo(fraction.ToDecimal()) == 0;
+
+            if (obj is IConvertible v)
+            {
+                TypeCode typeCode = v.GetTypeCode();
+                return typeCode switch
+                {
+                    TypeCode.Decimal => EqualTo<T>(fraction, Convert.ToDecimal(obj)),
+                    TypeCode.Double => EqualTo<T>(fraction, Convert.ToDouble(obj)),
+                    TypeCode.Single => EqualTo<T>(fraction, Convert.ToSingle(obj)),
+                    TypeCode.Int16 => EqualTo<T>(fraction, Convert.ToInt16(obj)),
+                    TypeCode.Int32 => EqualTo<T>(fraction, Convert.ToInt32(obj)),
+                    TypeCode.Int64 => EqualTo<T>(fraction, Convert.ToInt64(obj)),
+                    TypeCode.Byte => EqualTo<T>(fraction, Convert.ToByte(obj)),
+                    TypeCode.SByte => EqualTo<T>(fraction, Convert.ToSByte(obj)),
+                    TypeCode.UInt32 => EqualTo<T>(fraction, Convert.ToUInt32(obj)),
+                    TypeCode.UInt64 => EqualTo<T>(fraction, Convert.ToUInt64(obj)),
+                    TypeCode.UInt16 => EqualTo<T>(fraction, Convert.ToUInt16(obj)),
+                    _ => fraction.ToString().Equals(obj.ToString()),
+                };
+            }
+
+            return false;
         }
 
         public static int Compare<T>(IFraction<T> fraction, object obj)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
-            // TODO: Implement Compare{T}(IFraction{T}, object)
-            throw new NotImplementedException();
+            if (obj == null)
+                return 1;
+
+            if (obj is IFraction n)
+                return fraction.CompareTo(n);
+
+            if (obj is double d)
+                return fraction.ToDouble().CompareTo(d);
+
+            if (obj is float f)
+                return fraction.ToSingle().CompareTo(f);
+
+            if (obj is decimal m)
+                return fraction.ToDecimal().CompareTo(m);
+
+            if (obj is string s)
+                return fraction.ToString().CompareTo(s);
+
+            if (obj is IComparable c)
+                return 0 - c.CompareTo(fraction.ToDecimal());
+
+            if (obj is IConvertible v)
+            {
+                TypeCode typeCode = v.GetTypeCode();
+                return typeCode switch
+                {
+                    TypeCode.Decimal => Compare<T>(fraction, Convert.ToDecimal(obj)),
+                    TypeCode.Double => Compare<T>(fraction, Convert.ToDouble(obj)),
+                    TypeCode.Single => Compare<T>(fraction, Convert.ToSingle(obj)),
+                    TypeCode.Int16 => Compare<T>(fraction, Convert.ToInt16(obj)),
+                    TypeCode.Int32 => Compare<T>(fraction, Convert.ToInt32(obj)),
+                    TypeCode.Int64 => Compare<T>(fraction, Convert.ToInt64(obj)),
+                    TypeCode.Byte => Compare<T>(fraction, Convert.ToByte(obj)),
+                    TypeCode.SByte => Compare<T>(fraction, Convert.ToSByte(obj)),
+                    TypeCode.UInt32 => Compare<T>(fraction, Convert.ToUInt32(obj)),
+                    TypeCode.UInt64 => Compare<T>(fraction, Convert.ToUInt64(obj)),
+                    TypeCode.UInt16 => Compare<T>(fraction, Convert.ToUInt16(obj)),
+                    _ => fraction.ToString().CompareTo(obj.ToString()),
+                };
+            }
+
+            return -1;
         }
 
         #endregion
