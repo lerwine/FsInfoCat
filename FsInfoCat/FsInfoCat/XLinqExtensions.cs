@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -12,6 +13,12 @@ namespace FsInfoCat
 {
     public static class XLinqExtensions
     {
+        public const string XmlNamespace_FsInfoCatExport = "http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd";
+
+        public static readonly XNamespace XNamespace_FsInfoCatExport = XNamespace.Get(XmlNamespace_FsInfoCatExport);
+
+        public static XName ToFsInfoCatExportXmlns(this string name) => XNamespace_FsInfoCatExport.GetName(name);
+
         public static string AttributeValueOrDefault([AllowNull] this XElement element, [NotNull] XName attributeName, string ifNotPresent = null)
         {
             if (attributeName is null)
@@ -147,6 +154,19 @@ namespace FsInfoCat
             return false;
         }
 
+        public static bool TryConvertToInt16(string value, out short result)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                try
+                {
+                    result = XmlConvert.ToInt16(value);
+                    return true;
+                }
+                catch { /* ignored intentionally */ }
+            result = default;
+            return false;
+        }
+
         public static bool TryConvertToInt32(string value, out int result)
         {
             if (!string.IsNullOrWhiteSpace(value))
@@ -180,6 +200,20 @@ namespace FsInfoCat
                 return true;
             result = default;
             return false;
+        }
+
+        private static readonly Regex WsRegex = new(@"[\s\r\n]+", RegexOptions.Compiled);
+
+        public static IEnumerable<TEnum> GetEnumList<TEnum>(string value)
+            where TEnum : struct, IComparable, IConvertible, IFormattable
+        {
+            if (value is not null && (value = value.Trim()).Length > 0)
+                foreach (string n in WsRegex.Split(value))
+                {
+                    if (!Enum.TryParse(n, out TEnum result))
+                        throw new ArgumentOutOfRangeException(nameof(value));
+                    yield return result;
+                }
         }
 
         public static bool TryConvertToGuid(string value, out Guid result)
@@ -337,6 +371,52 @@ namespace FsInfoCat
             return false;
         }
 
+        public static short? GetAttributeInt16([AllowNull] this XElement element, [NotNull] XName attributeName, short? ifNotPresent = null)
+        {
+            if (TryGetAttributeValue(element, attributeName, out string value))
+            {
+                if (value is null && (value = value.Trim()).Length == 0)
+                    return null;
+                if (TryConvertToInt16(value, out short result))
+                    return result;
+            }
+            return ifNotPresent;
+        }
+
+        public static short GetAttributeInt16([AllowNull] this XElement element, [NotNull] XName attributeName, short ifNotPresent)
+        {
+            if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToInt16(value, out short result))
+                return result;
+            return ifNotPresent;
+        }
+
+        public static bool TryGetAttributeInt16([AllowNull] this XElement element, [NotNull] XName attributeName, out short result)
+        {
+            if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToInt16(value, out result))
+                return true;
+            result = default;
+            return false;
+        }
+
+        public static bool TryGetAttributeInt16([AllowNull] this XElement element, [NotNull] XName attributeName, out short? result)
+        {
+            if (TryGetAttributeValue(element, attributeName, out string value))
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    result = null;
+                    return true;
+                }
+                if (TryConvertToInt16(value, out short r))
+                {
+                    result = r;
+                    return true;
+                }
+            }
+            result = default;
+            return false;
+        }
+
         public static int? GetAttributeInt32([AllowNull] this XElement element, [NotNull] XName attributeName, int? ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
@@ -479,6 +559,14 @@ namespace FsInfoCat
             return false;
         }
 
+        public static IEnumerable<TEnum> GetAttributeEnumFlags<TEnum>([AllowNull] this XElement element, [NotNull] XName attributeName)
+            where TEnum : struct, IComparable, IConvertible, IFormattable
+        {
+            if (TryGetAttributeValue(element, attributeName, out string value))
+                return GetEnumList<TEnum>(value);
+            return null;
+        }
+
         public static Guid? GetAttributeGuid([AllowNull] this XElement element, [NotNull] XName attributeName, Guid? ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
@@ -507,6 +595,37 @@ namespace FsInfoCat
         }
 
         public static bool TryGetAttributeGuid([AllowNull] this XElement element, [NotNull] XName attributeName, out Guid? result)
+        {
+            if (TryGetAttributeValue(element, attributeName, out string value))
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    result = null;
+                    return true;
+                }
+                if (TryConvertToGuid(value, out Guid r))
+                {
+                    result = r;
+                    return true;
+                }
+            }
+            result = default;
+            return false;
+        }
+
+        public static byte[] GetAttributeBytes([AllowNull] this XElement element, [NotNull] XName attributeName, byte[] ifNotPresent = null)
+        {
+            if (TryGetAttributeValue(element, attributeName, out string value))
+            {
+                if (value is null && (value = value.Trim()).Length == 0)
+                    return null;
+                if (TryConvertToGuid(value, out Guid result))
+                    return result;
+            }
+            return ifNotPresent;
+        }
+
+        public static bool TryGetAttributeBytes([AllowNull] this XElement element, [NotNull] XName attributeName, out byte[] result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {

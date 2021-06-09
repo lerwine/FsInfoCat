@@ -24,8 +24,13 @@ namespace FsInfoCat
             }
             else if (type.IsArray && type.GetArrayRank() == 1)
             {
-                type = typeof(ArrayCoersion<>).MakeGenericType(type.GetElementType());
-                Default = (Coersion<T>)type.GetField(nameof(ArrayCoersion<object>.Default)).GetValue(null);
+                if (type.Equals(typeof(byte[])))
+                    Default = (Coersion<T>)(object)ByteArrayCoersion.Default;
+                else
+                {
+                    type = typeof(ArrayCoersion<>).MakeGenericType(type.GetElementType());
+                    Default = (Coersion<T>)type.GetField(nameof(ArrayCoersion<object>.Default)).GetValue(null);
+                }
             }
             else
                 Default = (Coersion<T>)Activator.CreateInstance(typeof(ReferenceCoersion<>).MakeGenericType(type));
