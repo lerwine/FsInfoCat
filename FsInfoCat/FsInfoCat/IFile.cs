@@ -23,6 +23,10 @@ namespace FsInfoCat
 
         bool Deleted { get; set; }
 
+        DateTime CreationTime { get; set; }
+
+        DateTime LastWriteTime { get; set; }
+
         IContentInfo Content { get; set; }
 
         IExtendedProperties ExtendedProperties { get; set; }

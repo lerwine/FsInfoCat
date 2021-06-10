@@ -1,10 +1,10 @@
 namespace FsInfoCat
 {
-    public enum DirectoryStatus
+    public enum DirectoryStatus : short
     {
-        Incomplete,
-        Complete,
-        AccessError,
-        Deleted
+        Incomplete = 0,
+        Complete = 1,
+        AccessError = 2,
+        Deleted = 3
     }
 }

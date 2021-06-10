@@ -28,6 +28,8 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DateTime?> _lastHashCalculation;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<bool> _deleted;
+        private readonly IPropertyChangeTracker<DateTime> _creationTime;
+        private readonly IPropertyChangeTracker<DateTime> _lastWriteTime;
         private readonly IPropertyChangeTracker<Guid> _parentId;
         private readonly IPropertyChangeTracker<Guid> _contentId;
         private readonly IPropertyChangeTracker<Guid?> _extendedPropertiesId;
@@ -65,6 +67,10 @@ namespace FsInfoCat.Local
 
         [Required]
         public virtual bool Deleted { get => _deleted.GetValue(); set => _deleted.SetValue(value); }
+
+        public DateTime CreationTime { get => _creationTime.GetValue(); set => _creationTime.SetValue(value); }
+
+        public DateTime LastWriteTime { get => _lastWriteTime.GetValue(); set => _lastWriteTime.SetValue(value); }
 
         public virtual Guid ParentId
         {
@@ -225,6 +231,8 @@ namespace FsInfoCat.Local
             _lastHashCalculation = AddChangeTracker<DateTime?>(nameof(LastHashCalculation), null);
             _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
             _deleted = AddChangeTracker(nameof(Deleted), false);
+            _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
+            _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
             _parentId = AddChangeTracker(nameof(ParentId), Guid.Empty);
             _contentId = AddChangeTracker(nameof(ContentId), Guid.Empty);
             _extendedPropertiesId = AddChangeTracker<Guid?>(nameof(ExtendedPropertiesId), null);

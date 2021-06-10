@@ -36,7 +36,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(DirectoryCrawlOptions.None, target.Options);
             Assert.IsNotNull(target.Notes);
             Assert.AreEqual("", target.Notes);
-            Assert.IsFalse(target.Deleted);
+            Assert.AreEqual(target.Status, DirectoryStatus.Incomplete);
             Assert.IsNull(target.ParentId);
             Assert.IsNull(target.VolumeId);
             Assert.IsNull(target.Parent);
@@ -63,7 +63,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(DirectoryCrawlOptions.None, target.Options);
             Assert.IsNotNull(target.Notes);
             Assert.AreEqual("", target.Notes);
-            Assert.IsFalse(target.Deleted);
+            Assert.AreEqual(target.Status, DirectoryStatus.Incomplete);
             Assert.IsNull(target.ParentId);
             Assert.IsNull(target.VolumeId);
             Assert.IsNull(target.Parent);
@@ -148,16 +148,16 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, actualValue);
         }
 
-        [TestMethod("bool Deleted")]
-        public void DeletedTestMethod()
+        [TestMethod("DirectoryStatus Status")]
+        public void StatusTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for bool Deleted
 
             Subdirectory target = default; // TODO: Create and initialize Subdirectory instance
-            bool expectedValue = default;
-            target.Deleted = default;
-            bool actualValue = target.Deleted;
+            DirectoryStatus expectedValue = default;
+            target.Status = default;
+            DirectoryStatus actualValue = target.Status;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

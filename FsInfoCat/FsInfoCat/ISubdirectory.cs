@@ -15,8 +15,9 @@ namespace FsInfoCat
 
         string Notes { get; set; }
 
-        [Obsolete("Use Status")]
-        bool Deleted { get; set; }
+        DateTime CreationTime { get; set; }
+
+        DateTime LastWriteTime { get; set; }
 
         DirectoryStatus Status { get; set; }
 

@@ -31,25 +31,26 @@ namespace FsInfoCat.UnitTests
         public static void AssemblyInit(TestContext context)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
+            string dbPath = Path.Combine(AppContext.BaseDirectory, TestHelper.TEST_DB_PATH);
             Services.Initialize(services =>
             {
-                string dbPath = Path.Combine(AppContext.BaseDirectory, TestHelper.TEST_DB_PATH);
                 LocalDbContext.ConfigureServices(services, dbPath);
             }).Wait();
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
-            XDocument document = XDocument.Parse(Properties.Resources.DbCommands);
-            var logger = Services.ServiceProvider.GetService<ILogger<LocalDbContextTests>>();
-            foreach (XElement element in document.Root.Element("DropTables").Elements("Text"))
-            {
-                logger.LogInformation(element.Attribute("Message").Value);
-                dbContext.Database.ExecuteSqlRaw(element.Value.Trim());
-            }
-            foreach (XElement element in document.Root.Element("DbCreation").Elements("Text"))
-            {
-                logger.LogInformation(element.Attribute("Message").Value);
-                dbContext.Database.ExecuteSqlRaw(element.Value.Trim());
-            }
-            dbContext.Import(XDocument.Parse(Properties.Resources.TestData));
+            //var logger = Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContextTests>>();
+            //using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            //XDocument document = XDocument.Parse(Properties.Resources.DbCommands);
+            //var logger = Services.ServiceProvider.GetService<ILogger<LocalDbContextTests>>();
+            //foreach (XElement element in document.Root.Element("DropTables").Elements("Text"))
+            //{
+            //    logger.LogInformation(element.Attribute("Message").Value);
+            //    dbContext.Database.ExecuteSqlRaw(element.Value.Trim());
+            //}
+            //foreach (XElement element in document.Root.Element("DbCreation").Elements("Text"))
+            //{
+            //    logger.LogInformation(element.Attribute("Message").Value);
+            //    dbContext.Database.ExecuteSqlRaw(element.Value.Trim());
+            //}
+            //dbContext.Import(XDocument.Parse(Properties.Resources.TestData));
         }
 
         [AssemblyCleanup()]

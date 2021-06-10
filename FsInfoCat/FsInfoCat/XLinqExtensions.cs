@@ -619,8 +619,8 @@ namespace FsInfoCat
             {
                 if (value is null && (value = value.Trim()).Length == 0)
                     return null;
-                if (TryConvertToGuid(value, out Guid result))
-                    return result;
+                throw new NotImplementedException();
+                // TODO: Implement GetAttributeBytes(XElement, XName, byte[])
             }
             return ifNotPresent;
         }
@@ -636,8 +636,7 @@ namespace FsInfoCat
                 }
                 if (TryConvertToGuid(value, out Guid r))
                 {
-                    result = r;
-                    return true;
+                    // TODO: Implement TryGetAttributeBytes(XElement, XName, out byte[])
                 }
             }
             result = default;

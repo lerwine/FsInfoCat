@@ -86,7 +86,7 @@ namespace FsInfoCat.Local
         public SubdirectoryAccessError()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _errorCode = AddChangeTracker(nameof(AccessErrorCode), AccessErrorCode.UnexpectedError);
+            _errorCode = AddChangeTracker(nameof(AccessErrorCode), AccessErrorCode.Unspecified);
             _message = AddChangeTracker(nameof(Message), "", NonNullStringCoersion.Default);
             _details = AddChangeTracker(nameof(Details), "", NonNullStringCoersion.Default);
             _targetId = AddChangeTracker(nameof(TargetId), Guid.Empty);

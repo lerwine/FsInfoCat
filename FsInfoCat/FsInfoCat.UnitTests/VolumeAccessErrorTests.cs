@@ -35,7 +35,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual("", target.Message);
             Assert.IsNotNull(target.Details);
             Assert.AreEqual("", target.Details);
-            Assert.AreEqual(AccessErrorCode.OpenError, target.ErrorCode);
+            Assert.AreEqual(AccessErrorCode.Unspecified, target.ErrorCode);
             Assert.AreEqual(Guid.Empty, target.TargetId);
             Assert.IsNull(target.Target);
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
@@ -50,7 +50,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual("", target.Message);
             Assert.IsNotNull(target.Details);
             Assert.AreEqual("", target.Details);
-            Assert.AreEqual(AccessErrorCode.OpenError, target.ErrorCode);
+            Assert.AreEqual(AccessErrorCode.Unspecified, target.ErrorCode);
             Assert.AreEqual(Guid.Empty, target.TargetId);
             Assert.IsNull(target.Target);
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);

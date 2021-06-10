@@ -23,7 +23,8 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DirectoryStatus> _status;
         private readonly IPropertyChangeTracker<DateTime> _lastAccessed;
         private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<bool> _deleted;
+        private readonly IPropertyChangeTracker<DateTime> _creationTime;
+        private readonly IPropertyChangeTracker<DateTime> _lastWriteTime;
         private readonly IPropertyChangeTracker<Guid?> _parentId;
         private readonly IPropertyChangeTracker<Guid?> _volumeId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
@@ -55,8 +56,9 @@ namespace FsInfoCat.Local
         [Required]
         public DirectoryStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
 
-        [Obsolete("Use Status")]
-        public virtual bool Deleted { get => _deleted.GetValue(); set => _deleted.SetValue(value); }
+        public DateTime CreationTime { get => _creationTime.GetValue(); set => _creationTime.SetValue(value); }
+
+        public DateTime LastWriteTime { get => _lastWriteTime.GetValue(); set => _lastWriteTime.SetValue(value); }
 
         public virtual Guid? ParentId
         {
@@ -168,7 +170,8 @@ namespace FsInfoCat.Local
             _options = AddChangeTracker(nameof(Options), DirectoryCrawlOptions.None);
             _status = AddChangeTracker(nameof(Status), DirectoryStatus.Incomplete);
             _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
-            _deleted = AddChangeTracker(nameof(Deleted), false);
+            _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
+            _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
             _parentId = AddChangeTracker<Guid?>(nameof(ParentId), null);
             _volumeId = AddChangeTracker<Guid?>(nameof(VolumeId), null);
             _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
@@ -272,8 +275,7 @@ namespace FsInfoCat.Local
             DirectoryCrawlOptions options = Options;
             if (options != DirectoryCrawlOptions.None)
                 result.SetAttributeValue(nameof(Options), Enum.GetName(typeof(DirectoryCrawlOptions), Options));
-            if (Deleted)
-                result.SetAttributeValue(nameof(Deleted), Deleted);
+            result.SetAttributeValue(nameof(Status), Enum.GetName(Status));
             result.SetAttributeValue(nameof(LastAccessed), XmlConvert.ToString(LastAccessed, XmlDateTimeSerializationMode.RoundtripKind));
             AddExportAttributes(result);
             if (Notes.Length > 0)
@@ -315,11 +317,8 @@ namespace FsInfoCat.Local
                     case nameof(Options):
                         values.Add(Enum.ToObject(typeof(DirectoryCrawlOptions), Enum.Parse<DirectoryCrawlOptions>(attribute.Value)));
                         break;
-                    case nameof(Deleted):
-                        if (string.IsNullOrWhiteSpace(attribute.Value))
-                            values.Add(null);
-                        else
-                            values.Add(XmlConvert.ToBoolean(attribute.Value));
+                    case nameof(Status):
+                        values.Add(Enum.ToObject(typeof(DirectoryStatus), Enum.Parse<DirectoryStatus>(attribute.Value)));
                         break;
                     case nameof(LastAccessed):
                     case nameof(CreatedOn):

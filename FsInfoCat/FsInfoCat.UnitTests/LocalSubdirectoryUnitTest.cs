@@ -54,7 +54,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreNotEqual(Guid.Empty, target1.Id);
             entityEntry.Reload();
             Assert.AreEqual(expectedName, target1.Name);
-            Assert.IsFalse(target1.Deleted);
+            Assert.AreEqual(target1.Status, DirectoryStatus.Incomplete);
             Assert.AreEqual("", target1.Notes);
             Assert.AreEqual(DirectoryCrawlOptions.None, target1.Options);
             Assert.IsNull(target1.Parent);
