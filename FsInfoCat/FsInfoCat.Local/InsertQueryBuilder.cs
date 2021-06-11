@@ -62,6 +62,18 @@ namespace FsInfoCat.Local
             return this;
         }
 
+        public InsertQueryBuilder AppendInnerText(string colName)
+        {
+            if (string.IsNullOrWhiteSpace(colName))
+                throw new ArgumentException($"'{nameof(colName)}' cannot be null or whitespace.", nameof(colName));
+            if (!_source.IsEmpty)
+            {
+                _values.Add((_source.Value.Trim().Length > 0) ? _source.Value : "");
+                _sql.Append(", \"").Append(colName).Append('"');
+            }
+            return this;
+        }
+
         public InsertQueryBuilder AppendGuid(string name, bool required = false)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -150,14 +162,28 @@ namespace FsInfoCat.Local
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            throw new NotImplementedException();
+            if (_source.TryGetAttributeValue(name, out string result))
+            {
+                _values.Add(ByteArrayCoersion.Parse(result));
+                _sql.Append(", \"").Append(name).Append('"');
+            }
+            else if (required)
+                throw new ArgumentOutOfRangeException(nameof(name));
+            return this;
         }
 
-        public InsertQueryBuilder AppendInnerText(string colName)
+        public InsertQueryBuilder AppendMd5Hash(string name, bool required = false)
         {
-            if (string.IsNullOrWhiteSpace(colName))
-                throw new ArgumentException($"'{nameof(colName)}' cannot be null or whitespace.", nameof(colName));
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            if (_source.TryGetAttributeValue(name, out string result))
+            {
+                _values.Add(MD5Hash.Parse(result).GetBuffer());
+                _sql.Append(", \"").Append(name).Append('"');
+            }
+            else if (required)
+                throw new ArgumentOutOfRangeException(nameof(name));
+            return this;
         }
     }
 }
