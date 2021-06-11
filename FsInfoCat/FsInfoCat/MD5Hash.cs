@@ -23,11 +23,13 @@ namespace FsInfoCat
         public const int MD5ByteSize = 16;
 
 
-        public static readonly Regex Base64SequenceRegex = new(@"^\s*(([a-z\d+/]\s*){4})*((?<c>[a-z\d+/\s]+(==?)?)|(?<e>[^a-z\d+/=]))?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public static readonly Regex BinHexSequenceRegex = new(@"^\s*([a-f\d\s]+$|[a-f\d\s]*(?<e>[^a-f\d\s]))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public static readonly Regex BraceUuidRegex = new(@"^\s*(\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\}\s*$|(?<e>\{[a-f\d]{8}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{12}\}?|[a-f\d]{0,12})\s*|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,7}))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public static readonly Regex DashUuidRegex = new(@"^\s*([a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\s*$|(?<e>[a-f\d]{8}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{12}|[a-f\d]{0,12})\s*|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,7}))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public static readonly Regex WsRegex = new(@"[\s\r\n]+", RegexOptions.Compiled);
+        public static readonly Regex Base64MD5Regex = new(@"^\s*((?:[a-z\d+/]\s*){4}){4}(?:[a-z\d+/]\s*){6}(=\s*=\s*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        //public static readonly Regex Base64SequenceRegex = new(@"^\s*(([a-z\d+/]\s*){4})*((?<c>[a-z\d+/\s]+(==?)?)|(?<e>[^a-z\d+/=]))?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        //public static readonly Regex BinHexSequenceRegex = new(@"^\s*([a-f\d\s]+$|[a-f\d\s]*(?<e>[^a-f\d\s]))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        //public static readonly Regex BraceUuidRegex = new(@"^\s*(\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\}\s*$|(?<e>\{[a-f\d]{8}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{12}\}?|[a-f\d]{0,12})\s*|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,7}))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        //public static readonly Regex DashUuidRegex = new(@"^\s*([a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\s*$|(?<e>[a-f\d]{8}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{4}-([a-f\d]{12}|[a-f\d]{0,12})\s*|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,3})|[a-f\d]{0,7}))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        //public static readonly Regex WsRegex = new(@"[\s\r\n]+", RegexOptions.Compiled);
 
         public static readonly ValueConverter<MD5Hash, byte[]> Converter = new(
             v => v.GetBuffer(),
@@ -243,56 +245,15 @@ namespace FsInfoCat
         {
             if (string.IsNullOrWhiteSpace(s))
                 return new MD5Hash();
-            Match match;
-
-            if (s.TrimStart().StartsWith('{'))
-                match = BraceUuidRegex.Match(s);
-            else if (s.Contains("-"))
-                match = DashUuidRegex.Match(s);
-            else
-            {
-                Match bMatch;
-                if ((match = Base64SequenceRegex.Match(s)).Success)
-                {
-                    if (match.Groups["e"].Success)
-                    {
-                        if (!(bMatch = BinHexSequenceRegex.Match(s)).Success)
-                        {
-                            if (match.Length == s.Length)
-                                throw new FormatException("Base-64 character sequence does not represent 16 bytes.");
-                            throw new FormatException($"Invalid Base-64 character at index {match.Groups["e"].Index}");
-                        }
-                    }
-                    else
-                        return new MD5Hash(Convert.FromBase64String(s.Trim()));
-                }
-                else if (!(bMatch = BinHexSequenceRegex.Match(s)).Success)
-                    throw new FormatException("Input string is not a valid Base-64, BinHex or UUID character sequence.");
-                if (bMatch.Groups["e"].Success)
-                    throw new FormatException($"Invalid BinHex character at index {bMatch.Groups["e"].Index}");
-                if ((s = WsRegex.Replace(s, "")).Length == StringLength_BinHex)
-                    return new MD5Hash(BitConverter.GetBytes(long.Parse(s[MD5ByteSize..], System.Globalization.NumberStyles.HexNumber))
-                        .Concat(BitConverter.GetBytes(long.Parse(s[0..MD5ByteSize], System.Globalization.NumberStyles.HexNumber))).ToArray());
-                if (s.Length < StringLength_BinHex)
-                    throw new FormatException("Not enough BinHex character pairs.");
-                throw new FormatException("Too many BinHex character pairs.");
-            }
+            Match match = Base64MD5Regex.Match(s);
             if (match.Success)
-            {
-                if (match.Groups["e"].Success)
-                {
-                    if (match.Length < s.Length)
-                        throw new FormatException($"Invalid UUID character at index {match.Length}");
-                }
-                else if (Guid.TryParse(s.Trim(), out Guid g))
-                    return new MD5Hash(g.ToByteArray());
-            }
-            else
-            {
-                if (s.Trim().Length > 1)
-                    throw new FormatException("Invalid UUID character at index 1");
-            }
-            throw new FormatException("Incomplete UUID string");
+                return new MD5Hash(Convert.FromBase64String($"{match.Groups[1].Value}=="));
+            byte[] buffer = ByteArrayCoersion.Parse(s).ToArray();
+            if (buffer.Length < MD5ByteSize)
+                throw new ArgumentOutOfRangeException(nameof(s), "Decoded byte length too short.");
+            if (buffer.Length > MD5ByteSize)
+                throw new ArgumentOutOfRangeException(nameof(s), "Decoded byte length too long.");
+            return new MD5Hash(buffer);
         }
 
         /// <summary>
@@ -309,49 +270,20 @@ namespace FsInfoCat
                 return true;
             }
 
-            Match match;
-
-            if (s.TrimStart().StartsWith('{'))
-                match = BraceUuidRegex.Match(s);
-            else if (s.Contains("-"))
-                match = DashUuidRegex.Match(s);
-            else
+            Match match = Base64MD5Regex.Match(s);
+            if (match.Success)
             {
-                Match bMatch;
-                if ((match = Base64SequenceRegex.Match(s)).Success)
+                result = new MD5Hash(Convert.FromBase64String($"{match.Groups[1].Value}=="));
+                return true;
+            }
+            else if (ByteArrayCoersion.TryParse(s, out IEnumerable<byte> bytes))
+            {
+                byte[] buffer = bytes.ToArray();
+                if (buffer.Length == MD5ByteSize)
                 {
-                    if (match.Groups["e"].Success)
-                    {
-                        if (!(bMatch = BinHexSequenceRegex.Match(s)).Success || bMatch.Groups["e"].Success)
-                        {
-                            result = default;
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        result = new MD5Hash(Convert.FromBase64String(s.Trim()));
-                        return true;
-                    }
-                }
-                else if (!(bMatch = BinHexSequenceRegex.Match(s)).Success || bMatch.Groups["e"].Success)
-                {
-                    result = default;
-                    return false;
-                }
-                if ((s = WsRegex.Replace(s, "")).Length == StringLength_BinHex)
-                {
-                    result = new MD5Hash(BitConverter.GetBytes(long.Parse(s[MD5ByteSize..], System.Globalization.NumberStyles.HexNumber))
-                        .Concat(BitConverter.GetBytes(long.Parse(s[0..MD5ByteSize], System.Globalization.NumberStyles.HexNumber))).ToArray());
+                    result = new MD5Hash(buffer);
                     return true;
                 }
-                result = default;
-                return false;
-            }
-            if (match.Success && !match.Groups["e"].Success && Guid.TryParse(s.Trim(), out Guid g))
-            {
-                result = new MD5Hash(g.ToByteArray());
-                return true;
             }
             result = default;
             return false;
