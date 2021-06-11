@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ namespace FsInfoCat.Local
 {
     public class InsertQueryBuilder
     {
+        private bool _finalized = false;
         private StringBuilder _sql = new();
         private ArrayList _values = new();
 
@@ -36,6 +39,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendBoolean(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeBoolean(name, out bool? value))
@@ -50,6 +55,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendString(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeValue(name, out string value))
@@ -62,8 +69,27 @@ namespace FsInfoCat.Local
             return this;
         }
 
+        public InsertQueryBuilder AppendElementString(string name, bool required = false)
+        {
+            if (_finalized)
+                throw new InvalidOperationException();
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            XElement element = _source.Element(name);
+            if (!(element is null || element.IsEmpty))
+            {
+                _values.Add(element.Value);
+                _sql.Append(", \"").Append(name).Append('"');
+            }
+            else if (required)
+                throw new ArgumentOutOfRangeException(nameof(name));
+            return this;
+        }
+
         public InsertQueryBuilder AppendInnerText(string colName)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(colName))
                 throw new ArgumentException($"'{nameof(colName)}' cannot be null or whitespace.", nameof(colName));
             if (!_source.IsEmpty)
@@ -76,6 +102,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendGuid(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeGuid(name, out Guid? value))
@@ -88,8 +116,21 @@ namespace FsInfoCat.Local
             return this;
         }
 
+        public InsertQueryBuilder AppendGuid(string name, Guid? value)
+        {
+            if (_finalized)
+                throw new InvalidOperationException();
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            _values.Add(value);
+            _sql.Append(", \"").Append(name).Append('"');
+            return this;
+        }
+
         public InsertQueryBuilder AppendInt16(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeInt16(name, out short? value))
@@ -104,6 +145,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendInt32(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeInt32(name, out int? value))
@@ -118,6 +161,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendInt64(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeInt64(name, out long? value))
@@ -132,6 +177,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendEnum<T>(string name, bool required = false) where T : struct, IComparable, IConvertible, IFormattable
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeEnumValue(name, out T? value))
@@ -146,6 +193,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendDateTime(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeDateTime(name, out DateTime? value))
@@ -160,6 +209,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendBinary(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeValue(name, out string result))
@@ -174,6 +225,8 @@ namespace FsInfoCat.Local
 
         public InsertQueryBuilder AppendMd5Hash(string name, bool required = false)
         {
+            if (_finalized)
+                throw new InvalidOperationException();
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeValue(name, out string result))
@@ -184,6 +237,29 @@ namespace FsInfoCat.Local
             else if (required)
                 throw new ArgumentOutOfRangeException(nameof(name));
             return this;
+        }
+
+        internal async Task<int> ExecuteSqlAsync(DatabaseFacade database)
+        {
+            if (!_finalized)
+            {
+                _finalized = true;
+                _sql.Append(") Values({0}");
+
+                for (int i = 1; i < _values.Count; i++)
+                {
+                    if (_values[i] is null)
+                    {
+                        _sql.Append(", NULL");
+                        _values.RemoveAt(i--);
+                    }
+                    else
+                        _sql.Append(", {").Append(i).Append('}');
+                }
+                _sql.Append(')');
+            }
+
+            return await database.ExecuteSqlRawAsync(_sql.ToString(), _values.ToArray());
         }
     }
 }

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -17,13 +18,13 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        public static readonly Regex IPV4HostRegex = new Regex(@"^((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)$", RegexOptions.Compiled);
+        public static readonly Regex IPV4HostRegex = new(@"^((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)$", RegexOptions.Compiled);
 
-        public static readonly Regex IPV6HostRegex = new Regex(@"([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?", RegexOptions.Compiled);
+        public static readonly Regex IPV6HostRegex = new(@"([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?", RegexOptions.Compiled);
 
-        public static readonly Regex DnsRegex = new Regex(@"[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?", RegexOptions.Compiled);
+        public static readonly Regex DnsRegex = new(@"[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?", RegexOptions.Compiled);
 
-        public static readonly Regex HOST_NAME_OR_ADDRESS_FOR_URI_REGEX = new Regex(@"^
+        public static readonly Regex HOST_NAME_OR_ADDRESS_FOR_URI_REGEX = new(@"^
 (
     (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
 |
@@ -123,43 +124,15 @@ namespace FsInfoCat.Local
             builder.HasOne(sn => sn.ContentInfo).WithMany(d => d.RedundantSets).HasForeignKey(nameof(ContentInfoId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        internal static (Guid redundantSetId, XElement[] redundancies) Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid contentInfoId, XElement redundantSetElement)
+        internal static async Task<(Guid redundantSetId, XElement[] redundancies)> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid contentInfoId, XElement redundantSetElement)
         {
-            XName n = nameof(Id);
+            string n = nameof(Id);
             Guid redundantSetId = redundantSetElement.GetAttributeGuid(n).Value;
-            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.RedundantSets)).Append("\" (\"").Append(nameof(Id)).Append("\" , \"").Append(nameof(ContentInfoId)).Append('"');
-            List<object> values = new();
-            values.Add(redundantSetId);
-            values.Add(contentInfoId);
-            foreach (XAttribute attribute in redundantSetElement.Attributes().Where(a => a.Name != n))
-            {
-                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
-                switch (attribute.Name.LocalName)
-                {
-                    case nameof(Reference):
-                    case nameof(Notes):
-                        values.Add(attribute.Value);
-                        break;
-                    case nameof(RemediationStatus):
-                        values.Add(Enum.Parse<RedundancyRemediationStatus>(attribute.Value));
-                        break;
-                    case nameof(CreatedOn):
-                    case nameof(ModifiedOn):
-                    case nameof(LastSynchronizedOn):
-                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
-                        break;
-                    case nameof(UpstreamId):
-                        values.Add(XmlConvert.ToGuid(attribute.Value));
-                        break;
-                    default:
-                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(RedundantSet)}");
-                }
-            }
-            sql.Append(") Values({0}");
-            for (int i = 1; i < values.Count; i++)
-                sql.Append(", {").Append(i).Append('}');
             logger.LogInformation($"Inserting {nameof(RedundantSet)} with Id {{Id}}", contentInfoId);
-            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+            await new InsertQueryBuilder(nameof(LocalDbContext.RedundantSets), redundantSetElement, n).AppendGuid(nameof(ContentInfoId), contentInfoId)
+                .AppendString(nameof(Reference)).AppendElementString(nameof(Notes)).AppendEnum<RedundancyRemediationStatus>(nameof(RemediationStatus))
+                .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId))
+                .ExecuteSqlAsync(dbContext.Database);
             return (redundantSetId, redundantSetElement.Elements(nameof(Redundancy)).ToArray());
         }
     }

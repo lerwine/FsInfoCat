@@ -2,10 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -15,6 +18,8 @@ namespace FsInfoCat.Local
         #region Fields
 
         public const string TABLE_NAME = "Comparisons";
+
+        public const string ELEMENT_NAME = "Comparison";
 
         private readonly IPropertyChangeTracker<Guid> _sourceFileId;
         private readonly IPropertyChangeTracker<Guid> _targetFileId;
@@ -120,6 +125,14 @@ namespace FsInfoCat.Local
             builder.HasKey(nameof(SourceFileId), nameof(TargetFileId));
             builder.HasOne(sn => sn.SourceFile).WithMany(d => d.ComparisonSources).HasForeignKey(nameof(SourceFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(sn => sn.TargetFile).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(TargetFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        }
+
+        internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileId, XElement comparisonElement)
+        {
+            string n = nameof(TargetFileId);
+            return await new InsertQueryBuilder(nameof(LocalDbContext.Files), comparisonElement, n).AppendGuid(nameof(SourceFileId), fileId)
+                .AppendBoolean(nameof(AreEqual)).AppendDateTime(nameof(ComparedOn)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
+                .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
         }
     }
 }

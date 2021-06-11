@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -289,6 +290,7 @@ namespace FsInfoCat.Local
             results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
 
+        // TODO: Change to async with LocalDbContext
         internal XElement Export(bool includeParentId = false)
         {
             XElement result = new(nameof(TABLE_NAME),
@@ -343,16 +345,20 @@ namespace FsInfoCat.Local
 
         }
 
-        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid parentId, XElement fileElement)
+        internal static async Task ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid parentId, XElement fileElement)
         {
-            XName n = nameof(DbFile.Id);
+            string n = nameof(Id);
             Guid fileId = fileElement.GetAttributeGuid(n).Value;
-            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.Files)).Append("\" (\"").Append(nameof(DbFile.Id)).Append("\" , \"").Append(nameof(DbFile.ParentId)).Append('"');
-            List<object> values = new();
-            values.Add(fileId);
-            values.Add(parentId);
-            // TODO: Implement Import(LocalDbContext, ILogger{LocalDbContext}, Guid, XElement)
-            throw new NotImplementedException();
+            await new InsertQueryBuilder(nameof(LocalDbContext.Files), fileElement, n).AppendGuid(nameof(ParentId), parentId).AppendString(nameof(Name))
+                .AppendGuid(nameof(ContentId)).AppendGuid(nameof(ExtendedPropertiesId)).AppendEnum<FileCrawlOptions>(nameof(Options))
+                .AppendDateTime(nameof(LastHashCalculation)).AppendDateTime(nameof(LastHashCalculation)).AppendElementString(nameof(Notes))
+                .AppendBoolean(nameof(Deleted)).AppendDateTime(nameof(CreationTime)).AppendDateTime(nameof(LastWriteTime))
+                .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
+                .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
+            foreach (XElement accessErrorElement in fileElement.Elements(ElementName_AccessError))
+                await FileAccessError.ImportAsync(dbContext, logger, fileId, accessErrorElement);
+            foreach (XElement comparisonElement in fileElement.Elements(FileComparison.ELEMENT_NAME))
+                await FileComparison.ImportAsync(dbContext, logger, fileId, comparisonElement);
         }
     }
 }

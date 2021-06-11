@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -123,11 +124,15 @@ namespace FsInfoCat.Local
             }
         }
 
+        // TODO: Use ImportAsync
+        [Obsolete("Use ImportAsync")]
         internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement symbolicNameElement)
         {
+            // TODO: Use InsertQueryBuilder
             XName n = nameof(Id);
             Guid symbolicNameId = symbolicNameElement.GetAttributeGuid(n).Value;
-            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.SymbolicNames)).Append("\" (\"").Append(nameof(Id)).Append("\" , \"").Append(nameof(FileSystemId)).Append('"');
+            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.SymbolicNames)).Append("\" (\"").Append(nameof(Id))
+                .Append("\" , \"").Append(nameof(FileSystemId)).Append('"');
             List<object> values = new();
             values.Add(symbolicNameId);
             values.Add(fileSystemId);
@@ -159,13 +164,25 @@ namespace FsInfoCat.Local
                         throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(SymbolicName)}");
                 }
             }
+            new InsertQueryBuilder(nameof(LocalDbContext.SymbolicNames), symbolicNameElement, nameof(Id)).AppendGuid(nameof(FileSystemId), fileSystemId)
+                .AppendString(nameof(Name)).AppendInnerText(nameof(Notes)).AppendBoolean(nameof(IsInactive)).AppendInt32(nameof(Priority))
+                .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
+                .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             sql.Append(") Values({0}");
             for (int i = 1; i < values.Count; i++)
                 sql.Append(", {").Append(i).Append('}');
-            logger.LogInformation($"Inserting {nameof(SymbolicName)} with Id {{Id}}", symbolicNameId);
             dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
         }
 
+        internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement symbolicNameElement)
+        {
+            return await new InsertQueryBuilder(nameof(LocalDbContext.SymbolicNames), symbolicNameElement, nameof(Id)).AppendGuid(nameof(FileSystemId), fileSystemId)
+                .AppendString(nameof(Name)).AppendInnerText(nameof(Notes)).AppendBoolean(nameof(IsInactive)).AppendInt32(nameof(Priority))
+                .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
+                .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
+        }
+
+        // TODO: Change to async with LocalDbContext
         internal XElement Export(bool includeFileSystemId = false)
         {
             XElement result = new(nameof(FileSystem),

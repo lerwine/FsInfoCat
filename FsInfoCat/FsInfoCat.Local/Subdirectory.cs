@@ -6,8 +6,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -258,6 +260,7 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
         }
 
+        // TODO: Change to async with LocalDbContext
         internal XElement Export(bool includeParentId = false)
         {
             Guid? parentId = VolumeId;
@@ -295,7 +298,7 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
         }
 
-        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid? volumeId, Guid? parentId, XElement subDirectoryElement)
+        internal static async Task ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid? volumeId, Guid? parentId, XElement subDirectoryElement)
         {
             XName n = nameof(Id);
             Guid subDirectoryId = subDirectoryElement.GetAttributeGuid(n).Value;
@@ -337,13 +340,62 @@ namespace FsInfoCat.Local
             for (int i = 1; i < values.Count; i++)
                 sql.Append(", {").Append(i).Append('}');
             logger.LogInformation($"Inserting {nameof(Subdirectory)} with Id {{Id}}", volumeId);
-            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+            await dbContext.Database.ExecuteSqlRawAsync(sql.Append(')').ToString(), values.ToArray());
             foreach (XElement element in subDirectoryElement.Elements(nameof(Subdirectory)))
-                Import(dbContext, logger, null, subDirectoryId, element);
+                await ImportAsync(dbContext, logger, null, subDirectoryId, element);
             foreach (XElement element in subDirectoryElement.Elements(DbFile.TABLE_NAME))
-                DbFile.Import(dbContext, logger, subDirectoryId, element);
+                await DbFile.ImportAsync(dbContext, logger, subDirectoryId, element);
             foreach (XElement accessErrorElement in subDirectoryElement.Elements(ElementName_AccessError))
-                SubdirectoryAccessError.Import(dbContext, logger, subDirectoryId, accessErrorElement);
+                await SubdirectoryAccessError.ImportAsync(dbContext, logger, subDirectoryId, accessErrorElement);
+        }
+
+        public static async Task<Subdirectory> ImportBranchAsync(DirectoryInfo directoryInfo, LocalDbContext dbContext, bool markNewAsCompleted = false)
+        {
+            Subdirectory result;
+            if (directoryInfo.Parent is null)
+            {
+                throw new NotImplementedException();
+                //Volume volume = await Volume.ImportAsync(directoryInfo, dbContext);
+                //if ((result = volume.RootDirectory) is null)
+                //{
+                //    result = new Subdirectory
+                //    {
+                //        Id = Guid.NewGuid(),
+                //        CreationTime = directoryInfo.CreationTime,
+                //        LastWriteTime = directoryInfo.LastWriteTime,
+                //        Name = directoryInfo.Name,
+                //        Volume = volume,
+                //        VolumeId = volume.Id
+                //    };
+                //    if (markNewAsCompleted)
+                //        result.Status = DirectoryStatus.Complete;
+                //    dbContext.Subdirectories.Add(result);
+                //    volume.RootDirectory = result;
+                //    await dbContext.SaveChangesAsync();
+                //}
+            }
+            else
+            {
+                Subdirectory parent = await ImportBranchAsync(directoryInfo.Parent, dbContext, true);
+                string name = directoryInfo.Name;
+                if ((result = parent.SubDirectories.FirstOrDefault(s => s.Name == name)) is null)
+                {
+                    result = new Subdirectory
+                    {
+                        Id = Guid.NewGuid(),
+                        CreationTime = directoryInfo.CreationTime,
+                        LastWriteTime = directoryInfo.LastWriteTime,
+                        Name = directoryInfo.Name,
+                        Parent = parent,
+                        ParentId = parent.Id
+                    };
+                    if (markNewAsCompleted)
+                        result.Status = DirectoryStatus.Complete;
+                    dbContext.Subdirectories.Add(result);
+                    await dbContext.SaveChangesAsync();
+                }
+            }
+            return result;
         }
     }
 }

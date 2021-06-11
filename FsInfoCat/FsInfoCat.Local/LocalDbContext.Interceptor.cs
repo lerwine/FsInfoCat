@@ -85,17 +85,17 @@ namespace FsInfoCat.Local
             }
         }
 
-        public void Import(XDocument document)
+        public async Task ImportAsync(XDocument document)
         {
             if (document is null)
                 throw new ArgumentNullException(nameof(document));
 
-            var redundancySets = document.Root.Elements(nameof(ContentInfo)).Select(e => ContentInfo.Import(this, _logger, e)).SelectMany(rs => rs).ToArray();
+            var redundancySets = document.Root.Elements(nameof(ContentInfo)).Select(e => ContentInfo.ImportAsync(this, _logger, e).Result).SelectMany(rs => rs).ToArray();
             foreach (XElement fileSystemElement in document.Root.Elements(nameof(FileSystem)))
-                FileSystem.Import(this, _logger, fileSystemElement);
+                await FileSystem.ImportAsync(this, _logger, fileSystemElement);
             foreach (var (redundantSetId, redundancies) in redundancySets)
                 foreach (XElement element in redundancies)
-                    Redundancy.Import(this, _logger, redundantSetId, element);
+                    await Redundancy.ImportAsync(this, _logger, redundantSetId, element);
         }
 
         public void ForceDeleteContentInfo(ContentInfo target)

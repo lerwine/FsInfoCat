@@ -9,7 +9,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -160,6 +162,7 @@ namespace FsInfoCat.Local
             _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
         }
 
+        // TODO: Change to async with LocalDbContext
         internal XElement Export(bool includeFileSystemId = false)
         {
             XElement result = new(nameof(Volume),
@@ -230,66 +233,20 @@ namespace FsInfoCat.Local
                 }
         }
 
-        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement volumeElement)
+        internal static async Task ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement volumeElement)
         {
-            XName n = nameof(Id);
-            Guid volumeId = volumeElement.GetAttributeGuid(n).Value;
-            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.Volumes)).Append("\" (\"").Append(nameof(Id)).Append("\" , \"").Append(nameof(FileSystemId)).Append('"');
-            List<object> values = new();
-            values.Add(volumeId);
-            values.Add(fileSystemId);
-            foreach (XAttribute attribute in volumeElement.Attributes().Where(a => a.Name != n))
-            {
-                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
-                switch (attribute.Name.LocalName)
-                {
-                    case nameof(DisplayName):
-                    case nameof(VolumeName):
-                    case nameof(Identifier):
-                    case nameof(Notes):
-                        values.Add(attribute.Value);
-                        break;
-                    case nameof(Status):
-                        values.Add(Enum.ToObject(typeof(VolumeStatus), Enum.Parse<VolumeStatus>(attribute.Value)));
-                        break;
-                    case nameof(Type):
-                        values.Add(Enum.ToObject(typeof(DriveType), Enum.Parse<DriveType>(attribute.Value)));
-                        break;
-                    case nameof(CaseSensitiveSearch):
-                    case nameof(ReadOnly):
-                        if (string.IsNullOrWhiteSpace(attribute.Value))
-                            values.Add(null);
-                        else
-                            values.Add(XmlConvert.ToBoolean(attribute.Value));
-                        break;
-                    case nameof(MaxNameLength):
-                        if (string.IsNullOrWhiteSpace(attribute.Value))
-                            values.Add(null);
-                        else
-                            values.Add(XmlConvert.ToInt32(attribute.Value));
-                        break;
-                    case nameof(CreatedOn):
-                    case nameof(ModifiedOn):
-                    case nameof(LastSynchronizedOn):
-                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
-                        break;
-                    case nameof(UpstreamId):
-                        values.Add(XmlConvert.ToGuid(attribute.Value));
-                        break;
-                    default:
-                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(Volume)}");
-                }
-            }
-            sql.Append(") Values({0}");
-            for (int i = 1; i < values.Count; i++)
-                sql.Append(", {").Append(i).Append('}');
+            Guid volumeId = volumeElement.GetAttributeGuid(nameof(Id)).Value;
             logger.LogInformation($"Inserting {nameof(Volume)} with Id {{Id}}", volumeId);
-            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+            await new InsertQueryBuilder(nameof(LocalDbContext.Volumes), volumeElement, nameof(Id)).AppendGuid(nameof(FileSystemId), fileSystemId)
+                .AppendString(nameof(DisplayName)).AppendString(nameof(VolumeName)).AppendString(nameof(Identifier)).AppendInnerText(nameof(Notes))
+                .AppendEnum<VolumeStatus>(nameof(Status)).AppendEnum<DriveType>(nameof(Type)).AppendBoolean(nameof(CaseSensitiveSearch))
+                .AppendBoolean(nameof(ReadOnly)).AppendInt32(nameof(MaxNameLength)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
+                .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             XElement rootDirectoryElement = volumeElement.Element(nameof(RootDirectory));
             if (rootDirectoryElement is not null)
-                Subdirectory.Import(dbContext, logger, volumeId, null, rootDirectoryElement);
+                await Subdirectory.ImportAsync(dbContext, logger, volumeId, null, rootDirectoryElement);
             foreach (XElement accessErrorElement in volumeElement.Elements(ElementName_AccessError))
-                VolumeAccessError.Import(dbContext, logger, volumeId, accessErrorElement);
+                await VolumeAccessError.ImportAsync(dbContext, logger, volumeId, accessErrorElement);
         }
 
         private void ValidateIdentifier(ValidationContext validationContext, List<ValidationResult> results)

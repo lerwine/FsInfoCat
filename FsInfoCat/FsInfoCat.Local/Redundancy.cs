@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -149,7 +150,7 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileInRedundantSet, new string[] { nameof(File) }));
         }
 
-        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid redundantSetId, XElement redundancyElement)
+        internal static async Task ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid redundantSetId, XElement redundancyElement)
         {
             XName n = nameof(FileId);
             Guid fileId = redundancyElement.GetAttributeGuid(n).Value;
@@ -182,7 +183,7 @@ namespace FsInfoCat.Local
             for (int i = 1; i < values.Count; i++)
                 sql.Append(", {").Append(i).Append('}');
             logger.LogInformation($"Inserting {nameof(Redundancy)} with FileId {{FileId}} and RedundantSetId {{RedundantSetId}}", fileId, redundantSetId);
-            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
+            await dbContext.Database.ExecuteSqlRawAsync(sql.Append(')').ToString(), values.ToArray());
         }
     }
 }

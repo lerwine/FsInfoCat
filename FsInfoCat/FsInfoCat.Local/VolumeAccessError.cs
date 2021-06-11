@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -116,6 +117,8 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateMessage, new string[] { nameof(Message) }));
         }
 
+        // TODO: Use ImportAsync
+        [Obsolete("Use ImportAsync")]
         internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid volumeId, XElement accessErrorElement)
         {
             XName n = nameof(Id);
@@ -159,6 +162,17 @@ namespace FsInfoCat.Local
             dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
         }
 
+        internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid volumeId, XElement accessErrorElement)
+        {
+            string n = nameof(Id);
+            Guid accessErrorId = accessErrorElement.GetAttributeGuid(n).Value;
+            logger.LogInformation($"Inserting {nameof(VolumeAccessError)} with Id {{Id}}", accessErrorId);
+            return await new InsertQueryBuilder(nameof(LocalDbContext.VolumeAccessErrors), accessErrorElement, n).AppendGuid(nameof(TargetId), volumeId)
+                .AppendString(nameof(Message)).AppendInnerText(nameof(Details))
+                .AppendEnum<AccessErrorCode>(nameof(ErrorCode)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).ExecuteSqlAsync(dbContext.Database);
+        }
+
+        // TODO: Change to async with LocalDbContext
         internal XElement Export(bool includeTargetId = false)
         {
             XElement result = new(LocalDbEntity.ElementName_AccessError,

@@ -619,25 +619,17 @@ namespace FsInfoCat
             {
                 if (value is null && (value = value.Trim()).Length == 0)
                     return null;
-                throw new NotImplementedException();
-                // TODO: Implement GetAttributeBytes(XElement, XName, byte[])
+                return ByteArrayCoersion.Parse(value).ToArray();
             }
             return ifNotPresent;
         }
 
         public static bool TryGetAttributeBytes([AllowNull] this XElement element, [NotNull] XName attributeName, out byte[] result)
         {
-            if (TryGetAttributeValue(element, attributeName, out string value))
+            if (TryGetAttributeValue(element, attributeName, out string value) && ByteArrayCoersion.TryParse(value, out IEnumerable<byte> en))
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    result = null;
-                    return true;
-                }
-                if (TryConvertToGuid(value, out Guid r))
-                {
-                    // TODO: Implement TryGetAttributeBytes(XElement, XName, out byte[])
-                }
+                result = en.ToArray();
+                return true;
             }
             result = default;
             return false;

@@ -1,6 +1,7 @@
 ﻿Import-Module -Name 'C:\Users\lerwi\Git\FsInfoCat\Setup\bin\FsInfoCat' -ErrorAction Stop;
 Import-Module -Name 'Microsoft.PowerShell.Management' -ErrorAction Stop;
 $LogicalDisks = @(Get-CimInstance -ClassName 'Win32_LogicalDisk');
+$LogicalVolumes = @(Get-CimInstance -ClassName 'Win32_Volume');
 $CIM_LogicalDisk = @(Get-CimInstance -ClassName 'CIM_LogicalDisk');
 (Get-CimInstance -ClassName 'Win32_FileSystem') | Out-GridView;
 <#
@@ -44,7 +45,6 @@ $LogicalDisks | ForEach-Object { ($_.Properties | Select-Object -Property 'IsArr
 $LogicalDisks | ForEach-Object { ($_.GetRelationships() | Select-Object -Property 'GroupComponent', 'PartComponent') | Out-GridView -Title "($($_.__PATH)).Relationships" }
 ($LogicalDisks.Properties  | Select-Object -First 1) | Get-Member
 #>
-
 @((Get-CimInstance -Query 'SELECT * FROM CIM_Directory WHERE Name="z:\\"').CimInstanceProperties) | Out-GridView -Title "CIM_Directory";
 
 @((Get-CimInstance -Query 'SELECT * FROM Win32_FileSystem').CimInstanceProperties) | Out-GridView -Title "CIM_Directory";
