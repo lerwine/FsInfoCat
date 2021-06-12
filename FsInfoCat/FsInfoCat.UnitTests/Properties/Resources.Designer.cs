@@ -61,24 +61,6 @@ namespace FsInfoCat.UnitTests.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;DbCommands&gt;
-        ///    &lt;DbCreation&gt;
-        ///        &lt;Text Message=&quot;Creating table &apos;FileSystems&apos;&quot;&gt;
-        ///            &lt;![CDATA[CREATE TABLE &quot;FileSystems&quot; (
-        ///	&quot;Id&quot;	UNIQUEIDENTIFIER NOT NULL,
-        ///	&quot;DisplayName&quot;	NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)&gt;0) UNIQUE COLLATE NOCASE,
-        ///	&quot;CaseSensitiveSearch&quot;	BIT NOT NULL DEFAULT 0,
-        ///	&quot;ReadOnly&quot;	BIT NOT NULL DEFAULT 0,
-        ///	&quot;MaxNameLength&quot;	INT NOT NULL CHECK(MaxNameLength&gt;=1) DEFAULT 255,
-        ///	&quot;DefaultDriveType&quot;	TINYINT CHECK(DefaultDr [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string DbCommands {
-            get {
-                return ResourceManager.GetString("DbCommands", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///&lt;TestData&gt;
         ///  &lt;Row ErrorMessage=&quot;Display Name is required.&quot;&gt;
@@ -128,11 +110,10 @@ namespace FsInfoCat.UnitTests.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;TestData xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;TestData.xsd&quot;&gt;
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;Local xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;&gt;
         ///    &lt;FileSystem Id=&quot;{bedb396b-2212-4149-9cad-7e437c47314c}&quot; DisplayName=&quot;New Technology File System&quot; DefaultDriveType=&quot;Fixed&quot; CreatedOn=&quot;2004-08-19T14:51:06&quot; ModifiedOn=&quot;2004-08-19T14:51:06&quot;&gt;
-        ///        &lt;SymbolicName Id=&quot;{74381ccb-d56d-444d-890f-3a8051bc18e6}&quot; Name=&quot;NTFS&quot; Priority=&quot;0&quot; CreatedOn=&quot;2021-05-21T21:29:59&quot; ModifiedOn=&quot;2021-05-21T21:29:59&quot; /&gt;
-        ///         [rest of string was truncated]&quot;;.
+        ///        &lt;SymbolicName Id=&quot;{74381ccb-d56d-444d-890f-3a8051bc18e6}&quot; Name=&quot;NTFS&quot; Priority=&quot;0&quot; CreatedOn=&quot;2021-05-21T21:29:59&quot; ModifiedOn=&quot;2021-05-21T [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TestData {
             get {

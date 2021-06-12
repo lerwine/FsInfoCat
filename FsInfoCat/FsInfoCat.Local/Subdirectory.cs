@@ -30,7 +30,9 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DateTime> _lastWriteTime;
         private readonly IPropertyChangeTracker<Guid?> _parentId;
         private readonly IPropertyChangeTracker<Guid?> _volumeId;
+        private readonly IPropertyChangeTracker<Guid?> _crawlConfigurationId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
+        private readonly IPropertyChangeTracker<CrawlConfiguration> _crawlConfiguration;
         private readonly IPropertyChangeTracker<Volume> _volume;
         private HashSet<DbFile> _files = new();
         private HashSet<Subdirectory> _subDirectories = new();
@@ -121,6 +123,36 @@ namespace FsInfoCat.Local
             }
         }
 
+        public Guid? CrawlConfigurationId
+        {
+            get => _crawlConfigurationId.GetValue();
+            set
+            {
+                if (_crawlConfigurationId.SetValue(value))
+                {
+                    CrawlConfiguration nav = _crawlConfiguration.GetValue();
+                    if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
+                        _crawlConfiguration.SetValue(null);
+                }
+            }
+        }
+
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public CrawlConfiguration CrawlConfiguration
+        {
+            get => _crawlConfiguration.GetValue();
+            set
+            {
+                if (_crawlConfiguration.SetValue(value))
+                {
+                    if (value is null)
+                        _crawlConfigurationId.SetValue(Guid.Empty);
+                    else
+                        _crawlConfigurationId.SetValue(value.Id);
+                }
+            }
+        }
+
         public virtual HashSet<DbFile> Files
         {
             get => _files;
@@ -164,6 +196,10 @@ namespace FsInfoCat.Local
 
         IEnumerable<IAccessError<ISubdirectory>> ISubdirectory.AccessErrors => AccessErrors.Cast<IAccessError<ISubdirectory>>();
 
+        ILocalCrawlConfiguration ILocalSubdirectory.CrawlConfiguration { get => CrawlConfiguration; set => CrawlConfiguration = (CrawlConfiguration)value; }
+
+        ICrawlConfiguration ISubdirectory.CrawlConfiguration { get => CrawlConfiguration; set => CrawlConfiguration = (CrawlConfiguration)value; }
+
         #endregion
 
         public Subdirectory()
@@ -177,9 +213,11 @@ namespace FsInfoCat.Local
             _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
             _parentId = AddChangeTracker<Guid?>(nameof(ParentId), null);
             _volumeId = AddChangeTracker<Guid?>(nameof(VolumeId), null);
+            _crawlConfigurationId = AddChangeTracker<Guid?>(nameof(CrawlConfigurationId), null);
             _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
             _volume = AddChangeTracker<Volume>(nameof(Volume), null);
+            _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)
@@ -193,6 +231,7 @@ namespace FsInfoCat.Local
         {
             builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId)).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId)).OnDelete(DeleteBehavior.Restrict);//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
+            builder.HasOne(s => s.CrawlConfiguration).WithOne(c => c.Root).HasForeignKey<CrawlConfiguration>(nameof(CrawlConfigurationId)).OnDelete(DeleteBehavior.Restrict);
         }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)

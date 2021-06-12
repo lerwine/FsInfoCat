@@ -8,6 +8,8 @@ namespace FsInfoCat.Upstream
 
         new IUpstreamVolume Volume { get; set; }
 
+        new IHostCrawlConfiguration CrawlConfiguration { get; set; }
+
         new IEnumerable<IUpstreamFile> Files { get; }
 
         new IEnumerable<IUpstreamSubdirectory> SubDirectories { get; }

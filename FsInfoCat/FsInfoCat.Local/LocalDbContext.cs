@@ -1,7 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public partial class LocalDbContext : DbContext
+    public partial class LocalDbContext : DbContext, ILocalDbContext
     {
         private static readonly object _syncRoot = new();
         private static bool _connectionStringValidated;
@@ -47,6 +46,8 @@ namespace FsInfoCat.Local
         public virtual DbSet<RedundantSet> RedundantSets { get; set; }
 
         public virtual DbSet<Redundancy> Redundancies { get; set; }
+
+        public virtual DbSet<CrawlConfiguration> CrawlConfigurations { get; set; }
 
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
@@ -162,5 +163,75 @@ namespace FsInfoCat.Local
                 return Path.GetFullPath(dbFileName);
             return Path.Combine(Services.GetAppDataPath(assembly), dbFileName);
         }
+
+        #region Explicit Members
+
+        IEnumerable<ILocalComparison> ILocalDbContext.Comparisons => Comparisons.Cast<ILocalComparison>();
+
+        IEnumerable<ILocalContentInfo> ILocalDbContext.ContentInfos => ContentInfos.Cast<ILocalContentInfo>();
+
+        IEnumerable<ILocalExtendedProperties> ILocalDbContext.ExtendedProperties => ExtendedProperties.Cast<ILocalExtendedProperties>();
+
+        IEnumerable<IAccessError<ILocalFile>> ILocalDbContext.FileAccessErrors => FileAccessErrors.Cast<IAccessError<ILocalFile>>();
+
+        IEnumerable<ILocalFile> ILocalDbContext.Files => Files.Cast<ILocalFile>();
+
+        IEnumerable<ILocalFileSystem> ILocalDbContext.FileSystems => FileSystems.Cast<ILocalFileSystem>();
+
+        IEnumerable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies.Cast<ILocalRedundancy>();
+
+        IEnumerable<ILocalRedundantSet> ILocalDbContext.RedundantSets => RedundantSets.Cast<ILocalRedundantSet>();
+
+        IEnumerable<ILocalSubdirectory> ILocalDbContext.Subdirectories => Subdirectories.Cast<ILocalSubdirectory>();
+
+        IEnumerable<IAccessError<ILocalSubdirectory>> ILocalDbContext.SubdirectoryAccessErrors => SubdirectoryAccessErrors.Cast<IAccessError<ILocalSubdirectory>>();
+
+        IEnumerable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames.Cast<ILocalSymbolicName>();
+
+        IEnumerable<IAccessError<ILocalVolume>> ILocalDbContext.VolumeAccessErrors => VolumeAccessErrors.Cast<IAccessError<ILocalVolume>>();
+
+        IEnumerable<ILocalVolume> ILocalDbContext.Volumes => Volumes.Cast<ILocalVolume>();
+
+        IEnumerable<ILocalCrawlConfiguration> ILocalDbContext.CrawlConfigurations => CrawlConfigurations.Cast<ILocalCrawlConfiguration>();
+
+        IEnumerable<IComparison> IDbContext.Comparisons => Comparisons.Cast<IComparison>();
+
+        IEnumerable<IContentInfo> IDbContext.ContentInfos => ContentInfos.Cast<IContentInfo>();
+
+        IEnumerable<IExtendedProperties> IDbContext.ExtendedProperties => ExtendedProperties.Cast<IExtendedProperties>();
+
+        IEnumerable<IAccessError<IFile>> IDbContext.FileAccessErrors => FileAccessErrors.Cast<IAccessError<IFile>>();
+
+        IEnumerable<IFile> IDbContext.Files => Files.Cast<IFile>();
+
+        IEnumerable<IFileSystem> IDbContext.FileSystems => FileSystems.Cast<IFileSystem>();
+
+        IEnumerable<IRedundancy> IDbContext.Redundancies => Redundancies.Cast<IRedundancy>();
+
+        IEnumerable<IRedundantSet> IDbContext.RedundantSets => RedundantSets.Cast<IRedundantSet>();
+
+        IEnumerable<ISubdirectory> IDbContext.Subdirectories => Subdirectories.Cast<ISubdirectory>();
+
+        IEnumerable<IAccessError<ISubdirectory>> IDbContext.SubdirectoryAccessErrors => SubdirectoryAccessErrors.Cast<IAccessError<ISubdirectory>>();
+
+        IEnumerable<ISymbolicName> IDbContext.SymbolicNames => SymbolicNames.Cast<ISymbolicName>();
+
+        IEnumerable<IAccessError<IVolume>> IDbContext.VolumeAccessErrors => VolumeAccessErrors.Cast<IAccessError<IVolume>>();
+
+        IEnumerable<IVolume> IDbContext.Volumes => Volumes.Cast<IVolume>();
+
+        IEnumerable<ICrawlConfiguration> IDbContext.CrawlConfigurations => CrawlConfigurations.Cast<ICrawlConfiguration>();
+
+        void ILocalDbContext.ForceDeleteContentInfo(ILocalContentInfo target) => ForceDeleteContentInfo((ContentInfo)target);
+
+        void ILocalDbContext.ForceDeleteRedundantSet(ILocalRedundantSet target) => ForceDeleteRedundantSet((RedundantSet)target);
+
+        void ILocalDbContext.ForceDeleteFileSystem(ILocalFileSystem target) => ForceDeleteFileSystem((FileSystem)target);
+
+        void IDbContext.ForceDeleteContentInfo(IContentInfo target) => ForceDeleteContentInfo((ContentInfo)target);
+
+        void IDbContext.ForceDeleteRedundantSet(IRedundantSet target) => ForceDeleteRedundantSet((RedundantSet)target);
+
+        #endregion
     }
 }

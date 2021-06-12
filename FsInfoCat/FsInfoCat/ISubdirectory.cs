@@ -25,6 +25,8 @@ namespace FsInfoCat
 
         IVolume Volume { get; set; }
 
+        ICrawlConfiguration CrawlConfiguration { get; set; }
+
         IEnumerable<IFile> Files { get; }
 
         IEnumerable<ISubdirectory> SubDirectories { get; }

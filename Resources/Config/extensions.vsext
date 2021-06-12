@@ -1,0 +1,28 @@
+{
+  "id": "d51e9094-04fb-4b42-8a98-1028ffd10243",
+  "name": "My Visual Studio extensions",
+  "description": "A collection of my Visual Studio extensions",
+  "version": "1.0",
+  "extensions": [
+    {
+      "name": "Azure Data Lake and Stream Analytics Tools",
+      "vsixId": "1e906ff5-9da8-4091-a299-5c253c55fdc9"
+    },
+    {
+      "name": "GhostDoc Community for VS2017 and Later",
+      "vsixId": "f646ea44-feb2-4168-802a-80c9b64bb8bb"
+    },
+    {
+      "name": "GitHub Extension for Visual Studio",
+      "vsixId": "c3d3dc68-c977-411f-b3e8-03b0dccf7dfc"
+    },
+    {
+      "name": "Microsoft Visual Studio Installer Projects",
+      "vsixId": "VSInstallerProjects"
+    },
+    {
+      "name": "SQLite and SQL Server Compact Toolbox",
+      "vsixId": "41521019-e4c7-480c-8ea8-fc4a2c6f50aa"
+    }
+  ]
+}

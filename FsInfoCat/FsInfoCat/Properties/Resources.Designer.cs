@@ -97,6 +97,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawl Configuration.
+        /// </summary>
+        public static string DisplayName_CrawlConfiguration {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Created On.
         /// </summary>
         public static string DisplayName_CreatedOn {
@@ -584,11 +593,11 @@ namespace FsInfoCat.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;xs:schema xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;qualified&quot;
-        ///           xmlns:ex=&quot;http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd&quot; targetNamespace=&quot;http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd&quot;
-        ///           xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns=&quot;http://git.erwinefamily.net/FsInfoCat/V1/ExportSchema.xsd&quot;&gt;
+        ///           xmlns:ex=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot; targetNamespace=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;
+        ///           xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;&gt;
         ///    &lt;xs:simpleType name=&quot;UUID&quot;&gt;
         ///        &lt;xs:restriction base=&quot;xs:token&quot;&gt;
-        ///            &lt;xs:pattern v [rest of string was truncated]&quot;;.
+        ///            &lt;xs: [rest of string was truncated]&quot;;.
         /// </summary>
         public static string FsInfoCatExport {
             get {

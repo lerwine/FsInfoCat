@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Upstream
 {
@@ -17,6 +17,7 @@ namespace FsInfoCat.Upstream
         bool IsInactive { get; }
 
         IEnumerable<IUpstreamVolume> Volumes { get; }
-    }
 
+        IEnumerable<IHostCrawlConfiguration> CrawlConfigurations { get; }
+    }
 }

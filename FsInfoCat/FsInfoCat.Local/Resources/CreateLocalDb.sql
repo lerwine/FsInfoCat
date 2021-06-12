@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS "Files";
 DROP TABLE IF EXISTS "RedundantSets";
 DROP TABLE IF EXISTS "ContentInfos";
 DROP TABLE IF EXISTS "ExtendedProperties";
+DROP TABLE IF EXISTS "CrawlConfigurations";
 PRAGMA foreign_keys = OFF;
 DROP TABLE IF EXISTS "Subdirectories";
 PRAGMA foreign_keys = ON;
@@ -85,6 +86,22 @@ CREATE TABLE IF NOT EXISTS "VolumeAccessErrors" (
     CHECK(CreatedOn<=ModifiedOn)
 );
 
+CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName")) = length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
+	"IsInactive"	BIT NOT NULL DEFAULT 0,
+    "MaxRecursionDepth" INT NOT NULL CHECK("MaxRecursionDepth">=0 AND "MaxRecursionDepth"<65536) DEFAULT 256,
+    "MaxTotalItems" BIGINT NOT NULL CHECK("MaxTotalItems">0),
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	CONSTRAINT "PK_CrawlConfigurations" PRIMARY KEY("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND
+        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+);
+
 CREATE TABLE IF NOT EXISTS "Subdirectories" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
@@ -96,6 +113,7 @@ CREATE TABLE IF NOT EXISTS "Subdirectories" (
 	"LastWriteTime"	DATETIME NOT NULL,
 	"ParentId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryParent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
 	"VolumeId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryVolume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT,
+    "CrawlConfigurationId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryCrawlConfiguration" REFERENCES CrawlConfigurations("Id") ON DELETE RESTRICT,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),

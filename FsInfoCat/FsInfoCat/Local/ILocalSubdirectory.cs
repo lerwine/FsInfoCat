@@ -8,6 +8,8 @@ namespace FsInfoCat.Local
 
         new ILocalVolume Volume { get; set; }
 
+        new ILocalCrawlConfiguration CrawlConfiguration { get; set; }
+
         new IEnumerable<ILocalFile> Files { get; }
 
         new IEnumerable<ILocalSubdirectory> SubDirectories { get; }
