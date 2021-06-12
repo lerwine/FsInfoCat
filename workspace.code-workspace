@@ -13,9 +13,6 @@
 			"path": "..\\LErwineExamples"
 		},
 		{
-			"path": "..\\..\\..\\OneDrive\\Documents\\Visual Studio 2019\\Code Snippets"
-		},
-		{
 			"path": "..\\..\\..\\..\\..\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional"
 		},
 		{
@@ -26,6 +23,9 @@
 		},
 		{
 			"path": "..\\PowerShell-Modules"
+		},
+		{
+			"path": "..\\..\\OneDrive\\Documents\\Visual Studio 2019"
 		}
 	],
     "settings": {}
