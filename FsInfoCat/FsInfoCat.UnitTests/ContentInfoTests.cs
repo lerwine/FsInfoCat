@@ -58,6 +58,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Guid Id")]
+        [Ignore]
         public void IdTestMethod()
         {
             ContentInfo target = new();

@@ -63,6 +63,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Guid Id")]
+        [Ignore]
         public void IdTestMethod()
         {
             SymbolicName target = new();

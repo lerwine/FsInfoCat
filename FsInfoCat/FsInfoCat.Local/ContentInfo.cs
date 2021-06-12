@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -66,6 +67,13 @@ namespace FsInfoCat.Local
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _length = AddChangeTracker(nameof(Length), 0L);
             _hash = AddChangeTracker<MD5Hash?>(nameof(Hash), null);
+        }
+
+        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (args.PropertyName == nameof(Id) && _id.IsChanged)
+                throw new InvalidOperationException();
+            base.OnPropertyChanging(args);
         }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)

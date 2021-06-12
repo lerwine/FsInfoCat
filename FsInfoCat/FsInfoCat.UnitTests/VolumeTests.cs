@@ -85,6 +85,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Guid Id")]
+        [Ignore]
         public void IdTestMethod()
         {
             Volume target = new();
@@ -210,10 +211,11 @@ namespace FsInfoCat.UnitTests
         [DataRow(VolumeStatus.Offline, null, DisplayName = "VolumeStatus Status = Offline")]
         [DataRow(VolumeStatus.Relinquished, null, DisplayName = "VolumeStatus Status = Relinquished")]
         [DataRow(VolumeStatus.Destroyed, null, DisplayName = "VolumeStatus Status = Destroyed")]
-        [DataRow(6, "Volume Status is invalid.", DisplayName = "VolumeStatus Status = 6")]
+        [DataRow(7, "Volume Status is invalid.", DisplayName = "VolumeStatus Status = 6")]
         [TestProperty(TestHelper.TestProperty_Description, "Volume.Type: TINYINT NOT NULL CHECK(Status>=0 AND Status<6)")]
-        public void StatusTestMethod(VolumeStatus value, string errorMessage)
+        public void StatusTestMethod(object sourceValue, string errorMessage)
         {
+            VolumeStatus value = (VolumeStatus)Enum.ToObject(typeof(VolumeStatus), sourceValue);
             Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
             target.Status = value;
             VolumeStatus actualValue = target.Status;
@@ -230,7 +232,7 @@ namespace FsInfoCat.UnitTests
                 string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
                 Assert.IsNotNull(actualMemberName);
                 Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
-                Assert.AreEqual(nameof(Volume.Identifier), actualMemberName);
+                Assert.AreEqual(nameof(Volume.Status), actualMemberName);
             }
         }
 
@@ -262,7 +264,7 @@ namespace FsInfoCat.UnitTests
                 string actualMemberName = validationResults[0].MemberNames.FirstOrDefault();
                 Assert.IsNotNull(actualMemberName);
                 Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
-                Assert.AreEqual(nameof(Volume.Identifier), actualMemberName);
+                Assert.AreEqual(nameof(Volume.Type), actualMemberName);
             }
         }
 
@@ -350,17 +352,49 @@ namespace FsInfoCat.UnitTests
         }
 
         [DataTestMethod]
-        [DataRow(null, null, null, DisplayName = "string UpstreamId = null; LastSynchronizedOn = null")]
-        [DataRow("81217ede-7cb8-43b8-ace5-8ae10e861303", null, "\"LastSynchronizedOn\" date is required when \"Upstream Id\" is specified.", DisplayName = "string UpstreamId = \"81217ede-7cb8-43b8-ace5-8ae10e861303\"; LastSynchronizedOn = null")]
-        [DataRow(null, "6/5/2021 11:48:58 PM", null, DisplayName = "string UpstreamId = null; LastSynchronizedOn = \"6/5/2021 11:48:58 PM\"")]
-        [DataRow("81217ede-7cb8-43b8-ace5-8ae10e861303", "6/5/2021 11:48:58 PM", "\"LastSynchronizedOn\" date is required when \"Upstream Id\" is specified.", DisplayName = "string UpstreamId = \"81217ede-7cb8-43b8-ace5-8ae10e861303\"; LastSynchronizedOn = \"6/5/2021 11:48:58 PM\"")]
+        [DataRow(
+            null, // lastSynchronizedOn
+            null, // upstreamId
+            "6/5/2021 11:48:58 PM", // createdOn
+            "6/8/2021 1:12:34 PM", // modifiedOn
+            null, // errorMessage
+            DisplayName = "string UpstreamId = null; LastSynchronizedOn = null")]
+        [DataRow(
+            null, // dateTime
+            "81217ede-7cb8-43b8-ace5-8ae10e861303", // upstreamId
+            "6/5/2021 11:48:58 PM", // createdOn
+            "6/8/2021 1:12:34 PM", // modifiedOn
+            "\"LastSynchronizedOn\" date is required when \"Upstream Id\" is specified.", // errorMessage
+            DisplayName = "string UpstreamId = \"81217ede-7cb8-43b8-ace5-8ae10e861303\"; LastSynchronizedOn = null")]
+        [DataRow(
+            "6/8/2021 1:12:34 PM", // lastSynchronizedOn
+            null, // upstreamId
+            "6/5/2021 11:48:58 PM", // createdOn
+            "6/8/2021 1:12:34 PM", // modifiedOn
+            null, // errorMessage
+            DisplayName = "string UpstreamId = null; LastSynchronizedOn = \"6/5/2021 11:48:58 PM\"")]
+        [DataRow(
+            "6/8/2021 1:12:34 PM", // lastSynchronizedOn
+            "81217ede-7cb8-43b8-ace5-8ae10e861303", // upstreamId
+            "6/5/2021 11:48:58 PM", // createdOn
+            "6/8/2021 1:12:34 PM", // modifiedOn
+            null, // errorMessage
+            DisplayName = "string UpstreamId = \"81217ede-7cb8-43b8-ace5-8ae10e861303\"; LastSynchronizedOn = \"6/5/2021 11:48:58 PM\"")]
+        // TODO: Add tests for LastSynchronizedOn out of range
         [TestProperty(TestHelper.TestProperty_Description,
             "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        public void LastSynchronizedOnTestMethod(string dateTime, string id, string errorMessage)
+        public void LastSynchronizedOnTestMethod(string lastSynchronizedOn, string upstreamId, string createdOn, string modifiedOn, string errorMessage)
         {
-            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
-            DateTime? expectedDateTime = string.IsNullOrWhiteSpace(dateTime) ? null : DateTime.Parse(dateTime);
-            Guid? expectedGuid = string.IsNullOrWhiteSpace(id) ? null : Guid.Parse(id);
+            Volume target = new()
+            {
+                DisplayName = "Test",
+                FileSystem = new(),
+                Identifier = new VolumeIdentifier(Guid.NewGuid()),
+                CreatedOn = DateTime.Parse(createdOn),
+                ModifiedOn = DateTime.Parse(modifiedOn)
+            };
+            DateTime? expectedDateTime = string.IsNullOrWhiteSpace(lastSynchronizedOn) ? null : DateTime.Parse(lastSynchronizedOn);
+            Guid? expectedGuid = string.IsNullOrWhiteSpace(upstreamId) ? null : Guid.Parse(upstreamId);
             target.UpstreamId = expectedGuid;
             target.LastSynchronizedOn = expectedDateTime;
             DateTime? actualDateTime = target.LastSynchronizedOn;

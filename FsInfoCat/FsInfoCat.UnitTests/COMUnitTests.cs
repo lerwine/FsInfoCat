@@ -28,18 +28,10 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(folder);
             Dictionary<int, string> result = folder.GetExtendedPropertyMapAsync().Result;
             Assert.IsNotNull(result);
-            Assert.IsTrue(result.Values.Contains("Name"));
-            Assert.IsTrue(result.Values.Contains("Path"));
-            Assert.IsTrue(result.Values.Contains("Size"));
             Assert.IsTrue(result.Values.Contains("Item type"));
             Assert.IsTrue(result.Values.Contains("Kind"));
             Assert.IsTrue(result.Values.Contains("Date created"));
-            Assert.IsTrue(result.Values.Contains("Date modified"));
-            Assert.IsTrue(result.Values.Contains("Date accessed"));
-            Assert.IsTrue(result.Values.Contains("Folder name"));
-            Assert.IsTrue(result.Values.Contains("Folder path"));
-            Assert.IsTrue(result.Values.Contains("Folder"));
-        }
+       }
 
         [TestMethod()]
         public void GetExtendedPropertyDictionaryAsyncTest()
@@ -70,7 +62,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(nameAndProperties);
             Assert.IsTrue(nameAndProperties.properties.ContainsKey(ExtendedPropertyName.ProductVersion));
             Assert.IsTrue(Version.TryParse(nameAndProperties.properties[ExtendedPropertyName.ProductVersion], out version));
-            Assert.AreEqual(typeof(ShellAdapter).Assembly.GetName().Version.ToString(3), version.ToString(3));
+            Assert.AreEqual(typeof(Microsoft.Data.Sqlite.SqliteConnectionStringBuilder).Assembly.GetName().Version.ToString(3), version.ToString(3));
         }
 
         [TestMethod()]

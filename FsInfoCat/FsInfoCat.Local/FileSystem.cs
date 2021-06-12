@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
@@ -102,8 +103,15 @@ namespace FsInfoCat.Local
             _readOnly = AddChangeTracker(nameof(ReadOnly), false);
             _maxNameLength = AddChangeTracker(nameof(MaxNameLength), DbConstants.DbColDefaultValue_MaxNameLength);
             _defaultDriveType = AddChangeTracker<DriveType?>(nameof(DefaultDriveType), null);
-            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _isInactive = AddChangeTracker(nameof(IsInactive), false);
+        }
+
+        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (args.PropertyName == nameof(Id) && _id.IsChanged)
+                throw new InvalidOperationException();
+            base.OnPropertyChanging(args);
         }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)

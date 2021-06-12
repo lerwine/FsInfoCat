@@ -89,6 +89,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Guid Id")]
+        [Ignore]
         public void IdTestMethod()
         {
             DbFile target = new();

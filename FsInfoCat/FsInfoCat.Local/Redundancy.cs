@@ -119,8 +119,8 @@ namespace FsInfoCat.Local
         {
             _fileId = AddChangeTracker(nameof(FileId), Guid.Empty);
             _redundantSetId = AddChangeTracker(nameof(RedundantSetId), Guid.Empty);
-            _reference = AddChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
-            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _reference = AddChangeTracker(nameof(Reference), "", TrimmedNonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _file = AddChangeTracker<DbFile>(nameof(File), null);
             _redundantSet = AddChangeTracker<RedundantSet>(nameof(RedundantSet), null);
         }

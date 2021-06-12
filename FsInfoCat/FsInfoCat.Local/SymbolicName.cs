@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -98,10 +99,17 @@ namespace FsInfoCat.Local
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _name = AddChangeTracker(nameof(Name), "", TrimmedNonNullStringCoersion.Default);
             _priority = AddChangeTracker(nameof(Priority), 0);
-            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _isInactive = AddChangeTracker(nameof(IsInactive), false);
             _fileSystemId = AddChangeTracker(nameof(FileSystemId), Guid.Empty);
             _fileSystem = AddChangeTracker<FileSystem>(nameof(FileSystem), null);
+        }
+
+        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (args.PropertyName == nameof(Id) && _id.IsChanged)
+                throw new InvalidOperationException();
+            base.OnPropertyChanging(args);
         }
 
         internal static void BuildEntity([NotNull] EntityTypeBuilder<SymbolicName> builder)

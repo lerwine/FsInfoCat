@@ -65,6 +65,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Guid Id")]
+        [Ignore]
         public void IdTestMethod()
         {
             RedundantSet target = new();

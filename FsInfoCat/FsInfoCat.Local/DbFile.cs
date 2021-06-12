@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -230,7 +231,7 @@ namespace FsInfoCat.Local
             _options = AddChangeTracker(nameof(FileCrawlOptions), FileCrawlOptions.None);
             _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
             _lastHashCalculation = AddChangeTracker<DateTime?>(nameof(LastHashCalculation), null);
-            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _deleted = AddChangeTracker(nameof(Deleted), false);
             _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
             _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
@@ -241,6 +242,13 @@ namespace FsInfoCat.Local
             _content = AddChangeTracker<ContentInfo>(nameof(Content), null);
             _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
             _extendedProperties = AddChangeTracker<ExtendedProperties>(nameof(ExtendedProperties), null);
+        }
+
+        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (args.PropertyName == nameof(Id) && _id.IsChanged)
+                throw new InvalidOperationException();
+            base.OnPropertyChanging(args);
         }
 
         internal static void BuildEntity(EntityTypeBuilder<DbFile> builder)

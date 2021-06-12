@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -113,10 +114,17 @@ namespace FsInfoCat.Local
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _remediationStatus = AddChangeTracker(nameof(RemediationStatus), RedundancyRemediationStatus.Unconfirmed);
-            _reference = AddChangeTracker(nameof(Reference), "", NonNullStringCoersion.Default);
-            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _reference = AddChangeTracker(nameof(Reference), "", TrimmedNonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _contentInfoId = AddChangeTracker(nameof(ContentInfoId), Guid.Empty);
             _contentInfo = AddChangeTracker<ContentInfo>(nameof(ContentInfo), null);
+        }
+
+        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (args.PropertyName == nameof(Id) && _id.IsChanged)
+                throw new InvalidOperationException();
+            base.OnPropertyChanging(args);
         }
 
         internal static void BuildEntity(EntityTypeBuilder<RedundantSet> builder)

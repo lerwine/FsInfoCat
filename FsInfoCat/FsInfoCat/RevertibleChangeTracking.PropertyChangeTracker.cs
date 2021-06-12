@@ -61,9 +61,15 @@ namespace FsInfoCat
                     {
                         IsSet = _originalValueIsSet;
                         oldValue = _value;
-                        _value = newValue = _originalValue;
+                        newValue = _originalValue;
                         if (Coersion.Equals(oldValue, newValue) || !(target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker)))
                             return;
+                    }
+                    target.RaisePropertyChanging(PropertyName);
+                    lock (target.SyncRoot)
+                    {
+                        IsSet = _originalValueIsSet;
+                        _value = _originalValue;
                     }
                     try { ValueChanged?.Invoke(this, EventArgs.Empty); }
                     finally { target.RaisePropertyChanged(oldValue, newValue, PropertyName); }
@@ -88,13 +94,21 @@ namespace FsInfoCat
                 {
                     lock (target.SyncRoot)
                     {
-                        IsSet = true;
                         oldValue = _value;
-                        _value = newValue = Coersion.Normalize(newValue);
+                        newValue = Coersion.Normalize(newValue);
                         if (Coersion.Equals(oldValue, newValue))
                             return false;
                         if (!(target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker)))
+                        {
+                            _value = newValue;
                             return true;
+                        }
+                    }
+                    target.RaisePropertyChanging(PropertyName);
+                    lock (target.SyncRoot)
+                    {
+                        IsSet = true;
+                        _value = newValue;
                     }
                     try { ValueChanged?.Invoke(this, EventArgs.Empty); }
                     finally { target.RaisePropertyChanged(oldValue, newValue, PropertyName); }

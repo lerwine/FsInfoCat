@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -88,10 +89,17 @@ namespace FsInfoCat.Local
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _errorCode = AddChangeTracker(nameof(AccessErrorCode), AccessErrorCode.Unspecified);
-            _message = AddChangeTracker(nameof(Message), "", NonNullStringCoersion.Default);
-            _details = AddChangeTracker(nameof(Details), "", NonNullStringCoersion.Default);
+            _message = AddChangeTracker(nameof(Message), "", TrimmedNonNullStringCoersion.Default);
+            _details = AddChangeTracker(nameof(Details), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _targetId = AddChangeTracker(nameof(TargetId), Guid.Empty);
             _target = AddChangeTracker<Subdirectory>(nameof(Target), null);
+        }
+
+        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (args.PropertyName == nameof(Id) && _id.IsChanged)
+                throw new InvalidOperationException();
+            base.OnPropertyChanging(args);
         }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)

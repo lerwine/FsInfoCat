@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace FsInfoCat
 {
-    public abstract partial class RevertibleChangeTracking : NotifyPropertyValueChanged, IRevertibleChangeTracking
+    public abstract partial class RevertibleChangeTracking : NotifyPropertyValueChanging, IRevertibleChangeTracking
     {
         private readonly Dictionary<string, IPropertyChangeTracker> _changeTrackers = new();
 

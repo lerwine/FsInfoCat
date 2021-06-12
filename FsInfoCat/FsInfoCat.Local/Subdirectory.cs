@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
@@ -171,7 +172,7 @@ namespace FsInfoCat.Local
             _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
             _options = AddChangeTracker(nameof(Options), DirectoryCrawlOptions.None);
             _status = AddChangeTracker(nameof(Status), DirectoryStatus.Incomplete);
-            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
             _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
             _parentId = AddChangeTracker<Guid?>(nameof(ParentId), null);
@@ -179,6 +180,13 @@ namespace FsInfoCat.Local
             _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
             _volume = AddChangeTracker<Volume>(nameof(Volume), null);
+        }
+
+        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (args.PropertyName == nameof(Id) && _id.IsChanged)
+                throw new InvalidOperationException();
+            base.OnPropertyChanging(args);
         }
 
         internal static void BuildEntity(EntityTypeBuilder<Subdirectory> builder)

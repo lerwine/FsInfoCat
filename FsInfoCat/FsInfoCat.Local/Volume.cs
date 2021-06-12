@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
@@ -155,11 +156,18 @@ namespace FsInfoCat.Local
             _readOnly = AddChangeTracker<bool?>(nameof(ReadOnly), null);
             _maxNameLength = AddChangeTracker<int?>(nameof(MaxNameLength), null);
             _type = AddChangeTracker(nameof(Type), DriveType.Unknown);
-            _notes = AddChangeTracker(nameof(Notes), "", NonNullStringCoersion.Default);
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _status = AddChangeTracker(nameof(Status), VolumeStatus.Unknown);
             _fileSystemId = AddChangeTracker(nameof(FileSystemId), Guid.Empty);
             _fileSystem = AddChangeTracker<FileSystem>(nameof(FileSystem), null);
             _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
+        }
+
+        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (args.PropertyName == nameof(Id) && _id.IsChanged)
+                throw new InvalidOperationException();
+            base.OnPropertyChanging(args);
         }
 
         // TODO: Change to async with LocalDbContext
