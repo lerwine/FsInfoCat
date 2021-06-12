@@ -124,56 +124,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        // TODO: Use ImportAsync
-        [Obsolete("Use ImportAsync")]
-        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement symbolicNameElement)
-        {
-            // TODO: Use InsertQueryBuilder
-            XName n = nameof(Id);
-            Guid symbolicNameId = symbolicNameElement.GetAttributeGuid(n).Value;
-            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.SymbolicNames)).Append("\" (\"").Append(nameof(Id))
-                .Append("\" , \"").Append(nameof(FileSystemId)).Append('"');
-            List<object> values = new();
-            values.Add(symbolicNameId);
-            values.Add(fileSystemId);
-            foreach (XAttribute attribute in symbolicNameElement.Attributes().Where(a => a.Name != n))
-            {
-                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
-                switch (attribute.Name.LocalName)
-                {
-                    case nameof(Name):
-                        // TODO: Change all notes to an element
-                    case nameof(Notes):
-                        values.Add(attribute.Value);
-                        break;
-                    case nameof(IsInactive):
-                        values.Add(XmlConvert.ToBoolean(attribute.Value));
-                        break;
-                    case nameof(Priority):
-                        values.Add(XmlConvert.ToInt32(attribute.Value));
-                        break;
-                    case nameof(CreatedOn):
-                    case nameof(ModifiedOn):
-                    case nameof(LastSynchronizedOn):
-                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
-                        break;
-                    case nameof(UpstreamId):
-                        values.Add(XmlConvert.ToGuid(attribute.Value));
-                        break;
-                    default:
-                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(SymbolicName)}");
-                }
-            }
-            new InsertQueryBuilder(nameof(LocalDbContext.SymbolicNames), symbolicNameElement, nameof(Id)).AppendGuid(nameof(FileSystemId), fileSystemId)
-                .AppendString(nameof(Name)).AppendInnerText(nameof(Notes)).AppendBoolean(nameof(IsInactive)).AppendInt32(nameof(Priority))
-                .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
-                .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
-            sql.Append(") Values({0}");
-            for (int i = 1; i < values.Count; i++)
-                sql.Append(", {").Append(i).Append('}');
-            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
-        }
-
         internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement symbolicNameElement)
         {
             return await new InsertQueryBuilder(nameof(LocalDbContext.SymbolicNames), symbolicNameElement, nameof(Id)).AppendGuid(nameof(FileSystemId), fileSystemId)
