@@ -71,13 +71,13 @@
     CHECK(CreatedOn<=ModifiedOn)
 )]]>
         </Text>
-        <Text Message="Creating table 'VolumeAccessErrors'">
+        <Text Message="Creating table 'CrawlConfigurations'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName")) = length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
 	"IsInactive"	BIT NOT NULL DEFAULT 0,
     "MaxRecursionDepth" INT NOT NULL CHECK("MaxRecursionDepth">=0 AND "MaxRecursionDepth"<65536) DEFAULT 256,
-    "MaxTotalItems" BIGINT NOT NULL CHECK("MaxTotalItems">0),
+    "MaxTotalItems" BIGINT NOT NULL CHECK("MaxTotalItems">0) DEFAULT 18446744073709551615,
     "Notes" TEXT NOT NULL DEFAULT '',
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
@@ -268,6 +268,33 @@
 BEGIN
     SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
 END]]>
+</Text>
+<Text Message="Creating trigger 'validate_redundancy_change'">
+    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
+   BEFORE UPDATE
+   ON Redundancies
+   WHEN (NEW.FileId<>OLD.FileID OR NEW.RedundantSetId<>OLD.RedundantSetId) AND (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.ContentInfoId=r.ContentInfoId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
+BEGIN
+    SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
+END]]>
+</Text>
+<Text Message="Creating trigger 'validate_new_crawl_config'">
+    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_crawl_config
+   BEFORE INSERT
+   ON Subdirectories
+   WHEN NEW.CrawlConfigurationId IS NOT NULL AND (SELECT COUNT(Id) FROM Subdirectories WHERE CrawlConfigurationId=NEW.CrawlConfigurationId)=0
+BEGIN
+    SELECT RAISE (ABORT,'Crawl configuration can only be applied to one subdirectory.');
+END]]>
+</Text>
+<Text Message="Creating trigger 'validate_crawl_config_change'">
+    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_crawl_config_change
+   BEFORE UPDATE
+   ON Subdirectories
+   WHEN NEW.CrawlConfigurationId IS NOT NULL AND NEW.CrawlConfigurationId<>OLD.CrawlConfigurationId AND (SELECT COUNT(Id) FROM Subdirectories WHERE Id<>NEW.Id AND CrawlConfigurationId=NEW.CrawlConfigurationId)=0
+BEGIN
+    SELECT RAISE (ABORT,'Crawl configuration can only be applied to one subdirectory.');
+END]]>
         </Text>
     </DbCreation>
     <DropTables>
@@ -306,6 +333,9 @@ END]]>
         </Text>
         <Text Message="Turning foreign_keys back ON">
             <![CDATA[PRAGMA foreign_keys = ON]]>
+        </Text>
+        <Text Message="Dropping table 'Subdirectories'">
+            <![CDATA[DROP TABLE IF EXISTS "CrawlConfigurations"]]>
         </Text>
         <Text Message="Dropping table 'Volumes'">
             <![CDATA[DROP TABLE IF EXISTS "Volumes"]]>

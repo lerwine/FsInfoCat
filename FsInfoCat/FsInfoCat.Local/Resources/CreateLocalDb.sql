@@ -9,10 +9,10 @@ DROP TABLE IF EXISTS "Files";
 DROP TABLE IF EXISTS "RedundantSets";
 DROP TABLE IF EXISTS "ContentInfos";
 DROP TABLE IF EXISTS "ExtendedProperties";
-DROP TABLE IF EXISTS "CrawlConfigurations";
 PRAGMA foreign_keys = OFF;
 DROP TABLE IF EXISTS "Subdirectories";
 PRAGMA foreign_keys = ON;
+DROP TABLE IF EXISTS "CrawlConfigurations";
 DROP TABLE IF EXISTS "Volumes";
 DROP TABLE IF EXISTS "SymbolicNames";
 DROP TABLE IF EXISTS "FileSystems";
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName")) = length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
 	"IsInactive"	BIT NOT NULL DEFAULT 0,
     "MaxRecursionDepth" INT NOT NULL CHECK("MaxRecursionDepth">=0 AND "MaxRecursionDepth"<65536) DEFAULT 256,
-    "MaxTotalItems" BIGINT NOT NULL CHECK("MaxTotalItems">0),
+    "MaxTotalItems" BIGINT NOT NULL CHECK("MaxTotalItems">0) DEFAULT 18446744073709551615,
     "Notes" TEXT NOT NULL DEFAULT '',
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
@@ -273,6 +273,30 @@ BEGIN
     SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
 END;
 
+CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
+   BEFORE UPDATE
+   ON Redundancies
+   WHEN (NEW.FileId<>OLD.FileID OR NEW.RedundantSetId<>OLD.RedundantSetId) AND (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.ContentInfoId=r.ContentInfoId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
+BEGIN
+    SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_new_crawl_config
+   BEFORE INSERT
+   ON Subdirectories
+   WHEN NEW.CrawlConfigurationId IS NOT NULL AND (SELECT COUNT(Id) FROM Subdirectories WHERE CrawlConfigurationId=NEW.CrawlConfigurationId)<>0
+BEGIN
+    SELECT RAISE (ABORT,'Crawl configuration can only be applied to one subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_crawl_config_change
+   BEFORE UPDATE
+   ON Subdirectories
+   WHEN NEW.CrawlConfigurationId IS NOT NULL AND NEW.CrawlConfigurationId<>OLD.CrawlConfigurationId AND (SELECT COUNT(Id) FROM Subdirectories WHERE Id<>NEW.Id AND CrawlConfigurationId=NEW.CrawlConfigurationId)<>0
+BEGIN
+    SELECT RAISE (ABORT,'Crawl configuration can only be applied to one subdirectory.');
+END;
+
 INSERT INTO "FileSystems" ("Id", "DisplayName", "DefaultDriveType", "CreatedOn", "ModifiedOn")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System', 3, '2004-08-19 14:51:06', '2004-08-19 14:51:06');
 INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
@@ -321,8 +345,10 @@ INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWri
 	VALUES ('513fe108-9777-4ff1-84bb-1836ceebc958', 'lerwi', '37cd633c-a544-46fb-80c0-8832944a47a0', '2021-03-09 23:51:36', '2021-06-02 22:49:19', '2021-06-05 00:58:39', '2021-06-05 00:58:39', '2021-06-05 00:58:39');
 INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
 	VALUES ('941fcb97-9ea7-4c95-be4f-4b1b21ff1ead', 'OneDrive', '513fe108-9777-4ff1-84bb-1836ceebc958', '2019-11-23 20:35:06', '2021-06-09 18:49:25', '2021-06-05 00:58:42', '2021-06-05 00:58:42', '2021-06-05 00:58:42');
-INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
-	VALUES ('dfc1b888-4bfc-4ad8-bfef-e46ba491fbc3', 'Music', '941fcb97-9ea7-4c95-be4f-4b1b21ff1ead', '2019-11-23 20:35:49', '2021-05-27 16:12:42', '2021-06-05 00:58:44', '2021-06-05 00:58:44', '2021-06-05 00:58:44');
+INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
+    VALUES ('5453f617-625f-4e2d-815e-a11030077d9a', 'Music Files', '2021-06-06 11:57:22', '2021-06-06 11:57:22');
+INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CrawlConfigurationId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
+	VALUES ('dfc1b888-4bfc-4ad8-bfef-e46ba491fbc3', 'Music', '941fcb97-9ea7-4c95-be4f-4b1b21ff1ead', '5453f617-625f-4e2d-815e-a11030077d9a', '2019-11-23 20:35:49', '2021-05-27 16:12:42', '2021-06-06 11:57:22', '2021-06-05 00:58:44', '2021-06-06 11:57:22');
 INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
 	VALUES ('957378c1-b275-49e5-b6d0-d2dd3df1eb19', 'Discovery', 'dfc1b888-4bfc-4ad8-bfef-e46ba491fbc3', '2021-05-26 15:33:27', '2021-05-26 15:33:28', '2021-06-05 00:58:45', '2021-06-05 00:58:45', '2021-06-05 00:58:45');
 INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
@@ -508,22 +534,14 @@ INSERT INTO "ContentInfos" ("Id", "Length", "CreatedOn", "ModifiedOn")
 	VALUES ('1b533b50-8fed-4296-9e0a-55b45c3ad7e3', 14210101, '2021-06-05 01:01:32', '2021-06-05 01:01:32');
 INSERT INTO "Files" ("Id", "Name", "ContentId", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
 	VALUES ('7d5f73ed-fd6f-4d6f-80c1-bfde477d77a2', 'Mozart concerto 20 in d, K.466 - 3. Rondo ; Gulda.mp3', '1b533b50-8fed-4296-9e0a-55b45c3ad7e3', '128196f8-ebe8-4b21-acab-abd62f3c35d7', '2020-05-18 12:33:47', '2017-04-30 22:44:40', '2021-06-05 01:01:33', '2021-06-05 01:01:33', '2021-06-05 01:01:33');
-INSERT INTO "Subdirectories" ("Id", "Name", "VolumeId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
-	VALUES ('a0a3ac94-eb7c-46fb-b493-3be94110a081', 'Z:\', 'c48c1c92-154c-43cf-a277-53223d5c1510', '2021-02-01 13:51:40', '2021-02-01 13:51:40', '2021-06-05 01:01:36', '2021-06-05 01:01:36', '2021-06-05 01:01:36');
+INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
+    VALUES ('22b06970-adc0-4179-bac6-459c20c05806', 'Z Drive', '2021-06-06 11:59:16', '2021-06-06 11:59:16');
+INSERT INTO "Subdirectories" ("Id", "Name", "VolumeId", "CrawlConfigurationId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
+	VALUES ('a0a3ac94-eb7c-46fb-b493-3be94110a081', 'Z:\', 'c48c1c92-154c-43cf-a277-53223d5c1510', '22b06970-adc0-4179-bac6-459c20c05806', '2021-02-01 13:51:40', '2021-02-01 13:51:40', '2021-06-06 11:59:16', '2021-06-05 01:01:36', '2021-06-06 11:59:16');
 INSERT INTO "ContentInfos" ("Id", "Length", "CreatedOn", "ModifiedOn")
 	VALUES ('a375bac9-14d8-431a-a93e-2e4d01289d8b', 9224036, '2021-06-05 01:01:36', '2021-06-05 01:01:36');
 INSERT INTO "Files" ("Id", "Name", "ContentId", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
 	VALUES ('1c097e1c-986c-4f4c-b6c1-18325a0c30df', '08___DIRE_STRAITS___SULTANS.MP3', 'a375bac9-14d8-431a-a93e-2e4d01289d8b', 'a0a3ac94-eb7c-46fb-b493-3be94110a081', '2021-05-28 00:28:41', '2013-12-01 11:33:34', '2021-06-05 01:01:39', '2021-06-05 01:01:39', '2021-06-05 01:01:39');
-INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
-	VALUES ('6459283e-5b6e-47b6-b2dd-f79a07ec9455', 'barba', '37cd633c-a544-46fb-80c0-8832944a47a0', '2020-08-07 09:50:50', '2021-06-09 21:15:16', '2021-06-05 01:07:26', '2021-06-05 01:07:26', '2021-06-05 01:07:26');
-INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
-	VALUES ('bc1db013-7b38-421c-80dd-1d90e9b8bcfc', 'iCloudDrive', '6459283e-5b6e-47b6-b2dd-f79a07ec9455', '2020-08-06 16:03:18', '2021-06-09 21:30:02', '2021-06-05 01:07:29', '2021-06-05 01:07:29', '2021-06-05 01:07:29');
-INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
-	VALUES ('acdf7b49-5e63-4a6b-87db-20fac7984a10', 'Downloads', 'bc1db013-7b38-421c-80dd-1d90e9b8bcfc', '2020-03-06 16:05:12', '2021-02-04 19:53:54', '2021-06-05 01:07:29', '2021-06-05 01:07:29', '2021-06-05 01:07:29');
-INSERT INTO "ContentInfos" ("Id", "Length", "CreatedOn", "ModifiedOn")
-	VALUES ('e75d961f-336f-4cf0-810c-1f3323603899', 332771, '2021-06-05 01:07:30', '2021-06-05 01:07:30');
-INSERT INTO "Files" ("Id", "Name", "ContentId", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
-	VALUES ('d0ab8bf4-22e2-48bb-bdfa-a009e751f2cb', 'walmart near me - Google Search.pdf', 'e75d961f-336f-4cf0-810c-1f3323603899', 'acdf7b49-5e63-4a6b-87db-20fac7984a10', '2021-02-26 16:35:39', '2021-02-26 16:35:39', '2021-06-05 01:07:31', '2021-06-05 01:07:31', '2021-06-05 01:07:31');
 INSERT INTO "Subdirectories" ("Id", "Name", "ParentId", "CreationTime", "LastWriteTime", "LastAccessed", "CreatedOn", "ModifiedOn")
 	VALUES ('9fb3a2e0-307a-4a99-8761-34bb3504e28d', 'Orders', 'a1a5880e-393c-4599-9fbf-7e59a0a7235c', '2021-06-10 01:05:00', '2021-06-10 01:05:02', '2021-06-05 01:07:35', '2021-06-05 01:07:35', '2021-06-05 01:07:35');
 INSERT INTO "ContentInfos" ("Id", "Length", "CreatedOn", "ModifiedOn")
