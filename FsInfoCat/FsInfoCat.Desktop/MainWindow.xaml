@@ -1,12 +1,46 @@
-﻿<Window x:Class="FsInfoCat.Desktop.MainWindow"
+<Window x:Class="FsInfoCat.Desktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FsInfoCat.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters"
+        Title="FS InfoCat" Height="600" Width="800" DataContext="{Binding Mode=OneWay, Source={DynamicResource MainViewModel}}" WindowState="Maximized">
+    <Window.Resources>
+        <!--<converters:AccountToStringConverter x:Key="AccountConverter" NullSource="(not logged in)"/>-->
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </Window.Resources>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel HorizontalAlignment="Stretch"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+            <MenuItem Header="File">
+                <Separator/>
+                <MenuItem Header="Exit" />
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="Help" HorizontalAlignment="Right"/>
+        </Menu>
+        <Frame Grid.Row="1" Source="/FsInfoCat.Desktop;component/View/CrawlConfigurationsPage.xaml"/>
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Not logged in" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <ProgressBar/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
