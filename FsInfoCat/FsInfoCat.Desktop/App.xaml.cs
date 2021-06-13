@@ -22,6 +22,7 @@ namespace FsInfoCat.Desktop
         private void ShowMainWindow()
         {
             var mainWindow = Services.ServiceProvider.GetRequiredService<MainWindow>();
+            ((ViewModel.MainVM)FindResource("MainViewModel")).InitializeAsync();
             mainWindow.Show();
         }
 
