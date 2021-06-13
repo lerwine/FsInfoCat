@@ -220,6 +220,64 @@ namespace FsInfoCat.Local
             _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
         }
 
+        public static async Task<List<((string, Guid), T)>> LoadFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory, LocalDbContext dbContext) => await Task.Run(() =>
+        {
+            Dictionary<Guid, string> fullNames = new();
+            return source.Select(t =>
+            {
+                Subdirectory subdirectory = factory(t);
+                if (subdirectory is null)
+                    return (((string)null, Guid.Empty), t);
+                return ((LookupFullName(fullNames, subdirectory, dbContext), subdirectory.Id), t);
+            }).ToList();
+        });
+
+        public static async Task<string> LookupFullNameAsync(Subdirectory subdirectory)
+        {
+            LocalDbContext dbContext = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid? parentId = subdirectory.ParentId;
+            string path = subdirectory.Name;
+            while (parentId.HasValue)
+            {
+                Subdirectory parent = subdirectory.Parent;
+                if (parent is null && (subdirectory.Parent = parent = await dbContext.Subdirectories.FindAsync(parentId.Value)) is null)
+                    break;
+                path = $"{parent.Name}/{path}";
+                parentId = (subdirectory = parent).ParentId;
+            }
+            return path;
+        }
+
+        private static string LookupFullName(Dictionary<Guid, string> fullNames, Subdirectory subdirectory, LocalDbContext dbContext)
+        {
+            if (fullNames.ContainsKey(subdirectory.Id))
+                return fullNames[subdirectory.Id];
+            Guid? parentId = subdirectory.ParentId;
+            if (parentId.HasValue)
+            {
+                Subdirectory parent = subdirectory.Parent ?? dbContext.Find<Subdirectory>(parentId.Value);
+                if (parent is not null)
+                {
+                    string path = $"{LookupFullName(fullNames, parent, dbContext)}/{subdirectory.Name}";
+                    fullNames.Add(subdirectory.Id, path);
+                    return path;
+                }
+            }
+            fullNames.Add(subdirectory.Id, subdirectory.Name);
+            return subdirectory.Name;
+        }
+
+        public static async Task<Subdirectory> FindByCrawlConfigurationAsync(Guid crawlConfigurationId) => await Task.Run(() =>
+        {
+            LocalDbContext dbContext = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
+            return FindByCrawlConfiguration(crawlConfigurationId, dbContext);
+        });
+
+        public static Subdirectory FindByCrawlConfiguration(Guid crawlConfigurationId, LocalDbContext dbContext)
+        {
+            return dbContext.Subdirectories.Where(s => s.CrawlConfigurationId == crawlConfigurationId).FirstOrDefault();
+        }
+
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)
         {
             if (args.PropertyName == nameof(Id) && _id.IsChanged)
