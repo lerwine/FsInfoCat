@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.WMI
 {
-    public class CIM_LogicalDisk
+    public class Win32_LogicalDisk
     {
         public string Name { get; private set; }
 
@@ -37,7 +39,9 @@ namespace FsInfoCat.Desktop.WMI
         public CIMLogicalDiskAccess Access { get; private set; }
 
         public CIMLogicalDiskAvailability Availability { get; private set; }
-        public CIM_LogicalDisk(ManagementObject obj)
+        internal Win32_Directory RootDirectory { get; }
+
+        internal Win32_LogicalDisk(ManagementObject obj)
         {
             Name = obj.GetString(nameof(Name));
             VolumeName = obj.GetString(nameof(VolumeName));
@@ -54,15 +58,30 @@ namespace FsInfoCat.Desktop.WMI
             MaximumComponentLength = obj.GetUInt32(nameof(MaximumComponentLength));
             Access = (CIMLogicalDiskAccess)obj.GetUInt16(nameof(Access));
             Availability = (CIMLogicalDiskAvailability)obj.GetUInt16(nameof(Availability));
+            RootDirectory = obj.GetRelated("Win32_LogicalDiskRootDirectory").OfType<ManagementObject>().Select(m => new Win32_Directory(m)).FirstOrDefault();
         }
 
-        internal static IEnumerable<CIM_LogicalDisk> GetLogicalDisks(DirectoryInfo directoryInfo)
+        internal static async Task<Win32_LogicalDisk> GetLogicalDiskAsync(DirectoryInfo directoryInfo)
+        {
+            if (directoryInfo is null)
+                return null;
+            string fullName = directoryInfo.Root.FullName;
+            return (await GetLogicalDisksAsync()).FirstOrDefault(l =>
+            {
+                Win32_Directory d = l.RootDirectory;
+                return d is not null && fullName.Equals(d.Name, StringComparison.InvariantCultureIgnoreCase);
+            });
+        }
+
+        internal static async Task<Win32_LogicalDisk[]> GetLogicalDisksAsync() => await Task.Run(() => GetLogicalDisks().ToArray());
+
+        internal static IEnumerable<Win32_LogicalDisk> GetLogicalDisks()
         {
             ManagementScope namespaceScope = new ManagementScope("\\\\.\\ROOT\\CIMV2");
-            ObjectQuery diskQuery = new ObjectQuery("SELECT * FROM CIM_LogicalDisk");
+            ObjectQuery diskQuery = new ObjectQuery($"SELECT * FROM {nameof(Win32_LogicalDisk)}");
             ManagementObjectSearcher mgmtObjSearcher = new ManagementObjectSearcher(namespaceScope, diskQuery);
-                foreach (ManagementObject obj in mgmtObjSearcher.Get())
-                    yield return new CIM_LogicalDisk(obj);
+            foreach (ManagementObject obj in mgmtObjSearcher.Get())
+                yield return new Win32_LogicalDisk(obj);
         }
     }
 }

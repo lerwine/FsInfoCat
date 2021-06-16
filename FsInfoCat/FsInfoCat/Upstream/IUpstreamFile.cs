@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamFile : IFile, IUpstreamDbEntity
+    public interface IUpstreamFile : IFile, IUpstreamDbFsItem
     {
         new IUpstreamContentInfo Content { get; set; }
 

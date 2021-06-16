@@ -11,8 +11,9 @@ namespace FsInfoCat.Local
 
         private HashSet<DbFile> _files = new();
         private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<ushort> _width;
-        private readonly IPropertyChangeTracker<ushort> _height;
+        private readonly IPropertyChangeTracker<string> _kind;
+        private readonly IPropertyChangeTracker<ushort?> _width;
+        private readonly IPropertyChangeTracker<ushort?> _height;
         private readonly IPropertyChangeTracker<ulong?> _duration;
         private readonly IPropertyChangeTracker<uint?> _frameCount;
         private readonly IPropertyChangeTracker<uint?> _trackNumber;
@@ -44,9 +45,11 @@ namespace FsInfoCat.Local
 
         public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
-        public ushort Width { get => _width.GetValue(); set => _width.SetValue(value); }
+        public string Kind { get => _kind.GetValue(); set => _kind.SetValue(value); }
 
-        public ushort Height { get => _height.GetValue(); set => _height.SetValue(value); }
+        public ushort? Width { get => _width.GetValue(); set => _width.SetValue(value); }
+
+        public ushort? Height { get => _height.GetValue(); set => _height.SetValue(value); }
 
         public ulong? Duration { get => _duration.GetValue(); set => _duration.SetValue(value); }
 
@@ -115,8 +118,9 @@ namespace FsInfoCat.Local
         public ExtendedProperties()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _width = AddChangeTracker(nameof(Width), (ushort)0);
-            _height = AddChangeTracker(nameof(Height), (ushort)0);
+            _kind = AddChangeTracker(nameof(Kind), "", TrimmedNonNullStringCoersion.Default);
+            _width = AddChangeTracker(nameof(Width), (ushort?)null);
+            _height = AddChangeTracker(nameof(Height), (ushort?)null);
             _duration = AddChangeTracker(nameof(Duration), (ulong?)null);
             _frameCount = AddChangeTracker(nameof(FrameCount), (uint?)null);
             _trackNumber = AddChangeTracker(nameof(TrackNumber), (uint?)null);

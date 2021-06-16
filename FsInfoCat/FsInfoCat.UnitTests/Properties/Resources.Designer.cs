@@ -85,6 +85,15 @@ namespace FsInfoCat.UnitTests.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data\FirstDrive.
+        /// </summary>
+        internal static string FirstDriveContentsRelativePath {
+            get {
+                return ResourceManager.GetString("FirstDriveContentsRelativePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///&lt;TestData&gt;
         ///  &lt;Row ErrorMessage=&quot;Name is required.&quot;&gt;
@@ -110,6 +119,15 @@ namespace FsInfoCat.UnitTests.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data\SecondDrive.
+        /// </summary>
+        internal static string SecondDriveContentsRelativePath {
+            get {
+                return ResourceManager.GetString("SecondDriveContentsRelativePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
         ///&lt;Local xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;&gt;
         ///    &lt;FileSystem Id=&quot;{bedb396b-2212-4149-9cad-7e437c47314c}&quot; DisplayName=&quot;New Technology File System&quot; DefaultDriveType=&quot;Fixed&quot; CreatedOn=&quot;2004-08-19T14:51:06&quot; ModifiedOn=&quot;2004-08-19T14:51:06&quot;&gt;
@@ -118,6 +136,15 @@ namespace FsInfoCat.UnitTests.Properties {
         internal static string TestData {
             get {
                 return ResourceManager.GetString("TestData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resources\TestLocal.db.
+        /// </summary>
+        internal static string TestDbRelativePath {
+            get {
+                return ResourceManager.GetString("TestDbRelativePath", resourceCulture);
             }
         }
         

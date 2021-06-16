@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class FileAccessError : DbEntity, IAccessError<DbFile>, IAccessError<ILocalFile>, IAccessError<IFile>
+    public class FileAccessError : DbEntity, IAccessError<DbFile>, IAccessError<ILocalFile>, IAccessError<IFile>, IAccessError<ILocalDbFsItem>
     {
         #region Fields
 
@@ -80,6 +80,8 @@ namespace FsInfoCat.Local
         ILocalFile IAccessError<ILocalFile>.Target { get => Target; set => Target = (DbFile)value; }
 
         IFile IAccessError<IFile>.Target { get => Target; set => Target = (DbFile)value; }
+
+        ILocalDbFsItem IAccessError<ILocalDbFsItem>.Target { get => Target; set => Target = (DbFile)value; }
 
         IDbEntity IAccessError.Target { get => Target; set => Target = (DbFile)value; }
 

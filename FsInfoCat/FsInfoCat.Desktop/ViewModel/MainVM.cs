@@ -16,5 +16,9 @@ namespace FsInfoCat.Desktop.ViewModel
     public class MainVM : DependencyObject
     {
         private ILogger<MainVM> _logger;
+        
+        public MainVM()
+        {
+        }
     }
 }

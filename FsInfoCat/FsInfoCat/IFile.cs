@@ -7,31 +7,17 @@ namespace FsInfoCat
     /// Represents a file in its hierarchical structure.
     /// </summary>
     /// <seealso cref="IDbEntity" />
-    public interface IFile : IDbEntity
+    public interface IFile : IDbFsItem
     {
-        Guid Id { get; set; }
-
-        string Name { get; set; }
-
         FileCrawlOptions Options { get; set; }
-
-        DateTime LastAccessed { get; set; }
 
         DateTime? LastHashCalculation { get; set; }
 
-        string Notes { get; set; }
-
-        bool Deleted { get; set; }
-
-        DateTime CreationTime { get; set; }
-
-        DateTime LastWriteTime { get; set; }
+        bool Deleted { get; }
 
         IContentInfo Content { get; set; }
 
         IExtendedProperties ExtendedProperties { get; set; }
-
-        ISubdirectory Parent { get; set; }
 
         IRedundancy Redundancy { get; }
 
@@ -39,6 +25,6 @@ namespace FsInfoCat
 
         IEnumerable<IComparison> ComparisonTargets { get; }
 
-        IEnumerable<IAccessError<IFile>> AccessErrors { get; }
+        new IEnumerable<IAccessError<IFile>> AccessErrors { get; }
     }
 }

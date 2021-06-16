@@ -3,25 +3,11 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
-    public interface ISubdirectory : IDbEntity
+    public interface ISubdirectory : IDbFsItem
     {
-        Guid Id { get; set; }
-
-        string Name { get; set; }
-
         DirectoryCrawlOptions Options { get; set; }
 
-        DateTime LastAccessed { get; set; }
-
-        string Notes { get; set; }
-
-        DateTime CreationTime { get; set; }
-
-        DateTime LastWriteTime { get; set; }
-
         DirectoryStatus Status { get; set; }
-
-        ISubdirectory Parent { get; set; }
 
         IVolume Volume { get; set; }
 
@@ -31,6 +17,6 @@ namespace FsInfoCat
 
         IEnumerable<ISubdirectory> SubDirectories { get; }
 
-        IEnumerable<IAccessError<ISubdirectory>> AccessErrors { get; }
+        new IEnumerable<IAccessError<ISubdirectory>> AccessErrors { get; }
     }
 }

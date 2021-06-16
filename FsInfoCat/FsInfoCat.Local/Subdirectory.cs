@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -178,7 +179,7 @@ namespace FsInfoCat.Local
 
         ILocalSubdirectory ILocalSubdirectory.Parent { get => Parent; set => Parent = (Subdirectory)value; }
 
-        ISubdirectory ISubdirectory.Parent { get => Parent; set => Parent = (Subdirectory)value; }
+        ISubdirectory IDbFsItem.Parent { get => Parent; set => Parent = (Subdirectory)value; }
 
         ILocalVolume ILocalSubdirectory.Volume { get => Volume; set => Volume = (Volume)value; }
 
@@ -196,9 +197,13 @@ namespace FsInfoCat.Local
 
         IEnumerable<IAccessError<ISubdirectory>> ISubdirectory.AccessErrors => AccessErrors.Cast<IAccessError<ISubdirectory>>();
 
+        IEnumerable<IAccessError<ILocalDbFsItem>> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError<ILocalDbFsItem>>();
+
         ILocalCrawlConfiguration ILocalSubdirectory.CrawlConfiguration { get => CrawlConfiguration; set => CrawlConfiguration = (CrawlConfiguration)value; }
 
         ICrawlConfiguration ISubdirectory.CrawlConfiguration { get => CrawlConfiguration; set => CrawlConfiguration = (CrawlConfiguration)value; }
+
+        IEnumerable<IAccessError> IDbFsItem.AccessErrors => throw new NotImplementedException();
 
         #endregion
 
@@ -232,9 +237,15 @@ namespace FsInfoCat.Local
             }).ToList();
         });
 
-        public static async Task<string> LookupFullNameAsync(Subdirectory subdirectory)
+        public static async Task<string> LookupFullNameAsync([NotNull] Subdirectory subdirectory, LocalDbContext dbContext = null)
         {
-            LocalDbContext dbContext = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
+            if (subdirectory is null)
+                throw new ArgumentNullException(nameof(subdirectory));
+            if (dbContext is null)
+            {
+                using LocalDbContext context = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
+                return await LookupFullNameAsync(subdirectory, context);
+            }
             Guid? parentId = subdirectory.ParentId;
             string path = subdirectory.Name;
             while (parentId.HasValue)

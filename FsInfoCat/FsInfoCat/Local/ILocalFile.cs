@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalFile : IFile, ILocalDbEntity
+    public interface ILocalFile : IFile, ILocalDbFsItem
     {
         new ILocalContentInfo Content { get; set; }
 

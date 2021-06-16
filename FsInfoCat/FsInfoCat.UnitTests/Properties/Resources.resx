@@ -121,11 +121,20 @@
   <data name="DisplayName1024" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\displayname1024.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="FirstDriveContentsRelativePath" xml:space="preserve">
+    <value>Data\FirstDrive</value>
+  </data>
   <data name="Name1024" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\name1024.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="SecondDriveContentsRelativePath" xml:space="preserve">
+    <value>Data\SecondDrive</value>
+  </data>
   <data name="TestData" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\testdata.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="TestDbRelativePath" xml:space="preserve">
+    <value>Resources\TestLocal.db</value>
   </data>
   <data name="VolumeIdentifier1024" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\volumeidentifier1024.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>

@@ -117,6 +117,20 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
+        [TestMethod("string Kind")]
+        public void KindTestMethod()
+        {
+            Assert.Inconclusive("Test not implemented");
+            // TODO: Implement test for ushort Width
+
+            ExtendedProperties target = default; // TODO: Create and initialize ExtendedProperties instance
+            string expectedValue = default;
+            target.Width = default;
+            string actualValue = target.Kind;
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+
+
         [TestMethod("ushort Width")]
         public void WidthTestMethod()
         {
@@ -124,9 +138,9 @@ namespace FsInfoCat.UnitTests
             // TODO: Implement test for ushort Width
 
             ExtendedProperties target = default; // TODO: Create and initialize ExtendedProperties instance
-            ushort expectedValue = default;
+            ushort? expectedValue = default;
             target.Width = default;
-            ushort actualValue = target.Width;
+            ushort? actualValue = target.Width;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
@@ -137,9 +151,9 @@ namespace FsInfoCat.UnitTests
             // TODO: Implement test for ushort Height
 
             ExtendedProperties target = default; // TODO: Create and initialize ExtendedProperties instance
-            ushort expectedValue = default;
+            ushort? expectedValue = default;
             target.Height = default;
-            ushort actualValue = target.Height;
+            ushort? actualValue = target.Height;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamSubdirectory : ISubdirectory, IUpstreamDbEntity
+    public interface IUpstreamSubdirectory : ISubdirectory, IUpstreamDbFsItem
     {
         new IUpstreamSubdirectory Parent { get; set; }
 

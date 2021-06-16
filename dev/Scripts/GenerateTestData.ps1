@@ -1,4 +1,8 @@
-﻿Function Expand-NestedTypes {
+﻿Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.Data.Sqlite.dll');
+Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.WindowsAPICodePack.dll');
+Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.WindowsAPICodePack.Shell.dll');
+
+Function Expand-NestedTypes {
     [CmdletBinding()]
     Param(
         # Types to generate test stubs for.
@@ -30,37 +34,29 @@ Function Get-NestedNamespace {
     }
 }
 
-$Script:TypesByAssembly = [System.Collections.Generic.Dictionary[string,Type[]]]::new();
-$Script:TypesNamespace = [System.Collections.Generic.Dictionary[string,Type[]]]::new();
-[Type[]]$Script:AllTypes = @((Get-ChildItem -LiteralPath ($PSScriptRoot | Join-Path -ChildPath "..\..\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows7.0") -Filter '*.dll') | Where-Object {
-    -not ($_.Name.StartsWith('Microsoft.TestPlatForm') -or $_.Name.StartsWith('Microsoft.VisualStudio') -or $_.Name.StartsWith('testhost'))
-} | ForEach-Object {
-    [Type[]]$Types = @((Add-Type -LiteralPath $_.FullName -ErrorAction Stop -PassThru) | Expand-NestedTypes | Where-Object { $_.IsPublic });
-    if ($Types.Length -gt 0) {
-        $Name = $Types[0].Assembly.GetName().Name;
-        if ($Script:TypesByAssembly.ContainsKey($Name)) {
-            $Script:TypesByAssembly[$Name] = ([Type[]](@($Script:TypesByAssembly[$Name]) + @($Types)));
-        } else {
-            $Script:TypesByAssembly.Add($Name, $Types);
+if ($null -eq $Script:ProjectAssemblies) {
+    Set-Variable -Name 'ProjectAssemblies' -Option Constant -Scope Script -Value (&{
+        $Dictionary = [System.Collections.Generic.Dictionary[string,System.Collections.ObjectModel.ReadOnlyCollection[Type]]]::new();
+        foreach ($g in ((Get-ChildItem -LiteralPath ($PSScriptRoot | Join-Path -ChildPath "..\..\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows7.0") -Filter '*.dll') | Where-Object {
+            -not ($_.Name.StartsWith('Microsoft.TestPlatForm') -or $_.Name.StartsWith('Microsoft.VisualStudio') -or $_.Name.StartsWith('testhost'))
+        } | ForEach-Object {
+            (Add-Type -LiteralPath $_.FullName -ErrorAction Stop -PassThru) | Expand-NestedTypes | Where-Object { $_.IsPublic };
+        } | Group-Object -Property @{ Expression = { $_.Assembly.GetName().Name } })) {
+            $Dictionary.Add($g.Name, [System.Collections.ObjectModel.ReadOnlyCollection[Type]]::new(([Type[]]@($g.Group))));
         }
-        $Types | ForEach-Object {
-            $ns = Get-NestedNamespace -InputType $_;
-            if ($Script:TypesNamespace.ContainsKey($ns)) {
-                $Script:TypesNamespace[$Name] = ([Type[]](@($Script:TypesNamespace[$ns]) + @($_)));
-            } else {
-                $Script:TypesNamespace.Add($ns, ([Type[]](@($_))));
-            }
+        return [System.Collections.ObjectModel.ReadOnlyDictionary[string,System.Collections.ObjectModel.ReadOnlyCollection[Type]]]::new($Dictionary);
+    });
+
+    Set-Variable -Name 'ProjectNamespaces' -Option Constant -Scope Script -Value (&{
+        $Dictionary = [System.Collections.Generic.Dictionary[string,System.Collections.ObjectModel.ReadOnlyCollection[Type]]]::new();
+        foreach ($g in ($Script:ProjectAssemblies.Keys | ForEach-Object { $Script:ProjectAssemblies[$_] | Write-Output } | Group-Object -Property @{ Expression = { $_ | Get-NestedNamespace } })) {
+            $Dictionary.Add($g.Name, [System.Collections.ObjectModel.ReadOnlyCollection[Type]]::new(([Type[]]@($g.Group))));
         }
-        $Types | Write-Output;
-    }
-});
+        return [System.Collections.ObjectModel.ReadOnlyDictionary[string,System.Collections.ObjectModel.ReadOnlyCollection[Type]]]::new($Dictionary);
+    });
+}
 
 <#
-$Script:ProjectTypes = @('FsInfoCat', 'FsInfoCat.Local', 'FsInfoCat.Upstream', 'FsInfoCat.Desktop') | ForEach-Object {
-    Add-Type -LiteralPath ($PSScriptRoot | Join-Path -ChildPath "..\..\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows7.0\$_.dll") -ErrorAction Stop -PassThru;
-}
-#>
-
 Function New-AppUser {
     Param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
@@ -83,32 +79,6 @@ Function New-AppUser {
     )
 
     New-Object -TypeName 'System.Management.Automation.PSObject' -Property $PSBoundParameters;
-}
-
-Function ConvertTo-NormalizedDate {
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [DateTime]$Value
-    )
-
-    Process {
-        if ($Value -gt $Value.Date.AddHours(17)) {
-            $Value = $Value.Subtract([TimeSpan]::FromHours($Value.Hour - 16));
-        } else {
-            if ($Value -lt $Value.Date.AddHours(8)) {
-                $Value = $Value.Subtract([TimeSpan]::FromHours($Value.Hour + 8));
-            }
-        }
-        if ($Now.DayOfWeek -eq [DayOfWeek]::Saturday) {
-            $Value.Subtract([TimeSpan]::FromDays(1.0));
-        } else {
-            if ($Now.DayOfWeek -eq [DayOfWeek]::Sunday) {
-                $Value.Subtract([TimeSpan]::FromDays(2.0));
-            } else {
-                $Value;
-            }
-        }
-    }
 }
 
 $Script:AppUserCollection = @(
@@ -235,17 +205,44 @@ Function Out-AppUsers {
 
     }
 }
+#>
+
+Function ConvertTo-NormalizedDate {
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [DateTime]$Value
+    )
+
+    Process {
+        if ($Value -gt $Value.Date.AddHours(17)) {
+            $Value = $Value.Subtract([TimeSpan]::FromHours($Value.Hour - 16));
+        } else {
+            if ($Value -lt $Value.Date.AddHours(8)) {
+                $Value = $Value.Subtract([TimeSpan]::FromHours($Value.Hour + 8));
+            }
+        }
+        if ($Now.DayOfWeek -eq [DayOfWeek]::Saturday) {
+            $Value.Subtract([TimeSpan]::FromDays(1.0));
+        } else {
+            if ($Now.DayOfWeek -eq [DayOfWeek]::Sunday) {
+                $Value.Subtract([TimeSpan]::FromDays(2.0));
+            } else {
+                $Value;
+            }
+        }
+    }
+}
 
 Function Read-TargetType {
     [CmdletBinding()]
     Param()
     [Type[]]$Types = @();
     [PSCustomObject[]]$SelectionList = @();
-    [string[]]$Names = $Script:TypesByAssembly.Keys | Out-GridView -Title 'Pick assembly(s) (select none for all assemblies)' -OutputMode Multiple;
+    [string[]]$Names = $Script:ProjectAssemblies.Keys | Out-GridView -Title 'Pick assembly(s) (select none for all assemblies)' -OutputMode Multiple;
     if ($Names.Length -eq 0) {
-        [string[]]$Names = $Script:TypesNamespace.Key | Out-GridView -Title 'Pick namespace(s) (select none for all namespaces)' -OutputMode Multiple;
+        [string[]]$Names = $Script:ProjectNamespaces.Key | Out-GridView -Title 'Pick namespace(s) (select none for all namespaces)' -OutputMode Multiple;
         if ($Names.Length -eq 0) {
-            $Types = $Script:AllTypes;
+            $Types = @($Script:ProjectAssemblies.Keys | ForEach-Object { $Script:ProjectAssemblies[$_] | Write-Output });
             [PSCustomObject[]]$SelectionList = @($Types | Select-Object -Property 'Name', @{ Label = 'BaseType'; Expression = {
                 if ($_.IsEnum) {
                     '(enum)';
@@ -263,7 +260,7 @@ Function Read-TargetType {
             } }, @{ Label = 'Namespace'; Expression = { Get-NestedNamespace -InputType $_ } }, @{ Label = 'Assembly'; Expression = { $_.Assembly.GetName().Name } }, 'IsAbstract', 'IsCollectible', 'IsCOMObject',
                 'IsInterface');
         } else {
-            [Type[]]$Types = @($Names | ForEach-Object { $Script:TypesNamespace[$_] });
+            [Type[]]$Types = @($Names | ForEach-Object { $Script:ProjectNamespaces[$_] });
             if ($Names.Count -gt 1) {
                 [PSCustomObject[]]$SelectionList = @($Types | Select-Object -Property 'Name', @{ Label = 'BaseType'; Expression = {
                     if ($_.IsEnum) {
@@ -301,7 +298,7 @@ Function Read-TargetType {
             }
         }
     } else {
-        [Type[]]$Types = @($Names | ForEach-Object { $Script:TypesByAssembly[$_] });
+        [Type[]]$Types = @($Names | ForEach-Object { $Script:ProjectAssemblies[$_] });
         if ($Names.Count -gt 1) {
             [PSCustomObject[]]$SelectionList = @($Types | Select-Object -Property 'Name', @{ Label = 'BaseType'; Expression = {
                 if ($_.IsEnum) {
@@ -342,6 +339,7 @@ Function Read-TargetType {
     $PickedItems = $SelectionList | Out-GridView -Title 'Select target type(s)' -OutputMode Multiple;
     $PickedItems | ForEach-Object { $Types[$SelectionList.IndexOf($_)] }
 }
+
 Function Add-TypeNamespaces {
     [CmdletBinding()]
     Param(
@@ -818,4 +816,91 @@ Function Build-TestStub {
     }
 }
 
-Read-TargetType | Build-TestStub -InformationAction Continue;
+Function Read-FileSystemItemExtendedProperties {
+    [CmdletBinding(DefaultParameterSetName="WC")]
+    param (
+        # Specifies a path to one or more file system items. Wildcards are permitted.
+        [Parameter(Mandatory=$true,
+                   Position=0,
+                   ParameterSetName="WC",
+                   ValueFromPipeline=$true,
+                   HelpMessage="Path to one or more file system items.")]
+        [ValidateNotNullOrEmpty()]
+        [SupportsWildcards()]
+        [string[]]$Path,
+
+        # Specifies a path to one or more locations. Unlike the Path parameter, the value of the LiteralPath parameter is
+        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory=$true,
+                   ParameterSetName="LP",
+                   ValueFromPipelineByPropertyName=$true,
+                   HelpMessage="Literal path to one or more file system items.")]
+        [Alias("PSPath", "FullName")]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$LiteralPath
+    )
+
+    process {
+        if ($PSBoundParameters.ContainsKey('Path')) {
+            Read-FileSystemItemExtendedProperties -LiteralPath ($Path | Resolve-Path | Select-Object -ExpandProperty 'Path');
+        } else {
+            $LiteralPath | ForEach-Object {
+                $Item = Get-Item -LiteralPath $_;
+                $ShellObject = $null;
+                if ($Item.PSIsContainer) {
+                    $ShellObject = [Microsoft.WindowsAPICodePack.Shell.ShellFileSystemFolder]::FromFolderPath($Item.FullName);
+                } else {
+                    $ShellObject = [Microsoft.WindowsAPICodePack.Shell.ShellFile]::FromFilePath($Item.FullName);
+                }
+                $Item | Add-Member -MemberType NoteProperty -Name 'IsLink' -Value $ShellObject.IsLink -Force;
+                $Name = $ShellObject.GetDisplayName([Microsoft.WindowsAPICodePack.Shell.DisplayNameType]::RelativeToParentEditing);
+                if ([string]::IsNullOrWhiteSpace($Name)) {
+                    $Item | Add-Member -MemberType NoteProperty -Name 'DisplayName' -Value $ShellObject.Name -Force;
+                } else {
+                    $Item | Add-Member -MemberType NoteProperty -Name 'DisplayName' -Value $Name -Force;
+                }
+                $Properties = @($Item.PSObject.Properties | Select-Object -ExpandProperty 'Name');
+                [Xml]$MetaData = '<MetaData/>'
+                $ShellObject.Properties.DefaultPropertyCollection | ForEach-Object {
+                    $XmlElement = $MetaData.DocumentElement.AppendChild($MetaData.CreateElement('Property'));
+                    $Name = $_.CanonicalName;
+                    if (-not [string]::IsNullOrWhiteSpace($Name)) {
+                        $i = $Name.LastIndexOf('.') + 1;
+                        if ($i -gt 0) { $Name = $Name.Substring($i) }
+                        if ($Properties -inotcontains $Name) {
+                            $Properties += $Name;
+                            $Item | Add-Member -MemberType NoteProperty -Name $Name -Value $_.ValueAsObject;
+                            $XmlElement.Attributes.Append($MetaData.CreateAttribute("Name")).Value = $Name;
+                        }
+                        $XmlElement.Attributes.Append($MetaData.CreateAttribute("CanonicalName")).Value = $_.CanonicalName;
+                    }
+                    $XmlElement.Attributes.Append($MetaData.CreateAttribute("PropertyId")).Value = $_.PropertyKey.PropertyId.ToString();
+                    $XmlElement.Attributes.Append($MetaData.CreateAttribute("FormatId")).Value = $_.PropertyKey.FormatId.ToString();
+                    $XmlElement.Attributes.Append($MetaData.CreateAttribute("DisplayType")).Value = $_.Description.DisplayType.ToString('F');
+                    $XmlElement.Attributes.Append($MetaData.CreateAttribute("GroupingRange")).Value = $_.Description.GroupingRange.ToString('F');
+                    $XmlElement.Attributes.Append($MetaData.CreateAttribute("DisplayType")).Value = $_.Description.DisplayType;
+                    if ($null -ne $_.Description.DisplayName) { $XmlElement.InnerText = $_.Description.DisplayName }
+                }
+                $Item | Add-Member -MemberType NoteProperty -Name '__MetaData' -Value $MetaData;
+                $Item | Write-Output;
+            }
+        }
+    }
+}
+
+Function Import-LocalTestData {
+
+}
+
+
+$Item = Read-FileSystemItemExtendedProperties -LiteralPath ($PSScriptRoot | Join-Path -ChildPath '..\..\Resources\Reference\CategorizedSources.xml');
+($Item.PSObject.Properties | Select-Object -Property 'Name', 'Value') | Out-GridView;
+[System.Windows.Clipboard]::SetText($Item.__MetaData.OuterXml)
+
+<#
+Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.Data.Sqlite.dll'
+Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.WindowsAPICodePack.dll'
+Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.WindowsAPICodePack.Shell.dll'
+#>

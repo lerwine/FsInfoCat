@@ -24,57 +24,22 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalDbContextTests
     {
-        private static TestContext _testContext;
-
         [AssemblyInitialize()]
-#pragma warning disable IDE0060 // Remove unused parameter
-        public static void AssemblyInit(TestContext context)
-#pragma warning restore IDE0060 // Remove unused parameter
-        {
-            string dbPath = Path.Combine(AppContext.BaseDirectory, TestHelper.TEST_DB_PATH);
-            Services.Initialize(services =>
-            {
-                LocalDbContext.ConfigureServices(services, dbPath);
-            }).Wait();
-            //var logger = Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContextTests>>();
-            //using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
-            //XDocument document = XDocument.Parse(Properties.Resources.DbCommands);
-            //var logger = Services.ServiceProvider.GetService<ILogger<LocalDbContextTests>>();
-            //foreach (XElement element in document.Root.Element("DropTables").Elements("Text"))
-            //{
-            //    logger.LogInformation(element.Attribute("Message").Value);
-            //    dbContext.Database.ExecuteSqlRaw(element.Value.Trim());
-            //}
-            //foreach (XElement element in document.Root.Element("DbCreation").Elements("Text"))
-            //{
-            //    logger.LogInformation(element.Attribute("Message").Value);
-            //    dbContext.Database.ExecuteSqlRaw(element.Value.Trim());
-            //}
-            //dbContext.Import(XDocument.Parse(Properties.Resources.TestData));
-        }
+        public static void AssemblyInit(TestContext context) => TestHelper.AssemblyInit(context);
 
         [AssemblyCleanup()]
-        public static void AssemblyCleanup()
-        {
-            using (Services.Host)
-                Services.Host.StopAsync(TimeSpan.FromSeconds(5)).Wait();
-        }
-
-        [ClassInitialize]
-        public static void OnClassInitialize(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
+        public static void AssemblyCleanup() => TestHelper.AssemblyCleanup();
 
         [TestMethod("new LocalDbContext(DbContextOptions<LocalDbContext>)")]
         public void NewLocalDbContextDbContextOptionsTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using LocalDbContext dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
 
             Assert.IsNotNull(dbContext.FileSystems);
             Assert.IsNotNull(dbContext.SymbolicNames);
             Assert.IsNotNull(dbContext.Volumes);
             Assert.IsNotNull(dbContext.VolumeAccessErrors);
+            Assert.IsNotNull(dbContext.CrawlConfigurations);
             Assert.IsNotNull(dbContext.Subdirectories);
             Assert.IsNotNull(dbContext.SubdirectoryAccessErrors);
             Assert.IsNotNull(dbContext.Files);
