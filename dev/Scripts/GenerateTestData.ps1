@@ -890,17 +890,1002 @@ Function Read-FileSystemItemExtendedProperties {
     }
 }
 
-Function Import-LocalTestData {
-
+class Win32LogicalDisk {
+    [ushort]$Access;
+    [ulong]$Availability;
+    [ulong]$BlockSize;
+    [string]$Caption;
+    [bool]$Compressed;
+    [uint]$ConfigManagerErrorCode;
+    [bool]$ConfigManagerUserConfig;
+    [string]$CreationClassName;
+    [string]$Description;
+    [string]$DeviceID;
+    [uint]$DriveType;
+    [bool]$ErrorCleared;
+    [string]$ErrorDescription;
+    [string]$ErrorMethodology;
+    [string]$FileSystem;
+    [ulong]$FreeSpace;
+    [Nullable[DateTime]]$InstallDate;
+    [uint]$LastErrorCode;
+    [uint]$MaximumComponentLength;
+    [uint]$MediaType;
+    [string]$Name;
+    [ulong]$NumberOfBlocks;
+    [string]$PNPDeviceID;
+    [ushort[]]$PowerManagementCapabilities;
+    [bool]$PowerManagementSupported;
+    [string]$ProviderName;
+    [string]$PSComputerName;
+    [string]$Purpose;
+    [bool]$QuotasDisabled;
+    [bool]$QuotasIncomplete;
+    [bool]$QuotasRebuilding;
+    [ulong]$Size;
+    [string]$Status;
+    [ushort]$StatusInfo;
+    [bool]$SupportsDiskQuotas;
+    [bool]$SupportsFileBasedCompression;
+    [string]$SystemCreationClassName;
+    [string]$SystemName;
+    [bool]$VolumeDirty;
+    [string]$VolumeName;
+    [string]$VolumeSerialNumber;
+    Win32LogicalDisk([Microsoft.Management.Infrastructure.CimInstance]$CimInstance) {
+        $this.Access = $CimInstance.Access;
+        $this.Access = $CimInstance.Access;
+        $this.Availability = $CimInstance.Availability;
+        $this.BlockSize = $CimInstance.BlockSize;
+        $this.Caption = $CimInstance.Caption;
+        $this.Compressed = $CimInstance.Compressed;
+        $this.ConfigManagerErrorCode = $CimInstance.ConfigManagerErrorCode;
+        $this.ConfigManagerUserConfig = $CimInstance.ConfigManagerUserConfig;
+        $this.CreationClassName = $CimInstance.CreationClassName;
+        $this.Description = $CimInstance.Description;
+        $this.DeviceID = $CimInstance.DeviceID;
+        $this.DriveType = $CimInstance.DriveType;
+        $this.ErrorCleared = $CimInstance.ErrorCleared;
+        $this.ErrorDescription = $CimInstance.ErrorDescription;
+        $this.ErrorMethodology = $CimInstance.ErrorMethodology;
+        $this.FileSystem = $CimInstance.FileSystem;
+        $this.FreeSpace = $CimInstance.FreeSpace;
+        $this.InstallDate = $CimInstance.InstallDate;
+        $this.LastErrorCode = $CimInstance.LastErrorCode;
+        $this.MaximumComponentLength = $CimInstance.MaximumComponentLength;
+        $this.MediaType = $CimInstance.MediaType;
+        $this.Name = $CimInstance.Name;
+        $this.NumberOfBlocks = $CimInstance.NumberOfBlocks;
+        $this.PNPDeviceID = $CimInstance.PNPDeviceID;
+        $this.PowerManagementCapabilities = $CimInstance.PowerManagementCapabilities;
+        $this.PowerManagementSupported = $CimInstance.PowerManagementSupported;
+        $this.ProviderName = $CimInstance.ProviderName;
+        $this.PSComputerName = $CimInstance.PSComputerName;
+        $this.Purpose = $CimInstance.Purpose;
+        $this.QuotasDisabled = $CimInstance.QuotasDisabled;
+        $this.QuotasIncomplete = $CimInstance.QuotasIncomplete;
+        $this.QuotasRebuilding = $CimInstance.QuotasRebuilding;
+        $this.Size = $CimInstance.Size;
+        $this.Status = $CimInstance.Status;
+        $this.StatusInfo = $CimInstance.StatusInfo;
+        $this.SupportsDiskQuotas = $CimInstance.SupportsDiskQuotas;
+        $this.SupportsFileBasedCompression = $CimInstance.SupportsFileBasedCompression;
+        $this.SystemCreationClassName = $CimInstance.SystemCreationClassName;
+        $this.SystemName = $CimInstance.SystemName;
+        $this.VolumeDirty = $CimInstance.VolumeDirty;
+        $this.VolumeName = $CimInstance.VolumeName;
+        $this.VolumeSerialNumber = $CimInstance.VolumeSerialNumber;
+    }
 }
 
+Function Get-Win32LogicalDisk {
+    [CmdletBinding()]
+    [OutputType([Win32LogicalDisk])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateScript({ [System.IO.Path]::IsPathFullyQualified($_) })]
+        [string]$Path
+    )
+
+    $p = [System.IO.Path]::GetPathRoot($Path);
+    foreach ($CimInstance in  (Get-CimInstance -ClassName 'Win32_LogicalDisk')) {
+        $RelatedInstance = $CimInstance | Get-CimAssociatedInstance -Association 'Win32_LogicalDiskRootDirectory';
+        if ($null -ne $RelatedInstance -and $RelatedInstance.Name -ieq $p) {
+            return [Win32LogicalDisk]::new($CimInstance);
+        }
+    }
+}
+
+Function Get-TestFileSystemElement {
+    [CmdletBinding(DefaultParameterSetName = 'Id')]
+    Param(
+        [Parameter(Mandatory = $true, ParameterSetName = 'Id')]
+        [ValidateNotNull()]
+        [Guid]$Id,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'LogicalDisk')]
+        [ValidateNotNull()]
+        [Win32LogicalDisk]$LogicalDisk,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNull()]
+        [ValidateScript({ $null -ne $_.DocumentElement -and $_.DocumentElement.NamespaceURI.Length -eq 0 -and $_.DocumentElement.LocalName -eq 'SampleData' })]
+        [System.Xml.XmlDocument]$SampleData
+    )
+
+    if ($PSCmdlet.ParameterSetName -eq 'LogicalDisk') {
+        $SymbolicNameElement = $SampleData.DocumentElement.SelectSingleNode("FileSystem/SymbolicName[text()=`"$($LogicalDisk.FileSystem)`"]");
+        if ($null -eq $SymbolicNameElement) {
+            $XmlElement = $SampleData.DocumentElement.AppendChild($SampleData.CreateElement('FileSystem'));
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('Id')).Value = [Guid]::NewGuid().ToString('D');
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('DisplayName')).Value = $LogicalDisk.FileSystem;
+            if ($LogicalDisk.DriveType -eq [System.IO.DriveType]::CDRom) {
+                $XmlElement.Attributes.Append($SampleData.CreateAttribute('ReadOnly')).Value = 'true';
+            }
+            $SymbolicNameElement = $XmlElement.AppendChild($SampleData.CreateElement('SymbolicName'));
+            $SymbolicNameElement.Attributes.Append($SampleData.CreateAttribute('Id')).Value = [Guid]::NewGuid().ToString('D');
+            $SymbolicNameElement.InnerText = $LogicalDisk.FileSystem;
+            $CreatedOn = [DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss');
+            $SymbolicNameElement.Attributes.Append($SampleData.CreateAttribute('CreatedOn')).Value = $CreatedOn;
+            $SymbolicNameElement.Attributes.Append($SampleData.CreateAttribute('ModifiedOn')).Value = $CreatedOn;
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('CreatedOn')).Value = $CreatedOn;
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('ModifiedOn')).Value = $CreatedOn;
+            $XmlElement | Write-Output;
+        } else {
+            $SymbolicNameElement.ParentNode | Write-Output;
+        }
+    } else {
+        $SampleData.DocumentElement.SelectSingleNode("FileSystem[@Id=`"$Id`"]") | Write-Output;
+    }
+}
+
+Function Get-TestVolumeElement {
+    [CmdletBinding(DefaultParameterSetName = 'Id')]
+    Param(
+        [Parameter(Mandatory = $true, ParameterSetName = 'Id')]
+        [ValidateNotNull()]
+        [Guid]$Id,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'LogicalDisk')]
+        [ValidateNotNull()]
+        [Win32LogicalDisk]$LogicalDisk,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNull()]
+        [ValidateScript({ $null -ne $_.DocumentElement -and $_.DocumentElement.NamespaceURI.Length -eq 0 -and $_.DocumentElement.LocalName -eq 'SampleData' })]
+        [System.Xml.XmlDocument]$SampleData
+    )
+
+    if ($PSCmdlet.ParameterSetName -eq 'LogicalDisk') {
+        $TestFileSystemElement = Get-TestFileSystemElement -LogicalDisk $LogicalDisk -SampleData $SampleData;
+        $Identifier = '';
+        if ($LogicalDisk.DriveType -eq [System.IO.DriveType]::Network) {
+            $Identifier = $LogicalDisk.ProviderName -replace '/$', '';
+        } else {
+            $Identifier = "urn:volume:id:$($LogicalDisk.VolumeSerialNumber.Substring(0, 4))-$($LogicalDisk.VolumeSerialNumber.Substring(4))";
+        }
+        $XmlElement = $TestFileSystemElement.SelectSingleNode("FileSystem/Volume[@Identifer=`"$Identifier`"]");
+        if ($null -eq $XmlElement) {
+            $XmlElement = $TestFileSystemElement.AppendChild($SampleData.CreateElement('Volume'));
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('Id')).Value = [Guid]::NewGuid().ToString('D');
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('VolumeName')).Value = '' + $LogicalDisk.VolumeName;
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('Identifier')).Value = $Identifier;
+            if ([string]::IsNullOrWhiteSpace($LogicalDisk.Name)) {
+                $XmlElement.Attributes.Append($SampleData.CreateAttribute('DisplayName')).Value = $LogicalDisk.VolumeName;
+            } else {
+                $XmlElement.Attributes.Append($SampleData.CreateAttribute('DisplayName')).Value = $LogicalDisk.Name;
+            }
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('Type')).Value = $LogicalDisk.DriveType;
+            $CreatedOn = [DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss');
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('CreatedOn')).Value = $CreatedOn;
+            $XmlElement.Attributes.Append($SampleData.CreateAttribute('ModifiedOn')).Value = $CreatedOn;
+            $XmlElement | Write-Output;
+        }
+    }
+}
+
+Add-Type -TypeDefinition @'
+namespace FsInfoCat.Local
+{
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Xml;
+    public abstract class DbEntityNode
+    {
+        private XmlElement _element;
+        public Guid? UpstreamId
+        {
+            get { return GetAttributeGuid("UpstreamId"); }
+            set { SetAttributeGuid("UpstreamId", value); }
+        }
+        public DateTime? LastSynchronizedOn
+        {
+            get { return GetAttributeDateTime("LastSynchronizedOn"); }
+            set { SetAttributeDateTime("LastSynchronizedOn", value); }
+        }
+        public DateTime CreatedOn
+        {
+            get
+            {
+                DateTime? dateTime = GetAttributeDateTime("CreatedOn");
+                if (dateTime.HasValue)
+                    return dateTime.Value;
+                if (!(dateTime = GetAttributeDateTime("ModifiedOn")).HasValue)
+                    dateTime = DateTime.Now;
+                SetAttributeDateTime("CreatedOn", dateTime.Value);
+                return dateTime.Value;
+            }
+            set { SetAttributeDateTime("CreatedOn", value); }
+        }
+        public DateTime ModifiedOn
+        {
+            get
+            {
+                DateTime? dateTime = GetAttributeDateTime("ModifiedOn");
+                if (dateTime.HasValue)
+                    return dateTime.Value;
+                if (!(dateTime = GetAttributeDateTime("CreatedOn")).HasValue)
+                    dateTime = DateTime.Now;
+                SetAttributeDateTime("ModifiedOn", dateTime.Value);
+                return dateTime.Value;
+            }
+            set { SetAttributeDateTime("ModifiedOn", value); }
+        }
+        internal XmlElement Element { get { return _element; } }
+        protected XmlDocument OwnerDocument { get { return _element.OwnerDocument; } }
+        protected DbEntityNode(XmlElement element)
+        {
+            _element = element;
+        }
+        protected string GetAttributeString(string name, string defaultValue = null)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? defaultValue : attribute.Value;
+        }
+        protected Guid? GetAttributeGuid(string name)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? null : XmlConvert.ToGuid(attribute.Value);
+        }
+        protected DateTime? GetAttributeDateTime(string name)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? null : XmlConvert.ToDateTime(attribute.Value, "yyyy-MM-dd HH:mm:ss");
+        }
+        protected byte? GetAttributeByte(string name)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? null : XmlConvert.ToByte(attribute.Value);
+        }
+        protected byte GetAttributeByte(string name, byte defaultValue)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? defaultValue : XmlConvert.ToByte(attribute.Value);
+        }
+        protected int? GetAttributeInt32(string name)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? null : XmlConvert.ToInt32(attribute.Value);
+        }
+        protected int GetAttributeInt32(string name, int defaultValue)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? defaultValue : XmlConvert.ToInt32(attribute.Value);
+        }
+        protected bool GetAttributeBoolean(string name, bool defaultValue = false)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? defaultValue : XmlConvert.ToBoolean(attribute.Value);
+        }
+        protected bool? GetAttributeBooleanOpt(string name)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            return (attribute is null) ? null : XmlConvert.ToBoolean(attribute.Value);
+        }
+        protected void SetAttributeString(string name, string value)
+        {
+            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
+            if (attribute == null)
+            {
+                if (value != null)
+                    _element.Attributes.Append(OwnerDocument.CreateAttribute(name)).Value = value;
+            }
+            else if (value == null)
+                _element.Attributes.Remove(attribute);
+            else
+                attribute.Value = value;
+        }
+        protected void SetAttributeBoolean(string name, bool? value, bool? defaultValue = false)
+        {
+            SetAttributeString(name, (value.HasValue && (!defaultValue.HasValue || value.Value != defaultValue.Value)) ? XmlConvert.ToString(value.Value) : null);
+        }
+        protected void SetAttributeGuid(string name, Guid? value)
+        {
+            if (value.HasValue)
+                SetAttributeString(name, XmlConvert.ToString(value.Value));
+            else
+                SetAttributeString(name, null);
+        }
+        protected void SetAttributeByte(string name, byte? value)
+        {
+            if (value.HasValue)
+                SetAttributeString(name, XmlConvert.ToString(value.Value));
+            else
+                SetAttributeString(name, null);
+        }
+        protected void SetAttributeByte(string name, byte? value, byte? defaultValue = null)
+        {
+            if (value.HasValue && (!defaultValue.HasValue || defaultValue.Value != value.Value))
+                SetAttributeString(name, XmlConvert.ToString(value.Value));
+            else
+                SetAttributeString(name, null);
+        }
+        protected void SetAttributeInt32(string name, int? value, int? defaultValue = null)
+        {
+            if (value.HasValue && (!defaultValue.HasValue || defaultValue.Value != value.Value))
+                SetAttributeString(name, XmlConvert.ToString(value.Value));
+            else
+                SetAttributeString(name, null);
+        }
+        protected void SetAttributeUInt16(string name, ushort? value, ushort? defaultValue = null)
+        {
+            if (value.HasValue && (!defaultValue.HasValue || defaultValue.Value != value.Value))
+                SetAttributeString(name, XmlConvert.ToString(value.Value));
+            else
+                SetAttributeString(name, null);
+        }
+        protected void SetAttributeUInt64(string name, ulong? value, ulong? defaultValue)
+        {
+            if (value.HasValue && (!defaultValue.HasValue || defaultValue.Value != value.Value))
+                SetAttributeString(name, XmlConvert.ToString(value.Value));
+            else
+                SetAttributeString(name, null);
+        }
+        protected void SetAttributeDateTime(string name, DateTime? value)
+        {
+            if (value.HasValue)
+                SetAttributeString(name, XmlConvert.ToString(value.Value, "yyyy-MM-dd HH:mm:ss"));
+            else
+                SetAttributeString(name, null);
+        }
+    }
+    public class FileNode : DbEntityNode
+    {
+        public const string Element_Name = "File";
+        private SubdirectoryNode _parent;
+        public SubdirectoryNode Parent { get { return _parent; } }
+        public FileNode(SubdirectoryNode parent, XmlElement element) : base(element)
+        {
+            if (parent is null)
+                throw new ArgumentNullException("parent");
+            if (element is null)
+                throw new ArgumentNullException("element");
+            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
+                throw new ArgumentOutOfRangeException("element");
+            _parent = parent;
+        }
+    }
+    public class SubdirectoryNode : DbEntityNode
+    {
+        public const string Element_Name = "Subdirectory";
+        public const string Root_Element_Name = "RootDirectory";
+        private SubdirectoryNode _parent;
+        private VolumeNode _volume;
+        private Collection<FileNode> _files = new Collection<FileNode>();
+        private ReadOnlyCollection<FileNode> _roFiles;
+        private Collection<SubdirectoryNode> _subdirectories = new Collection<SubdirectoryNode>();
+        private ReadOnlyCollection<SubdirectoryNode> _roSubdirectories;
+        public Guid Id
+        {
+            get
+            {
+                Guid? id = GetAttributeGuid("Id");
+                if (id.HasValue)
+                    return id.Value;
+                Guid value = new Guid();
+                SetAttributeGuid("Id", value);
+                return value;
+            }
+            set { SetAttributeGuid("Id", value); }
+        }
+        public SubdirectoryNode Parent { get { return _parent; } }
+        public VolumeNode Volume { get { return _volume; } }
+        public ReadOnlyCollection<FileNode> Files { get { return _roFiles; } }
+        public ReadOnlyCollection<SubdirectoryNode> Subdirectories { get { return _roSubdirectories; } }
+        public SubdirectoryNode(SubdirectoryNode parent, XmlElement element) : base(element)
+        {
+            if (parent is null)
+                throw new ArgumentNullException("parent");
+            if (element is null)
+                throw new ArgumentNullException("element");
+            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
+                throw new ArgumentOutOfRangeException("element");
+            _volume = (_parent = parent)._volume;
+            _roFiles = new ReadOnlyCollection<FileNode>(_files);
+            _roSubdirectories = new ReadOnlyCollection<SubdirectoryNode>(_subdirectories);
+            foreach (XmlElement e in element.SelectNodes(FileNode.Element_Name))
+                _files.Add(new FileNode(this, e));
+            foreach (XmlElement e in element.SelectNodes(Element_Name))
+                _subdirectories.Add(new SubdirectoryNode(this, e));
+        }
+        public SubdirectoryNode(VolumeNode parent, XmlElement element) : base(element)
+        {
+            if (parent is null)
+                throw new ArgumentNullException("parent");
+            if (element is null)
+                throw new ArgumentNullException("element");
+            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
+                throw new ArgumentOutOfRangeException("element");
+            _volume = parent;
+            _roFiles = new ReadOnlyCollection<FileNode>(_files);
+            _roSubdirectories = new ReadOnlyCollection<SubdirectoryNode>(_subdirectories);
+            foreach (XmlElement e in element.SelectNodes(FileNode.Element_Name))
+                _files.Add(new FileNode(this, e));
+            foreach (XmlElement e in element.SelectNodes(Element_Name))
+                _subdirectories.Add(new SubdirectoryNode(this, e));
+        }
+    }
+    public class CrawlConfigurationNode : DbEntityNode
+    {
+        public const string Element_Name = "CrawlConfiguration";
+        private SubdirectoryNode _parent;
+        public Guid Id
+        {
+            get
+            {
+                Guid? id = GetAttributeGuid("Id");
+                if (id.HasValue)
+                    return id.Value;
+                Guid value = new Guid();
+                SetAttributeGuid("Id", value);
+                return value;
+            }
+            set { SetAttributeGuid("Id", value); }
+        }
+        public SubdirectoryNode Parent { get { return _parent; } }
+        public CrawlConfigurationNode(SubdirectoryNode parent, XmlElement element) : base(element)
+        {
+            if (parent is null)
+                throw new ArgumentNullException("parent");
+            if (element is null)
+                throw new ArgumentNullException("element");
+            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
+                throw new ArgumentOutOfRangeException("element");
+            _parent = parent;
+        }
+    }
+    public class VolumeNode : DbEntityNode
+    {
+        public const string Element_Name = "Volume";
+        private FileSystemNode _fileSystem;
+        private SubdirectoryNode _rootDirectory;
+        public Guid Id
+        {
+            get
+            {
+                Guid? id = GetAttributeGuid("Id");
+                if (id.HasValue)
+                    return id.Value;
+                Guid value = new Guid();
+                SetAttributeGuid("Id", value);
+                return value;
+            }
+            set { SetAttributeGuid("Id", value); }
+        }
+        public string DisplayName
+        {
+            get { return GetAttributeString("DisplayName", ""); }
+            set { SetAttributeString("DisplayName", (value == null) ? "" : value); }
+        }
+        public string VolumeName
+        {
+            get { return GetAttributeString("VolumeName", ""); }
+            set { SetAttributeString("VolumeName", (value == null) ? "" : value); }
+        }
+        public string Identifier
+        {
+            get { return GetAttributeString("Identifier", ""); }
+            set { SetAttributeString("Identifier", (value == null) ? "" : value); }
+        }
+        public bool? CaseSensitiveSearch
+        {
+            get { return GetAttributeBooleanOpt("CaseSensitiveSearch"); }
+            set { SetAttributeBoolean("CaseSensitiveSearch", value, null); }
+        }
+        public bool? ReadOnly
+        {
+            get { return GetAttributeBooleanOpt("ReadOnly"); }
+            set { SetAttributeBoolean("ReadOnly", value, null); }
+        }
+
+        public int? MaxNameLength
+        {
+            get { return GetAttributeInt32("MaxNameLength"); }
+            set { SetAttributeInt32("MaxNameLength", value, null); }
+        }
+        public int Type
+        {
+            get { return GetAttributeInt32("Type", (int)System.IO.DriveType.Unknown); }
+            set { SetAttributeInt32("Type", value); }
+        }
+        public string Notes
+        {
+            get
+            {
+                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
+                return (element is null || element.IsEmpty) ? null : element.InnerText;
+            }
+            set
+            {
+                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    if (element != null)
+                        Element.RemoveChild(element);
+                }
+                else if (element == null)
+                    Element.AppendChild(OwnerDocument.CreateElement("Notes")).InnerText = value;
+                else
+                    element.InnerText = value;
+            }
+        }
+        VolumeStatus Status { get; set; }
+        public FileSystemNode FileSystem { get { return _fileSystem; } }
+        public SubdirectoryNode RootDirectory { get { return _rootDirectory; } }
+        public VolumeNode(FileSystemNode parent, XmlElement element) : base(element)
+        {
+            if (parent is null)
+                throw new ArgumentNullException("parent");
+            if (element is null)
+                throw new ArgumentNullException("element");
+            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
+                throw new ArgumentOutOfRangeException("element");
+            _fileSystem = parent;
+            XmlElement e = (XmlElement)element.SelectSingleNode(SubdirectoryNode.Element_Name);
+            if (e != null)
+                _rootDirectory = new SubdirectoryNode(this, e);
+        }
+    }
+    public class SymbolicNameNode : DbEntityNode
+    {
+        public const string Element_Name = "SymbolicName";
+        private FileSystemNode _fileSystem;
+        public Guid Id
+        {
+            get
+            {
+                Guid? id = GetAttributeGuid("Id");
+                if (id.HasValue)
+                    return id.Value;
+                Guid value = new Guid();
+                SetAttributeGuid("Id", value);
+                return value;
+            }
+            set { SetAttributeGuid("Id", value); }
+        }
+        public string Name
+        {
+            get { return GetAttributeString("Name", ""); }
+            set { SetAttributeString("Name", (value == null) ? "" : value); }
+        }
+        public int Priority
+        {
+            get { return GetAttributeInt32("Priority", 0); }
+            set { SetAttributeInt32("Priority", value, 0); }
+        }
+        public string Notes
+        {
+            get
+            {
+                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
+                return (element is null || element.IsEmpty) ? null : element.InnerText;
+            }
+            set
+            {
+                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    if (element != null)
+                        Element.RemoveChild(element);
+                }
+                else if (element == null)
+                    Element.AppendChild(OwnerDocument.CreateElement("Notes")).InnerText = value;
+                else
+                    element.InnerText = value;
+            }
+        }
+        public bool IsInactive
+        {
+            get { return GetAttributeBoolean("ReadOnly"); }
+            set { SetAttributeBoolean("ReadOnly", value); }
+        }
+        public FileSystemNode FileSystem { get { return _fileSystem; } }
+        public SymbolicNameNode(FileSystemNode parent, XmlElement element) : base(element)
+        {
+            if (parent is null)
+                throw new ArgumentNullException("parent");
+            if (element is null)
+                throw new ArgumentNullException("element");
+            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
+                throw new ArgumentOutOfRangeException("element");
+            _fileSystem = parent;
+        }
+    }
+    public class FileSystemNode : DbEntityNode
+    {
+        public const string Element_Name = "FileSystem";
+        private SampleDataNode _owner;
+        private Collection<SymbolicNameNode> _symbolicNames = new Collection<SymbolicNameNode>();
+        private ReadOnlyCollection<SymbolicNameNode> _roSymbolicNames;
+        private Collection<VolumeNode> _volumes = new Collection<VolumeNode>();
+        private ReadOnlyCollection<VolumeNode> _roVolumes;
+        public Guid Id
+        {
+            get
+            {
+                Guid? id = GetAttributeGuid("Id");
+                if (id.HasValue)
+                    return id.Value;
+                Guid value = new Guid();
+                SetAttributeGuid("Id", value);
+                return value;
+            }
+            set { SetAttributeGuid("Id", value); }
+        }
+        public string DisplayName
+        {
+            get { return GetAttributeString("DisplayName", ""); }
+            set { SetAttributeString("DisplayName", (value == null) ? "" : value); }
+        }
+        public bool CaseSensitiveSearch
+        {
+            get { return GetAttributeBoolean("CaseSensitiveSearch"); }
+            set { SetAttributeBoolean("DisplayName", value); }
+        }
+        public bool ReadOnly
+        {
+            get { return GetAttributeBoolean("ReadOnly"); }
+            set { SetAttributeBoolean("ReadOnly", value); }
+        }
+        public int MaxNameLength
+        {
+            get { return GetAttributeInt32("MaxNameLength", 255); }
+            set { SetAttributeInt32("MaxNameLength", value, 255); }
+        }
+        public byte? DefaultDriveType
+        {
+            get { return GetAttributeByte("DefaultDriveType"); }
+            set { SetAttributeByte("DefaultDriveType", value); }
+        }
+        public string Notes
+        {
+            get
+            {
+                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
+                return (element is null || element.IsEmpty) ? null : element.InnerText;
+            }
+            set
+            {
+                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    if (element != null)
+                        Element.RemoveChild(element);
+                }
+                else if (element == null)
+                    Element.AppendChild(OwnerDocument.CreateElement("Notes")).InnerText = value;
+                else
+                    element.InnerText = value;
+            }
+        }
+        public bool IsInactive
+        {
+            get { return GetAttributeBoolean("ReadOnly"); }
+            set { SetAttributeBoolean("ReadOnly", value); }
+        }
+        public SampleDataNode Owner { get { return _owner; } }
+        public ReadOnlyCollection<SymbolicNameNode> SymbolicNames { get { return _roSymbolicNames; } }
+        public ReadOnlyCollection<VolumeNode> Volumes { get { return _roVolumes; } }
+        public FileSystemNode(SampleDataNode parent, XmlElement element) : base(element)
+        {
+            if (parent is null)
+                throw new ArgumentNullException("parent");
+            if (element is null)
+                throw new ArgumentNullException("element");
+            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
+                throw new ArgumentOutOfRangeException("element");
+            _owner = parent;
+            _roSymbolicNames = new ReadOnlyCollection<SymbolicNameNode>(_symbolicNames);
+            _roVolumes = new ReadOnlyCollection<VolumeNode>(_volumes);
+            foreach (XmlElement e in element.SelectNodes(SymbolicNameNode.Element_Name))
+                _symbolicNames.Add(new SymbolicNameNode(this, e));
+            foreach (XmlElement e in element.SelectNodes(VolumeNode.Element_Name))
+                _volumes.Add(new VolumeNode(this, e));
+        }
+    }
+    public class SampleDataNode : DbEntityNode
+    {
+        public const string Element_Name = "SampleData";
+        private Collection<FileSystemNode> _fileSystems = new Collection<FileSystemNode>();
+        private ReadOnlyCollection<FileSystemNode> _roFileSystems;
+        public ReadOnlyCollection<FileSystemNode> FileSystems { get { return _roFileSystems; } }
+        public SampleDataNode(XmlDocument document) : base(document.DocumentElement)
+        {
+            if (document.DocumentElement.LocalName != Element_Name)
+                throw new ArgumentOutOfRangeException("document");
+            _roFileSystems = new ReadOnlyCollection<FileSystemNode>(_fileSystems);
+            foreach (XmlElement element in document.DocumentElement.SelectNodes(FileSystemNode.Element_Name))
+                _fileSystems.Add(new FileSystemNode(this, element));
+        }
+    }
+}
+'@
+
+Function Import-LocalTestData {
+    [CmdletBinding(DefaultParameterSetName="WC")]
+    Param (
+        # The path to one or more file system items to import. Wildcards are permitted.
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = "WC", ValueFromPipeline = $true, HelpMessage = "Path to one or more file system items.")]
+        [ValidateNotNullOrEmpty()]
+        [SupportsWildcards()]
+        [string[]]$Path,
+
+        # Literal path of file system items to import. Unlike the Path parameter, the value of the LiteralPath parameter is
+        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, ParameterSetName = "LP", ValueFromPipelineByPropertyName = $true, HelpMessage = "Literal path to one or more file system items.")]
+        [Alias("PSPath", "FullName")]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$LiteralPath,
+
+        # Literal path to XML file.
+        [Parameter(Mandatory = $true, ParameterSetName = "ChildItems")]
+        [ValidateNotNullOrEmpty()]
+        [System.Xml.XmlElement]$ParentElement,
+
+        # Literal path to XML file.
+        [Parameter(Mandatory = $true, HelpMessage = "Literal path to XML file.", ParameterSetName = "WC")]
+        [Parameter(Mandatory = $true, HelpMessage = "Literal path to XML file.", ParameterSetName = "LP")]
+        [ValidateNotNullOrEmpty()]
+        [string]$XmlFile,
+
+        [ushort]$MaxRecursionDepth = 256,
+
+        [ulong]$MaxTotalItems = [ulong]::MaxValue
+    )
+
+    Begin {
+        $XmlDocument = [System.Xml.XmlDocument]::new();
+        if ($XmlFile | Test-Path -PathType Leaf) {
+            $XmlDocument.Load($XmlFile);
+            if ($null -eq $XmlDocument.DocumentElement) {
+                $XmlDocument = $null;
+                Write-Error -Message 'Failed to load XML' -Category ReadError -ErrorId 'XmlDocument.Load' -TargetObject $XmlFile -CategoryReason 'Document element was null';
+                return;
+            }
+            if ($XmlDocument.DocumentElement.NamespaceURI.Length -gt 0 -or $XmlDocument.DocumentElement.LocalName -ne 'SampleData') {
+                Write-Error -Message 'Invalid root element name.' -Category InvalidData -ErrorId 'XmlDocument.DocumentElement' -TargetObject $XmlFile -CategoryReason "Document element was {$($XmlDocument.DocumentElement.NamespaceURI):$($XmlDocument.DocumentElement.LocalName)} instead of {:SampleData}.";
+                $XmlDocument = $null;
+                return;
+            }
+        } else {
+            $XmlDocument.AppendChild($XmlDocument.CreateElement('SampleData')) | Out-Null;
+        }
+    }
+
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'ChildItems') {
+            if ($null -eq $ParentElement.FileSystemInfo) {
+                Write-Error -Message 'Invalid parent element' -Category InvalidArgument -ErrorId 'ParentElement.FileSystemInfo' -TargetObject $ParentElement -CategoryTargetName 'FileSystemInfo';
+            } else {
+                $OwnerDocument = $ParentElement.OwnerDocument;
+                $RemainingMaxTotalItems = $MaxTotalItems;
+                if ($ParentElement.FileSystemInfo -is [System.IO.FileInfo]) {
+                    return $RemainingMaxTotalItems - 1;
+                } else {
+                    if ($RemainingMaxTotalItems -gt 0) {
+                        foreach ($FileInfo in $ParentElement.FileSystemInfo.GetFiles()) {
+                            $RemainingMaxTotalItems =
+                        }
+                        [System.IO.FileInfo[]]$Files = $ParentElement.FileSystemInfo.GetFiles();
+                        if ($RemainingMaxTotalItems -lt $Files.Length) {
+                            $Files = @($Files[0..($RemainingMaxTotalItems-1)]);
+                            $RemainingMaxTotalItems = 0;
+                        } else {
+                            $RemainingMaxTotalItems -= $Files.Length;
+                        }
+                        [System.IO.DirectoryInfo[]]$Directories = @();
+                        if ($RemainingMaxTotalItems -gt 0 -and $MaxRecursionDepth -gt 0) {
+                            $Directories = $ParentElement.FileSystemInfo.GetDirectories();
+                            if ($RemainingMaxTotalItems -lt $Directories.Length) {
+                                $Directories = @($Directories[0..($RemainingMaxTotalItems-1)]);
+                                $RemainingMaxTotalItems = 0;
+                            } else {
+                                $RemainingMaxTotalItems -= $Directories.Length;
+                            }
+                        }
+                        if ($Files.Length -gt 0) {
+                            foreach ($FileInfo in $Files) {
+                                $XmlElement = $ParentElement.SelectSingleNode("File[@Name=`"$($FileInfo.Name)\""]");
+                                if ($null -eq $XmlElement) {
+                                    $XmlElement = $ParentElement.AppendChild($OwnerDocument.CreateElement('File'));
+                                    $XmlElement.Attributes.Append($OwnerDocument.CreateAttribute('Id')).Value = [Guid]::NewGuid().ToString('D');
+                                    $XmlElement.Attributes.Append($OwnerDocument.CreateAttribute('Name')).Value = $FileInfo.Name;
+
+                                }
+                            }
+                        }
+                        if ($Directories.Length -gt 0) {
+                            foreach ($DirectoryInfo in $Directories) {
+                                $XmlElement = $ParentElement.SelectSingleNode("Subdirectory[@Name=`"$($DirectoryInfo.Name)\""]");
+                                if ($null -eq $XmlElement) {
+                                    $XmlElement = $ParentElement.AppendChild($OwnerDocument.CreateElement('Subdirectory'));
+                                    $XmlElement.Attributes.Append($OwnerDocument.CreateAttribute('Id')).Value = [Guid]::NewGuid().ToString('D');
+                                    $XmlElement.Attributes.Append($OwnerDocument.CreateAttribute('Name')).Value = $DirectoryInfo.Name;
+
+                                }
+
+                                $XmlElement | Add-Member -MemberType NoteProperty -Name 'FileSystemInfo' -Value $DirectoryInfo -Force;
+                                $RemainingMaxTotalItems = Import-LocalTestData -Parent $XmlElement -MaxRecursionDepth ($MaxRecursionDepth - 1) -MaxTotalItems $RemainingMaxTotalItems;
+                                if ($RemainingMaxTotalItems -lt 1) { break }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            foreach ($FileSystemInfo in ((&{
+                if ($args[0] -eq 'WC') {
+                    ($Path | Resolve-Path | Select-Object -ExpandProperty 'Path') | Write-Output;
+                } else {
+                    $LiteralPath | Write-Output;
+                }
+            }($PSCmdlet.ParameterSetName)) | ForEach-Object {
+                if ([System.IO.File]::Exists($InputPath)) {
+                    [System.IO.FileInfo]::new($InputPath) | Write-Output;
+                } else {
+                    if ([System.IO.Directory]::Exists($InputPath)) {
+                        [System.IO.DirectoryInfo]::new($InputPath) | Write-Output;
+                    } else {
+                        Write-Error -Message "Path not found: $InputPath" -Category ObjectNotFound -ErrorId 'FileSystemInfo.Exists' -TargetObject $InputPath;
+                    }
+                }
+            })) {
+                [System.IO.DirectoryInfo]$DirectoryInfo = (&{
+                    if ($args[0] -is [System.IO.FileInfo]) { return $args[0].Directory }
+                    return $args[0];
+                }($FileSystemInfo));
+                $Stack = [System.Collections.Generic.Stack[System.IO.DirectoryInfo]]::new();
+                do {
+                    $Stack.Push($DirectoryInfo);
+                } while ($null -ne ($DirectoryInfo = $DirectoryInfo.Parent));
+                $DirectoryInfo = $Stack.Pop();
+                $LogicalDisk = Get-Win32LogicalDisk -Path $DirectoryInfo.FullName;
+                if ($null -ne $LogicalDisk) {
+                    $TestVolumeElement = Get-TestVolumeElement -LogicalDisk $LogicalDisk -SampleData $XmlDocument;
+                    $XmlElement = $TestVolumeElement.SelectSingleNode('RootDirectory');
+                    $ModifiedOn = [DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss');
+                    if ($null -eq $XmlElement) {
+                        $XmlElement = $TestVolumeElement.AppendChild($XmlDocument.CreateElement('RootDirectory'));
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('Id')).Value = [Guid]::NewGuid().ToString('D');
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('Name')).Value = $DirectoryInfo.Name;
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('CreationTime')).Value = $DirectoryInfo.CreationTime.ToString('yyyy-MM-dd HH:mm:ss');
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('LastWriteTime')).Value = $DirectoryInfo.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss');
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('LastAccessed')).Value = $ModifiedOn;
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('CreatedOn')).Value = $ModifiedOn;
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('ModifiedOn')).Value = $ModifiedOn;
+                    } else {
+                        $NewCreationTime = $DirectoryInfo.CreationTime.ToString('yyyy-MM-dd HH:mm:ss');
+                        $NewLastWriteTime = $DirectoryInfo.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss');
+                        $OldCreationTime = $XmlElement.SelectSingleNode('@CreationTime');
+                        $OldLastWriteTime = $XmlElement.SelectSingleNode('@LastWriteTime');
+                        $OldLastAccessed = $XmlElement.SelectSingleNode('@LastAccessed');
+                        if ($NewCreationTime -ne $OldCreationTime.Value -or $NewLastWriteTime -ne $OldLastWriteTime.Value -or $OldLastAccessed.Value -ne $ModifiedOn) {
+                            $OldLastAccessed.Value = $ModifiedOn;
+                            $XmlElement.SelectSingleNode('@ModifiedOn').Value = $ModifiedOn;
+                            $OldCreationTime.Value = $NewCreationTime;
+                            $OldLastWriteTime.Value = $LastWriteTime;
+                        }
+                    }
+                    while ($Stack.Count -gt 0) {
+                        $ParentDirectoryInfo = $DirectoryInfo;
+                        $DirectoryInfo = $Stack.Pop();
+                        $ParentElement = $XmlElement;
+                        $XmlElement = $ParentElement.SelectSingleNode("Subdirectory[@Name=`"$($DirectoryInfo.Name)`"");
+                        if ($null -eq $XmlElement) {
+                            $XmlElement = $ParentElement.SelectNodes('Subdirectory') | Where-Object {
+                                $_.Name -ieq $DirectoryInfo.Name
+                            } | Select-Object -First 1;
+                        }
+                        $ModifiedOn = [DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss');
+                        if ($null -eq $XmlElement) {
+                            $XmlElement = $ParentElement.AppendChild($XmlDocument.CreateElement('Subdirectory'));
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('Id')).Value = [Guid]::NewGuid().ToString('D');
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('Name')).Value = $DirectoryInfo.Name;
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('CreationTime')).Value = $DirectoryInfo.CreationTime.ToString('yyyy-MM-dd HH:mm:ss');
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('LastWriteTime')).Value = $DirectoryInfo.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss');
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('LastAccessed')).Value = $ModifiedOn;
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('CreatedOn')).Value = $ModifiedOn;
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('ModifiedOn')).Value = $ModifiedOn;
+                        } else {
+                            $NewCreationTime = $DirectoryInfo.CreationTime.ToString('yyyy-MM-dd HH:mm:ss');
+                            $NewLastWriteTime = $DirectoryInfo.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss');
+                            $OldCreationTime = $XmlElement.SelectSingleNode('@CreationTime');
+                            $OldLastWriteTime = $XmlElement.SelectSingleNode('@LastWriteTime');
+                            $OldLastAccessed = $XmlElement.SelectSingleNode('@LastAccessed');
+                            if ($NewCreationTime -ne $OldCreationTime.Value -or $NewLastWriteTime -ne $OldLastWriteTime.Value -or $OldLastAccessed.Value -ne $ModifiedOn) {
+                                $OldLastAccessed.Value = $ModifiedOn;
+                                $XmlElement.SelectSingleNode('@ModifiedOn').Value = $ModifiedOn;
+                                $OldCreationTime.Value = $NewCreationTime;
+                                $OldLastWriteTime.Value = $LastWriteTime;
+                            }
+                        }
+                    }
+                    $CrawlConfigurationElement = $XmlElement.SelectSingleNode('CrawlConfiguration');
+                    $ActualMaxRecursionDepth = $MaxRecursionDepth;
+                    $ActualMaxTotalItems = $MaxTotalItems;
+                    if ($null -eq $CrawlConfigurationElement) {
+                        $CreatedOn = [DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss');
+                        $CrawlConfigurationElement = $XmlElement.AppendChild($XmlDocument.CreateElement('CrawlConfiguration'));
+                        $CrawlConfigurationElement.Attributes.Append($SampleData.CreateAttribute('Id')).Value = [Guid]::NewGuid().ToString('D');
+                        if ($ActualMaxRecursionDepth -ne 256) {
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('MaxRecursionDepth')).Value = $ActualMaxRecursionDepth.ToString();
+                        }
+                        if ($ActualMaxTotalItems -ne [ulong]::MaxValue) {
+                            $XmlElement.Attributes.Append($SampleData.CreateAttribute('MaxTotalItems')).Value = $ActualMaxTotalItems.ToString();
+                        }
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('CreatedOn')).Value = $CreatedOn;
+                        $XmlElement.Attributes.Append($SampleData.CreateAttribute('ModifiedOn')).Value = $CreatedOn;
+                    } else {
+                        $XmlAttribute = $CrawlConfigurationElement.SelectSingleNode('@MaxRecursionDepth');
+                        if ($null -ne $XmlAttribute) { $ActualMaxRecursionDepth = [ushort]::Parse($XmlAttribute.Value) }
+                        $XmlAttribute = $CrawlConfigurationElement.SelectSingleNode('@MaxTotalItems');
+                        if ($null -ne $XmlAttribute) { $ActualMaxTotalItems = [ulong]::Parse($XmlAttribute.Value) }
+                    }
+                    $XmlElement | Add-Member -MemberType NoteProperty -Name 'FileSystemInfo' -Value $FileSystemInfo -Force;
+                    (Import-LocalTestData -Parent $XmlElement -MaxRecursionDepth $ActualMaxRecursionDepth -MaxTotalItems $ActualMaxTotalItems) | Out-Null;
+                } else {
+                    Write-Error -Message "Failed to get logical volume for path: $($DirectoryInfo.FullName)" -Category ResourceUnavailable -ErrorId 'Win32_LogicalDisk' -TargetObject $ParentDirectoryInfo;
+                }
+            }
+        }
+    }
+
+    End {
+        $XmlWriter = [System.Xml.XmlWriter]::Create($XmlFile, [System.Xml.XmlWriterSettings]@{
+            Indent = $true;
+            Encoding = [System.Text.UTF8Encoding]::new($false, $false);
+        });
+        try {
+            $XmlDocument.WriteTo($XmlWriter);
+            $XmlWriter.Flush();
+        } finally { $XmlWriter.Close() }
+    }
+}
+
+($PSScriptRoot | Join-Path -ChildPath '..\..\Resources') | Import-LocalTestData -XmlFile ($PSScriptRoot | Join-Path -ChildPath '..\..\FsInfoCat\FsInfoCat.UnitTests\Resources\SampleData.xml');
+
+<#
 
 $Item = Read-FileSystemItemExtendedProperties -LiteralPath ($PSScriptRoot | Join-Path -ChildPath '..\..\Resources\Reference\CategorizedSources.xml');
 ($Item.PSObject.Properties | Select-Object -Property 'Name', 'Value') | Out-GridView;
 [System.Windows.Clipboard]::SetText($Item.__MetaData.OuterXml)
 
-<#
+
+Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\SQLitePCLRaw.provider.dynamic_cdecl.dll'
+Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\SQLitePCLRaw.batteries_v2.dll'
+Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\SQLitePCLRaw.nativelibrary.dll'
+Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\SQLitePCLRaw.core.dll'
+
+Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\runtimes\win-x64\native\e_sqlite3.dll';
 Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.Data.Sqlite.dll'
 Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.WindowsAPICodePack.dll'
 Add-Type -Path '..\..\FsInfoCat\FsInfoCat.Desktop\bin\Debug\net5.0-windows\Microsoft.WindowsAPICodePack.Shell.dll'
+$ConnectionStringBuilder = [Microsoft.Data.Sqlite.SqliteConnectionStringBuilder]::new();
+$ConnectionStringBuilder.DataSource = 'C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\Resources\TestLocal.db';
+$ConnectionStringBuilder.Mode = [Microsoft.Data.Sqlite.SqliteOpenMode]::ReadWrite;
+$Connection = [Microsoft.Data.Sqlite.SqliteConnection]::new($ConnectionStringBuilder.ConnectionString);
+$Connection.Open();
 #>
