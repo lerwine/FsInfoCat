@@ -20,7 +20,7 @@ namespace FsInfoCat.Desktop
                 CurrentSubdirectory = subdirectory;
                 CurrentDirectoryInfo = directoryInfo;
                 CancellationToken = cancellationToken;
-                DirectoryImportEventArgs args = new DirectoryImportEventArgs(this, directoryInfo, subdirectory);
+                DirectoryImportEventArgs args = new(this, directoryInfo, subdirectory);
                 importer.Importing?.Invoke(this, args);
                 importer.DirectoryImporting?.Invoke(this, args);
                 try
@@ -63,7 +63,7 @@ namespace FsInfoCat.Desktop
                 _subdirectories = null;
                 try
                 {
-                    DirectoryImportEventArgs args = new DirectoryImportEventArgs(this, CurrentDirectoryInfo, CurrentSubdirectory);
+                    DirectoryImportEventArgs args = new(this, CurrentDirectoryInfo, CurrentSubdirectory);
                     Importer?.Importing(this, args);
                     Importer?.DirectoryImporting(this, args);
                     _files = new Queue<FileInfo>(CurrentDirectoryInfo.GetFiles());
@@ -75,7 +75,7 @@ namespace FsInfoCat.Desktop
                         _files = new();
                     if (_subdirectories is null)
                         _subdirectories = new();
-                    DirectoryImportEventArgs args = new DirectoryImportEventArgs(this, CurrentDirectoryInfo, CurrentSubdirectory, error);
+                    DirectoryImportEventArgs args = new(this, CurrentDirectoryInfo, CurrentSubdirectory, error);
                     Importer?.ImportError(this, args);
                     Importer?.DirectoryImportError(this, args);
                 }

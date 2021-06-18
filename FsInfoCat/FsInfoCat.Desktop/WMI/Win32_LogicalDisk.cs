@@ -77,9 +77,9 @@ namespace FsInfoCat.Desktop.WMI
 
         internal static IEnumerable<Win32_LogicalDisk> GetLogicalDisks()
         {
-            ManagementScope namespaceScope = new ManagementScope("\\\\.\\ROOT\\CIMV2");
-            ObjectQuery diskQuery = new ObjectQuery($"SELECT * FROM {nameof(Win32_LogicalDisk)}");
-            ManagementObjectSearcher mgmtObjSearcher = new ManagementObjectSearcher(namespaceScope, diskQuery);
+            ManagementScope namespaceScope = new("\\\\.\\ROOT\\CIMV2");
+            ObjectQuery diskQuery = new($"SELECT * FROM {nameof(Win32_LogicalDisk)}");
+            ManagementObjectSearcher mgmtObjSearcher = new(namespaceScope, diskQuery);
             foreach (ManagementObject obj in mgmtObjSearcher.Get())
                 yield return new Win32_LogicalDisk(obj);
         }
