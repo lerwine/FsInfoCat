@@ -200,7 +200,7 @@ namespace FsInfoCat.Local
 
         ILocalSubdirectory ILocalFile.Parent { get => Parent; set => Parent = (Subdirectory)value; }
 
-        ISubdirectory IFile.Parent { get => Parent; set => Parent = (Subdirectory)value; }
+        ISubdirectory IDbFsItem.Parent { get => Parent; set => Parent = (Subdirectory)value; }
 
         ILocalRedundancy ILocalFile.Redundancy => Redundancy;
 
@@ -221,6 +221,10 @@ namespace FsInfoCat.Local
         IEnumerable<IAccessError<ILocalFile>> ILocalFile.AccessErrors => AccessErrors.Cast<IAccessError<ILocalFile>>();
 
         IEnumerable<IAccessError<IFile>> IFile.AccessErrors => AccessErrors.Cast<IAccessError<IFile>>();
+
+        IEnumerable<IAccessError<ILocalDbFsItem>> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError<ILocalDbFsItem>>();
+
+        IEnumerable<IAccessError> IDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError>();
 
         #endregion
 
