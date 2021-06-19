@@ -29,6 +29,9 @@
 		},
 		{
 			"path": "..\\..\\Downloads\\winpropssource\\WinProps"
+		},
+		{
+			"path": "FsInfoCat\\FsInfoCat.Local\\Resources"
 		}
 	],
     "settings": {}

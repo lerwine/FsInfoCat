@@ -1085,542 +1085,7 @@ Function Get-TestVolumeElement {
     }
 }
 
-Add-Type -TypeDefinition @'
-namespace FsInfoCat.Local
-{
-    using System;
-    using System.Collections.ObjectModel;
-    using System.Xml;
-    public abstract class DbEntityNode
-    {
-        private XmlElement _element;
-        public Guid? UpstreamId
-        {
-            get { return GetAttributeGuid("UpstreamId"); }
-            set { SetAttributeGuid("UpstreamId", value); }
-        }
-        public DateTime? LastSynchronizedOn
-        {
-            get { return GetAttributeDateTime("LastSynchronizedOn"); }
-            set { SetAttributeDateTime("LastSynchronizedOn", value); }
-        }
-        public DateTime CreatedOn
-        {
-            get
-            {
-                DateTime? dateTime = GetAttributeDateTime("CreatedOn");
-                if (dateTime.HasValue)
-                    return dateTime.Value;
-                if (!(dateTime = GetAttributeDateTime("ModifiedOn")).HasValue)
-                    dateTime = DateTime.Now;
-                SetAttributeDateTime("CreatedOn", dateTime.Value);
-                return dateTime.Value;
-            }
-            set { SetAttributeDateTime("CreatedOn", value); }
-        }
-        public DateTime ModifiedOn
-        {
-            get
-            {
-                DateTime? dateTime = GetAttributeDateTime("ModifiedOn");
-                if (dateTime.HasValue)
-                    return dateTime.Value;
-                if (!(dateTime = GetAttributeDateTime("CreatedOn")).HasValue)
-                    dateTime = DateTime.Now;
-                SetAttributeDateTime("ModifiedOn", dateTime.Value);
-                return dateTime.Value;
-            }
-            set { SetAttributeDateTime("ModifiedOn", value); }
-        }
-        internal XmlElement Element { get { return _element; } }
-        protected XmlDocument OwnerDocument { get { return _element.OwnerDocument; } }
-        protected DbEntityNode(XmlElement element)
-        {
-            _element = element;
-        }
-        protected string GetAttributeString(string name, string defaultValue = null)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? defaultValue : attribute.Value;
-        }
-        protected Guid? GetAttributeGuid(string name)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? null : XmlConvert.ToGuid(attribute.Value);
-        }
-        protected DateTime? GetAttributeDateTime(string name)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? null : XmlConvert.ToDateTime(attribute.Value, "yyyy-MM-dd HH:mm:ss");
-        }
-        protected byte? GetAttributeByte(string name)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? null : XmlConvert.ToByte(attribute.Value);
-        }
-        protected byte GetAttributeByte(string name, byte defaultValue)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? defaultValue : XmlConvert.ToByte(attribute.Value);
-        }
-        protected int? GetAttributeInt32(string name)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? null : XmlConvert.ToInt32(attribute.Value);
-        }
-        protected int GetAttributeInt32(string name, int defaultValue)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? defaultValue : XmlConvert.ToInt32(attribute.Value);
-        }
-        protected bool GetAttributeBoolean(string name, bool defaultValue = false)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? defaultValue : XmlConvert.ToBoolean(attribute.Value);
-        }
-        protected bool? GetAttributeBooleanOpt(string name)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            return (attribute is null) ? null : XmlConvert.ToBoolean(attribute.Value);
-        }
-        protected void SetAttributeString(string name, string value)
-        {
-            XmlAttribute attribute = _element.SelectSingleNode("@" + name) as XmlAttribute;
-            if (attribute == null)
-            {
-                if (value != null)
-                    _element.Attributes.Append(OwnerDocument.CreateAttribute(name)).Value = value;
-            }
-            else if (value == null)
-                _element.Attributes.Remove(attribute);
-            else
-                attribute.Value = value;
-        }
-        protected void SetAttributeBoolean(string name, bool? value, bool? defaultValue = false)
-        {
-            SetAttributeString(name, (value.HasValue && (!defaultValue.HasValue || value.Value != defaultValue.Value)) ? XmlConvert.ToString(value.Value) : null);
-        }
-        protected void SetAttributeGuid(string name, Guid? value)
-        {
-            if (value.HasValue)
-                SetAttributeString(name, XmlConvert.ToString(value.Value));
-            else
-                SetAttributeString(name, null);
-        }
-        protected void SetAttributeByte(string name, byte? value)
-        {
-            if (value.HasValue)
-                SetAttributeString(name, XmlConvert.ToString(value.Value));
-            else
-                SetAttributeString(name, null);
-        }
-        protected void SetAttributeByte(string name, byte? value, byte? defaultValue = null)
-        {
-            if (value.HasValue && (!defaultValue.HasValue || defaultValue.Value != value.Value))
-                SetAttributeString(name, XmlConvert.ToString(value.Value));
-            else
-                SetAttributeString(name, null);
-        }
-        protected void SetAttributeInt32(string name, int? value, int? defaultValue = null)
-        {
-            if (value.HasValue && (!defaultValue.HasValue || defaultValue.Value != value.Value))
-                SetAttributeString(name, XmlConvert.ToString(value.Value));
-            else
-                SetAttributeString(name, null);
-        }
-        protected void SetAttributeUInt16(string name, ushort? value, ushort? defaultValue = null)
-        {
-            if (value.HasValue && (!defaultValue.HasValue || defaultValue.Value != value.Value))
-                SetAttributeString(name, XmlConvert.ToString(value.Value));
-            else
-                SetAttributeString(name, null);
-        }
-        protected void SetAttributeUInt64(string name, ulong? value, ulong? defaultValue)
-        {
-            if (value.HasValue && (!defaultValue.HasValue || defaultValue.Value != value.Value))
-                SetAttributeString(name, XmlConvert.ToString(value.Value));
-            else
-                SetAttributeString(name, null);
-        }
-        protected void SetAttributeDateTime(string name, DateTime? value)
-        {
-            if (value.HasValue)
-                SetAttributeString(name, XmlConvert.ToString(value.Value, "yyyy-MM-dd HH:mm:ss"));
-            else
-                SetAttributeString(name, null);
-        }
-    }
-    public class FileNode : DbEntityNode
-    {
-        public const string Element_Name = "File";
-        private SubdirectoryNode _parent;
-        public SubdirectoryNode Parent { get { return _parent; } }
-        public FileNode(SubdirectoryNode parent, XmlElement element) : base(element)
-        {
-            if (parent is null)
-                throw new ArgumentNullException("parent");
-            if (element is null)
-                throw new ArgumentNullException("element");
-            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
-                throw new ArgumentOutOfRangeException("element");
-            _parent = parent;
-        }
-    }
-    public class SubdirectoryNode : DbEntityNode
-    {
-        public const string Element_Name = "Subdirectory";
-        public const string Root_Element_Name = "RootDirectory";
-        private SubdirectoryNode _parent;
-        private VolumeNode _volume;
-        private Collection<FileNode> _files = new Collection<FileNode>();
-        private ReadOnlyCollection<FileNode> _roFiles;
-        private Collection<SubdirectoryNode> _subdirectories = new Collection<SubdirectoryNode>();
-        private ReadOnlyCollection<SubdirectoryNode> _roSubdirectories;
-        public Guid Id
-        {
-            get
-            {
-                Guid? id = GetAttributeGuid("Id");
-                if (id.HasValue)
-                    return id.Value;
-                Guid value = new Guid();
-                SetAttributeGuid("Id", value);
-                return value;
-            }
-            set { SetAttributeGuid("Id", value); }
-        }
-        public SubdirectoryNode Parent { get { return _parent; } }
-        public VolumeNode Volume { get { return _volume; } }
-        public ReadOnlyCollection<FileNode> Files { get { return _roFiles; } }
-        public ReadOnlyCollection<SubdirectoryNode> Subdirectories { get { return _roSubdirectories; } }
-        public SubdirectoryNode(SubdirectoryNode parent, XmlElement element) : base(element)
-        {
-            if (parent is null)
-                throw new ArgumentNullException("parent");
-            if (element is null)
-                throw new ArgumentNullException("element");
-            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
-                throw new ArgumentOutOfRangeException("element");
-            _volume = (_parent = parent)._volume;
-            _roFiles = new ReadOnlyCollection<FileNode>(_files);
-            _roSubdirectories = new ReadOnlyCollection<SubdirectoryNode>(_subdirectories);
-            foreach (XmlElement e in element.SelectNodes(FileNode.Element_Name))
-                _files.Add(new FileNode(this, e));
-            foreach (XmlElement e in element.SelectNodes(Element_Name))
-                _subdirectories.Add(new SubdirectoryNode(this, e));
-        }
-        public SubdirectoryNode(VolumeNode parent, XmlElement element) : base(element)
-        {
-            if (parent is null)
-                throw new ArgumentNullException("parent");
-            if (element is null)
-                throw new ArgumentNullException("element");
-            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
-                throw new ArgumentOutOfRangeException("element");
-            _volume = parent;
-            _roFiles = new ReadOnlyCollection<FileNode>(_files);
-            _roSubdirectories = new ReadOnlyCollection<SubdirectoryNode>(_subdirectories);
-            foreach (XmlElement e in element.SelectNodes(FileNode.Element_Name))
-                _files.Add(new FileNode(this, e));
-            foreach (XmlElement e in element.SelectNodes(Element_Name))
-                _subdirectories.Add(new SubdirectoryNode(this, e));
-        }
-    }
-    public class CrawlConfigurationNode : DbEntityNode
-    {
-        public const string Element_Name = "CrawlConfiguration";
-        private SubdirectoryNode _parent;
-        public Guid Id
-        {
-            get
-            {
-                Guid? id = GetAttributeGuid("Id");
-                if (id.HasValue)
-                    return id.Value;
-                Guid value = new Guid();
-                SetAttributeGuid("Id", value);
-                return value;
-            }
-            set { SetAttributeGuid("Id", value); }
-        }
-        public SubdirectoryNode Parent { get { return _parent; } }
-        public CrawlConfigurationNode(SubdirectoryNode parent, XmlElement element) : base(element)
-        {
-            if (parent is null)
-                throw new ArgumentNullException("parent");
-            if (element is null)
-                throw new ArgumentNullException("element");
-            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
-                throw new ArgumentOutOfRangeException("element");
-            _parent = parent;
-        }
-    }
-    public class VolumeNode : DbEntityNode
-    {
-        public const string Element_Name = "Volume";
-        private FileSystemNode _fileSystem;
-        private SubdirectoryNode _rootDirectory;
-        public Guid Id
-        {
-            get
-            {
-                Guid? id = GetAttributeGuid("Id");
-                if (id.HasValue)
-                    return id.Value;
-                Guid value = new Guid();
-                SetAttributeGuid("Id", value);
-                return value;
-            }
-            set { SetAttributeGuid("Id", value); }
-        }
-        public string DisplayName
-        {
-            get { return GetAttributeString("DisplayName", ""); }
-            set { SetAttributeString("DisplayName", (value == null) ? "" : value); }
-        }
-        public string VolumeName
-        {
-            get { return GetAttributeString("VolumeName", ""); }
-            set { SetAttributeString("VolumeName", (value == null) ? "" : value); }
-        }
-        public string Identifier
-        {
-            get { return GetAttributeString("Identifier", ""); }
-            set { SetAttributeString("Identifier", (value == null) ? "" : value); }
-        }
-        public bool? CaseSensitiveSearch
-        {
-            get { return GetAttributeBooleanOpt("CaseSensitiveSearch"); }
-            set { SetAttributeBoolean("CaseSensitiveSearch", value, null); }
-        }
-        public bool? ReadOnly
-        {
-            get { return GetAttributeBooleanOpt("ReadOnly"); }
-            set { SetAttributeBoolean("ReadOnly", value, null); }
-        }
-
-        public int? MaxNameLength
-        {
-            get { return GetAttributeInt32("MaxNameLength"); }
-            set { SetAttributeInt32("MaxNameLength", value, null); }
-        }
-        public int Type
-        {
-            get { return GetAttributeInt32("Type", (int)System.IO.DriveType.Unknown); }
-            set { SetAttributeInt32("Type", value); }
-        }
-        public string Notes
-        {
-            get
-            {
-                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
-                return (element is null || element.IsEmpty) ? null : element.InnerText;
-            }
-            set
-            {
-                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    if (element != null)
-                        Element.RemoveChild(element);
-                }
-                else if (element == null)
-                    Element.AppendChild(OwnerDocument.CreateElement("Notes")).InnerText = value;
-                else
-                    element.InnerText = value;
-            }
-        }
-        VolumeStatus Status { get; set; }
-        public FileSystemNode FileSystem { get { return _fileSystem; } }
-        public SubdirectoryNode RootDirectory { get { return _rootDirectory; } }
-        public VolumeNode(FileSystemNode parent, XmlElement element) : base(element)
-        {
-            if (parent is null)
-                throw new ArgumentNullException("parent");
-            if (element is null)
-                throw new ArgumentNullException("element");
-            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
-                throw new ArgumentOutOfRangeException("element");
-            _fileSystem = parent;
-            XmlElement e = (XmlElement)element.SelectSingleNode(SubdirectoryNode.Element_Name);
-            if (e != null)
-                _rootDirectory = new SubdirectoryNode(this, e);
-        }
-    }
-    public class SymbolicNameNode : DbEntityNode
-    {
-        public const string Element_Name = "SymbolicName";
-        private FileSystemNode _fileSystem;
-        public Guid Id
-        {
-            get
-            {
-                Guid? id = GetAttributeGuid("Id");
-                if (id.HasValue)
-                    return id.Value;
-                Guid value = new Guid();
-                SetAttributeGuid("Id", value);
-                return value;
-            }
-            set { SetAttributeGuid("Id", value); }
-        }
-        public string Name
-        {
-            get { return GetAttributeString("Name", ""); }
-            set { SetAttributeString("Name", (value == null) ? "" : value); }
-        }
-        public int Priority
-        {
-            get { return GetAttributeInt32("Priority", 0); }
-            set { SetAttributeInt32("Priority", value, 0); }
-        }
-        public string Notes
-        {
-            get
-            {
-                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
-                return (element is null || element.IsEmpty) ? null : element.InnerText;
-            }
-            set
-            {
-                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    if (element != null)
-                        Element.RemoveChild(element);
-                }
-                else if (element == null)
-                    Element.AppendChild(OwnerDocument.CreateElement("Notes")).InnerText = value;
-                else
-                    element.InnerText = value;
-            }
-        }
-        public bool IsInactive
-        {
-            get { return GetAttributeBoolean("ReadOnly"); }
-            set { SetAttributeBoolean("ReadOnly", value); }
-        }
-        public FileSystemNode FileSystem { get { return _fileSystem; } }
-        public SymbolicNameNode(FileSystemNode parent, XmlElement element) : base(element)
-        {
-            if (parent is null)
-                throw new ArgumentNullException("parent");
-            if (element is null)
-                throw new ArgumentNullException("element");
-            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
-                throw new ArgumentOutOfRangeException("element");
-            _fileSystem = parent;
-        }
-    }
-    public class FileSystemNode : DbEntityNode
-    {
-        public const string Element_Name = "FileSystem";
-        private SampleDataNode _owner;
-        private Collection<SymbolicNameNode> _symbolicNames = new Collection<SymbolicNameNode>();
-        private ReadOnlyCollection<SymbolicNameNode> _roSymbolicNames;
-        private Collection<VolumeNode> _volumes = new Collection<VolumeNode>();
-        private ReadOnlyCollection<VolumeNode> _roVolumes;
-        public Guid Id
-        {
-            get
-            {
-                Guid? id = GetAttributeGuid("Id");
-                if (id.HasValue)
-                    return id.Value;
-                Guid value = new Guid();
-                SetAttributeGuid("Id", value);
-                return value;
-            }
-            set { SetAttributeGuid("Id", value); }
-        }
-        public string DisplayName
-        {
-            get { return GetAttributeString("DisplayName", ""); }
-            set { SetAttributeString("DisplayName", (value == null) ? "" : value); }
-        }
-        public bool CaseSensitiveSearch
-        {
-            get { return GetAttributeBoolean("CaseSensitiveSearch"); }
-            set { SetAttributeBoolean("DisplayName", value); }
-        }
-        public bool ReadOnly
-        {
-            get { return GetAttributeBoolean("ReadOnly"); }
-            set { SetAttributeBoolean("ReadOnly", value); }
-        }
-        public int MaxNameLength
-        {
-            get { return GetAttributeInt32("MaxNameLength", 255); }
-            set { SetAttributeInt32("MaxNameLength", value, 255); }
-        }
-        public byte? DefaultDriveType
-        {
-            get { return GetAttributeByte("DefaultDriveType"); }
-            set { SetAttributeByte("DefaultDriveType", value); }
-        }
-        public string Notes
-        {
-            get
-            {
-                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
-                return (element is null || element.IsEmpty) ? null : element.InnerText;
-            }
-            set
-            {
-                XmlElement element = Element.SelectSingleNode("Notes") as XmlElement;
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    if (element != null)
-                        Element.RemoveChild(element);
-                }
-                else if (element == null)
-                    Element.AppendChild(OwnerDocument.CreateElement("Notes")).InnerText = value;
-                else
-                    element.InnerText = value;
-            }
-        }
-        public bool IsInactive
-        {
-            get { return GetAttributeBoolean("ReadOnly"); }
-            set { SetAttributeBoolean("ReadOnly", value); }
-        }
-        public SampleDataNode Owner { get { return _owner; } }
-        public ReadOnlyCollection<SymbolicNameNode> SymbolicNames { get { return _roSymbolicNames; } }
-        public ReadOnlyCollection<VolumeNode> Volumes { get { return _roVolumes; } }
-        public FileSystemNode(SampleDataNode parent, XmlElement element) : base(element)
-        {
-            if (parent is null)
-                throw new ArgumentNullException("parent");
-            if (element is null)
-                throw new ArgumentNullException("element");
-            if (element.LocalName != Element_Name || element.ParentNode == null || !ReferenceEquals(element.ParentNode, parent.Element))
-                throw new ArgumentOutOfRangeException("element");
-            _owner = parent;
-            _roSymbolicNames = new ReadOnlyCollection<SymbolicNameNode>(_symbolicNames);
-            _roVolumes = new ReadOnlyCollection<VolumeNode>(_volumes);
-            foreach (XmlElement e in element.SelectNodes(SymbolicNameNode.Element_Name))
-                _symbolicNames.Add(new SymbolicNameNode(this, e));
-            foreach (XmlElement e in element.SelectNodes(VolumeNode.Element_Name))
-                _volumes.Add(new VolumeNode(this, e));
-        }
-    }
-    public class SampleDataNode : DbEntityNode
-    {
-        public const string Element_Name = "SampleData";
-        private Collection<FileSystemNode> _fileSystems = new Collection<FileSystemNode>();
-        private ReadOnlyCollection<FileSystemNode> _roFileSystems;
-        public ReadOnlyCollection<FileSystemNode> FileSystems { get { return _roFileSystems; } }
-        public SampleDataNode(XmlDocument document) : base(document.DocumentElement)
-        {
-            if (document.DocumentElement.LocalName != Element_Name)
-                throw new ArgumentOutOfRangeException("document");
-            _roFileSystems = new ReadOnlyCollection<FileSystemNode>(_fileSystems);
-            foreach (XmlElement element in document.DocumentElement.SelectNodes(FileSystemNode.Element_Name))
-                _fileSystems.Add(new FileSystemNode(this, element));
-        }
-    }
-}
-'@
+Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath 'GenerateTestData.cs') -ErrorAction Stop;
 
 Function Import-LocalTestData {
     [CmdletBinding(DefaultParameterSetName="WC")]
@@ -1687,7 +1152,8 @@ Function Import-LocalTestData {
                 } else {
                     if ($RemainingMaxTotalItems -gt 0) {
                         foreach ($FileInfo in $ParentElement.FileSystemInfo.GetFiles()) {
-                            $RemainingMaxTotalItems =
+                            #$RemainingMaxTotalItems =
+                            throw 'Not implemented'
                         }
                         [System.IO.FileInfo[]]$Files = $ParentElement.FileSystemInfo.GetFiles();
                         if ($RemainingMaxTotalItems -lt $Files.Length) {
@@ -1865,9 +1331,48 @@ Function Import-LocalTestData {
     }
 }
 
-($PSScriptRoot | Join-Path -ChildPath '..\..\Resources') | Import-LocalTestData -XmlFile ($PSScriptRoot | Join-Path -ChildPath '..\..\FsInfoCat\FsInfoCat.UnitTests\Resources\SampleData.xml');
+$FileSystem = [GenerateTestData.FileSystem]::new();
+$FileSystem.DisplayName = "Test";
+$SymbolicName = [GenerateTestData.SymbolicName]::new();
+$SymbolicName.Name = 'SN';
+$FileSystem.SymbolicNames.Add($SymbolicName);
+$SymbolicName = [GenerateTestData.SymbolicName]::new();
+$SymbolicName.Name = 'SN2';
+$SymbolicName.Notes = 'My Notes';
+$FileSystem.SymbolicNames.Add($SymbolicName);
+$FileSystem.Notes = 'hey there';
+$Volume = [GenerateTestData.Volume]::new();
+$Volume.DisplayName = "C:\";
+$Volume.VolumeName = "MyVolume";
+$Volume.Identifier = [Uri]::new('\\mysite\myshare', [UriKind]::Absolute);
+$FileSystem.Volumes.Add($Volume);
+$VolumeAccessError = [GenerateTestData.VolumeAccessError]::new();
+$VolumeAccessError.Message = 'MyError';
+$VolumeAccessError.ErrorCode = 12;
+$Volume.AccessErrors.Add($VolumeAccessError);
+$Subdirectory = [GenerateTestData.Subdirectory]::new();
+$Subdirectory.Name = 'C:\';
+$Volume.RootDirectory = $Subdirectory;
+$SubdirectoryAccessError = [GenerateTestData.SubdirectoryAccessError]::new();
+$SubdirectoryAccessError.Message = 'hey you';
+$SubdirectoryAccessError.Details = 'Get offa my cloud';
+$SubdirectoryAccessError.ErrorCode = 54;
+$Subdirectory.AccessErrors.Add($SubdirectoryAccessError);
+$CrawlConfiguration = [GenerateTestData.CrawlConfiguration]::new();
+$CrawlConfiguration.DisplayName = "MyConfig";
+$CrawlConfiguration.MaxRecursionDepth = 255;
+$CrawlConfiguration.MaxTotalItems = 100;
+$Subdirectory.CrawlConfiguration = $CrawlConfiguration;
+$XmlSerializer = [System.Xml.Serialization.XmlSerializer]::new([GenerateTestData.FileSystem]);
+$sw = [System.IO.StringWriter]::new();
+$XmlSerializer.Serialize($sw, $FileSystem);
+$sw.ToString()
 
 <#
+cd C:\Users\lerwi\Git\FsInfoCat\dev\Scripts
+.\GenerateTestData.ps1
+
+($PSScriptRoot | Join-Path -ChildPath '..\..\Resources') | Import-LocalTestData -XmlFile ($PSScriptRoot | Join-Path -ChildPath '..\..\FsInfoCat\FsInfoCat.UnitTests\Resources\SampleData.xml');
 
 $Item = Read-FileSystemItemExtendedProperties -LiteralPath ($PSScriptRoot | Join-Path -ChildPath '..\..\Resources\Reference\CategorizedSources.xml');
 ($Item.PSObject.Properties | Select-Object -Property 'Name', 'Value') | Out-GridView;
