@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Interface Name="FsInfoCat.IFileSystem">
     <Position X="3.75" Y="6.5" Width="1.75" />
@@ -28,11 +28,11 @@
       <Property Name="TargetFile" />
     </ShowAsAssociation>
   </Interface>
-  <Interface Name="FsInfoCat.IContentInfo">
+  <Interface Name="FsInfoCat.IBinaryProperties">
     <Position X="6.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAIAAAAAAAAAAABAABAAAAAAAAAAAAAAAIA=</HashCode>
-      <FileName>IContentInfo.cs</FileName>
+      <FileName>IBinaryProperties.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.IFile">
@@ -64,7 +64,7 @@
       <FileName>IRedundantSet.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="ContentInfo" />
+      <Property Name="BinaryProperties" />
     </ShowAsAssociation>
   </Interface>
   <Interface Name="FsInfoCat.ISubdirectory">

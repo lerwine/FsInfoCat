@@ -146,7 +146,7 @@ namespace FsInfoCat.Local
                 }
             RedundantSet redundantSet = RedundantSet;
             DbFile file = File;
-            if (!(redundantSet is null || file is null || redundantSet.ContentInfoId.Equals(file.ContentId)))
+            if (!(redundantSet is null || file is null || redundantSet.BinaryPropertiesId.Equals(file.BinaryPropertiesId)))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileInRedundantSet, new string[] { nameof(File) }));
         }
 

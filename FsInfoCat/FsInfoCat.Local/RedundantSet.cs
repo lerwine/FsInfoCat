@@ -39,8 +39,8 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<RedundancyRemediationStatus> _remediationStatus;
         private readonly IPropertyChangeTracker<string> _reference;
         private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<Guid> _contentInfoId;
-        private readonly IPropertyChangeTracker<ContentInfo> _contentInfo;
+        private readonly IPropertyChangeTracker<Guid> _binaryPropertiesId;
+        private readonly IPropertyChangeTracker<BinaryProperties> _binaryProperties;
         private HashSet<Redundancy> _redundancies = new();
 
         #endregion
@@ -61,31 +61,31 @@ namespace FsInfoCat.Local
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
-        public virtual Guid ContentInfoId
+        public virtual Guid BinaryPropertiesId
         {
-            get => _contentInfoId.GetValue();
+            get => _binaryPropertiesId.GetValue();
             set
             {
-                if (_contentInfoId.SetValue(value))
+                if (_binaryPropertiesId.SetValue(value))
                 {
-                    ContentInfo nav = _contentInfo.GetValue();
+                    BinaryProperties nav = _binaryProperties.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _contentInfo.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
 
-        public virtual ContentInfo ContentInfo
+        public virtual BinaryProperties BinaryProperties
         {
-            get => _contentInfo.GetValue();
+            get => _binaryProperties.GetValue();
             set
             {
-                if (_contentInfo.SetValue(value))
+                if (_binaryProperties.SetValue(value))
                 {
                     if (value is null)
-                        _contentInfoId.SetValue(Guid.Empty);
+                        _binaryPropertiesId.SetValue(Guid.Empty);
                     else
-                        _contentInfoId.SetValue(value.Id);
+                        _binaryPropertiesId.SetValue(value.Id);
                 }
             }
         }
@@ -100,9 +100,9 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalContentInfo ILocalRedundantSet.ContentInfo { get => ContentInfo; set => ContentInfo = (ContentInfo)value; }
+        ILocalBinaryProperties ILocalRedundantSet.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryProperties)value; }
 
-        IContentInfo IRedundantSet.ContentInfo { get => ContentInfo; set => ContentInfo = (ContentInfo)value; }
+        IBinaryProperties IRedundantSet.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryProperties)value; }
 
         IEnumerable<ILocalRedundancy> ILocalRedundantSet.Redundancies => Redundancies.Cast<ILocalRedundancy>();
 
@@ -116,8 +116,8 @@ namespace FsInfoCat.Local
             _remediationStatus = AddChangeTracker(nameof(RemediationStatus), RedundancyRemediationStatus.Unconfirmed);
             _reference = AddChangeTracker(nameof(Reference), "", TrimmedNonNullStringCoersion.Default);
             _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _contentInfoId = AddChangeTracker(nameof(ContentInfoId), Guid.Empty);
-            _contentInfo = AddChangeTracker<ContentInfo>(nameof(ContentInfo), null);
+            _binaryPropertiesId = AddChangeTracker(nameof(BinaryPropertiesId), Guid.Empty);
+            _binaryProperties = AddChangeTracker<BinaryProperties>(nameof(BinaryProperties), null);
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)
@@ -129,15 +129,15 @@ namespace FsInfoCat.Local
 
         internal static void BuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
-            builder.HasOne(sn => sn.ContentInfo).WithMany(d => d.RedundantSets).HasForeignKey(nameof(ContentInfoId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.RedundantSets).HasForeignKey(nameof(BinaryPropertiesId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        internal static async Task<(Guid redundantSetId, XElement[] redundancies)> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid contentInfoId, XElement redundantSetElement)
+        internal static async Task<(Guid redundantSetId, XElement[] redundancies)> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid binaryPropertiesId, XElement redundantSetElement)
         {
             string n = nameof(Id);
             Guid redundantSetId = redundantSetElement.GetAttributeGuid(n).Value;
-            logger.LogInformation($"Inserting {nameof(RedundantSet)} with Id {{Id}}", contentInfoId);
-            await new InsertQueryBuilder(nameof(LocalDbContext.RedundantSets), redundantSetElement, n).AppendGuid(nameof(ContentInfoId), contentInfoId)
+            logger.LogInformation($"Inserting {nameof(RedundantSet)} with Id {{Id}}", binaryPropertiesId);
+            await new InsertQueryBuilder(nameof(LocalDbContext.RedundantSets), redundantSetElement, n).AppendGuid(nameof(BinaryPropertiesId), binaryPropertiesId)
                 .AppendString(nameof(Reference)).AppendElementString(nameof(Notes)).AppendEnum<RedundancyRemediationStatus>(nameof(RemediationStatus))
                 .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId))
                 .ExecuteSqlAsync(dbContext.Database);

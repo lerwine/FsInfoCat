@@ -70,6 +70,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Audio Properties.
+        /// </summary>
+        public static string DisplayName_AudioProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_AudioProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case-sensitive Search.
         /// </summary>
         public static string DisplayName_CaseSensitiveSearch {
@@ -133,11 +142,20 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extended Properties.
+        ///   Looks up a localized string similar to Document Properties.
         /// </summary>
-        public static string DisplayName_ExtendedProperties {
+        public static string DisplayName_DocumentProperties {
             get {
-                return ResourceManager.GetString("DisplayName_ExtendedProperties", resourceCulture);
+                return ResourceManager.GetString("DisplayName_DocumentProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DRM Properties.
+        /// </summary>
+        public static string DisplayName_DRMProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_DRMProperties", resourceCulture);
             }
         }
         
@@ -151,11 +169,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GPS Properties.
+        /// </summary>
+        public static string DisplayName_GPSProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_GPSProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volume Identifier.
         /// </summary>
         public static string DisplayName_Identifier {
             get {
                 return ResourceManager.GetString("DisplayName_Identifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image Properties.
+        /// </summary>
+        public static string DisplayName_ImageProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_ImageProperties", resourceCulture);
             }
         }
         
@@ -187,6 +223,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Media Properties.
+        /// </summary>
+        public static string DisplayName_MediaProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_MediaProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modified On.
         /// </summary>
         public static string DisplayName_ModifiedOn {
@@ -196,11 +241,38 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Music Properties.
+        /// </summary>
+        public static string DisplayName_MusicProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_MusicProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Photo Properties.
+        /// </summary>
+        public static string DisplayName_PhotoProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_PhotoProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read-only.
         /// </summary>
         public static string DisplayName_ReadOnly {
             get {
                 return ResourceManager.GetString("DisplayName_ReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recorded TV Properties.
+        /// </summary>
+        public static string DisplayName_RecordedTVProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_RecordedTVProperties", resourceCulture);
             }
         }
         
@@ -223,6 +295,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Summary Properties.
+        /// </summary>
+        public static string DisplayName_SummaryProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_SummaryProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Symbolic Names.
         /// </summary>
         public static string DisplayName_SymbolicNames {
@@ -241,6 +322,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Video Properties.
+        /// </summary>
+        public static string DisplayName_VideoProperties {
+            get {
+                return ResourceManager.GetString("DisplayName_VideoProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volume Name.
         /// </summary>
         public static string DisplayName_VolumeName {
@@ -250,20 +340,20 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Content Info must be selected.
+        /// </summary>
+        public static string ErrorMessage_BinaryPropertiesRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_BinaryPropertiesRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Circular subdirectory hierarchy reference not allowed..
         /// </summary>
         public static string ErrorMessage_CircularReference {
             get {
                 return ResourceManager.GetString("ErrorMessage_CircularReference", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File Content Info must be selected.
-        /// </summary>
-        public static string ErrorMessage_ContentInfoRequired {
-            get {
-                return ResourceManager.GetString("ErrorMessage_ContentInfoRequired", resourceCulture);
             }
         }
         

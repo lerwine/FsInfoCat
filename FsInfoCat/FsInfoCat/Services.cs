@@ -7,9 +7,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -90,6 +92,26 @@ namespace FsInfoCat
                 options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId;
             })).Build();
             await Host.StartAsync();
+        }
+
+        public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry, [NotNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression)
+            where TEntity : class
+            where TProperty : class
+        {
+            CollectionEntry<TEntity, TProperty> collectionEntry = entry.Collection(propertyExpression);
+            if (!collectionEntry.IsLoaded)
+                await collectionEntry.LoadAsync();
+            return collectionEntry.CurrentValue;
+        }
+
+        public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry, [NotNull] Expression<Func<TEntity, TProperty>> propertyExpression)
+            where TEntity : class
+            where TProperty : class
+        {
+            ReferenceEntry<TEntity, TProperty> referenceEntry = entry.Reference(propertyExpression);
+            if (!referenceEntry.IsLoaded)
+                await referenceEntry.LoadAsync();
+            return referenceEntry.CurrentValue;
         }
 
         public static void RejectChanges<T>(this DbSet<T> dbSet, Func<T, EntityEntry<T>> getEntry) where T : class, IRevertibleChangeTracking

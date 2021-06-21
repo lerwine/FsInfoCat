@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class ContentInfo : LocalDbEntity, ILocalContentInfo
+    public class BinaryProperties : LocalDbEntity, ILocalBinaryProperties
     {
         #region Fields
 
@@ -52,17 +52,17 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        IEnumerable<ILocalFile> ILocalContentInfo.Files => Files.Cast<ILocalFile>();
+        IEnumerable<ILocalFile> ILocalBinaryProperties.Files => Files.Cast<ILocalFile>();
 
-        IEnumerable<IFile> IContentInfo.Files => Files.Cast<IFile>();
+        IEnumerable<IFile> IBinaryProperties.Files => Files.Cast<IFile>();
 
-        IEnumerable<ILocalRedundantSet> ILocalContentInfo.RedundantSets => RedundantSets.Cast<ILocalRedundantSet>();
+        IEnumerable<ILocalRedundantSet> ILocalBinaryProperties.RedundantSets => RedundantSets.Cast<ILocalRedundantSet>();
 
-        IEnumerable<IRedundantSet> IContentInfo.RedundantSets => RedundantSets.Cast<IRedundantSet>();
+        IEnumerable<IRedundantSet> IBinaryProperties.RedundantSets => RedundantSets.Cast<IRedundantSet>();
 
         #endregion
 
-        public ContentInfo()
+        public BinaryProperties()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _length = AddChangeTracker(nameof(Length), 0L);
@@ -83,20 +83,20 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, new string[] { nameof(Length) }));
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<ContentInfo> obj)
+        internal static void BuildEntity(EntityTypeBuilder<BinaryProperties> obj)
         {
             obj.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
         }
 
-        internal static async Task<(Guid redundantSetId, XElement[] redundancies)[]> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, XElement contentInfoElement)
+        internal static async Task<(Guid redundantSetId, XElement[] redundancies)[]> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, XElement binaryPropertiesIdElement)
         {
             string n = nameof(Id);
-            Guid contentInfoId = contentInfoElement.GetAttributeGuid(n).Value;
-            logger.LogInformation($"Inserting {nameof(ContentInfo)} with Id {{Id}}", contentInfoId);
-            await new InsertQueryBuilder(nameof(LocalDbContext.ContentInfos), contentInfoElement, n).AppendInt64(nameof(Length)).AppendMd5Hash(nameof(Hash))
+            Guid binaryPropertiesId = binaryPropertiesIdElement.GetAttributeGuid(n).Value;
+            logger.LogInformation($"Inserting {nameof(BinaryProperties)} with Id {{Id}}", binaryPropertiesId);
+            await new InsertQueryBuilder(nameof(LocalDbContext.BinaryProperties), binaryPropertiesIdElement, n).AppendInt64(nameof(Length)).AppendMd5Hash(nameof(Hash))
                 .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
                 .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
-            return contentInfoElement.Elements(nameof(RedundantSet)).Select(e => RedundantSet.ImportAsync(dbContext, logger, contentInfoId, e).Result).ToArray();
+            return binaryPropertiesIdElement.Elements(nameof(RedundantSet)).Select(e => RedundantSet.ImportAsync(dbContext, logger, binaryPropertiesId, e).Result).ToArray();
         }
     }
 }

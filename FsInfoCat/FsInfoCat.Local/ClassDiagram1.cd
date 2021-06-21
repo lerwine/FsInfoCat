@@ -1,19 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="FsInfoCat.Local.ContentInfo" BaseTypeListCollapsed="true">
+  <Class Name="FsInfoCat.Local.BinaryProperties" BaseTypeListCollapsed="true">
     <Position X="1" Y="2.5" Width="1.75" />
     <Members>
-      <Property Name="IContentInfo.Files" Hidden="true" />
-      <Property Name="IContentInfo.RedundantSets" Hidden="true" />
-      <Property Name="ILocalContentInfo.Files" Hidden="true" />
-      <Property Name="ILocalContentInfo.RedundantSets" Hidden="true" />
+      <Property Name="IBinaryProperties.Files" Hidden="true" />
+      <Property Name="IBinaryProperties.RedundantSets" Hidden="true" />
+      <Property Name="ILocalBinaryProperties.Files" Hidden="true" />
+      <Property Name="ILocalBinaryProperties.RedundantSets" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
       <HashCode>AIACAABAAAKABECAgATAAABQABACAABgBEAIAAEAEIA=</HashCode>
-      <FileName>ContentInfo.cs</FileName>
+      <FileName>BinaryProperties.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
@@ -106,9 +106,9 @@
   <Class Name="FsInfoCat.Local.RedundantSet" BaseTypeListCollapsed="true">
     <Position X="4" Y="1" Width="1.75" />
     <Members>
-      <Property Name="ILocalRedundantSet.ContentInfo" Hidden="true" />
+      <Property Name="ILocalRedundantSet.BinaryProperties" Hidden="true" />
       <Property Name="ILocalRedundantSet.Redundancies" Hidden="true" />
-      <Property Name="IRedundantSet.ContentInfo" Hidden="true" />
+      <Property Name="IRedundantSet.BinaryProperties" Hidden="true" />
       <Property Name="IRedundantSet.Redundancies" Hidden="true" />
     </Members>
     <Compartments>
@@ -119,7 +119,7 @@
       <FileName>RedundantSet.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="ContentInfo" />
+      <Property Name="BinaryProperties" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>

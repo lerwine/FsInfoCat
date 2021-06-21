@@ -2,7 +2,7 @@ DROP TABLE "Comparisons";
 DROP TABLE "Redundancies";
 DROP TABLE "Files";
 DROP TABLE "RedundantSets";
-DROP TABLE "ContentInfos";
+DROP TABLE "BinaryProperties";
 DROP TABLE "ExtendedProperties";
 PRAGMA foreign_keys = OFF;
 DROP TABLE "Subdirectories";
@@ -96,7 +96,7 @@ CREATE TABLE "Files" (
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ContentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileContentInfo" REFERENCES "ContentInfos"("Id") ON DELETE RESTRICT,
+	"BinaryPropertiesId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileBinaryProperties" REFERENCES "BinaryProperties"("Id") ON DELETE RESTRICT,
 	"ParentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileSubdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
 	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
@@ -139,7 +139,7 @@ CREATE TABLE "ExtendedProperties" (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
         (XResNumerator IS NULL) = (XResDenominator IS NULL) AND (YResNumerator IS NULL) = (YResDenominator IS NULL))
 );
-CREATE TABLE "ContentInfos" (
+CREATE TABLE "BinaryProperties" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"Length"	BIGINT NOT NULL CHECK(Length>=0),
 	"Hash"	BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL,
@@ -147,14 +147,14 @@ CREATE TABLE "ContentInfos" (
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_ContentInfo" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_BinaryProperties" PRIMARY KEY("Id"),
 	CONSTRAINT "UK_LengthHash" UNIQUE("Length","Hash"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 CREATE TABLE "RedundantSets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ContentInfoId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSeContentInfo" REFERENCES "ContentInfos"("Id") ON DELETE RESTRICT,
+	"BinaryPropertiesId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSetBinaryProperties" REFERENCES "BinaryProperties"("Id") ON DELETE RESTRICT,
 	"RemediationStatus"	TINYINT NOT NULL DEFAULT 1 CHECK(RemediationStatus>=0 AND RemediationStatus<9),
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
@@ -194,7 +194,7 @@ CREATE TABLE "Comparisons" (
 CREATE TRIGGER validate_new_redundancy 
    BEFORE INSERT
    ON Redundancies
-   WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.ContentInfoId=r.ContentInfoId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
+   WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertiesId=r.BinaryPropertiesId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
     SELECT RAISE (ABORT,'File does not have same content info as the redundancy set.');
 END;
@@ -247,12 +247,12 @@ INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "Created
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{04863253-dc35-48ba-9662-c0c02556ae84}', 'FsInfoCat.Local', '2021-05-21 21:46:53', '{7f4e1340-2066-424b-a499-978f82ee0e50}', '2021-05-21 21:46:53', '2021-05-21 21:46:53');
     
-INSERT INTO "ContentInfos" ("Id", "Length", "CreatedOn", "ModifiedOn")
+INSERT INTO "BinaryProperties" ("Id", "Length", "CreatedOn", "ModifiedOn")
     VALUES ('{6696e337-c4ad-4e03-b954-ee585270958d}', 77824, '2021-05-21 21:49:59', '2021-05-21 21:49:59');
-INSERT INTO "ContentInfos" ("Id", "Length", "CreatedOn", "ModifiedOn")
+INSERT INTO "BinaryProperties" ("Id", "Length", "CreatedOn", "ModifiedOn")
     VALUES ('{dc508120-8617-4d61-ba38-480ac35fcfe5}', 0, '2021-05-21 21:49:59', '2021-05-21 21:49:59');
 
-INSERT INTO "Files" ("Id", "Name", "LastAccessed", "ContentInfoId", "ParentId", "CreatedOn", "ModifiedOn")
+INSERT INTO "Files" ("Id", "Name", "LastAccessed", "BinaryPropertiesId", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{04863253-dc35-48ba-9662-c0c02556ae84}', 'Example.db', '2021-05-21 21:52:08', '{6696e337-c4ad-4e03-b954-ee585270958d}', '{04863253-dc35-48ba-9662-c0c02556ae84}',
     '2021-05-21 21:52:08', '2021-05-21 21:52:08');
 
@@ -265,15 +265,15 @@ INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "Created
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{9659ea19-ca72-419f-9b35-3b59e6cc89e0}', '1.0.0.0', '2021-05-21 21:46:53', '{1b1ba34d-a703-4e65-a7bf-b37a13818c61}', '2021-05-21 21:46:53', '2021-05-21 21:46:53');
     
-INSERT INTO "Files" ("Id", "Name", "LastAccessed", "ContentInfoId", "ParentId", "CreatedOn", "ModifiedOn")
+INSERT INTO "Files" ("Id", "Name", "LastAccessed", "BinaryPropertiesId", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{6219ddc4-5979-491e-8b76-5050b391f4d3}', 'Test.db', '2021-05-21 21:52:08', '{6696e337-c4ad-4e03-b954-ee585270958d}', '{9659ea19-ca72-419f-9b35-3b59e6cc89e0}',
     '2021-05-21 21:52:08', '2021-05-21 21:52:08');
 
-INSERT INTO "Files" ("Id", "Name", "LastAccessed", "ContentInfoId", "ParentId", "CreatedOn", "ModifiedOn")
+INSERT INTO "Files" ("Id", "Name", "LastAccessed", "BinaryPropertiesId", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('{a3e8dab2-98fd-4059-8756-27db5fb80932}', 'Test.sdl', '2021-05-21 21:52:08', '{6696e337-c4ad-4e03-b954-ee585270958d}', '{9659ea19-ca72-419f-9b35-3b59e6cc89e0}',
     '2021-05-21 21:52:08', '2021-05-21 21:52:08');
 
-INSERT INTO "RedundantSets" ("Id", "ContentInfoId", "CreatedOn", "ModifiedOn")
+INSERT INTO "RedundantSets" ("Id", "BinaryPropertiesId", "CreatedOn", "ModifiedOn")
 	VALUES ('{1ba4dd35-7a45-400b-8f20-57546c94afef}', '{6696e337-c4ad-4e03-b954-ee585270958d}', '2021-05-21 22:23:32', '2021-05-21 22:23:32');
     
 INSERT INTO "Redundancies" ("FileId", "RedundantSetId", "CreatedOn", "ModifiedOn")

@@ -23,6 +23,15 @@ namespace FsInfoCat.PS.Export
         [XmlIgnore]
         public DirectoryCrawlOptions Options { get; set; }
 
+        internal void SetAllProcessedFlags(bool value)
+        {
+            IsProcessed = value;
+            foreach (File file in Files)
+                file.IsProcessed = false;
+            foreach (Subdirectory dir in SubDirectories)
+                dir.SetAllProcessedFlags(value);
+        }
+
         [XmlAttribute(nameof(Status))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
@@ -57,6 +66,8 @@ namespace FsInfoCat.PS.Export
 
         [XmlElement]
         public string Notes { get => _notes; set => _notes = value.NullIfWhitespace(); }
+
+        internal bool IsProcessed { get; set; }
 
         [XmlElement(nameof(CrawlConfiguration))]
         public CrawlConfiguration CrawlConfiguration { get; set; }

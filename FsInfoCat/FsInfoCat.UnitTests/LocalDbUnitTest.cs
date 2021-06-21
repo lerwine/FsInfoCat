@@ -28,7 +28,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(dbContext.Subdirectories);
             Assert.IsNotNull(dbContext.Files);
             Assert.IsNotNull(dbContext.ExtendedProperties);
-            Assert.IsNotNull(dbContext.ContentInfos);
+            Assert.IsNotNull(dbContext.BinaryProperties);
             Assert.IsNotNull(dbContext.Comparisons);
             Assert.IsNotNull(dbContext.RedundantSets);
             Assert.IsNotNull(dbContext.Redundancies);

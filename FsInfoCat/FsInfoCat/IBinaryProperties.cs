@@ -7,7 +7,7 @@ namespace FsInfoCat
     /// Represents a set of files that have the same file size and cryptographic hash.
     /// </summary>
     /// <seealso cref="FsInfoCat.IDbEntity" />
-    public interface IContentInfo : IDbEntity
+    public interface IBinaryProperties : IDbEntity
     {
         Guid Id { get; set; }
 

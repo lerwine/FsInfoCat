@@ -96,7 +96,7 @@
                 <xs:attribute name="Options" type="FileCrawlOptions" use="optional" default="None" />
                 <xs:attribute name="LastAccessed" type="xs:dateTime" use="required" />
                 <xs:attribute name="Deleted" type="xs:boolean" use="optional" default="false" />
-                <xs:attribute name="ContentInfoId" type="GUID" use="required" />
+                <xs:attribute name="BinaryPropertiesId" type="GUID" use="required" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -187,7 +187,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="ContentInfoType">
+    <xs:complexType name="BinaryPropertiesType">
         <xs:complexContent>
             <xs:extension base="DbEntity">
                 <xs:sequence>
@@ -202,7 +202,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element maxOccurs="unbounded" name="FileSystem" type="FileSystemType" />
-                <xs:element maxOccurs="unbounded" name="ContentInfo" type="ContentInfoType" />
+                <xs:element maxOccurs="unbounded" name="BinaryProperties" type="BinaryPropertiesType" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>

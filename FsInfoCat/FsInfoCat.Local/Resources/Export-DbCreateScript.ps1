@@ -248,7 +248,7 @@ Function Export-FileSystemElement {
     }
 }
 
-Function Export-ContentInfoElement {
+Function Export-BinaryPropertiesElement {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
@@ -259,7 +259,7 @@ Function Export-ContentInfoElement {
     )
     
     Process {
-        $StreamWriter.Write('INSERT INTO "ContentInfos" ("Id", "Length"');
+        $StreamWriter.Write('INSERT INTO "BinaryProperties" ("Id", "Length"');
         @('Hash', 'UpstreamId', 'LastSynchronizedOn') | ForEach-Object {
             if ($null -ne $SourceElement.$_) { $StreamWriter.Write(", `"$_`"") }
         }
@@ -364,12 +364,12 @@ Function Export-FileElement {
     )
     
     Process {
-        $StreamWriter.Write('INSERT INTO "Files" ("Id", "Name", "ContentId", "ParentId"');
+        $StreamWriter.Write('INSERT INTO "Files" ("Id", "Name", "BinaryPropertiesId", "ParentId"');
         @('Options', 'LastHashCalculation', 'Notes', 'Deleted', 'ExtendedPropertyId', 'UpstreamId', 'LastSynchronizedOn') | ForEach-Object {
             if ($null -ne $SourceElement.$_) { $StreamWriter.Write(", `"$_`"") }
         }
         $StreamWriter.WriteLine(', "LastAccessed", "CreatedOn", "ModifiedOn")');
-        $StreamWriter.Write("`tVALUES ('$($SourceElement.Id)', '$($SourceElement.Name.Replace("'", "''"))', '$($SourceElement.ContentId)', '$ParentId'");
+        $StreamWriter.Write("`tVALUES ('$($SourceElement.Id)', '$($SourceElement.Name.Replace("'", "''"))', '$($SourceElement.BinaryPropertiesId)', '$ParentId'");
         if ($null -ne $SourceElement.Options) {
             $Value = 0;
             ($SourceElement.Options -split '\s+') | ForEach-Object {
@@ -519,7 +519,7 @@ try {
         $Nsmgr = [System.Xml.XmlNamespaceManager]::new($LocalXmlDocument.NameTable);
         $Nsmgr.AddNamespace('f', 'http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd');
         @($LocalXmlDocument.DocumentElement.SelectNodes('f:FileSystem', $Nsmgr)) | Export-FileSystemElement -StreamWriter $StreamWriter -Nsmgr $Nsmgr;
-        @($LocalXmlDocument.DocumentElement.SelectNodes('f:ContentInfo', $Nsmgr)) | Export-ContentInfoElement -StreamWriter $StreamWriter;
+        @($LocalXmlDocument.DocumentElement.SelectNodes('f:BinaryProperties', $Nsmgr)) | Export-BinaryPropertiesElement -StreamWriter $StreamWriter;
         @($LocalXmlDocument.DocumentElement.SelectNodes('f:ExtendedProperties', $Nsmgr)) | Export-ExtendedPropertiesElement -StreamWriter $StreamWriter;
         @($LocalXmlDocument.DocumentElement.SelectNodes('f:FileSystem/f:Volume/f:RootDirectory', $Nsmgr)) | Export-SubdirectoryElement -StreamWriter $StreamWriter -Nsmgr $Nsmgr;
     }

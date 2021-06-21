@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
+    [Obsolete]
     public class ExtendedProperties : LocalDbEntity, ILocalExtendedProperties
     {
         #region Fields
@@ -109,9 +110,9 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        IEnumerable<IFile> IExtendedProperties.Files => Files.Cast<IFile>();
-
         IEnumerable<ILocalFile> ILocalExtendedProperties.Files => Files.Cast<ILocalFile>();
+
+        IEnumerable<IFile> IExtendedProperties.Files { get => Files.Cast<IFile>(); set => throw new NotImplementedException(); }
 
         #endregion
 

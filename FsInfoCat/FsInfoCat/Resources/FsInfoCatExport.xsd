@@ -336,11 +336,11 @@
         </xs:sequence>
         <xs:attribute name="Id" type="EntityId" use="required"/>
         <xs:attribute name="Name" type="RequiredLongName" use="required"/>
-        <xs:attribute name="ContentId" type="EntityId" use="required">
+        <xs:attribute name="BinaryPropertiesId" type="EntityId" use="required">
             <xs:annotation>
                 <xs:documentation>The Id of the content info for the current file.</xs:documentation>
                 <xs:appinfo xmlns:d="urn:schemas-microsoft-com:xml-msdata">
-                    <d:Relationship d:parent="IContentInfo" />
+                    <d:Relationship d:parent="IBinaryProperties" />
                 </xs:appinfo>
             </xs:annotation>
         </xs:attribute>
@@ -416,15 +416,15 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="IContentInfo">
+    <xs:complexType name="IBinaryProperties">
         <xs:attribute name="Id" type="EntityId" use="required"/>
         <xs:attribute name="Length" type="NonNegativeLong" use="required"/>
         <xs:attribute name="Hash" type="MD5Hash" use="optional"/>
         <xs:attributeGroup ref="IDbEntity" />
     </xs:complexType>
-    <xs:complexType name="ILocalContentInfo">
+    <xs:complexType name="ILocalBinaryProperties">
         <xs:complexContent>
-            <xs:extension base="IContentInfo">
+            <xs:extension base="IBinaryProperties">
                 <xs:sequence>
                     <xs:element name="RedundantSet" type="ILocalRedundantSet" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
@@ -437,9 +437,9 @@
             <xs:element name="Notes" type="NotesField" minOccurs="0" maxOccurs="1"/>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="File" type="IFile">
-                    <xs:keyref name="FK_FileContentInfo" refer="PK_ContentInfo">
+                    <xs:keyref name="FK_FileBinaryProperties" refer="PK_BinaryProperties">
                         <xs:selector xpath="."/>
-                        <xs:field xpath="ContentId"/>
+                        <xs:field xpath="BinaryPropertiesId"/>
                     </xs:keyref>
                     <xs:keyref name="FK_FileExtendedProperty" refer="PK_ExtendedProperties">
                         <xs:selector xpath="."/>
@@ -548,7 +548,7 @@
         <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="FileSystem" type="ILocalFileSystem" />
-                <xs:element name="ContentInfo" type="ILocalContentInfo" />
+                <xs:element name="BinaryProperties" type="ILocalBinaryProperties" />
                 <xs:element name="ExtendedProperties" type="IExtendedProperties" />
             </xs:choice>
         </xs:complexType>
@@ -600,12 +600,12 @@
             <xs:selector xpath="ex:FileSystem"/>
             <xs:field xpath="@DisplayName"/>
         </xs:unique>
-        <xs:key name="PK_ContentInfo">
-            <xs:selector xpath="ex:ContentInfo"/>
+        <xs:key name="PK_BinaryProperties">
+            <xs:selector xpath="ex:BinaryProperties"/>
             <xs:field xpath="@Id"/>
         </xs:key>
-        <xs:unique name="IDX_ContentInfo">
-            <xs:selector xpath="ex:ContentInfo"/>
+        <xs:unique name="IDX_BinaryProperties">
+            <xs:selector xpath="ex:BinaryProperties"/>
             <xs:field xpath="@Length"/>
             <xs:field xpath="@Hash"/>
         </xs:unique>

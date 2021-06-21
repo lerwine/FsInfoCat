@@ -11,9 +11,32 @@ namespace FsInfoCat
     {
         IEnumerable<IComparison> Comparisons { get; }
 
-        IEnumerable<IContentInfo> ContentInfos { get; }
+        IEnumerable<IBinaryProperties> BinaryProperties { get; }
 
+        [Obsolete()]
         IEnumerable<IExtendedProperties> ExtendedProperties { get; }
+
+        IEnumerable<ISummaryProperties> SummaryProperties { get; }
+
+        IEnumerable<IDocumentProperties> DocumentProperties { get; }
+
+        IEnumerable<IAudioProperties> AudioProperties { get; }
+
+        IEnumerable<IDRMProperties> DRMProperties { get; }
+
+        IEnumerable<IGPSProperties> GPSProperties { get; }
+
+        IEnumerable<IImageProperties> ImageProperties { get; }
+
+        IEnumerable<IMediaProperties> MediaProperties { get; }
+
+        IEnumerable<IMusicProperties> MusicProperties { get; }
+
+        IEnumerable<IPhotoProperties> PhotoProperties { get; }
+
+        IEnumerable<IRecordedTVProperties> RecordedTVProperties { get; }
+
+        IEnumerable<IVideoProperties> VideoProperties { get; }
 
         IEnumerable<IAccessError<IFile>> FileAccessErrors { get; }
 
@@ -37,7 +60,7 @@ namespace FsInfoCat
 
         IEnumerable<ICrawlConfiguration> CrawlConfigurations { get; }
 
-        void ForceDeleteContentInfo(IContentInfo target);
+        void ForceDeleteBinaryProperties(IBinaryProperties target);
 
         void ForceDeleteRedundantSet(IRedundantSet target);
 

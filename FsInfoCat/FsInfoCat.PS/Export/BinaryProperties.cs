@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.PS.Export
 {
-    public class ContentInfo : ExportSet.ContentInfoBase
+    public class BinaryProperties : ExportSet.BinaryPropertiesBase
     {
         private readonly RedundantSetBase.Collection _redundantSets;
 
@@ -18,7 +18,7 @@ namespace FsInfoCat.PS.Export
                 return null;
             Guid id = Id;
             return exportSet.FileSystems.SelectMany(fs => fs.Volumes.Select(v => v.RootDirectory).Where(r => r is not null)).SelectMany(d => d.GetAllFiles())
-                .Where(f => f.ContentId == id);
+                .Where(f => f.BinaryPropertiesId == id);
         }
 
         [XmlElement(nameof(RedundantSet))]
@@ -41,27 +41,27 @@ namespace FsInfoCat.PS.Export
             }
         }
 
-        public ContentInfo()
+        public BinaryProperties()
         {
             _redundantSets = new RedundantSetBase.Collection(this);
         }
 
-        public abstract class RedundantSetBase : EntityExportElement, IOwnedElement<ContentInfo>
+        public abstract class RedundantSetBase : EntityExportElement, IOwnedElement<BinaryProperties>
         {
             [XmlIgnore]
-            public ContentInfo ContentInfo { get; private set; }
+            public BinaryProperties BinaryProperties { get; private set; }
 
-            ContentInfo IOwnedElement<ContentInfo>.Owner => ContentInfo;
+            BinaryProperties IOwnedElement<BinaryProperties>.Owner => BinaryProperties;
 
-            internal class Collection : OwnedCollection<ContentInfo, RedundantSet>
+            internal class Collection : OwnedCollection<BinaryProperties, RedundantSet>
             {
-                internal Collection(ContentInfo owner) : base(owner) { }
+                internal Collection(BinaryProperties owner) : base(owner) { }
 
-                internal Collection(ContentInfo owner, IEnumerable<RedundantSet> items) : base(owner, items) { }
+                internal Collection(BinaryProperties owner, IEnumerable<RedundantSet> items) : base(owner, items) { }
 
-                protected override void OnItemAdding(RedundantSet item) => item.ContentInfo = Owner;
+                protected override void OnItemAdding(RedundantSet item) => item.BinaryProperties = Owner;
 
-                protected override void OnItemRemoved(RedundantSet item) => item.ContentInfo = null;
+                protected override void OnItemRemoved(RedundantSet item) => item.BinaryProperties = null;
             }
         }
     }

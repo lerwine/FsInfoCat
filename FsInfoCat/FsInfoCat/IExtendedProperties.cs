@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    [Obsolete("Use other I*Properties interfaces")]
     public interface IExtendedProperties : IDbEntity
     {
         Guid Id { get; set; }
@@ -10,75 +11,75 @@ namespace FsInfoCat
         /*
          * What:
          // string Title { get; 
-         // string Subject { get; }
-         // string StreamName { get; } // PropertySystemAudio
-         // string AlbumTitle { get; } // PropertySystemMusic
-         // string StreamName { get; } // PropertySystemVideo
+         // string Subject { get; set; }
+         // string StreamName { get; set; } // PropertySystemAudio
+         // string AlbumTitle { get; set; } // PropertySystemMusic
+         // string StreamName { get; set; } // PropertySystemVideo
         
-         // string Subtitle { get; } // PropertySystemMedia
-         // string RevisionNumber { get; } // PropertySystemDocument
-         // string Version { get; } // PropertySystemDocument
-         // string FileVersion { get; }
-         // string ImageID { get; } // PropertySystemImage
+         // string Subtitle { get; set; } // PropertySystemMedia
+         // string RevisionNumber { get; set; } // PropertySystemDocument
+         // string Version { get; set; } // PropertySystemDocument
+         // string FileVersion { get; set; }
+         // string ImageID { get; set; } // PropertySystemImage
         
-         // ushort? StreamNumber { get; } // PropertySystemAudio
-         // ushort? StreamNumber { get; } // PropertySystemVideo
-         // uint? TrackNumber { get; } // PropertySystemMusic
+         // ushort? StreamNumber { get; set; } // PropertySystemAudio
+         // ushort? StreamNumber { get; set; } // PropertySystemVideo
+         // uint? TrackNumber { get; set; } // PropertySystemMusic
 
-         // string ApplicationName { get; }
-         // string ProductName { get; } // PropertySystemSoftware
+         // string ApplicationName { get; set; }
+         // string ProductName { get; set; } // PropertySystemSoftware
 
-         // string[] Author { get; }
-         // string[] ItemAuthors { get; }
-         // string[] Contributor { get; } // PropertySystemDocument
-         // string LastAuthor { get; } // PropertySystemDocument
-         // string Manager { get; } // PropertySystemDocument
-         // string[] Producer { get; } // PropertySystemMedia
-         // string[] Writer { get; } // PropertySystemMedia
-         // string Publisher { get; } // PropertySystemMedia
-         // string DisplayArtist { get; } // PropertySystemMusic
-         // string[] Artist { get; } // PropertySystemMusic
-         // string[] Composer { get; } // PropertySystemMusic
-         // string[] Conductor { get; } // PropertySystemMusic
-         // string[] Director { get; } // PropertySystemVideo
+         // string[] Author { get; set; }
+         // string[] ItemAuthors { get; set; }
+         // string[] Contributor { get; set; } // PropertySystemDocument
+         // string LastAuthor { get; set; } // PropertySystemDocument
+         // string Manager { get; set; } // PropertySystemDocument
+         // string[] Producer { get; set; } // PropertySystemMedia
+         // string[] Writer { get; set; } // PropertySystemMedia
+         // string Publisher { get; set; } // PropertySystemMedia
+         // string DisplayArtist { get; set; } // PropertySystemMusic
+         // string[] Artist { get; set; } // PropertySystemMusic
+         // string[] Composer { get; set; } // PropertySystemMusic
+         // string[] Conductor { get; set; } // PropertySystemMusic
+         // string[] Director { get; set; } // PropertySystemVideo
 
          // string Company { get; 
-         // string Division { get; } // PropertySystemDocument
+         // string Division { get; set; } // PropertySystemDocument
         
-         // string[] Event { get; } // PropertySystemPhoto
-         // string[] PeopleNames { get; } // PropertySystemPhoto
+         // string[] Event { get; set; } // PropertySystemPhoto
+         // string[] PeopleNames { get; set; } // PropertySystemPhoto
 
-         // string Copyright { get; }
+         // string Copyright { get; set; }
 
-         // int? PerceivedType { get; }
-         // string ContentType { get; }
+         // int? PerceivedType { get; set; }
+         // string ContentType { get; set; }
 
-         // uint? EncodingBitrate { get; } // PropertySystemAudio
-         // uint? EncodingBitrate { get; } // PropertySystemVideo
-         // bool? IsVariableBitrate { get; } // PropertySystemAudio
-         // uint? BitDepth { get; } // PropertySystemImage
+         // uint? EncodingBitrate { get; set; } // PropertySystemAudio
+         // uint? EncodingBitrate { get; set; } // PropertySystemVideo
+         // bool? IsVariableBitrate { get; set; } // PropertySystemAudio
+         // uint? BitDepth { get; set; } // PropertySystemImage
 
-         // uint? SampleRate { get; } // PropertySystemAudio
+         // uint? SampleRate { get; set; } // PropertySystemAudio
          // uint? SampleSize { get;  // PropertySystemAudio
-         // double? HorizontalResolution { get; } // PropertySystemImage
-         // double? VerticalResolution { get; } // PropertySystemImage
-         // uint? FrameRate { get; } // PropertySystemVideo
+         // double? HorizontalResolution { get; set; } // PropertySystemImage
+         // double? VerticalResolution { get; set; } // PropertySystemImage
+         // uint? FrameRate { get; set; } // PropertySystemVideo
         
-         // string Language { get; }
+         // string Language { get; set; }
 
-         // string Format { get; } // PropertySystemAudio
+         // string Format { get; set; } // PropertySystemAudio
 
-         // System.DateTime? DateCreated { get; } // PropertySystemDocument
-         // uint? Year { get; } // PropertySystemMedia
-         // System.DateTime? DateTaken { get; } // PropertySystemPhoto
+         // System.DateTime? DateCreated { get; set; } // PropertySystemDocument
+         // uint? Year { get; set; } // PropertySystemMedia
+         // System.DateTime? DateTaken { get; set; } // PropertySystemPhoto
          * 
-         // uint? HorizontalSize { get; } // PropertySystemImage
-         // uint? VerticalSize { get; } // PropertySystemImage
-         // uint? FrameHeight { get; } // PropertySystemVideo
-         // uint? FrameWidth { get; } // PropertySystemVideo
+         // uint? HorizontalSize { get; set; } // PropertySystemImage
+         // uint? VerticalSize { get; set; } // PropertySystemImage
+         // uint? FrameHeight { get; set; } // PropertySystemVideo
+         // uint? FrameWidth { get; set; } // PropertySystemVideo
          * 
-         // ulong? Duration { get; } // PropertySystemMedia
-         // uint? FrameCount { get; } // PropertySystemMedia
+         // ulong? Duration { get; set; } // PropertySystemMedia
+         // uint? FrameCount { get; set; } // PropertySystemMedia
 
          * 
          * 
@@ -111,6 +112,6 @@ namespace FsInfoCat
         string SoftwareUsed { get; set; }
         string Artist { get; set; }
         string HostComputer { get; set; }
-        IEnumerable<IFile> Files { get; }
+        IEnumerable<IFile> Files { get; set; }
     }
 }

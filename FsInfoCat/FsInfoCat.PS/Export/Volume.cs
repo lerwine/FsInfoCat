@@ -18,6 +18,12 @@ namespace FsInfoCat.PS.Export
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
         public string __XML_CaseSensitiveSearch { get => CaseSensitiveSearch.ToBooleanXml(); set => CaseSensitiveSearch = value.FromXmlBoolean(); }
+
+        internal void SetAllProcessedFlags(bool value)
+        {
+            IsProcessed = value;
+            RootDirectory?.SetAllProcessedFlags(value);
+        }
 #pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
         public bool? CaseSensitiveSearch { get; set; }
@@ -56,6 +62,8 @@ namespace FsInfoCat.PS.Export
 
         [XmlElement]
         public string Notes { get => _notes; set => _notes = value.NullIfWhitespace(); }
+
+        internal bool IsProcessed { get; set; }
 
         [XmlElement]
         public Subdirectory RootDirectory

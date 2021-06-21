@@ -78,27 +78,27 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DbFile Content Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DbFile.Content: UNIQUEIDENTIFIER FOREIGN REFERENCES ContentInfos")]
+        [TestProperty(TestHelper.TestProperty_Description, "DbFile.Content: UNIQUEIDENTIFIER FOREIGN REFERENCES BinaryProperties")]
         [Ignore]
-        public void DbFileContentInfoTestMethod()
+        public void DbFileBinaryPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.ContentInfo expected = default; // DEFERRED: Set invalid value
-            Local.DbFile target = new() { Content = expected };
+            Local.BinaryProperties expected = default; // DEFERRED: Set invalid value
+            Local.DbFile target = new() { BinaryProperties = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DbFile.Content), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_ContentInfoRequired, results[0].ErrorMessage);
+            Assert.AreEqual(nameof(Local.DbFile.BinaryProperties), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BinaryPropertiesRequired, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Content);
+            Assert.AreEqual(expected, target.BinaryProperties);
 
             expected = default; // DEFERRED: Set valid value
-            target.Content = expected;
+            target.BinaryProperties = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
@@ -106,21 +106,21 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
-            Assert.AreEqual(expected, target.Content);
+            Assert.AreEqual(expected, target.BinaryProperties);
 
             expected = default; // DEFERRED: Set invalid value
-            target.Content = expected;
+            target.BinaryProperties = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DbFile.Content), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_ContentInfoRequired, results[0].ErrorMessage);
+            Assert.AreEqual(nameof(Local.DbFile.BinaryProperties), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BinaryPropertiesRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Files.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Content);
+            Assert.AreEqual(expected, target.BinaryProperties);
             dbContext.Files.Remove(target);
         }
 

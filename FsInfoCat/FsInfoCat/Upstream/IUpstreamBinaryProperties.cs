@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamContentInfo : IContentInfo, IUpstreamDbEntity
+    public interface IUpstreamBinaryProperties : IBinaryProperties, IUpstreamDbEntity
     {
         new IEnumerable<IUpstreamFile> Files { get; }
 

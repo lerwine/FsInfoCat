@@ -358,21 +358,21 @@ namespace FsInfoCat.UnitTests
         //            dbContext.ForceDeleteFileSystem(f);
         //        dbContext.SaveChanges();
         //    }
-        //    ids = document.Root.Elements(nameof(Local.ContentInfo)).Select(e => EnsureLocalContentInfo(dbContext, e).Id).ToArray();
-        //    var contentInfos = dbContext.ContentInfos.AsEnumerable().Where(c => !ids.Contains(c.Id)).ToArray();
-        //    if (contentInfos.Length > 0)
+        //    ids = document.Root.Elements(nameof(Local.BinaryProperties)).Select(e => EnsureLocalBinaryProperties(dbContext, e).Id).ToArray();
+        //    var binaryPropertiess = dbContext.BinaryProperties.AsEnumerable().Where(c => !ids.Contains(c.Id)).ToArray();
+        //    if (binaryPropertiess.Length > 0)
         //    {
-        //        foreach (var c in contentInfos)
-        //            dbContext.ForceDeleteContentInfo(c);
+        //        foreach (var c in binaryPropertiess)
+        //            dbContext.ForceDeleteBinaryProperties(c);
         //        dbContext.SaveChanges();
         //    }
         //}
 
-        //private static Local.ContentInfo EnsureLocalContentInfo(Local.LocalDbContext dbContext, XElement element)
+        //private static Local.BinaryProperties EnsureLocalBinaryProperties(Local.LocalDbContext dbContext, XElement element)
         //{
-        //    string n = nameof(Local.ContentInfo.Id);
+        //    string n = nameof(Local.BinaryProperties.Id);
         //    Guid id = Guid.Parse(element.Attribute(n).Value);
-        //    var target = dbContext.ContentInfos.Find(id);
+        //    var target = dbContext.BinaryProperties.Find(id);
         //    throw new NotImplementedException();
         //}
 

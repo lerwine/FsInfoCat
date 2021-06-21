@@ -13,6 +13,13 @@ namespace FsInfoCat.PS.Export
         [XmlAttribute(nameof(CaseSensitiveSearch))]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public string __XML_CaseSensitiveSearch { get => CaseSensitiveSearch.ToBooleanXml(false); set => CaseSensitiveSearch = value.FromXmlBoolean(CaseSensitiveSearch); }
+
+        internal void SetAllProcessedFlags(bool value)
+        {
+            foreach (Volume volume in Volumes)
+                volume.SetAllProcessedFlags(value);
+        }
+
         [XmlIgnore]
         public bool CaseSensitiveSearch { get; set; }
 

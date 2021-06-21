@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.PS.Export
 {
+    [Obsolete]
     public class ExtendedProperties : ExportSet.ExtendedPropertiesBase
     {
         public string Kind { get; set; }
@@ -44,5 +45,10 @@ namespace FsInfoCat.PS.Export
         public string HostComputer { get; set; }
 
         public IEnumerable<File> GetFiles() => throw new NotImplementedException();
+
+        internal static ExtendedProperties Create(System.IO.FileInfo fileInfo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

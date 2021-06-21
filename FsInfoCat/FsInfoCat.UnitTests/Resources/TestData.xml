@@ -10,7 +10,7 @@
                             <Subdirectory Id="{7a90f629-9ad0-44b3-96d7-c60f51db8f7e}" Name="FsInfoCat" LastAccessed="2021-05-21T21:45:27" CreatedOn="2021-05-21T21:45:27" ModifiedOn="2021-05-21T21:45:27">
                                 <Subdirectory Id="{7f4e1340-2066-424b-a499-978f82ee0e50}" Name="FsInfoCat" LastAccessed="2021-05-21T21:45:35" CreatedOn="2021-05-21T21:45:35" ModifiedOn="2021-05-21T21:45:35">
                                     <Subdirectory Id="{04863253-dc35-48ba-9662-c0c02556ae84}" Name="FsInfoCat.Local" LastAccessed="2021-05-21T21:46:53" CreatedOn="2021-05-21T21:46:53" ModifiedOn="2021-05-21T21:46:53">
-                                        <File Id="{04863253-dc35-48ba-9662-c0c02556ae84}" Name="Example.db" LastAccessed="2021-05-21T21:52:08" ContentId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
+                                        <File Id="{04863253-dc35-48ba-9662-c0c02556ae84}" Name="Example.db" LastAccessed="2021-05-21T21:52:08" BinaryPropertiesId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
                                     </Subdirectory>
                                 </Subdirectory>
                             </Subdirectory>
@@ -19,9 +19,9 @@
                             <Subdirectory Id="{5d2f0713-1857-4253-a69a-eb5e245ed553}" Name="Local" LastAccessed="2021-05-21T21:45:27" CreatedOn="2021-05-21T21:45:27" ModifiedOn="2021-05-21T21:45:27">
                                 <Subdirectory Id="{1b1ba34d-a703-4e65-a7bf-b37a13818c61}" Name="FsInfoCat.Desktop" LastAccessed="2021-05-21T21:45:35" CreatedOn="2021-05-21T21:45:35" ModifiedOn="2021-05-21T21:45:35">
                                     <Subdirectory Id="{9659ea19-ca72-419f-9b35-3b59e6cc89e0}" Name="1.0.0.0" LastAccessed="2021-05-21T21:46:53" CreatedOn="2021-05-21T21:46:53" ModifiedOn="2021-05-21T21:46:53">
-                                        <File Id="{6219ddc4-5979-491e-8b76-5050b391f4d3}" Name="Test.db" LastAccessed="2021-05-21T21:52:08" ContentId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
-                                        <File Id="{a3e8dab2-98fd-4059-8756-27db5fb80932}" Name="Test.sdl" LastAccessed="2021-05-21T21:52:08" ContentId="{dc508120-8617-4d61-ba38-480ac35fcfe5}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
-                                        <File Id="{d52ea636-e1fb-41b4-81ec-3b396d4e6ca4}" Name="Test.tmp" LastAccessed="2021-05-21T21:52:08" ContentId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08">
+                                        <File Id="{6219ddc4-5979-491e-8b76-5050b391f4d3}" Name="Test.db" LastAccessed="2021-05-21T21:52:08" BinaryPropertiesId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
+                                        <File Id="{a3e8dab2-98fd-4059-8756-27db5fb80932}" Name="Test.sdl" LastAccessed="2021-05-21T21:52:08" BinaryPropertiesId="{dc508120-8617-4d61-ba38-480ac35fcfe5}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08" />
+                                        <File Id="{d52ea636-e1fb-41b4-81ec-3b396d4e6ca4}" Name="Test.tmp" LastAccessed="2021-05-21T21:52:08" BinaryPropertiesId="{6696e337-c4ad-4e03-b954-ee585270958d}" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08">
                                             <AccessError Id="{2a36dcad-8ae8-46f8-b085-0dbfbc3c0442}" ErrorCode="ReadError" Message="asdf" CreatedOn="2021-05-21T21:52:08" ModifiedOn="2021-05-21T21:52:08">
                                                 <![CDATA[Stack Trace:]]>
                                             </AccessError>
@@ -53,12 +53,12 @@
             <RootDirectory Id="{a951b559-a895-4669-9bfb-ea547c4c24d4}" Name="\\servicenowdiag479.file.core.windows.net\testazureshare\" LastAccessed="2021-05-21T21:37:18" CreatedOn="2021-05-21T21:37:18" ModifiedOn="2021-05-21T21:37:18" />
         </Volume>
     </FileSystem>
-    <ContentInfo Id="{6696e337-c4ad-4e03-b954-ee585270958d}" Length="77824" CreatedOn="2021-05-21T21:49:59" ModifiedOn="2021-05-21T21:49:59" Hash="+wEAAPsBAAD7AQAA+wEAAA">
+    <BinaryProperties Id="{6696e337-c4ad-4e03-b954-ee585270958d}" Length="77824" CreatedOn="2021-05-21T21:49:59" ModifiedOn="2021-05-21T21:49:59" Hash="+wEAAPsBAAD7AQAA+wEAAA">
         <RedundantSet Id="{1ba4dd35-7a45-400b-8f20-57546c94afef}" RemediationStatus="Unconfirmed" CreatedOn="2021-05-21T22:23:32" ModifiedOn="2021-05-21T22:23:32">
             <Redundancy FileId="{04863253-dc35-48ba-9662-c0c02556ae84}" CreatedOn="2021-05-21T22:23:32" ModifiedOn="2021-05-21T22:23:32" />
             <Redundancy FileId="{6219ddc4-5979-491e-8b76-5050b391f4d3}" CreatedOn="2021-05-21T22:23:32" ModifiedOn="2021-05-21T22:23:32" />
             <Redundancy FileId="{a3e8dab2-98fd-4059-8756-27db5fb80932}" CreatedOn="2021-05-21T22:23:32" ModifiedOn="2021-05-21T22:23:32" />
         </RedundantSet>
-    </ContentInfo>
-    <ContentInfo Id="{dc508120-8617-4d61-ba38-480ac35fcfe5}" Length="0" CreatedOn="2021-05-21T21:49:59" ModifiedOn="2021-05-21T21:49:59" />
+    </BinaryProperties>
+    <BinaryProperties Id="{dc508120-8617-4d61-ba38-480ac35fcfe5}" Length="0" CreatedOn="2021-05-21T21:49:59" ModifiedOn="2021-05-21T21:49:59" />
 </Local>

@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.PS.Export
 {
-    public class RedundantSet : ContentInfo.RedundantSetBase
+    public class RedundantSet : BinaryProperties.RedundantSetBase
     {
         private string _reference = "";
         private string _notes;

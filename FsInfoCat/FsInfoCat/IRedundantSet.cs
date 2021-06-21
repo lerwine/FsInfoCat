@@ -16,7 +16,7 @@ namespace FsInfoCat
 
         string Notes { get; set; }
 
-        IContentInfo ContentInfo { get; set; }
+        IBinaryProperties BinaryProperties { get; set; }
 
         IEnumerable<IRedundancy> Redundancies { get; }
     }

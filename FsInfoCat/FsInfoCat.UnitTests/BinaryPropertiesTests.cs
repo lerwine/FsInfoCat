@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.UnitTests
 {
     [TestClass]
-    public class ContentInfoTests
+    public class BinaryPropertiesTests
     {
         private static TestContext _testContext;
 
@@ -21,13 +21,13 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
-        [TestMethod("new ContentInfo()")]
-        public void NewContentInfoTestMethod()
+        [TestMethod("new BinaryProperties()")]
+        public void NewBinaryPropertiesTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
-            ContentInfo target = new();
+            BinaryProperties target = new();
 
-            EntityEntry<ContentInfo> entry = dbContext.Entry(target);
+            EntityEntry<BinaryProperties> entry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entry.State);
             Assert.AreEqual(Guid.Empty, target.Id);
             Assert.AreEqual(0L, target.Length);
@@ -41,9 +41,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for new ContentInfo()
+            // TODO: Implement test for new BinaryProperties()
 
-            dbContext.ContentInfos.Add(target);
+            dbContext.BinaryProperties.Add(target);
             Assert.AreEqual(EntityState.Added, entry.State);
             Assert.AreNotEqual(Guid.Empty, target.Id);
             Assert.AreEqual(0L, target.Length);
@@ -61,7 +61,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void IdTestMethod()
         {
-            ContentInfo target = new();
+            BinaryProperties target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -73,13 +73,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("long Length")]
-        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
+        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
         public void LengthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for long Length
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             long expectedValue = default;
             target.Length = default;
             long actualValue = target.Length;
@@ -87,13 +87,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MD5Hash? Hash")]
-        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
+        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
         public void HashTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for MD5Hash? Hash
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             MD5Hash? expectedValue = default;
             target.Hash = default;
             MD5Hash? actualValue = target.Hash;
@@ -106,7 +106,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for HashSet<DbFile> Files
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             HashSet<DbFile> expectedValue = default;
             target.Files = default;
             HashSet<DbFile> actualValue = target.Files;
@@ -119,7 +119,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for HashSet<RedundantSet> RedundantSets
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             HashSet<RedundantSet> expectedValue = default;
             target.RedundantSets = default;
             HashSet<RedundantSet> actualValue = target.RedundantSets;
@@ -132,7 +132,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for Guid? UpstreamId
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             Guid? expectedValue = default;
             target.UpstreamId = default;
             Guid? actualValue = target.UpstreamId;
@@ -147,7 +147,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for DateTime? LastSynchronizedOn
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             DateTime? expectedValue = default;
             target.LastSynchronizedOn = default;
             DateTime? actualValue = target.LastSynchronizedOn;
@@ -155,13 +155,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn")]
-        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for DateTime CreatedOn
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             DateTime expectedValue = default;
             target.CreatedOn = default;
             DateTime actualValue = target.CreatedOn;
@@ -174,7 +174,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for DateTime ModifiedOn
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             DateTime expectedValue = default;
             target.ModifiedOn = default;
             DateTime actualValue = target.ModifiedOn;
@@ -188,7 +188,7 @@ namespace FsInfoCat.UnitTests
             // TODO: Implement test for string Item[string]
 
             string columnNameIndex = default;
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             string expectedValue = default;
             string actualValue = target[columnNameIndex];
             Assert.AreEqual(expectedValue, actualValue);
@@ -201,7 +201,7 @@ namespace FsInfoCat.UnitTests
             // TODO: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
 
             ValidationContext validationContextArg = default;
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             IEnumerable<ValidationResult> expectedReturnValue = default;
             IEnumerable<ValidationResult> actualReturnValue = target.Validate(validationContextArg);
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
@@ -213,7 +213,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for bool HasErrors()
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             bool expectedReturnValue = default;
             bool actualReturnValue = target.HasErrors();
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
@@ -225,7 +225,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for void AcceptChanges()
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             target.AcceptChanges();
         }
 
@@ -235,7 +235,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for bool IsChanged()
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             bool expectedReturnValue = default;
             bool actualReturnValue = target.IsChanged();
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
@@ -247,7 +247,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for void RejectChanges()
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             target.RejectChanges();
         }
 
@@ -257,7 +257,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for Type GetType()
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             Type expectedReturnValue = default;
             Type actualReturnValue = target.GetType();
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
@@ -269,7 +269,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for string ToString()
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             string expectedReturnValue = default;
             string actualReturnValue = target.ToString();
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
@@ -282,7 +282,7 @@ namespace FsInfoCat.UnitTests
             // TODO: Implement test for bool Equals(object)
 
             object objArg = default;
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             bool expectedReturnValue = default;
             bool actualReturnValue = target.Equals(objArg);
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
@@ -294,7 +294,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // TODO: Implement test for int GetHashCode()
 
-            ContentInfo target = default; // TODO: Create and initialize ContentInfo instance
+            BinaryProperties target = default; // TODO: Create and initialize BinaryProperties instance
             int expectedReturnValue = default;
             int actualReturnValue = target.GetHashCode();
             Assert.AreEqual(expectedReturnValue, actualReturnValue);

@@ -37,9 +37,32 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<FileAccessError> FileAccessErrors { get; set; }
 
+        [Obsolete]
         public virtual DbSet<ExtendedProperties> ExtendedProperties { get; set; }
 
-        public virtual DbSet<ContentInfo> ContentInfos { get; set; }
+        public virtual DbSet<SummaryProperties> SummaryProperties { get; }
+
+        public virtual DbSet<DocumentProperties> DocumentProperties { get; }
+
+        public virtual DbSet<AudioProperties> AudioProperties { get; }
+
+        public virtual DbSet<DRMProperties> DRMProperties { get; }
+
+        public virtual DbSet<GPSProperties> GPSProperties { get; }
+
+        public virtual DbSet<ImageProperties> ImageProperties { get; }
+
+        public virtual DbSet<MediaProperties> MediaProperties { get; }
+
+        public virtual DbSet<MusicProperties> MusicProperties { get; }
+
+        public virtual DbSet<PhotoProperties> PhotoProperties { get; }
+
+        public virtual DbSet<RecordedTVProperties> RecordedTVProperties { get; }
+
+        public virtual DbSet<VideoProperties> VideoProperties { get; }
+
+        public virtual DbSet<BinaryProperties> BinaryProperties { get; set; }
 
         public virtual DbSet<FileComparison> Comparisons { get; set; }
 
@@ -122,7 +145,7 @@ namespace FsInfoCat.Local
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<Subdirectory>(Subdirectory.BuildEntity);
             modelBuilder.Entity<DbFile>(DbFile.BuildEntity);
-            modelBuilder.Entity<ContentInfo>(ContentInfo.BuildEntity);
+            modelBuilder.Entity<BinaryProperties>(Local.BinaryProperties.BuildEntity);
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
@@ -168,8 +191,9 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalComparison> ILocalDbContext.Comparisons => Comparisons.Cast<ILocalComparison>();
 
-        IEnumerable<ILocalContentInfo> ILocalDbContext.ContentInfos => ContentInfos.Cast<ILocalContentInfo>();
+        IEnumerable<ILocalBinaryProperties> ILocalDbContext.BinaryProperties => BinaryProperties.Cast<ILocalBinaryProperties>();
 
+        [Obsolete]
         IEnumerable<ILocalExtendedProperties> ILocalDbContext.ExtendedProperties => ExtendedProperties.Cast<ILocalExtendedProperties>();
 
         IEnumerable<IAccessError<ILocalFile>> ILocalDbContext.FileAccessErrors => FileAccessErrors.Cast<IAccessError<ILocalFile>>();
@@ -196,8 +220,9 @@ namespace FsInfoCat.Local
 
         IEnumerable<IComparison> IDbContext.Comparisons => Comparisons.Cast<IComparison>();
 
-        IEnumerable<IContentInfo> IDbContext.ContentInfos => ContentInfos.Cast<IContentInfo>();
+        IEnumerable<IBinaryProperties> IDbContext.BinaryProperties => BinaryProperties.Cast<IBinaryProperties>();
 
+        [Obsolete]
         IEnumerable<IExtendedProperties> IDbContext.ExtendedProperties => ExtendedProperties.Cast<IExtendedProperties>();
 
         IEnumerable<IAccessError<IFile>> IDbContext.FileAccessErrors => FileAccessErrors.Cast<IAccessError<IFile>>();
@@ -222,13 +247,57 @@ namespace FsInfoCat.Local
 
         IEnumerable<ICrawlConfiguration> IDbContext.CrawlConfigurations => CrawlConfigurations.Cast<ICrawlConfiguration>();
 
-        void ILocalDbContext.ForceDeleteContentInfo(ILocalContentInfo target) => ForceDeleteContentInfo((ContentInfo)target);
+        IEnumerable<ILocalSummaryProperties> ILocalDbContext.SummaryProperties => SummaryProperties.Cast<ILocalSummaryProperties>();
+
+        IEnumerable<ILocalDocumentProperties> ILocalDbContext.DocumentProperties => DocumentProperties.Cast<ILocalDocumentProperties>();
+
+        IEnumerable<ILocalAudioProperties> ILocalDbContext.AudioProperties => AudioProperties.Cast<ILocalAudioProperties>();
+
+        IEnumerable<ILocalDRMProperties> ILocalDbContext.DRMProperties => DRMProperties.Cast<ILocalDRMProperties>();
+
+        IEnumerable<ILocalGPSProperties> ILocalDbContext.GPSProperties => GPSProperties.Cast<ILocalGPSProperties>();
+
+        IEnumerable<ILocalImageProperties> ILocalDbContext.ImageProperties => ImageProperties.Cast<ILocalImageProperties>();
+
+        IEnumerable<ILocalMediaProperties> ILocalDbContext.MediaProperties => MediaProperties.Cast<ILocalMediaProperties>();
+
+        IEnumerable<ILocalMusicProperties> ILocalDbContext.MusicProperties => MusicProperties.Cast<ILocalMusicProperties>();
+
+        IEnumerable<ILocalPhotoProperties> ILocalDbContext.PhotoProperties => PhotoProperties.Cast<ILocalPhotoProperties>();
+
+        IEnumerable<ILocalRecordedTVProperties> ILocalDbContext.RecordedTVProperties => RecordedTVProperties.Cast<ILocalRecordedTVProperties>();
+
+        IEnumerable<ILocalVideoProperties> ILocalDbContext.VideoProperties => VideoProperties.Cast<ILocalVideoProperties>();
+
+        IEnumerable<ISummaryProperties> IDbContext.SummaryProperties => SummaryProperties.Cast<ISummaryProperties>();
+
+        IEnumerable<IDocumentProperties> IDbContext.DocumentProperties => DocumentProperties.Cast<IDocumentProperties>();
+
+        IEnumerable<IAudioProperties> IDbContext.AudioProperties => AudioProperties.Cast<IAudioProperties>();
+
+        IEnumerable<IDRMProperties> IDbContext.DRMProperties => DRMProperties.Cast<IDRMProperties>();
+
+        IEnumerable<IGPSProperties> IDbContext.GPSProperties => GPSProperties.Cast<IGPSProperties>();
+
+        IEnumerable<IImageProperties> IDbContext.ImageProperties => ImageProperties.Cast<IImageProperties>();
+
+        IEnumerable<IMediaProperties> IDbContext.MediaProperties => MediaProperties.Cast<IMediaProperties>();
+
+        IEnumerable<IMusicProperties> IDbContext.MusicProperties => MusicProperties.Cast<IMusicProperties>();
+
+        IEnumerable<IPhotoProperties> IDbContext.PhotoProperties => PhotoProperties.Cast<IPhotoProperties>();
+
+        IEnumerable<IRecordedTVProperties> IDbContext.RecordedTVProperties => RecordedTVProperties.Cast<IRecordedTVProperties>();
+
+        IEnumerable<IVideoProperties> IDbContext.VideoProperties => VideoProperties.Cast<IVideoProperties>();
+
+        void ILocalDbContext.ForceDeleteBinaryProperties(ILocalBinaryProperties target) => ForceDeleteBinaryProperties((BinaryProperties)target);
 
         void ILocalDbContext.ForceDeleteRedundantSet(ILocalRedundantSet target) => ForceDeleteRedundantSet((RedundantSet)target);
 
         void ILocalDbContext.ForceDeleteFileSystem(ILocalFileSystem target) => ForceDeleteFileSystem((FileSystem)target);
 
-        void IDbContext.ForceDeleteContentInfo(IContentInfo target) => ForceDeleteContentInfo((ContentInfo)target);
+        void IDbContext.ForceDeleteBinaryProperties(IBinaryProperties target) => ForceDeleteBinaryProperties((BinaryProperties)target);
 
         void IDbContext.ForceDeleteRedundantSet(IRedundantSet target) => ForceDeleteRedundantSet((RedundantSet)target);
 

@@ -36,8 +36,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(RedundancyRemediationStatus.Unconfirmed, target.RemediationStatus);
             Assert.IsNotNull(target.Notes);
             Assert.AreEqual("", target.Notes);
-            Assert.AreEqual(Guid.Empty, target.ContentInfoId);
-            Assert.IsNull(target.ContentInfo);
+            Assert.AreEqual(Guid.Empty, target.BinaryPropertiesId);
+            Assert.IsNull(target.BinaryProperties);
             Assert.IsNotNull(target.Redundancies);
             Assert.AreEqual(0, target.Redundancies.Count);
             Assert.IsNull(target.UpstreamId);
@@ -55,8 +55,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(RedundancyRemediationStatus.Unconfirmed, target.RemediationStatus);
             Assert.IsNotNull(target.Notes);
             Assert.AreEqual("", target.Notes);
-            Assert.AreEqual(Guid.Empty, target.ContentInfoId);
-            Assert.IsNull(target.ContentInfo);
+            Assert.AreEqual(Guid.Empty, target.BinaryPropertiesId);
+            Assert.IsNull(target.BinaryProperties);
             Assert.IsNotNull(target.Redundancies);
             Assert.AreEqual(0, target.Redundancies.Count);
             Assert.IsNull(target.UpstreamId);
@@ -120,29 +120,29 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, actualValue);
         }
 
-        [TestMethod("Guid ContentInfoId")]
-        public void ContentInfoIdTestMethod()
+        [TestMethod("Guid BinaryPropertiesId")]
+        public void BinaryPropertiesIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid ContentInfoId
+            // TODO: Implement test for Guid BinaryPropertiesId
 
             RedundantSet target = default; // TODO: Create and initialize RedundantSet instance
             Guid expectedValue = default;
-            target.ContentInfoId = default;
-            Guid actualValue = target.ContentInfoId;
+            target.BinaryPropertiesId = default;
+            Guid actualValue = target.BinaryPropertiesId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("ContentInfo ContentInfo")]
-        public void ContentInfoTestMethod()
+        [TestMethod("BinaryProperties BinaryProperties")]
+        public void BinaryPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for ContentInfo ContentInfo
+            // TODO: Implement test for BinaryProperties BinaryProperties
 
             RedundantSet target = default; // TODO: Create and initialize RedundantSet instance
-            ContentInfo expectedValue = default;
-            target.ContentInfo = default;
-            ContentInfo actualValue = target.ContentInfo;
+            BinaryProperties expectedValue = default;
+            target.BinaryProperties = default;
+            BinaryProperties actualValue = target.BinaryProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
@@ -188,7 +188,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn")]
-        [TestProperty(TestHelper.TestProperty_Description, "ContentInfo.CreatedOn: CreatedOn<=ModifiedOn")]
+        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

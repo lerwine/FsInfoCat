@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Interface Name="FsInfoCat.Local.ILocalFileSystem">
     <Position X="0.75" Y="3.75" Width="1.5" />
@@ -55,14 +55,14 @@
       <FileName>Local\ILocalRedundantSet.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="ContentInfo" />
+      <Property Name="BinaryProperties" />
     </ShowAsAssociation>
   </Interface>
-  <Interface Name="FsInfoCat.Local.ILocalContentInfo">
+  <Interface Name="FsInfoCat.Local.ILocalBinaryProperties">
     <Position X="6.75" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAIA=</HashCode>
-      <FileName>Local\ILocalContentInfo.cs</FileName>
+      <FileName>Local\ILocalBinaryProperties.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FsInfoCat.Local.ILocalFile">

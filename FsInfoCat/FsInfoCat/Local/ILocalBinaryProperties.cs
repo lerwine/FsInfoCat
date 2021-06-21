@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalContentInfo : IContentInfo, ILocalDbEntity
+    public interface ILocalBinaryProperties : IBinaryProperties, ILocalDbEntity
     {
         new IEnumerable<ILocalFile> Files { get; }
 
