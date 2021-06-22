@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -70,6 +72,11 @@ namespace FsInfoCat.Local
             _resolutionUnit = AddChangeTracker<short?>(nameof(ResolutionUnit), null);
             _verticalResolution = AddChangeTracker<double?>(nameof(VerticalResolution), null);
             _verticalSize = AddChangeTracker<uint?>(nameof(VerticalSize), null);
+        }
+
+        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

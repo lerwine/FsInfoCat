@@ -18,12 +18,12 @@ namespace FsInfoCat.Desktop
 
         public string DisplayName { get; }
 
-        protected FileSystemImportEventArgs(FileSystemImporter.ScanContext scanContext, FileSystemInfo fsTarget, ILocalDbFsItem dbTarget, Exception error)
+        protected FileSystemImportEventArgs(FileSystemImportJob.ScanContext scanContext, FileSystemInfo fsTarget, ILocalDbFsItem dbTarget, Exception error)
         {
             Fault = error;
             RecursionDepth = scanContext.Depth;
             ItemCount = scanContext.TotalCount;
-            DisplayName = scanContext.Importer.DisplayName;
+            DisplayName = scanContext.Job.DisplayName;
         }
     }
 }

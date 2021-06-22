@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -109,6 +111,11 @@ namespace FsInfoCat.Local
             _simpleRating = AddChangeTracker<uint?>(nameof(SimpleRating), null);
             _trademarks = AddChangeTracker<string>(nameof(Trademarks), null);
             _productName = AddChangeTracker<string>(nameof(ProductName), null);
+        }
+
+        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -52,6 +54,11 @@ namespace FsInfoCat.Local
             _description = AddChangeTracker<string>(nameof(Description), null);
             _isProtected = AddChangeTracker<bool?>(nameof(IsProtected), null);
             _playCount = AddChangeTracker<uint?>(nameof(PlayCount), null);
+        }
+
+        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

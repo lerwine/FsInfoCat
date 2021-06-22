@@ -6,7 +6,7 @@ namespace FsInfoCat.Desktop
 {
     public sealed class FileImportEventArgs : FileSystemImportEventArgs
     {
-        internal FileImportEventArgs(FileSystemImporter.ScanContext scanContext, FileInfo fsTarget, DbFile dbTarget, Exception error = null)
+        internal FileImportEventArgs(FileSystemImportJob.ScanContext scanContext, FileInfo fsTarget, DbFile dbTarget, Exception error = null)
             : base(scanContext, fsTarget, dbTarget, error)
         {
         }

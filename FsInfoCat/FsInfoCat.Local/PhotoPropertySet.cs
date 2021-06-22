@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -61,6 +63,11 @@ namespace FsInfoCat.Local
             _orientation = AddChangeTracker<ushort?>(nameof(Orientation), null);
             _orientationText = AddChangeTracker<string>(nameof(OrientationText), null);
             _peopleNames = AddChangeTracker<string[]>(nameof(PeopleNames), null);
+        }
+
+        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }
