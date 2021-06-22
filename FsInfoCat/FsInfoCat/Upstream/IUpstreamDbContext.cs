@@ -8,9 +8,6 @@ namespace FsInfoCat.Upstream
 
         new IEnumerable<IUpstreamBinaryPropertySet> BinaryPropertySets { get; }
 
-        [System.Obsolete()]
-        new IEnumerable<IUpstreamExtendedPropertySet> ExtendedProperties { get; }
-
         new IEnumerable<IUpstreamSummaryPropertySet> SummaryPropertySets { get; }
 
         new IEnumerable<IUpstreamDocumentPropertySet> DocumentPropertySets { get; }
