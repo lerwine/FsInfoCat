@@ -14,6 +14,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _displayName;
         private readonly IPropertyChangeTracker<ushort> _maxRecursionDepth;
         private readonly IPropertyChangeTracker<ulong> _totalMaxItems;
+        private readonly IPropertyChangeTracker<long?> _ttl;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<bool> _isInactive;
         private readonly IPropertyChangeTracker<Subdirectory> _root;
@@ -40,6 +41,10 @@ namespace FsInfoCat.Local
 
         public virtual ulong MaxTotalItems { get => _totalMaxItems.GetValue(); set => _totalMaxItems.SetValue(value); }
 
+        [Range(1, long.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual long? TTL { get => _ttl.GetValue(); set => _ttl.SetValue(value); }
+
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
@@ -61,6 +66,7 @@ namespace FsInfoCat.Local
             _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
             _maxRecursionDepth = AddChangeTracker(nameof(MaxRecursionDepth), DbConstants.DbColDefaultValue_MaxRecursionDepth);
             _totalMaxItems = AddChangeTracker(nameof(MaxTotalItems), DbConstants.DbColDefaultValue_MaxTotalItems);
+            _ttl = AddChangeTracker<long?>(nameof(TTL), null);
             _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _isInactive = AddChangeTracker(nameof(IsInactive), false);
             _root = AddChangeTracker<Subdirectory>(nameof(Root), null);
