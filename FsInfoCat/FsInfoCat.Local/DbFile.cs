@@ -607,9 +607,6 @@ namespace FsInfoCat.Local
         IPhotoPropertySet IFile.PhotoProperties { get => PhotoProperties; set => PhotoProperties = (PhotoPropertySet)value; }
         IRecordedTVPropertySet IFile.RecordedTVProperties { get => RecordedTVProperties; set => RecordedTVProperties = (RecordedTVPropertySet)value; }
         IVideoPropertySet IFile.VideoProperties { get => VideoProperties; set => VideoProperties = (VideoPropertySet)value; }
-        IExtendedProperties IFile.ExtendedProperties { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        ILocalExtendedProperties ILocalFile.ExtendedProperties { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         IEnumerable<IAccessError<ILocalFile>> ILocalFile.AccessErrors => AccessErrors.Cast<IAccessError<ILocalFile>>();
 
         IEnumerable<IAccessError<IFile>> IFile.AccessErrors => AccessErrors.Cast<IAccessError<IFile>>();

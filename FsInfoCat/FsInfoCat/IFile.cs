@@ -17,9 +17,6 @@ namespace FsInfoCat
 
         IBinaryPropertySet BinaryProperties { get; set; }
 
-        [Obsolete]
-        IExtendedProperties ExtendedProperties { get; set; }
-
         ISummaryPropertySet SummaryProperties { get; set; }
 
         IDocumentPropertySet DocumentProperties { get; set; }

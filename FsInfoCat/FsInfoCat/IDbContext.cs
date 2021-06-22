@@ -13,9 +13,6 @@ namespace FsInfoCat
 
         IEnumerable<IBinaryPropertySet> BinaryPropertySets { get; }
 
-        [Obsolete()]
-        IEnumerable<IExtendedProperties> ExtendedProperties { get; }
-
         IEnumerable<ISummaryPropertySet> SummaryPropertySets { get; }
 
         IEnumerable<IDocumentPropertySet> DocumentPropertySets { get; }

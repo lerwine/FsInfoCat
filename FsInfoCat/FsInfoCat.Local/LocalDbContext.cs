@@ -39,9 +39,6 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<FileAccessError> FileAccessErrors { get; set; }
 
-        [Obsolete]
-        public virtual DbSet<ExtendedProperties> ExtendedProperties { get; set; }
-
         public virtual DbSet<SummaryPropertySet> SummaryPropertySets { get; }
 
         public virtual DbSet<DocumentPropertySet> DocumentPropertySets { get; }
@@ -546,9 +543,6 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalBinaryPropertySet> ILocalDbContext.BinaryPropertySets => BinaryPropertySets.Cast<ILocalBinaryPropertySet>();
 
-        [Obsolete]
-        IEnumerable<ILocalExtendedProperties> ILocalDbContext.ExtendedProperties => ExtendedProperties.Cast<ILocalExtendedProperties>();
-
         IEnumerable<IAccessError<ILocalFile>> ILocalDbContext.FileAccessErrors => FileAccessErrors.Cast<IAccessError<ILocalFile>>();
 
         IEnumerable<ILocalFile> ILocalDbContext.Files => Files.Cast<ILocalFile>();
@@ -574,9 +568,6 @@ namespace FsInfoCat.Local
         IEnumerable<IComparison> IDbContext.Comparisons => Comparisons.Cast<IComparison>();
 
         IEnumerable<IBinaryPropertySet> IDbContext.BinaryPropertySets => BinaryPropertySets.Cast<IBinaryPropertySet>();
-
-        [Obsolete]
-        IEnumerable<IExtendedProperties> IDbContext.ExtendedProperties => ExtendedProperties.Cast<IExtendedProperties>();
 
         IEnumerable<IAccessError<IFile>> IDbContext.FileAccessErrors => FileAccessErrors.Cast<IAccessError<IFile>>();
 

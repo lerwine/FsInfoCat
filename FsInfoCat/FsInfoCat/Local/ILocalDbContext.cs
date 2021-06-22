@@ -10,9 +10,6 @@ namespace FsInfoCat.Local
 
         new IEnumerable<ILocalBinaryPropertySet> BinaryPropertySets { get; }
 
-        [System.Obsolete]
-        new IEnumerable<ILocalExtendedProperties> ExtendedProperties { get; }
-
         new IEnumerable<ILocalSummaryProperties> SummaryPropertySets { get; }
 
         new IEnumerable<ILocalDocumentPropertySet> DocumentPropertySets { get; }

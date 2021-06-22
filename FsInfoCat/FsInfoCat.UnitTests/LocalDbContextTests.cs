@@ -44,7 +44,17 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(dbContext.SubdirectoryAccessErrors);
             Assert.IsNotNull(dbContext.Files);
             Assert.IsNotNull(dbContext.FileAccessErrors);
-            Assert.IsNotNull(dbContext.ExtendedProperties);
+            Assert.IsNotNull(dbContext.SummaryPropertySets);
+            Assert.IsNotNull(dbContext.DocumentPropertySets);
+            Assert.IsNotNull(dbContext.AudioPropertySets);
+            Assert.IsNotNull(dbContext.DRMPropertySets);
+            Assert.IsNotNull(dbContext.GPSPropertySets);
+            Assert.IsNotNull(dbContext.ImagePropertySets);
+            Assert.IsNotNull(dbContext.MediaPropertySets);
+            Assert.IsNotNull(dbContext.MusicPropertySets);
+            Assert.IsNotNull(dbContext.PhotoPropertySets);
+            Assert.IsNotNull(dbContext.RecordedTVPropertySets);
+            Assert.IsNotNull(dbContext.VideoPropertySets);
             Assert.IsNotNull(dbContext.BinaryPropertySets);
             Assert.IsNotNull(dbContext.Comparisons);
             Assert.IsNotNull(dbContext.RedundantSets);

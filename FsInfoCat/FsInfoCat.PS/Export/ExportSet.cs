@@ -19,9 +19,6 @@ namespace FsInfoCat.PS.Export
         [XmlElement(nameof(FileSystem))]
         public Collection<FileSystem> FileSystems { get; set; }
 
-        [Obsolete]
-        public Collection<ExtendedProperties> ExtendedProperties { get; set; }
-
         [XmlElement(nameof(SummaryPropertySet))]
         public Collection<SummaryPropertySet> SummaryPropertySets { get; }
 
@@ -379,8 +376,18 @@ namespace FsInfoCat.PS.Export
                     CreatedOn = DateTime.Now,
                     CreationTime = fileInfo.CreationTime,
                     LastWriteTime = fileInfo.LastWriteTime,
-                    //ExtendedPropertyId = extendedProperties?.Id,
                     BinaryPropertySetId = binaryProperties.Id,
+                    SummaryPropertySetId = summaryProperties?.Id,
+                    DocumentPropertySetId = documentProperties?.Id,
+                    AudioPropertySetId = audioProperties?.Id,
+                    DRMPropertySetId = drmProperties?.Id,
+                    GPSPropertySetId = gpsProperties?.Id,
+                    ImagePropertySetId = imageProperties?.Id,
+                    MediaPropertySetId = mediaProperties?.Id,
+                    MusicPropertySetId = musicProperties?.Id,
+                    PhotoPropertySetId = photoProperties?.Id,
+                    RecordedTVPropertySetId = recordedTVProperties?.Id,
+                    VideoPropertySetId = videoProperties?.Id,
                     IsProcessed = true
                 };
                 file.LastAccessed = file.ModifiedOn = file.CreatedOn;
