@@ -140,9 +140,9 @@ namespace FsInfoCat.UnitTests
             // TODO: Implement test for BinaryProperties BinaryProperties
 
             RedundantSet target = default; // TODO: Create and initialize RedundantSet instance
-            BinaryProperties expectedValue = default;
+            BinaryPropertySet expectedValue = default;
             target.BinaryProperties = default;
-            BinaryProperties actualValue = target.BinaryProperties;
+            BinaryPropertySet actualValue = target.BinaryProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

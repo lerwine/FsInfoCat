@@ -94,7 +94,7 @@ namespace FsInfoCat.Local
             if (document is null)
                 throw new ArgumentNullException(nameof(document));
 
-            var redundancySets = document.Root.Elements(nameof(BinaryProperties)).Select(e => Local.BinaryProperties.ImportAsync(this, _logger, e).Result).SelectMany(rs => rs).ToArray();
+            var redundancySets = document.Root.Elements(nameof(BinaryPropertySets)).Select(e => Local.BinaryPropertySet.ImportAsync(this, _logger, e).Result).SelectMany(rs => rs).ToArray();
             foreach (XElement fileSystemElement in document.Root.Elements(nameof(FileSystem)))
                 await FileSystem.ImportAsync(this, _logger, fileSystemElement);
             foreach (var (redundantSetId, redundancies) in redundancySets)
@@ -102,11 +102,11 @@ namespace FsInfoCat.Local
                     await Redundancy.ImportAsync(this, _logger, redundantSetId, element);
         }
 
-        public void ForceDeleteBinaryProperties(BinaryProperties target)
+        public void ForceDeleteBinaryProperties(BinaryPropertySet target)
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            EntityEntry<BinaryProperties> targetEntry = Entry(target);
+            EntityEntry<BinaryPropertySet> targetEntry = Entry(target);
             var redundantSets = (targetEntry.GetRelatedCollectionAsync(t => t.RedundantSets).Result).ToArray();
             if (redundantSets.Length > 0)
             {
@@ -117,27 +117,27 @@ namespace FsInfoCat.Local
             var files = target.Files.AsEnumerable().Select(f => Entry(f)).ToArray();
             if (files.Length > 0)
             {
-                SummaryProperties[] summaryProperties = files.Select(e => e.Entity.SummaryPropertiesId.HasValue ?
+                SummaryPropertySet[] summaryProperties = files.Select(e => e.Entity.SummaryPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.SummaryProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                DocumentProperties[] documentProperties = files.Select(e => e.Entity.DocumentPropertiesId.HasValue ?
+                DocumentPropertySet[] documentProperties = files.Select(e => e.Entity.DocumentPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.DocumentProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                AudioProperties[] audioProperties = files.Select(e => e.Entity.AudioPropertiesId.HasValue ?
+                AudioPropertySet[] audioProperties = files.Select(e => e.Entity.AudioPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.AudioProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                DRMProperties[] drmProperties = files.Select(e => e.Entity.DRMPropertiesId.HasValue ?
+                DRMPropertySet[] drmProperties = files.Select(e => e.Entity.DRMPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.DRMProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                GPSProperties[] gpsProperties = files.Select(e => e.Entity.GPSPropertiesId.HasValue ?
+                GPSPropertySet[] gpsProperties = files.Select(e => e.Entity.GPSPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.GPSProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                ImageProperties[] imageProperties = files.Select(e => e.Entity.ImagePropertiesId.HasValue ?
+                ImagePropertySet[] imageProperties = files.Select(e => e.Entity.ImagePropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.ImageProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                MediaProperties[] mediaProperties = files.Select(e => e.Entity.MediaPropertiesId.HasValue ?
+                MediaPropertySet[] mediaProperties = files.Select(e => e.Entity.MediaPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.MediaProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                MusicProperties[] musicProperties = files.Select(e => e.Entity.MusicPropertiesId.HasValue ?
+                MusicPropertySet[] musicProperties = files.Select(e => e.Entity.MusicPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.MusicProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                PhotoProperties[] photoProperties = files.Select(e => e.Entity.PhotoPropertiesId.HasValue ?
+                PhotoPropertySet[] photoProperties = files.Select(e => e.Entity.PhotoPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.PhotoProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                RecordedTVProperties[] recordedTVProperties = files.Select(e => e.Entity.RecordedTVPropertiesId.HasValue ?
+                RecordedTVPropertySet[] recordedTVProperties = files.Select(e => e.Entity.RecordedTVPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.RecordedTVProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                VideoProperties[] videoProperties = files.Select(e => e.Entity.VideoPropertiesId.HasValue ?
+                VideoPropertySet[] videoProperties = files.Select(e => e.Entity.VideoPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.VideoProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
                 FileComparison[] comparisons = files.SelectMany(e => e.GetRelatedCollectionAsync(f => f.ComparisonSources).Result
                     .Concat(e.GetRelatedCollectionAsync(f => f.ComparisonTargets).Result)).Distinct().ToArray();
@@ -180,7 +180,7 @@ namespace FsInfoCat.Local
                 if (hasChanges)
                     SaveChanges();
             }
-            BinaryProperties.Remove(target);
+            BinaryPropertySets.Remove(target);
         }
 
         public void ForceDeleteRedundantSet(RedundantSet target)
@@ -285,23 +285,23 @@ namespace FsInfoCat.Local
             if (hasChanges)
                 await SaveChangesAsync();
             var content = await fileEntry.GetRelatedReferenceAsync(f => f.BinaryProperties);
-            var summaryProperties = target.SummaryPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.SummaryProperties) : null;
-            var documentProperties = target.DocumentPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.DocumentProperties) : null;
-            var audioProperties = target.AudioPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.AudioProperties) : null;
-            var drmProperties = target.DRMPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.DRMProperties) : null;
-            var gpsProperties = target.GPSPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.GPSProperties) : null;
-            var imageProperties = target.ImagePropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.ImageProperties) : null;
-            var mediaProperties = target.MediaPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.MediaProperties) : null;
-            var musicProperties = target.MusicPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.MusicProperties) : null;
-            var photoProperties = target.PhotoPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.PhotoProperties) : null;
-            var recordedTVProperties = target.RecordedTVPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.RecordedTVProperties) : null;
-            var videoProperties = target.VideoPropertiesId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.VideoProperties) : null;
+            var summaryProperties = target.SummaryPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.SummaryProperties) : null;
+            var documentProperties = target.DocumentPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.DocumentProperties) : null;
+            var audioProperties = target.AudioPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.AudioProperties) : null;
+            var drmProperties = target.DRMPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.DRMProperties) : null;
+            var gpsProperties = target.GPSPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.GPSProperties) : null;
+            var imageProperties = target.ImagePropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.ImageProperties) : null;
+            var mediaProperties = target.MediaPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.MediaProperties) : null;
+            var musicProperties = target.MusicPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.MusicProperties) : null;
+            var photoProperties = target.PhotoPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.PhotoProperties) : null;
+            var recordedTVProperties = target.RecordedTVPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.RecordedTVProperties) : null;
+            var videoProperties = target.VideoPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.VideoProperties) : null;
             Files.Remove(target);
             await SaveChangesAsync();
 
             hasChanges = await RemoveIfNoReferencesAsync(content);
             if (content.Files.Count == 0)
-                BinaryProperties.Remove(content);
+                BinaryPropertySets.Remove(content);
             if (summaryProperties is not null && await RemoveIfNoReferencesAsync(summaryProperties))
                 hasChanges = true;
             if (documentProperties is not null && await RemoveIfNoReferencesAsync(documentProperties))
@@ -332,100 +332,100 @@ namespace FsInfoCat.Local
             where TEntity : class
             where TProperty : class => await Entry(entity).GetRelatedCollectionAsync(propertyExpression);
 
-        private async Task<bool> RemoveIfNoReferencesAsync(BinaryProperties binaryProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(BinaryPropertySet binaryProperties)
         {
-            EntityEntry<BinaryProperties> entry = Entry(binaryProperties);
+            EntityEntry<BinaryPropertySet> entry = Entry(binaryProperties);
             if ((await entry.GetRelatedCollectionAsync(p => p.Files)).Any() || !(await entry.GetRelatedCollectionAsync(p => p.RedundantSets)).Any())
                 return false;
-            BinaryProperties.Remove(binaryProperties);
+            BinaryPropertySets.Remove(binaryProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(VideoProperties videoProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(VideoPropertySet videoProperties)
         {
             if ((await GetRelatedCollectionAsync(videoProperties, p => p.Files)).Any())
                 return false;
-            VideoProperties.Remove(videoProperties);
+            VideoPropertySets.Remove(videoProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(RecordedTVProperties recordedTVProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(RecordedTVPropertySet recordedTVProperties)
         {
             if ((await GetRelatedCollectionAsync(recordedTVProperties, p => p.Files)).Any())
                 return false;
-            RecordedTVProperties.Remove(recordedTVProperties);
+            RecordedTVPropertySets.Remove(recordedTVProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(PhotoProperties photoProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(PhotoPropertySet photoProperties)
         {
             if ((await GetRelatedCollectionAsync(photoProperties, p => p.Files)).Any())
                 return false;
-            PhotoProperties.Remove(photoProperties);
+            PhotoPropertySets.Remove(photoProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(MusicProperties musicProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(MusicPropertySet musicProperties)
         {
             if ((await GetRelatedCollectionAsync(musicProperties, p => p.Files)).Any())
                 return false;
-            MusicProperties.Remove(musicProperties);
+            MusicPropertySets.Remove(musicProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(MediaProperties mediaProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(MediaPropertySet mediaProperties)
         {
             if ((await GetRelatedCollectionAsync(mediaProperties, p => p.Files)).Any())
                 return false;
-            MediaProperties.Remove(mediaProperties);
+            MediaPropertySets.Remove(mediaProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(ImageProperties imageProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(ImagePropertySet imageProperties)
         {
             if ((await GetRelatedCollectionAsync(imageProperties, p => p.Files)).Any())
                 return false;
-            ImageProperties.Remove(imageProperties);
+            ImagePropertySets.Remove(imageProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(GPSProperties gpsProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(GPSPropertySet gpsProperties)
         {
             if ((await GetRelatedCollectionAsync(gpsProperties, p => p.Files)).Any())
                 return false;
-            GPSProperties.Remove(gpsProperties);
+            GPSPropertySets.Remove(gpsProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(DRMProperties drmProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(DRMPropertySet drmProperties)
         {
             if ((await GetRelatedCollectionAsync(drmProperties, p => p.Files)).Any())
                 return false;
-            DRMProperties.Remove(drmProperties);
+            DRMPropertySets.Remove(drmProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(AudioProperties audioProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(AudioPropertySet audioProperties)
         {
             if ((await GetRelatedCollectionAsync(audioProperties, p => p.Files)).Any())
                 return false;
-            AudioProperties.Remove(audioProperties);
+            AudioPropertySets.Remove(audioProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(DocumentProperties documentProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(DocumentPropertySet documentProperties)
         {
             if ((await GetRelatedCollectionAsync(documentProperties, p => p.Files)).Any())
                 return false;
-            DocumentProperties.Remove(documentProperties);
+            DocumentPropertySets.Remove(documentProperties);
             return true;
         }
 
-        private async Task<bool> RemoveIfNoReferencesAsync(SummaryProperties summaryProperties)
+        private async Task<bool> RemoveIfNoReferencesAsync(SummaryPropertySet summaryProperties)
         {
             if ((await GetRelatedCollectionAsync(summaryProperties, p => p.Files)).Any())
                 return false;
-            SummaryProperties.Remove(summaryProperties);
+            SummaryPropertySets.Remove(summaryProperties);
             return true;
         }
 

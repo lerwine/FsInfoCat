@@ -11,32 +11,32 @@ namespace FsInfoCat
     {
         IEnumerable<IComparison> Comparisons { get; }
 
-        IEnumerable<IBinaryProperties> BinaryProperties { get; }
+        IEnumerable<IBinaryPropertySet> BinaryPropertySets { get; }
 
         [Obsolete()]
         IEnumerable<IExtendedProperties> ExtendedProperties { get; }
 
-        IEnumerable<ISummaryProperties> SummaryProperties { get; }
+        IEnumerable<ISummaryPropertySet> SummaryPropertySets { get; }
 
-        IEnumerable<IDocumentProperties> DocumentProperties { get; }
+        IEnumerable<IDocumentPropertySet> DocumentPropertySets { get; }
 
-        IEnumerable<IAudioProperties> AudioProperties { get; }
+        IEnumerable<IAudioPropertySet> AudioPropertySets { get; }
 
-        IEnumerable<IDRMProperties> DRMProperties { get; }
+        IEnumerable<IDRMPropertySet> DRMPropertySets { get; }
 
-        IEnumerable<IGPSProperties> GPSProperties { get; }
+        IEnumerable<IGPSPropertySet> GPSPropertySets { get; }
 
-        IEnumerable<IImageProperties> ImageProperties { get; }
+        IEnumerable<IImagePropertySet> ImagePropertySets { get; }
 
-        IEnumerable<IMediaProperties> MediaProperties { get; }
+        IEnumerable<IMediaPropertySet> MediaPropertySets { get; }
 
-        IEnumerable<IMusicProperties> MusicProperties { get; }
+        IEnumerable<IMusicPropertySet> MusicPropertySets { get; }
 
-        IEnumerable<IPhotoProperties> PhotoProperties { get; }
+        IEnumerable<IPhotoPropertySet> PhotoPropertySets { get; }
 
-        IEnumerable<IRecordedTVProperties> RecordedTVProperties { get; }
+        IEnumerable<IRecordedTVPropertySet> RecordedTVPropertySets { get; }
 
-        IEnumerable<IVideoProperties> VideoProperties { get; }
+        IEnumerable<IVideoPropertySet> VideoPropertySets { get; }
 
         IEnumerable<IAccessError<IFile>> FileAccessErrors { get; }
 
@@ -60,7 +60,7 @@ namespace FsInfoCat
 
         IEnumerable<ICrawlConfiguration> CrawlConfigurations { get; }
 
-        void ForceDeleteBinaryProperties(IBinaryProperties target);
+        void ForceDeleteBinaryProperties(IBinaryPropertySet target);
 
         void ForceDeleteRedundantSet(IRedundantSet target);
 

@@ -33,10 +33,10 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.BinaryProperties target = new() { /* DEFERRED: Initialize properties */ };
-            EntityEntry<Local.BinaryProperties> entityEntry = dbContext.Entry(target);
+            Local.BinaryPropertySet target = new() { /* DEFERRED: Initialize properties */ };
+            EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
-            entityEntry = dbContext.BinaryProperties.Add(target);
+            entityEntry = dbContext.BinaryPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -68,8 +68,8 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.BinaryProperties target = new() { Hash = null };
-            EntityEntry<Local.BinaryProperties> entityEntry = dbContext.BinaryProperties.Add(target);
+            Local.BinaryPropertySet target = new() { Hash = null };
+            EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.BinaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
@@ -98,14 +98,14 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             long expected = default; // DEFERRED: Set invalid value
-            Local.BinaryProperties target = new() { Length = expected };
-            EntityEntry<Local.BinaryProperties> entityEntry = dbContext.BinaryProperties.Add(target);
+            Local.BinaryPropertySet target = new() { Length = expected };
+            EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.BinaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.BinaryProperties.Length), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.BinaryPropertySet.Length), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Length);
@@ -128,9 +128,9 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.BinaryProperties.Length), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.BinaryPropertySet.Length), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.BinaryProperties.Update(target);
+            entityEntry = dbContext.BinaryPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Length);
@@ -143,8 +143,8 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.BinaryProperties target = new() {  /* DEFERRED: Initialize properties */ };
-            EntityEntry<Local.BinaryProperties> entityEntry = dbContext.BinaryProperties.Add(target);
+            Local.BinaryPropertySet target = new() {  /* DEFERRED: Initialize properties */ };
+            EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.BinaryPropertySets.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
@@ -154,7 +154,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.BinaryProperties.CreatedOn), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(Local.BinaryPropertySet.CreatedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
@@ -171,7 +171,7 @@ namespace FsInfoCat.UnitTests
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            entityEntry = dbContext.BinaryProperties.Update(target);
+            entityEntry = dbContext.BinaryPropertySets.Update(target);
             dbContext.SaveChanges();
         }
 
@@ -183,8 +183,8 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.BinaryProperties target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
-            EntityEntry<Local.BinaryProperties> entityEntry = dbContext.BinaryProperties.Add(target);
+            Local.BinaryPropertySet target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.BinaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
@@ -197,7 +197,7 @@ namespace FsInfoCat.UnitTests
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            entityEntry = dbContext.BinaryProperties.Update(target);
+            entityEntry = dbContext.BinaryPropertySets.Update(target);
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
@@ -206,7 +206,7 @@ namespace FsInfoCat.UnitTests
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            entityEntry = dbContext.BinaryProperties.Update(target);
+            entityEntry = dbContext.BinaryPropertySets.Update(target);
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
@@ -218,7 +218,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
-            entityEntry = dbContext.BinaryProperties.Update(target);
+            entityEntry = dbContext.BinaryPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
@@ -229,7 +229,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Local.FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
-            entityEntry = dbContext.BinaryProperties.Update(target);
+            entityEntry = dbContext.BinaryPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn;

@@ -39,18 +39,18 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual("", target.Notes);
             Assert.IsFalse(target.Deleted);
             Assert.AreEqual(Guid.Empty, target.ParentId);
-            Assert.AreEqual(Guid.Empty, target.BinaryPropertiesId);
-            Assert.IsNull(target.SummaryPropertiesId);
-            Assert.IsNull(target.DocumentPropertiesId);
-            Assert.IsNull(target.AudioPropertiesId);
-            Assert.IsNull(target.DRMPropertiesId);
-            Assert.IsNull(target.GPSPropertiesId);
-            Assert.IsNull(target.ImagePropertiesId);
-            Assert.IsNull(target.MediaPropertiesId);
-            Assert.IsNull(target.MusicPropertiesId);
-            Assert.IsNull(target.PhotoPropertiesId);
-            Assert.IsNull(target.RecordedTVPropertiesId);
-            Assert.IsNull(target.VideoPropertiesId);
+            Assert.AreEqual(Guid.Empty, target.BinaryPropertySetId);
+            Assert.IsNull(target.SummaryPropertySetId);
+            Assert.IsNull(target.DocumentPropertySetId);
+            Assert.IsNull(target.AudioPropertySetId);
+            Assert.IsNull(target.DRMPropertySetId);
+            Assert.IsNull(target.GPSPropertySetId);
+            Assert.IsNull(target.ImagePropertySetId);
+            Assert.IsNull(target.MediaPropertySetId);
+            Assert.IsNull(target.MusicPropertySetId);
+            Assert.IsNull(target.PhotoPropertySetId);
+            Assert.IsNull(target.RecordedTVPropertySetId);
+            Assert.IsNull(target.VideoPropertySetId);
             Assert.IsNull(target.BinaryProperties);
             Assert.IsNull(target.Parent);
             Assert.IsNull(target.Redundancy);
@@ -90,18 +90,18 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual("", target.Notes);
             Assert.IsFalse(target.Deleted);
             Assert.AreEqual(Guid.Empty, target.ParentId);
-            Assert.AreEqual(Guid.Empty, target.BinaryPropertiesId);
-            Assert.IsNull(target.SummaryPropertiesId);
-            Assert.IsNull(target.DocumentPropertiesId);
-            Assert.IsNull(target.AudioPropertiesId);
-            Assert.IsNull(target.DRMPropertiesId);
-            Assert.IsNull(target.GPSPropertiesId);
-            Assert.IsNull(target.ImagePropertiesId);
-            Assert.IsNull(target.MediaPropertiesId);
-            Assert.IsNull(target.MusicPropertiesId);
-            Assert.IsNull(target.PhotoPropertiesId);
-            Assert.IsNull(target.RecordedTVPropertiesId);
-            Assert.IsNull(target.VideoPropertiesId);
+            Assert.AreEqual(Guid.Empty, target.BinaryPropertySetId);
+            Assert.IsNull(target.SummaryPropertySetId);
+            Assert.IsNull(target.DocumentPropertySetId);
+            Assert.IsNull(target.AudioPropertySetId);
+            Assert.IsNull(target.DRMPropertySetId);
+            Assert.IsNull(target.GPSPropertySetId);
+            Assert.IsNull(target.ImagePropertySetId);
+            Assert.IsNull(target.MediaPropertySetId);
+            Assert.IsNull(target.MusicPropertySetId);
+            Assert.IsNull(target.PhotoPropertySetId);
+            Assert.IsNull(target.RecordedTVPropertySetId);
+            Assert.IsNull(target.VideoPropertySetId);
             Assert.IsNull(target.BinaryProperties);
             Assert.IsNull(target.Parent);
             Assert.IsNull(target.Redundancy);
@@ -236,159 +236,159 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid BinaryPropertiesId")]
-        public void BinaryPropertiesIdTestMethod()
+        [TestMethod("Guid BinaryPropertySetId")]
+        public void BinaryPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid BinaryPropertiesId
+            // TODO: Implement test for Guid BinaryPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid expectedValue = default;
-            target.BinaryPropertiesId = default;
-            Guid actualValue = target.BinaryPropertiesId;
+            target.BinaryPropertySetId = default;
+            Guid actualValue = target.BinaryPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? SummaryPropertiesId")]
-        public void SummaryPropertiesIdTestMethod()
+        [TestMethod("Guid? SummaryPropertySetId")]
+        public void SummaryPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? SummaryPropertiesId
+            // TODO: Implement test for Guid? BinaryPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.SummaryPropertiesId = default;
-            Guid? actualValue = target.SummaryPropertiesId;
+            target.BinaryPropertySetId = default;
+            Guid? actualValue = target.SummaryPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? DocumentPropertiesId")]
-        public void DocumentPropertiesIdTestMethod()
+        [TestMethod("Guid? DocumentPropertySetId")]
+        public void DocumentPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? DocumentPropertiesId
+            // TODO: Implement test for Guid? DocumentPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.DocumentPropertiesId = default;
-            Guid? actualValue = target.DocumentPropertiesId;
+            target.DocumentPropertySetId = default;
+            Guid? actualValue = target.DocumentPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? AudioPropertiesId")]
-        public void AudioPropertiesIdTestMethod()
+        [TestMethod("Guid? AudioPropertySetId")]
+        public void AudioPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? AudioPropertiesId
+            // TODO: Implement test for Guid? AudioPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.AudioPropertiesId = default;
-            Guid? actualValue = target.AudioPropertiesId;
+            target.AudioPropertySetId = default;
+            Guid? actualValue = target.AudioPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? DRMPropertiesId")]
-        public void DRMPropertiesIdTestMethod()
+        [TestMethod("Guid? DRMPropertySetId")]
+        public void DRMPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? DRMPropertiesId
+            // TODO: Implement test for Guid? DRMPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.DRMPropertiesId = default;
-            Guid? actualValue = target.DRMPropertiesId;
+            target.DRMPropertySetId = default;
+            Guid? actualValue = target.DRMPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? GPSPropertiesId")]
-        public void GPSPropertiesIdTestMethod()
+        [TestMethod("Guid? GPSPropertySetId")]
+        public void GPSPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? GPSPropertiesId
+            // TODO: Implement test for Guid? GPSPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.GPSPropertiesId = default;
-            Guid? actualValue = target.GPSPropertiesId;
+            target.GPSPropertySetId = default;
+            Guid? actualValue = target.GPSPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? ImagePropertiesId")]
-        public void ImagePropertiesIdTestMethod()
+        [TestMethod("Guid? ImagePropertySetId")]
+        public void ImagePropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? ImagePropertiesId
+            // TODO: Implement test for Guid? ImagePropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.ImagePropertiesId = default;
-            Guid? actualValue = target.ImagePropertiesId;
+            target.ImagePropertySetId = default;
+            Guid? actualValue = target.ImagePropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? MediaPropertiesId")]
-        public void MediaPropertiesIdTestMethod()
+        [TestMethod("Guid? MediaPropertySetId")]
+        public void MediaPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? MediaPropertiesId
+            // TODO: Implement test for Guid? MediaPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.MediaPropertiesId = default;
-            Guid? actualValue = target.MediaPropertiesId;
+            target.MediaPropertySetId = default;
+            Guid? actualValue = target.MediaPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? MusicPropertiesId")]
-        public void MusicPropertiesIdTestMethod()
+        [TestMethod("Guid? MusicPropertySetId")]
+        public void MusicPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? MusicPropertiesId
+            // TODO: Implement test for Guid? MusicPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.MusicPropertiesId = default;
-            Guid? actualValue = target.MusicPropertiesId;
+            target.MusicPropertySetId = default;
+            Guid? actualValue = target.MusicPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? PhotoPropertiesId")]
-        public void PhotoPropertiesIdTestMethod()
+        [TestMethod("Guid? PhotoPropertySetId")]
+        public void PhotoPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? PhotoPropertiesId
+            // TODO: Implement test for Guid? PhotoPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.PhotoPropertiesId = default;
-            Guid? actualValue = target.PhotoPropertiesId;
+            target.PhotoPropertySetId = default;
+            Guid? actualValue = target.PhotoPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? RecordedTVPropertiesId")]
-        public void RecordedTVPropertiesIdTestMethod()
+        [TestMethod("Guid? RecordedTVPropertySetId")]
+        public void RecordedTVPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? RecordedTVPropertiesId
+            // TODO: Implement test for Guid? RecordedTVPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.RecordedTVPropertiesId = default;
-            Guid? actualValue = target.RecordedTVPropertiesId;
+            target.RecordedTVPropertySetId = default;
+            Guid? actualValue = target.RecordedTVPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? VideoPropertiesId")]
-        public void VideoPropertiesIdTestMethod()
+        [TestMethod("Guid? VideoPropertySetId")]
+        public void VideoPropertySetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? VideoPropertiesId
+            // TODO: Implement test for Guid? VideoPropertySetId
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             Guid? expectedValue = default;
-            target.VideoPropertiesId = default;
-            Guid? actualValue = target.VideoPropertiesId;
+            target.VideoPropertySetId = default;
+            Guid? actualValue = target.VideoPropertySetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
@@ -399,9 +399,9 @@ namespace FsInfoCat.UnitTests
             // TODO: Implement test for BinaryProperties BinaryProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            BinaryProperties expectedValue = default;
+            BinaryPropertySet expectedValue = default;
             target.BinaryProperties = default;
-            BinaryProperties actualValue = target.BinaryProperties;
+            BinaryPropertySet actualValue = target.BinaryProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
@@ -431,146 +431,146 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("SummaryProperties SummaryProperties")]
+        [TestMethod("SummaryPropertySet SummaryProperties")]
         public void SummaryPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for SummaryProperties SummaryProperties
+            // TODO: Implement test for SummaryPropertySet SummaryProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            SummaryProperties expectedValue = default;
+            SummaryPropertySet expectedValue = default;
             target.SummaryProperties = default;
-            SummaryProperties actualValue = target.SummaryProperties;
+            SummaryPropertySet actualValue = target.SummaryProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DocumentProperties DocumentProperties")]
+        [TestMethod("DocumentPropertySet DocumentProperties")]
         public void DocumentPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DocumentProperties DocumentProperties
+            // TODO: Implement test for DocumentPropertySet DocumentProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            DocumentProperties expectedValue = default;
+            DocumentPropertySet expectedValue = default;
             target.DocumentProperties = default;
-            DocumentProperties actualValue = target.DocumentProperties;
+            DocumentPropertySet actualValue = target.DocumentProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("AudioProperties AudioProperties")]
+        [TestMethod("AudioPropertySet AudioProperties")]
         public void AudioPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for AudioProperties AudioProperties
+            // TODO: Implement test for AudioPropertySet AudioProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            AudioProperties expectedValue = default;
+            AudioPropertySet expectedValue = default;
             target.AudioProperties = default;
-            AudioProperties actualValue = target.AudioProperties;
+            AudioPropertySet actualValue = target.AudioProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DRMProperties DRMProperties")]
+        [TestMethod("DRMPropertySet DRMProperties")]
         public void DRMPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DRMProperties DRMProperties
+            // TODO: Implement test for DRMPropertySet DRMProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            DRMProperties expectedValue = default;
+            DRMPropertySet expectedValue = default;
             target.DRMProperties = default;
-            DRMProperties actualValue = target.DRMProperties;
+            DRMPropertySet actualValue = target.DRMProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("GPSProperties GPSProperties")]
+        [TestMethod("GPSPropertySet GPSProperties")]
         public void GPSPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for GPSProperties GPSProperties
+            // TODO: Implement test for GPSPropertySet GPSProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            GPSProperties expectedValue = default;
+            GPSPropertySet expectedValue = default;
             target.GPSProperties = default;
-            GPSProperties actualValue = target.GPSProperties;
+            GPSPropertySet actualValue = target.GPSProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("ImageProperties ImageProperties")]
+        [TestMethod("ImagePropertySet ImageProperties")]
         public void ImagePropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for ImageProperties ImageProperties
+            // TODO: Implement test for ImagePropertySet ImageProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            ImageProperties expectedValue = default;
+            ImagePropertySet expectedValue = default;
             target.ImageProperties = default;
-            ImageProperties actualValue = target.ImageProperties;
+            ImagePropertySet actualValue = target.ImageProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("MediaProperties MediaProperties")]
+        [TestMethod("MediaPropertySet MediaProperties")]
         public void MediaPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for MediaProperties MediaProperties
+            // TODO: Implement test for MediaPropertySet MediaProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            MediaProperties expectedValue = default;
+            MediaPropertySet expectedValue = default;
             target.MediaProperties = default;
-            MediaProperties actualValue = target.MediaProperties;
+            MediaPropertySet actualValue = target.MediaProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("MusicProperties MusicProperties")]
+        [TestMethod("MusicPropertySet MusicProperties")]
         public void MusicPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for MusicProperties MusicProperties
+            // TODO: Implement test for MusicPropertySet MusicProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            MusicProperties expectedValue = default;
+            MusicPropertySet expectedValue = default;
             target.MusicProperties = default;
-            MusicProperties actualValue = target.MusicProperties;
+            MusicPropertySet actualValue = target.MusicProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("PhotoProperties PhotoProperties")]
+        [TestMethod("PhotoPropertySet PhotoProperties")]
         public void PhotoPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for PhotoProperties PhotoProperties
+            // TODO: Implement test for PhotoPropertySet PhotoProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            PhotoProperties expectedValue = default;
+            PhotoPropertySet expectedValue = default;
             target.PhotoProperties = default;
-            PhotoProperties actualValue = target.PhotoProperties;
+            PhotoPropertySet actualValue = target.PhotoProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("RecordedTVProperties RecordedTVProperties")]
+        [TestMethod("RecordedTVPropertySet RecordedTVProperties")]
         public void RecordedTVPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for RecordedTVProperties RecordedTVProperties
+            // TODO: Implement test for RecordedTVPropertySet RecordedTVProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            RecordedTVProperties expectedValue = default;
+            RecordedTVPropertySet expectedValue = default;
             target.RecordedTVProperties = default;
-            RecordedTVProperties actualValue = target.RecordedTVProperties;
+            RecordedTVPropertySet actualValue = target.RecordedTVProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("VideoProperties VideoProperties")]
+        [TestMethod("VideoPropertySet VideoProperties")]
         public void VideoPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for VideoProperties VideoProperties
+            // TODO: Implement test for VideoPropertySet VideoProperties
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            VideoProperties expectedValue = default;
+            VideoPropertySet expectedValue = default;
             target.VideoProperties = default;
-            VideoProperties actualValue = target.VideoProperties;
+            VideoPropertySet actualValue = target.VideoProperties;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

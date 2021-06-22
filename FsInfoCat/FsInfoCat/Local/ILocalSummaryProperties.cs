@@ -1,6 +1,6 @@
 namespace FsInfoCat.Local
 {
-    public interface ILocalSummaryProperties : ILocalPropertySet, ISummaryProperties
+    public interface ILocalSummaryProperties : ILocalPropertySet, ISummaryPropertySet
     {
     }
 }

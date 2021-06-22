@@ -22,41 +22,41 @@ namespace FsInfoCat.PS.Export
         [Obsolete]
         public Collection<ExtendedProperties> ExtendedProperties { get; set; }
 
-        [XmlElement(nameof(SummaryProperties))]
-        public Collection<SummaryProperties> SummaryProperties { get; }
+        [XmlElement(nameof(SummaryPropertySet))]
+        public Collection<SummaryPropertySet> SummaryPropertySets { get; }
 
-        [XmlElement(nameof(DocumentProperties))]
-        public Collection<DocumentProperties> DocumentProperties { get; }
+        [XmlElement(nameof(DocumentPropertySet))]
+        public Collection<DocumentPropertySet> DocumentPropertySets { get; }
 
-        [XmlElement(nameof(AudioProperties))]
-        public Collection<AudioProperties> AudioProperties { get; }
+        [XmlElement(nameof(AudioPropertySet))]
+        public Collection<AudioPropertySet> AudioPropertySets { get; }
 
-        [XmlElement(nameof(DRMProperties))]
-        public Collection<DRMProperties> DRMProperties { get; }
+        [XmlElement(nameof(DRMPropertySet))]
+        public Collection<DRMPropertySet> DRMPropertySets { get; }
 
-        [XmlElement(nameof(GPSProperties))]
-        public Collection<GPSProperties> GPSProperties { get; }
+        [XmlElement(nameof(GPSPropertySet))]
+        public Collection<GPSPropertySet> GPSPropertySets { get; }
 
-        [XmlElement(nameof(ImageProperties))]
-        public Collection<ImageProperties> ImageProperties { get; }
+        [XmlElement(nameof(ImagePropertySet))]
+        public Collection<ImagePropertySet> ImagePropertySets { get; }
 
-        [XmlElement(nameof(MediaProperties))]
-        public Collection<MediaProperties> MediaProperties { get; }
+        [XmlElement(nameof(MediaPropertySet))]
+        public Collection<MediaPropertySet> MediaPropertySets { get; }
 
-        [XmlElement(nameof(MusicProperties))]
-        public Collection<MusicProperties> MusicProperties { get; }
+        [XmlElement(nameof(MusicPropertySet))]
+        public Collection<MusicPropertySet> MusicPropertySets { get; }
 
-        [XmlElement(nameof(PhotoProperties))]
-        public Collection<PhotoProperties> PhotoProperties { get; }
+        [XmlElement(nameof(PhotoPropertySet))]
+        public Collection<PhotoPropertySet> PhotoPropertySets { get; }
 
-        [XmlElement(nameof(RecordedTVProperties))]
-        public Collection<RecordedTVProperties> RecordedTVProperties { get; }
+        [XmlElement(nameof(RecordedTVPropertySet))]
+        public Collection<RecordedTVPropertySet> RecordedTVPropertySets { get; }
 
-        [XmlElement(nameof(VideoProperties))]
-        public Collection<VideoProperties> VideoProperties { get; }
+        [XmlElement(nameof(VideoPropertySet))]
+        public Collection<VideoPropertySet> VideoPropertySets { get; }
 
-        [XmlElement(nameof(Export.BinaryProperties))]
-        public Collection<BinaryProperties> BinaryProperties { get; set; }
+        [XmlElement(nameof(BinaryPropertySet))]
+        public Collection<BinaryPropertySet> BinaryPropertySets { get; set; }
 
         private static XmlWriterSettings GetDefaultXmlWriterSettings() => new()
         {
@@ -142,7 +142,7 @@ namespace FsInfoCat.PS.Export
             public ExportSet ExportSet { get; private set; }
         }
 
-        public abstract class ExtendedPropertiesBase : EntityExportElement
+        public abstract class ExtendedPropertySetBase : EntityExportElement
         {
             [XmlIgnore]
             public ExportSet ExportSet { get; private set; }
@@ -165,18 +165,18 @@ namespace FsInfoCat.PS.Export
             Subdirectory parent = Import(fileInfo.Directory);
             string n = fileInfo.Name;
             File file = parent.Files.FirstOrDefault(f => n.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase));
-            BinaryProperties binaryProperties;
-            SummaryProperties summaryProperties;
-            DocumentProperties documentProperties;
-            AudioProperties audioProperties;
-            DRMProperties drmProperties;
-            GPSProperties gpsProperties;
-            ImageProperties imageProperties;
-            MediaProperties mediaProperties;
-            MusicProperties musicProperties;
-            PhotoProperties photoProperties;
-            RecordedTVProperties recordedTVProperties;
-            VideoProperties videoProperties;
+            BinaryPropertySet binaryProperties;
+            SummaryPropertySet summaryProperties;
+            DocumentPropertySet documentProperties;
+            AudioPropertySet audioProperties;
+            DRMPropertySet drmProperties;
+            GPSPropertySet gpsProperties;
+            ImagePropertySet imageProperties;
+            MediaPropertySet mediaProperties;
+            MusicPropertySet musicProperties;
+            PhotoPropertySet photoProperties;
+            RecordedTVPropertySet recordedTVProperties;
+            VideoPropertySet videoProperties;
             if (file is not null)
             {
                 if (file.IsProcessed)
@@ -193,102 +193,102 @@ namespace FsInfoCat.PS.Export
                 photoProperties = file.GetPhotoProperties();
                 recordedTVProperties = file.GetRecordedTVProperties();
                 videoProperties = file.GetVideoProperties();
-                SummaryProperties sp = Export.SummaryProperties.Create(fileInfo);
-                DocumentProperties dp = Export.DocumentProperties.Create(fileInfo);
-                AudioProperties ap = Export.AudioProperties.Create(fileInfo);
-                DRMProperties drm = Export.DRMProperties.Create(fileInfo);
-                GPSProperties gp = Export.GPSProperties.Create(fileInfo);
-                ImageProperties ip = Export.ImageProperties.Create(fileInfo);
-                MediaProperties mdp = Export.MediaProperties.Create(fileInfo);
-                MusicProperties msp = Export.MusicProperties.Create(fileInfo);
-                PhotoProperties pp = Export.PhotoProperties.Create(fileInfo);
-                RecordedTVProperties rp = Export.RecordedTVProperties.Create(fileInfo);
-                VideoProperties vp = Export.VideoProperties.Create(fileInfo);
+                SummaryPropertySet sp = Export.SummaryPropertySet.Create(fileInfo);
+                DocumentPropertySet dp = Export.DocumentPropertySet.Create(fileInfo);
+                AudioPropertySet ap = Export.AudioPropertySet.Create(fileInfo);
+                DRMPropertySet drm = Export.DRMPropertySet.Create(fileInfo);
+                GPSPropertySet gp = Export.GPSPropertySet.Create(fileInfo);
+                ImagePropertySet ip = Export.ImagePropertySet.Create(fileInfo);
+                MediaPropertySet mdp = Export.MediaPropertySet.Create(fileInfo);
+                MusicPropertySet msp = Export.MusicPropertySet.Create(fileInfo);
+                PhotoPropertySet pp = Export.PhotoPropertySet.Create(fileInfo);
+                RecordedTVPropertySet rp = Export.RecordedTVPropertySet.Create(fileInfo);
+                VideoPropertySet vp = Export.VideoPropertySet.Create(fileInfo);
                 if (!summaryProperties.Equals(sp))
                 {
-                    if ((summaryProperties = SummaryProperties.FirstOrDefault(e => e.Equals(sp))) is null && sp is not null)
+                    if ((summaryProperties = SummaryPropertySets.FirstOrDefault(e => e.Equals(sp))) is null && sp is not null)
                     {
-                        SummaryProperties.Add(sp);
+                        SummaryPropertySets.Add(sp);
                         summaryProperties = sp;
                     }
                 }
                 if (!documentProperties.Equals(dp))
                 {
-                    if ((documentProperties = DocumentProperties.FirstOrDefault(e => e.Equals(dp))) is null && dp is not null)
+                    if ((documentProperties = DocumentPropertySets.FirstOrDefault(e => e.Equals(dp))) is null && dp is not null)
                     {
-                        DocumentProperties.Add(dp);
+                        DocumentPropertySets.Add(dp);
                         documentProperties = dp;
                     }
                 }
                 if (!audioProperties.Equals(ap))
                 {
-                    if ((audioProperties = AudioProperties.FirstOrDefault(e => e.Equals(ap))) is null && ap is not null)
+                    if ((audioProperties = AudioPropertySets.FirstOrDefault(e => e.Equals(ap))) is null && ap is not null)
                     {
-                        AudioProperties.Add(ap);
+                        AudioPropertySets.Add(ap);
                         audioProperties = ap;
                     }
                 }
                 if (!drmProperties.Equals(drm))
                 {
-                    if ((drmProperties = DRMProperties.FirstOrDefault(e => e.Equals(drm))) is null && drm is not null)
+                    if ((drmProperties = DRMPropertySets.FirstOrDefault(e => e.Equals(drm))) is null && drm is not null)
                     {
-                        DRMProperties.Add(drm);
+                        DRMPropertySets.Add(drm);
                         drmProperties = drm;
                     }
                 }
                 if (!gpsProperties.Equals(gp))
                 {
-                    if ((gpsProperties = GPSProperties.FirstOrDefault(e => e.Equals(gp))) is null && gp is not null)
+                    if ((gpsProperties = GPSPropertySets.FirstOrDefault(e => e.Equals(gp))) is null && gp is not null)
                     {
-                        GPSProperties.Add(gp);
+                        GPSPropertySets.Add(gp);
                         gpsProperties = gp;
                     }
                 }
                 if (!imageProperties.Equals(ip))
                 {
-                    if ((imageProperties = ImageProperties.FirstOrDefault(e => e.Equals(ip))) is null && ip is not null)
+                    if ((imageProperties = ImagePropertySets.FirstOrDefault(e => e.Equals(ip))) is null && ip is not null)
                     {
-                        ImageProperties.Add(ip);
+                        ImagePropertySets.Add(ip);
                         imageProperties = ip;
                     }
                 }
                 if (!mediaProperties.Equals(mdp))
                 {
-                    if ((mediaProperties = MediaProperties.FirstOrDefault(e => e.Equals(mdp))) is null && mdp is not null)
+                    if ((mediaProperties = MediaPropertySets.FirstOrDefault(e => e.Equals(mdp))) is null && mdp is not null)
                     {
-                        MediaProperties.Add(mdp);
+                        MediaPropertySets.Add(mdp);
                         mediaProperties = mdp;
                     }
                 }
                 if (!musicProperties.Equals(msp))
                 {
-                    if ((musicProperties = MusicProperties.FirstOrDefault(e => e.Equals(msp))) is null && msp is not null)
+                    if ((musicProperties = MusicPropertySets.FirstOrDefault(e => e.Equals(msp))) is null && msp is not null)
                     {
-                        MusicProperties.Add(msp);
+                        MusicPropertySets.Add(msp);
                         musicProperties = msp;
                     }
                 }
                 if (!photoProperties.Equals(pp))
                 {
-                    if ((photoProperties = PhotoProperties.FirstOrDefault(e => e.Equals(pp))) is null && pp is not null)
+                    if ((photoProperties = PhotoPropertySets.FirstOrDefault(e => e.Equals(pp))) is null && pp is not null)
                     {
-                        PhotoProperties.Add(pp);
+                        PhotoPropertySets.Add(pp);
                         photoProperties = pp;
                     }
                 }
                 if (!recordedTVProperties.Equals(rp))
                 {
-                    if ((recordedTVProperties = RecordedTVProperties.FirstOrDefault(e => e.Equals(rp))) is null && rp is not null)
+                    if ((recordedTVProperties = RecordedTVPropertySets.FirstOrDefault(e => e.Equals(rp))) is null && rp is not null)
                     {
-                        RecordedTVProperties.Add(rp);
+                        RecordedTVPropertySets.Add(rp);
                         recordedTVProperties = rp;
                     }
                 }
                 if (!videoProperties.Equals(vp))
                 {
-                    if ((videoProperties = VideoProperties.FirstOrDefault(e => e.Equals(vp))) is null && vp is not null)
+                    if ((videoProperties = VideoPropertySets.FirstOrDefault(e => e.Equals(vp))) is null && vp is not null)
                     {
-                        VideoProperties.Add(vp);
+                        VideoPropertySets.Add(vp);
                         videoProperties = vp;
                     }
                 }
@@ -296,7 +296,7 @@ namespace FsInfoCat.PS.Export
             else
             {
                 long length = fileInfo.Length;
-                binaryProperties = BinaryProperties.FirstOrDefault(c => !c.Hash.HasValue && c.Length == length);
+                binaryProperties = BinaryPropertySets.FirstOrDefault(c => !c.Hash.HasValue && c.Length == length);
                 if (binaryProperties is null)
                 {
                     (binaryProperties = new()
@@ -304,73 +304,73 @@ namespace FsInfoCat.PS.Export
                         CreatedOn = DateTime.Now,
                         Length = length
                     }).ModifiedOn = binaryProperties.CreatedOn;
-                    BinaryProperties.Add(binaryProperties);
+                    BinaryPropertySets.Add(binaryProperties);
                 }
                 //SummaryProperties summaryProperties;
-                SummaryProperties sp = Export.SummaryProperties.Create(fileInfo);
-                if ((summaryProperties = SummaryProperties.FirstOrDefault(e => e.Equals(sp))) is null && sp is not null)
+                SummaryPropertySet sp = Export.SummaryPropertySet.Create(fileInfo);
+                if ((summaryProperties = SummaryPropertySets.FirstOrDefault(e => e.Equals(sp))) is null && sp is not null)
                 {
-                    SummaryProperties.Add(sp);
+                    SummaryPropertySets.Add(sp);
                     summaryProperties = sp;
                 }
-                DocumentProperties dp = Export.DocumentProperties.Create(fileInfo);
-                if ((documentProperties = DocumentProperties.FirstOrDefault(e => e.Equals(dp))) is null && dp is not null)
+                DocumentPropertySet dp = Export.DocumentPropertySet.Create(fileInfo);
+                if ((documentProperties = DocumentPropertySets.FirstOrDefault(e => e.Equals(dp))) is null && dp is not null)
                 {
-                    DocumentProperties.Add(dp);
+                    DocumentPropertySets.Add(dp);
                     documentProperties = dp;
                 }
-                AudioProperties ap = Export.AudioProperties.Create(fileInfo);
-                if ((audioProperties = AudioProperties.FirstOrDefault(e => e.Equals(ap))) is null && ap is not null)
+                AudioPropertySet ap = Export.AudioPropertySet.Create(fileInfo);
+                if ((audioProperties = AudioPropertySets.FirstOrDefault(e => e.Equals(ap))) is null && ap is not null)
                 {
-                    AudioProperties.Add(ap);
+                    AudioPropertySets.Add(ap);
                     audioProperties = ap;
                 }
-                DRMProperties drm = Export.DRMProperties.Create(fileInfo);
-                if ((drmProperties = DRMProperties.FirstOrDefault(e => e.Equals(drm))) is null && drm is not null)
+                DRMPropertySet drm = Export.DRMPropertySet.Create(fileInfo);
+                if ((drmProperties = DRMPropertySets.FirstOrDefault(e => e.Equals(drm))) is null && drm is not null)
                 {
-                    DRMProperties.Add(drm);
+                    DRMPropertySets.Add(drm);
                     drmProperties = drm;
                 }
-                GPSProperties gp = Export.GPSProperties.Create(fileInfo);
-                if ((gpsProperties = GPSProperties.FirstOrDefault(e => e.Equals(gp))) is null && gp is not null)
+                GPSPropertySet gp = Export.GPSPropertySet.Create(fileInfo);
+                if ((gpsProperties = GPSPropertySets.FirstOrDefault(e => e.Equals(gp))) is null && gp is not null)
                 {
-                    GPSProperties.Add(gp);
+                    GPSPropertySets.Add(gp);
                     gpsProperties = gp;
                 }
-                ImageProperties ip = Export.ImageProperties.Create(fileInfo);
-                if ((imageProperties = ImageProperties.FirstOrDefault(e => e.Equals(ip))) is null && ip is not null)
+                ImagePropertySet ip = Export.ImagePropertySet.Create(fileInfo);
+                if ((imageProperties = ImagePropertySets.FirstOrDefault(e => e.Equals(ip))) is null && ip is not null)
                 {
-                    ImageProperties.Add(ip);
+                    ImagePropertySets.Add(ip);
                     imageProperties = ip;
                 }
-                MediaProperties mdp = Export.MediaProperties.Create(fileInfo);
-                if ((mediaProperties = MediaProperties.FirstOrDefault(e => e.Equals(mdp))) is null && mdp is not null)
+                MediaPropertySet mdp = Export.MediaPropertySet.Create(fileInfo);
+                if ((mediaProperties = MediaPropertySets.FirstOrDefault(e => e.Equals(mdp))) is null && mdp is not null)
                 {
-                    MediaProperties.Add(mdp);
+                    MediaPropertySets.Add(mdp);
                     mediaProperties = mdp;
                 }
-                MusicProperties msp = Export.MusicProperties.Create(fileInfo);
-                if ((musicProperties = MusicProperties.FirstOrDefault(e => e.Equals(msp))) is null && msp is not null)
+                MusicPropertySet msp = Export.MusicPropertySet.Create(fileInfo);
+                if ((musicProperties = MusicPropertySets.FirstOrDefault(e => e.Equals(msp))) is null && msp is not null)
                 {
-                    MusicProperties.Add(msp);
+                    MusicPropertySets.Add(msp);
                     musicProperties = msp;
                 }
-                PhotoProperties pp = Export.PhotoProperties.Create(fileInfo);
-                if ((photoProperties = PhotoProperties.FirstOrDefault(e => e.Equals(pp))) is null && pp is not null)
+                PhotoPropertySet pp = Export.PhotoPropertySet.Create(fileInfo);
+                if ((photoProperties = PhotoPropertySets.FirstOrDefault(e => e.Equals(pp))) is null && pp is not null)
                 {
-                        PhotoProperties.Add(pp);
+                        PhotoPropertySets.Add(pp);
                     photoProperties = pp;
                 }
-                RecordedTVProperties rp = Export.RecordedTVProperties.Create(fileInfo);
-                if ((recordedTVProperties = RecordedTVProperties.FirstOrDefault(e => e.Equals(rp))) is null && rp is not null)
+                RecordedTVPropertySet rp = Export.RecordedTVPropertySet.Create(fileInfo);
+                if ((recordedTVProperties = RecordedTVPropertySets.FirstOrDefault(e => e.Equals(rp))) is null && rp is not null)
                 {
-                    RecordedTVProperties.Add(rp);
+                    RecordedTVPropertySets.Add(rp);
                     recordedTVProperties = rp;
                 }
-                VideoProperties vp = Export.VideoProperties.Create(fileInfo);
-                if ((videoProperties = VideoProperties.FirstOrDefault(e => e.Equals(vp))) is null && vp is not null)
+                VideoPropertySet vp = Export.VideoPropertySet.Create(fileInfo);
+                if ((videoProperties = VideoPropertySets.FirstOrDefault(e => e.Equals(vp))) is null && vp is not null)
                 {
-                    VideoProperties.Add(vp);
+                    VideoPropertySets.Add(vp);
                     videoProperties = vp;
                 }
                 file = new File
@@ -380,7 +380,7 @@ namespace FsInfoCat.PS.Export
                     CreationTime = fileInfo.CreationTime,
                     LastWriteTime = fileInfo.LastWriteTime,
                     //ExtendedPropertyId = extendedProperties?.Id,
-                    BinaryPropertiesId = binaryProperties.Id,
+                    BinaryPropertySetId = binaryProperties.Id,
                     IsProcessed = true
                 };
                 file.LastAccessed = file.ModifiedOn = file.CreatedOn;

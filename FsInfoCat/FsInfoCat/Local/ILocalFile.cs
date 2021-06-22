@@ -4,32 +4,32 @@ namespace FsInfoCat.Local
 {
     public interface ILocalFile : IFile, ILocalDbFsItem
     {
-        new ILocalBinaryProperties BinaryProperties { get; set; }
+        new ILocalBinaryPropertySet BinaryProperties { get; set; }
 
         [System.Obsolete]
         new ILocalExtendedProperties ExtendedProperties { get; set; }
 
         new ILocalSummaryProperties SummaryProperties { get; set; }
 
-        new ILocalDocumentProperties DocumentProperties { get; set; }
+        new ILocalDocumentPropertySet DocumentProperties { get; set; }
 
-        new ILocalAudioProperties AudioProperties { get; set; }
+        new ILocalAudioPropertySet AudioProperties { get; set; }
 
-        new ILocalDRMProperties DRMProperties { get; set; }
+        new ILocalDRMPropertySet DRMProperties { get; set; }
 
-        new ILocalGPSProperties GPSProperties { get; set; }
+        new ILocalGPSPropertySet GPSProperties { get; set; }
 
-        new ILocalImageProperties ImageProperties { get; set; }
+        new ILocalImagePropertySet ImageProperties { get; set; }
 
-        new ILocalMediaProperties MediaProperties { get; set; }
+        new ILocalMediaPropertySet MediaProperties { get; set; }
 
-        new ILocalMusicProperties MusicProperties { get; set; }
+        new ILocalMusicPropertySet MusicProperties { get; set; }
 
-        new ILocalPhotoProperties PhotoProperties { get; set; }
+        new ILocalPhotoPropertySet PhotoProperties { get; set; }
 
-        new ILocalRecordedTVProperties RecordedTVProperties { get; set; }
+        new ILocalRecordedTVPropertySet RecordedTVProperties { get; set; }
 
-        new ILocalVideoProperties VideoProperties { get; set; }
+        new ILocalVideoPropertySet VideoProperties { get; set; }
 
         new ILocalSubdirectory Parent { get; set; }
 

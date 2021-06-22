@@ -40,7 +40,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _reference;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<Guid> _binaryPropertiesId;
-        private readonly IPropertyChangeTracker<BinaryProperties> _binaryProperties;
+        private readonly IPropertyChangeTracker<BinaryPropertySet> _binaryProperties;
         private HashSet<Redundancy> _redundancies = new();
 
         #endregion
@@ -68,14 +68,14 @@ namespace FsInfoCat.Local
             {
                 if (_binaryPropertiesId.SetValue(value))
                 {
-                    BinaryProperties nav = _binaryProperties.GetValue();
+                    BinaryPropertySet nav = _binaryProperties.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
                         _binaryProperties.SetValue(null);
                 }
             }
         }
 
-        public virtual BinaryProperties BinaryProperties
+        public virtual BinaryPropertySet BinaryProperties
         {
             get => _binaryProperties.GetValue();
             set
@@ -100,9 +100,9 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalBinaryProperties ILocalRedundantSet.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryProperties)value; }
+        ILocalBinaryPropertySet ILocalRedundantSet.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryPropertySet)value; }
 
-        IBinaryProperties IRedundantSet.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryProperties)value; }
+        IBinaryPropertySet IRedundantSet.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryPropertySet)value; }
 
         IEnumerable<ILocalRedundancy> ILocalRedundantSet.Redundancies => Redundancies.Cast<ILocalRedundancy>();
 
@@ -117,7 +117,7 @@ namespace FsInfoCat.Local
             _reference = AddChangeTracker(nameof(Reference), "", TrimmedNonNullStringCoersion.Default);
             _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _binaryPropertiesId = AddChangeTracker(nameof(BinaryPropertiesId), Guid.Empty);
-            _binaryProperties = AddChangeTracker<BinaryProperties>(nameof(BinaryProperties), null);
+            _binaryProperties = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)

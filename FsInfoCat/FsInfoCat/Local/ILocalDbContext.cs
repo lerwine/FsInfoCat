@@ -8,32 +8,32 @@ namespace FsInfoCat.Local
     {
         new IEnumerable<ILocalComparison> Comparisons { get; }
 
-        new IEnumerable<ILocalBinaryProperties> BinaryProperties { get; }
+        new IEnumerable<ILocalBinaryPropertySet> BinaryPropertySets { get; }
 
         [System.Obsolete]
         new IEnumerable<ILocalExtendedProperties> ExtendedProperties { get; }
 
-        new IEnumerable<ILocalSummaryProperties> SummaryProperties { get; }
+        new IEnumerable<ILocalSummaryProperties> SummaryPropertySets { get; }
 
-        new IEnumerable<ILocalDocumentProperties> DocumentProperties { get; }
+        new IEnumerable<ILocalDocumentPropertySet> DocumentPropertySets { get; }
 
-        new IEnumerable<ILocalAudioProperties> AudioProperties { get; }
+        new IEnumerable<ILocalAudioPropertySet> AudioPropertySets { get; }
 
-        new IEnumerable<ILocalDRMProperties> DRMProperties { get; }
+        new IEnumerable<ILocalDRMPropertySet> DRMPropertySets { get; }
 
-        new IEnumerable<ILocalGPSProperties> GPSProperties { get; }
+        new IEnumerable<ILocalGPSPropertySet> GPSPropertySets { get; }
 
-        new IEnumerable<ILocalImageProperties> ImageProperties { get; }
+        new IEnumerable<ILocalImagePropertySet> ImagePropertySets { get; }
 
-        new IEnumerable<ILocalMediaProperties> MediaProperties { get; }
+        new IEnumerable<ILocalMediaPropertySet> MediaPropertySets { get; }
 
-        new IEnumerable<ILocalMusicProperties> MusicProperties { get; }
+        new IEnumerable<ILocalMusicPropertySet> MusicPropertySets { get; }
 
-        new IEnumerable<ILocalPhotoProperties> PhotoProperties { get; }
+        new IEnumerable<ILocalPhotoPropertySet> PhotoPropertySets { get; }
 
-        new IEnumerable<ILocalRecordedTVProperties> RecordedTVProperties { get; }
+        new IEnumerable<ILocalRecordedTVPropertySet> RecordedTVPropertySets { get; }
 
-        new IEnumerable<ILocalVideoProperties> VideoProperties { get; }
+        new IEnumerable<ILocalVideoPropertySet> VideoPropertySets { get; }
 
         new IEnumerable<IAccessError<ILocalFile>> FileAccessErrors { get; }
 
@@ -57,7 +57,7 @@ namespace FsInfoCat.Local
 
         new IEnumerable<ILocalCrawlConfiguration> CrawlConfigurations { get; }
 
-        void ForceDeleteBinaryProperties(ILocalBinaryProperties target);
+        void ForceDeleteBinaryProperties(ILocalBinaryPropertySet target);
 
         void ForceDeleteRedundantSet(ILocalRedundantSet target);
 

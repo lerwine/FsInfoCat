@@ -33,32 +33,32 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DateTime> _creationTime;
         private readonly IPropertyChangeTracker<DateTime> _lastWriteTime;
         private readonly IPropertyChangeTracker<Guid> _parentId;
-        private readonly IPropertyChangeTracker<Guid> _binaryPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _summaryPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _documentPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _audioPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _drmPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _gpsPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _imagePropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _mediaPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _musicPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _photoPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _recordedTVPropertiesId;
-        private readonly IPropertyChangeTracker<Guid?> _videoPropertiesId;
+        private readonly IPropertyChangeTracker<Guid> _binaryPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _summaryPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _documentPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _audioPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _drmPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _gpsPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _imagePropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _mediaPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _musicPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _photoPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _recordedTVPropertySetId;
+        private readonly IPropertyChangeTracker<Guid?> _videoPropertySetId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
-        private readonly IPropertyChangeTracker<BinaryProperties> _content;
+        private readonly IPropertyChangeTracker<BinaryPropertySet> _content;
         private readonly IPropertyChangeTracker<Redundancy> _redundancy;
-        private readonly IPropertyChangeTracker<SummaryProperties> _summaryProperties;
-        private readonly IPropertyChangeTracker<DocumentProperties> _documentProperties;
-        private readonly IPropertyChangeTracker<AudioProperties> _audioProperties;
-        private readonly IPropertyChangeTracker<DRMProperties> _drmProperties;
-        private readonly IPropertyChangeTracker<GPSProperties> _gpsProperties;
-        private readonly IPropertyChangeTracker<ImageProperties> _imageProperties;
-        private readonly IPropertyChangeTracker<MediaProperties> _mediaProperties;
-        private readonly IPropertyChangeTracker<MusicProperties> _musicProperties;
-        private readonly IPropertyChangeTracker<PhotoProperties> _photoProperties;
-        private readonly IPropertyChangeTracker<RecordedTVProperties> _recordedTVProperties;
-        private readonly IPropertyChangeTracker<VideoProperties> _videoProperties;
+        private readonly IPropertyChangeTracker<SummaryPropertySet> _summaryPropertySet;
+        private readonly IPropertyChangeTracker<DocumentPropertySet> _documentProperties;
+        private readonly IPropertyChangeTracker<AudioPropertySet> _audioProperties;
+        private readonly IPropertyChangeTracker<DRMPropertySet> _drmProperties;
+        private readonly IPropertyChangeTracker<GPSPropertySet> _gpsProperties;
+        private readonly IPropertyChangeTracker<ImagePropertySet> _imageProperties;
+        private readonly IPropertyChangeTracker<MediaPropertySet> _mediaProperties;
+        private readonly IPropertyChangeTracker<MusicPropertySet> _musicProperties;
+        private readonly IPropertyChangeTracker<PhotoPropertySet> _photoProperties;
+        private readonly IPropertyChangeTracker<RecordedTVPropertySet> _recordedTVProperties;
+        private readonly IPropertyChangeTracker<VideoPropertySet> _videoProperties;
         private HashSet<FileAccessError> _accessErrors = new();
         private HashSet<FileComparison> _comparisonSources = new();
         private HashSet<FileComparison> _comparisonTargets = new();
@@ -108,28 +108,28 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid BinaryPropertiesId
+        public virtual Guid BinaryPropertySetId
         {
-            get => _binaryPropertiesId.GetValue();
+            get => _binaryPropertySetId.GetValue();
             set
             {
-                if (_binaryPropertiesId.SetValue(value))
+                if (_binaryPropertySetId.SetValue(value))
                 {
-                    BinaryProperties nav = _content.GetValue();
+                    BinaryPropertySet nav = _content.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
                         _content.SetValue(null);
                 }
             }
         }
 
-        public virtual Guid? SummaryPropertiesId
+        public virtual Guid? SummaryPropertySetId
         {
-            get => _summaryPropertiesId.GetValue();
+            get => _summaryPropertySetId.GetValue();
             set
             {
-                if (_summaryPropertiesId.SetValue(value))
+                if (_summaryPropertySetId.SetValue(value))
                 {
-                    SummaryProperties nav = _summaryProperties.GetValue();
+                    SummaryPropertySet nav = _summaryPropertySet.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -141,14 +141,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? DocumentPropertiesId
+        public virtual Guid? DocumentPropertySetId
         {
-            get => _documentPropertiesId.GetValue();
+            get => _documentPropertySetId.GetValue();
             set
             {
-                if (_documentPropertiesId.SetValue(value))
+                if (_documentPropertySetId.SetValue(value))
                 {
-                    DocumentProperties nav = _documentProperties.GetValue();
+                    DocumentPropertySet nav = _documentProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -160,14 +160,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? AudioPropertiesId
+        public virtual Guid? AudioPropertySetId
         {
-            get => _audioPropertiesId.GetValue();
+            get => _audioPropertySetId.GetValue();
             set
             {
-                if (_audioPropertiesId.SetValue(value))
+                if (_audioPropertySetId.SetValue(value))
                 {
-                    AudioProperties nav = _audioProperties.GetValue();
+                    AudioPropertySet nav = _audioProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -179,14 +179,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? DRMPropertiesId
+        public virtual Guid? DRMPropertySetId
         {
-            get => _drmPropertiesId.GetValue();
+            get => _drmPropertySetId.GetValue();
             set
             {
-                if (_drmPropertiesId.SetValue(value))
+                if (_drmPropertySetId.SetValue(value))
                 {
-                    DRMProperties nav = _drmProperties.GetValue();
+                    DRMPropertySet nav = _drmProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -198,14 +198,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? GPSPropertiesId
+        public virtual Guid? GPSPropertySetId
         {
-            get => _gpsPropertiesId.GetValue();
+            get => _gpsPropertySetId.GetValue();
             set
             {
-                if (_gpsPropertiesId.SetValue(value))
+                if (_gpsPropertySetId.SetValue(value))
                 {
-                    GPSProperties nav = _gpsProperties.GetValue();
+                    GPSPropertySet nav = _gpsProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -217,14 +217,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? ImagePropertiesId
+        public virtual Guid? ImagePropertySetId
         {
-            get => _imagePropertiesId.GetValue();
+            get => _imagePropertySetId.GetValue();
             set
             {
-                if (_imagePropertiesId.SetValue(value))
+                if (_imagePropertySetId.SetValue(value))
                 {
-                    ImageProperties nav = _imageProperties.GetValue();
+                    ImagePropertySet nav = _imageProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -236,14 +236,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? MediaPropertiesId
+        public virtual Guid? MediaPropertySetId
         {
-            get => _mediaPropertiesId.GetValue();
+            get => _mediaPropertySetId.GetValue();
             set
             {
-                if (_mediaPropertiesId.SetValue(value))
+                if (_mediaPropertySetId.SetValue(value))
                 {
-                    MediaProperties nav = _mediaProperties.GetValue();
+                    MediaPropertySet nav = _mediaProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -255,14 +255,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? MusicPropertiesId
+        public virtual Guid? MusicPropertySetId
         {
-            get => _musicPropertiesId.GetValue();
+            get => _musicPropertySetId.GetValue();
             set
             {
-                if (_musicPropertiesId.SetValue(value))
+                if (_musicPropertySetId.SetValue(value))
                 {
-                    MusicProperties nav = _musicProperties.GetValue();
+                    MusicPropertySet nav = _musicProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -274,14 +274,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? PhotoPropertiesId
+        public virtual Guid? PhotoPropertySetId
         {
-            get => _photoPropertiesId.GetValue();
+            get => _photoPropertySetId.GetValue();
             set
             {
-                if (_photoPropertiesId.SetValue(value))
+                if (_photoPropertySetId.SetValue(value))
                 {
-                    PhotoProperties nav = _photoProperties.GetValue();
+                    PhotoPropertySet nav = _photoProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -293,14 +293,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? RecordedTVPropertiesId
+        public virtual Guid? RecordedTVPropertySetId
         {
-            get => _recordedTVPropertiesId.GetValue();
+            get => _recordedTVPropertySetId.GetValue();
             set
             {
-                if (_recordedTVPropertiesId.SetValue(value))
+                if (_recordedTVPropertySetId.SetValue(value))
                 {
-                    RecordedTVProperties nav = _recordedTVProperties.GetValue();
+                    RecordedTVPropertySet nav = _recordedTVProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -312,14 +312,14 @@ namespace FsInfoCat.Local
             }
         }
 
-        public virtual Guid? VideoPropertiesId
+        public virtual Guid? VideoPropertySetId
         {
-            get => _videoPropertiesId.GetValue();
+            get => _videoPropertySetId.GetValue();
             set
             {
-                if (_videoPropertiesId.SetValue(value))
+                if (_videoPropertySetId.SetValue(value))
                 {
-                    VideoProperties nav = _videoProperties.GetValue();
+                    VideoPropertySet nav = _videoProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
@@ -332,7 +332,7 @@ namespace FsInfoCat.Local
         }
 
 
-        public virtual BinaryProperties BinaryProperties
+        public virtual BinaryPropertySet BinaryProperties
         {
             get => _content.GetValue();
             set
@@ -340,9 +340,9 @@ namespace FsInfoCat.Local
                 if (_content.SetValue(value))
                 {
                     if (value is null)
-                        _binaryPropertiesId.SetValue(Guid.Empty);
+                        _binaryPropertySetId.SetValue(Guid.Empty);
                     else
-                        _binaryPropertiesId.SetValue(value.Id);
+                        _binaryPropertySetId.SetValue(value.Id);
                 }
             }
         }
@@ -365,23 +365,23 @@ namespace FsInfoCat.Local
         public virtual Redundancy Redundancy { get => _redundancy.GetValue(); set => _redundancy.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual SummaryProperties SummaryProperties
+        public virtual SummaryPropertySet SummaryProperties
         {
-            get => _summaryProperties.GetValue();
+            get => _summaryPropertySet.GetValue();
             set
             {
-                if (_summaryProperties.SetValue(value))
+                if (_summaryPropertySet.SetValue(value))
                 {
                     if (value is null)
-                        _summaryPropertiesId.SetValue(null);
+                        _summaryPropertySetId.SetValue(null);
                     else
-                        _summaryPropertiesId.SetValue(value.Id);
+                        _summaryPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DocumentProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DocumentProperties DocumentProperties
+        public virtual DocumentPropertySet DocumentProperties
         {
             get => _documentProperties.GetValue();
             set
@@ -389,15 +389,15 @@ namespace FsInfoCat.Local
                 if (_documentProperties.SetValue(value))
                 {
                     if (value is null)
-                        _documentPropertiesId.SetValue(null);
+                        _documentPropertySetId.SetValue(null);
                     else
-                        _documentPropertiesId.SetValue(value.Id);
+                        _documentPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AudioProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual AudioProperties AudioProperties
+        public virtual AudioPropertySet AudioProperties
         {
             get => _audioProperties.GetValue();
             set
@@ -405,15 +405,15 @@ namespace FsInfoCat.Local
                 if (_audioProperties.SetValue(value))
                 {
                     if (value is null)
-                        _audioPropertiesId.SetValue(null);
+                        _audioPropertySetId.SetValue(null);
                     else
-                        _audioPropertiesId.SetValue(value.Id);
+                        _audioPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DRMProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DRMProperties DRMProperties
+        public virtual DRMPropertySet DRMProperties
         {
             get => _drmProperties.GetValue();
             set
@@ -421,15 +421,15 @@ namespace FsInfoCat.Local
                 if (_drmProperties.SetValue(value))
                 {
                     if (value is null)
-                        _drmPropertiesId.SetValue(null);
+                        _drmPropertySetId.SetValue(null);
                     else
-                        _drmPropertiesId.SetValue(value.Id);
+                        _drmPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_GPSProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual GPSProperties GPSProperties
+        public virtual GPSPropertySet GPSProperties
         {
             get => _gpsProperties.GetValue();
             set
@@ -437,15 +437,15 @@ namespace FsInfoCat.Local
                 if (_gpsProperties.SetValue(value))
                 {
                     if (value is null)
-                        _gpsPropertiesId.SetValue(null);
+                        _gpsPropertySetId.SetValue(null);
                     else
-                        _gpsPropertiesId.SetValue(value.Id);
+                        _gpsPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ImageProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual ImageProperties ImageProperties
+        public virtual ImagePropertySet ImageProperties
         {
             get => _imageProperties.GetValue();
             set
@@ -453,15 +453,15 @@ namespace FsInfoCat.Local
                 if (_imageProperties.SetValue(value))
                 {
                     if (value is null)
-                        _imagePropertiesId.SetValue(null);
+                        _imagePropertySetId.SetValue(null);
                     else
-                        _imagePropertiesId.SetValue(value.Id);
+                        _imagePropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MediaProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual MediaProperties MediaProperties
+        public virtual MediaPropertySet MediaProperties
         {
             get => _mediaProperties.GetValue();
             set
@@ -469,15 +469,15 @@ namespace FsInfoCat.Local
                 if (_mediaProperties.SetValue(value))
                 {
                     if (value is null)
-                        _mediaPropertiesId.SetValue(null);
+                        _mediaPropertySetId.SetValue(null);
                     else
-                        _mediaPropertiesId.SetValue(value.Id);
+                        _mediaPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MusicProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual MusicProperties MusicProperties
+        public virtual MusicPropertySet MusicProperties
         {
             get => _musicProperties.GetValue();
             set
@@ -485,15 +485,15 @@ namespace FsInfoCat.Local
                 if (_musicProperties.SetValue(value))
                 {
                     if (value is null)
-                        _musicPropertiesId.SetValue(null);
+                        _musicPropertySetId.SetValue(null);
                     else
-                        _musicPropertiesId.SetValue(value.Id);
+                        _musicPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual PhotoProperties PhotoProperties
+        public virtual PhotoPropertySet PhotoProperties
         {
             get => _photoProperties.GetValue();
             set
@@ -501,15 +501,15 @@ namespace FsInfoCat.Local
                 if (_photoProperties.SetValue(value))
                 {
                     if (value is null)
-                        _photoPropertiesId.SetValue(null);
+                        _photoPropertySetId.SetValue(null);
                     else
-                        _photoPropertiesId.SetValue(value.Id);
+                        _photoPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RecordedTVProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual RecordedTVProperties RecordedTVProperties
+        public virtual RecordedTVPropertySet RecordedTVProperties
         {
             get => _recordedTVProperties.GetValue();
             set
@@ -517,15 +517,15 @@ namespace FsInfoCat.Local
                 if (_recordedTVProperties.SetValue(value))
                 {
                     if (value is null)
-                        _recordedTVPropertiesId.SetValue(null);
+                        _recordedTVPropertySetId.SetValue(null);
                     else
-                        _recordedTVPropertiesId.SetValue(value.Id);
+                        _recordedTVPropertySetId.SetValue(value.Id);
                 }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VideoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual VideoProperties VideoProperties
+        public virtual VideoPropertySet VideoProperties
         {
             get => _videoProperties.GetValue();
             set
@@ -533,9 +533,9 @@ namespace FsInfoCat.Local
                 if (_videoProperties.SetValue(value))
                 {
                     if (value is null)
-                        _videoPropertiesId.SetValue(null);
+                        _videoPropertySetId.SetValue(null);
                     else
-                        _videoPropertiesId.SetValue(value.Id);
+                        _videoPropertySetId.SetValue(value.Id);
                 }
             }
         }
@@ -565,9 +565,9 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalBinaryProperties ILocalFile.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryProperties)value; }
+        ILocalBinaryPropertySet ILocalFile.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryPropertySet)value; }
 
-        IBinaryProperties IFile.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryProperties)value; }
+        IBinaryPropertySet IFile.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryPropertySet)value; }
 
         ILocalSubdirectory ILocalFile.Parent { get => Parent; set => Parent = (Subdirectory)value; }
 
@@ -585,28 +585,28 @@ namespace FsInfoCat.Local
 
         IEnumerable<IComparison> IFile.ComparisonTargets => ComparisonSources.Cast<IComparison>();
 
-        ILocalSummaryProperties ILocalFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryProperties)value; }
-        ILocalDocumentProperties ILocalFile.DocumentProperties { get => DocumentProperties; set => DocumentProperties = (DocumentProperties)value; }
-        ILocalAudioProperties ILocalFile.AudioProperties { get => AudioProperties; set => AudioProperties = (AudioProperties)value; }
-        ILocalDRMProperties ILocalFile.DRMProperties { get => DRMProperties; set => DRMProperties = (DRMProperties)value; }
-        ILocalGPSProperties ILocalFile.GPSProperties { get => GPSProperties; set => GPSProperties = (GPSProperties)value; }
-        ILocalImageProperties ILocalFile.ImageProperties { get => ImageProperties; set => ImageProperties = (ImageProperties)value; }
-        ILocalMediaProperties ILocalFile.MediaProperties { get => MediaProperties; set => MediaProperties = (MediaProperties)value; }
-        ILocalMusicProperties ILocalFile.MusicProperties { get => MusicProperties; set => MusicProperties = (MusicProperties)value; }
-        ILocalPhotoProperties ILocalFile.PhotoProperties { get => PhotoProperties; set => PhotoProperties = (PhotoProperties)value; }
-        ILocalRecordedTVProperties ILocalFile.RecordedTVProperties { get => RecordedTVProperties; set => RecordedTVProperties = (RecordedTVProperties)value; }
-        ILocalVideoProperties ILocalFile.VideoProperties { get => VideoProperties; set => VideoProperties = (VideoProperties)value; }
-        ISummaryProperties IFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryProperties)value; }
-        IDocumentProperties IFile.DocumentProperties { get => DocumentProperties; set => DocumentProperties = (DocumentProperties)value; }
-        IAudioProperties IFile.AudioProperties { get => AudioProperties; set => AudioProperties = (AudioProperties)value; }
-        IDRMProperties IFile.DRMProperties { get => DRMProperties; set => DRMProperties = (DRMProperties)value; }
-        IGPSProperties IFile.GPSProperties { get => GPSProperties; set => GPSProperties = (GPSProperties)value; }
-        IImageProperties IFile.ImageProperties { get => ImageProperties; set => ImageProperties = (ImageProperties)value; }
-        IMediaProperties IFile.MediaProperties { get => MediaProperties; set => MediaProperties = (MediaProperties)value; }
-        IMusicProperties IFile.MusicProperties { get => MusicProperties; set => MusicProperties = (MusicProperties)value; }
-        IPhotoProperties IFile.PhotoProperties { get => PhotoProperties; set => PhotoProperties = (PhotoProperties)value; }
-        IRecordedTVProperties IFile.RecordedTVProperties { get => RecordedTVProperties; set => RecordedTVProperties = (RecordedTVProperties)value; }
-        IVideoProperties IFile.VideoProperties { get => VideoProperties; set => VideoProperties = (VideoProperties)value; }
+        ILocalSummaryProperties ILocalFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryPropertySet)value; }
+        ILocalDocumentPropertySet ILocalFile.DocumentProperties { get => DocumentProperties; set => DocumentProperties = (DocumentPropertySet)value; }
+        ILocalAudioPropertySet ILocalFile.AudioProperties { get => AudioProperties; set => AudioProperties = (AudioPropertySet)value; }
+        ILocalDRMPropertySet ILocalFile.DRMProperties { get => DRMProperties; set => DRMProperties = (DRMPropertySet)value; }
+        ILocalGPSPropertySet ILocalFile.GPSProperties { get => GPSProperties; set => GPSProperties = (GPSPropertySet)value; }
+        ILocalImagePropertySet ILocalFile.ImageProperties { get => ImageProperties; set => ImageProperties = (ImagePropertySet)value; }
+        ILocalMediaPropertySet ILocalFile.MediaProperties { get => MediaProperties; set => MediaProperties = (MediaPropertySet)value; }
+        ILocalMusicPropertySet ILocalFile.MusicProperties { get => MusicProperties; set => MusicProperties = (MusicPropertySet)value; }
+        ILocalPhotoPropertySet ILocalFile.PhotoProperties { get => PhotoProperties; set => PhotoProperties = (PhotoPropertySet)value; }
+        ILocalRecordedTVPropertySet ILocalFile.RecordedTVProperties { get => RecordedTVProperties; set => RecordedTVProperties = (RecordedTVPropertySet)value; }
+        ILocalVideoPropertySet ILocalFile.VideoProperties { get => VideoProperties; set => VideoProperties = (VideoPropertySet)value; }
+        ISummaryPropertySet IFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryPropertySet)value; }
+        IDocumentPropertySet IFile.DocumentProperties { get => DocumentProperties; set => DocumentProperties = (DocumentPropertySet)value; }
+        IAudioPropertySet IFile.AudioProperties { get => AudioProperties; set => AudioProperties = (AudioPropertySet)value; }
+        IDRMPropertySet IFile.DRMProperties { get => DRMProperties; set => DRMProperties = (DRMPropertySet)value; }
+        IGPSPropertySet IFile.GPSProperties { get => GPSProperties; set => GPSProperties = (GPSPropertySet)value; }
+        IImagePropertySet IFile.ImageProperties { get => ImageProperties; set => ImageProperties = (ImagePropertySet)value; }
+        IMediaPropertySet IFile.MediaProperties { get => MediaProperties; set => MediaProperties = (MediaPropertySet)value; }
+        IMusicPropertySet IFile.MusicProperties { get => MusicProperties; set => MusicProperties = (MusicPropertySet)value; }
+        IPhotoPropertySet IFile.PhotoProperties { get => PhotoProperties; set => PhotoProperties = (PhotoPropertySet)value; }
+        IRecordedTVPropertySet IFile.RecordedTVProperties { get => RecordedTVProperties; set => RecordedTVProperties = (RecordedTVPropertySet)value; }
+        IVideoPropertySet IFile.VideoProperties { get => VideoProperties; set => VideoProperties = (VideoPropertySet)value; }
         IExtendedProperties IFile.ExtendedProperties { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         ILocalExtendedProperties ILocalFile.ExtendedProperties { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -632,32 +632,32 @@ namespace FsInfoCat.Local
             _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
             _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
             _parentId = AddChangeTracker(nameof(ParentId), Guid.Empty);
-            _binaryPropertiesId = AddChangeTracker(nameof(BinaryPropertiesId), Guid.Empty);
-            _summaryPropertiesId = AddChangeTracker<Guid?>(nameof(SummaryPropertiesId), null);
-            _documentPropertiesId = AddChangeTracker<Guid?>(nameof(DocumentPropertiesId), null);
-            _audioPropertiesId = AddChangeTracker<Guid?>(nameof(AudioPropertiesId), null);
-            _drmPropertiesId = AddChangeTracker<Guid?>(nameof(DRMPropertiesId), null);
-            _gpsPropertiesId = AddChangeTracker<Guid?>(nameof(GPSPropertiesId), null);
-            _imagePropertiesId = AddChangeTracker<Guid?>(nameof(ImagePropertiesId), null);
-            _mediaPropertiesId = AddChangeTracker<Guid?>(nameof(MediaPropertiesId), null);
-            _musicPropertiesId = AddChangeTracker<Guid?>(nameof(MusicPropertiesId), null);
-            _photoPropertiesId = AddChangeTracker<Guid?>(nameof(PhotoPropertiesId), null);
-            _recordedTVPropertiesId = AddChangeTracker<Guid?>(nameof(RecordedTVPropertiesId), null);
-            _videoPropertiesId = AddChangeTracker<Guid?>(nameof(VideoPropertiesId), null);
+            _binaryPropertySetId = AddChangeTracker(nameof(BinaryPropertySetId), Guid.Empty);
+            _summaryPropertySetId = AddChangeTracker<Guid?>(nameof(SummaryPropertySetId), null);
+            _documentPropertySetId = AddChangeTracker<Guid?>(nameof(DocumentPropertySetId), null);
+            _audioPropertySetId = AddChangeTracker<Guid?>(nameof(AudioPropertySetId), null);
+            _drmPropertySetId = AddChangeTracker<Guid?>(nameof(DRMPropertySetId), null);
+            _gpsPropertySetId = AddChangeTracker<Guid?>(nameof(GPSPropertySetId), null);
+            _imagePropertySetId = AddChangeTracker<Guid?>(nameof(ImagePropertySetId), null);
+            _mediaPropertySetId = AddChangeTracker<Guid?>(nameof(MediaPropertySetId), null);
+            _musicPropertySetId = AddChangeTracker<Guid?>(nameof(MusicPropertySetId), null);
+            _photoPropertySetId = AddChangeTracker<Guid?>(nameof(PhotoPropertySetId), null);
+            _recordedTVPropertySetId = AddChangeTracker<Guid?>(nameof(RecordedTVPropertySetId), null);
+            _videoPropertySetId = AddChangeTracker<Guid?>(nameof(VideoPropertySetId), null);
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
-            _content = AddChangeTracker<BinaryProperties>(nameof(BinaryProperties), null);
+            _content = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
             _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
-            _summaryProperties = AddChangeTracker<SummaryProperties>(nameof(SummaryProperties), null);
-            _documentProperties = AddChangeTracker<DocumentProperties>(nameof(DocumentProperties), null);
-            _audioProperties = AddChangeTracker<AudioProperties>(nameof(AudioProperties), null);
-            _drmProperties = AddChangeTracker<DRMProperties>(nameof(DRMProperties), null);
-            _gpsProperties = AddChangeTracker<GPSProperties>(nameof(GPSProperties), null);
-            _imageProperties = AddChangeTracker<ImageProperties>(nameof(ImageProperties), null);
-            _mediaProperties = AddChangeTracker<MediaProperties>(nameof(MediaProperties), null);
-            _musicProperties = AddChangeTracker<MusicProperties>(nameof(MusicProperties), null);
-            _photoProperties = AddChangeTracker<PhotoProperties>(nameof(PhotoProperties), null);
-            _recordedTVProperties = AddChangeTracker<RecordedTVProperties>(nameof(RecordedTVProperties), null);
-            _videoProperties = AddChangeTracker<VideoProperties>(nameof(VideoProperties), null);
+            _summaryPropertySet = AddChangeTracker<SummaryPropertySet>(nameof(SummaryProperties), null);
+            _documentProperties = AddChangeTracker<DocumentPropertySet>(nameof(DocumentProperties), null);
+            _audioProperties = AddChangeTracker<AudioPropertySet>(nameof(AudioProperties), null);
+            _drmProperties = AddChangeTracker<DRMPropertySet>(nameof(DRMProperties), null);
+            _gpsProperties = AddChangeTracker<GPSPropertySet>(nameof(GPSProperties), null);
+            _imageProperties = AddChangeTracker<ImagePropertySet>(nameof(ImageProperties), null);
+            _mediaProperties = AddChangeTracker<MediaPropertySet>(nameof(MediaProperties), null);
+            _musicProperties = AddChangeTracker<MusicPropertySet>(nameof(MusicProperties), null);
+            _photoProperties = AddChangeTracker<PhotoPropertySet>(nameof(PhotoProperties), null);
+            _recordedTVProperties = AddChangeTracker<RecordedTVPropertySet>(nameof(RecordedTVProperties), null);
+            _videoProperties = AddChangeTracker<VideoPropertySet>(nameof(VideoProperties), null);
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)
@@ -670,18 +670,18 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<DbFile> builder)
         {
             builder.HasOne(sn => sn.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.Files).HasForeignKey(nameof(BinaryPropertiesId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.SummaryProperties).WithMany(d => d.Files).HasForeignKey(nameof(SummaryPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.DocumentProperties).WithMany(d => d.Files).HasForeignKey(nameof(DocumentPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.AudioProperties).WithMany(d => d.Files).HasForeignKey(nameof(AudioPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.DRMProperties).WithMany(d => d.Files).HasForeignKey(nameof(DRMPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.GPSProperties).WithMany(d => d.Files).HasForeignKey(nameof(GPSPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.ImageProperties).WithMany(d => d.Files).HasForeignKey(nameof(ImagePropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.MediaProperties).WithMany(d => d.Files).HasForeignKey(nameof(MediaPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.MusicProperties).WithMany(d => d.Files).HasForeignKey(nameof(MusicPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.PhotoProperties).WithMany(d => d.Files).HasForeignKey(nameof(PhotoPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.RecordedTVProperties).WithMany(d => d.Files).HasForeignKey(nameof(RecordedTVPropertiesId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.VideoProperties).WithMany(d => d.Files).HasForeignKey(nameof(VideoPropertiesId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.Files).HasForeignKey(nameof(BinaryPropertySetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.SummaryProperties).WithMany(d => d.Files).HasForeignKey(nameof(SummaryPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.DocumentProperties).WithMany(d => d.Files).HasForeignKey(nameof(DocumentPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.AudioProperties).WithMany(d => d.Files).HasForeignKey(nameof(AudioPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.DRMProperties).WithMany(d => d.Files).HasForeignKey(nameof(DRMPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.GPSProperties).WithMany(d => d.Files).HasForeignKey(nameof(GPSPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.ImageProperties).WithMany(d => d.Files).HasForeignKey(nameof(ImagePropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.MediaProperties).WithMany(d => d.Files).HasForeignKey(nameof(MediaPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.MusicProperties).WithMany(d => d.Files).HasForeignKey(nameof(MusicPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.PhotoProperties).WithMany(d => d.Files).HasForeignKey(nameof(PhotoPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.RecordedTVProperties).WithMany(d => d.Files).HasForeignKey(nameof(RecordedTVPropertySetId)).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.VideoProperties).WithMany(d => d.Files).HasForeignKey(nameof(VideoPropertySetId)).OnDelete(DeleteBehavior.Restrict);
         }
 
         private void ValidateLastHashCalculation(List<ValidationResult> results)
@@ -730,7 +730,7 @@ namespace FsInfoCat.Local
             XElement result = new(nameof(TABLE_NAME),
                 new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
                 new XAttribute(nameof(Name), Name),
-                new XAttribute(nameof(BinaryPropertiesId), XmlConvert.ToString(BinaryPropertiesId))
+                new XAttribute(nameof(BinaryPropertySetId), XmlConvert.ToString(BinaryPropertySetId))
             );
             if (includeParentId)
             {
@@ -784,10 +784,10 @@ namespace FsInfoCat.Local
             string n = nameof(Id);
             Guid fileId = fileElement.GetAttributeGuid(n).Value;
             await new InsertQueryBuilder(nameof(LocalDbContext.Files), fileElement, n).AppendGuid(nameof(ParentId), parentId).AppendString(nameof(Name))
-                .AppendGuid(nameof(BinaryPropertiesId)).AppendGuid(nameof(SummaryPropertiesId)).AppendGuid(nameof(DocumentPropertiesId)).AppendGuid(nameof(AudioPropertiesId))
-                .AppendGuid(nameof(DRMPropertiesId)).AppendGuid(nameof(GPSPropertiesId)).AppendGuid(nameof(ImagePropertiesId)).AppendGuid(nameof(MediaPropertiesId))
-                .AppendGuid(nameof(MusicPropertiesId)).AppendGuid(nameof(PhotoPropertiesId)).AppendGuid(nameof(RecordedTVPropertiesId))
-                .AppendGuid(nameof(VideoPropertiesId)).AppendEnum<FileCrawlOptions>(nameof(Options)).AppendDateTime(nameof(LastHashCalculation))
+                .AppendGuid(nameof(BinaryPropertySetId)).AppendGuid(nameof(SummaryPropertySetId)).AppendGuid(nameof(DocumentPropertySetId)).AppendGuid(nameof(AudioPropertySetId))
+                .AppendGuid(nameof(DRMPropertySetId)).AppendGuid(nameof(GPSPropertySetId)).AppendGuid(nameof(ImagePropertySetId)).AppendGuid(nameof(MediaPropertySetId))
+                .AppendGuid(nameof(MusicPropertySetId)).AppendGuid(nameof(PhotoPropertySetId)).AppendGuid(nameof(RecordedTVPropertySetId))
+                .AppendGuid(nameof(VideoPropertySetId)).AppendEnum<FileCrawlOptions>(nameof(Options)).AppendDateTime(nameof(LastHashCalculation))
                 .AppendDateTime(nameof(LastHashCalculation)).AppendElementString(nameof(Notes)).AppendBoolean(nameof(Deleted)).AppendDateTime(nameof(CreationTime))
                 .AppendDateTime(nameof(LastWriteTime)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
                 .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);

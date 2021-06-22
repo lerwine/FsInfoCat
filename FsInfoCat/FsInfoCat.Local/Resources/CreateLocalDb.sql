@@ -19,6 +19,18 @@ DROP TABLE IF EXISTS "MusicProperties";
 DROP TABLE IF EXISTS "PhotoProperties";
 DROP TABLE IF EXISTS "RecordedTVProperties";
 DROP TABLE IF EXISTS "VideoProperties";
+DROP TABLE IF EXISTS "BinaryPropertySets";
+DROP TABLE IF EXISTS "SummaryPropertySets";
+DROP TABLE IF EXISTS "DocumentPropertySets";
+DROP TABLE IF EXISTS "AudioPropertySets";
+DROP TABLE IF EXISTS "DRMPropertySets";
+DROP TABLE IF EXISTS "GPSPropertySets";
+DROP TABLE IF EXISTS "ImagePropertySets";
+DROP TABLE IF EXISTS "MediaPropertySets";
+DROP TABLE IF EXISTS "MusicPropertySets";
+DROP TABLE IF EXISTS "PhotoPropertySets";
+DROP TABLE IF EXISTS "RecordedTVPropertySets";
+DROP TABLE IF EXISTS "VideoPropertySets";
 PRAGMA foreign_keys = OFF;
 DROP TABLE IF EXISTS "Subdirectories";
 PRAGMA foreign_keys = ON;
@@ -147,7 +159,7 @@ CREATE TABLE IF NOT EXISTS "SubdirectoryAccessErrors" (
     CHECK(CreatedOn<=ModifiedOn)
 );
 
-CREATE TABLE IF NOT EXISTS "BinaryProperties" (
+CREATE TABLE IF NOT EXISTS "BinaryPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"Length"	BIGINT NOT NULL CHECK(Length>=0),
 	"Hash"	BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16),
@@ -155,13 +167,13 @@ CREATE TABLE IF NOT EXISTS "BinaryProperties" (
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_BinaryProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_BinaryPropertySet" PRIMARY KEY("Id"),
 	CONSTRAINT "UK_LengthHash" UNIQUE("Length","Hash"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "SummaryProperties" (
+CREATE TABLE IF NOT EXISTS "SummaryPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"ApplicationName" NVARCHAR(1024) DEFAULT NULL,
 	"Author" TEXT DEFAULT NULL,
@@ -191,11 +203,11 @@ CREATE TABLE IF NOT EXISTS "SummaryProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_SummaryProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_SummaryPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "DocumentProperties" (
+CREATE TABLE IF NOT EXISTS "DocumentPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"ClientID" NVARCHAR(64) DEFAULT NULL,
 	"Contributor" TEXT DEFAULT NULL,
@@ -212,11 +224,11 @@ CREATE TABLE IF NOT EXISTS "DocumentProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_DocumentProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_DocumentPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "AudioProperties" (
+CREATE TABLE IF NOT EXISTS "AudioPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"Compression" NVARCHAR(256) DEFAULT NULL,
 	"EncodingBitrate" BIGINT CHECK("EncodingBitrate" IS NULL OR ("EncodingBitrate">=0 AND "EncodingBitrate"<4294967296)) DEFAULT NULL,
@@ -230,11 +242,11 @@ CREATE TABLE IF NOT EXISTS "AudioProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_AudioProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_AudioPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "DRMProperties" (
+CREATE TABLE IF NOT EXISTS "DRMPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"DatePlayExpires" DATETIME DEFAULT NULL,
 	"DatePlayStarts" DATETIME DEFAULT NULL,
@@ -245,11 +257,11 @@ CREATE TABLE IF NOT EXISTS "DRMProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_DRMProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_DRMPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "GPSProperties" (
+CREATE TABLE IF NOT EXISTS "GPSPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"AreaInformation" NVARCHAR(1024) DEFAULT NULL,
 	"LatitudeDegrees" DOUBLE DEFAULT NULL,
@@ -267,11 +279,11 @@ CREATE TABLE IF NOT EXISTS "GPSProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_GPSProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_GPSPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "ImageProperties" (
+CREATE TABLE IF NOT EXISTS "ImagePropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"BitDepth" BIGINT CHECK("BitDepth" IS NULL OR ("BitDepth">=0 AND "BitDepth"<4294967296)) DEFAULT NULL,
 	"ColorSpace" INT CHECK("ColorSpace" IS NULL OR ("ColorSpace">=0 AND "ColorSpace"<65536)) DEFAULT NULL,
@@ -288,11 +300,11 @@ CREATE TABLE IF NOT EXISTS "ImageProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_ImageProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_ImagePropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "MediaProperties" (
+CREATE TABLE IF NOT EXISTS "MediaPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"ContentDistributor" NVARCHAR(256) DEFAULT NULL,
 	"CreatorApplication" NVARCHAR(256) DEFAULT NULL,
@@ -313,11 +325,11 @@ CREATE TABLE IF NOT EXISTS "MediaProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_MediaProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_MediaPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "MusicProperties" (
+CREATE TABLE IF NOT EXISTS "MusicPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"AlbumArtist" NVARCHAR(1024) DEFAULT NULL,
 	"AlbumTitle" NVARCHAR(1024) DEFAULT NULL,
@@ -333,11 +345,11 @@ CREATE TABLE IF NOT EXISTS "MusicProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_MusicProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_MusicPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "PhotoProperties" (
+CREATE TABLE IF NOT EXISTS "PhotoPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"CameraManufacturer" NVARCHAR(256) DEFAULT NULL,
 	"CameraModel" NVARCHAR(256) DEFAULT NULL,
@@ -351,11 +363,11 @@ CREATE TABLE IF NOT EXISTS "PhotoProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_PhotoProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_PhotoPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "RecordedTVProperties" (
+CREATE TABLE IF NOT EXISTS "RecordedTVPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"ChannelNumber" BIGINT CHECK("ChannelNumber" IS NULL OR ("ChannelNumber">=0 AND "ChannelNumber"<4294967296)) DEFAULT NULL,
 	"EpisodeName" NVARCHAR(1024) DEFAULT NULL,
@@ -370,11 +382,11 @@ CREATE TABLE IF NOT EXISTS "RecordedTVProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_RecordedTVProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_RecordedTVPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
-CREATE TABLE IF NOT EXISTS "VideoProperties" (
+CREATE TABLE IF NOT EXISTS "VideoPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"Compression" NVARCHAR(256) DEFAULT NULL,
 	"Director" TEXT DEFAULT NULL,
@@ -390,7 +402,7 @@ CREATE TABLE IF NOT EXISTS "VideoProperties" (
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_VideoProperties" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_VideoPropertySet" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
@@ -404,18 +416,18 @@ CREATE TABLE IF NOT EXISTS "Files" (
     "Deleted" BIT NOT NULL DEFAULT 0,
 	"CreationTime"	DATETIME NOT NULL,
 	"LastWriteTime"	DATETIME NOT NULL,
-    "SummaryPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileSummaryProperties" REFERENCES "SummaryProperties"("Id") ON DELETE RESTRICT,
-    "DocumentPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileDocumentProperties" REFERENCES "DocumentProperties"("Id") ON DELETE RESTRICT,
-    "AudioPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileAudioProperties" REFERENCES "AudioProperties"("Id") ON DELETE RESTRICT,
-    "DRMPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileDRMProperties" REFERENCES "DRMProperties"("Id") ON DELETE RESTRICT,
-    "GPSPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileGPSProperties" REFERENCES "GPSProperties"("Id") ON DELETE RESTRICT,
-    "ImagePropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileImageProperties" REFERENCES "ImageProperties"("Id") ON DELETE RESTRICT,
-    "MediaPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileMediaProperties" REFERENCES "MediaProperties"("Id") ON DELETE RESTRICT,
-    "MusicPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileMusicProperties" REFERENCES "MusicProperties"("Id") ON DELETE RESTRICT,
-    "PhotoPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FilePhotoProperties" REFERENCES "PhotoProperties"("Id") ON DELETE RESTRICT,
-    "RecordedTVPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileRecordedTVProperties" REFERENCES "RecordedTVProperties"("Id") ON DELETE RESTRICT,
-    "VideoPropertiesId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileVideoProperties" REFERENCES "VideoProperties"("Id") ON DELETE RESTRICT,
-	"BinaryPropertiesId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileBinaryProperties" REFERENCES "BinaryProperties"("Id") ON DELETE RESTRICT,
+    "SummaryPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileSummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT,
+    "DocumentPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileDocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT,
+    "AudioPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileAudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT,
+    "DRMPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileDRMPropertySet" REFERENCES "DRMPropertySets"("Id") ON DELETE RESTRICT,
+    "GPSPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileGPSPropertySet" REFERENCES "GPSPropertySets"("Id") ON DELETE RESTRICT,
+    "ImagePropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileImagePropertySet" REFERENCES "ImagePropertySets"("Id") ON DELETE RESTRICT,
+    "MediaPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileMediaPropertySet" REFERENCES "MediaPropertySets"("Id") ON DELETE RESTRICT,
+    "MusicPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileMusicPropertySet" REFERENCES "MusicPropertySets"("Id") ON DELETE RESTRICT,
+    "PhotoPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FilePhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT,
+    "RecordedTVPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileRecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT,
+    "VideoPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileVideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT,
+	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
 	"ParentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileSubdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
@@ -443,7 +455,7 @@ CREATE TABLE IF NOT EXISTS "RedundantSets" (
 	"RemediationStatus"	TINYINT NOT NULL DEFAULT 1 CHECK(RemediationStatus>=0 AND RemediationStatus<9),
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
-	"BinaryPropertiesId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSetBinaryProperties" REFERENCES "BinaryProperties"("Id") ON DELETE RESTRICT,
+	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSetBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -483,7 +495,7 @@ CREATE TABLE IF NOT EXISTS "Comparisons" (
 CREATE TRIGGER IF NOT EXISTS validate_new_redundancy 
    BEFORE INSERT
    ON Redundancies
-   WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertiesId=r.BinaryPropertiesId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
+   WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
     SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
 END;
@@ -491,7 +503,7 @@ END;
 CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
    BEFORE UPDATE
    ON Redundancies
-   WHEN (NEW.FileId<>OLD.FileID OR NEW.RedundantSetId<>OLD.RedundantSetId) AND (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertiesId=r.BinaryPropertiesId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
+   WHEN (NEW.FileId<>OLD.FileID OR NEW.RedundantSetId<>OLD.RedundantSetId) AND (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
     SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
 END;

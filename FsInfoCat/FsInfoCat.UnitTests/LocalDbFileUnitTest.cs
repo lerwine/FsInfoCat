@@ -84,7 +84,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.BinaryProperties expected = default; // DEFERRED: Set invalid value
+            Local.BinaryPropertySet expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { BinaryProperties = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();

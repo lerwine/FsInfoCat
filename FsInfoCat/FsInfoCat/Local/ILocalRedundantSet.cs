@@ -4,7 +4,7 @@ namespace FsInfoCat.Local
 {
     public interface ILocalRedundantSet : IRedundantSet, ILocalDbEntity
     {
-        new ILocalBinaryProperties BinaryProperties { get; set; }
+        new ILocalBinaryPropertySet BinaryProperties { get; set; }
 
         new IEnumerable<ILocalRedundancy> Redundancies { get; }
     }

@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace FsInfoCat.PS.Export
 {
     [Obsolete]
-    public class ExtendedProperties : ExportSet.ExtendedPropertiesBase
+    public class ExtendedProperties : ExportSet.ExtendedPropertySetBase
     {
         public string Kind { get; set; }
         public ushort? Width { get; set; }

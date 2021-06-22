@@ -6,32 +6,32 @@ namespace FsInfoCat.Upstream
     {
         new IEnumerable<IUpstreamComparison> Comparisons { get; }
 
-        new IEnumerable<IUpstreamBinaryProperties> BinaryProperties { get; }
+        new IEnumerable<IUpstreamBinaryPropertySet> BinaryPropertySets { get; }
 
         [System.Obsolete()]
-        new IEnumerable<IUpstreamExtendedProperties> ExtendedProperties { get; }
+        new IEnumerable<IUpstreamExtendedPropertySet> ExtendedProperties { get; }
 
-        new IEnumerable<IUpstreamSummaryProperties> SummaryProperties { get; }
+        new IEnumerable<IUpstreamSummaryPropertySet> SummaryPropertySets { get; }
 
-        new IEnumerable<IUpstreamDocumentProperties> DocumentProperties { get; }
+        new IEnumerable<IUpstreamDocumentPropertySet> DocumentPropertySets { get; }
 
-        new IEnumerable<IUpstreamAudioProperties> AudioProperties { get; }
+        new IEnumerable<IUpstreamAudioPropertySet> AudioPropertySets { get; }
 
-        new IEnumerable<IUpstreamDRMProperties> DRMProperties { get; }
+        new IEnumerable<IUpstreamDRMPropertySet> DRMPropertySets { get; }
 
-        new IEnumerable<IUpstreamGPSProperties> GPSProperties { get; }
+        new IEnumerable<IUpstreamGPSPropertySet> GPSPropertySets { get; }
 
-        new IEnumerable<IUpstreamImageProperties> ImageProperties { get; }
+        new IEnumerable<IUpstreamImagePropertySet> ImagePropertySets { get; }
 
-        new IEnumerable<IUpstreamMediaProperties> MediaProperties { get; }
+        new IEnumerable<IUpstreamMediaPropertySet> MediaPropertySets { get; }
 
-        new IEnumerable<IUpstreamMusicProperties> MusicProperties { get; }
+        new IEnumerable<IUpstreamMusicPropertySet> MusicPropertySets { get; }
 
-        new IEnumerable<IUpstreamPhotoProperties> PhotoProperties { get; }
+        new IEnumerable<IUpstreamPhotoPropertySet> PhotoPropertySets { get; }
 
-        new IEnumerable<IUpstreamRecordedTVProperties> RecordedTVProperties { get; }
+        new IEnumerable<IUpstreamRecordedTVPropertySet> RecordedTVPropertySets { get; }
 
-        new IEnumerable<IUpstreamVideoProperties> VideoProperties { get; }
+        new IEnumerable<IUpstreamVideoPropertySet> VideoPropertySets { get; }
 
         new IEnumerable<IAccessError<IUpstreamFile>> FileAccessErrors { get; }
 
@@ -71,7 +71,7 @@ namespace FsInfoCat.Upstream
 
         IEnumerable<IUserProfile> UserProfiles { get; }
 
-        void ForceDeleteBinaryProperties(IUpstreamBinaryProperties target);
+        void ForceDeleteBinaryProperties(IUpstreamBinaryPropertySet target);
 
         void ForceDeleteRedundantSet(IUpstreamRedundantSet target);
     }

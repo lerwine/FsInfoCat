@@ -62,243 +62,243 @@ namespace FsInfoCat.PS.Export
         [XmlIgnore]
         public DateTime LastWriteTime { get; set; }
 
-        [XmlAttribute(nameof(BinaryPropertiesId))]
+        [XmlAttribute(nameof(BinaryPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_BinaryPropertiesId { get => BinaryPropertiesId.ToGuidXml(); set => BinaryPropertiesId = value.FromXmlGuid(BinaryPropertiesId); }
+        public string __XML_BinaryPropertySetId { get => BinaryPropertySetId.ToGuidXml(); set => BinaryPropertySetId = value.FromXmlGuid(BinaryPropertySetId); }
 #pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
-        public Guid BinaryPropertiesId { get; set; }
-        public BinaryProperties GetBinaryProperties()
+        public Guid BinaryPropertySetId { get; set; }
+        public BinaryPropertySet GetBinaryProperties()
         {
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            Guid id = BinaryPropertiesId;
-            return exportSet.BinaryProperties.FirstOrDefault(e => e.Id == id);
+            Guid id = BinaryPropertySetId;
+            return exportSet.BinaryPropertySets.FirstOrDefault(e => e.Id == id);
         }
 
         [Obsolete]
         public Guid? ExtendedPropertyId { get; set; }
 
-        [XmlAttribute(nameof(SummaryPropertiesId))]
+        [XmlAttribute(nameof(SummaryPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_SummaryPropertiesId { get => SummaryPropertiesId.ToGuidXml(); set => SummaryPropertiesId = value.FromXmlGuid(); }
+        public string __XML_SummaryPropertySetId { get => SummaryPropertySetId.ToGuidXml(); set => SummaryPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? SummaryPropertiesId { get; set; }
+        public Guid? SummaryPropertySetId { get; set; }
 
-        public SummaryProperties GetSummaryProperties()
+        public SummaryPropertySet GetSummaryProperties()
         {
-            Guid? id = SummaryPropertiesId;
+            Guid? id = SummaryPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.SummaryProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.SummaryPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(DocumentPropertiesId))]
+        [XmlAttribute(nameof(DocumentPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_DocumentPropertiesId { get => DocumentPropertiesId.ToGuidXml(); set => DocumentPropertiesId = value.FromXmlGuid(); }
+        public string __XML_DocumentPropertySetId { get => DocumentPropertySetId.ToGuidXml(); set => DocumentPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? DocumentPropertiesId { get; set; }
+        public Guid? DocumentPropertySetId { get; set; }
 
-        public DocumentProperties GetDocumentProperties()
+        public DocumentPropertySet GetDocumentProperties()
         {
-            Guid? id = DocumentPropertiesId;
+            Guid? id = DocumentPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.DocumentProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.DocumentPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(AudioPropertiesId))]
+        [XmlAttribute(nameof(AudioPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_AudioPropertiesId { get => AudioPropertiesId.ToGuidXml(); set => AudioPropertiesId = value.FromXmlGuid(); }
+        public string __XML_AudioPropertySetId { get => AudioPropertySetId.ToGuidXml(); set => AudioPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? AudioPropertiesId { get; set; }
+        public Guid? AudioPropertySetId { get; set; }
 
-        public AudioProperties GetAudioProperties()
+        public AudioPropertySet GetAudioProperties()
         {
-            Guid? id = AudioPropertiesId;
+            Guid? id = AudioPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.AudioProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.AudioPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(DRMPropertiesId))]
+        [XmlAttribute(nameof(DRMPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_DRMPropertiesId { get => DRMPropertiesId.ToGuidXml(); set => DRMPropertiesId = value.FromXmlGuid(); }
+        public string __XML_DRMPropertySetId { get => DRMPropertySetId.ToGuidXml(); set => DRMPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? DRMPropertiesId { get; set; }
+        public Guid? DRMPropertySetId { get; set; }
 
-        public DRMProperties GetDRMProperties()
+        public DRMPropertySet GetDRMProperties()
         {
-            Guid? id = DRMPropertiesId;
+            Guid? id = DRMPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.DRMProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.DRMPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(GPSPropertiesId))]
+        [XmlAttribute(nameof(GPSPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_GPSPropertiesId { get => GPSPropertiesId.ToGuidXml(); set => GPSPropertiesId = value.FromXmlGuid(); }
+        public string __XML_GPSPropertySetId { get => GPSPropertySetId.ToGuidXml(); set => GPSPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? GPSPropertiesId { get; set; }
+        public Guid? GPSPropertySetId { get; set; }
 
-        public GPSProperties GetGPSProperties()
+        public GPSPropertySet GetGPSProperties()
         {
-            Guid? id = GPSPropertiesId;
+            Guid? id = GPSPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.GPSProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.GPSPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(ImagePropertiesId))]
+        [XmlAttribute(nameof(ImagePropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_ImagePropertiesId { get => ImagePropertiesId.ToGuidXml(); set => ImagePropertiesId = value.FromXmlGuid(); }
+        public string __XML_ImagePropertySetId { get => ImagePropertySetId.ToGuidXml(); set => ImagePropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? ImagePropertiesId { get; set; }
+        public Guid? ImagePropertySetId { get; set; }
 
-        public ImageProperties GetImageProperties()
+        public ImagePropertySet GetImageProperties()
         {
-            Guid? id = ImagePropertiesId;
+            Guid? id = ImagePropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.ImageProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.ImagePropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(MediaPropertiesId))]
+        [XmlAttribute(nameof(MediaPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_MediaPropertiesId { get => MediaPropertiesId.ToGuidXml(); set => MediaPropertiesId = value.FromXmlGuid(); }
+        public string __XML_MediaPropertySetId { get => MediaPropertySetId.ToGuidXml(); set => MediaPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? MediaPropertiesId { get; set; }
+        public Guid? MediaPropertySetId { get; set; }
 
-        public MediaProperties GetMediaProperties()
+        public MediaPropertySet GetMediaProperties()
         {
-            Guid? id = MediaPropertiesId;
+            Guid? id = MediaPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.MediaProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.MediaPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(MusicPropertiesId))]
+        [XmlAttribute(nameof(MusicPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_MusicPropertiesId { get => MusicPropertiesId.ToGuidXml(); set => MusicPropertiesId = value.FromXmlGuid(); }
+        public string __XML_MusicPropertySetId { get => MusicPropertySetId.ToGuidXml(); set => MusicPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? MusicPropertiesId { get; set; }
+        public Guid? MusicPropertySetId { get; set; }
 
-        public MusicProperties GetMusicProperties()
+        public MusicPropertySet GetMusicProperties()
         {
-            Guid? id = MusicPropertiesId;
+            Guid? id = MusicPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.MusicProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.MusicPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(PhotoPropertiesId))]
+        [XmlAttribute(nameof(PhotoPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_PhotoPropertiesId { get => PhotoPropertiesId.ToGuidXml(); set => PhotoPropertiesId = value.FromXmlGuid(); }
+        public string __XML_PhotoPropertySetId { get => PhotoPropertySetId.ToGuidXml(); set => PhotoPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? PhotoPropertiesId { get; set; }
+        public Guid? PhotoPropertySetId { get; set; }
 
-        public PhotoProperties GetPhotoProperties()
+        public PhotoPropertySet GetPhotoProperties()
         {
-            Guid? id = PhotoPropertiesId;
+            Guid? id = PhotoPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.PhotoProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.PhotoPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(RecordedTVPropertiesId))]
+        [XmlAttribute(nameof(RecordedTVPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_RecordedTVPropertiesId { get => RecordedTVPropertiesId.ToGuidXml(); set => RecordedTVPropertiesId = value.FromXmlGuid(); }
+        public string __XML_RecordedTVPropertySetId { get => RecordedTVPropertySetId.ToGuidXml(); set => RecordedTVPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? RecordedTVPropertiesId { get; set; }
+        public Guid? RecordedTVPropertySetId { get; set; }
 
-        public RecordedTVProperties GetRecordedTVProperties()
+        public RecordedTVPropertySet GetRecordedTVProperties()
         {
-            Guid? id = RecordedTVPropertiesId;
+            Guid? id = RecordedTVPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.RecordedTVProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.RecordedTVPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
-        [XmlAttribute(nameof(VideoPropertiesId))]
+        [XmlAttribute(nameof(VideoPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_VideoPropertiesId { get => VideoPropertiesId.ToGuidXml(); set => VideoPropertiesId = value.FromXmlGuid(); }
+        public string __XML_VideoPropertySetId { get => VideoPropertySetId.ToGuidXml(); set => VideoPropertySetId = value.FromXmlGuid(); }
 #pragma warning restore IDE1006 // Naming Styles
 
         [XmlIgnore]
-        public Guid? VideoPropertiesId { get; set; }
+        public Guid? VideoPropertySetId { get; set; }
 
-        public VideoProperties GetVideoProperties()
+        public VideoPropertySet GetVideoProperties()
         {
-            Guid? id = VideoPropertiesId;
+            Guid? id = VideoPropertySetId;
             if (!id.HasValue)
                 return null;
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            return exportSet.VideoProperties.FirstOrDefault(e => e.Id == id.Value);
+            return exportSet.VideoPropertySets.FirstOrDefault(e => e.Id == id.Value);
         }
 
         [XmlElement]
@@ -310,7 +310,7 @@ namespace FsInfoCat.PS.Export
             if (exportSet is null)
                 return null;
             Guid id = Id;
-            return exportSet.BinaryProperties.SelectMany(c => c.RedundantSets.SelectMany(r => r.Redundancies)).FirstOrDefault(r => r.FileId == id);
+            return exportSet.BinaryPropertySets.SelectMany(c => c.RedundantSets.SelectMany(r => r.Redundancies)).FirstOrDefault(r => r.FileId == id);
         }
 
         [XmlElement(nameof(AccessError))]

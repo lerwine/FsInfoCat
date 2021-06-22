@@ -15,32 +15,32 @@ namespace FsInfoCat
 
         bool Deleted { get; }
 
-        IBinaryProperties BinaryProperties { get; set; }
+        IBinaryPropertySet BinaryProperties { get; set; }
 
         [Obsolete]
         IExtendedProperties ExtendedProperties { get; set; }
 
-        ISummaryProperties SummaryProperties { get; set; }
+        ISummaryPropertySet SummaryProperties { get; set; }
 
-        IDocumentProperties DocumentProperties { get; set; }
+        IDocumentPropertySet DocumentProperties { get; set; }
 
-        IAudioProperties AudioProperties { get; set; }
+        IAudioPropertySet AudioProperties { get; set; }
 
-        IDRMProperties DRMProperties { get; set; }
+        IDRMPropertySet DRMProperties { get; set; }
 
-        IGPSProperties GPSProperties { get; set; }
+        IGPSPropertySet GPSProperties { get; set; }
 
-        IImageProperties ImageProperties { get; set; }
+        IImagePropertySet ImageProperties { get; set; }
 
-        IMediaProperties MediaProperties { get; set; }
+        IMediaPropertySet MediaProperties { get; set; }
 
-        IMusicProperties MusicProperties { get; set; }
+        IMusicPropertySet MusicProperties { get; set; }
 
-        IPhotoProperties PhotoProperties { get; set; }
+        IPhotoPropertySet PhotoProperties { get; set; }
 
-        IRecordedTVProperties RecordedTVProperties { get; set; }
+        IRecordedTVPropertySet RecordedTVProperties { get; set; }
 
-        IVideoProperties VideoProperties { get; set; }
+        IVideoPropertySet VideoProperties { get; set; }
 
         IRedundancy Redundancy { get; }
 
