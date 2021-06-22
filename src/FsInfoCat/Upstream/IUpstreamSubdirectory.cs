@@ -1,0 +1,25 @@
+using System.Collections.Generic;
+
+namespace FsInfoCat.Upstream
+{
+    public interface IUpstreamSubdirectory : ISubdirectory, IUpstreamDbFsItem
+    {
+        new IUpstreamSubdirectory Parent { get; set; }
+
+        new IUpstreamVolume Volume { get; set; }
+
+        new IHostCrawlConfiguration CrawlConfiguration { get; set; }
+
+        new IEnumerable<IUpstreamFile> Files { get; }
+
+        new IEnumerable<IUpstreamSubdirectory> SubDirectories { get; }
+
+        IEnumerable<IFileAction> FileActions { get; }
+
+        IEnumerable<ISubdirectoryAction> SubdirectoryActions { get; }
+
+        IEnumerable<ISubdirectoryAction> SubdirectoryActionSources { get; }
+
+        new IEnumerable<IAccessError<IUpstreamSubdirectory>> AccessErrors { get; }
+    }
+}

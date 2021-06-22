@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "FsInfoCat.PS": {
+      "commandName": "Executable",
+      "executablePath": "pwsh",
+      "commandLineArgs": "-NoExit -c \"Import-Module -Name './FsInfoCat.psd1'\""
+    }
+  }
+}

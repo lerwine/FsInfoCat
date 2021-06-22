@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="FsInfoCat.Model.Local.ILocalDbContext">
+    <Position X="8.75" Y="11.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIFQBAiAAAFJAAIUAAACGAAAADIEAIEAAgBMQAAAIIA=</HashCode>
+      <FileName>Model\Local\ILocalDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalDbService" Collapsed="true">
+    <Position X="23.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Local\ILocalDbService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalFile">
+    <Position X="5.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Local\ILocalFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalFileComparison">
+    <Position X="15.25" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Local\ILocalFileComparison.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalFileSystem">
+    <Position X="17.75" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Model\Local\ILocalFileSystem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalHashCalculation">
+    <Position X="10.25" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\Local\ILocalHashCalculation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalRedundancy">
+    <Position X="3.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\Local\ILocalRedundancy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalSubDirectory">
+    <Position X="20.5" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAAIAAAAAAIA=</HashCode>
+      <FileName>Model\Local\ILocalSubDirectory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalSymbolicName">
+    <Position X="7.75" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Local\ILocalSymbolicName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Local.ILocalVolume">
+    <Position X="13" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Local\ILocalVolume.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IDbContext">
+    <Position X="8.5" Y="7.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAEBAEAAAAACAAAAADAAAAEAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFile">
+    <Position X="5.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAAEAAAAAAAAAQAQAAAQAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFileComparison">
+    <Position X="15.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFileComparison.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFileSystem">
+    <Position X="17.75" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAiEAAAAAEBAABAAAAAAAACAAAAgAAAAAAIAEAAIAA=</HashCode>
+      <FileName>Model\IFileSystem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFsSymbolicName">
+    <Position X="7.75" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAiAACAAAAAAAAAAAAQAAQCAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFsSymbolicName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IHashCalculation">
+    <Position X="10.25" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAEBAAAAAABAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IHashCalculation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IRedundancy">
+    <Position X="3.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IRedundancy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.ISubDirectory">
+    <Position X="20.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAQAQAAAAAAAAQAAIAAAAAAIA=</HashCode>
+      <FileName>Model\ISubDirectory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.ITimeStampedEntity">
+    <Position X="12" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ITimeStampedEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IVolume">
+    <Position X="12.75" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAiEACAAAAAAAAAAAAAAAACAAAAgAEAAAgAQAAAIAA=</HashCode>
+      <FileName>Model\IVolume.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

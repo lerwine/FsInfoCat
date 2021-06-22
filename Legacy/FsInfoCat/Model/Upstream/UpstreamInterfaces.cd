@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="FsInfoCat.Model.Upstream.IDirectoryRelocateTask">
+    <Position X="30" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAAEAAgAAAAEgAAAAAAKAACAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Model\Upstream\IDirectoryRelocateTask.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssignmentGroup" />
+      <Property Name="AssignedTo" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IFileRelocateTask">
+    <Position X="23.25" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAAEAAgAAAAEgAAAAAAIAAAAAAAAAAABAAAAAIA=</HashCode>
+      <FileName>Model\Upstream\IFileRelocateTask.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssignmentGroup" />
+      <Property Name="AssignedTo" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IHostDevice">
+    <Position X="0.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAiEAAAAAUAAIAAAAAAAAACAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Model\Upstream\IHostDevice.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Platform" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IHostPlatform">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAiEAAAAAAAAAQAAAAAAAACgAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Model\Upstream\IHostPlatform.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamDbContext">
+    <Position X="3.5" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIFQBEmUAgHpEAYUIAACGAAAIDYkAKkAAgBMQhAAIKA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamFile">
+    <Position X="12.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAQAAAAAQAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parent" />
+      <Property Name="HashCalculation" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamFileComparison">
+    <Position X="20.75" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamFileComparison.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamFileSystem">
+    <Position X="3.25" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamFileSystem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamHashCalculation">
+    <Position X="15.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamHashCalculation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamRedundancy">
+    <Position X="18.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamRedundancy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamSubDirectory">
+    <Position X="10" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAQAAAAAAAAAAQAAIAAAAAAIA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamSubDirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamSymbolicName">
+    <Position X="12.5" Y="10.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamSymbolicName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUpstreamVolume">
+    <Position X="7" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACACAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Upstream\IUpstreamVolume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUserGroup">
+    <Position X="25.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAEAAAAAAAAAAAAAAAQCAgAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Model\Upstream\IUserGroup.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.Upstream.IUserProfile">
+    <Position X="26" Y="4" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>aFAyFEEAgAIACEIAAEAAEBACAABEQJQAAiBHGEBIAhw=</HashCode>
+      <FileName>Model\Upstream\IUserProfile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IDbContext">
+    <Position X="0.5" Y="8.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAEBAEAAAAACAAAAADAAAAEAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFile">
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAAEAAAAAAAAAQAQAAAQAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HashCalculation" />
+      <Property Name="Parent" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFileComparison">
+    <Position X="20.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFileComparison.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFileSystem">
+    <Position X="3.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAiEAAAAAEBAABAAAAAAAACAAAAgAAAAAAIAEAAIAA=</HashCode>
+      <FileName>Model\IFileSystem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFsSymbolicName">
+    <Position X="12.5" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAiAACAAAAAAAAAAAAQAAQCAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFsSymbolicName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IHashCalculation">
+    <Position X="15.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAEBAAAAAABAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IHashCalculation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IRedundancy">
+    <Position X="18.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IRedundancy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.ISubDirectory">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQAAAAAAAAAAQAQAAAAAAAAQAAIAAAAAAIA=</HashCode>
+      <FileName>Model\ISubDirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IVolume">
+    <Position X="7" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAiEACAAAAAAAAAAAAAAAACAAAAgAEAAQgIQAAAIAA=</HashCode>
+      <FileName>Model\IVolume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

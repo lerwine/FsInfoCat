@@ -25,28 +25,10 @@ namespace FsInfoCat.Desktop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCat.sdf")]
-        public string LocalDbFile {
+        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCat.db")]
+        public string LocalDbfileName {
             get {
-                return ((string)(this["LocalDbFile"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6ba7b811-ffff-3fff-80b4-00c04fd430c8")]
-        public global::System.Guid AppUUID {
-            get {
-                return ((global::System.Guid)(this["AppUUID"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FsInfoCat")]
-        public string ApplicationDataFolderName {
-            get {
-                return ((string)(this["ApplicationDataFolderName"]));
+                return ((string)(this["LocalDbfileName"]));
             }
         }
         
@@ -54,20 +36,10 @@ namespace FsInfoCat.Desktop.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(localdb)\\ProjectsV13;Initial Catalog=FsInfoCat;Integrated Security=T" +
-            "rue;MultipleActiveResultSets=True;Application Name=EntityFramework")]
-        public string UpstreamDb {
+            "rue;MultipleActiveResultSets=True;Connect Timeout=30")]
+        public string UpstreamDB {
             get {
-                return ((string)(this["UpstreamDb"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"metadata=res://*/Model.Remote.RemoteDbModel.csdl|res://*/Model.Remote.RemoteDbModel.ssdl|res://*/Model.Remote.RemoteDbModel.msl;provider=System.Data.SqlClient;provider connection string=""data source=(localdb)\ProjectsV13;initial catalog=FsInfoCat;persist security info=True;user id=fsinfocatadmin;multipleactiveresultsets=True;connect timeout=30;encrypt=True;application name=EntityFramework""")]
-        public string RemoteEntityConnectionString {
-            get {
-                return ((string)(this["RemoteEntityConnectionString"]));
+                return ((string)(this["UpstreamDB"]));
             }
         }
     }

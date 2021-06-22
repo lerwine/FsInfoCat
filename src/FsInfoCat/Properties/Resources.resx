@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DisplayName_AccessErrors" xml:space="preserve">
+    <value>Access Errors</value>
+  </data>
+  <data name="DisplayName_AudioProperties" xml:space="preserve">
+    <value>Audio Properties</value>
+  </data>
+  <data name="DisplayName_CaseSensitiveSearch" xml:space="preserve">
+    <value>Case-sensitive Search</value>
+  </data>
+  <data name="DisplayName_ComparisonSources" xml:space="preserve">
+    <value>Comparisons (as source)</value>
+  </data>
+  <data name="DisplayName_ComparisonTargets" xml:space="preserve">
+    <value>Comparisons (as target)</value>
+  </data>
+  <data name="DisplayName_CrawlConfiguration" xml:space="preserve">
+    <value>Crawl Configuration</value>
+  </data>
+  <data name="DisplayName_CreatedOn" xml:space="preserve">
+    <value>Created On</value>
+  </data>
+  <data name="DisplayName_DefaultDriveType" xml:space="preserve">
+    <value>Default Drive Type</value>
+  </data>
+  <data name="DisplayName_DisplayName" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="DisplayName_DocumentProperties" xml:space="preserve">
+    <value>Document Properties</value>
+  </data>
+  <data name="DisplayName_DRMProperties" xml:space="preserve">
+    <value>DRM Properties</value>
+  </data>
+  <data name="DisplayName_FileSystem" xml:space="preserve">
+    <value>File System</value>
+  </data>
+  <data name="DisplayName_GPSProperties" xml:space="preserve">
+    <value>GPS Properties</value>
+  </data>
+  <data name="DisplayName_Identifier" xml:space="preserve">
+    <value>Volume Identifier</value>
+  </data>
+  <data name="DisplayName_ImageProperties" xml:space="preserve">
+    <value>Image Properties</value>
+  </data>
+  <data name="DisplayName_IsInactive" xml:space="preserve">
+    <value>Is Inactive</value>
+  </data>
+  <data name="DisplayName_LastSynchronizedOn" xml:space="preserve">
+    <value>Last Synchronized On</value>
+  </data>
+  <data name="DisplayName_MaxNameLength" xml:space="preserve">
+    <value>Maximum Name Length</value>
+  </data>
+  <data name="DisplayName_MediaProperties" xml:space="preserve">
+    <value>Media Properties</value>
+  </data>
+  <data name="DisplayName_ModifiedOn" xml:space="preserve">
+    <value>Modified On</value>
+  </data>
+  <data name="DisplayName_MusicProperties" xml:space="preserve">
+    <value>Music Properties</value>
+  </data>
+  <data name="DisplayName_PhotoProperties" xml:space="preserve">
+    <value>Photo Properties</value>
+  </data>
+  <data name="DisplayName_ReadOnly" xml:space="preserve">
+    <value>Read-only</value>
+  </data>
+  <data name="DisplayName_RecordedTVProperties" xml:space="preserve">
+    <value>Recorded TV Properties</value>
+  </data>
+  <data name="DisplayName_RedundantSet" xml:space="preserve">
+    <value>Redundancy Set</value>
+  </data>
+  <data name="DisplayName_RootDirectory" xml:space="preserve">
+    <value>Root Directory</value>
+  </data>
+  <data name="DisplayName_SummaryProperties" xml:space="preserve">
+    <value>Summary Properties</value>
+  </data>
+  <data name="DisplayName_SymbolicNames" xml:space="preserve">
+    <value>Symbolic Names</value>
+  </data>
+  <data name="DisplayName_UpstreamId" xml:space="preserve">
+    <value>Remote DB Identifier</value>
+  </data>
+  <data name="DisplayName_VideoProperties" xml:space="preserve">
+    <value>Video Properties</value>
+  </data>
+  <data name="DisplayName_VolumeName" xml:space="preserve">
+    <value>Volume Name</value>
+  </data>
+  <data name="ErrorMessage_CircularReference" xml:space="preserve">
+    <value>Circular subdirectory hierarchy reference not allowed.</value>
+  </data>
+  <data name="ErrorMessage_BinaryPropertiesRequired" xml:space="preserve">
+    <value>File Content Info must be selected</value>
+  </data>
+  <data name="ErrorMessage_CreatedOnAfterModifiedOn" xml:space="preserve">
+    <value>"Created On" date cannot be later than the "Modified On" date.</value>
+  </data>
+  <data name="ErrorMessage_DisplayNameLength" xml:space="preserve">
+    <value>Display Name too long.</value>
+  </data>
+  <data name="ErrorMessage_DisplayNameRequired" xml:space="preserve">
+    <value>Display Name is required.</value>
+  </data>
+  <data name="ErrorMessage_DriveTypeInvalid" xml:space="preserve">
+    <value>Drive Type is invalid.</value>
+  </data>
+  <data name="ErrorMessage_DuplicateDisplayName" xml:space="preserve">
+    <value>Display Name is already in use.</value>
+  </data>
+  <data name="ErrorMessage_DuplicateMessage" xml:space="preserve">
+    <value>Duplicate message with same error code.</value>
+  </data>
+  <data name="ErrorMessage_DuplicateName" xml:space="preserve">
+    <value>Name is already in use.</value>
+  </data>
+  <data name="ErrorMessage_DuplicateVolumeIdentifier" xml:space="preserve">
+    <value>Volume Identifier already in use.</value>
+  </data>
+  <data name="ErrorMessage_FileRequired" xml:space="preserve">
+    <value>File must be selected.</value>
+  </data>
+  <data name="ErrorMessage_FileSystemRequired" xml:space="preserve">
+    <value>File System is required.</value>
+  </data>
+  <data name="ErrorMessage_IdentifierLength" xml:space="preserve">
+    <value>Volume Identifier too long.</value>
+  </data>
+  <data name="ErrorMessage_IdentifierRequired" xml:space="preserve">
+    <value>Volume Identifier is required.</value>
+  </data>
+  <data name="ErrorMessage_InvalidDirectoryCrawlOption" xml:space="preserve">
+    <value>Directory Crawl Option is invalid.</value>
+  </data>
+  <data name="ErrorMessage_InvalidFileCrawlOption" xml:space="preserve">
+    <value>File Crawl Option is invalid.</value>
+  </data>
+  <data name="ErrorMessage_InvalidFileInRedundantSet" xml:space="preserve">
+    <value>File does not have the same content information as the target Redundancy Set.</value>
+  </data>
+  <data name="ErrorMessage_InvalidFileLength" xml:space="preserve">
+    <value>File Length cannot be negative.</value>
+  </data>
+  <data name="ErrorMessage_InvalidFileRedundancyStatus" xml:space="preserve">
+    <value>File Redundancy Status is invalid.</value>
+  </data>
+  <data name="ErrorMessage_InvalidVolumeStatus" xml:space="preserve">
+    <value>Volume Status is invalid.</value>
+  </data>
+  <data name="ErrorMessage_LastHashCalculationAfterModifiedOn" xml:space="preserve">
+    <value>""Last Hash Calulation Date" cannot be later than the "Modified On" date.</value>
+  </data>
+  <data name="ErrorMessage_LastHashCalculationBeforeCreatedOn" xml:space="preserve">
+    <value>"Last Hash Calulation Date" cannot be earlier than the "Created On" date.</value>
+  </data>
+  <data name="ErrorMessage_LastHashCalculationRequired" xml:space="preserve">
+    <value>Last Hash Calculation Date Required</value>
+  </data>
+  <data name="ErrorMessage_LastSynchronizedOnAfterModifiedOn" xml:space="preserve">
+    <value>""Last Synchronized On" date cannot be later than the "Modified On" date.</value>
+  </data>
+  <data name="ErrorMessage_LastSynchronizedOnBeforeCreatedOn" xml:space="preserve">
+    <value>"Last Synchronized On" date cannot be earlier than the "Created On" date.</value>
+  </data>
+  <data name="ErrorMessage_LastSynchronizedOnRequired" xml:space="preserve">
+    <value>"LastSynchronizedOn" date is required when "Upstream Id" is specified.</value>
+  </data>
+  <data name="ErrorMessage_MaxNameLengthInvalid" xml:space="preserve">
+    <value>Maximum Name Length must be greater than zero.</value>
+  </data>
+  <data name="ErrorMessage_NameLength" xml:space="preserve">
+    <value>Name too long.</value>
+  </data>
+  <data name="ErrorMessage_NameRequired" xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="ErrorMessage_ParentRequired" xml:space="preserve">
+    <value>Parent Subdirectory must be selected.</value>
+  </data>
+  <data name="ErrorMessage_RedundantSetRequired" xml:space="preserve">
+    <value>Redundancy Set must be selected.</value>
+  </data>
+  <data name="ErrorMessage_ReferenceLength" xml:space="preserve">
+    <value>Reference too long.</value>
+  </data>
+  <data name="ErrorMessage_SourceFileRequired" xml:space="preserve">
+    <value>Source File must be selected.</value>
+  </data>
+  <data name="ErrorMessage_TargetFileRequired" xml:space="preserve">
+    <value>Target File must be selected.</value>
+  </data>
+  <data name="ErrorMessage_VolumeAndParent" xml:space="preserve">
+    <value>Volume and Parent Subdirectory cannot be selected at the same time.</value>
+  </data>
+  <data name="ErrorMessage_VolumeHasRoot" xml:space="preserve">
+    <value>Volume already has another root directory specified.</value>
+  </data>
+  <data name="ErrorMessage_VolumeNameLength" xml:space="preserve">
+    <value>Volume Name too long.</value>
+  </data>
+  <data name="ErrorMessage_VolumeOrParentRequired" xml:space="preserve">
+    <value>Volume or Parent Subdirectory must be selected.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="FsInfoCatExport" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\fsinfocatexport.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+</root>

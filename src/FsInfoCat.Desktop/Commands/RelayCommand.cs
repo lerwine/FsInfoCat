@@ -31,7 +31,7 @@ namespace FsInfoCat.Desktop.Commands
             : base(allowSimultaneousExecute, isDisabled)
         {
             if (execute == null)
-                throw new ArgumentNullException("execute");
+                throw new ArgumentNullException(nameof(execute));
             _execute = (object obj) => execute();
         }
 
@@ -44,7 +44,7 @@ namespace FsInfoCat.Desktop.Commands
         public RelayCommand(Action<object> execute, bool allowSimultaneousExecute, bool isDisabled = false)
             : base(allowSimultaneousExecute, isDisabled)
         {
-            _execute = execute ?? throw new ArgumentNullException("execute");
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
         }
 
         protected override void OnExecute(object parameter) { _execute(parameter); }
@@ -73,7 +73,7 @@ namespace FsInfoCat.Desktop.Commands
         public DelegateCommand(Action<THandlableEventArgs> execute, bool allowSimultaneousExecute, bool isDisabled = false)
             : base(allowSimultaneousExecute, isDisabled)
         {
-            _execute = execute ?? throw new ArgumentNullException("execute");
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
         }
 
         protected override void OnExecute(THandlableEventArgs parameter) { _execute(parameter); }

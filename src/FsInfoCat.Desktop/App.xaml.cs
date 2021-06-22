@@ -1,13 +1,7 @@
-using FsInfoCat.Model;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 using System;
-using System.Configuration;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Windows;
 
 namespace FsInfoCat.Desktop
@@ -17,53 +11,44 @@ namespace FsInfoCat.Desktop
     /// </summary>
     public partial class App : Application
     {
-        private readonly ILogger<App> _logger;
+        private ILogger<App> _logger;
 
-        public static string GetAppDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                Desktop.Properties.Settings.Default.ApplicationDataFolderName);
-
-        public static string GetLocalDbPath() => Path.Combine(GetAppDataPath(), Desktop.Properties.Settings.Default.LocalDbFile);
-
-        public static DirectoryInfo EnsureAppDataPath()
+        private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            DirectoryInfo result = new DirectoryInfo(GetAppDataPath());
-            if (!result.Exists)
-                result.Create();
-            return result;
+            await Services.Initialize(ConfigureServices, e.Args);
+            if (Dispatcher.CheckAccess())
+                ShowMainWindow();
+            else
+                Dispatcher.Invoke(ShowMainWindow);
         }
 
-        public App() { _logger = Services.GetLoggingService().CreateLogger<App>(); }
-
-        protected override void OnStartup(StartupEventArgs e)
+        private void ShowMainWindow()
         {
-            Assembly assembly = Assembly.GetEntryAssembly();
-            using (var scope = _logger.BeginScope("OnStartup"))
-            {
-                LocalDb.LocalDbContext.Initialize(Desktop.Properties.Settings.Default.LocalDbFile, assembly);
-                if (AppConfig.TryGetUpstreamDbConnectionStringBuilder(out DbConnectionStringBuilder connectionStringBuilder, out string providerName))
-                {
-                    if (connectionStringBuilder is SqlConnectionStringBuilder)
-                        UpstreamDb.UpstreamDbContext.Initialize(connectionStringBuilder.ConnectionString, assembly.GetName());
-                    else
-                    {
-                        _logger.LogWarning($"Unsported provider type \"{{{nameof(ConnectionStringSettings.ProviderName)}}}\" specified in {nameof(ConnectionStringSettings)} \"{{{nameof(ConnectionStringSettings.Name)}}}\".",
-                            providerName, nameof(UpstreamDb.UpstreamDbContext));
-                        UpstreamDb.UpstreamDbContext.Initialize(null, assembly.GetName());
-                    }
-                }
-                else
-                    UpstreamDb.UpstreamDbContext.Initialize(null, assembly.GetName());
-                base.OnStartup(e);
-            }
+            _logger = Services.ServiceProvider.GetRequiredService<ILogger<App>>();
+            MainWindow mainWindow = Services.ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
 
-        public static ViewModel.MainViewModel GetMainVM() => ((App)Current).FindResource("MainVM") as ViewModel.MainViewModel;
+        private void ConfigureServices(IServiceCollection services)
+        {
+            Local.LocalDbContext.ConfigureServices(
+                    services.AddSingleton<MainWindow>()
+                    .AddSingleton<ViewModel.MainVM>(),
+                GetType().Assembly, Desktop.Properties.Settings.Default.LocalDbfileName);
+        }
 
-        public static ViewModel.SettingsViewModel GetSettingsVM() => ((App)Current).FindResource("SettingsVM") as ViewModel.SettingsViewModel;
+        private async void Application_Exit(object sender, ExitEventArgs e)
+        {
+            using (Services.Host)
+                await Services.Host.StopAsync(TimeSpan.FromSeconds(5));
+        }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            _logger.LogError(e.Exception, "An unhandled has occurred: {Message}", string.IsNullOrWhiteSpace(e.Exception.Message) ? e.Exception.ToString() : e.Exception.Message);
+            if (_logger is null)
+                System.Diagnostics.Debug.WriteLine($"An unhandled has occurred: {e.Exception.Message}\n{e.Exception}");
+            else
+                _logger.LogError(e.Exception, "An unhandled has occurred: {Message}", string.IsNullOrWhiteSpace(e.Exception.Message) ? e.Exception.ToString() : e.Exception.Message);
         }
     }
 }

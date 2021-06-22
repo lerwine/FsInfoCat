@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="FsInfoCat.Model.IDbContext">
+    <Position X="8.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAEBAEAAAAACAAAAADAAAAEAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFile">
+    <Position X="3.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAAEAAAAAAAAAQAQAAAQAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HashCalculation" />
+      <Property Name="Parent" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFileComparison">
+    <Position X="7.75" Y="7" Width="1.5" />
+    <InheritanceLine Type="FsInfoCat.Model.ITimeStampedEntity" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="4.75" Y="6.046" />
+        <Point X="4.75" Y="6.483" />
+        <Point X="8.5" Y="6.483" />
+        <Point X="8.5" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFileComparison.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFileSystem">
+    <Position X="3" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAiEAAAAAEBAABAAAAAAAACAAAAgAAAAAAIAEAAIAA=</HashCode>
+      <FileName>Model\IFileSystem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IFsSymbolicName">
+    <Position X="6.75" Y="4" Width="1.75" />
+    <AssociationLine Name="FileSystem" Type="FsInfoCat.Model.IFileSystem" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="4" />
+        <Point X="7.75" Y="1.739" />
+        <Point X="5" Y="1.739" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAiAACAAAAAAAAAAAAQAAQCAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IFsSymbolicName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IHashCalculation">
+    <Position X="5.5" Y="7" Width="1.75" />
+    <InheritanceLine Type="FsInfoCat.Model.ITimeStampedEntity" FixedFromPoint="true">
+      <Path>
+        <Point X="4.375" Y="6.046" />
+        <Point X="4.375" Y="6.483" />
+        <Point X="6.375" Y="6.483" />
+        <Point X="6.375" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAEBAAAAAABAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IHashCalculation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IRedundancy">
+    <Position X="5.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\IRedundancy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.ISubDirectory">
+    <Position X="1" Y="7" Width="1.5" />
+    <InheritanceLine Type="FsInfoCat.Model.ITimeStampedEntity" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.312" Y="6.046" />
+        <Point X="3.312" Y="6.7" />
+        <Point X="2.062" Y="6.7" />
+        <Point X="2.062" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Volume" Type="FsInfoCat.Model.IVolume" FixedToPoint="true">
+      <Path>
+        <Point X="1.125" Y="7" />
+        <Point X="1.125" Y="6.401" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAQAQAAAAAAAAQAAIAAAAAAIA=</HashCode>
+      <FileName>Model\ISubDirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.ITimeStampedEntity">
+    <Position X="3" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ITimeStampedEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Model.IVolume">
+    <Position X="0.5" Y="3.5" Width="1.75" />
+    <AssociationLine Name="FileSystem" Type="FsInfoCat.Model.IFileSystem" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.312" Y="3.5" />
+        <Point X="1.312" Y="1.858" />
+        <Point X="3" Y="1.858" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAiEACAAAAAAAAAAAAAAAACAAAAgAEAAAgAQAAAIAA=</HashCode>
+      <FileName>Model\IVolume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FileSystem" />
+    </ShowAsAssociation>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

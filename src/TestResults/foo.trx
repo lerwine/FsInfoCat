@@ -1,0 +1,979 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="e04c8014-eb56-4837-8a1a-7f34bf726de6" name="lerwi@DESKTOP-G10FC12 2021-06-04 01:16:35" runUser="DESKTOP-G10FC12\lerwi" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2021-06-04T01:16:35.9707190-04:00" queuing="2021-06-04T01:16:35.9707190-04:00" start="2021-06-04T01:16:31.7871561-04:00" finish="2021-06-04T01:16:38.9528888-04:00" />
+  <TestSettings name="default" id="35e3ce1e-12a7-4b5a-8372-e90439e917e1">
+    <Deployment runDeploymentRoot="lerwi_DESKTOP-G10FC12_2021-06-04_01_16_35" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="7fc43f5a-5ecb-4537-86dd-65522f0b7e9d" testId="12844171-82c5-f543-aaa3-184573c92d06" testName="SymbolicName LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0054724" startTime="2021-06-04T01:16:38.4938900-04:00" endTime="2021-06-04T01:16:38.4995449-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7fc43f5a-5ecb-4537-86dd-65522f0b7e9d">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsTrue failed. </Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalSymbolicNameUnitTest.SymbolicNameLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSymbolicNameUnitTest.cs:line 235&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d579c79a-501a-4f4a-9201-cfedbd137a32" testId="90d7104a-8d65-3fbb-d17b-5d9f7e9aca19" testName="Volume Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0100063" startTime="2021-06-04T01:16:38.5014615-04:00" endTime="2021-06-04T01:16:38.5122980-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d579c79a-501a-4f4a-9201-cfedbd137a32">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeAddRemoveTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 43&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fca4782f-a5f2-4a61-b41c-8783f44048f9" testId="87ce3f0a-460d-e6f9-51e3-37f9a1ab0c56" testName="RedundantSet CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0031344" startTime="2021-06-04T01:16:38.2146422-04:00" endTime="2021-06-04T01:16:38.2180427-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fca4782f-a5f2-4a61-b41c-8783f44048f9">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundantSetUnitTest.RedundantSetCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundantSetUnitTest.cs:line 197&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="89f51580-5e3e-4e63-913e-1a4bfe8e1fc5" testId="ba15aa55-269c-6174-53a0-59ee4673c534" testName="DbFile Name Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0020544" startTime="2021-06-04T01:16:37.5176592-04:00" endTime="2021-06-04T01:16:37.5198866-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89f51580-5e3e-4e63-913e-1a4bfe8e1fc5">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalDbFileUnitTest.DbFileNameTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalDbFileUnitTest.cs:line 122&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="76259e3c-8718-4354-a0ee-2d6687b101f5" testId="481621e1-3ab3-7f54-12f0-19efcd69f8ae" testName="RedundantSet Reference Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0034701" startTime="2021-06-04T01:16:38.1996489-04:00" endTime="2021-06-04T01:16:38.2033630-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="76259e3c-8718-4354-a0ee-2d6687b101f5">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundantSetUnitTest.RedundantSetRemediationStatusTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundantSetUnitTest.cs:line 107&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5c5bf333-66c1-4e43-857c-4a6d206230a5" testId="c530cfd5-b0f3-ce0d-007b-f943b799bc79" testName="SymbolicName FileSystem Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0314717" startTime="2021-06-04T01:16:38.4459104-04:00" endTime="2021-06-04T01:16:38.4775360-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5c5bf333-66c1-4e43-857c-4a6d206230a5">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalSymbolicNameUnitTest.SymbolicNameFileSystemTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalSymbolicNameUnitTest.SymbolicNameFileSystemTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSymbolicNameUnitTest.cs:line 180&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="9f45ea44-7ea8-4504-970b-e627c25fd956" testId="9b5f2eab-ebc2-affd-43a7-b3965103573d" testName="ContentInfo LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0033015" startTime="2021-06-04T01:16:36.0130593-04:00" endTime="2021-06-04T01:16:36.0165436-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9f45ea44-7ea8-4504-970b-e627c25fd956">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalContentInfoUnitTest.ContentInfoLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalContentInfoUnitTest.cs:line 173&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="10e42813-415f-4c62-87f8-c823931f5495" testId="6d5b986d-4dd6-82d9-7fea-28107ee1007d" testName="Subdirectory Name Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0105965" startTime="2021-06-04T01:16:38.3355872-04:00" endTime="2021-06-04T01:16:38.3463453-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="10e42813-415f-4c62-87f8-c823931f5495">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryNameTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryNameTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSubdirectoryUnitTest.cs:line 85&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="516e4a52-0745-4924-875e-e135e73f2ca4" testId="9943ed49-574e-5045-140f-6243ea67f171" testName="IsPrimeNumberTestMethod" computerName="DESKTOP-G10FC12" duration="00:00:00.0107389" startTime="2021-06-04T01:16:35.0147442-04:00" endTime="2021-06-04T01:16:35.8341955-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="516e4a52-0745-4924-875e-e135e73f2ca4" />
+    <UnitTestResult executionId="d86f116c-5de0-4dc5-b90c-6696ace1bac5" testId="f22ad969-5630-c24a-a62c-21af41f3eca9" testName="RedundantSet ContentInfo Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0026812" startTime="2021-06-04T01:16:38.1940697-04:00" endTime="2021-06-04T01:16:38.1969535-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d86f116c-5de0-4dc5-b90c-6696ace1bac5">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundantSetUnitTest.RedundantSetContentInfoTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundantSetUnitTest.cs:line 62&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="716e1944-1bb8-440a-b7ff-9093788f3820" testId="c1356327-3db5-15de-5e4b-24b41d460aed" testName="DbFile Options Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0027285" startTime="2021-06-04T01:16:37.5353945-04:00" endTime="2021-06-04T01:16:37.5383428-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="716e1944-1bb8-440a-b7ff-9093788f3820">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalDbFileUnitTest.DbFileOptionsTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalDbFileUnitTest.cs:line 216&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="76765e58-ee1b-4699-9242-9c2afce9e4fc" testId="177d3262-e9e5-4b8c-b7a0-5381458eb774" testName="Subdirectory Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0988229" startTime="2021-06-04T01:16:38.2342894-04:00" endTime="2021-06-04T01:16:38.3339302-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="76765e58-ee1b-4699-9242-9c2afce9e4fc">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryAddRemoveTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSubdirectoryUnitTest.cs:line 44&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ebff3ec2-1d66-4695-ad29-67d2c1f97b73" testId="34d6aa1b-332d-a203-faf5-c51d6b124f57" testName="FileSystem DefaultDriveType Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0250438" startTime="2021-06-04T01:16:38.0461143-04:00" endTime="2021-06-04T01:16:38.0713241-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ebff3ec2-1d66-4695-ad29-67d2c1f97b73">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemDefaultDriveTypeTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemDefaultDriveTypeTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileSystemUnitTest.cs:line 86&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ead313ec-8728-4c93-b0c0-a640c8004821" testId="88af3eef-c1fd-4e05-e5be-5854de473bdc" testName="FileComparison CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0031177" startTime="2021-06-04T01:16:37.6190217-04:00" endTime="2021-06-04T01:16:37.6224057-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ead313ec-8728-4c93-b0c0-a640c8004821">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalFileComparisonUnitTest.FileComparisonCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileComparisonUnitTest.cs:line 150&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="91ccc52e-20f2-4b70-9e0d-22854e1588c5" testId="85d1355c-386d-f418-71a6-5f68ba95e036" testName="DbFile LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0041635" startTime="2021-06-04T01:16:37.5468734-04:00" endTime="2021-06-04T01:16:37.5512740-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="91ccc52e-20f2-4b70-9e0d-22854e1588c5">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalDbFileUnitTest.DbFileLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalDbFileUnitTest.cs:line 300&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="9dd3b727-451c-450f-86cc-ce2edcb9428d" testId="24c296b6-5e5f-001c-a77f-830d17450704" testName="LocalDbContextTestMethod" computerName="DESKTOP-G10FC12" duration="00:00:00.0019790" startTime="2021-06-04T01:16:37.5540517-04:00" endTime="2021-06-04T01:16:37.5567833-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9dd3b727-451c-450f-86cc-ce2edcb9428d" />
+    <UnitTestResult executionId="f5a82a61-944d-448d-b172-b4fee2898102" testId="aa8b3704-c3d7-15dd-6f3f-5dea925d370a" testName="ContentInfo Length Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0026959" startTime="2021-06-04T01:16:36.0036256-04:00" endTime="2021-06-04T01:16:36.0065475-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f5a82a61-944d-448d-b172-b4fee2898102">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalContentInfoUnitTest.ContentInfoLengthTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalContentInfoUnitTest.cs:line 89&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3a412dc1-53ae-43c6-aa75-920ad3d39b76" testId="0904ba07-92cc-2ce2-818b-3031c7d5e0d2" testName="ContentInfo Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0898725" startTime="2021-06-04T01:16:35.8974111-04:00" endTime="2021-06-04T01:16:35.9896969-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3a412dc1-53ae-43c6-aa75-920ad3d39b76">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalContentInfoUnitTest.ContentInfoAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalContentInfoUnitTest.cs:line 27&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="2fabc7f8-ffde-4480-9cc9-4871cfbdb427" testId="2c0f46ee-4973-bb84-d1d6-ea0b43ccba3b" testName="ExtendedProperties LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0046053" startTime="2021-06-04T01:16:37.5907853-04:00" endTime="2021-06-04T01:16:37.5956809-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2fabc7f8-ffde-4480-9cc9-4871cfbdb427">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest.ExtendedPropertiesLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalExtendedPropertiesUnitTest.cs:line 197&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="99b562b0-9fc0-46ce-a6ce-da9ee02040d6" testId="13809e01-7eb0-93f5-dbac-048802ff98c6" testName="ExtendedProperties Width Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0033326" startTime="2021-06-04T01:16:37.5776142-04:00" endTime="2021-06-04T01:16:37.5811971-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="99b562b0-9fc0-46ce-a6ce-da9ee02040d6">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest.ExtendedPropertiesWidthTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalExtendedPropertiesUnitTest.cs:line 113&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e16e7b4b-b290-4b21-ac3a-58e9809efe3d" testId="3c9f779d-18c3-d833-b595-d1702e5b3bdd" testName="ExtendedProperties CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0036338" startTime="2021-06-04T01:16:37.5839595-04:00" endTime="2021-06-04T01:16:37.5878785-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e16e7b4b-b290-4b21-ac3a-58e9809efe3d">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest.ExtendedPropertiesCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalExtendedPropertiesUnitTest.cs:line 158&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="2d2b74b1-40cd-48de-8215-32af6310e488" testId="faeec441-f2b2-8da7-b2d3-76a05066c511" testName="Volume CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0086375" startTime="2021-06-04T01:16:38.6881106-04:00" endTime="2021-06-04T01:16:38.6969822-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2d2b74b1-40cd-48de-8215-32af6310e488">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeCreatedOnTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 702&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b513ebd3-79a9-408a-aa10-e0e25f3f1a62" testId="148ad142-7786-3d1a-02f9-07f174a9fe10" testName="FileSystem LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0156597" startTime="2021-06-04T01:16:38.1398688-04:00" endTime="2021-06-04T01:16:38.1557143-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b513ebd3-79a9-408a-aa10-e0e25f3f1a62">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemLastSynchronizedOnTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileSystemUnitTest.cs:line 317&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4b37b632-547f-4127-b6f9-337a010a7b96" testId="adab39a0-efb3-7a18-03ac-ede385d08ad2" testName="DbFile Content Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0021126" startTime="2021-06-04T01:16:37.5135172-04:00" endTime="2021-06-04T01:16:37.5158177-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4b37b632-547f-4127-b6f9-337a010a7b96">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalDbFileUnitTest.DbFileContentInfoTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalDbFileUnitTest.cs:line 76&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="05f4a46d-52d8-4b64-9f09-7593fc961428" testId="d6059e11-de77-22f1-4bbb-168d1d695c6e" testName="Redundancy RedundantSet Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0021950" startTime="2021-06-04T01:16:38.1656202-04:00" endTime="2021-06-04T01:16:38.1679660-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="05f4a46d-52d8-4b64-9f09-7593fc961428">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundancyUnitTest.RedundancyRedundantSetTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundancyUnitTest.cs:line 106&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="87b9fbe0-4207-40f4-bf30-6575531ed3e0" testId="fb6c192e-e238-ca04-e023-92332be1cfa0" testName="DbFile Parent Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0021361" startTime="2021-06-04T01:16:37.5284629-04:00" endTime="2021-06-04T01:16:37.5307909-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="87b9fbe0-4207-40f4-bf30-6575531ed3e0">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalDbFileUnitTest.DbFileParentTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalDbFileUnitTest.cs:line 170&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fda1360d-3ff1-46ab-bb7e-96f4b804cd4a" testId="992e95f6-a86b-acc8-42b6-1be68db9a608" testName="Volume LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0134776" startTime="2021-06-04T01:16:38.6987894-04:00" endTime="2021-06-04T01:16:38.7124669-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fda1360d-3ff1-46ab-bb7e-96f4b804cd4a">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeLastSynchronizedOnTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 748&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0e02bb25-dc00-4712-aa89-b5e618a8c6c3" testId="909ac7a7-079f-8f87-5a0b-a1c3704c6e6e" testName="Volume Identifier Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0105054" startTime="2021-06-04T01:16:38.5141222-04:00" endTime="2021-06-04T01:16:38.5248041-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0e02bb25-dc00-4712-aa89-b5e618a8c6c3">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeIdentifierTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeIdentifierTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 79&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="77fd0c70-316a-4b99-ae78-963a9431bbe9" testId="8cd151e0-cb83-24e6-0886-cfcdbd5d2b9d" testName="FileComparison SourceFile Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0033365" startTime="2021-06-04T01:16:37.6057123-04:00" endTime="2021-06-04T01:16:37.6093159-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="77fd0c70-316a-4b99-ae78-963a9431bbe9">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalFileComparisonUnitTest.FileComparisonSourceFileTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileComparisonUnitTest.cs:line 60&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5a7b9976-ed4d-4f2f-8537-d53bb026814c" testId="f73892c0-cd86-c9f6-7995-29b5a8dc5584" testName="Volume Status Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0270672" startTime="2021-06-04T01:16:38.6251823-04:00" endTime="2021-06-04T01:16:38.6524594-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a7b9976-ed4d-4f2f-8537-d53bb026814c">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeStatusTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeStatusTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 609&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="38246bf4-70c9-43ed-b8a2-fbe74b0af72a" testId="fcabc0c4-d112-299c-d32e-b25ae10f0aa0" testName="FileComparison LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0044470" startTime="2021-06-04T01:16:37.6251716-04:00" endTime="2021-06-04T01:16:37.6298650-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="38246bf4-70c9-43ed-b8a2-fbe74b0af72a">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalFileComparisonUnitTest.FileComparisonLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileComparisonUnitTest.cs:line 189&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e3e0b84b-b37a-4093-9638-a7a7ff889242" testId="294b110c-cef2-2179-edc7-78de45b730a3" testName="Subdirectory Options Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0069773" startTime="2021-06-04T01:16:38.3481649-04:00" endTime="2021-06-04T01:16:38.3553042-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e3e0b84b-b37a-4093-9638-a7a7ff889242">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryOptionsTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryOptionsTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSubdirectoryUnitTest.cs:line 246&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3d7e1d08-2a86-445e-8007-4e98b48741bb" testId="e8f4c58f-e4b9-e582-1cfa-6c2ce2d21ebd" testName="ExtendedProperties Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0033917" startTime="2021-06-04T01:16:37.5602192-04:00" endTime="2021-06-04T01:16:37.5644117-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3d7e1d08-2a86-445e-8007-4e98b48741bb">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest.ExtendedPropertiesAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalExtendedPropertiesUnitTest.cs:line 27&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e3419a7a-191a-48f2-8ad2-cafbb7cbc4ca" testId="0d5e447f-9f5d-2bbb-538c-1a153d476b19" testName="Redundancy File Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0020884" startTime="2021-06-04T01:16:38.1741708-04:00" endTime="2021-06-04T01:16:38.1764187-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e3419a7a-191a-48f2-8ad2-cafbb7cbc4ca">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundancyUnitTest.RedundancyFileTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundancyUnitTest.cs:line 151&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3597de73-5746-4bec-b59a-ea528f3b77e8" testId="9c0d7851-4601-d1c7-ed35-ee3db2c88cdb" testName="FileSystem MaxNameLength Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0261004" startTime="2021-06-04T01:16:38.1029825-04:00" endTime="2021-06-04T01:16:38.1292487-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3597de73-5746-4bec-b59a-ea528f3b77e8">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemMaxNameLengthTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemMaxNameLengthTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileSystemUnitTest.cs:line 234&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="cbfcde1c-00e8-406c-b738-aee1cad0ef28" testId="8382bb5b-d4f3-b5d2-cf64-a274e18374d3" testName="FileComparison TargetFile Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0032804" startTime="2021-06-04T01:16:37.6120324-04:00" endTime="2021-06-04T01:16:37.6155515-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cbfcde1c-00e8-406c-b738-aee1cad0ef28">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalFileComparisonUnitTest.FileComparisonTargetFileTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileComparisonUnitTest.cs:line 105&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="515d23f9-5164-4dae-b3a2-dbc1e2f7142b" testId="0275fc7d-ff43-546f-45c9-ccecbaa29f9e" testName="Volume DisplayName Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0174105" startTime="2021-06-04T01:16:38.5579918-04:00" endTime="2021-06-04T01:16:38.5756050-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="515d23f9-5164-4dae-b3a2-dbc1e2f7142b">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeDisplayNameTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeDisplayNameTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 372&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ca5ed6ba-0aa7-4f0a-81ea-cb22c2d928da" testId="f0c263a1-26c0-2ae1-26c0-39a3e3c1486e" testName="DbFile Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:01.4921779" startTime="2021-06-04T01:16:36.0186869-04:00" endTime="2021-06-04T01:16:37.5114966-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ca5ed6ba-0aa7-4f0a-81ea-cb22c2d928da">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsTrue failed. </Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalDbFileUnitTest.DbFileAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalDbFileUnitTest.cs:line 47&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c55fbf62-a4cf-4b5d-82f6-c4087abb54f2" testId="b4f10f24-38f8-8477-68f3-1316a62badc6" testName="SymbolicName Name Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0050946" startTime="2021-06-04T01:16:38.4388542-04:00" endTime="2021-06-04T01:16:38.4441046-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c55fbf62-a4cf-4b5d-82f6-c4087abb54f2">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.AreEqual failed. Expected:&lt;1&gt;. Actual:&lt;2&gt;. </Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalSymbolicNameUnitTest.SymbolicNameNameTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSymbolicNameUnitTest.cs:line 82&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="856aeee8-60f9-405b-95cd-bf91cbfa3818" testId="541c6c3c-d7a1-392f-5dad-ca955812ba14" testName="FileSystem CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0065569" startTime="2021-06-04T01:16:38.1310541-04:00" endTime="2021-06-04T01:16:38.1377726-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="856aeee8-60f9-405b-95cd-bf91cbfa3818">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemCreatedOnTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileSystemUnitTest.cs:line 275&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="aef2df20-0d7b-4465-9a4a-e3bcea009cad" testId="ccb2a00d-994a-3df0-cf32-50097864001e" testName="RedundantSet Reference Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0033154" startTime="2021-06-04T01:16:38.2081443-04:00" endTime="2021-06-04T01:16:38.2117212-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aef2df20-0d7b-4465-9a4a-e3bcea009cad">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundantSetUnitTest.RedundantSetReferenceTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundantSetUnitTest.cs:line 152&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="056d2e41-f443-4f5a-9432-f47a98c4ade3" testId="ab7f19e3-5ee7-30f6-18cc-379f93bd66bc" testName="Redundancy Reference Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0019898" startTime="2021-06-04T01:16:38.1616860-04:00" endTime="2021-06-04T01:16:38.1638183-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="056d2e41-f443-4f5a-9432-f47a98c4ade3">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundancyUnitTest.RedundancyReferenceTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundancyUnitTest.cs:line 61&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="255cf018-871e-4600-8e0d-d68963b8f8b2" testId="09559f37-b061-614a-4183-b2f02e5f7255" testName="Volume FileSystem Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0187335" startTime="2021-06-04T01:16:38.6042290-04:00" endTime="2021-06-04T01:16:38.6231529-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="255cf018-871e-4600-8e0d-d68963b8f8b2">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeFileSystemTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeFileSystemTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 533&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8ac95862-9144-4f79-8efb-21a0f808a311" testId="e7978543-6900-c36d-e984-af2e2f7fb91c" testName="Volume VolumeName Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0247266" startTime="2021-06-04T01:16:38.5264618-04:00" endTime="2021-06-04T01:16:38.5513391-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8ac95862-9144-4f79-8efb-21a0f808a311">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeVolumeNameTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeVolumeNameTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 255&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fb610cf6-b16d-4f06-b144-8345cdef6cb5" testId="b6a5b40e-09b9-8783-2e2d-0b1260af3db3" testName="ExtendedProperties Height Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0019699" startTime="2021-06-04T01:16:37.5729624-04:00" endTime="2021-06-04T01:16:37.5751872-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fb610cf6-b16d-4f06-b144-8345cdef6cb5">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest.ExtendedPropertiesHeightTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalExtendedPropertiesUnitTest.cs:line 85&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="1c56a3eb-bde3-4a9b-825b-b293afaf4e1b" testId="7f2f8835-6f6e-d736-6c07-e55a2f170edf" testName="Redundancy LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0035789" startTime="2021-06-04T01:16:38.1827258-04:00" endTime="2021-06-04T01:16:38.1865609-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1c56a3eb-bde3-4a9b-825b-b293afaf4e1b">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundancyUnitTest.RedundancyLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundancyUnitTest.cs:line 235&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="09a466f4-8763-4c8e-9d30-951b61e2fdbc" testId="5e8ba8bd-9067-851e-6419-1987bb304dbb" testName="FileSystem Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.4051069" startTime="2021-06-04T01:16:37.6383790-04:00" endTime="2021-06-04T01:16:38.0441110-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="09a466f4-8763-4c8e-9d30-951b61e2fdbc">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemAddRemoveTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileSystemUnitTest.cs:line 40&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4df6103c-b2f3-4112-b499-d7ab820efd1a" testId="f62dd268-7b15-e710-c772-5fc644c30c80" testName="FindPrimeNumberTestMethod" computerName="DESKTOP-G10FC12" duration="00:00:00.0018771" startTime="2021-06-04T01:16:35.8906199-04:00" endTime="2021-06-04T01:16:35.8928629-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4df6103c-b2f3-4112-b499-d7ab820efd1a" />
+    <UnitTestResult executionId="b9e3736f-bf34-41a5-839c-1bee5d584a05" testId="212e7832-a349-37a9-af19-775d9897fa23" testName="Redundancy Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0017010" startTime="2021-06-04T01:16:38.1575559-04:00" endTime="2021-06-04T01:16:38.1597988-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b9e3736f-bf34-41a5-839c-1bee5d584a05">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundancyUnitTest.RedundancyAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundancyUnitTest.cs:line 27&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="31b81547-0f39-448d-8568-9e6bffd75faa" testId="fef561ff-e965-a384-8b6e-ee23c08340b3" testName="Subdirectory CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0099802" startTime="2021-06-04T01:16:38.3573384-04:00" endTime="2021-06-04T01:16:38.3675500-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="31b81547-0f39-448d-8568-9e6bffd75faa">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryCreatedOnTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSubdirectoryUnitTest.cs:line 289&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4426f5eb-408e-4aeb-8953-bb9e026f2c0d" testId="c569f5d3-79e7-2d11-30eb-4a4fef9960db" testName="Subdirectory LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0086241" startTime="2021-06-04T01:16:38.3694909-04:00" endTime="2021-06-04T01:16:38.3783048-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4426f5eb-408e-4aeb-8953-bb9e026f2c0d">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryLastSynchronizedOnTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalSubdirectoryUnitTest.SubdirectoryLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSubdirectoryUnitTest.cs:line 340&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="56c9cb7d-bf97-4697-b3a3-9e65148d57b6" testId="f226e646-80a1-c753-67c0-23cb462f8442" testName="Redundancy CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0019610" startTime="2021-06-04T01:16:38.1782938-04:00" endTime="2021-06-04T01:16:38.1804102-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="56c9cb7d-bf97-4697-b3a3-9e65148d57b6">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundancyUnitTest.RedundancyCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundancyUnitTest.cs:line 196&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a2a63b9b-0eb0-4705-b48b-d815cec840f9" testId="91940b62-c391-d3d3-15c4-e8724eec28f1" testName="DbFile CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0028913" startTime="2021-06-04T01:16:37.5409016-04:00" endTime="2021-06-04T01:16:37.5440585-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a2a63b9b-0eb0-4705-b48b-d815cec840f9">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalDbFileUnitTest.DbFileCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalDbFileUnitTest.cs:line 261&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3e33da3d-dcae-4df2-b067-9fa3c0b818b6" testId="64ce8fad-f5b6-a017-47e2-117089bb6449" testName="RedundantSet LastSynchronizedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0044313" startTime="2021-06-04T01:16:38.2209075-04:00" endTime="2021-06-04T01:16:38.2256092-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3e33da3d-dcae-4df2-b067-9fa3c0b818b6">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundantSetUnitTest.RedundantSetLastSynchronizedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundantSetUnitTest.cs:line 236&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="290167fe-aadc-4993-95b4-24d6e6483a0c" testId="7247a10b-1f5b-c701-b5e1-07464316dfaa" testName="Volume MaxNameLength Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0268114" startTime="2021-06-04T01:16:38.6546438-04:00" endTime="2021-06-04T01:16:38.6816354-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="290167fe-aadc-4993-95b4-24d6e6483a0c">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeMaxNameLengthTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeMaxNameLengthTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 658&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7bf7ff91-8d5b-4ca3-ab58-6cd69e47dfd1" testId="1e2c7581-2104-7900-16c6-3ba7f299a8a6" testName="ContentInfo CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0023883" startTime="2021-06-04T01:16:36.0084839-04:00" endTime="2021-06-04T01:16:36.0110500-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7bf7ff91-8d5b-4ca3-ab58-6cd69e47dfd1">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalContentInfoUnitTest.ContentInfoCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalContentInfoUnitTest.cs:line 134&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="af51b509-5781-4593-ad8f-eeb4bb25f1f5" testId="3d9adced-2ff9-d2e8-8cf1-48410ad2d029" testName="FileComparison Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0029690" startTime="2021-06-04T01:16:37.5989530-04:00" endTime="2021-06-04T01:16:37.6028867-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af51b509-5781-4593-ad8f-eeb4bb25f1f5">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalFileComparisonUnitTest.FileComparisonAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileComparisonUnitTest.cs:line 27&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a40905fe-b494-4c84-907a-2765ace52330" testId="d09246cc-9279-2fe5-b97f-bc67925c6806" testName="ContentInfo Hash Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0018590" startTime="2021-06-04T01:16:35.9983028-04:00" endTime="2021-06-04T01:16:36.0015531-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a40905fe-b494-4c84-907a-2765ace52330">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalContentInfoUnitTest.ContentInfoHashTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalContentInfoUnitTest.cs:line 61&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="9c77ec8a-7773-42a6-8482-2935a04eff7e" testId="3dc7bef9-ee1b-730a-6e4b-4eae7d588858" testName="FileSystem DisplayName Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0277953" startTime="2021-06-04T01:16:38.0732765-04:00" endTime="2021-06-04T01:16:38.1012823-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9c77ec8a-7773-42a6-8482-2935a04eff7e">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemDisplayNameTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalFileSystemUnitTest.FileSystemDisplayNameTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalFileSystemUnitTest.cs:line 134&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d63cbe27-f00a-4374-801a-1d09d693ef93" testId="f8579783-3199-a9a6-ca89-afcb681687f3" testName="Volume Type Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0243720" startTime="2021-06-04T01:16:38.5774612-04:00" endTime="2021-06-04T01:16:38.6020378-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d63cbe27-f00a-4374-801a-1d09d693ef93">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeTypeTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalVolumeUnitTest.VolumeTypeTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalVolumeUnitTest.cs:line 486&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="78eacc20-ac4d-4be3-b246-90c6aff81a14" testId="111cc6f0-d04e-50ca-f97e-329bf3e4bc6d" testName="SymbolicName CreatedOn Validation Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0086357" startTime="2021-06-04T01:16:38.4793538-04:00" endTime="2021-06-04T01:16:38.4881682-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="78eacc20-ac4d-4be3-b246-90c6aff81a14">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method FsInfoCat.UnitTests.LocalSymbolicNameUnitTest.SymbolicNameCreatedOnTestMethod threw exception: &#xD;
+System.ComponentModel.DataAnnotations.ValidationException: Name is required.</Message>
+          <StackTrace>    at System.ComponentModel.DataAnnotations.Validator.ValidationError.ThrowValidationException()&#xD;
+   at System.ComponentModel.DataAnnotations.Validator.ValidateObject(Object instance, ValidationContext validationContext, Boolean validateAllProperties)&#xD;
+   at FsInfoCat.Local.LocalDbContext.SaveChanges() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.Local\LocalDbContext.cs:line 99&#xD;
+   at FsInfoCat.UnitTests.LocalSymbolicNameUnitTest.SymbolicNameCreatedOnTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSymbolicNameUnitTest.cs:line 194&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="334ff35d-1c67-4310-924b-52aff4591e95" testId="876cd6b5-e6af-9ff4-ab8f-787c81bd10f3" testName="SymbolicName Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0564077" startTime="2021-06-04T01:16:38.3801872-04:00" endTime="2021-06-04T01:16:38.4371154-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="334ff35d-1c67-4310-924b-52aff4591e95">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsTrue failed. </Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalSymbolicNameUnitTest.SymbolicNameAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalSymbolicNameUnitTest.cs:line 37&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d44475ec-f3a4-4e8a-b469-90e4f8bfcad2" testId="986e9645-39a8-9183-1342-6e970c93d870" testName="RedundantSet Add/Remove Tests" computerName="DESKTOP-G10FC12" duration="00:00:00.0021082" startTime="2021-06-04T01:16:38.1888066-04:00" endTime="2021-06-04T01:16:38.1916149-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d44475ec-f3a4-4e8a-b469-90e4f8bfcad2">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Inconclusive failed. Test not implemented</Message>
+          <StackTrace>   at FsInfoCat.UnitTests.LocalRedundantSetUnitTest.RedundantSetAddRemoveTestMethod() in C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\LocalRedundantSetUnitTest.cs:line 27&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ContentInfo CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="1e2c7581-2104-7900-16c6-3ba7f299a8a6">
+      <Execution id="7bf7ff91-8d5b-4ca3-ab58-6cd69e47dfd1" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalContentInfoUnitTest" name="ContentInfoCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="90d7104a-8d65-3fbb-d17b-5d9f7e9aca19">
+      <Execution id="d579c79a-501a-4f4a-9201-cfedbd137a32" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="ContentInfo Length Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="aa8b3704-c3d7-15dd-6f3f-5dea925d370a">
+      <Execution id="f5a82a61-944d-448d-b172-b4fee2898102" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalContentInfoUnitTest" name="ContentInfoLengthTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="faeec441-f2b2-8da7-b2d3-76a05066c511">
+      <Execution id="2d2b74b1-40cd-48de-8215-32af6310e488" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="ExtendedProperties LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="2c0f46ee-4973-bb84-d1d6-ea0b43ccba3b">
+      <Execution id="2fabc7f8-ffde-4480-9cc9-4871cfbdb427" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest" name="ExtendedPropertiesLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileComparison LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="fcabc0c4-d112-299c-d32e-b25ae10f0aa0">
+      <Execution id="38246bf4-70c9-43ed-b8a2-fbe74b0af72a" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileComparisonUnitTest" name="FileComparisonLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="Subdirectory Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="177d3262-e9e5-4b8c-b7a0-5381458eb774">
+      <Execution id="76765e58-ee1b-4699-9242-9c2afce9e4fc" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSubdirectoryUnitTest" name="SubdirectoryAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileSystem DisplayName Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="3dc7bef9-ee1b-730a-6e4b-4eae7d588858">
+      <Execution id="9c77ec8a-7773-42a6-8482-2935a04eff7e" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileSystemUnitTest" name="FileSystemDisplayNameTestMethod" />
+    </UnitTest>
+    <UnitTest name="RedundantSet ContentInfo Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="f22ad969-5630-c24a-a62c-21af41f3eca9">
+      <Execution id="d86f116c-5de0-4dc5-b90c-6696ace1bac5" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundantSetUnitTest" name="RedundantSetContentInfoTestMethod" />
+    </UnitTest>
+    <UnitTest name="Subdirectory Options Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="294b110c-cef2-2179-edc7-78de45b730a3">
+      <Execution id="e3e0b84b-b37a-4093-9638-a7a7ff889242" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSubdirectoryUnitTest" name="SubdirectoryOptionsTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileSystem MaxNameLength Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="9c0d7851-4601-d1c7-ed35-ee3db2c88cdb">
+      <Execution id="3597de73-5746-4bec-b59a-ea528f3b77e8" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileSystemUnitTest" name="FileSystemMaxNameLengthTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileComparison SourceFile Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="8cd151e0-cb83-24e6-0886-cfcdbd5d2b9d">
+      <Execution id="77fd0c70-316a-4b99-ae78-963a9431bbe9" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileComparisonUnitTest" name="FileComparisonSourceFileTestMethod" />
+    </UnitTest>
+    <UnitTest name="RedundantSet Reference Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="481621e1-3ab3-7f54-12f0-19efcd69f8ae">
+      <Execution id="76259e3c-8718-4354-a0ee-2d6687b101f5" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundantSetUnitTest" name="RedundantSetRemediationStatusTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="992e95f6-a86b-acc8-42b6-1be68db9a608">
+      <Execution id="fda1360d-3ff1-46ab-bb7e-96f4b804cd4a" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume Identifier Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="909ac7a7-079f-8f87-5a0b-a1c3704c6e6e">
+      <Execution id="0e02bb25-dc00-4712-aa89-b5e618a8c6c3" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeIdentifierTestMethod" />
+    </UnitTest>
+    <UnitTest name="DbFile Name Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="ba15aa55-269c-6174-53a0-59ee4673c534">
+      <Execution id="89f51580-5e3e-4e63-913e-1a4bfe8e1fc5" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalDbFileUnitTest" name="DbFileNameTestMethod" />
+    </UnitTest>
+    <UnitTest name="ContentInfo Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="0904ba07-92cc-2ce2-818b-3031c7d5e0d2">
+      <Execution id="3a412dc1-53ae-43c6-aa75-920ad3d39b76" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalContentInfoUnitTest" name="ContentInfoAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="Redundancy LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="7f2f8835-6f6e-d736-6c07-e55a2f170edf">
+      <Execution id="1c56a3eb-bde3-4a9b-825b-b293afaf4e1b" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundancyUnitTest" name="RedundancyLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="DbFile Options Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="c1356327-3db5-15de-5e4b-24b41d460aed">
+      <Execution id="716e1944-1bb8-440a-b7ff-9093788f3820" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalDbFileUnitTest" name="DbFileOptionsTestMethod" />
+    </UnitTest>
+    <UnitTest name="DbFile Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="f0c263a1-26c0-2ae1-26c0-39a3e3c1486e">
+      <Execution id="ca5ed6ba-0aa7-4f0a-81ea-cb22c2d928da" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalDbFileUnitTest" name="DbFileAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="DbFile LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="85d1355c-386d-f418-71a6-5f68ba95e036">
+      <Execution id="91ccc52e-20f2-4b70-9e0d-22854e1588c5" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalDbFileUnitTest" name="DbFileLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileSystem CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="541c6c3c-d7a1-392f-5dad-ca955812ba14">
+      <Execution id="856aeee8-60f9-405b-95cd-bf91cbfa3818" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileSystemUnitTest" name="FileSystemCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="ExtendedProperties Height Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="b6a5b40e-09b9-8783-2e2d-0b1260af3db3">
+      <Execution id="fb610cf6-b16d-4f06-b144-8345cdef6cb5" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest" name="ExtendedPropertiesHeightTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileComparison Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="3d9adced-2ff9-d2e8-8cf1-48410ad2d029">
+      <Execution id="af51b509-5781-4593-ad8f-eeb4bb25f1f5" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileComparisonUnitTest" name="FileComparisonAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="SymbolicName CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="111cc6f0-d04e-50ca-f97e-329bf3e4bc6d">
+      <Execution id="78eacc20-ac4d-4be3-b246-90c6aff81a14" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSymbolicNameUnitTest" name="SymbolicNameCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="SymbolicName FileSystem Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="c530cfd5-b0f3-ce0d-007b-f943b799bc79">
+      <Execution id="5c5bf333-66c1-4e43-857c-4a6d206230a5" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSymbolicNameUnitTest" name="SymbolicNameFileSystemTestMethod" />
+    </UnitTest>
+    <UnitTest name="RedundantSet LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="64ce8fad-f5b6-a017-47e2-117089bb6449">
+      <Execution id="3e33da3d-dcae-4df2-b067-9fa3c0b818b6" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundantSetUnitTest" name="RedundantSetLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="ExtendedProperties Width Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="13809e01-7eb0-93f5-dbac-048802ff98c6">
+      <Execution id="99b562b0-9fc0-46ce-a6ce-da9ee02040d6" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest" name="ExtendedPropertiesWidthTestMethod" />
+    </UnitTest>
+    <UnitTest name="Subdirectory LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="c569f5d3-79e7-2d11-30eb-4a4fef9960db">
+      <Execution id="4426f5eb-408e-4aeb-8953-bb9e026f2c0d" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSubdirectoryUnitTest" name="SubdirectoryLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileComparison TargetFile Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="8382bb5b-d4f3-b5d2-cf64-a274e18374d3">
+      <Execution id="cbfcde1c-00e8-406c-b738-aee1cad0ef28" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileComparisonUnitTest" name="FileComparisonTargetFileTestMethod" />
+    </UnitTest>
+    <UnitTest name="Redundancy CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="f226e646-80a1-c753-67c0-23cb462f8442">
+      <Execution id="56c9cb7d-bf97-4697-b3a3-9e65148d57b6" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundancyUnitTest" name="RedundancyCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="SymbolicName Name Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="b4f10f24-38f8-8477-68f3-1316a62badc6">
+      <Execution id="c55fbf62-a4cf-4b5d-82f6-c4087abb54f2" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSymbolicNameUnitTest" name="SymbolicNameNameTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume VolumeName Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="e7978543-6900-c36d-e984-af2e2f7fb91c">
+      <Execution id="8ac95862-9144-4f79-8efb-21a0f808a311" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeVolumeNameTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume Type Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="f8579783-3199-a9a6-ca89-afcb681687f3">
+      <Execution id="d63cbe27-f00a-4374-801a-1d09d693ef93" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeTypeTestMethod" />
+    </UnitTest>
+    <UnitTest name="ExtendedProperties Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="e8f4c58f-e4b9-e582-1cfa-6c2ce2d21ebd">
+      <Execution id="3d7e1d08-2a86-445e-8007-4e98b48741bb" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest" name="ExtendedPropertiesAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileSystem DefaultDriveType Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="34d6aa1b-332d-a203-faf5-c51d6b124f57">
+      <Execution id="ebff3ec2-1d66-4695-ad29-67d2c1f97b73" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileSystemUnitTest" name="FileSystemDefaultDriveTypeTestMethod" />
+    </UnitTest>
+    <UnitTest name="Redundancy File Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="0d5e447f-9f5d-2bbb-538c-1a153d476b19">
+      <Execution id="e3419a7a-191a-48f2-8ad2-cafbb7cbc4ca" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundancyUnitTest" name="RedundancyFileTestMethod" />
+    </UnitTest>
+    <UnitTest name="ContentInfo Hash Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="d09246cc-9279-2fe5-b97f-bc67925c6806">
+      <Execution id="a40905fe-b494-4c84-907a-2765ace52330" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalContentInfoUnitTest" name="ContentInfoHashTestMethod" />
+    </UnitTest>
+    <UnitTest name="FindPrimeNumberTestMethod" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="f62dd268-7b15-e710-c772-5fc644c30c80">
+      <Execution id="4df6103c-b2f3-4112-b499-d7ab820efd1a" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.CollectionExtensionsTests" name="FindPrimeNumberTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume MaxNameLength Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="7247a10b-1f5b-c701-b5e1-07464316dfaa">
+      <Execution id="290167fe-aadc-4993-95b4-24d6e6483a0c" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeMaxNameLengthTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume FileSystem Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="09559f37-b061-614a-4183-b2f02e5f7255">
+      <Execution id="255cf018-871e-4600-8e0d-d68963b8f8b2" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeFileSystemTestMethod" />
+    </UnitTest>
+    <UnitTest name="Subdirectory CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="fef561ff-e965-a384-8b6e-ee23c08340b3">
+      <Execution id="31b81547-0f39-448d-8568-9e6bffd75faa" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSubdirectoryUnitTest" name="SubdirectoryCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="SymbolicName Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="876cd6b5-e6af-9ff4-ab8f-787c81bd10f3">
+      <Execution id="334ff35d-1c67-4310-924b-52aff4591e95" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSymbolicNameUnitTest" name="SymbolicNameAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="RedundantSet CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="87ce3f0a-460d-e6f9-51e3-37f9a1ab0c56">
+      <Execution id="fca4782f-a5f2-4a61-b41c-8783f44048f9" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundantSetUnitTest" name="RedundantSetCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="DbFile Parent Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="fb6c192e-e238-ca04-e023-92332be1cfa0">
+      <Execution id="87b9fbe0-4207-40f4-bf30-6575531ed3e0" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalDbFileUnitTest" name="DbFileParentTestMethod" />
+    </UnitTest>
+    <UnitTest name="RedundantSet Reference Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="ccb2a00d-994a-3df0-cf32-50097864001e">
+      <Execution id="aef2df20-0d7b-4465-9a4a-e3bcea009cad" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundantSetUnitTest" name="RedundantSetReferenceTestMethod" />
+    </UnitTest>
+    <UnitTest name="RedundantSet Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="986e9645-39a8-9183-1342-6e970c93d870">
+      <Execution id="d44475ec-f3a4-4e8a-b469-90e4f8bfcad2" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundantSetUnitTest" name="RedundantSetAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="Redundancy Reference Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="ab7f19e3-5ee7-30f6-18cc-379f93bd66bc">
+      <Execution id="056d2e41-f443-4f5a-9432-f47a98c4ade3" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundancyUnitTest" name="RedundancyReferenceTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume DisplayName Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="0275fc7d-ff43-546f-45c9-ccecbaa29f9e">
+      <Execution id="515d23f9-5164-4dae-b3a2-dbc1e2f7142b" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeDisplayNameTestMethod" />
+    </UnitTest>
+    <UnitTest name="IsPrimeNumberTestMethod" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="9943ed49-574e-5045-140f-6243ea67f171">
+      <Execution id="516e4a52-0745-4924-875e-e135e73f2ca4" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.CollectionExtensionsTests" name="IsPrimeNumberTestMethod" />
+    </UnitTest>
+    <UnitTest name="ExtendedProperties CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="3c9f779d-18c3-d833-b595-d1702e5b3bdd">
+      <Execution id="e16e7b4b-b290-4b21-ac3a-58e9809efe3d" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalExtendedPropertiesUnitTest" name="ExtendedPropertiesCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="Redundancy RedundantSet Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="d6059e11-de77-22f1-4bbb-168d1d695c6e">
+      <Execution id="05f4a46d-52d8-4b64-9f09-7593fc961428" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundancyUnitTest" name="RedundancyRedundantSetTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileSystem Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="5e8ba8bd-9067-851e-6419-1987bb304dbb">
+      <Execution id="09a466f4-8763-4c8e-9d30-951b61e2fdbc" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileSystemUnitTest" name="FileSystemAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="Volume Status Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="f73892c0-cd86-c9f6-7995-29b5a8dc5584">
+      <Execution id="5a7b9976-ed4d-4f2f-8537-d53bb026814c" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalVolumeUnitTest" name="VolumeStatusTestMethod" />
+    </UnitTest>
+    <UnitTest name="DbFile CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="91940b62-c391-d3d3-15c4-e8724eec28f1">
+      <Execution id="a2a63b9b-0eb0-4705-b48b-d815cec840f9" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalDbFileUnitTest" name="DbFileCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="SymbolicName LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="12844171-82c5-f543-aaa3-184573c92d06">
+      <Execution id="7fc43f5a-5ecb-4537-86dd-65522f0b7e9d" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSymbolicNameUnitTest" name="SymbolicNameLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileComparison CreatedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="88af3eef-c1fd-4e05-e5be-5854de473bdc">
+      <Execution id="ead313ec-8728-4c93-b0c0-a640c8004821" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileComparisonUnitTest" name="FileComparisonCreatedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="Redundancy Add/Remove Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="212e7832-a349-37a9-af19-775d9897fa23">
+      <Execution id="b9e3736f-bf34-41a5-839c-1bee5d584a05" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalRedundancyUnitTest" name="RedundancyAddRemoveTestMethod" />
+    </UnitTest>
+    <UnitTest name="Subdirectory Name Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="6d5b986d-4dd6-82d9-7fea-28107ee1007d">
+      <Execution id="10e42813-415f-4c62-87f8-c823931f5495" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalSubdirectoryUnitTest" name="SubdirectoryNameTestMethod" />
+    </UnitTest>
+    <UnitTest name="FileSystem LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="148ad142-7786-3d1a-02f9-07f174a9fe10">
+      <Execution id="b513ebd3-79a9-408a-aa10-e0e25f3f1a62" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalFileSystemUnitTest" name="FileSystemLastSynchronizedOnTestMethod" />
+    </UnitTest>
+    <UnitTest name="DbFile Content Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="adab39a0-efb3-7a18-03ac-ede385d08ad2">
+      <Execution id="4b37b632-547f-4127-b6f9-337a010a7b96" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalDbFileUnitTest" name="DbFileContentInfoTestMethod" />
+    </UnitTest>
+    <UnitTest name="LocalDbContextTestMethod" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="24c296b6-5e5f-001c-a77f-830d17450704">
+      <Execution id="9dd3b727-451c-450f-86cc-ce2edcb9428d" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalDbUnitTest" name="LocalDbContextTestMethod" />
+    </UnitTest>
+    <UnitTest name="ContentInfo LastSynchronizedOn Validation Tests" storage="c:\users\lerwi\git\fsinfocat\fsinfocat\fsinfocat.unittests\bin\debug\net5.0-windows\fsinfocat.unittests.dll" id="9b5f2eab-ebc2-affd-43a7-b3965103573d">
+      <Execution id="9f45ea44-7ea8-4504-970b-e627c25fd956" />
+      <TestMethod codeBase="C:\Users\lerwi\Git\FsInfoCat\FsInfoCat\FsInfoCat.UnitTests\bin\Debug\net5.0-windows\FsInfoCat.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="FsInfoCat.UnitTests.LocalContentInfoUnitTest" name="ContentInfoLastSynchronizedOnTestMethod" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="12844171-82c5-f543-aaa3-184573c92d06" executionId="7fc43f5a-5ecb-4537-86dd-65522f0b7e9d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="90d7104a-8d65-3fbb-d17b-5d9f7e9aca19" executionId="d579c79a-501a-4f4a-9201-cfedbd137a32" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="87ce3f0a-460d-e6f9-51e3-37f9a1ab0c56" executionId="fca4782f-a5f2-4a61-b41c-8783f44048f9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ba15aa55-269c-6174-53a0-59ee4673c534" executionId="89f51580-5e3e-4e63-913e-1a4bfe8e1fc5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="481621e1-3ab3-7f54-12f0-19efcd69f8ae" executionId="76259e3c-8718-4354-a0ee-2d6687b101f5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c530cfd5-b0f3-ce0d-007b-f943b799bc79" executionId="5c5bf333-66c1-4e43-857c-4a6d206230a5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9b5f2eab-ebc2-affd-43a7-b3965103573d" executionId="9f45ea44-7ea8-4504-970b-e627c25fd956" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6d5b986d-4dd6-82d9-7fea-28107ee1007d" executionId="10e42813-415f-4c62-87f8-c823931f5495" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9943ed49-574e-5045-140f-6243ea67f171" executionId="516e4a52-0745-4924-875e-e135e73f2ca4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f22ad969-5630-c24a-a62c-21af41f3eca9" executionId="d86f116c-5de0-4dc5-b90c-6696ace1bac5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c1356327-3db5-15de-5e4b-24b41d460aed" executionId="716e1944-1bb8-440a-b7ff-9093788f3820" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="177d3262-e9e5-4b8c-b7a0-5381458eb774" executionId="76765e58-ee1b-4699-9242-9c2afce9e4fc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="34d6aa1b-332d-a203-faf5-c51d6b124f57" executionId="ebff3ec2-1d66-4695-ad29-67d2c1f97b73" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="88af3eef-c1fd-4e05-e5be-5854de473bdc" executionId="ead313ec-8728-4c93-b0c0-a640c8004821" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="85d1355c-386d-f418-71a6-5f68ba95e036" executionId="91ccc52e-20f2-4b70-9e0d-22854e1588c5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="24c296b6-5e5f-001c-a77f-830d17450704" executionId="9dd3b727-451c-450f-86cc-ce2edcb9428d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="aa8b3704-c3d7-15dd-6f3f-5dea925d370a" executionId="f5a82a61-944d-448d-b172-b4fee2898102" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0904ba07-92cc-2ce2-818b-3031c7d5e0d2" executionId="3a412dc1-53ae-43c6-aa75-920ad3d39b76" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2c0f46ee-4973-bb84-d1d6-ea0b43ccba3b" executionId="2fabc7f8-ffde-4480-9cc9-4871cfbdb427" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="13809e01-7eb0-93f5-dbac-048802ff98c6" executionId="99b562b0-9fc0-46ce-a6ce-da9ee02040d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3c9f779d-18c3-d833-b595-d1702e5b3bdd" executionId="e16e7b4b-b290-4b21-ac3a-58e9809efe3d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="faeec441-f2b2-8da7-b2d3-76a05066c511" executionId="2d2b74b1-40cd-48de-8215-32af6310e488" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="148ad142-7786-3d1a-02f9-07f174a9fe10" executionId="b513ebd3-79a9-408a-aa10-e0e25f3f1a62" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="adab39a0-efb3-7a18-03ac-ede385d08ad2" executionId="4b37b632-547f-4127-b6f9-337a010a7b96" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d6059e11-de77-22f1-4bbb-168d1d695c6e" executionId="05f4a46d-52d8-4b64-9f09-7593fc961428" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fb6c192e-e238-ca04-e023-92332be1cfa0" executionId="87b9fbe0-4207-40f4-bf30-6575531ed3e0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="992e95f6-a86b-acc8-42b6-1be68db9a608" executionId="fda1360d-3ff1-46ab-bb7e-96f4b804cd4a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="909ac7a7-079f-8f87-5a0b-a1c3704c6e6e" executionId="0e02bb25-dc00-4712-aa89-b5e618a8c6c3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8cd151e0-cb83-24e6-0886-cfcdbd5d2b9d" executionId="77fd0c70-316a-4b99-ae78-963a9431bbe9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f73892c0-cd86-c9f6-7995-29b5a8dc5584" executionId="5a7b9976-ed4d-4f2f-8537-d53bb026814c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fcabc0c4-d112-299c-d32e-b25ae10f0aa0" executionId="38246bf4-70c9-43ed-b8a2-fbe74b0af72a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="294b110c-cef2-2179-edc7-78de45b730a3" executionId="e3e0b84b-b37a-4093-9638-a7a7ff889242" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e8f4c58f-e4b9-e582-1cfa-6c2ce2d21ebd" executionId="3d7e1d08-2a86-445e-8007-4e98b48741bb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0d5e447f-9f5d-2bbb-538c-1a153d476b19" executionId="e3419a7a-191a-48f2-8ad2-cafbb7cbc4ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9c0d7851-4601-d1c7-ed35-ee3db2c88cdb" executionId="3597de73-5746-4bec-b59a-ea528f3b77e8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8382bb5b-d4f3-b5d2-cf64-a274e18374d3" executionId="cbfcde1c-00e8-406c-b738-aee1cad0ef28" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0275fc7d-ff43-546f-45c9-ccecbaa29f9e" executionId="515d23f9-5164-4dae-b3a2-dbc1e2f7142b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f0c263a1-26c0-2ae1-26c0-39a3e3c1486e" executionId="ca5ed6ba-0aa7-4f0a-81ea-cb22c2d928da" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b4f10f24-38f8-8477-68f3-1316a62badc6" executionId="c55fbf62-a4cf-4b5d-82f6-c4087abb54f2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="541c6c3c-d7a1-392f-5dad-ca955812ba14" executionId="856aeee8-60f9-405b-95cd-bf91cbfa3818" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ccb2a00d-994a-3df0-cf32-50097864001e" executionId="aef2df20-0d7b-4465-9a4a-e3bcea009cad" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ab7f19e3-5ee7-30f6-18cc-379f93bd66bc" executionId="056d2e41-f443-4f5a-9432-f47a98c4ade3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="09559f37-b061-614a-4183-b2f02e5f7255" executionId="255cf018-871e-4600-8e0d-d68963b8f8b2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e7978543-6900-c36d-e984-af2e2f7fb91c" executionId="8ac95862-9144-4f79-8efb-21a0f808a311" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b6a5b40e-09b9-8783-2e2d-0b1260af3db3" executionId="fb610cf6-b16d-4f06-b144-8345cdef6cb5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7f2f8835-6f6e-d736-6c07-e55a2f170edf" executionId="1c56a3eb-bde3-4a9b-825b-b293afaf4e1b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5e8ba8bd-9067-851e-6419-1987bb304dbb" executionId="09a466f4-8763-4c8e-9d30-951b61e2fdbc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f62dd268-7b15-e710-c772-5fc644c30c80" executionId="4df6103c-b2f3-4112-b499-d7ab820efd1a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="212e7832-a349-37a9-af19-775d9897fa23" executionId="b9e3736f-bf34-41a5-839c-1bee5d584a05" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fef561ff-e965-a384-8b6e-ee23c08340b3" executionId="31b81547-0f39-448d-8568-9e6bffd75faa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c569f5d3-79e7-2d11-30eb-4a4fef9960db" executionId="4426f5eb-408e-4aeb-8953-bb9e026f2c0d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f226e646-80a1-c753-67c0-23cb462f8442" executionId="56c9cb7d-bf97-4697-b3a3-9e65148d57b6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="91940b62-c391-d3d3-15c4-e8724eec28f1" executionId="a2a63b9b-0eb0-4705-b48b-d815cec840f9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="64ce8fad-f5b6-a017-47e2-117089bb6449" executionId="3e33da3d-dcae-4df2-b067-9fa3c0b818b6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7247a10b-1f5b-c701-b5e1-07464316dfaa" executionId="290167fe-aadc-4993-95b4-24d6e6483a0c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1e2c7581-2104-7900-16c6-3ba7f299a8a6" executionId="7bf7ff91-8d5b-4ca3-ab58-6cd69e47dfd1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3d9adced-2ff9-d2e8-8cf1-48410ad2d029" executionId="af51b509-5781-4593-ad8f-eeb4bb25f1f5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d09246cc-9279-2fe5-b97f-bc67925c6806" executionId="a40905fe-b494-4c84-907a-2765ace52330" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3dc7bef9-ee1b-730a-6e4b-4eae7d588858" executionId="9c77ec8a-7773-42a6-8482-2935a04eff7e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f8579783-3199-a9a6-ca89-afcb681687f3" executionId="d63cbe27-f00a-4374-801a-1d09d693ef93" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="111cc6f0-d04e-50ca-f97e-329bf3e4bc6d" executionId="78eacc20-ac4d-4be3-b246-90c6aff81a14" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="876cd6b5-e6af-9ff4-ab8f-787c81bd10f3" executionId="334ff35d-1c67-4310-924b-52aff4591e95" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="986e9645-39a8-9183-1342-6e970c93d870" executionId="d44475ec-f3a4-4e8a-b469-90e4f8bfcad2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="63" executed="63" passed="3" failed="60" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <CollectorDataEntries>
+      <Collector agentName="DESKTOP-G10FC12" uri="datacollector://microsoft/CodeCoverage/2.0" collectorDisplayName="Code Coverage">
+        <UriAttachments>
+          <UriAttachment>
+            <A href="DESKTOP-G10FC12\lerwi_DESKTOP-G10FC12_2021-06-04.01_16_33.coverage"></A>
+          </UriAttachment>
+        </UriAttachments>
+      </Collector>
+    </CollectorDataEntries>
+  </ResultSummary>
+</TestRun>

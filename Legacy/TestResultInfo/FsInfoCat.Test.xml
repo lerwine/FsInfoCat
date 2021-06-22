@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<command-line><![CDATA[C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Test\bin\Debug\netcoreapp3.1\testhost.dll --port 50956 --endpoint 127.0.0.1:050956 --role client --parentprocessid 6392 --telemetryoptedin true]]></command-line>

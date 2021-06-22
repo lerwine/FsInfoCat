@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace FsInfoCat.Collections
@@ -11,63 +9,63 @@ namespace FsInfoCat.Collections
     /// </summary>
     public static class CollectionExtensions
     {
-        public static IEqualityComparer<T> ToEqualityComparer<T>(this IComparer<T> comparer)
-        {
-            if (comparer is null)
-                return EqualityComparer<T>.Default;
-            if (comparer is IEqualityComparer<T> equalityComparer)
-                return equalityComparer;
-            return new Internal.ComparerToEqualityComparer<T>(comparer);
-        }
+        //public static IEqualityComparer<T> ToEqualityComparer<T>(this IComparer<T> comparer)
+        //{
+        //    if (comparer is null)
+        //        return EqualityComparer<T>.Default;
+        //    if (comparer is IEqualityComparer<T> equalityComparer)
+        //        return equalityComparer;
+        //    return new Internal.ComparerToEqualityComparer<T>(comparer);
+        //}
 
-        public static IGeneralizableOrderAndEqualityComparer<T> ToOrderAndEqualityComparer<T>(this IEqualityComparer<T> comparer)
-        {
-            if (comparer is null)
-                return Defaults<T>.OrderAndEqualityComparer;
-            if (comparer is IGeneralizableOrderAndEqualityComparer<T> g)
-                return g;
-            if (comparer is IComparer<T> c)
-                return new Internal.GeneralizableOrderAndEqualityComparer<T>(comparer, c);
-            return new Internal.GeneralizableOrderAndEqualityComparer<T>(comparer, null);
-        }
+        //public static IGeneralizableOrderAndEqualityComparer<T> ToOrderAndEqualityComparer<T>(this IEqualityComparer<T> comparer)
+        //{
+        //    if (comparer is null)
+        //        return Defaults<T>.OrderAndEqualityComparer;
+        //    if (comparer is IGeneralizableOrderAndEqualityComparer<T> g)
+        //        return g;
+        //    if (comparer is IComparer<T> c)
+        //        return new Internal.GeneralizableOrderAndEqualityComparer<T>(comparer, c);
+        //    return new Internal.GeneralizableOrderAndEqualityComparer<T>(comparer, null);
+        //}
 
-        public static IGeneralizableOrderAndEqualityComparer<T> ToOrderAndEqualityComparer<T>(this IComparer<T> comparer)
-        {
-            if (comparer is null)
-                return Defaults<T>.OrderAndEqualityComparer;
-            if (comparer is IGeneralizableOrderAndEqualityComparer<T> g)
-                return g;
-            if (comparer is IEqualityComparer<T> c)
-                return new Internal.GeneralizableOrderAndEqualityComparer<T>(c, comparer);
-            return new Internal.GeneralizableOrderAndEqualityComparer<T>(null, comparer);
-        }
+        //public static IGeneralizableOrderAndEqualityComparer<T> ToOrderAndEqualityComparer<T>(this IComparer<T> comparer)
+        //{
+        //    if (comparer is null)
+        //        return Defaults<T>.OrderAndEqualityComparer;
+        //    if (comparer is IGeneralizableOrderAndEqualityComparer<T> g)
+        //        return g;
+        //    if (comparer is IEqualityComparer<T> c)
+        //        return new Internal.GeneralizableOrderAndEqualityComparer<T>(c, comparer);
+        //    return new Internal.GeneralizableOrderAndEqualityComparer<T>(null, comparer);
+        //}
 
-        public static IGeneralizableEqualityComparer<T> ToGeneralizable<T>(this IEqualityComparer<T> comparer)
-        {
-            if (comparer is null)
-                return Defaults<T>.EqualityComparer;
-            if (comparer is IGeneralizableEqualityComparer<T> g)
-                return g;
-            return new Internal.GeneralizableEqualityComparer<T>(comparer);
-        }
+        //public static IGeneralizableEqualityComparer<T> ToGeneralizable<T>(this IEqualityComparer<T> comparer)
+        //{
+        //    if (comparer is null)
+        //        return Defaults<T>.EqualityComparer;
+        //    if (comparer is IGeneralizableEqualityComparer<T> g)
+        //        return g;
+        //    return new Internal.GeneralizableEqualityComparer<T>(comparer);
+        //}
 
-        public static IGeneralizableEqualityComparer<T> ToGeneralizableEqualityComparer<T>(this IComparer<T> comparer)
-        {
-            if (comparer is null)
-                return Defaults<T>.EqualityComparer;
-            if (comparer is IGeneralizableEqualityComparer<T> g)
-                return g;
-            return new Internal.GeneralizableEqualityComparer<T>(comparer);
-        }
+        //public static IGeneralizableEqualityComparer<T> ToGeneralizableEqualityComparer<T>(this IComparer<T> comparer)
+        //{
+        //    if (comparer is null)
+        //        return Defaults<T>.EqualityComparer;
+        //    if (comparer is IGeneralizableEqualityComparer<T> g)
+        //        return g;
+        //    return new Internal.GeneralizableEqualityComparer<T>(comparer);
+        //}
 
-        public static IGeneralizableComparer<T> ToGeneralizable<T>(this IComparer<T> comparer)
-        {
-            if (comparer is null)
-                return Defaults<T>.Comparer;
-            if (comparer is IGeneralizableComparer<T> g)
-                return g;
-            return new Internal.GeneralizableComparer<T>(comparer);
-        }
+        //public static IGeneralizableComparer<T> ToGeneralizable<T>(this IComparer<T> comparer)
+        //{
+        //    if (comparer is null)
+        //        return Defaults<T>.Comparer;
+        //    if (comparer is IGeneralizableComparer<T> g)
+        //        return g;
+        //    return new Internal.GeneralizableComparer<T>(comparer);
+        //}
 
         /// <summary>
         /// Finds the next prime number that is greater than or equal to the specified value.
@@ -118,30 +116,30 @@ namespace FsInfoCat.Collections
         public static T[] CoerceAsArray<T>(this IEnumerable<T> source, bool allowNull = false) => (source is null) ? (allowNull ? null : Array.Empty<T>()) :
             (source is T[] a) ? a : source.ToArray();
 
-        /// <summary>
-        /// Coerces an <see cref="IEnumerable{T}"/> object as a generic <see cref="IList"/>
-        /// </summary>
-        /// <typeparam name="T">The source element type</typeparam>
-        /// <param name="source">The source <see cref="IEnumerable{T}"/> items.</param>
-        /// <param name="allowNull">If <see langword="true"/> and <paramref name="source"/> is <see langword="null"/> value will be returned;
-        /// otherwise an empty array wll be returned if <paramref name="source"/> is <see langword="null"/>.</param>
-        /// <returns>The <paramref name="source"/> items if it was already a generic <see cref="IList"/>; otherwise, the elements converted
-        /// to a generic <seealso cref="IList"/>.</returns>
-        public static IList CoerceGenericList<T>(this IEnumerable<T> source, bool allowNull = false) => (source is null) ? (allowNull ? null : Array.Empty<T>()) :
-            (source is IList a) ? a : source.ToArray();
+        ///// <summary>
+        ///// Coerces an <see cref="IEnumerable{T}"/> object as a generic <see cref="IList"/>
+        ///// </summary>
+        ///// <typeparam name="T">The source element type</typeparam>
+        ///// <param name="source">The source <see cref="IEnumerable{T}"/> items.</param>
+        ///// <param name="allowNull">If <see langword="true"/> and <paramref name="source"/> is <see langword="null"/> value will be returned;
+        ///// otherwise an empty array wll be returned if <paramref name="source"/> is <see langword="null"/>.</param>
+        ///// <returns>The <paramref name="source"/> items if it was already a generic <see cref="IList"/>; otherwise, the elements converted
+        ///// to a generic <seealso cref="IList"/>.</returns>
+        //public static IList CoerceGenericList<T>(this IEnumerable<T> source, bool allowNull = false) => (source is null) ? (allowNull ? null : Array.Empty<T>()) :
+        //    (source is IList a) ? a : source.ToArray();
 
-        /// <summary>
-        /// Coerces an <see cref="IEnumerable{T}"/> object as a strongly typed <seealso cref="IList"/> that can be cat as a generic <see cref="IList"/> as well.
-        /// </summary>
-        /// <typeparam name="T">The source element type</typeparam>
-        /// <param name="source">The source <see cref="IEnumerable{T}"/> items.</param>
-        /// <param name="allowNull">If <see langword="true"/> and <paramref name="source"/> is <see langword="null"/> value will be returned;
-        /// otherwise an empty array wll be returned if <paramref name="source"/> is <see langword="null"/>.</param>
-        /// <returns>The <paramref name="source"/> items if it was already a generic <see cref="IList"/>; otherwise, the elements converted
-        /// to a generic <seealso cref="IList"/>.</returns>
-        public static IReadOnlyList<T> CoerceGeneralizableReadOnlyList<T>(this IEnumerable<T> source, bool allowNull = false) => (source is null) ? (allowNull ? null : Array.Empty<T>()) :
-            (source is IReadOnlyList<T> r) ? ((r is IList g) ? r : new ReadOnlyCollection<T>((r is IList<T> i) ? i : r.ToArray())) :
-            new ReadOnlyCollection<T>(source.ToArray());
+        ///// <summary>
+        ///// Coerces an <see cref="IEnumerable{T}"/> object as a strongly typed <seealso cref="IList"/> that can be cat as a generic <see cref="IList"/> as well.
+        ///// </summary>
+        ///// <typeparam name="T">The source element type</typeparam>
+        ///// <param name="source">The source <see cref="IEnumerable{T}"/> items.</param>
+        ///// <param name="allowNull">If <see langword="true"/> and <paramref name="source"/> is <see langword="null"/> value will be returned;
+        ///// otherwise an empty array wll be returned if <paramref name="source"/> is <see langword="null"/>.</param>
+        ///// <returns>The <paramref name="source"/> items if it was already a generic <see cref="IList"/>; otherwise, the elements converted
+        ///// to a generic <seealso cref="IList"/>.</returns>
+        //public static IReadOnlyList<T> CoerceGeneralizableReadOnlyList<T>(this IEnumerable<T> source, bool allowNull = false) => (source is null) ? (allowNull ? null : Array.Empty<T>()) :
+        //    (source is IReadOnlyList<T> r) ? ((r is IList g) ? r : new ReadOnlyCollection<T>((r is IList<T> i) ? i : r.ToArray())) :
+        //    new ReadOnlyCollection<T>(source.ToArray());
 
         /// <summary>
         /// Combines the specified hash codes as a single hash code.
@@ -151,15 +149,13 @@ namespace FsInfoCat.Collections
         public static int ToAggregateHashCode(this IEnumerable<int> hashCodes)
         {
             int[] arr = hashCodes.CoerceAsArray();
-            int prime = arr.Length;
-            if (prime == 0)
+            int seed = arr.Length;
+            if (seed == 0)
                 return 0;
             if (arr.Length == 1)
                 return arr[0];
-            int seed = FindPrimeNumber(prime);
-            for (int n = 1; n < prime; n++)
-                seed = FindPrimeNumber(seed + 1);
-            prime = FindPrimeNumber(seed + 1);
+            int prime = FindPrimeNumber(seed & 0xffff);
+            seed = FindPrimeNumber(prime + 1);
             return arr.Aggregate(seed, (a, i) =>
             {
                 unchecked { return (a * prime) ^ i; }
@@ -324,29 +320,29 @@ namespace FsInfoCat.Collections
                 .DefaultIfEmpty(-1).Last();
         }
 
-        public static class Defaults<T>
-        {
-            public static readonly IGeneralizableOrderAndEqualityComparer<T> OrderAndEqualityComparer;
-            public static readonly IGeneralizableEqualityComparer<T> EqualityComparer;
-            public static readonly IGeneralizableComparer<T> Comparer;
+        //public static class Defaults<T>
+        //{
+        //    public static readonly IGeneralizableOrderAndEqualityComparer<T> OrderAndEqualityComparer;
+        //    public static readonly IGeneralizableEqualityComparer<T> EqualityComparer;
+        //    public static readonly IGeneralizableComparer<T> Comparer;
 
-            static Defaults()
-            {
-                Type type = typeof(T);
-                if (type.Equals(typeof(string)))
-                {
-                    OrderAndEqualityComparer = (IGeneralizableOrderAndEqualityComparer<T>)new Internal.GeneralizableOrderAndEqualityComparer<string>(StringComparer.InvariantCulture, StringComparer.InvariantCulture);
-                    EqualityComparer = (IGeneralizableEqualityComparer<T>)new Internal.GeneralizableEqualityComparer<string>((IEqualityComparer<string>)StringComparer.InvariantCulture);
-                    Comparer = (IGeneralizableComparer<T>)new Internal.GeneralizableComparer<string>((IComparer<string>)StringComparer.InvariantCulture);
-                }
-                else
-                {
-                    OrderAndEqualityComparer = new Internal.GeneralizableOrderAndEqualityComparer<T>(EqualityComparer<T>.Default, Comparer<T>.Default);
-                    EqualityComparer = new Internal.GeneralizableEqualityComparer<T>((IEqualityComparer<T>)EqualityComparer<T>.Default);
-                    Comparer = new Internal.GeneralizableComparer<T>((IComparer<T>)Comparer<T>.Default);
-                }
-            }
+        //    static Defaults()
+        //    {
+        //        Type type = typeof(T);
+        //        if (type.Equals(typeof(string)))
+        //        {
+        //            OrderAndEqualityComparer = (IGeneralizableOrderAndEqualityComparer<T>)new Internal.GeneralizableOrderAndEqualityComparer<string>(StringComparer.InvariantCulture, StringComparer.InvariantCulture);
+        //            EqualityComparer = (IGeneralizableEqualityComparer<T>)new Internal.GeneralizableEqualityComparer<string>((IEqualityComparer<string>)StringComparer.InvariantCulture);
+        //            Comparer = (IGeneralizableComparer<T>)new Internal.GeneralizableComparer<string>((IComparer<string>)StringComparer.InvariantCulture);
+        //        }
+        //        else
+        //        {
+        //            OrderAndEqualityComparer = new Internal.GeneralizableOrderAndEqualityComparer<T>(EqualityComparer<T>.Default, Comparer<T>.Default);
+        //            EqualityComparer = new Internal.GeneralizableEqualityComparer<T>((IEqualityComparer<T>)EqualityComparer<T>.Default);
+        //            Comparer = new Internal.GeneralizableComparer<T>((IComparer<T>)Comparer<T>.Default);
+        //        }
+        //    }
 
-        }
+        //}
     }
 }

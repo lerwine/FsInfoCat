@@ -9,7 +9,7 @@ namespace FsInfoCat.Desktop.Commands
     /// </summary>
     public abstract class BaseCommand : DependencyObject, System.Windows.Input.ICommand
     {
-        private readonly object _syncRoot = new object();
+        private readonly object _syncRoot = new();
         private bool _canExecute = true;
         private int _execCount = 0;
 
@@ -21,14 +21,9 @@ namespace FsInfoCat.Desktop.Commands
         #region IsEnabled Property Members
 
         /// <summary>
-        /// Defines the name for the <see cref="IsEnabled"/> dependency property.
-        /// </summary>
-        public const string DependencyPropertyName_IsEnabled = "IsEnabled";
-
-        /// <summary>
         /// Identifies the <see cref="IsEnabled"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsEnabledProperty = DependencyProperty.Register(DependencyPropertyName_IsEnabled, typeof(bool), typeof(BaseCommand),
+        public static readonly DependencyProperty IsEnabledProperty = DependencyProperty.Register(nameof(IsEnabled), typeof(bool), typeof(BaseCommand),
                 new PropertyMetadata(true,
                 (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BaseCommand).IsEnabled_PropertyChanged((bool)(e.OldValue), (bool)(e.NewValue))));
 
@@ -53,14 +48,9 @@ namespace FsInfoCat.Desktop.Commands
         #region AllowSimultaneousExecute Property Members
 
         /// <summary>
-        /// Defines the name for the <see cref="AllowSimultaneousExecute"/> dependency property.
-        /// </summary>
-        public const string DependencyPropertyName_AllowSimultaneousExecute = "AllowSimultaneousExecute";
-
-        /// <summary>
         /// Identifies the <see cref="AllowSimultaneousExecute"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty AllowSimultaneousExecuteProperty = DependencyProperty.Register(DependencyPropertyName_AllowSimultaneousExecute, typeof(bool), typeof(BaseCommand),
+        public static readonly DependencyProperty AllowSimultaneousExecuteProperty = DependencyProperty.Register(nameof(AllowSimultaneousExecute), typeof(bool), typeof(BaseCommand),
                 new PropertyMetadata(false,
                 (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BaseCommand).AllowSimultaneousExecute_PropertyChanged((bool)(e.OldValue), (bool)(e.NewValue))));
 
@@ -105,7 +95,7 @@ namespace FsInfoCat.Desktop.Commands
             try
             {
                 couldExecute = _canExecute;
-                canExecute = _CanExecute();
+                canExecute = InnerCanExecute();
                 _canExecute = canExecute;
             }
             catch { throw; }
@@ -139,10 +129,10 @@ namespace FsInfoCat.Desktop.Commands
         /// <returns>true if this command can be executed; otherwise, false.</returns>
         protected virtual bool OnCanExecute(object parameter)
         {
-            return _CanExecute();
+            return InnerCanExecute();
         }
 
-        private bool _CanExecute()
+        private bool InnerCanExecute()
         {
             return IsEnabled && (AllowSimultaneousExecute || _execCount == 0);
         }
