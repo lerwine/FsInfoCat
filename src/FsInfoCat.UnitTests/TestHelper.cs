@@ -21,21 +21,33 @@ namespace FsInfoCat.UnitTests
         internal const string TestCategory_LocalDb = "LocalDb";
         internal const string TestProperty_Description = "Description";
 
+        public static string DbPath { get; private set; }
+
         internal static Local.FileSystem GetVFatFileSystem(Local.LocalDbContext dbContext)
         {
             Guid id = Guid.Parse("{53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd}");
             return dbContext.FileSystems.ToList().FirstOrDefault(fs => fs.Id.Equals(id));
         }
 
+        [ServiceBuilderHandler]
+#pragma warning disable IDE0051 // Remove unused private members
+        private static void ConfigureServices(IServiceCollection services)
+#pragma warning restore IDE0051 // Remove unused private members
+        {
+            Console.WriteLine($"Initializing services: LocalDb Path=\"{DbPath}\"");
+            Local.LocalDbContext.AddDbContextPool(services, DbPath);
+
+        }
+
         internal static void AssemblyInit(TestContext context)
         {
-            string path = Path.Combine(context.DeploymentDirectory, Properties.Resources.TestDbRelativePath);
-            Console.WriteLine($"Initializing services: LocalDb Path=\"{path}\"");
-            Services.Initialize(services =>
-            {
-                Local.LocalDbContext.ConfigureServices(services, path);
-            }).Wait();
-
+            DbPath = Path.Combine(context.DeploymentDirectory, Properties.Resources.TestDbRelativePath);
+            //Console.WriteLine($"Initializing services: LocalDb Path=\"{path}\"");
+            //Services.Initialize_Obsolete(services =>
+            //{
+            //    Local.LocalDbContext.AddDbContextPool(services, path);
+            //}).Wait();
+            Services.Initialize().Wait();
             string name = Assembly.GetExecutingAssembly().GetName().Name;
             DirectoryInfo directoryInfo = new(context.DeploymentDirectory);
             while ((directoryInfo = directoryInfo.Parent) is not null)

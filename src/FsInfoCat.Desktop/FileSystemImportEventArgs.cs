@@ -5,6 +5,7 @@ using System.IO;
 
 namespace FsInfoCat.Desktop
 {
+    [Obsolete("Use FsInfoCat.Local.CrawlWorker, instead")]
     public abstract class FileSystemImportEventArgs : EventArgs
     {
         [NotNull]

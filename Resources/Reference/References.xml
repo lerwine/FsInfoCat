@@ -130,6 +130,7 @@
         </Category>
         <Category Name="PowerShell">
             <Link Tag="Pester" />
+            <Link Tag="PsBinMod" />
             <Link Tag="PsMmodule" />
             <Link Tag="CmdletHelp" />
             <Link Tag="PsModuleHelp" />

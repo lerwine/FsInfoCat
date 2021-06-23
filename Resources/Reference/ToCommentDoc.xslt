@@ -6,7 +6,7 @@
     <xsl:output encoding="utf-8" omit-xml-declaration="yes" method="xml" />
 
     <!-- Semicolon-separated list of values from /b:Sources/b:Source/b:Tag elements of the sources to be included in the reference listing. Empty string emits all references -->
-    <xsl:param name="tagNames" select="''"/>
+    <xsl:param name="tagNames" select="'PsBinMod'"/>
     <xsl:variable name="UcLetters" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
     <xsl:variable name="LcLetters" select="'abcdefghijklmnopqrstuvwxyz'" />
     <xsl:variable name="AllLetters" select="concat($UcLetters, $LcLetters)" />

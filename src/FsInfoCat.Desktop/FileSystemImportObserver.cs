@@ -5,6 +5,7 @@ using System.IO;
 
 namespace FsInfoCat.Desktop
 {
+    [Obsolete("Use FsInfoCat.Local.CrawlWorker, instead")]
     public class FileSystemImportObserver : FileSystemImportJob.ScanContext.FileSystemImportObserverBase
     {
         public event EventHandler<FileSystemImportEventArgs> Importing;
@@ -18,6 +19,7 @@ namespace FsInfoCat.Desktop
         public event EventHandler<DirectoryImportEventArgs> DirectoryImportError;
         public event EventHandler JobStarted;
         public event EventHandler JobCanceled;
+        public event EventHandler<CrawlErrorEventArgs> JobFailed;
         public event EventHandler JobCompleted;
 
         protected override void OnDirectoryImporting(DirectoryImportEventArgs args)
@@ -61,5 +63,7 @@ namespace FsInfoCat.Desktop
         protected override void OnJobCompleted() => JobCompleted?.Invoke(this, EventArgs.Empty);
 
         protected override void OnJobCanceled() => JobCanceled?.Invoke(this, EventArgs.Empty);
+
+        protected override void OnJobFailed(CrawlErrorEventArgs args) => JobFailed?.Invoke(this, args);
     }
 }

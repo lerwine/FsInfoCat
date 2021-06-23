@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{
 		..\Resources\Reference\References.xml = ..\Resources\Reference\References.xml
 		..\Resources\Reference\References.xsd = ..\Resources\Reference\References.xsd
 		..\Resources\Reference\References.xslt = ..\Resources\Reference\References.xslt
+		..\Resources\Reference\Sources.xml = ..\Resources\Reference\Sources.xml
 		..\Resources\Reference\ToCommentDoc.xslt = ..\Resources\Reference\ToCommentDoc.xslt
 		..\Resources\Reference\ToHtml.xslt = ..\Resources\Reference\ToHtml.xslt
 		..\Resources\Reference\ToMarkdown.xslt = ..\Resources\Reference\ToMarkdown.xslt
@@ -38,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLite", "SQLite", "{E4FEA3
 		SQLite\LocalTest.sqbpro = SQLite\LocalTest.sqbpro
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsInfoCat.PS", "FsInfoCat.PS\FsInfoCat.PS.csproj", "{1FAF9E79-E791-44AC-8EEC-DC5A0D9A8BAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.PS", "FsInfoCat.PS\FsInfoCat.PS.csproj", "{1FAF9E79-E791-44AC-8EEC-DC5A0D9A8BAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

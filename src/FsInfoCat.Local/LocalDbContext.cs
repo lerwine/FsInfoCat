@@ -151,10 +151,10 @@ namespace FsInfoCat.Local
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
         }
 
-        public static void ConfigureServices(IServiceCollection services, Assembly assembly, string dbFileName) =>
-            ConfigureServices(services, GetDbFilePath(assembly, dbFileName));
+        public static void AddDbContextPool(IServiceCollection services, Assembly assembly, string dbFileName) =>
+            AddDbContextPool(services, GetDbFilePath(assembly, dbFileName));
 
-        public static void ConfigureServices(IServiceCollection services, string dbPath)
+        public static void AddDbContextPool(IServiceCollection services, string dbPath)
         {
             string connectionString = GetConnectionString(dbPath);
             services.AddDbContextPool<LocalDbContext>(options =>
@@ -435,8 +435,7 @@ namespace FsInfoCat.Local
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if (target.Redundancy is not null)
             {
                 ForceDeleteRedundancy(target.Redundancy);
@@ -523,8 +522,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(BinaryPropertySet binaryProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             EntityEntry<BinaryPropertySet> entry = Entry(binaryProperties);
             if ((await entry.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any() || !(await entry.GetRelatedCollectionAsync(p => p.RedundantSets, cancellationToken)).Any())
                 return false;
@@ -543,8 +541,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(VideoPropertySet videoProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(videoProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             VideoPropertySets.Remove(videoProperties);
@@ -562,8 +559,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(RecordedTVPropertySet recordedTVProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(recordedTVProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             RecordedTVPropertySets.Remove(recordedTVProperties);
@@ -581,8 +577,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(PhotoPropertySet photoProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(photoProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             PhotoPropertySets.Remove(photoProperties);
@@ -600,8 +595,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(MusicPropertySet musicProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(musicProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             MusicPropertySets.Remove(musicProperties);
@@ -619,8 +613,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(MediaPropertySet mediaProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(mediaProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             MediaPropertySets.Remove(mediaProperties);
@@ -638,8 +631,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(ImagePropertySet imageProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(imageProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             ImagePropertySets.Remove(imageProperties);
@@ -657,8 +649,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(GPSPropertySet gpsProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(gpsProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             GPSPropertySets.Remove(gpsProperties);
@@ -676,8 +667,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(DRMPropertySet drmProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(drmProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             DRMPropertySets.Remove(drmProperties);
@@ -695,8 +685,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(AudioPropertySet audioProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(audioProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             AudioPropertySets.Remove(audioProperties);
@@ -714,8 +703,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(DocumentPropertySet documentProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(documentProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             DocumentPropertySets.Remove(documentProperties);
@@ -733,8 +721,7 @@ namespace FsInfoCat.Local
 
         private async Task<bool> RemoveIfNoReferencesAsync(SummaryPropertySet summaryProperties, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(summaryProperties, p => p.Files, cancellationToken)).Any())
                 return false;
             SummaryPropertySets.Remove(summaryProperties);

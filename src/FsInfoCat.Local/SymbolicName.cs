@@ -20,6 +20,7 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        public const string Fallback_Symbolic_Name = "NTFS";
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _name;
         private readonly IPropertyChangeTracker<Guid> _fileSystemId;
