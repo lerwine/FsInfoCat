@@ -1,10 +1,11 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace FsInfoCat.Desktop
 {
-    public partial class FileSystemImportObserver
+    public class FileSystemImportObserver : FileSystemImportJob.ScanContext.FileSystemImportObserverBase
     {
         public event EventHandler<FileSystemImportEventArgs> Importing;
         public event EventHandler<FileSystemImportEventArgs> Imported;
@@ -15,41 +16,50 @@ namespace FsInfoCat.Desktop
         public event EventHandler<DirectoryImportEventArgs> DirectoryImporting;
         public event EventHandler<DirectoryImportEventArgs> DirectoryImported;
         public event EventHandler<DirectoryImportEventArgs> DirectoryImportError;
+        public event EventHandler JobStarted;
+        public event EventHandler JobCanceled;
+        public event EventHandler JobCompleted;
 
-        internal void RaiseDirectoryImporting(FileSystemImportJob.ScanContext scanContext)
+        protected override void OnDirectoryImporting(DirectoryImportEventArgs args)
         {
-            DirectoryImportEventArgs args = new DirectoryImportEventArgs(scanContext);
-            Importing?.Invoke(this, args);
-            DirectoryImporting?.Invoke(this, args);
+            try { Importing?.Invoke(this, args); }
+            finally { DirectoryImporting?.Invoke(this, args); }
         }
 
-        internal void RaiseDirectoryImportError(FileSystemImportJob.ScanContext scanContext, Exception error)
+        protected override void OnDirectoryImportError(DirectoryImportEventArgs args)
         {
-            DirectoryImportEventArgs args = new DirectoryImportEventArgs(scanContext, error);
-            ImportError?.Invoke(this, args);
-            DirectoryImportError?.Invoke(this, args);
+            try { ImportError?.Invoke(this, args); }
+            finally { DirectoryImportError?.Invoke(this, args); }
         }
 
-        internal void RaiseDirectoryImported(FileSystemImportJob.ScanContext scanContext)
+        protected override void OnDirectoryImported(DirectoryImportEventArgs args)
         {
-            DirectoryImportEventArgs args = new DirectoryImportEventArgs(scanContext);
-            Imported?.Invoke(this, args);
-            DirectoryImported?.Invoke(this, args);
+            try { Imported?.Invoke(this, args); }
+            finally { DirectoryImported?.Invoke(this, args); }
         }
 
-        internal void RaiseFileImporting(FileSystemImportJob.ScanContext scanContext, FileInfo fileInfo, DbFile dbFile)
+        protected override void OnFileImporting(FileImportEventArgs args)
         {
-            throw new NotImplementedException();
+            try { Importing?.Invoke(this, args); }
+            finally { FileImporting?.Invoke(this, args); }
         }
 
-        internal void RaiseFileImportError(FileSystemImportJob.ScanContext scanContext, FileInfo fileInfo, DbFile dbFile, Exception error)
+        protected override void OnFileImportError(FileImportEventArgs args)
         {
-            throw new NotImplementedException();
+            try { ImportError?.Invoke(this, args); }
+            finally { FileImportError?.Invoke(this, args); }
         }
 
-        internal void RaiseFileImported(FileSystemImportJob.ScanContext scanContext, FileInfo fileInfo, DbFile dbFile)
+        protected override void OnFileImported(FileImportEventArgs args)
         {
-            throw new NotImplementedException();
+            try { Imported?.Invoke(this, args); }
+            finally { FileImported?.Invoke(this, args); }
         }
+
+        protected override void OnJobStarted() => JobStarted?.Invoke(this, EventArgs.Empty);
+
+        protected override void OnJobCompleted() => JobCompleted?.Invoke(this, EventArgs.Empty);
+
+        protected override void OnJobCanceled() => JobCanceled?.Invoke(this, EventArgs.Empty);
     }
 }

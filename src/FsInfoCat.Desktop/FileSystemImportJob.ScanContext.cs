@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -12,35 +13,38 @@ namespace FsInfoCat.Desktop
 {
     public partial class FileSystemImportJob
     {
-        public class ScanContext
+        public partial class ScanContext
         {
             internal ushort Depth { get; }
+
             internal Subdirectory DbDirectoryItem { get; }
+
             internal DirectoryInfo FsDirectoryInfo { get; }
+
             internal CancellationToken CancellationToken { get; }
+
             internal ulong TotalCount { get; private set; }
+
             internal FileSystemImportJob Job { get; }
 
-            internal static async Task Create(CrawlConfiguration configuration, FileSystemImportObserver observer, CancellationToken cancellationToken)
+            internal static async Task RunAsync([NotNull] CrawlConfiguration configuration, [AllowNull] FileSystemImportObserver observer, CancellationToken cancellationToken)
             {
                 using LocalDbContext dbContext = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
-                ReferenceEntry<CrawlConfiguration, Subdirectory> rootEntry = dbContext.Entry(configuration).Reference(c => c.Root);
-                if (!rootEntry.IsLoaded)
-                    await rootEntry.LoadAsync(cancellationToken);
+                Subdirectory subdirectory = await dbContext.Entry(configuration).GetRelatedReferenceAsync(c => c.Root, cancellationToken);
                 if (cancellationToken.IsCancellationRequested)
                     throw new OperationCanceledException();
-                Subdirectory subdirectory = rootEntry.CurrentValue;
                 if (subdirectory is null)
-                    throw new Exception("Could not get root directory"); // TODO: Throw proper error
+                    throw new InvalidOperationException($"Unexpected error: {nameof(CrawlConfiguration)}.{nameof(CrawlConfiguration.Root)} was null.");
 
                 string fullName = await Subdirectory.LookupFullNameAsync(subdirectory, dbContext);
                 if (cancellationToken.IsCancellationRequested)
                     throw new OperationCanceledException();
                 if (string.IsNullOrEmpty(fullName))
-                    throw new Exception("Could not determine full name"); // TODO: Throw proper error
+                    throw new InvalidOperationException($"Unexpected error: Could not build full path for {nameof(CrawlConfiguration)}.{nameof(CrawlConfiguration.Root)}.");
                 ScanContext context = new(0, 0UL, new DirectoryInfo(fullName), subdirectory, cancellationToken);
                 await context.ScanAsync(observer, dbContext);
             }
+
             private async Task ScanAsync(FileSystemImportObserver observer, LocalDbContext dbContext)
             {
                 if (CancellationToken.IsCancellationRequested)
@@ -51,7 +55,7 @@ namespace FsInfoCat.Desktop
                 try
                 {
                     newFiles = FsDirectoryInfo.GetFiles();
-                    newDirectories = (Depth < Job.MaxRecursionDepth) ? FsDirectoryInfo.GetDirectories() : Array.Empty<DirectoryInfo>();
+                    newDirectories = (Depth < Job.MaxRecursionDepth) ? FsDirectoryInfo.GetDirectories() : null;
                 }
                 catch (Exception exception)
                 {
@@ -71,31 +75,53 @@ namespace FsInfoCat.Desktop
                     await dbContext.SaveChangesAsync(CancellationToken);
                     return;
                 }
-                if (CancellationToken.IsCancellationRequested)
-                    throw new OperationCanceledException();
+
                 EntityEntry<Subdirectory> entityEntry = dbContext.Entry(DbDirectoryItem);
-                CollectionEntry<Subdirectory, DbFile> filesEntry = entityEntry.Collection(d => d.Files);
-                if (!filesEntry.IsLoaded)
+                foreach ((FileInfo FS, DbFile DB) item in newFiles.Join((await entityEntry.GetRelatedCollectionAsync(d => d.Files, CancellationToken)),
+                    f => f.Name, f => f.Name, (fileInfo, dbFile) => (FS: fileInfo, DB: dbFile)))
                 {
-                    await filesEntry.LoadAsync(CancellationToken);
-                    if (CancellationToken.IsCancellationRequested)
-                        throw new OperationCanceledException();
+                    if (item.DB is null)
+                    {
+                        long length = item.FS.Length;
+                        DbFile file = await DbFile.AddNewAsync(dbContext, DbDirectoryItem.Id, item.FS.Name, item.FS.Length, item.FS.CreationTime, item.FS.LastWriteTime,
+                            CancellationToken);
+                        
+                        // TODO: Add other property sets
+                    }
+                    else if (item.FS is null)
+                    {
+                        item.DB.SetDeleted(dbContext);
+                        // Mark item deleted
+                    }
+                    else
+                    {
+                        // Update item
+                    }
                 }
-                DbFile[] oldFiles = filesEntry.CurrentValue.ToArray();
-                CollectionEntry<Subdirectory, Subdirectory> subdirectoriesEntry = entityEntry.Collection(d => d.SubDirectories);
-                if (!subdirectoriesEntry.IsLoaded)
-                {
-                    await subdirectoriesEntry.LoadAsync(CancellationToken);
-                    if (CancellationToken.IsCancellationRequested)
-                        throw new OperationCanceledException();
-                }
-                Subdirectory[] oldDirectories = subdirectoriesEntry.CurrentValue.ToArray();
+                if (newDirectories is not null)
+                    foreach ((DirectoryInfo FS, Subdirectory DB) item in newDirectories.Join((await entityEntry.GetRelatedCollectionAsync(d => d.SubDirectories, CancellationToken)),
+                        f => f.Name, f => f.Name, (directoryInfo, subdirectory) => (FS: directoryInfo, DB: subdirectory)))
+                    {
+                        if (item.DB is null)
+                        {
+                            // TODO: Add new DB item
+                        }
+                        else if (item.FS is null)
+                        {
+                            // Mark item deleted
+                        }
+                        else
+                        {
+                            // Update item
+                        }
+                    }
+                Subdirectory[] oldDirectories = (await entityEntry.GetRelatedCollectionAsync(d => d.SubDirectories, CancellationToken)).ToArray();
                 foreach (FileInfo fileInfo in newFiles)
                 {
                     if (CancellationToken.IsCancellationRequested)
                         throw new OperationCanceledException();
                     string name = fileInfo.Name;
-                    DbFile dbFile = filesEntry.CurrentValue.FirstOrDefault(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    DbFile dbFile = oldFiles.FirstOrDefault(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                     if (dbFile is null)
                     {
                         long length = fileInfo.Length;
@@ -166,7 +192,7 @@ namespace FsInfoCat.Desktop
                         if (++TotalCount >= Job.MaxTotalItems)
                             break;
                         string name = directoryInfo.Name;
-                        Subdirectory subdirectory = subdirectoriesEntry.CurrentValue.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.InvariantCultureIgnoreCase));
+                        Subdirectory subdirectory = oldDirectories.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.InvariantCultureIgnoreCase));
                         if (subdirectory is null)
                         {
                             subdirectory = new Subdirectory

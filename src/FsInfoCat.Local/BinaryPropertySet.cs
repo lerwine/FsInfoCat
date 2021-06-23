@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -97,6 +98,22 @@ namespace FsInfoCat.Local
                 .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
                 .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             return binaryPropertiesIdElement.Elements(nameof(RedundantSet)).Select(e => RedundantSet.ImportAsync(dbContext, logger, binaryPropertiesId, e).Result).ToArray();
+        }
+
+        internal static async Task<BinaryPropertySet> GetBinaryPropertySetAsync(LocalDbContext dbContext, long length, MD5Hash? hash, CancellationToken cancellationToken)
+        {
+            BinaryPropertySet result = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == length && p.Hash == hash, cancellationToken);
+            if (result is null)
+            {
+                result = new()
+                {
+                    Length = length,
+                    Hash = hash
+                };
+                dbContext.BinaryPropertySets.Add(result);
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+            return result;
         }
     }
 }

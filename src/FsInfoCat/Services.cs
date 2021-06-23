@@ -14,6 +14,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat
@@ -94,6 +95,7 @@ namespace FsInfoCat
             await Host.StartAsync();
         }
 
+        [Obsolete("Pass cancellation token")]
         public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry, [NotNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression)
             where TEntity : class
             where TProperty : class
@@ -104,6 +106,20 @@ namespace FsInfoCat
             return collectionEntry.CurrentValue;
         }
 
+        public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry,
+            [NotNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, CancellationToken cancellationToken)
+            where TEntity : class
+            where TProperty : class
+        {
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+            CollectionEntry<TEntity, TProperty> collectionEntry = entry.Collection(propertyExpression);
+            if (!collectionEntry.IsLoaded)
+                await collectionEntry.LoadAsync(cancellationToken);
+            return collectionEntry.CurrentValue;
+        }
+
+        [Obsolete("Pass cancellation token")]
         public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry, [NotNull] Expression<Func<TEntity, TProperty>> propertyExpression)
             where TEntity : class
             where TProperty : class
@@ -111,6 +127,19 @@ namespace FsInfoCat
             ReferenceEntry<TEntity, TProperty> referenceEntry = entry.Reference(propertyExpression);
             if (!referenceEntry.IsLoaded)
                 await referenceEntry.LoadAsync();
+            return referenceEntry.CurrentValue;
+        }
+
+        public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry,
+            [NotNull] Expression<Func<TEntity, TProperty>> propertyExpression, CancellationToken cancellationToken)
+            where TEntity : class
+            where TProperty : class
+        {
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+            ReferenceEntry<TEntity, TProperty> referenceEntry = entry.Reference(propertyExpression);
+            if (!referenceEntry.IsLoaded)
+                await referenceEntry.LoadAsync(cancellationToken);
             return referenceEntry.CurrentValue;
         }
 

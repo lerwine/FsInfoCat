@@ -19,19 +19,13 @@
 			"path": "dev\\Scripts"
 		},
 		{
-			"path": "src"
-		},
-		{
 			"path": "..\\PowerShell-Modules"
 		},
 		{
 			"path": "..\\..\\OneDrive\\Documents\\Visual Studio 2019"
 		},
 		{
-			"path": "..\\..\\Downloads\\winpropssource\\WinProps"
-		},
-		{
-			"path": "FsInfoCat\\FsInfoCat.Local\\Resources"
+			"path": "Legacy"
 		}
 	],
     "settings": {}

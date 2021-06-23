@@ -10,7 +10,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -224,6 +226,69 @@ namespace FsInfoCat.Local
             _volume = AddChangeTracker<Volume>(nameof(Volume), null);
             _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
         }
+
+        internal async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        {
+            switch (Status)
+            {
+                case DirectoryStatus.Deleted:
+                case DirectoryStatus.Incomplete:
+                    return;
+            }
+            Status = DirectoryStatus.Incomplete;
+            EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
+            SubdirectoryAccessError[] subdirectoryAccessErrors = (await dbEntry.GetRelatedCollectionAsync(d => d.AccessErrors, cancellationToken)).ToArray();
+            if (subdirectoryAccessErrors.Length > 0)
+                dbContext.SubdirectoryAccessErrors.RemoveRange(subdirectoryAccessErrors);
+            foreach (Subdirectory subdirectory in (await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken)))
+                await subdirectory.MarkBranchIncompleteAsync(dbContext, cancellationToken, true);
+            if (!doNotSaveChanges)
+                await dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        internal async Task MarkBranchDeletedAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        {
+            if (Status == DirectoryStatus.Deleted)
+                return;
+            Status = DirectoryStatus.Deleted;
+            EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
+            SubdirectoryAccessError[] subdirectoryAccessErrors = (await dbEntry.GetRelatedCollectionAsync(d => d.AccessErrors, cancellationToken)).ToArray();
+            if (subdirectoryAccessErrors.Length > 0)
+                dbContext.SubdirectoryAccessErrors.RemoveRange(subdirectoryAccessErrors);
+            foreach (Subdirectory subdirectory in (await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken)))
+                await subdirectory.MarkBranchDeletedAsync(dbContext, cancellationToken, true);
+            foreach (DbFile file in (await dbEntry.GetRelatedCollectionAsync(d => d.Files, cancellationToken)))
+                await file.MarkDeletedAsync(dbContext, cancellationToken, true);
+            if (!doNotSaveChanges)
+                await dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        private void SetError(LocalDbContext dbContext, AccessErrorCode errorCode, Exception exception)
+        {
+            dbContext.SubdirectoryAccessErrors.Add(new SubdirectoryAccessError()
+            {
+                ErrorCode = errorCode,
+                Message = string.IsNullOrWhiteSpace(exception.Message) ? $"An unexpected {exception.GetType().FullName} has occurred." : exception.Message,
+                Details = exception.ToString(),
+                TargetId = Id
+            });
+            Status = DirectoryStatus.AccessError;
+        }
+
+        internal void SetUnauthorizedAccessError([DisallowNull] LocalDbContext dbContext, [DisallowNull] UnauthorizedAccessException exception) =>
+            SetError(dbContext, AccessErrorCode.UnauthorizedAccess, exception);
+
+        internal void SetSecurityError([DisallowNull] LocalDbContext dbContext, [DisallowNull] SecurityException exception) =>
+            SetError(dbContext, AccessErrorCode.SecurityException, exception);
+
+        internal void SetPathTooLongError([DisallowNull] LocalDbContext dbContext, [DisallowNull] PathTooLongException exception) =>
+            SetError(dbContext, AccessErrorCode.PathTooLong, exception);
+
+        internal void SetIOError([DisallowNull] LocalDbContext dbContext, [DisallowNull] IOException exception) =>
+            SetError(dbContext, AccessErrorCode.IOError, exception);
+
+        internal void SetUnspecifiedError([DisallowNull] LocalDbContext dbContext, [DisallowNull] Exception exception) =>
+            SetError(dbContext, AccessErrorCode.Unspecified, exception);
 
         public static async Task<List<((string, Guid), T)>> LoadFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory, LocalDbContext dbContext) => await Task.Run(() =>
         {

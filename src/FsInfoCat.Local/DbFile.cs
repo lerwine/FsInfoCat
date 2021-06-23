@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -46,7 +47,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid?> _recordedTVPropertySetId;
         private readonly IPropertyChangeTracker<Guid?> _videoPropertySetId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
-        private readonly IPropertyChangeTracker<BinaryPropertySet> _content;
+        private readonly IPropertyChangeTracker<BinaryPropertySet> _binaryPropertySet;
         private readonly IPropertyChangeTracker<Redundancy> _redundancy;
         private readonly IPropertyChangeTracker<SummaryPropertySet> _summaryPropertySet;
         private readonly IPropertyChangeTracker<DocumentPropertySet> _documentProperties;
@@ -82,6 +83,11 @@ namespace FsInfoCat.Local
         [Required]
         public virtual DateTime LastAccessed { get => _lastAccessed.GetValue(); set => _lastAccessed.SetValue(value); }
 
+        public void SetDeleted(LocalDbContext dbContext)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual DateTime? LastHashCalculation { get => _lastHashCalculation.GetValue(); set => _lastHashCalculation.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
@@ -115,9 +121,9 @@ namespace FsInfoCat.Local
             {
                 if (_binaryPropertySetId.SetValue(value))
                 {
-                    BinaryPropertySet nav = _content.GetValue();
+                    BinaryPropertySet nav = _binaryPropertySet.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -133,10 +139,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -152,10 +158,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -171,10 +177,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -190,10 +196,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -209,10 +215,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -228,10 +234,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -247,10 +253,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -266,10 +272,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -285,10 +291,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -304,10 +310,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -323,10 +329,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _content.SetValue(null);
+                            _binaryPropertySet.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _content.SetValue(null);
+                        _binaryPropertySet.SetValue(null);
                 }
             }
         }
@@ -334,10 +340,10 @@ namespace FsInfoCat.Local
 
         public virtual BinaryPropertySet BinaryProperties
         {
-            get => _content.GetValue();
+            get => _binaryPropertySet.GetValue();
             set
             {
-                if (_content.SetValue(value))
+                if (_binaryPropertySet.SetValue(value))
                 {
                     if (value is null)
                         _binaryPropertySetId.SetValue(Guid.Empty);
@@ -642,7 +648,7 @@ namespace FsInfoCat.Local
             _recordedTVPropertySetId = AddChangeTracker<Guid?>(nameof(RecordedTVPropertySetId), null);
             _videoPropertySetId = AddChangeTracker<Guid?>(nameof(VideoPropertySetId), null);
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
-            _content = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
+            _binaryPropertySet = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
             _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
             _summaryPropertySet = AddChangeTracker<SummaryPropertySet>(nameof(SummaryProperties), null);
             _documentProperties = AddChangeTracker<DocumentPropertySet>(nameof(DocumentProperties), null);
@@ -655,6 +661,19 @@ namespace FsInfoCat.Local
             _photoProperties = AddChangeTracker<PhotoPropertySet>(nameof(PhotoProperties), null);
             _recordedTVProperties = AddChangeTracker<RecordedTVPropertySet>(nameof(RecordedTVProperties), null);
             _videoProperties = AddChangeTracker<VideoPropertySet>(nameof(VideoProperties), null);
+        }
+
+        internal async Task MarkDeletedAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        {
+            if (Deleted)
+                return;
+            EntityEntry<DbFile> dbEntry = dbContext.Entry(this);
+            FileAccessError[] fileAccessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
+            if (fileAccessErrors.Length > 0)
+                dbContext.FileAccessErrors.RemoveRange(fileAccessErrors);
+            Deleted = true;
+            if (!doNotSaveChanges)
+                await dbContext.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)
@@ -792,6 +811,22 @@ namespace FsInfoCat.Local
                 await FileAccessError.ImportAsync(dbContext, logger, fileId, accessErrorElement);
             foreach (XElement comparisonElement in fileElement.Elements(FileComparison.ELEMENT_NAME))
                 await FileComparison.ImportAsync(dbContext, logger, fileId, comparisonElement);
+        }
+
+        public static async Task<DbFile> AddNewAsync(LocalDbContext dbContext, Guid parentId, string name, long length, DateTime creationTime, DateTime lastWriteTime,
+            CancellationToken cancellationToken)
+        {
+            DbFile file = new()
+            {
+                ParentId = parentId,
+                Name = name,
+                BinaryProperties = await BinaryPropertySet.GetBinaryPropertySetAsync(dbContext, length, null, cancellationToken),
+                CreationTime = creationTime,
+                LastWriteTime = lastWriteTime
+            };
+            dbContext.Files.Add(file);
+            await dbContext.SaveChangesAsync(cancellationToken);
+            return file;
         }
     }
 }

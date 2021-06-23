@@ -1,17 +1,26 @@
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace FsInfoCat.Desktop
 {
     public sealed class FileImportEventArgs : FileSystemImportEventArgs
     {
-        internal FileImportEventArgs(FileSystemImportJob.ScanContext scanContext, FileInfo fsTarget, DbFile dbTarget, Exception error = null)
-            : base(scanContext, fsTarget, dbTarget, error)
+        [NotNull]
+        public new FileInfo FsTarget => (FileInfo)base.FsTarget;
+
+        [MaybeNull]
+        public new DbFile DbTarget => (DbFile)base.DbTarget;
+
+        internal FileImportEventArgs([DisallowNull] FileSystemImportJob importJob, [DisallowNull] FileInfo fsTarget, [AllowNull] DbFile dbTarget, Exception error = null)
+            : base(importJob, fsTarget, dbTarget, error)
         {
         }
 
-        public new FileInfo FsTarget => (FileInfo)base.FsTarget;
-        public new DbFile DbTarget => (DbFile)base.DbTarget;
+        internal FileImportEventArgs([DisallowNull] FileSystemImportJob.ScanContext scanContext, [DisallowNull] FileInfo fsTarget, [AllowNull] DbFile dbTarget, Exception error = null)
+            : base(scanContext, fsTarget, dbTarget, error)
+        {
+        }
     }
 }
