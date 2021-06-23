@@ -1,20 +1,25 @@
+using FsInfoCat.Local;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.WMI
 {
-    public class Win32_LogicalDisk
+    public class Win32_LogicalDisk : ILogicalDiskInfo
     {
+        public string DisplayName => string.IsNullOrWhiteSpace(Caption) ? Name : Caption;
+
         public string Name { get; private set; }
 
         public string VolumeName { get; private set; }
 
         public string VolumeSerialNumber { get; private set; }
+
+        public bool ReadOnly => (Access & CIMLogicalDiskAccess.Writeable) == CIMLogicalDiskAccess.Unknown;
 
         public string Caption { get; private set; }
 
@@ -39,7 +44,12 @@ namespace FsInfoCat.Desktop.WMI
         public CIMLogicalDiskAccess Access { get; private set; }
 
         public CIMLogicalDiskAvailability Availability { get; private set; }
+
         internal Win32_Directory RootDirectory { get; }
+
+        string ILogicalDiskInfo.FileSystemName => FileSystem;
+
+        uint ILogicalDiskInfo.MaxNameLength => MaximumComponentLength;
 
         internal Win32_LogicalDisk(ManagementObject obj)
         {
@@ -61,6 +71,7 @@ namespace FsInfoCat.Desktop.WMI
             RootDirectory = obj.GetRelated("Win32_LogicalDiskRootDirectory").OfType<ManagementObject>().Select(m => new Win32_Directory(m)).FirstOrDefault();
         }
 
+        [Obsolete("Use CancellationToken")]
         internal static async Task<Win32_LogicalDisk> GetLogicalDiskAsync(DirectoryInfo directoryInfo)
         {
             if (directoryInfo is null)
@@ -73,8 +84,29 @@ namespace FsInfoCat.Desktop.WMI
             });
         }
 
+        internal static async Task<Win32_LogicalDisk> GetLogicalDiskAsync(DirectoryInfo directoryInfo, CancellationToken cancellationToken)
+        {
+            if (directoryInfo is null)
+                return null;
+            string fullName = directoryInfo.Root.FullName;
+            return (await GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(l =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                Win32_Directory d = l.RootDirectory;
+                return d is not null && fullName.Equals(d.Name, StringComparison.InvariantCultureIgnoreCase);
+            });
+        }
+
+        [Obsolete("Use CancellationToken")]
         internal static async Task<Win32_LogicalDisk[]> GetLogicalDisksAsync() => await Task.Run(() => GetLogicalDisks().ToArray());
 
+        internal static async Task<Win32_LogicalDisk[]> GetLogicalDisksAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await Task.Run(() => GetLogicalDisks(cancellationToken).ToArray(), cancellationToken);
+        }
+
+        [Obsolete("Use CancellationToken")]
         internal static IEnumerable<Win32_LogicalDisk> GetLogicalDisks()
         {
             ManagementScope namespaceScope = new("\\\\.\\ROOT\\CIMV2");
@@ -82,6 +114,19 @@ namespace FsInfoCat.Desktop.WMI
             ManagementObjectSearcher mgmtObjSearcher = new(namespaceScope, diskQuery);
             foreach (ManagementObject obj in mgmtObjSearcher.Get())
                 yield return new Win32_LogicalDisk(obj);
+        }
+
+        internal static IEnumerable<Win32_LogicalDisk> GetLogicalDisks(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ManagementScope namespaceScope = new("\\\\.\\ROOT\\CIMV2");
+            ObjectQuery diskQuery = new($"SELECT * FROM {nameof(Win32_LogicalDisk)}");
+            ManagementObjectSearcher mgmtObjSearcher = new(namespaceScope, diskQuery);
+            foreach (ManagementObject obj in mgmtObjSearcher.Get())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                yield return new Win32_LogicalDisk(obj);
+            }
         }
     }
 }

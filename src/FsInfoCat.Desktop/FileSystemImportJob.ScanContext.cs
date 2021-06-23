@@ -32,14 +32,12 @@ namespace FsInfoCat.Desktop
             {
                 using LocalDbContext dbContext = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
                 Subdirectory subdirectory = await dbContext.Entry(configuration).GetRelatedReferenceAsync(c => c.Root, cancellationToken);
-                if (cancellationToken.IsCancellationRequested)
-                    throw new OperationCanceledException();
+                cancellationToken.ThrowIfCancellationRequested();
                 if (subdirectory is null)
                     throw new InvalidOperationException($"Unexpected error: {nameof(CrawlConfiguration)}.{nameof(CrawlConfiguration.Root)} was null.");
 
                 string fullName = await Subdirectory.LookupFullNameAsync(subdirectory, dbContext);
-                if (cancellationToken.IsCancellationRequested)
-                    throw new OperationCanceledException();
+                cancellationToken.ThrowIfCancellationRequested();
                 if (string.IsNullOrEmpty(fullName))
                     throw new InvalidOperationException($"Unexpected error: Could not build full path for {nameof(CrawlConfiguration)}.{nameof(CrawlConfiguration.Root)}.");
                 ScanContext context = new(0, 0UL, new DirectoryInfo(fullName), subdirectory, cancellationToken);
@@ -48,8 +46,7 @@ namespace FsInfoCat.Desktop
 
             private async Task ScanAsync(FileSystemImportObserver observer, LocalDbContext dbContext)
             {
-                if (CancellationToken.IsCancellationRequested)
-                    throw new OperationCanceledException();
+                CancellationToken.ThrowIfCancellationRequested();
                 observer.RaiseDirectoryImporting(this);
                 FileInfo[] newFiles;
                 DirectoryInfo[] newDirectories;

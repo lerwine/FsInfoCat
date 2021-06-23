@@ -77,55 +77,73 @@ namespace FsInfoCat
             return GetAppDataPath(path, assemblyName.CultureInfo);
         }
 
-        private static async Task<IHost> PrivateInitialize(string[] args)
-        {
-            _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
-                .ConfigureHostConfiguration(builder => builder
-                    .SetBasePath(AppContext.BaseDirectory)
-                    .AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true)
-                ).ConfigureAppConfiguration((context, builder) => builder
-                    .SetBasePath(AppContext.BaseDirectory)
-                    .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
-                    .AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                ).ConfigureServices(ServiceBuilderHandlerAttribute.InvokeHandlers)
-                .ConfigureLogging((context, builder) => builder.Configure(options => options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId))
-                .Build();
-            await _host.StartAsync();
-            return _host;
-        }
+        //private static async Task<IHost> PrivateInitialize(string[] args)
+        //{
+        //    _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+        //        .ConfigureHostConfiguration(builder => builder
+        //            .SetBasePath(AppContext.BaseDirectory)
+        //            .AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true)
+        //        ).ConfigureAppConfiguration((context, builder) => builder
+        //            .SetBasePath(AppContext.BaseDirectory)
+        //            .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
+        //            .AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+        //        ).ConfigureServices(ServiceBuilderHandlerAttribute.InvokeHandlers)
+        //        .ConfigureLogging((context, builder) =>
+        //            builder.Configure(options => options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId)
+        //        ).Build();
+        //    await _host.StartAsync();
+        //    return _host;
+        //}
+
         public static async Task<IHost> Initialize(params string[] args)
         {
             Thread.BeginCriticalRegion();
             if (_initializeTask is null)
-                _initializeTask = PrivateInitialize(args);
+                _initializeTask = Task.Run(async () =>
+                {
+                    _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+                        .ConfigureHostConfiguration(builder => builder
+                            .SetBasePath(AppContext.BaseDirectory)
+                            .AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true)
+                        ).ConfigureAppConfiguration((context, builder) => builder
+                            .SetBasePath(AppContext.BaseDirectory)
+                            .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                        ).ConfigureServices(ServiceBuilderHandlerAttribute.InvokeHandlers)
+                        .ConfigureLogging((context, builder) =>
+                            builder.Configure(options => options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId)
+                        ).Build();
+                    await _host.StartAsync();
+                    return _host;
+                });
             Thread.EndCriticalRegion();
             return await _initializeTask;
         }
 
-        public static async Task Initialize_Obsolete(Action<IServiceCollection> configureServices, params string[] args)
-        {
-            if (!(Host is null))
-                throw new InvalidOperationException();
-            _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args).ConfigureHostConfiguration(builder =>
-            {
-                builder.SetBasePath(AppContext.BaseDirectory);
-                builder.AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true);
+        //public static async Task Initialize_Obsolete(Action<IServiceCollection> configureServices, params string[] args)
+        //{
+        //    if (!(Host is null))
+        //        throw new InvalidOperationException();
+        //    _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args).ConfigureHostConfiguration(builder =>
+        //    {
+        //        builder.SetBasePath(AppContext.BaseDirectory);
+        //        builder.AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true);
 
-            }).ConfigureAppConfiguration((context, builder) =>
-            {
-                builder.SetBasePath(AppContext.BaseDirectory);
-                builder.AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true);
-                builder.AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+        //    }).ConfigureAppConfiguration((context, builder) =>
+        //    {
+        //        builder.SetBasePath(AppContext.BaseDirectory);
+        //        builder.AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true);
+        //        builder.AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
-            }).ConfigureServices(services =>
-            {
-                configureServices?.Invoke(services);
-            }).ConfigureLogging((context, builder) => builder.Configure(options =>
-            {
-                options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId;
-            })).Build();
-            await Host.StartAsync();
-        }
+        //    }).ConfigureServices(services =>
+        //    {
+        //        configureServices?.Invoke(services);
+        //    }).ConfigureLogging((context, builder) => builder.Configure(options =>
+        //    {
+        //        options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId;
+        //    })).Build();
+        //    await Host.StartAsync();
+        //}
 
         [Obsolete("Pass cancellation token")]
         public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry, [NotNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression)
@@ -143,8 +161,7 @@ namespace FsInfoCat
             where TEntity : class
             where TProperty : class
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             CollectionEntry<TEntity, TProperty> collectionEntry = entry.Collection(propertyExpression);
             if (!collectionEntry.IsLoaded)
                 await collectionEntry.LoadAsync(cancellationToken);
@@ -167,8 +184,7 @@ namespace FsInfoCat
             where TEntity : class
             where TProperty : class
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
+            cancellationToken.ThrowIfCancellationRequested();
             ReferenceEntry<TEntity, TProperty> referenceEntry = entry.Reference(propertyExpression);
             if (!referenceEntry.IsLoaded)
                 await referenceEntry.LoadAsync(cancellationToken);
