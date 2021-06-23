@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -7,11 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
-using System.Management;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,7 +25,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<DriveType> _type;
         private readonly IPropertyChangeTracker<bool?> _caseSensitiveSearch;
         private readonly IPropertyChangeTracker<bool?> _readOnly;
-        private readonly IPropertyChangeTracker<int?> _maxNameLength;
+        private readonly IPropertyChangeTracker<uint?> _maxNameLength;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<VolumeStatus> _status;
         private readonly IPropertyChangeTracker<Guid> _fileSystemId;
@@ -78,9 +74,9 @@ namespace FsInfoCat.Local
         public virtual bool? ReadOnly { get => _readOnly.GetValue(); set => _readOnly.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
+        [Range(1, uint.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual int? MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
+        public virtual uint? MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
@@ -154,7 +150,7 @@ namespace FsInfoCat.Local
             _identifier = AddChangeTracker<VolumeIdentifier>(nameof(Identifier), default);
             _caseSensitiveSearch = AddChangeTracker<bool?>(nameof(CaseSensitiveSearch), null);
             _readOnly = AddChangeTracker<bool?>(nameof(ReadOnly), null);
-            _maxNameLength = AddChangeTracker<int?>(nameof(MaxNameLength), null);
+            _maxNameLength = AddChangeTracker<uint?>(nameof(MaxNameLength), null);
             _type = AddChangeTracker(nameof(Type), DriveType.Unknown);
             _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _status = AddChangeTracker(nameof(Status), VolumeStatus.Unknown);
@@ -193,7 +189,7 @@ namespace FsInfoCat.Local
             value = ReadOnly;
             if (value.HasValue)
                 result.SetAttributeValue(nameof(ReadOnly), value.Value);
-            int? maxNameLength = MaxNameLength;
+            uint? maxNameLength = MaxNameLength;
             if (maxNameLength.HasValue)
                 result.SetAttributeValue(nameof(MaxNameLength), maxNameLength.Value);
             if (Type != DriveType.Unknown)

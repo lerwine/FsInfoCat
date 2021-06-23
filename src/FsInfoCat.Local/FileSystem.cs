@@ -23,7 +23,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _displayName;
         private readonly IPropertyChangeTracker<bool> _caseSensitiveSearch;
         private readonly IPropertyChangeTracker<bool> _readOnly;
-        private readonly IPropertyChangeTracker<int> _maxNameLength;
+        private readonly IPropertyChangeTracker<uint> _maxNameLength;
         private readonly IPropertyChangeTracker<DriveType?> _defaultDriveType;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<bool> _isInactive;
@@ -54,9 +54,9 @@ namespace FsInfoCat.Local
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
+        [Range(1, uint.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual int MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
+        public virtual uint MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DefaultDriveType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DriveType? DefaultDriveType { get => _defaultDriveType.GetValue(); set => _defaultDriveType.SetValue(value); }
