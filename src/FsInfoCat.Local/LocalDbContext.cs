@@ -151,10 +151,10 @@ namespace FsInfoCat.Local
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
         }
 
-        public static void ConfigureServices(IServiceCollection services, Assembly assembly, string dbFileName) =>
-            ConfigureServices(services, GetDbFilePath(assembly, dbFileName));
+        public static void AddDbContextPool(IServiceCollection services, Assembly assembly, string dbFileName) =>
+            AddDbContextPool(services, GetDbFilePath(assembly, dbFileName));
 
-        public static void ConfigureServices(IServiceCollection services, string dbPath)
+        public static void AddDbContextPool(IServiceCollection services, string dbPath)
         {
             string connectionString = GetConnectionString(dbPath);
             services.AddDbContextPool<LocalDbContext>(options =>

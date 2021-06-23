@@ -9,6 +9,7 @@ namespace FsInfoCat.Desktop
     /// <summary>
     /// Represents a background task for crawling the contents of a subdirectory.
     /// </summary>
+    [Obsolete("Use FsInfoCat.Local.CrawlWorker, instead")]
     public partial class FileSystemImportJob : IDisposable
     {
         private readonly object _syncRoot = new();
@@ -56,7 +57,25 @@ namespace FsInfoCat.Desktop
             Task = ScanContext.RunAsync(configuration, observer, _tokenSource.Token);
             Task.ContinueWith(task =>
             {
-                if (task.IsCanceled)
+                try
+                {
+                    if (task.IsCanceled)
+                        observer?.RaiseJobCanceled();
+                    else if (task.IsFaulted)
+                        observer?.RaiseJobFailed(task.Exception);
+                    else
+                        observer?.RaiseJobCompleted();
+                }
+                finally
+                {
+                    CancellationTokenSource tokenSource;
+                    lock (_syncRoot)
+                    {
+                        tokenSource = _tokenSource;
+                        _tokenSource = null;
+                    }
+                    tokenSource?.Dispose();
+                }
             });
         }
 

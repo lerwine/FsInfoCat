@@ -15,7 +15,8 @@ namespace FsInfoCat.Desktop
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            await Services.Initialize(ConfigureServices, e.Args);
+            await Services.Initialize(e.Args);
+            //await Services.Initialize_Obsolete(ConfigureServices, e.Args);
             if (Dispatcher.CheckAccess())
                 ShowMainWindow();
             else
@@ -29,12 +30,13 @@ namespace FsInfoCat.Desktop
             mainWindow.Show();
         }
 
-        private void ConfigureServices(IServiceCollection services)
+        [ServiceBuilderHandler]
+#pragma warning disable IDE0051 // Remove unused private members
+        private static void ConfigureServices(IServiceCollection services)
+#pragma warning restore IDE0051 // Remove unused private members
         {
-            Local.LocalDbContext.ConfigureServices(
-                    services.AddSingleton<MainWindow>()
-                    .AddSingleton<ViewModel.MainVM>(),
-                GetType().Assembly, Desktop.Properties.Settings.Default.LocalDbfileName);
+            Local.LocalDbContext.AddDbContextPool(services.AddSingleton<MainWindow>().AddSingleton<ViewModel.MainVM>(),
+                typeof(App).Assembly, Desktop.Properties.Settings.Default.LocalDbfileName);
         }
 
         private async void Application_Exit(object sender, ExitEventArgs e)

@@ -21,13 +21,20 @@ namespace FsInfoCat
 {
     public static class Services
     {
+        private static Task<IHost> _initializeTask;
+        private static IHost _host;
+
         public const string DEFAULT_LOCAL_DB_FILENAME = "FsInfoCat.db";
 
         public static readonly Regex BackslashEscapablePattern = new(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
 
         public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
 
-        public static IHost Host { get; private set; }
+        public static IHost Host => _host is null
+                    ? _initializeTask is null
+                        ? throw new InvalidOperationException($"{nameof(Services)}.{nameof(Initialize)} has not been invoked.")
+                        : _initializeTask.Result
+                    : _host;
 
         public static IServiceProvider ServiceProvider => Host.Services;
 
@@ -70,11 +77,36 @@ namespace FsInfoCat
             return GetAppDataPath(path, assemblyName.CultureInfo);
         }
 
-        public static async Task Initialize(Action<IServiceCollection> configureServices, params string[] args)
+        private static async Task<IHost> PrivateInitialize(string[] args)
+        {
+            _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+                .ConfigureHostConfiguration(builder => builder
+                    .SetBasePath(AppContext.BaseDirectory)
+                    .AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true)
+                ).ConfigureAppConfiguration((context, builder) => builder
+                    .SetBasePath(AppContext.BaseDirectory)
+                    .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                ).ConfigureServices(ServiceBuilderHandlerAttribute.InvokeHandlers)
+                .ConfigureLogging((context, builder) => builder.Configure(options => options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId))
+                .Build();
+            await _host.StartAsync();
+            return _host;
+        }
+        public static async Task<IHost> Initialize(params string[] args)
+        {
+            Thread.BeginCriticalRegion();
+            if (_initializeTask is null)
+                _initializeTask = PrivateInitialize(args);
+            Thread.EndCriticalRegion();
+            return await _initializeTask;
+        }
+
+        public static async Task Initialize_Obsolete(Action<IServiceCollection> configureServices, params string[] args)
         {
             if (!(Host is null))
                 throw new InvalidOperationException();
-            Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args).ConfigureHostConfiguration(builder =>
+            _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args).ConfigureHostConfiguration(builder =>
             {
                 builder.SetBasePath(AppContext.BaseDirectory);
                 builder.AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true);
@@ -208,6 +240,10 @@ namespace FsInfoCat
         }
 
         public static string AsNonNullTrimmed(this string text) => string.IsNullOrWhiteSpace(text) ? "" : text.Trim();
+
+        public static string NullIfEmpty(this string text) => string.IsNullOrEmpty(text) ? null : text.Trim();
+
+        public static string NullIfWhiteSpace(this string text) => string.IsNullOrWhiteSpace(text) ? null : text.Trim();
 
         public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
 
@@ -534,20 +570,4 @@ namespace FsInfoCat
         //    public object GetService(Type serviceType) => null;
         //}
     }
-    //public interface ILoggingService
-    //{
-    //    ILogger<T> CreateLogger<T>();
-    //}
-    //internal class LoggingService : ILoggingService
-    //{
-    //    private static readonly LoggerFactory _loggerFactory;
-
-    //    static LoggingService()
-    //    {
-    //        _loggerFactory = new LoggerFactory();
-    //        _loggerFactory.AddProvider(new DebugLoggerProvider());
-    //    }
-
-    //    public ILogger<T> CreateLogger<T>() => _loggerFactory.CreateLogger<T>();
-    //}
 }

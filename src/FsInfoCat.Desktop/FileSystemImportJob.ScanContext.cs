@@ -13,6 +13,7 @@ namespace FsInfoCat.Desktop
 {
     public partial class FileSystemImportJob
     {
+        [Obsolete("Use FsInfoCat.Local.CrawlWorker, instead")]
         public partial class ScanContext
         {
             internal ushort Depth { get; }
@@ -77,7 +78,7 @@ namespace FsInfoCat.Desktop
                 }
 
                 EntityEntry<Subdirectory> entityEntry = dbContext.Entry(DbDirectoryItem);
-                foreach ((FileInfo FS, DbFile DB) item in newFiles.Join((await entityEntry.GetRelatedCollectionAsync(d => d.Files, CancellationToken)),
+                foreach ((FileInfo FS, DbFile DB) item in newFiles.Join(await entityEntry.GetRelatedCollectionAsync(d => d.Files, CancellationToken),
                     f => f.Name, f => f.Name, (fileInfo, dbFile) => (FS: fileInfo, DB: dbFile)))
                 {
                     if (item.DB is null)
@@ -99,7 +100,7 @@ namespace FsInfoCat.Desktop
                     }
                 }
                 if (newDirectories is not null)
-                    foreach ((DirectoryInfo FS, Subdirectory DB) item in newDirectories.Join((await entityEntry.GetRelatedCollectionAsync(d => d.SubDirectories, CancellationToken)),
+                    foreach ((DirectoryInfo FS, Subdirectory DB) item in newDirectories.Join(await entityEntry.GetRelatedCollectionAsync(d => d.SubDirectories, CancellationToken),
                         f => f.Name, f => f.Name, (directoryInfo, subdirectory) => (FS: directoryInfo, DB: subdirectory)))
                     {
                         if (item.DB is null)
@@ -115,149 +116,6 @@ namespace FsInfoCat.Desktop
                             // Update item
                         }
                     }
-                Subdirectory[] oldDirectories = (await entityEntry.GetRelatedCollectionAsync(d => d.SubDirectories, CancellationToken)).ToArray();
-                foreach (FileInfo fileInfo in newFiles)
-                {
-                    if (CancellationToken.IsCancellationRequested)
-                        throw new OperationCanceledException();
-                    string name = fileInfo.Name;
-                    DbFile dbFile = oldFiles.FirstOrDefault(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                    if (dbFile is null)
-                    {
-                        long length = fileInfo.Length;
-                        BinaryPropertySet bps = dbContext.BinaryPropertySets.FirstOrDefault(p => p.Length == length && p.Hash == null);
-                        if (bps is null)
-                        {
-                            bps = new BinaryPropertySet { Length = length };
-                            dbContext.BinaryPropertySets.Add(bps);
-                            await dbContext.SaveChangesAsync(CancellationToken);
-                            if (CancellationToken.IsCancellationRequested)
-                                throw new OperationCanceledException();
-                        }
-                        dbFile = new DbFile
-                        {
-                            Name = name,
-                            BinaryPropertySetId = bps.Id,
-                            BinaryProperties = bps,
-                            ParentId = DbDirectoryItem.Id,
-                            Parent = DbDirectoryItem
-                        };
-                    }
-                    observer.RaiseFileImporting(this, fileInfo, dbFile);
-                    EntityEntry<DbFile> fileEntry = dbContext.Entry(dbFile);
-                    try
-                    {
-                        await SummaryPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await DocumentPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await AudioPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await DRMPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await GPSPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await ImagePropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await MediaPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await MusicPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await PhotoPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await RecordedTVPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        await VideoPropertySet.ApplyAsync(fileEntry, dbContext, CancellationToken);
-                        switch (fileEntry.State)
-                        {
-                            case EntityState.Detached:
-                                dbContext.Files.Add(dbFile);
-                                await dbContext.SaveChangesAsync(CancellationToken);
-                                if (CancellationToken.IsCancellationRequested)
-                                    throw new OperationCanceledException();
-                                break;
-                            case EntityState.Modified:
-                                await dbContext.SaveChangesAsync(CancellationToken);
-                                if (CancellationToken.IsCancellationRequested)
-                                    throw new OperationCanceledException();
-                                break;
-                        }
-                    }
-                    catch (Exception error)
-                    {
-                        observer.RaiseFileImportError(this, fileInfo, dbFile, error);
-                        if (++TotalCount >= Job.MaxTotalItems)
-                            break;
-                        continue;
-                    }
-                    observer.RaiseFileImported(this, fileInfo, dbFile);
-                    if (++TotalCount >= Job.MaxTotalItems)
-                        break;
-                }
-                if (TotalCount < Job.MaxTotalItems)
-                    foreach (DirectoryInfo directoryInfo in newDirectories)
-                    {
-                        if (CancellationToken.IsCancellationRequested)
-                            throw new OperationCanceledException();
-                        if (++TotalCount >= Job.MaxTotalItems)
-                            break;
-                        string name = directoryInfo.Name;
-                        Subdirectory subdirectory = oldDirectories.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.InvariantCultureIgnoreCase));
-                        if (subdirectory is null)
-                        {
-                            subdirectory = new Subdirectory
-                            {
-                                Name = name,
-                                ParentId = DbDirectoryItem.Id,
-                                Parent = DbDirectoryItem,
-                                Status = DirectoryStatus.Incomplete
-                            };
-                            dbContext.Subdirectories.Add(subdirectory);
-                            await dbContext.SaveChangesAsync(CancellationToken);
-                            if (CancellationToken.IsCancellationRequested)
-                                throw new OperationCanceledException();
-                        }
-                        else
-                        {
-                            EntityEntry<Subdirectory> e = dbContext.Entry(subdirectory);
-                            subdirectory.Status = DirectoryStatus.Incomplete;
-                            e.DetectChanges();
-                            if (e.State == EntityState.Modified)
-                            {
-                                await dbContext.SaveChangesAsync(CancellationToken);
-                                if (CancellationToken.IsCancellationRequested)
-                                    throw new OperationCanceledException();
-                            }
-                        }
-                        ScanContext context = new((ushort)(Depth + 1), TotalCount, directoryInfo, subdirectory, CancellationToken);
-                        await context.ScanAsync(observer, dbContext);
-                        if (CancellationToken.IsCancellationRequested)
-                            throw new OperationCanceledException();
-                        if ((TotalCount = context.TotalCount) >= Job.MaxTotalItems)
-                            break;
-                    }
-                foreach (DbFile dbFile in oldFiles)
-                {
-                    if (CancellationToken.IsCancellationRequested)
-                        throw new OperationCanceledException();
-                    string name = dbFile.Name;
-                    if (newFiles.Any(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                        continue;
-                    EntityEntry<DbFile> e = dbContext.Entry(dbFile);
-                    dbFile.Deleted = true;
-                    e.DetectChanges();
-                    if (e.State == EntityState.Modified)
-                    {
-                        dbContext.Files.Update(dbFile);
-                        await dbContext.SaveChangesAsync(CancellationToken);
-                    }
-                }
-                foreach (Subdirectory subdir in oldDirectories)
-                {
-                    if (CancellationToken.IsCancellationRequested)
-                        throw new OperationCanceledException();
-                    string name = subdir.Name;
-                    if (newDirectories.Any(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                        continue;
-                    EntityEntry<Subdirectory> e = dbContext.Entry(subdir);
-                    subdir.Status = DirectoryStatus.Deleted;
-                    e.DetectChanges();
-                    if (e.State == EntityState.Modified)
-                    {
-                        dbContext.Subdirectories.Update(subdir);
-                        await dbContext.SaveChangesAsync(CancellationToken);
-                    }
-                }
                 observer.RaiseDirectoryImported(this);
             }
             private ScanContext(ushort depth, ulong totalCount, DirectoryInfo directoryInfo, Subdirectory subdirectory, CancellationToken cancellationToken)

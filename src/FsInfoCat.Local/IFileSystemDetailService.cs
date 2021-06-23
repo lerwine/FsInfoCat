@@ -9,7 +9,7 @@ namespace FsInfoCat.Local
 {
     public interface IFileSystemDetailService
     {
-        IFileDetailProvider CreateFileDetailProvider(string filePath);
+        IFileDetailProvider CreateFileDetailProvider(string filePath, bool doNotSaveChanges);
         Task<Volume> GetVolumeAsync(DirectoryInfo directoryInfo, LocalDbContext dbContext, CancellationToken cancellationToken);
     }
 }

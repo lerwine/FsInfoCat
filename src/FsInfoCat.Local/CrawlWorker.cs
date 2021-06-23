@@ -69,22 +69,22 @@ namespace FsInfoCat.Local
 
         private void OnCompleted(Task task, object arg)
         {
-            ICrawlEventFactory eventFactory = (ICrawlEventFactory)arg;
+            CrawlEventReceiver crawlEventReceiver = (CrawlEventReceiver)arg;
             _stopWatch.Stop();
             if (task.IsCanceled)
             {
                 StatusMessage = "Operation canceled.";
-                eventFactory?.RaiseCrawlCanceled(this);
+                crawlEventReceiver?.RaiseCrawlCanceled(this);
             }
             else if (task.IsFaulted)
             {
                 StatusMessage = "Operation failed.";
-                eventFactory?.RaiseCrawlFaulted(this, task.Exception);
+                crawlEventReceiver?.RaiseCrawlFaulted(this, task.Exception);
             }
             else
             {
                 StatusMessage = "Operation Completed.";
-                eventFactory?.RaiseCrawlFinished(this);
+                crawlEventReceiver?.RaiseCrawlFinished(this);
             }
         }
 
@@ -355,12 +355,6 @@ namespace FsInfoCat.Local
         }
 
         public CrawlEventArgs(CrawlWorker.CrawlContext crawlContext)
-        {
-        }
-    }
-    public class CrawlErrorEventArgs : EventArgs
-    {
-        public CrawlErrorEventArgs(CrawlWorker crawlWorker, AggregateException exception)
         {
         }
     }
