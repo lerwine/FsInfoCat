@@ -813,20 +813,27 @@ namespace FsInfoCat.Local
                 await FileComparison.ImportAsync(dbContext, logger, fileId, comparisonElement);
         }
 
-        public static async Task<DbFile> AddNewAsync(LocalDbContext dbContext, Guid parentId, string name, long length, DateTime creationTime, DateTime lastWriteTime,
-            CancellationToken cancellationToken)
+        public async Task<EntityEntry<DbFile>> RefreshAsync(LocalDbContext dbContext, long length, DateTime creationTime, DateTime lastWriteTime,
+            IFileDetailProvider fileDetailProvider, bool doNotSaveChanges, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+        public static async Task<EntityEntry<DbFile>> AddNewAsync(LocalDbContext dbContext, Guid parentId, string name, long length, DateTime creationTime,
+            DateTime lastWriteTime, IFileDetailProvider fileDetailProvider, bool doNotSaveChanges, CancellationToken cancellationToken)
         {
             DbFile file = new()
             {
                 ParentId = parentId,
                 Name = name,
-                BinaryProperties = await BinaryPropertySet.GetBinaryPropertySetAsync(dbContext, length, null, cancellationToken),
+                BinaryProperties = (await BinaryPropertySet.GetBinaryPropertySetAsync(dbContext, length, null, doNotSaveChanges, cancellationToken)).Entity,
                 CreationTime = creationTime,
                 LastWriteTime = lastWriteTime
             };
-            dbContext.Files.Add(file);
-            await dbContext.SaveChangesAsync(cancellationToken);
-            return file;
+            EntityEntry<DbFile> result = dbContext.Files.Add(file);
+            ISummaryProperties summaryPropertySet = await fileDetailProvider.GetSummaryPropertiesAsync(cancellationToken);
+            if (!doNotSaveChanges)
+                await dbContext.SaveChangesAsync(cancellationToken);
+            return result;
         }
     }
 }

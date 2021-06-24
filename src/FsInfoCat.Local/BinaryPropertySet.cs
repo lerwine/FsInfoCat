@@ -100,20 +100,22 @@ namespace FsInfoCat.Local
             return binaryPropertiesIdElement.Elements(nameof(RedundantSet)).Select(e => RedundantSet.ImportAsync(dbContext, logger, binaryPropertiesId, e).Result).ToArray();
         }
 
-        internal static async Task<BinaryPropertySet> GetBinaryPropertySetAsync(LocalDbContext dbContext, long length, MD5Hash? hash, CancellationToken cancellationToken)
+        internal static async Task<EntityEntry<BinaryPropertySet>> GetBinaryPropertySetAsync(LocalDbContext dbContext, long length, MD5Hash? hash, bool doNotSaveChanges,
+            CancellationToken cancellationToken)
         {
-            BinaryPropertySet result = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == length && p.Hash == hash, cancellationToken);
-            if (result is null)
+            BinaryPropertySet bps = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == length && p.Hash == hash, cancellationToken);
+            if (bps is null)
             {
-                result = new()
+                EntityEntry<BinaryPropertySet> result = dbContext.BinaryPropertySets.Add(bps = new()
                 {
                     Length = length,
                     Hash = hash
-                };
-                dbContext.BinaryPropertySets.Add(result);
-                await dbContext.SaveChangesAsync(cancellationToken);
+                });
+                if (!doNotSaveChanges)
+                    await dbContext.SaveChangesAsync(cancellationToken);
+                return result;
             }
-            return result;
+            return dbContext.Entry(bps);
         }
     }
 }

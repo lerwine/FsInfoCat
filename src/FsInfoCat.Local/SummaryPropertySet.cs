@@ -26,7 +26,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string[]> _itemAuthors;
         private readonly IPropertyChangeTracker<string> _itemType;
         private readonly IPropertyChangeTracker<string> _itemTypeText;
-        private readonly IPropertyChangeTracker<string> _kind;
+        private readonly IPropertyChangeTracker<string[]> _kind;
         private readonly IPropertyChangeTracker<string> _mimeType;
         private readonly IPropertyChangeTracker<string> _parentalRatingReason;
         private readonly IPropertyChangeTracker<string> _parentalRatingsOrganization;
@@ -58,7 +58,7 @@ namespace FsInfoCat.Local
         public string[] ItemAuthors { get => _itemAuthors.GetValue(); set => _itemAuthors.SetValue(value); }
         public string ItemType { get => _itemType.GetValue(); set => _itemType.SetValue(value); }
         public string ItemTypeText { get => _itemTypeText.GetValue(); set => _itemTypeText.SetValue(value); }
-        public string Kind { get => _kind.GetValue(); set => _kind.SetValue(value); }
+        public string[] Kind { get => _kind.GetValue(); set => _kind.SetValue(value); }
         public string MIMEType { get => _mimeType.GetValue(); set => _mimeType.SetValue(value); }
         public string ParentalRatingReason { get => _parentalRatingReason.GetValue(); set => _parentalRatingReason.SetValue(value); }
         public string ParentalRatingsOrganization { get => _parentalRatingsOrganization.GetValue(); set => _parentalRatingsOrganization.SetValue(value); }
@@ -102,7 +102,7 @@ namespace FsInfoCat.Local
             _itemAuthors = AddChangeTracker<string[]>(nameof(ItemAuthors), null);
             _itemType = AddChangeTracker<string>(nameof(ItemType), null);
             _itemTypeText = AddChangeTracker<string>(nameof(ItemTypeText), null);
-            _kind = AddChangeTracker<string>(nameof(Kind), null);
+            _kind = AddChangeTracker<string[]>(nameof(Kind), null);
             _mimeType = AddChangeTracker<string>(nameof(MIMEType), null);
             _parentalRatingReason = AddChangeTracker<string>(nameof(ParentalRatingReason), null);
             _parentalRatingsOrganization = AddChangeTracker<string>(nameof(ParentalRatingsOrganization), null);

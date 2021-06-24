@@ -12,7 +12,9 @@ namespace FsInfoCat.PS.Export
 
         [XmlAttribute(nameof(CaseSensitiveSearch))]
         [EditorBrowsable(EditorBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string __XML_CaseSensitiveSearch { get => CaseSensitiveSearch.ToBooleanXml(false); set => CaseSensitiveSearch = value.FromXmlBoolean(CaseSensitiveSearch); }
+#pragma warning restore IDE1006 // Naming Styles
 
         internal void SetAllProcessedFlags(bool value)
         {
@@ -25,25 +27,33 @@ namespace FsInfoCat.PS.Export
 
         [XmlAttribute(nameof(ReadOnly))]
         [EditorBrowsable(EditorBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string __XML_ReadOnly { get => ReadOnly.ToBooleanXml(false); set => ReadOnly = value.FromXmlBoolean(ReadOnly); }
+#pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
         public bool ReadOnly { get; set; }
 
         [XmlAttribute(nameof(MaxNameLength))]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string __XML_Priority { get => MaxNameLength.ToInt32Xml(DbConstants.DbColDefaultValue_MaxNameLength); set => MaxNameLength = value.FromXmlInt32(MaxNameLength); }
+#pragma warning disable IDE1006 // Naming Styles
+        public string __XML_Priority { get => MaxNameLength.ToUInt32Xml(DbConstants.DbColDefaultValue_MaxNameLength); set => MaxNameLength = value.FromXmlUInt32(MaxNameLength); }
+#pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
-        public int MaxNameLength { get; set; }
+        public uint MaxNameLength { get; set; }
 
         [XmlAttribute(nameof(DefaultDriveType))]
         [EditorBrowsable(EditorBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string __XML_DefaultDriveType { get => DefaultDriveType.ToDriveTypeXml(); set => DefaultDriveType = value.FromXmlDriveType(); }
+#pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
         public DriveType? DefaultDriveType { get; set; }
 
         [XmlAttribute(nameof(IsInactive))]
         [EditorBrowsable(EditorBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string __XML_IsInactive { get => IsInactive.ToBooleanXml(false); set => IsInactive = value.FromXmlBoolean(IsInactive); }
+#pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
         public bool IsInactive { get; set; }
 

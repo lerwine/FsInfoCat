@@ -263,12 +263,18 @@ namespace FsInfoCat.Local
                 await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        private void SetError(LocalDbContext dbContext, AccessErrorCode errorCode, Exception exception)
+        public void SetError(LocalDbContext dbContext, ErrorCode errorCode, Exception exception, string message = null)
+        {
+            SetError(dbContext, errorCode.ToAccessErrorCode(), exception, message.GetDefaultIfNullOrWhiteSpace(() =>
+                errorCode.GetAmbientValue<ErrorCode, string>()));
+        }
+
+        public void SetError(LocalDbContext dbContext, AccessErrorCode errorCode, Exception exception, string message = null)
         {
             dbContext.SubdirectoryAccessErrors.Add(new SubdirectoryAccessError()
             {
                 ErrorCode = errorCode,
-                Message = string.IsNullOrWhiteSpace(exception.Message) ? $"An unexpected {exception.GetType().FullName} has occurred." : exception.Message,
+                Message = message.GetDefaultIfNullOrWhiteSpace(() => $"An unexpected {exception.GetType().Name} has occurred."),
                 Details = exception.ToString(),
                 TargetId = Id
             });

@@ -26,6 +26,12 @@ namespace FsInfoCat
 
         public const string DEFAULT_LOCAL_DB_FILENAME = "FsInfoCat.db";
 
+        public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
+
+        public static readonly Regex AbnormalWsRegex = new(@" [\s\p{Z}\p{C}]+|(?! )[\s\p{Z}\p{C}]+", RegexOptions.Compiled);
+
+        public static readonly Regex OuterWsRegex = new(@"^[\s\p{Z}\p{C}]+|[\s\p{Z}\p{C}]+$", RegexOptions.Compiled);
+
         public static readonly Regex BackslashEscapablePattern = new(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
 
         public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
@@ -145,6 +151,136 @@ namespace FsInfoCat
         //    await Host.StartAsync();
         //}
 
+        public static bool TryGetAmbientValue<TEnum, TResult>(this TEnum value, out TResult result)
+            where TEnum : struct, Enum
+        {
+            AmbientValueAttribute attribute = typeof(TEnum).GetField(Enum.GetName(value)).GetCustomAttribute<AmbientValueAttribute>();
+            if (attribute is not null && attribute.Value is TResult r)
+            {
+                result = r;
+                return false;
+            }
+            result = default;
+            return false;
+        }
+
+        public static TResult GetAmbientValue<TEnum, TResult>(this TEnum value, TResult defaultValue = default)
+            where TEnum : struct, Enum
+        {
+            AmbientValueAttribute attribute = typeof(TEnum).GetField(Enum.GetName(value)).GetCustomAttribute<AmbientValueAttribute>();
+            if (attribute is not null && attribute.Value is TResult r)
+                return r;
+            return defaultValue;
+        }
+
+        public static IEnumerable<TEnum> GetFlagValues<TEnum>(this TEnum value)
+            where TEnum : struct, Enum
+        {
+            Type type = typeof(TEnum);
+            if (type.GetCustomAttribute<FlagsAttribute>() is null)
+                return new[] { value };
+            return Enum.GetValues<TEnum>().Where(v => value.HasFlag(v));
+        }
+
+        public static ISummaryProperties NullIfEmpty(this ISummaryProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this ISummaryProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.ApplicationName) &&
+            string.IsNullOrWhiteSpace(properties.Comment) && string.IsNullOrWhiteSpace(properties.Subject) &&
+            string.IsNullOrWhiteSpace(properties.Title) && string.IsNullOrWhiteSpace(properties.Company) &&
+            string.IsNullOrWhiteSpace(properties.ContentType) && string.IsNullOrWhiteSpace(properties.Copyright) &&
+            string.IsNullOrWhiteSpace(properties.ParentalRating) && string.IsNullOrWhiteSpace(properties.ItemType) &&
+            string.IsNullOrWhiteSpace(properties.MIMEType) && string.IsNullOrWhiteSpace(properties.ItemTypeText) &&
+            string.IsNullOrWhiteSpace(properties.ParentalRatingsOrganization) && string.IsNullOrWhiteSpace(properties.ParentalRatingReason) &&
+            string.IsNullOrWhiteSpace(properties.SensitivityText) && string.IsNullOrWhiteSpace(properties.Trademarks) && string.IsNullOrWhiteSpace(properties.ProductName) &&
+            !(properties.Rating.HasValue || properties.Sensitivity.HasValue || properties.SimpleRating.HasValue) &&
+            properties.Author.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null && properties.Keywords.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null &&
+            properties.Category.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null && properties.ItemAuthors.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null &&
+            properties.Kind.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null);
+
+        public static IAudioProperties NullIfEmpty(this IAudioProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IAudioProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.Compression) &&
+            string.IsNullOrWhiteSpace(properties.Format) && string.IsNullOrWhiteSpace(properties.StreamName) && !(properties.EncodingBitrate.HasValue ||
+            properties.IsVariableBitrate.HasValue || properties.SampleRate.HasValue || properties.SampleSize.HasValue || properties.StreamNumber.HasValue));
+
+        public static IDocumentProperties NullIfEmpty(this IDocumentProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IDocumentProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.ClientID) &&
+            string.IsNullOrWhiteSpace(properties.LastAuthor) && string.IsNullOrWhiteSpace(properties.RevisionNumber) &&
+            string.IsNullOrWhiteSpace(properties.Division) && string.IsNullOrWhiteSpace(properties.DocumentID) && string.IsNullOrWhiteSpace(properties.Manager) &&
+            string.IsNullOrWhiteSpace(properties.PresentationFormat) && string.IsNullOrWhiteSpace(properties.Version) && !(properties.DateCreated.HasValue ||
+            properties.Security.HasValue) && properties.Contributor.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null);
+
+        public static IDRMProperties NullIfEmpty(this IDRMProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IDRMProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.Description) &&
+            !(properties.DatePlayExpires.HasValue || properties.DatePlayStarts.HasValue || properties.IsProtected.HasValue || properties.PlayCount.HasValue));
+
+        public static IGPSProperties NullIfEmpty(this IGPSProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IGPSProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.AreaInformation) &&
+            string.IsNullOrWhiteSpace(properties.LatitudeRef) && string.IsNullOrWhiteSpace(properties.LongitudeRef) &&
+            string.IsNullOrWhiteSpace(properties.MeasureMode) && string.IsNullOrWhiteSpace(properties.ProcessingMethod) &&
+            !(properties.LatitudeDegrees.HasValue || properties.LatitudeMinutes.HasValue || properties.LatitudeSeconds.HasValue ||
+            properties.LongitudeDegrees.HasValue || properties.LongitudeMinutes.HasValue || properties.LongitudeSeconds.HasValue) &&
+            (properties.VersionID is null || properties.VersionID.Length == 0));
+
+        public static IImageProperties NullIfEmpty(this IImageProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IImageProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.CompressionText) &&
+            string.IsNullOrWhiteSpace(properties.ImageID) && !(properties.BitDepth.HasValue || properties.ColorSpace.HasValue ||
+            properties.CompressedBitsPerPixel.HasValue || properties.Compression.HasValue || properties.HorizontalResolution.HasValue ||
+            properties.HorizontalSize.HasValue || properties.ResolutionUnit.HasValue || properties.VerticalResolution.HasValue || properties.VerticalSize.HasValue));
+
+        public static IMediaProperties NullIfEmpty(this IMediaProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IMediaProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.ContentDistributor) &&
+            string.IsNullOrWhiteSpace(properties.CreatorApplication) && string.IsNullOrWhiteSpace(properties.CreatorApplicationVersion) &&
+            string.IsNullOrWhiteSpace(properties.DateReleased) && string.IsNullOrWhiteSpace(properties.DVDID) && string.IsNullOrWhiteSpace(properties.ProtectionType) &&
+            string.IsNullOrWhiteSpace(properties.ProviderRating) && string.IsNullOrWhiteSpace(properties.ProviderStyle) &&
+            string.IsNullOrWhiteSpace(properties.Publisher) && string.IsNullOrWhiteSpace(properties.Subtitle) && !(properties.Duration.HasValue ||
+            properties.FrameCount.HasValue || properties.Year.HasValue) && properties.Producer.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null &&
+            properties.Writer.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null);
+
+        public static IMusicProperties NullIfEmpty(this IMusicProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IMusicProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.AlbumArtist) &&
+            string.IsNullOrWhiteSpace(properties.AlbumTitle) && string.IsNullOrWhiteSpace(properties.DisplayArtist) && string.IsNullOrWhiteSpace(properties.PartOfSet) &&
+            string.IsNullOrWhiteSpace(properties.Period) && !properties.TrackNumber.HasValue && properties.Artist.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null &&
+            properties.Composer.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null && properties.Conductor.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null &&
+            properties.Genre.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null);
+
+        public static IPhotoProperties NullIfEmpty(this IPhotoProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IPhotoProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.CameraManufacturer) &&
+            string.IsNullOrWhiteSpace(properties.CameraModel) && string.IsNullOrWhiteSpace(properties.EXIFVersion) &&
+            string.IsNullOrWhiteSpace(properties.OrientationText) && !(properties.DateTaken.HasValue || properties.Orientation.HasValue) &&
+            properties.Event.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null && properties.PeopleNames.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null);
+
+        public static IRecordedTVProperties NullIfEmpty(this IRecordedTVProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IRecordedTVProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.EpisodeName) &&
+            string.IsNullOrWhiteSpace(properties.NetworkAffiliation) && string.IsNullOrWhiteSpace(properties.ProgramDescription) &&
+            string.IsNullOrWhiteSpace(properties.StationCallSign) && string.IsNullOrWhiteSpace(properties.StationName) &&
+            !(properties.ChannelNumber.HasValue || properties.IsDTVContent.HasValue || properties.IsHDContent.HasValue || properties.OriginalBroadcastDate.HasValue));
+
+        public static IVideoProperties NullIfEmpty(this IVideoProperties properties) => properties.IsNullOrEmpty() ? null : properties;
+
+        public static bool IsNullOrEmpty(this IVideoProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.Compression) &&
+            string.IsNullOrWhiteSpace(properties.StreamName) && !(properties.EncodingBitrate.HasValue || properties.FrameHeight.HasValue ||
+            properties.FrameRate.HasValue || properties.FrameWidth.HasValue || properties.HorizontalAspectRatio.HasValue || properties.StreamNumber.HasValue ||
+            properties.VerticalAspectRatio.HasValue) && properties.Director.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null);
+
+        public static ErrorCode ToErrorCode(this AccessErrorCode errorCode) => errorCode.GetAmbientValue(ErrorCode.Unexpected);
+
+        public static AccessErrorCode ToAccessErrorCode(this ErrorCode errorCode) =>
+            Enum.GetValues<AccessErrorCode>().Where(e => e.ToErrorCode() == errorCode).DefaultIfEmpty(AccessErrorCode.Unspecified).First();
+
+        public static EventId ToEventId(this AccessErrorCode errorCode) => errorCode.ToErrorCode().ToEventId();
+
+        public static EventId ToEventId(this ErrorCode errorCode) =>
+            new((byte)errorCode, errorCode.TryGetAmbientValue(out string name) ? name : Enum.GetName(errorCode));
+
         [Obsolete("Pass cancellation token")]
         public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry, [NotNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression)
             where TEntity : class
@@ -255,17 +391,51 @@ namespace FsInfoCat
             }
         }
 
+        public static T DefaultIf<T>(T inputValue, Func<T, bool> predicate, T defaultValue) => predicate(inputValue) ? defaultValue : inputValue;
+
+
+        public static TResult DefaultIf<TInput, TResult>(TInput inputValue, PredicatedProduction<TInput, TResult> producer, TResult defaultValue) =>
+            producer(inputValue, out TResult result) ? result : defaultValue;
+
+        public static T GetDefaultIf<T>(T inputValue, Func<T, bool> predicate, Func<T> defaultValueFunc) => predicate(inputValue) ? defaultValueFunc() : inputValue;
+
+        public static TResult GetDefaultIf<TInput, TResult>(TInput inputValue, PredicatedProduction<TInput, TResult> producer, Func<TInput, TResult> defaultValueFunc) =>
+            producer(inputValue, out TResult result) ? result : defaultValueFunc(inputValue);
+
+        public static string AsWsNormalizedOrEmpty(this string text) => (text is null || text.Length == 0 || (text = OuterWsRegex.Replace(text, "")).Length == 0) ? "" :
+            (AbnormalWsRegex.IsMatch(text) ? AbnormalWsRegex.Replace(text, " ") : text);
+
+        public static string DefaultIfNullOrEmpty(this string text, string defaultValue) => DefaultIf(text, string.IsNullOrEmpty, defaultValue);
+
+        public static string DefaultIfNullOrWhiteSpace(this string text, string defaultValue) => DefaultIf(text, string.IsNullOrWhiteSpace, defaultValue);
+
+        public static string GetDefaultIfNullOrEmpty(this string text, Func<string> getDefaultValue) => GetDefaultIf(text, string.IsNullOrEmpty, getDefaultValue);
+
+        public static string GetDefaultIfNullOrWhiteSpace(this string text, Func<string> getDefaultValue) =>
+            GetDefaultIf(text, string.IsNullOrWhiteSpace, getDefaultValue);
+
         public static string AsNonNullTrimmed(this string text) => string.IsNullOrWhiteSpace(text) ? "" : text.Trim();
 
-        public static string NullIfEmpty(this string text) => string.IsNullOrEmpty(text) ? null : text.Trim();
+        public static string TrimmedOrNullIfEmpty(this string text) => string.IsNullOrEmpty(text) ? null : text.Trim();
 
-        public static string NullIfWhiteSpace(this string text) => string.IsNullOrWhiteSpace(text) ? null : text.Trim();
-
-        public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
+        public static string TrimmedOrNullIfWhiteSpace(this string text) => (text is null || (text = text.Trim()).Length == 0) ? null : text;
 
         public static string[] SplitLines(this string text) => (text is null) ? Array.Empty<string>() : NewLineRegex.Split(text);
 
         public static string JoinWithNewLines(this IEnumerable<string> text) => (text is null || !text.Any()) ? null : string.Join(Environment.NewLine, text);
+
+        public static IEnumerable<T> NullIfEmpty<T>(this IEnumerable<T> source) => (source is null || !source.Any()) ? null : source;
+
+        public static IEnumerable<T> NonNullElements<T>(this IEnumerable<T> source) where T : class => source?.Where(s => s is not null);
+
+        public static IEnumerable<string> ElementsNotNullOrEmpty(this IEnumerable<string> text) => text?.Where(s => !string.IsNullOrEmpty(s));
+
+        public static IEnumerable<string> ElementsNotNullOrWhiteSpace(this IEnumerable<string> text) => text.Where(s => !string.IsNullOrWhiteSpace(s));
+
+        public static bool AllNullOrWhiteSpace(this IEnumerable<string> text) => text is null || !text.Any() || text.All(string.IsNullOrWhiteSpace);
+
+        public static IEnumerable<string> NonEmptyTrimmedElements(this IEnumerable<string> text) => text?.Where(s => s is not null).Select(s => s.Trim())
+            .Where(s => s.Length > 0);
 
         public static IEnumerable<string> AsNonNullTrimmedValues(this IEnumerable<string> text) => text?.Select(AsNonNullTrimmed);
 
@@ -279,13 +449,13 @@ namespace FsInfoCat
 
         public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => (source is null) ? Array.Empty<T>() : source;
 
-        public static IEnumerable<KeyValuePair<int, T>> ToIndexValuePairs<T>(this IEnumerable<T> source) => source?.Select((e, i) => new KeyValuePair<int, T>(i, e));
+        public static IEnumerable<IndexedValue<T>> ToIndexValuePairs<T>(this IEnumerable<T> source) => source?.Select((e, i) => new IndexedValue<T>(i, e));
 
-        public static IEnumerable<KeyValuePair<int, TResult>> ToIndexValuePairs<TElement, TResult>(this IEnumerable<TElement> source, Func<TElement, TResult> transform)
+        public static IEnumerable<IndexedValue<TResult>> ToIndexValuePairs<TElement, TResult>(this IEnumerable<TElement> source, Func<TElement, TResult> transform)
         {
             if (transform is null)
                 throw new ArgumentNullException(nameof(transform));
-            return source?.Select((e, i) => new KeyValuePair<int, TResult>(i, transform(e)));
+            return source?.Select((e, i) => new IndexedValue<TResult>(i, transform(e)));
         }
 
         public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, int, TKey> getKey, Func<TSource, int, TValue> getValue)
@@ -586,4 +756,6 @@ namespace FsInfoCat
         //    public object GetService(Type serviceType) => null;
         //}
     }
+
+    public record IndexedValue<T>(int Index, T Value);
 }

@@ -1,10 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,9 +13,10 @@ namespace FsInfoCat.Local
     {
         private bool _isDisposed;
         private readonly Stopwatch _stopWatch = new();
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly Task _task;
         private readonly Func<bool> _isExpired;
+        private readonly ILogger<CrawlWorker> _logger;
         private readonly IFileSystemDetailService _fileSystemDetailService;
 
         public string StatusMessage { get; private set; } = "";
@@ -37,6 +37,7 @@ namespace FsInfoCat.Local
 
         public CrawlWorker([DisallowNull] CrawlConfiguration crawlConfiguration, DateTime stopAt, CrawlEventReceiver crawlEventReceiver = null)
         {
+            _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlWorker>>();
             _fileSystemDetailService = Services.ServiceProvider.GetRequiredService<IFileSystemDetailService>();
             DisplayName = crawlConfiguration.DisplayName;
             MaxRecursionDepth = crawlConfiguration.MaxRecursionDepth;
@@ -53,6 +54,7 @@ namespace FsInfoCat.Local
 
         public CrawlWorker([DisallowNull] CrawlConfiguration crawlConfiguration, CrawlEventReceiver crawlEventReceiver = null)
         {
+            _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlWorker>>();
             _fileSystemDetailService = Services.ServiceProvider.GetRequiredService<IFileSystemDetailService>();
             DisplayName = crawlConfiguration.DisplayName;
             MaxRecursionDepth = crawlConfiguration.MaxRecursionDepth;
@@ -71,22 +73,26 @@ namespace FsInfoCat.Local
             if (task.IsCanceled)
             {
                 StatusMessage = "Operation canceled.";
+                _logger.LogWarning(StatusMessage);
                 crawlEventReceiver?.RaiseCrawlCanceled(this);
             }
             else if (task.IsFaulted)
             {
                 StatusMessage = "Operation failed.";
+                _logger.LogError(ErrorCode.CrawlOperationFailed.ToEventId(), task.Exception, StatusMessage);
                 crawlEventReceiver?.RaiseCrawlFaulted(this, task.Exception);
             }
             else
             {
                 StatusMessage = "Operation Completed.";
+                _logger.LogInformation(StatusMessage);
                 crawlEventReceiver?.RaiseCrawlFinished(this);
             }
         }
 
         private async Task CrawlAsync(CrawlConfiguration configuration, CrawlEventReceiver crawlEventReceiver, CancellationToken cancellationToken)
         {
+            _logger.LogWarning("Crawl Started");
             crawlEventReceiver?.RaiseCrawlStarted(this);
             using LocalDbContext dbContext = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
             Subdirectory subdirectory = await dbContext.Entry(configuration).GetRelatedReferenceAsync(c => c.Root, cancellationToken);

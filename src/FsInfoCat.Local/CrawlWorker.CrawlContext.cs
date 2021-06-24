@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -31,138 +33,177 @@ namespace FsInfoCat.Local
 
             internal async Task CrawlAsync([DisallowNull] LocalDbContext dbContext, [AllowNull] CrawlEventReceiver crawlEventReceiver, CancellationToken cancellationToken)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+                Worker._logger.LogInformation("Entering {FullName}", FS.FullName);
                 Worker.StatusMessage = $"Crawling {FS.FullName}";
                 crawlEventReceiver?.RaiseEnterSubdirectory(this);
                 EntityEntry<Subdirectory> dbEntry = dbContext.Entry(DB);
                 if (FS.Exists)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    FileInfo[] fsFiles = GetFiles(dbContext, crawlEventReceiver);
+                    cancellationToken.ThrowIfCancellationRequested();
                     DB.LastAccessed = DateTime.Now;
-                    FileInfo[] fsFiles = null;
-                    try { fsFiles = FS.GetFiles(); }
-                    catch (UnauthorizedAccessException exception)
-                    {
-                        DB.SetUnauthorizedAccessError(dbContext, exception);
-                        crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.UnauthorizedAccess, exception);
-                    }
-                    catch (SecurityException exception)
-                    {
-                        DB.SetSecurityError(dbContext, exception);
-                        crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.SecurityException, exception);
-                    }
-                    catch (PathTooLongException exception)
-                    {
-                        DB.SetPathTooLongError(dbContext, exception);
-                        crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.PathTooLong, exception);
-                    }
-                    catch (IOException exception)
-                    {
-                        DB.SetIOError(dbContext, exception);
-                        crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.IOError, exception);
-                    }
-                    catch (Exception exception)
-                    {
-                        DB.SetUnspecifiedError(dbContext, exception);
-                        crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.Unspecified, exception);
-                    }
-                    await dbContext.SaveChangesAsync(cancellationToken);
-                    DirectoryInfo[] fsDirectories = null;
-                    if (Depth < Worker.MaxRecursionDepth)
-                    {
-                        try
-                        {
-                            DB.LastAccessed = DateTime.Now;
-                            fsDirectories = FS.GetDirectories();
-                            if (DB.Status == DirectoryStatus.Incomplete)
-                                DB.Status = DirectoryStatus.Complete;
-                        }
-                        catch (UnauthorizedAccessException exception)
-                        {
-                            if (DB.Status == DirectoryStatus.Incomplete)
-                                DB.SetUnauthorizedAccessError(dbContext, exception);
-                            crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.UnauthorizedAccess, exception);
-                        }
-                        catch (SecurityException exception)
-                        {
-                            if (DB.Status == DirectoryStatus.Incomplete)
-                                DB.SetSecurityError(dbContext, exception);
-                            crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.SecurityException, exception);
-                        }
-                        catch (PathTooLongException exception)
-                        {
-                            if (DB.Status == DirectoryStatus.Incomplete)
-                                DB.SetPathTooLongError(dbContext, exception);
-                            crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.PathTooLong, exception);
-                        }
-                        catch (IOException exception)
-                        {
-                            if (DB.Status == DirectoryStatus.Incomplete)
-                                DB.SetIOError(dbContext, exception);
-                            crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.IOError, exception);
-                        }
-                        catch (Exception exception)
-                        {
-                            if (DB.Status == DirectoryStatus.Incomplete)
-                                DB.SetUnspecifiedError(dbContext, exception);
-                            crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.Unspecified, exception);
-                        }
-                    }
 
                     if (fsFiles is not null)
                     {
-                        foreach ((FileInfo FS, DbFile DB) item in fsFiles.Join(await dbEntry.GetRelatedCollectionAsync(d => d.Files, cancellationToken), f => f.Name.ToLower(), f => f.Name.ToLower(),
-                            (fs, db) => (FS: fs, DB: db)))
+                        foreach ((FileInfo FS, DbFile DB) item in fsFiles.Join(await dbEntry.GetRelatedCollectionAsync(d => d.Files, cancellationToken),
+                                f => f.Name.ToLower(), f => f.Name.ToLower(), (fs, db) => (FS: fs, DB: db)))
                         {
-                            if (item.DB is null)
-                            {
-                                // TODO: Add new FsFile
-                            }
-                            else if (item.FS is null)
-                                await item.DB.MarkDeletedAsync(dbContext, cancellationToken);
-                            else
-                            {
-                                // TODO: Update item
-                            }
+                            crawlEventReceiver?.RaiseReadingFile(this, item.FS, item.DB);
+                            (FileInfo FS, EntityEntry<DbFile> DB) pf = await ProcessFile(dbContext, item.FS, item.DB, cancellationToken);
+                            crawlEventReceiver.RaiseFileReadComplete(this, pf.FS, pf.DB.Entity);
+                            if (++Worker.TotalItems >= Worker.MaxTotalItems)
+                                break;
                         }
                     }
 
-                    if (Depth >= Worker.MaxRecursionDepth)
+                    if (Depth < Worker.MaxRecursionDepth && Worker.TotalItems <= Worker.MaxTotalItems)
                     {
-                        if (DB.Status == DirectoryStatus.Incomplete && fsFiles is not null)
+                        DirectoryInfo[] fsDirectories = GetDirectories(dbContext, crawlEventReceiver);
+                        DB.LastAccessed = DateTime.Now;
+                        if (fsDirectories is not null)
                         {
-                            DB.Status = DirectoryStatus.Complete;
-                            await dbContext.SaveChangesAsync(cancellationToken);
+                            foreach (var item in fsDirectories.Join(await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken), f => f.Name.ToLower(), f => f.Name.ToLower(),
+                                (fs, db) => (FS: fs, DB: db)))
+                            {
+                                CrawlContext crawlContext = await ProcessSubdirectory(dbContext, item.FS, item.DB, cancellationToken);
+                                if (++Worker.TotalItems >= Worker.MaxTotalItems)
+                                    break;
+                                if (crawlContext is not null)
+                                    await crawlContext.CrawlAsync(dbContext, crawlEventReceiver, cancellationToken);
+                            }
                         }
                     }
-                    else if (fsDirectories is not null)
-                    {
-                        foreach (var item in fsDirectories.Join(await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken), f => f.Name.ToLower(), f => f.Name.ToLower(),
-                            (fs, db) => (FS: fs, DB: db)))
-                        {
-                            if (item.DB is null)
-                            {
-                                // TODO: Add new Subdirectory
-                            }
-                            else if (item.FS is null)
-                            {
-                                await item.DB.MarkBranchDeletedAsync(dbContext, cancellationToken);
-                                continue;
-                            }
-                            else
-                            {
-                                // TODO: Update item
-                            }
-                            CrawlContext context = new(Worker, Depth + 1, item.FS, item.DB);
-                            await context.CrawlAsync(dbContext, crawlEventReceiver, cancellationToken);
-                        }
-                        if (DB.Status == DirectoryStatus.Incomplete && fsFiles is not null)
-                        {
-                            DB.Status = DirectoryStatus.Complete;
-                            await dbContext.SaveChangesAsync(cancellationToken);
-                        }
-                    }
+                    if (DB.Status == DirectoryStatus.Incomplete && Worker.TotalItems <= Worker.MaxTotalItems)
+                        DB.Status = DirectoryStatus.Complete;
+                    Worker._logger.LogInformation("Saving changes to database");
+                    await dbContext.SaveChangesAsync(cancellationToken);
                 }
                 else
                     await DB.MarkBranchDeletedAsync(dbContext, cancellationToken);
+                Worker._logger.LogInformation("Exiting {FullName}", FS.FullName);
+                crawlEventReceiver?.RaiseExitSubdirectory(this);
+            }
+
+            private FileInfo[] GetFiles(LocalDbContext dbContext, CrawlEventReceiver crawlEventReceiver)
+            {
+                try { return FS.GetFiles(); }
+                catch (UnauthorizedAccessException exception)
+                {
+                    Worker._logger.LogError(ErrorCode.UnauthorizedAccess.ToEventId(), exception, "Unauthorized Access while calling GetFiles on {Path}", FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.UnauthorizedAccess, exception, $"Access denied while getting file listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.UnauthorizedAccess, exception);
+                }
+                catch (SecurityException exception)
+                {
+                    Worker._logger.LogError(ErrorCode.SecurityException.ToEventId(), exception, "Security Exception while calling GetFiles on {Path}", FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.SecurityException, exception, $"Security violation while getting file listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.SecurityException, exception);
+                }
+                catch (PathTooLongException exception)
+                {
+                    Worker._logger.LogError(ErrorCode.PathTooLong.ToEventId(), exception, "PathTooLongException while calling GetFiles on {Path}", FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.PathTooLong, exception, $"Path too long while getting file listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.PathTooLong, exception);
+                }
+                catch (IOException exception)
+                {
+                    Worker._logger.LogError(ErrorCode.IOError.ToEventId(), exception, "IO Exception while calling GetFiles on {Path}", FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.IOError, exception, $"I/O error while getting file listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.IOError, exception);
+                }
+                catch (Exception exception)
+                {
+                    Worker._logger.LogError(ErrorCode.Unexpected.ToEventId(), exception, "{ExceptionType} while calling GetFiles on {Path}", exception.GetType().FullName, FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.Unspecified, exception, $"Unexpected error while getting file listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.Unspecified, exception);
+                }
+
+                return null;
+            }
+
+            private DirectoryInfo[] GetDirectories(LocalDbContext dbContext, CrawlEventReceiver crawlEventReceiver)
+            {
+                if (Depth >= Worker.MaxRecursionDepth)
+                    return null;
+                try { return FS.GetDirectories(); }
+                catch (UnauthorizedAccessException exception)
+                {
+                    Worker._logger.LogError(ErrorCode.UnauthorizedAccess.ToEventId(), exception, "Unauthorized Access while calling GetDirectories on {Path}", FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.UnauthorizedAccess, exception, $"Access denied while getting sub-directory listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.UnauthorizedAccess, exception);
+                }
+                catch (SecurityException exception)
+                {
+                    Worker._logger.LogError(ErrorCode.SecurityException.ToEventId(), exception, "Security Exception while calling GetDirectories on {Path}", FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.SecurityException, exception, $"Security violation while getting sub-directory listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.SecurityException, exception);
+                }
+                catch (PathTooLongException exception)
+                {
+                    Worker._logger.LogError(ErrorCode.PathTooLong.ToEventId(), exception, "PathTooLongException while calling GetDirectories on {Path}", FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.PathTooLong, exception, $"Path too long while getting sub-directory listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.PathTooLong, exception);
+                }
+                catch (IOException exception)
+                {
+                    Worker._logger.LogError(ErrorCode.IOError.ToEventId(), exception, "IO Exception while calling GetDirectories on {Path}", FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.IOError, exception, $"I/O error while getting sub-directory listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.IOError, exception);
+                }
+                catch (Exception exception)
+                {
+                    Worker._logger.LogError(ErrorCode.Unexpected.ToEventId(), exception, "{ExceptionType} while calling GetDirectories on {Path}", exception.GetType().FullName, FS.FullName);
+                    DB.SetError(dbContext, AccessErrorCode.Unspecified, exception, $"Unexpected error while getting sub-directory listing for {FS.FullName}");
+                    crawlEventReceiver?.RaiseSubdirectoryAccessError(this, AccessErrorCode.Unspecified, exception);
+                }
+                return null;
+            }
+
+            private async Task<(FileInfo FS, EntityEntry<DbFile> DB)> ProcessFile(LocalDbContext dbContext, FileInfo fileInfo, DbFile dbFile, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (dbFile is null)
+                {
+                    Worker._logger.LogTrace("Adding file {FileName}", fileInfo.Name);
+                    EntityEntry<DbFile> fileEntry = await DbFile.AddNewAsync(dbContext, DB.Id, fileInfo.Name, fileInfo.Length, fileInfo.CreationTime,
+                        fileInfo.LastWriteTime, Worker._fileSystemDetailService.CreateFileDetailProvider(fileInfo.FullName, true), true, cancellationToken);
+                    Worker._logger.LogTrace("Inserted file (Id={Id}; Name={Name})", fileEntry.Entity.Id, fileEntry.Entity.Name);
+                    return (FS: fileInfo, DB: fileEntry);
+                }
+                if (fileInfo is null)
+                {
+                    Worker._logger.LogTrace("Marking file deleted (Id={Id}; Name={Name})", dbFile.Id, dbFile.Name);
+                    await dbFile.MarkDeletedAsync(dbContext, cancellationToken);
+                    return (FS: fileInfo, DB: dbContext.Entry(dbFile));
+                }
+                Worker._logger.LogTrace("Updating file (Id={Id}; Name={Name})", dbFile.Id, dbFile.Name);
+                dbFile.Deleted = false;
+                return (FS: fileInfo, DB: await dbFile.RefreshAsync(dbContext, fileInfo.Length, fileInfo.CreationTime, fileInfo.LastWriteTime,
+                    Worker._fileSystemDetailService.CreateFileDetailProvider(fileInfo.FullName, true), true, cancellationToken));
+            }
+
+            private async Task<CrawlContext> ProcessSubdirectory(LocalDbContext dbContext, DirectoryInfo directoryInfo, Subdirectory subdirectory, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (subdirectory is null)
+                {
+                    Worker._logger.LogTrace("Adding subdirectory {FileName}", FS.Name);
+                    // TODO: Add new Subdirectory
+                }
+                else if (directoryInfo is null)
+                {
+                    Worker._logger.LogTrace("Marking subdirectory deleted (Id={Id}; Name={Name})", subdirectory.Id, subdirectory.Name);
+                    await subdirectory.MarkBranchDeletedAsync(dbContext, cancellationToken);
+                    return null;
+                }
+                else
+                {
+                    Worker._logger.LogTrace("Updating subdirectory (Id={Id}; Name={Name})", subdirectory.Id, subdirectory.Name);
+                    // TODO: Update item
+                }
+                return new CrawlContext(Worker, Depth + 1, directoryInfo, subdirectory);
             }
         }
     }
