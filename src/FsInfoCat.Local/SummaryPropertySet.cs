@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class SummaryPropertySet : LocalDbEntity, ILocalSummaryProperties
+    public class SummaryPropertySet : LocalDbEntity, ILocalSummaryPropertySet
     {
         #region Fields
 

@@ -1,0 +1,2106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PropertySystem>
+  <Set Name="Core">
+    <Property Name="System.AcquisitionID" Key="{65A98875-3C80-40AB-ABBC-EFDAF77DBEE2} 100" CanonicalName="System.AcquisitionID" DefaultColumnWidth="20" PropertyType="3">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.AppZoneIdentifier" Key="{502CFEAB-47EB-459C-B960-E6D8728F7701} 102" CanonicalName="System.AppZoneIdentifier" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ApplicationDefinedProperties" Key="{CDBFC167-337E-41D8-AF7C-8C09205429C7} 100" CanonicalName="System.ApplicationDefinedProperties" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ApplicationName" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 18" CanonicalName="System.ApplicationName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Program name]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the program name]]></EditInvitation>
+    </Property>
+    <Property Name="System.Author" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 4" CanonicalName="System.Author" DefaultColumnWidth="9" PropertyType="4127">
+      <DisplayName><![CDATA[Authors]]></DisplayName>
+      <EditInvitation><![CDATA[Add an author]]></EditInvitation>
+    </Property>
+    <Property Name="System.CachedFileUpdaterContentIdForConflictResolution" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 114" CanonicalName="System.CachedFileUpdaterContentIdForConflictResolution" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.CachedFileUpdaterContentIdForStream" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 113" CanonicalName="System.CachedFileUpdaterContentIdForStream" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.CameraRollDeduplicationId" Key="{75EE72AE-7D5F-482F-9487-F1C46CA819C1} 100" CanonicalName="System.CameraRollDeduplicationId" DefaultColumnWidth="20" PropertyType="72">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Capacity" Key="{9B174B35-40FF-11D2-A27E-00C04FC30871} 3" CanonicalName="System.Capacity" DefaultColumnWidth="20" PropertyType="21">
+      <DisplayName><![CDATA[Total size]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Category" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 2" CanonicalName="System.Category" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Categories]]></DisplayName>
+      <EditInvitation><![CDATA[Add a category]]></EditInvitation>
+    </Property>
+    <Property Name="System.ChapterId" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 19" CanonicalName="System.ChapterId" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.CheckState" Key="{3F5D9B45-5E9F-4D5C-8A5E-403181BF177B} 8" CanonicalName="System.CheckState" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Comment" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 6" CanonicalName="System.Comment" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Comments]]></DisplayName>
+      <EditInvitation><![CDATA[Add comments]]></EditInvitation>
+    </Property>
+    <Property Name="System.Company" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 15" CanonicalName="System.Company" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Company]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the company name]]></EditInvitation>
+    </Property>
+    <Property Name="System.ComputerName" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 5" CanonicalName="System.ComputerName" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Computer]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Condition" Key="{F8245476-2EC6-44BE-B2F7-82EC2537FA2E} 100" CanonicalName="System.Condition" DefaultColumnWidth="20" PropertyType="13">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ConditionKey" Key="{F8245476-2EC6-44BE-B2F7-82EC2537FA2E} 101" CanonicalName="System.ConditionKey" DefaultColumnWidth="20" PropertyType="65">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ContainedItems" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 29" CanonicalName="System.ContainedItems" DefaultColumnWidth="20" PropertyType="4168">
+      <DisplayName><![CDATA[Includes]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ContentId" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 132" CanonicalName="System.ContentId" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ContentStatus" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 27" CanonicalName="System.ContentStatus" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Content status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ContentType" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 26" CanonicalName="System.ContentType" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Content type]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ContentUri" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 131" CanonicalName="System.ContentUri" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ContentUrl" Key="{49691C90-7E17-101A-A91C-08002B2ECDA9} 10" CanonicalName="System.ContentUrl" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Copyright" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 11" CanonicalName="System.Copyright" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Copyright]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.CreatorAppId" Key="{C2EA046E-033C-4E91-BD5B-D4942F6BBE49} 2" CanonicalName="System.CreatorAppId" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.CreatorOpenWithUIOptions" Key="{C2EA046E-033C-4E91-BD5B-D4942F6BBE49} 3" CanonicalName="System.CreatorOpenWithUIOptions" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DataObjectFormat" Key="{1E81A3F8-A30F-4247-B9EE-1D0368A9425C} 2" CanonicalName="System.DataObjectFormat" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Data object format]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DateAccessed" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 16" CanonicalName="System.DateAccessed" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Date accessed]]></DisplayName>
+      <EditInvitation><![CDATA[Specify date and time accessed]]></EditInvitation>
+    </Property>
+    <Property Name="System.DateAcquired" Key="{2CBAA8F5-D81F-47CA-B17A-F8D822300131} 100" CanonicalName="System.DateAcquired" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Date acquired]]></DisplayName>
+      <EditInvitation><![CDATA[Specify date and time acquired]]></EditInvitation>
+    </Property>
+    <Property Name="System.DateArchived" Key="{43F8D7B7-A444-4F87-9383-52271C9B915C} 100" CanonicalName="System.DateArchived" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Date archived]]></DisplayName>
+      <EditInvitation><![CDATA[Specify date and time archived]]></EditInvitation>
+    </Property>
+    <Property Name="System.DateCompleted" Key="{72FAB781-ACDA-43E5-B155-B2434F85E678} 100" CanonicalName="System.DateCompleted" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Date completed]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DateCreated" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 15" CanonicalName="System.DateCreated" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Date created]]></DisplayName>
+      <EditInvitation><![CDATA[Specify date and time created]]></EditInvitation>
+    </Property>
+    <Property Name="System.DateImported" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 18258" CanonicalName="System.DateImported" DefaultColumnWidth="24" PropertyType="64">
+      <DisplayName><![CDATA[Date imported]]></DisplayName>
+      <EditInvitation><![CDATA[Specify date and time imported]]></EditInvitation>
+    </Property>
+    <Property Name="System.DateModified" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 14" CanonicalName="System.DateModified" DefaultColumnWidth="18" PropertyType="64">
+      <DisplayName><![CDATA[Date modified]]></DisplayName>
+      <EditInvitation><![CDATA[Choose a date]]></EditInvitation>
+    </Property>
+    <Property Name="System.DefaultGroupOrder" Key="{83914D1A-C270-48BF-B00D-1C4E451B0150} 100" CanonicalName="System.DefaultGroupOrder" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DefaultSaveLocationDisplay" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 10" CanonicalName="System.DefaultSaveLocationDisplay" DefaultColumnWidth="3" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DefaultSaveLocationIconContainer" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 11" CanonicalName="System.DefaultSaveLocationIconContainer" DefaultColumnWidth="1" PropertyType="65">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DelegateIDList" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 32" CanonicalName="System.DelegateIDList" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DelegateSourceId" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 11" CanonicalName="System.DelegateSourceId" DefaultColumnWidth="20" PropertyType="72">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DelegationFlags" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 9" CanonicalName="System.DelegationFlags" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DescriptionID" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 2" CanonicalName="System.DescriptionID" DefaultColumnWidth="20" PropertyType="4113">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DueDate" Key="{3F8472B5-E0AF-4DB2-8071-C53FE76AE7CE} 100" CanonicalName="System.DueDate" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Due date]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DuiControlResource" Key="{EA810849-87FF-4B54-ABD6-5B71ADF466F8} 1" CanonicalName="System.DuiControlResource" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.EndDate" Key="{C75FAA05-96FD-49E7-9CB4-9F601082D553} 100" CanonicalName="System.EndDate" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[End date]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ExpandoProperties" Key="{6FA20DE6-D11C-4D9D-A154-64317628C12D} 100" CanonicalName="System.ExpandoProperties" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileAllocationSize" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 18" CanonicalName="System.FileAllocationSize" DefaultColumnWidth="20" PropertyType="21">
+      <DisplayName><![CDATA[Size on disk]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileAttributes" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 13" CanonicalName="System.FileAttributes" DefaultColumnWidth="8" PropertyType="19">
+      <DisplayName><![CDATA[Attributes]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileAttributesDisplay" Key="{8D72ACA1-0716-419A-9AC1-ACB07B18DC32} 2" CanonicalName="System.FileAttributesDisplay" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileCount" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 12" CanonicalName="System.FileCount" DefaultColumnWidth="20" PropertyType="21">
+      <DisplayName><![CDATA[File count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileDescription" Key="{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} 3" CanonicalName="System.FileDescription" DefaultColumnWidth="30" PropertyType="31">
+      <DisplayName><![CDATA[File description]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileExtension" Key="{E4F10A3C-49E6-405D-8288-A23BD4EEAA6C} 100" CanonicalName="System.FileExtension" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[File extension]]></DisplayName>
+      <EditInvitation><![CDATA[Specify file extension]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileFRN" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 21" CanonicalName="System.FileFRN" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileIndex" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 8" CanonicalName="System.FileIndex" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileName" Key="{41CF5AE0-F75A-4806-BD87-59C7D9248EB9} 100" CanonicalName="System.FileName" DefaultColumnWidth="24" PropertyType="31">
+      <DisplayName><![CDATA[Filename]]></DisplayName>
+      <EditInvitation><![CDATA[Specify filename]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileOfflineAvailabilityStatus" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 100" CanonicalName="System.FileOfflineAvailabilityStatus" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileOwner" Key="{9B174B34-40FF-11D2-A27E-00C04FC30871} 4" CanonicalName="System.FileOwner" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Owner]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FilePlaceholderStatus" Key="{B2F9B9D6-FEC4-4DD5-94D7-8957488C807B} 2" CanonicalName="System.FilePlaceholderStatus" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileReparsePointTag" Key="{3D75E4F5-A391-4952-81F7-C7072FE53025} 100" CanonicalName="System.FileReparsePointTag" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FileVersion" Key="{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} 4" CanonicalName="System.FileVersion" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[File version]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FilterInfo" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 2" CanonicalName="System.FilterInfo" DefaultColumnWidth="20" PropertyType="66">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FindData" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 0" CanonicalName="System.FindData" DefaultColumnWidth="20" PropertyType="4113">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FlagColor" Key="{67DF94DE-0CA7-4D6F-B792-053A3E4F03CF} 100" CanonicalName="System.FlagColor" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[Flag color]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FlagColorText" Key="{45EAE747-8E2A-40AE-8CBF-CA52ABA6152A} 100" CanonicalName="System.FlagColorText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FlagStatus" Key="{E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD} 12" CanonicalName="System.FlagStatus" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Flag status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FlagStatusText" Key="{DC54FD2E-189D-4871-AA01-08C2F57A4ABC} 100" CanonicalName="System.FlagStatusText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FolderKind" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 101" CanonicalName="System.FolderKind" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FolderNameDisplay" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 25" CanonicalName="System.FolderNameDisplay" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ForceFullText" Key="{1173F62A-2A55-4F62-AED6-8C7112E0F7A3} 5" CanonicalName="System.ForceFullText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FreeSpace" Key="{9B174B35-40FF-11D2-A27E-00C04FC30871} 2" CanonicalName="System.FreeSpace" DefaultColumnWidth="20" PropertyType="21">
+      <DisplayName><![CDATA[Space free]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.FullText" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 6" CanonicalName="System.FullText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.HasLeafContainers" Key="{A11C005A-FF95-4785-8617-BEAF92399C3C} 100" CanonicalName="System.HasLeafContainers" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.HasNoAdditionalProperties" Key="{27B381E0-61DD-449C-B739-815E0F031299} 100" CanonicalName="System.HasNoAdditionalProperties" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.HideInGrepSearch" Key="{C6F039E7-F6A4-4185-AE48-07938262C274} 100" CanonicalName="System.HideInGrepSearch" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.HideOnDesktop" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 34" CanonicalName="System.HideOnDesktop" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.HighKeywords" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 24" CanonicalName="System.HighKeywords" DefaultColumnWidth="11" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.HomeGroupSharingStatus" Key="{4AC903F8-E780-4E4B-B7B8-4D00A99804FC} 100" CanonicalName="System.HomeGroupSharingStatus" DefaultColumnWidth="9" PropertyType="19">
+      <DisplayName><![CDATA[Sharing type]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IconIndex" Key="{5CBF2787-48CF-4208-B90E-EE5E5D420294} 26" CanonicalName="System.IconIndex" DefaultColumnWidth="20" PropertyType="3">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IconPath" Key="{5CBF2787-48CF-4208-B90E-EE5E5D420294} 25" CanonicalName="System.IconPath" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IconSecondaryStreamName" Key="{5CBF2787-48CF-4208-B90E-EE5E5D420294} 43" CanonicalName="System.IconSecondaryStreamName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Identity" Key="{A26F4AFC-7346-4299-BE47-EB1AE613139F} 100" CanonicalName="System.Identity" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Identity]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ImageParsingName" Key="{D7750EE0-C6A4-48EC-B53E-B87B52E6D073} 100" CanonicalName="System.ImageParsingName" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Importance" Key="{E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD} 11" CanonicalName="System.Importance" DefaultColumnWidth="3" PropertyType="3">
+      <DisplayName><![CDATA[Importance]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ImportanceText" Key="{A3B29791-7713-4E1D-BB40-17DB85F01831} 100" CanonicalName="System.ImportanceText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.InfoTipText" Key="{C9944A21-A406-48FE-8225-AEC7E24C211B} 17" CanonicalName="System.InfoTipText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.InternalName" Key="{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} 5" CanonicalName="System.InternalName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Internal name]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.InvalidPathValue" Key="{E5473742-4611-4AAF-9C49-A3417748CBC8} 100" CanonicalName="System.InvalidPathValue" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsAttachment" Key="{F23F425C-71A1-4FA8-922F-678EA4A60408} 100" CanonicalName="System.IsAttachment" DefaultColumnWidth="3" PropertyType="11">
+      <DisplayName><![CDATA[Is attachment]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsBarricadePage" Key="{98F920D1-51E2-4722-9069-3C4B5CFF5165} 100" CanonicalName="System.IsBarricadePage" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsDefaultNonOwnerSaveLocation" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 5" CanonicalName="System.IsDefaultNonOwnerSaveLocation" DefaultColumnWidth="3" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsDefaultSaveLocation" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 3" CanonicalName="System.IsDefaultSaveLocation" DefaultColumnWidth="3" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsDefaultSaveLocationForDisplay" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 7" CanonicalName="System.IsDefaultSaveLocationForDisplay" DefaultColumnWidth="3" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsDeleted" Key="{5CDA5FC8-33EE-4FF3-9094-AE7BD8868C4D} 100" CanonicalName="System.IsDeleted" DefaultColumnWidth="3" PropertyType="11">
+      <DisplayName><![CDATA[Is deleted]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsEncrypted" Key="{90E5E14E-648B-4826-B2AA-ACAF790E3513} 10" CanonicalName="System.IsEncrypted" DefaultColumnWidth="3" PropertyType="11">
+      <DisplayName><![CDATA[Encryption status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsFlagged" Key="{5DA84765-E3FF-4278-86B0-A27967FBDD03} 100" CanonicalName="System.IsFlagged" DefaultColumnWidth="3" PropertyType="11">
+      <DisplayName><![CDATA[Has flag]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsFlaggedComplete" Key="{A6F360D2-55F9-48DE-B909-620E090A647C} 100" CanonicalName="System.IsFlaggedComplete" DefaultColumnWidth="3" PropertyType="11">
+      <DisplayName><![CDATA[Is completed]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsFolder" Key="{09329B74-40A3-4C68-BF07-AF9A572F607C} 100" CanonicalName="System.IsFolder" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsGroup" Key="{C64A866E-41AE-4C8C-B3D5-DD6DBF70C9C1} 100" CanonicalName="System.IsGroup" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsIncomplete" Key="{346C8BD1-2E6A-4C45-89A4-61B78E8E700F} 100" CanonicalName="System.IsIncomplete" DefaultColumnWidth="3" PropertyType="11">
+      <DisplayName><![CDATA[Incomplete]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsLocationSupported" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 8" CanonicalName="System.IsLocationSupported" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsPinnedToNameSpaceTree" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 2" CanonicalName="System.IsPinnedToNameSpaceTree" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsRead" Key="{E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD} 10" CanonicalName="System.IsRead" DefaultColumnWidth="3" PropertyType="11">
+      <DisplayName><![CDATA[Read status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsSearchOnlyItem" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 4" CanonicalName="System.IsSearchOnlyItem" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsSendToTarget" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 33" CanonicalName="System.IsSendToTarget" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsShared" Key="{EF884C5B-2BFE-41BB-AAE5-76EEDF4F9902} 100" CanonicalName="System.IsShared" DefaultColumnWidth="3" PropertyType="11">
+      <DisplayName><![CDATA[Shared]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.IsSimpleItem" Key="{32BCB03C-7F34-4E3F-BBB2-EBE63629F5E4} 100" CanonicalName="System.IsSimpleItem" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemAfter" Key="{B9B4B3FC-2B51-4A42-B5D8-324146AFCF25} 6" CanonicalName="System.ItemAfter" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemAuthors" Key="{D0A04F0A-462A-48A4-BB2F-3706E88DBD7D} 100" CanonicalName="System.ItemAuthors" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Creators]]></DisplayName>
+      <EditInvitation><![CDATA[Specify creators]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemClassType" Key="{048658AD-2DB8-41A4-BBB6-AC1EF1207EB1} 100" CanonicalName="System.ItemClassType" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemContext" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 25" CanonicalName="System.ItemContext" DefaultColumnWidth="20" PropertyType="13">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemDate" Key="{F7DB74B4-4287-4103-AFBA-F1B13DCD75CF} 100" CanonicalName="System.ItemDate" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Date]]></DisplayName>
+      <EditInvitation><![CDATA[Specify date]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemFolderNameDisplay" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 2" CanonicalName="System.ItemFolderNameDisplay" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Folder name]]></DisplayName>
+      <EditInvitation><![CDATA[Specify folder name]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemFolderPathDisplay" Key="{E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD} 6" CanonicalName="System.ItemFolderPathDisplay" DefaultColumnWidth="15" PropertyType="31">
+      <DisplayName><![CDATA[Folder path]]></DisplayName>
+      <EditInvitation><![CDATA[Specify folder path]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemFolderPathDisplayNarrow" Key="{DABD30ED-0043-4789-A7F8-D013A4736622} 100" CanonicalName="System.ItemFolderPathDisplayNarrow" DefaultColumnWidth="15" PropertyType="31">
+      <DisplayName><![CDATA[Folder]]></DisplayName>
+      <EditInvitation><![CDATA[Specify folder]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemId" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 8" CanonicalName="System.ItemId" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemName" Key="{6B8DA074-3B5C-43BC-886F-0A2CDCE00B6F} 100" CanonicalName="System.ItemName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemNameDisplay" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 10" CanonicalName="System.ItemNameDisplay" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Name]]></DisplayName>
+      <EditInvitation><![CDATA[Specify name]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemNameDisplayWithoutExtension" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 24" CanonicalName="System.ItemNameDisplayWithoutExtension" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemNamePrefix" Key="{D7313FF1-A77A-401C-8C99-3DBDD68ADD36} 100" CanonicalName="System.ItemNamePrefix" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemNameSortOverride" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 23" CanonicalName="System.ItemNameSortOverride" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemParticipants" Key="{D4D0AA16-9948-41A4-AA85-D97FF9646993} 100" CanonicalName="System.ItemParticipants" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Participants]]></DisplayName>
+      <EditInvitation><![CDATA[Specify participants]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemPathDisplay" Key="{E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD} 7" CanonicalName="System.ItemPathDisplay" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Path]]></DisplayName>
+      <EditInvitation><![CDATA[Specify path]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemPathDisplayNarrow" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 8" CanonicalName="System.ItemPathDisplayNarrow" DefaultColumnWidth="60" PropertyType="31">
+      <DisplayName><![CDATA[Path]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemQueryCondition" Key="{F50D2F5D-DDA0-48D4-8D2B-E83729FB69A4} 100" CanonicalName="System.ItemQueryCondition" DefaultColumnWidth="20" PropertyType="66">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemSearchLocation" Key="{23620678-CCD4-47C0-9963-95A8405678A3} 100" CanonicalName="System.ItemSearchLocation" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[By location]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemSearchLocationHeaderType" Key="{23620678-CCD4-47C0-9963-95A8405678A3} 101" CanonicalName="System.ItemSearchLocationHeaderType" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemSourceCLSID" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 10" CanonicalName="System.ItemSourceCLSID" DefaultColumnWidth="20" PropertyType="72">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemSubType" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 37" CanonicalName="System.ItemSubType" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemType" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 11" CanonicalName="System.ItemType" DefaultColumnWidth="15" PropertyType="31">
+      <DisplayName><![CDATA[Item type]]></DisplayName>
+      <EditInvitation><![CDATA[Specify type]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemTypeText" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 4" CanonicalName="System.ItemTypeText" DefaultColumnWidth="15" PropertyType="31">
+      <DisplayName><![CDATA[Type]]></DisplayName>
+      <EditInvitation><![CDATA[Specify type]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemUrl" Key="{49691C90-7E17-101A-A91C-08002B2ECDA9} 9" CanonicalName="System.ItemUrl" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ItemsInStack" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 7" CanonicalName="System.ItemsInStack" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Keywords" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 5" CanonicalName="System.Keywords" DefaultColumnWidth="11" PropertyType="4127">
+      <DisplayName><![CDATA[Tags]]></DisplayName>
+      <EditInvitation><![CDATA[Add a tag]]></EditInvitation>
+    </Property>
+    <Property Name="System.Kind" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 3" CanonicalName="System.Kind" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Kind]]></DisplayName>
+      <EditInvitation><![CDATA[Add a kind of file]]></EditInvitation>
+    </Property>
+    <Property Name="System.KindText" Key="{F04BEF95-C585-4197-A2B7-DF46FDC9EE6D} 100" CanonicalName="System.KindText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Language" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 28" CanonicalName="System.Language" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Language]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.LastSyncError" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 107" CanonicalName="System.LastSyncError" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.LastSyncWarning" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 128" CanonicalName="System.LastSyncWarning" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.LastWriterPackageFamilyName" Key="{502CFEAB-47EB-459C-B960-E6D8728F7701} 101" CanonicalName="System.LastWriterPackageFamilyName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.LibraryLocationSupportStatus" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 9" CanonicalName="System.LibraryLocationSupportStatus" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.LibraryLocationsCount" Key="{908696C7-8F87-44F2-80ED-A8C1C6894575} 2" CanonicalName="System.LibraryLocationsCount" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Library includes]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.LibraryLocationsList" Key="{908696C7-8F87-44F2-80ED-A8C1C6894575} 4" CanonicalName="System.LibraryLocationsList" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ListDescription" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 23" CanonicalName="System.ListDescription" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.LocationEmptyString" Key="{62D2D9AB-8B64-498D-B865-402D4796F865} 3" CanonicalName="System.LocationEmptyString" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.LowKeywords" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 25" CanonicalName="System.LowKeywords" DefaultColumnWidth="11" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.MIMEType" Key="{0B63E350-9CCC-11D0-BCDB-00805FCCCE04} 5" CanonicalName="System.MIMEType" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.MaxStackCount" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 22" CanonicalName="System.MaxStackCount" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.MediumKeywords" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 26" CanonicalName="System.MediumKeywords" DefaultColumnWidth="11" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.MileageInformation" Key="{FDF84370-031A-4ADD-9E91-0D775F1C6605} 100" CanonicalName="System.MileageInformation" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Mileage]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.MusicStackThumbnailCacheIds" Key="{733CB147-8B1F-4C48-9966-192FDE353C75} 100" CanonicalName="System.MusicStackThumbnailCacheIds" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.NamespaceCLSID" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 6" CanonicalName="System.NamespaceCLSID" DefaultColumnWidth="20" PropertyType="72">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.NetworkLocation" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 4" CanonicalName="System.NetworkLocation" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Network location]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.NetworkPlacesDefaultName" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 35" CanonicalName="System.NetworkPlacesDefaultName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.NetworkProvider" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 31" CanonicalName="System.NetworkProvider" DefaultColumnWidth="23" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.NetworkResource" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 1" CanonicalName="System.NetworkResource" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.NewMenuAllowedTypes" Key="{9B174B34-40FF-11D2-A27E-00C04FC30871} 10" CanonicalName="System.NewMenuAllowedTypes" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.NewMenuPreferredTypes" Key="{9B174B34-40FF-11D2-A27E-00C04FC30871} 8" CanonicalName="System.NewMenuPreferredTypes" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.NotUserContent" Key="{FCFB52AA-C1E5-4CD8-88BC-F80FD7390F20} 100" CanonicalName="System.NotUserContent" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.OfflineAvailability" Key="{A94688B6-7D9F-4570-A648-E3DFC0AB2B3F} 100" CanonicalName="System.OfflineAvailability" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Availability]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.OfflineStatus" Key="{6D24888F-4718-4BDA-AFED-EA0FB4386CD8} 100" CanonicalName="System.OfflineStatus" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Offline status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.OfflineSyncTime" Key="{4E9CFC01-5D36-406A-83CD-4E7423923604} 2" CanonicalName="System.OfflineSyncTime" DefaultColumnWidth="20" PropertyType="64">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Order" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 26" CanonicalName="System.Order" DefaultColumnWidth="9" PropertyType="3">
+      <DisplayName><![CDATA[Order]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.OriginalFileName" Key="{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} 6" CanonicalName="System.OriginalFileName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Original filename]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.OwnerSID" Key="{5D76B67F-9B3D-44BB-B6AE-25DA4F638A67} 6" CanonicalName="System.OwnerSID" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ParentalRating" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 21" CanonicalName="System.ParentalRating" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Parental rating]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ParentalRatingReason" Key="{10984E0A-F9F2-4321-B7EF-BAF195AF4319} 100" CanonicalName="System.ParentalRatingReason" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Parental rating reason]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ParentalRatingsOrganization" Key="{A7FE0840-1344-46F0-8D37-52ED712A4BF9} 100" CanonicalName="System.ParentalRatingsOrganization" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Parental ratings organization]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ParsingBindContext" Key="{DFB9A04D-362F-4CA3-B30B-0254B17B5B84} 100" CanonicalName="System.ParsingBindContext" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ParsingName" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 24" CanonicalName="System.ParsingName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ParsingPath" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 30" CanonicalName="System.ParsingPath" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.PerceivedType" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 9" CanonicalName="System.PerceivedType" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Perceived type]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.PercentFull" Key="{9B174B35-40FF-11D2-A27E-00C04FC30871} 5" CanonicalName="System.PercentFull" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Space used]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Platform" Key="{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} 11" CanonicalName="System.Platform" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Platform]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Priority" Key="{9C1FCF74-2D97-41BA-B4AE-CB2E3661A6E4} 5" CanonicalName="System.Priority" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[Priority]]></DisplayName>
+      <EditInvitation><![CDATA[Specify priority]]></EditInvitation>
+    </Property>
+    <Property Name="System.PriorityText" Key="{D98BE98B-B86B-4095-BF52-9D23B2E0A752} 100" CanonicalName="System.PriorityText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Project" Key="{39A7F922-477C-48DE-8BC8-B28441E342E3} 100" CanonicalName="System.Project" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Project]]></DisplayName>
+      <EditInvitation><![CDATA[Add a project name]]></EditInvitation>
+    </Property>
+    <Property Name="System.ProviderItemID" Key="{F21D9941-81F0-471A-ADEE-4E74B49217ED} 100" CanonicalName="System.ProviderItemID" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Rating" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 9" CanonicalName="System.Rating" DefaultColumnWidth="12" PropertyType="19">
+      <DisplayName><![CDATA[Rating]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RatingText" Key="{90197CA7-FD8F-4E8C-9DA3-B57E1E609295} 100" CanonicalName="System.RatingText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RemoteConflictingFile" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 115" CanonicalName="System.RemoteConflictingFile" DefaultColumnWidth="20" PropertyType="13">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ResultSourceId" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 17" CanonicalName="System.ResultSourceId" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ResultType" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 20" CanonicalName="System.ResultType" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SDID" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 2147483650" CanonicalName="System.SDID" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SFGAOFlags" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 25" CanonicalName="System.SFGAOFlags" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SearchScope" Key="{CF5751FD-F4B3-443D-B31C-9A34740759EC} 100" CanonicalName="System.SearchScope" DefaultColumnWidth="20" PropertyType="66">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Sensitivity" Key="{F8D3F6AC-4874-42CB-BE59-AB454B30716A} 100" CanonicalName="System.Sensitivity" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[Sensitivity]]></DisplayName>
+      <EditInvitation><![CDATA[Specify sensitivity]]></EditInvitation>
+    </Property>
+    <Property Name="System.SensitivityText" Key="{D0C7F054-3F72-4725-8527-129A577CB269} 100" CanonicalName="System.SensitivityText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ShareScope" Key="{EF884C5B-2BFE-41BB-AAE5-76EEDF4F9902} 400" CanonicalName="System.ShareScope" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ShareUserRating" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 12" CanonicalName="System.ShareUserRating" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Shared user rating]]></DisplayName>
+      <EditInvitation><![CDATA[Rate this media]]></EditInvitation>
+    </Property>
+    <Property Name="System.SharedWith" Key="{EF884C5B-2BFE-41BB-AAE5-76EEDF4F9902} 200" CanonicalName="System.SharedWith" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Shared with]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SharingStatus" Key="{EF884C5B-2BFE-41BB-AAE5-76EEDF4F9902} 300" CanonicalName="System.SharingStatus" DefaultColumnWidth="9" PropertyType="19">
+      <DisplayName><![CDATA[Sharing status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SimpleRating" Key="{A09F084E-AD41-489F-8076-AA5BE3082BCA} 100" CanonicalName="System.SimpleRating" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Size" Key="{B725F130-47EF-101A-A5F1-02608C9EEBAC} 12" CanonicalName="System.Size" DefaultColumnWidth="10" PropertyType="21">
+      <DisplayName><![CDATA[Size]]></DisplayName>
+      <EditInvitation><![CDATA[Add a file size]]></EditInvitation>
+    </Property>
+    <Property Name="System.SoftwareUsed" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 305" CanonicalName="System.SoftwareUsed" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Creation software]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SourceItem" Key="{668CDFA5-7A1B-4323-AE4B-E527393A1D81} 100" CanonicalName="System.SourceItem" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Source]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SourcePackageFamilyName" Key="{FFAE9DB7-1C8D-43FF-818C-84403AA3732D} 100" CanonicalName="System.SourcePackageFamilyName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StackThumbnailCacheIds" Key="{4596208C-32FA-41D2-9695-AF0CB9E8DCFE} 100" CanonicalName="System.StackThumbnailCacheIds" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StartDate" Key="{48FD6EC8-8A12-4CDF-A03E-4EC5A511EDDE} 100" CanonicalName="System.StartDate" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Start date]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Status" Key="{000214A1-0000-0000-C000-000000000046} 9" CanonicalName="System.Status" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StatusBarItemAvailability" Key="{26DC287C-6E3D-4BD3-B2B0-6A26BA2E346D} 5" CanonicalName="System.StatusBarItemAvailability" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Selected item availability]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StatusBarSelectedItemCount" Key="{26DC287C-6E3D-4BD3-B2B0-6A26BA2E346D} 3" CanonicalName="System.StatusBarSelectedItemCount" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Selected item count and size]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StatusBarStorageProviderError" Key="{26DC287C-6E3D-4BD3-B2B0-6A26BA2E346D} 6" CanonicalName="System.StatusBarStorageProviderError" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Error]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StatusBarViewItemCount" Key="{26DC287C-6E3D-4BD3-B2B0-6A26BA2E346D} 2" CanonicalName="System.StatusBarViewItemCount" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Total item count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StatusIcons" Key="{7A55582B-BD8C-4475-B94C-B87A388A7899} 100" CanonicalName="System.StatusIcons" DefaultColumnWidth="20" PropertyType="65">
+      <DisplayName><![CDATA[State]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderAggregatedCustomStates" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 124" CanonicalName="System.StorageProviderAggregatedCustomStates" DefaultColumnWidth="20" PropertyType="4113">
+      <DisplayName><![CDATA[Activity]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderCallerVersionInformation" Key="{B2F9B9D6-FEC4-4DD5-94D7-8957488C807B} 7" CanonicalName="System.StorageProviderCallerVersionInformation" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderCustomStates" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 120" CanonicalName="System.StorageProviderCustomStates" DefaultColumnWidth="20" PropertyType="4113">
+      <DisplayName><![CDATA[Activity]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderDescendantSharingStatus" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 118" CanonicalName="System.StorageProviderDescendantSharingStatus" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderError" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 109" CanonicalName="System.StorageProviderError" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderFileChecksum" Key="{B2F9B9D6-FEC4-4DD5-94D7-8957488C807B} 5" CanonicalName="System.StorageProviderFileChecksum" DefaultColumnWidth="20" PropertyType="4113">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderFileFlags" Key="{B2F9B9D6-FEC4-4DD5-94D7-8957488C807B} 8" CanonicalName="System.StorageProviderFileFlags" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderFileIdentifier" Key="{B2F9B9D6-FEC4-4DD5-94D7-8957488C807B} 3" CanonicalName="System.StorageProviderFileIdentifier" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderFileRemoteUri" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 112" CanonicalName="System.StorageProviderFileRemoteUri" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderFileVersion" Key="{B2F9B9D6-FEC4-4DD5-94D7-8957488C807B} 4" CanonicalName="System.StorageProviderFileVersion" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderFileVersionWaterline" Key="{B2F9B9D6-FEC4-4DD5-94D7-8957488C807B} 6" CanonicalName="System.StorageProviderFileVersionWaterline" DefaultColumnWidth="20" PropertyType="4113">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderFullyQualifiedId" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 119" CanonicalName="System.StorageProviderFullyQualifiedId" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderId" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 108" CanonicalName="System.StorageProviderId" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderNetworkConnected" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 125" CanonicalName="System.StorageProviderNetworkConnected" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderProtectionMode" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 127" CanonicalName="System.StorageProviderProtectionMode" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderShareStatuses" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 111" CanonicalName="System.StorageProviderShareStatuses" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderSharingStatus" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 117" CanonicalName="System.StorageProviderSharingStatus" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Sharing]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderState" Key="{E77E90DF-6271-4F5B-834F-2DD1F245DDA4} 3" CanonicalName="System.StorageProviderState" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Availability status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderStatus" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 110" CanonicalName="System.StorageProviderStatus" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderThumbnailDimensions" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 116" CanonicalName="System.StorageProviderThumbnailDimensions" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderTransferProgress" Key="{E77E90DF-6271-4F5B-834F-2DD1F245DDA4} 4" CanonicalName="System.StorageProviderTransferProgress" DefaultColumnWidth="20" PropertyType="4115">
+      <DisplayName><![CDATA[Progress]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderUIStatus" Key="{E77E90DF-6271-4F5B-834F-2DD1F245DDA4} 2" CanonicalName="System.StorageProviderUIStatus" DefaultColumnWidth="10" PropertyType="65">
+      <DisplayName><![CDATA[Status]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageProviderWarningErrorState" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 126" CanonicalName="System.StorageProviderWarningErrorState" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.StorageSystemType" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 36" CanonicalName="System.StorageSystemType" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Subject" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 3" CanonicalName="System.Subject" DefaultColumnWidth="30" PropertyType="31">
+      <DisplayName><![CDATA[Subject]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the subject]]></EditInvitation>
+    </Property>
+    <Property Name="System.SyncAvailabilityFlags" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 130" CanonicalName="System.SyncAvailabilityFlags" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SyncTransferStatus" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 103" CanonicalName="System.SyncTransferStatus" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.SyncTransferStatusFlags" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 129" CanonicalName="System.SyncTransferStatusFlags" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Thumbnail" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 17" CanonicalName="System.Thumbnail" DefaultColumnWidth="20" PropertyType="71">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ThumbnailCacheId" Key="{446D16B1-8DAD-4870-A748-402EA43D788C} 100" CanonicalName="System.ThumbnailCacheId" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ThumbnailCacheIdParts" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 24" CanonicalName="System.ThumbnailCacheIdParts" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ThumbnailStream" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 27" CanonicalName="System.ThumbnailStream" DefaultColumnWidth="20" PropertyType="66">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Title" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 2" CanonicalName="System.Title" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Title]]></DisplayName>
+      <EditInvitation><![CDATA[Add a title]]></EditInvitation>
+    </Property>
+    <Property Name="System.TitleSortOverride" Key="{F0F7984D-222E-4AD2-82AB-1DD8EA40E57E} 300" CanonicalName="System.TitleSortOverride" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Sort title]]></DisplayName>
+      <EditInvitation><![CDATA[Specify sort title]]></EditInvitation>
+    </Property>
+    <Property Name="System.TooltipThumbnailStream" Key="{446D16B1-8DAD-4870-A748-402EA43D788C} 105" CanonicalName="System.TooltipThumbnailStream" DefaultColumnWidth="20" PropertyType="66">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.TotalFileSize" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 14" CanonicalName="System.TotalFileSize" DefaultColumnWidth="12" PropertyType="21">
+      <DisplayName><![CDATA[Total file size]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Trademarks" Key="{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} 9" CanonicalName="System.Trademarks" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Legal trademarks]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.TransferOrder" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 106" CanonicalName="System.TransferOrder" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.TransferPath" Key="{CEBF9B37-26AE-466B-9FE9-C7550C4B0CE8} 100" CanonicalName="System.TransferPath" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.TransferPosition" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 104" CanonicalName="System.TransferPosition" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.TransferSize" Key="{FCEFF153-E839-4CF3-A9E7-EA22832094B8} 105" CanonicalName="System.TransferSize" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.UrlHostName" Key="{5CBF2787-48CF-4208-B90E-EE5E5D420294} 4" CanonicalName="System.UrlHostName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.UrlScheme" Key="{5CBF2787-48CF-4208-B90E-EE5E5D420294} 3" CanonicalName="System.UrlScheme" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[URL scheme]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.UserDisplayName" Key="{54B3A473-59AA-445B-AECD-77541BA8B7C9} 3" CanonicalName="System.UserDisplayName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.UserName" Key="{54B3A473-59AA-445B-AECD-77541BA8B7C9} 2" CanonicalName="System.UserName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.UserProfilePath" Key="{54B3A473-59AA-445B-AECD-77541BA8B7C9} 5" CanonicalName="System.UserProfilePath" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.VelocityFeatureId" Key="{5567BF77-2BE2-4222-BEFA-D0C9C9CC4B6E} 2" CanonicalName="System.VelocityFeatureId" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.VerbRestrictions" Key="{705CCB0F-5A0D-41EA-B2CA-2C9B5CC7DB41} 100" CanonicalName="System.VerbRestrictions" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.VolumeId" Key="{446D16B1-8DAD-4870-A748-402EA43D788C} 104" CanonicalName="System.VolumeId" DefaultColumnWidth="20" PropertyType="72">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.WebDavPath" Key="{1804D1FB-9FA4-441D-A536-76468AC43307} 100" CanonicalName="System.WebDavPath" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.WebPreviewUrl" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 23" CanonicalName="System.WebPreviewUrl" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.WhichFolder" Key="{28636AA6-953D-11D2-B5D6-00C04FD918D0} 3" CanonicalName="System.WhichFolder" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.WordWheel" Key="{1E3EE840-BC2B-476C-8237-2ACD1A839B22} 5" CanonicalName="System.WordWheel" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Any text]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ZoneIdentifier" Key="{502CFEAB-47EB-459C-B960-E6D8728F7701} 100" CanonicalName="System.ZoneIdentifier" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Audio">
+    <Property Name="System.Audio.ChannelCount" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 7" CanonicalName="System.Audio.ChannelCount" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Channels]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.Compression" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 10" CanonicalName="System.Audio.Compression" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.EncodingBitrate" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 4" CanonicalName="System.Audio.EncodingBitrate" DefaultColumnWidth="15" PropertyType="19">
+      <DisplayName><![CDATA[Bit rate]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.Format" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 2" CanonicalName="System.Audio.Format" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Audio format]]></DisplayName>
+      <EditInvitation><![CDATA[Add a format]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.IsVariableBitRate" Key="{E6822FEE-8C17-4D62-823C-8E9CFCBD1D5C} 100" CanonicalName="System.Audio.IsVariableBitRate" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.PeakValue" Key="{2579E5D0-1116-4084-BD9A-9B4F7CB4DF5E} 100" CanonicalName="System.Audio.PeakValue" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.SampleRate" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 5" CanonicalName="System.Audio.SampleRate" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Audio sample rate]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.SampleSize" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 6" CanonicalName="System.Audio.SampleSize" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Audio sample size]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.StreamName" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 9" CanonicalName="System.Audio.StreamName" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Audio.StreamNumber" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 8" CanonicalName="System.Audio.StreamNumber" DefaultColumnWidth="20" PropertyType="18">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="DRM">
+    <Property Name="System.DRM.DatePlayExpires" Key="{AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED} 6" CanonicalName="System.DRM.DatePlayExpires" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Play expires]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DRM.DatePlayStarts" Key="{AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED} 5" CanonicalName="System.DRM.DatePlayStarts" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Play starts]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DRM.Description" Key="{AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED} 3" CanonicalName="System.DRM.Description" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[License description]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DRM.IsDisabled" Key="{AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED} 7" CanonicalName="System.DRM.IsDisabled" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[Disabled]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DRM.IsProtected" Key="{AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED} 2" CanonicalName="System.DRM.IsProtected" DefaultColumnWidth="10" PropertyType="11">
+      <DisplayName><![CDATA[Protected]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.DRM.PlayCount" Key="{AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED} 4" CanonicalName="System.DRM.PlayCount" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Plays remaining]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Document">
+    <Property Name="System.Document.ByteCount" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 4" CanonicalName="System.Document.ByteCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Byte count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.CharacterCount" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 16" CanonicalName="System.Document.CharacterCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Character count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.ClientID" Key="{276D7BB0-5B34-4FB0-AA4B-158ED12A1809} 100" CanonicalName="System.Document.ClientID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Client ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.Contributor" Key="{F334115E-DA1B-4509-9B3D-119504DC7ABB} 100" CanonicalName="System.Document.Contributor" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Contributors]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.DateCreated" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 12" CanonicalName="System.Document.DateCreated" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Content created]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.DatePrinted" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 11" CanonicalName="System.Document.DatePrinted" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Last printed]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.DateSaved" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 13" CanonicalName="System.Document.DateSaved" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Date last saved]]></DisplayName>
+      <EditInvitation><![CDATA[Specify last saved date and time]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.Division" Key="{1E005EE6-BF27-428B-B01C-79676ACD2870} 100" CanonicalName="System.Document.Division" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Division]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.DocumentID" Key="{E08805C8-E395-40DF-80D2-54F0D6C43154} 100" CanonicalName="System.Document.DocumentID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Document ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.HiddenSlideCount" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 9" CanonicalName="System.Document.HiddenSlideCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Hidden count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.LastAuthor" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 8" CanonicalName="System.Document.LastAuthor" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Last saved by]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.LineCount" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 5" CanonicalName="System.Document.LineCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Line count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.LinksDirty" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 16" CanonicalName="System.Document.LinksDirty" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[Links dirty?]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.Manager" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 14" CanonicalName="System.Document.Manager" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Manager]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the manager]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.MultimediaClipCount" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 10" CanonicalName="System.Document.MultimediaClipCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Multimedia clips]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.NoteCount" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 8" CanonicalName="System.Document.NoteCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Notes]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.PageCount" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 14" CanonicalName="System.Document.PageCount" DefaultColumnWidth="10" PropertyType="3">
+      <DisplayName><![CDATA[Pages]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.ParagraphCount" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 6" CanonicalName="System.Document.ParagraphCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Paragraph count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.PresentationFormat" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 3" CanonicalName="System.Document.PresentationFormat" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Presentation format]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.RevisionNumber" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 9" CanonicalName="System.Document.RevisionNumber" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Revision number]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the revision number]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.Scale" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 11" CanonicalName="System.Document.Scale" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[Scale]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.Security" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 19" CanonicalName="System.Document.Security" DefaultColumnWidth="20" PropertyType="3">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.SlideCount" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 7" CanonicalName="System.Document.SlideCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Slides]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.Template" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 7" CanonicalName="System.Document.Template" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Template]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.TotalEditingTime" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 10" CanonicalName="System.Document.TotalEditingTime" DefaultColumnWidth="15" PropertyType="21">
+      <DisplayName><![CDATA[Total editing time]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.Version" Key="{D5CDD502-2E9C-101B-9397-08002B2CF9AE} 29" CanonicalName="System.Document.Version" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Version number]]></DisplayName>
+      <EditInvitation><![CDATA[Specify a version number]]></EditInvitation>
+    </Property>
+    <Property Name="System.Document.WordCount" Key="{F29F85E0-4FF9-1068-AB91-08002B27B3D9} 15" CanonicalName="System.Document.WordCount" DefaultColumnWidth="20" PropertyType="3">
+      <DisplayName><![CDATA[Word count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="GPS">
+    <Property Name="System.GPS.Altitude" Key="{827EDB4F-5B73-44A7-891D-FDFFABEA35CA} 100" CanonicalName="System.GPS.Altitude" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Altitude]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.AltitudeDenominator" Key="{78342DCB-E358-4145-AE9A-6BFE4E0F9F51} 100" CanonicalName="System.GPS.AltitudeDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.AltitudeNumerator" Key="{2DAD1EB7-816D-40D3-9EC3-C9773BE2AADE} 100" CanonicalName="System.GPS.AltitudeNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.AltitudeRef" Key="{46AC629D-75EA-4515-867F-6DC4321C5844} 100" CanonicalName="System.GPS.AltitudeRef" DefaultColumnWidth="20" PropertyType="17">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.AreaInformation" Key="{972E333E-AC7E-49F1-8ADF-A70D07A9BCAB} 100" CanonicalName="System.GPS.AreaInformation" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DOP" Key="{0CF8FB02-1837-42F1-A697-A7017AA289B9} 100" CanonicalName="System.GPS.DOP" DefaultColumnWidth="20" PropertyType="5">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DOPDenominator" Key="{A0BE94C5-50BA-487B-BD35-0654BE8881ED} 100" CanonicalName="System.GPS.DOPDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DOPNumerator" Key="{47166B16-364F-4AA0-9F31-E2AB3DF449C3} 100" CanonicalName="System.GPS.DOPNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.Date" Key="{3602C812-0F3B-45F0-85AD-603468D69423} 100" CanonicalName="System.GPS.Date" DefaultColumnWidth="20" PropertyType="64">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestBearing" Key="{C66D4B3C-E888-47CC-B99F-9DCA3EE34DEA} 100" CanonicalName="System.GPS.DestBearing" DefaultColumnWidth="20" PropertyType="5">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestBearingDenominator" Key="{7ABCF4F8-7C3F-4988-AC91-8D2C2E97ECA5} 100" CanonicalName="System.GPS.DestBearingDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestBearingNumerator" Key="{BA3B1DA9-86EE-4B5D-A2A4-A271A429F0CF} 100" CanonicalName="System.GPS.DestBearingNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestBearingRef" Key="{9AB84393-2A0F-4B75-BB22-7279786977CB} 100" CanonicalName="System.GPS.DestBearingRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestDistance" Key="{A93EAE04-6804-4F24-AC81-09B266452118} 100" CanonicalName="System.GPS.DestDistance" DefaultColumnWidth="20" PropertyType="5">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestDistanceDenominator" Key="{9BC2C99B-AC71-4127-9D1C-2596D0D7DCB7} 100" CanonicalName="System.GPS.DestDistanceDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestDistanceNumerator" Key="{2BDA47DA-08C6-4FE1-80BC-A72FC517C5D0} 100" CanonicalName="System.GPS.DestDistanceNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestDistanceRef" Key="{ED4DF2D3-8695-450B-856F-F5C1C53ACB66} 100" CanonicalName="System.GPS.DestDistanceRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestLatitude" Key="{9D1D7CC5-5C39-451C-86B3-928E2D18CC47} 100" CanonicalName="System.GPS.DestLatitude" DefaultColumnWidth="20" PropertyType="4101">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestLatitudeDenominator" Key="{3A372292-7FCA-49A7-99D5-E47BB2D4E7AB} 100" CanonicalName="System.GPS.DestLatitudeDenominator" DefaultColumnWidth="20" PropertyType="4115">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestLatitudeNumerator" Key="{ECF4B6F6-D5A6-433C-BB92-4076650FC890} 100" CanonicalName="System.GPS.DestLatitudeNumerator" DefaultColumnWidth="20" PropertyType="4115">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestLatitudeRef" Key="{CEA820B9-CE61-4885-A128-005D9087C192} 100" CanonicalName="System.GPS.DestLatitudeRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestLongitude" Key="{47A96261-CB4C-4807-8AD3-40B9D9DBC6BC} 100" CanonicalName="System.GPS.DestLongitude" DefaultColumnWidth="20" PropertyType="4101">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestLongitudeDenominator" Key="{425D69E5-48AD-4900-8D80-6EB6B8D0AC86} 100" CanonicalName="System.GPS.DestLongitudeDenominator" DefaultColumnWidth="20" PropertyType="4115">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestLongitudeNumerator" Key="{A3250282-FB6D-48D5-9A89-DBCACE75CCCF} 100" CanonicalName="System.GPS.DestLongitudeNumerator" DefaultColumnWidth="20" PropertyType="4115">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.DestLongitudeRef" Key="{182C1EA6-7C1C-4083-AB4B-AC6C9F4ED128} 100" CanonicalName="System.GPS.DestLongitudeRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.Differential" Key="{AAF4EE25-BD3B-4DD7-BFC4-47F77BB00F6D} 100" CanonicalName="System.GPS.Differential" DefaultColumnWidth="20" PropertyType="18">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.ImgDirection" Key="{16473C91-D017-4ED9-BA4D-B6BAA55DBCF8} 100" CanonicalName="System.GPS.ImgDirection" DefaultColumnWidth="20" PropertyType="5">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.ImgDirectionDenominator" Key="{10B24595-41A2-4E20-93C2-5761C1395F32} 100" CanonicalName="System.GPS.ImgDirectionDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.ImgDirectionNumerator" Key="{DC5877C7-225F-45F7-BAC7-E81334B6130A} 100" CanonicalName="System.GPS.ImgDirectionNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.ImgDirectionRef" Key="{A4AAA5B7-1AD0-445F-811A-0F8F6E67F6B5} 100" CanonicalName="System.GPS.ImgDirectionRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.Latitude" Key="{8727CFFF-4868-4EC6-AD5B-81B98521D1AB} 100" CanonicalName="System.GPS.Latitude" DefaultColumnWidth="20" PropertyType="4101">
+      <DisplayName><![CDATA[Latitude]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.LatitudeDecimal" Key="{0F55CDE2-4F49-450D-92C1-DCD16301B1B7} 100" CanonicalName="System.GPS.LatitudeDecimal" DefaultColumnWidth="20" PropertyType="5">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.LatitudeDenominator" Key="{16E634EE-2BFF-497B-BD8A-4341AD39EEB9} 100" CanonicalName="System.GPS.LatitudeDenominator" DefaultColumnWidth="20" PropertyType="4115">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.LatitudeNumerator" Key="{7DDAAAD1-CCC8-41AE-B750-B2CB8031AEA2} 100" CanonicalName="System.GPS.LatitudeNumerator" DefaultColumnWidth="20" PropertyType="4115">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.LatitudeRef" Key="{029C0252-5B86-46C7-ACA0-2769FFC8E3D4} 100" CanonicalName="System.GPS.LatitudeRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.Longitude" Key="{C4C4DBB2-B593-466B-BBDA-D03D27D5E43A} 100" CanonicalName="System.GPS.Longitude" DefaultColumnWidth="20" PropertyType="4101">
+      <DisplayName><![CDATA[Longitude]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.LongitudeDecimal" Key="{4679C1B5-844D-4590-BAF5-F322231F1B81} 100" CanonicalName="System.GPS.LongitudeDecimal" DefaultColumnWidth="20" PropertyType="5">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.LongitudeDenominator" Key="{BE6E176C-4534-4D2C-ACE5-31DEDAC1606B} 100" CanonicalName="System.GPS.LongitudeDenominator" DefaultColumnWidth="20" PropertyType="4115">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.LongitudeNumerator" Key="{02B0F689-A914-4E45-821D-1DDA452ED2C4} 100" CanonicalName="System.GPS.LongitudeNumerator" DefaultColumnWidth="20" PropertyType="4115">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.LongitudeRef" Key="{33DCF22B-28D5-464C-8035-1EE9EFD25278} 100" CanonicalName="System.GPS.LongitudeRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.MapDatum" Key="{2CA2DAE6-EDDC-407D-BEF1-773942ABFA95} 100" CanonicalName="System.GPS.MapDatum" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.MeasureMode" Key="{A015ED5D-AAEA-4D58-8A86-3C586920EA0B} 100" CanonicalName="System.GPS.MeasureMode" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.ProcessingMethod" Key="{59D49E61-840F-4AA9-A939-E2099B7F6399} 100" CanonicalName="System.GPS.ProcessingMethod" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.Satellites" Key="{467EE575-1F25-4557-AD4E-B8B58B0D9C15} 100" CanonicalName="System.GPS.Satellites" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Satellites]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.Speed" Key="{DA5D0862-6E76-4E1B-BABD-70021BD25494} 100" CanonicalName="System.GPS.Speed" DefaultColumnWidth="20" PropertyType="5">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.SpeedDenominator" Key="{7D122D5A-AE5E-4335-8841-D71E7CE72F53} 100" CanonicalName="System.GPS.SpeedDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.SpeedNumerator" Key="{ACC9CE3D-C213-4942-8B48-6D0820F21C6D} 100" CanonicalName="System.GPS.SpeedNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.SpeedRef" Key="{ECF7F4C9-544F-4D6D-9D98-8AD79ADAF453} 100" CanonicalName="System.GPS.SpeedRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.Status" Key="{125491F4-818F-46B2-91B5-D537753617B2} 100" CanonicalName="System.GPS.Status" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.Track" Key="{76C09943-7C33-49E3-9E7E-CDBA872CFADA} 100" CanonicalName="System.GPS.Track" DefaultColumnWidth="20" PropertyType="5">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.TrackDenominator" Key="{C8D1920C-01F6-40C0-AC86-2F3A4AD00770} 100" CanonicalName="System.GPS.TrackDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.TrackNumerator" Key="{702926F4-44A6-43E1-AE71-45627116893B} 100" CanonicalName="System.GPS.TrackNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.TrackRef" Key="{35DBE6FE-44C3-4400-AAAE-D2C799C407E8} 100" CanonicalName="System.GPS.TrackRef" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.GPS.VersionID" Key="{22704DA4-C6B2-4A99-8E56-F16DF8C92599} 100" CanonicalName="System.GPS.VersionID" DefaultColumnWidth="20" PropertyType="4113">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Image">
+    <Property Name="System.Image.BitDepth" Key="{6444048F-4C8B-11D1-8B70-080036B11A03} 7" CanonicalName="System.Image.BitDepth" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Bit depth]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.ColorSpace" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 40961" CanonicalName="System.Image.ColorSpace" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[Color representation]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.CompressedBitsPerPixel" Key="{364B6FA9-37AB-482A-BE2B-AE02F60D4318} 100" CanonicalName="System.Image.CompressedBitsPerPixel" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Compressed bits/pixel]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.CompressedBitsPerPixelDenominator" Key="{1F8844E1-24AD-4508-9DFD-5326A415CE02} 100" CanonicalName="System.Image.CompressedBitsPerPixelDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.CompressedBitsPerPixelNumerator" Key="{D21A7148-D32C-4624-8900-277210F79C0F} 100" CanonicalName="System.Image.CompressedBitsPerPixelNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.Compression" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 259" CanonicalName="System.Image.Compression" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[Compression]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.CompressionText" Key="{3F08E66F-2F44-4BB9-A682-AC35D2562322} 100" CanonicalName="System.Image.CompressionText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.Copyright" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 33432" CanonicalName="System.Image.Copyright" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.Dimensions" Key="{6444048F-4C8B-11D1-8B70-080036B11A03} 13" CanonicalName="System.Image.Dimensions" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Dimensions]]></DisplayName>
+      <EditInvitation><![CDATA[Add dimensions]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.HorizontalResolution" Key="{6444048F-4C8B-11D1-8B70-080036B11A03} 5" CanonicalName="System.Image.HorizontalResolution" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Horizontal resolution]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.HorizontalSize" Key="{6444048F-4C8B-11D1-8B70-080036B11A03} 3" CanonicalName="System.Image.HorizontalSize" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Width]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.ImageID" Key="{10DABE05-32AA-4C29-BF1A-63E2D220587F} 100" CanonicalName="System.Image.ImageID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Image ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.PropertyBag" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 40096" CanonicalName="System.Image.PropertyBag" DefaultColumnWidth="20" PropertyType="1">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.ResolutionUnit" Key="{19B51FA6-1F92-4A5C-AB48-7DF0ABD67444} 100" CanonicalName="System.Image.ResolutionUnit" DefaultColumnWidth="20" PropertyType="2">
+      <DisplayName><![CDATA[Resolution unit]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.VerticalResolution" Key="{6444048F-4C8B-11D1-8B70-080036B11A03} 6" CanonicalName="System.Image.VerticalResolution" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Vertical resolution]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Image.VerticalSize" Key="{6444048F-4C8B-11D1-8B70-080036B11A03} 4" CanonicalName="System.Image.VerticalSize" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Height]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Media">
+    <Property Name="System.Media.AuthorUrl" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 32" CanonicalName="System.Media.AuthorUrl" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Author URL]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.AverageLevel" Key="{09EDD5B6-B301-43C5-9990-D00302EFFD46} 100" CanonicalName="System.Media.AverageLevel" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ClassPrimaryID" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 13" CanonicalName="System.Media.ClassPrimaryID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Media class primary ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ClassSecondaryID" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 14" CanonicalName="System.Media.ClassSecondaryID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Media class secondary ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.CollectionGroupID" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 24" CanonicalName="System.Media.CollectionGroupID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Collection group ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.CollectionID" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 25" CanonicalName="System.Media.CollectionID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Collection ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ContentDistributor" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 18" CanonicalName="System.Media.ContentDistributor" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Content provider]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ContentID" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 26" CanonicalName="System.Media.ContentID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Content ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.CreatorApplication" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 27" CanonicalName="System.Media.CreatorApplication" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Tool name]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.CreatorApplicationVersion" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 28" CanonicalName="System.Media.CreatorApplicationVersion" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Tool version]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.DVDID" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 15" CanonicalName="System.Media.DVDID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[DVD ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.DateEncoded" Key="{2E4B640D-5019-46D8-8881-55414CC5CAA0} 100" CanonicalName="System.Media.DateEncoded" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Media created]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.DateReleased" Key="{DE41CC29-6971-4290-B472-F59F2E2F31E2} 100" CanonicalName="System.Media.DateReleased" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Date released]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.DlnaProfileID" Key="{CFA31B45-525D-4998-BB44-3F7D81542FA4} 100" CanonicalName="System.Media.DlnaProfileID" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.Duration" Key="{64440490-4C8B-11D1-8B70-080036B11A03} 3" CanonicalName="System.Media.Duration" DefaultColumnWidth="15" PropertyType="21">
+      <DisplayName><![CDATA[Length]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.EncodedBy" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 36" CanonicalName="System.Media.EncodedBy" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Encoded by]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.EncodingSettings" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 37" CanonicalName="System.Media.EncodingSettings" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Encoding settings]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.EpisodeNumber" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 100" CanonicalName="System.Media.EpisodeNumber" DefaultColumnWidth="10" PropertyType="19">
+      <DisplayName><![CDATA[Episode number]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the episode number]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.FrameCount" Key="{6444048F-4C8B-11D1-8B70-080036B11A03} 12" CanonicalName="System.Media.FrameCount" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Frame count]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.MCDI" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 16" CanonicalName="System.Media.MCDI" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[MCDI]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.MetadataContentProvider" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 17" CanonicalName="System.Media.MetadataContentProvider" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Provider]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.Producer" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 22" CanonicalName="System.Media.Producer" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Producers]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.PromotionUrl" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 33" CanonicalName="System.Media.PromotionUrl" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Promotion URL]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ProtectionType" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 38" CanonicalName="System.Media.ProtectionType" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Protection type]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ProviderRating" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 39" CanonicalName="System.Media.ProviderRating" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Provider rating]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ProviderStyle" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 40" CanonicalName="System.Media.ProviderStyle" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Provider style]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.Publisher" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 30" CanonicalName="System.Media.Publisher" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Publisher]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.SeasonNumber" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 101" CanonicalName="System.Media.SeasonNumber" DefaultColumnWidth="10" PropertyType="19">
+      <DisplayName><![CDATA[Season number]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the season number]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.SeriesName" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 42" CanonicalName="System.Media.SeriesName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Series name]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.Status" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 7" CanonicalName="System.Media.Status" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Media status]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the status]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.SubTitle" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 38" CanonicalName="System.Media.SubTitle" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Subtitle]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.SubscriptionContentId" Key="{9AEBAE7A-9644-487D-A92C-657585ED751A} 100" CanonicalName="System.Media.SubscriptionContentId" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ThumbnailLargePath" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 47" CanonicalName="System.Media.ThumbnailLargePath" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Large thumbnail path]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ThumbnailLargeUri" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 48" CanonicalName="System.Media.ThumbnailLargeUri" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Large thumbnail uri]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ThumbnailSmallPath" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 49" CanonicalName="System.Media.ThumbnailSmallPath" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Small thumbnail path]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.ThumbnailSmallUri" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 50" CanonicalName="System.Media.ThumbnailSmallUri" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Small thumbnail uri]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.UniqueFileIdentifier" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 35" CanonicalName="System.Media.UniqueFileIdentifier" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Unique file ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.UserNoAutoInfo" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 41" CanonicalName="System.Media.UserNoAutoInfo" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[No auto info]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.UserWebUrl" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 34" CanonicalName="System.Media.UserWebUrl" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[User web URL]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.Writer" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 23" CanonicalName="System.Media.Writer" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Writers]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Media.Year" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 5" CanonicalName="System.Media.Year" DefaultColumnWidth="10" PropertyType="19">
+      <DisplayName><![CDATA[Year]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the year this media was published]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Music">
+    <Property Name="System.Music.AlbumArtist" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 13" CanonicalName="System.Music.AlbumArtist" DefaultColumnWidth="15" PropertyType="31">
+      <DisplayName><![CDATA[Album artist]]></DisplayName>
+      <EditInvitation><![CDATA[Specify album artist]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.AlbumArtistSortOverride" Key="{F1FDB4AF-F78C-466C-BB05-56E92DB0B8EC} 103" CanonicalName="System.Music.AlbumArtistSortOverride" DefaultColumnWidth="15" PropertyType="31">
+      <DisplayName><![CDATA[Sort album artist]]></DisplayName>
+      <EditInvitation><![CDATA[Specify sort album artist]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.AlbumID" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 100" CanonicalName="System.Music.AlbumID" DefaultColumnWidth="17" PropertyType="31">
+      <DisplayName><![CDATA[Album ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.AlbumTitle" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 4" CanonicalName="System.Music.AlbumTitle" DefaultColumnWidth="17" PropertyType="31">
+      <DisplayName><![CDATA[Album]]></DisplayName>
+      <EditInvitation><![CDATA[Specify album]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.AlbumTitleSortOverride" Key="{13EB7FFC-EC89-4346-B19D-CCC6F1784223} 101" CanonicalName="System.Music.AlbumTitleSortOverride" DefaultColumnWidth="17" PropertyType="31">
+      <DisplayName><![CDATA[Sort album]]></DisplayName>
+      <EditInvitation><![CDATA[Specify sort album]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.Artist" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 2" CanonicalName="System.Music.Artist" DefaultColumnWidth="15" PropertyType="4127">
+      <DisplayName><![CDATA[Contributing artists]]></DisplayName>
+      <EditInvitation><![CDATA[Specify contributing artist]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.ArtistSortOverride" Key="{DEEB2DB5-0696-4CE0-94FE-A01F77A45FB5} 102" CanonicalName="System.Music.ArtistSortOverride" DefaultColumnWidth="15" PropertyType="4127">
+      <DisplayName><![CDATA[Sort contributing artists]]></DisplayName>
+      <EditInvitation><![CDATA[Specify sort contributing artist]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.BeatsPerMinute" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 35" CanonicalName="System.Music.BeatsPerMinute" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Beats-per-minute]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.Composer" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 19" CanonicalName="System.Music.Composer" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Composers]]></DisplayName>
+      <EditInvitation><![CDATA[Specify composer]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.ComposerSortOverride" Key="{00BC20A3-BD48-4085-872C-A88D77F5097E} 105" CanonicalName="System.Music.ComposerSortOverride" DefaultColumnWidth="15" PropertyType="4127">
+      <DisplayName><![CDATA[Sort composer]]></DisplayName>
+      <EditInvitation><![CDATA[Specify sort composer]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.Conductor" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 36" CanonicalName="System.Music.Conductor" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Conductors]]></DisplayName>
+      <EditInvitation><![CDATA[Specify conductor]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.ContentGroupDescription" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 33" CanonicalName="System.Music.ContentGroupDescription" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Group description]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.DiscNumber" Key="{6AFE7437-9BCD-49C7-80FE-4A5C65FA5874} 104" CanonicalName="System.Music.DiscNumber" DefaultColumnWidth="5" PropertyType="19">
+      <DisplayName><![CDATA[Disc]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the disc number of a track]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.DisplayArtist" Key="{FD122953-FA93-4EF7-92C3-04C946B2F7C8} 100" CanonicalName="System.Music.DisplayArtist" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.Genre" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 11" CanonicalName="System.Music.Genre" DefaultColumnWidth="13" PropertyType="4127">
+      <DisplayName><![CDATA[Genre]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the genre of music]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.InitialKey" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 34" CanonicalName="System.Music.InitialKey" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Initial key]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.IsCompilation" Key="{C449D5CB-9EA4-4809-82E8-AF9D59DED6D1} 100" CanonicalName="System.Music.IsCompilation" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[Part of a compilation]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.Lyrics" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 12" CanonicalName="System.Music.Lyrics" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Lyrics]]></DisplayName>
+      <EditInvitation><![CDATA[Add lyrics]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.Mood" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 39" CanonicalName="System.Music.Mood" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Mood]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the mood of the track]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.PartOfSet" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 37" CanonicalName="System.Music.PartOfSet" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Part of set]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.Period" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 31" CanonicalName="System.Music.Period" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Period]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the period of music]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.SynchronizedLyrics" Key="{6B223B6A-162E-4AA9-B39F-05D678FC6D77} 100" CanonicalName="System.Music.SynchronizedLyrics" DefaultColumnWidth="20" PropertyType="65">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Music.TrackNumber" Key="{56A3372E-CE9C-11D2-9F0E-006097C686F6} 7" CanonicalName="System.Music.TrackNumber" DefaultColumnWidth="5" PropertyType="19">
+      <DisplayName><![CDATA[#]]></DisplayName>
+      <EditInvitation><![CDATA[Specify the track number]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Photo">
+    <Property Name="System.Photo.Aperture" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 37378" CanonicalName="System.Photo.Aperture" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Aperture]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ApertureDenominator" Key="{E1A9A38B-6685-46BD-875E-570DC7AD7320} 100" CanonicalName="System.Photo.ApertureDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ApertureNumerator" Key="{0337ECEC-39FB-4581-A0BD-4C4CC51E9914} 100" CanonicalName="System.Photo.ApertureNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.Brightness" Key="{1A701BF6-478C-4361-83AB-3701BB053C58} 100" CanonicalName="System.Photo.Brightness" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Brightness]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.BrightnessDenominator" Key="{6EBE6946-2321-440A-90F0-C043EFD32476} 100" CanonicalName="System.Photo.BrightnessDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.BrightnessNumerator" Key="{9E7D118F-B314-45A0-8CFB-D654B917C9E9} 100" CanonicalName="System.Photo.BrightnessNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.CameraManufacturer" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 271" CanonicalName="System.Photo.CameraManufacturer" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Camera maker]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.CameraModel" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 272" CanonicalName="System.Photo.CameraModel" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Camera model]]></DisplayName>
+      <EditInvitation><![CDATA[Add a name]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.CameraSerialNumber" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 273" CanonicalName="System.Photo.CameraSerialNumber" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Camera serial number]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.Contrast" Key="{2A785BA9-8D23-4DED-82E6-60A350C86A10} 100" CanonicalName="System.Photo.Contrast" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Contrast]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ContrastText" Key="{59DDE9F2-5253-40EA-9A8B-479E96C6249A} 100" CanonicalName="System.Photo.ContrastText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.DateTaken" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 36867" CanonicalName="System.Photo.DateTaken" DefaultColumnWidth="15" PropertyType="64">
+      <DisplayName><![CDATA[Date taken]]></DisplayName>
+      <EditInvitation><![CDATA[Specify date taken]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.DigitalZoom" Key="{F85BF840-A925-4BC2-B0C4-8E36B598679E} 100" CanonicalName="System.Photo.DigitalZoom" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Digital zoom]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.DigitalZoomDenominator" Key="{745BAF0E-E5C1-4CFB-8A1B-D031A0A52393} 100" CanonicalName="System.Photo.DigitalZoomDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.DigitalZoomNumerator" Key="{16CBB924-6500-473B-A5BE-F1599BCBE413} 100" CanonicalName="System.Photo.DigitalZoomNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.EXIFVersion" Key="{D35F743A-EB2E-47F2-A286-844132CB1427} 100" CanonicalName="System.Photo.EXIFVersion" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[EXIF version]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.Event" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 18248" CanonicalName="System.Photo.Event" DefaultColumnWidth="11" PropertyType="4127">
+      <DisplayName><![CDATA[Event]]></DisplayName>
+      <EditInvitation><![CDATA[Specify event]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureBias" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 37380" CanonicalName="System.Photo.ExposureBias" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Exposure bias]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureBiasDenominator" Key="{AB205E50-04B7-461C-A18C-2F233836E627} 100" CanonicalName="System.Photo.ExposureBiasDenominator" DefaultColumnWidth="20" PropertyType="3">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureBiasNumerator" Key="{738BF284-1D87-420B-92CF-5834BF6EF9ED} 100" CanonicalName="System.Photo.ExposureBiasNumerator" DefaultColumnWidth="20" PropertyType="3">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureIndex" Key="{967B5AF8-995A-46ED-9E11-35B3C5B9782D} 100" CanonicalName="System.Photo.ExposureIndex" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Exposure index]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureIndexDenominator" Key="{93112F89-C28B-492F-8A9D-4BE2062CEE8A} 100" CanonicalName="System.Photo.ExposureIndexDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureIndexNumerator" Key="{CDEDCF30-8919-44DF-8F4C-4EB2FFDB8D89} 100" CanonicalName="System.Photo.ExposureIndexNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureProgram" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 34850" CanonicalName="System.Photo.ExposureProgram" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Exposure program]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureProgramText" Key="{FEC690B7-5F30-4646-AE47-4CAAFBA884A3} 100" CanonicalName="System.Photo.ExposureProgramText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureTime" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 33434" CanonicalName="System.Photo.ExposureTime" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Exposure time]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureTimeDenominator" Key="{55E98597-AD16-42E0-B624-21599A199838} 100" CanonicalName="System.Photo.ExposureTimeDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ExposureTimeNumerator" Key="{257E44E2-9031-4323-AC38-85C552871B2E} 100" CanonicalName="System.Photo.ExposureTimeNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FNumber" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 33437" CanonicalName="System.Photo.FNumber" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[F-stop]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FNumberDenominator" Key="{E92A2496-223B-4463-A4E3-30EABBA79D80} 100" CanonicalName="System.Photo.FNumberDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FNumberNumerator" Key="{1B97738A-FDFC-462F-9D93-1957E08BE90C} 100" CanonicalName="System.Photo.FNumberNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.Flash" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 37385" CanonicalName="System.Photo.Flash" DefaultColumnWidth="20" PropertyType="17">
+      <DisplayName><![CDATA[Flash mode]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FlashEnergy" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 41483" CanonicalName="System.Photo.FlashEnergy" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Flash energy]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FlashEnergyDenominator" Key="{D7B61C70-6323-49CD-A5FC-C84277162C97} 100" CanonicalName="System.Photo.FlashEnergyDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FlashEnergyNumerator" Key="{FCAD3D3D-0858-400F-AAA3-2F66CCE2A6BC} 100" CanonicalName="System.Photo.FlashEnergyNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FlashFired" Key="{2D152B40-CA39-40DB-B2CC-573725B2FEC5} 100" CanonicalName="System.Photo.FlashFired" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FlashManufacturer" Key="{AABAF6C9-E0C5-4719-8585-57B103E584FE} 100" CanonicalName="System.Photo.FlashManufacturer" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Flash maker]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FlashModel" Key="{FE83BB35-4D1A-42E2-916B-06F3E1AF719E} 100" CanonicalName="System.Photo.FlashModel" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Flash model]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FlashText" Key="{6B8B68F6-200B-47EA-8D25-D8050F57339F} 100" CanonicalName="System.Photo.FlashText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalLength" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 37386" CanonicalName="System.Photo.FocalLength" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Focal length]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalLengthDenominator" Key="{305BC615-DCA1-44A5-9FD4-10C0BA79412E} 100" CanonicalName="System.Photo.FocalLengthDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalLengthInFilm" Key="{A0E74609-B84D-4F49-B860-462BD9971F98} 100" CanonicalName="System.Photo.FocalLengthInFilm" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[35mm focal length]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalLengthNumerator" Key="{776B6B3B-1E3D-4B0C-9A0E-8FBAF2A8492A} 100" CanonicalName="System.Photo.FocalLengthNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalPlaneXResolution" Key="{CFC08D97-C6F7-4484-89DD-EBEF4356FE76} 100" CanonicalName="System.Photo.FocalPlaneXResolution" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Focal plane X resolution]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalPlaneXResolutionDenominator" Key="{0933F3F5-4786-4F46-A8E8-D64DD37FA521} 100" CanonicalName="System.Photo.FocalPlaneXResolutionDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalPlaneXResolutionNumerator" Key="{DCCB10AF-B4E2-4B88-95F9-031B4D5AB490} 100" CanonicalName="System.Photo.FocalPlaneXResolutionNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalPlaneYResolution" Key="{4FFFE4D0-914F-4AC4-8D6F-C9C61DE169B1} 100" CanonicalName="System.Photo.FocalPlaneYResolution" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Focal plane Y resolution]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalPlaneYResolutionDenominator" Key="{1D6179A6-A876-4031-B013-3347B2B64DC8} 100" CanonicalName="System.Photo.FocalPlaneYResolutionDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.FocalPlaneYResolutionNumerator" Key="{A2E541C5-4440-4BA8-867E-75CFC06828CD} 100" CanonicalName="System.Photo.FocalPlaneYResolutionNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.GainControl" Key="{FA304789-00C7-4D80-904A-1E4DCC7265AA} 100" CanonicalName="System.Photo.GainControl" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Gain control]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.GainControlDenominator" Key="{42864DFD-9DA4-4F77-BDED-4AAD7B256735} 100" CanonicalName="System.Photo.GainControlDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.GainControlNumerator" Key="{8E8ECF7C-B7B8-4EB8-A63F-0EE715C96F9E} 100" CanonicalName="System.Photo.GainControlNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.GainControlText" Key="{C06238B2-0BF9-4279-A723-25856715CB9D} 100" CanonicalName="System.Photo.GainControlText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ISOSpeed" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 34855" CanonicalName="System.Photo.ISOSpeed" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[ISO speed]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.LensManufacturer" Key="{E6DDCAF7-29C5-4F0A-9A68-D19412EC7090} 100" CanonicalName="System.Photo.LensManufacturer" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Lens maker]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.LensModel" Key="{E1277516-2B5F-4869-89B1-2E585BD38B7A} 100" CanonicalName="System.Photo.LensModel" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Lens model]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.LightSource" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 37384" CanonicalName="System.Photo.LightSource" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Light source]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.MakerNote" Key="{FA303353-B659-4052-85E9-BCAC79549B84} 100" CanonicalName="System.Photo.MakerNote" DefaultColumnWidth="20" PropertyType="4113">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.MakerNoteOffset" Key="{813F4124-34E6-4D17-AB3E-6B1F3C2247A1} 100" CanonicalName="System.Photo.MakerNoteOffset" DefaultColumnWidth="20" PropertyType="21">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.MaxAperture" Key="{08F6D7C2-E3F2-44FC-AF1E-5AA5C81A2D3E} 100" CanonicalName="System.Photo.MaxAperture" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Max aperture]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.MaxApertureDenominator" Key="{C77724D4-601F-46C5-9B89-C53F93BCEB77} 100" CanonicalName="System.Photo.MaxApertureDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.MaxApertureNumerator" Key="{C107E191-A459-44C5-9AE6-B952AD4B906D} 100" CanonicalName="System.Photo.MaxApertureNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.MeteringMode" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 37383" CanonicalName="System.Photo.MeteringMode" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[Metering mode]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.MeteringModeText" Key="{F628FD8C-7BA8-465A-A65B-C5AA79263A9E} 100" CanonicalName="System.Photo.MeteringModeText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.Orientation" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 274" CanonicalName="System.Photo.Orientation" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[Orientation]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.OrientationText" Key="{A9EA193C-C511-498A-A06B-58E2776DCC28} 100" CanonicalName="System.Photo.OrientationText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.PeopleNames" Key="{E8309B6E-084C-49B4-B1FC-90A80331B638} 100" CanonicalName="System.Photo.PeopleNames" DefaultColumnWidth="11" PropertyType="4127">
+      <DisplayName><![CDATA[People]]></DisplayName>
+      <EditInvitation><![CDATA[Add a people tag]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.PhotometricInterpretation" Key="{341796F1-1DF9-4B1C-A564-91BDEFA43877} 100" CanonicalName="System.Photo.PhotometricInterpretation" DefaultColumnWidth="20" PropertyType="18">
+      <DisplayName><![CDATA[Photometric interpretation]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.PhotometricInterpretationText" Key="{821437D6-9EAB-4765-A589-3B1CBBD22A61} 100" CanonicalName="System.Photo.PhotometricInterpretationText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ProgramMode" Key="{6D217F6D-3F6A-4825-B470-5F03CA2FBE9B} 100" CanonicalName="System.Photo.ProgramMode" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Program mode]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ProgramModeText" Key="{7FE3AA27-2648-42F3-89B0-454E5CB150C3} 100" CanonicalName="System.Photo.ProgramModeText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.RelatedSoundFile" Key="{318A6B45-087F-4DC2-B8CC-05359551FC9E} 100" CanonicalName="System.Photo.RelatedSoundFile" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Audio]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.Saturation" Key="{49237325-A95A-4F67-B211-816B2D45D2E0} 100" CanonicalName="System.Photo.Saturation" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Saturation]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.SaturationText" Key="{61478C08-B600-4A84-BBE4-E99C45F0A072} 100" CanonicalName="System.Photo.SaturationText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.Sharpness" Key="{FC6976DB-8349-4970-AE97-B3C5316A08F0} 100" CanonicalName="System.Photo.Sharpness" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Sharpness]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.SharpnessText" Key="{51EC3F47-DD50-421D-8769-334F50424B1E} 100" CanonicalName="System.Photo.SharpnessText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ShutterSpeed" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 37377" CanonicalName="System.Photo.ShutterSpeed" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Shutter speed]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ShutterSpeedDenominator" Key="{E13D8975-81C7-4948-AE3F-37CAE11E8FF7} 100" CanonicalName="System.Photo.ShutterSpeedDenominator" DefaultColumnWidth="20" PropertyType="3">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.ShutterSpeedNumerator" Key="{16EA4042-D6F4-4BCA-8349-7C78D30FB333} 100" CanonicalName="System.Photo.ShutterSpeedNumerator" DefaultColumnWidth="20" PropertyType="3">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.SubjectDistance" Key="{14B81DA1-0135-4D31-96D9-6CBFC9671A99} 37382" CanonicalName="System.Photo.SubjectDistance" DefaultColumnWidth="20" PropertyType="5">
+      <DisplayName><![CDATA[Subject distance]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.SubjectDistanceDenominator" Key="{0C840A88-B043-466D-9766-D4B26DA3FA77} 100" CanonicalName="System.Photo.SubjectDistanceDenominator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.SubjectDistanceNumerator" Key="{8AF4961C-F526-43E5-AA81-DB768219178D} 100" CanonicalName="System.Photo.SubjectDistanceNumerator" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.TagViewAggregate" Key="{B812F15D-C2D8-4BBF-BACD-79744346113F} 100" CanonicalName="System.Photo.TagViewAggregate" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.TranscodedForSync" Key="{9A8EBB75-6458-4E82-BACB-35C0095B03BB} 100" CanonicalName="System.Photo.TranscodedForSync" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.WhiteBalance" Key="{EE3D3D8A-5381-4CFA-B13B-AAF66B5F4EC9} 100" CanonicalName="System.Photo.WhiteBalance" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[White balance]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Photo.WhiteBalanceText" Key="{6336B95E-C7A7-426D-86FD-7AE3D39C84B4} 100" CanonicalName="System.Photo.WhiteBalanceText" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="RecordedTV">
+    <Property Name="System.RecordedTV.ChannelNumber" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 7" CanonicalName="System.RecordedTV.ChannelNumber" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Channel number]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.Credits" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 4" CanonicalName="System.RecordedTV.Credits" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[TV credits]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.DateContentExpires" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 15" CanonicalName="System.RecordedTV.DateContentExpires" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Expiration date]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.EpisodeName" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 2" CanonicalName="System.RecordedTV.EpisodeName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Episode name]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.IsATSCContent" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 16" CanonicalName="System.RecordedTV.IsATSCContent" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[ATSC content]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.IsClosedCaptioningAvailable" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 12" CanonicalName="System.RecordedTV.IsClosedCaptioningAvailable" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[Closed captioning]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.IsDTVContent" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 17" CanonicalName="System.RecordedTV.IsDTVContent" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[DTV content]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.IsHDContent" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 18" CanonicalName="System.RecordedTV.IsHDContent" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[HDTV content]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.IsRepeatBroadcast" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 13" CanonicalName="System.RecordedTV.IsRepeatBroadcast" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[Rerun]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.IsSAP" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 14" CanonicalName="System.RecordedTV.IsSAP" DefaultColumnWidth="20" PropertyType="11">
+      <DisplayName><![CDATA[SAP]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.NetworkAffiliation" Key="{2C53C813-FB63-4E22-A1AB-0B331CA1E273} 100" CanonicalName="System.RecordedTV.NetworkAffiliation" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[TV network affiliation]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.OriginalBroadcastDate" Key="{4684FE97-8765-4842-9C13-F006447B178C} 100" CanonicalName="System.RecordedTV.OriginalBroadcastDate" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Broadcast date]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.ProgramDescription" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 3" CanonicalName="System.RecordedTV.ProgramDescription" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Program description]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.RecordingTime" Key="{A5477F61-7A82-4ECA-9DDE-98B69B2479B3} 100" CanonicalName="System.RecordedTV.RecordingTime" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Recording time]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.StationCallSign" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 5" CanonicalName="System.RecordedTV.StationCallSign" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Station call sign]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.StationName" Key="{1B5439E7-EBA1-4AF8-BDD7-7AF1D4549493} 100" CanonicalName="System.RecordedTV.StationName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Station name]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.RecordedTV.VideoQuality" Key="{6D748DE2-8D38-4CC3-AC60-F009B057C557} 10" CanonicalName="System.RecordedTV.VideoQuality" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Software">
+    <Property Name="System.Software.AppId" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 5" CanonicalName="System.Software.AppId" DefaultColumnWidth="20" PropertyType="72">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.Comments" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 20" CanonicalName="System.Software.Comments" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Comments]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.DateInstalled" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 11" CanonicalName="System.Software.DateInstalled" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Installed on]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.DateLastUsed" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 16" CanonicalName="System.Software.DateLastUsed" DefaultColumnWidth="20" PropertyType="64">
+      <DisplayName><![CDATA[Last used on]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.HelpLink" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 8" CanonicalName="System.Software.HelpLink" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Help link]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.InstallLocation" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 9" CanonicalName="System.Software.InstallLocation" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Install location]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.InstallSource" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 10" CanonicalName="System.Software.InstallSource" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Install source]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.NullPreview.Subtitle" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 998" CanonicalName="System.Software.NullPreview.Subtitle" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Subtitle]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.NullPreview.Title" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 999" CanonicalName="System.Software.NullPreview.Title" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Title]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.NullPreview.TotalSize" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 997" CanonicalName="System.Software.NullPreview.TotalSize" DefaultColumnWidth="7" PropertyType="21">
+      <DisplayName><![CDATA[Total size]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.ParentName" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 18" CanonicalName="System.Software.ParentName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Parent name]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.ProductID" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 19" CanonicalName="System.Software.ProductID" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Product ID]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.ProductName" Key="{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} 7" CanonicalName="System.Software.ProductName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Product name]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.ProductVersion" Key="{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} 8" CanonicalName="System.Software.ProductVersion" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Product version]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.Publisher" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 2" CanonicalName="System.Software.Publisher" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Publisher]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.ReadMeUrl" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 13" CanonicalName="System.Software.ReadMeUrl" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Readme location]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.RegisteredCompany" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 4" CanonicalName="System.Software.RegisteredCompany" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Registered company]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.RegisteredOwner" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 3" CanonicalName="System.Software.RegisteredOwner" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Registered owner]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.SupportContactName" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 12" CanonicalName="System.Software.SupportContactName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Support contact]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.SupportTelephone" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 7" CanonicalName="System.Software.SupportTelephone" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Support phone]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.SupportUrl" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 6" CanonicalName="System.Software.SupportUrl" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Support link]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.TasksFileUrl" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 17" CanonicalName="System.Software.TasksFileUrl" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.TimesUsed" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 15" CanonicalName="System.Software.TimesUsed" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Number of times used]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Software.UpdateInfoUrl" Key="{841E4F90-FF59-4D16-8947-E81BBFFAB36D} 14" CanonicalName="System.Software.UpdateInfoUrl" DefaultColumnWidth="23" PropertyType="31">
+      <DisplayName><![CDATA[Update information]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Supplemental">
+    <Property Name="System.Supplemental.Album" Key="{0C73B141-39D6-4653-A683-CAB291EAF95B} 6" CanonicalName="System.Supplemental.Album" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Supplemental.AlbumID" Key="{0C73B141-39D6-4653-A683-CAB291EAF95B} 2" CanonicalName="System.Supplemental.AlbumID" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Supplemental.Location" Key="{0C73B141-39D6-4653-A683-CAB291EAF95B} 5" CanonicalName="System.Supplemental.Location" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Supplemental.Person" Key="{0C73B141-39D6-4653-A683-CAB291EAF95B} 7" CanonicalName="System.Supplemental.Person" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Supplemental.ResourceId" Key="{0C73B141-39D6-4653-A683-CAB291EAF95B} 3" CanonicalName="System.Supplemental.ResourceId" DefaultColumnWidth="20" PropertyType="31">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Supplemental.Tag" Key="{0C73B141-39D6-4653-A683-CAB291EAF95B} 4" CanonicalName="System.Supplemental.Tag" DefaultColumnWidth="20" PropertyType="4127">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="Video">
+    <Property Name="System.Video.Compression" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 10" CanonicalName="System.Video.Compression" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Video compression]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.Director" Key="{64440492-4C8B-11D1-8B70-080036B11A03} 20" CanonicalName="System.Video.Director" DefaultColumnWidth="20" PropertyType="4127">
+      <DisplayName><![CDATA[Directors]]></DisplayName>
+      <EditInvitation><![CDATA[Specify director]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.EncodingBitrate" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 8" CanonicalName="System.Video.EncodingBitrate" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Data rate]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.FourCC" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 44" CanonicalName="System.Video.FourCC" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.FrameHeight" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 4" CanonicalName="System.Video.FrameHeight" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Frame height]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.FrameRate" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 6" CanonicalName="System.Video.FrameRate" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Frame rate]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.FrameWidth" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 3" CanonicalName="System.Video.FrameWidth" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Frame width]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.HorizontalAspectRatio" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 42" CanonicalName="System.Video.HorizontalAspectRatio" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.IsSpherical" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 100" CanonicalName="System.Video.IsSpherical" DefaultColumnWidth="10" PropertyType="11">
+      <DisplayName><![CDATA[Spherical]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.IsStereo" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 98" CanonicalName="System.Video.IsStereo" DefaultColumnWidth="10" PropertyType="11">
+      <DisplayName><![CDATA[Stereo]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.Orientation" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 99" CanonicalName="System.Video.Orientation" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Video orientation]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.SampleSize" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 9" CanonicalName="System.Video.SampleSize" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Video sample size]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.StreamName" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 2" CanonicalName="System.Video.StreamName" DefaultColumnWidth="20" PropertyType="31">
+      <DisplayName><![CDATA[Stream name]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.StreamNumber" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 11" CanonicalName="System.Video.StreamNumber" DefaultColumnWidth="20" PropertyType="18">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.TotalBitrate" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 43" CanonicalName="System.Video.TotalBitrate" DefaultColumnWidth="20" PropertyType="19">
+      <DisplayName><![CDATA[Total bitrate]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.TranscodedForSync" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 46" CanonicalName="System.Video.TranscodedForSync" DefaultColumnWidth="20" PropertyType="11">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.Video.VerticalAspectRatio" Key="{64440491-4C8B-11D1-8B70-080036B11A03} 45" CanonicalName="System.Video.VerticalAspectRatio" DefaultColumnWidth="20" PropertyType="19">
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+  <Set Name="ZipFolder">
+    <Property Name="System.ZipFolder.CRC32" Key="{E88DCCE0-B7B3-11D1-A9F0-00AA0060FA31} 5" CanonicalName="System.ZipFolder.CRC32" DefaultColumnWidth="14" PropertyType="1">
+      <DisplayName><![CDATA[CRC-32]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ZipFolder.CompressedSize" Key="{E88DCCE0-B7B3-11D1-A9F0-00AA0060FA31} 6" CanonicalName="System.ZipFolder.CompressedSize" DefaultColumnWidth="12" PropertyType="21">
+      <DisplayName><![CDATA[Compressed size]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ZipFolder.Encrypted" Key="{E88DCCE0-B7B3-11D1-A9F0-00AA0060FA31} 2" CanonicalName="System.ZipFolder.Encrypted" DefaultColumnWidth="6" PropertyType="1">
+      <DisplayName><![CDATA[Password protected]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ZipFolder.Method" Key="{E88DCCE0-B7B3-11D1-A9F0-00AA0060FA31} 3" CanonicalName="System.ZipFolder.Method" DefaultColumnWidth="8" PropertyType="1">
+      <DisplayName><![CDATA[Method]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+    <Property Name="System.ZipFolder.Ratio" Key="{E88DCCE0-B7B3-11D1-A9F0-00AA0060FA31} 4" CanonicalName="System.ZipFolder.Ratio" DefaultColumnWidth="6" PropertyType="19">
+      <DisplayName><![CDATA[Ratio]]></DisplayName>
+      <EditInvitation><![CDATA[Add text]]></EditInvitation>
+    </Property>
+  </Set>
+</PropertySystem>

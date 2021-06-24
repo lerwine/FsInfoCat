@@ -23,6 +23,7 @@ namespace FsInfoCat
         /// <summary>
         /// Indicates whether Bit Rate of the audio is variable
         /// </summary>
+        /// <value><see langword="true"/> if the bit rate of the audio is variable; <see langword="false"/> if the bit rate is constant; otherwise, <see langword="null"/> if this value is not specified.</value>
         /// <remarks>ID: {E6822FEE-8C17-4D62-823C-8E9CFCBD1D5C}, 100</remarks>
         bool? IsVariableBitrate { get; }
 

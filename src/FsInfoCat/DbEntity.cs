@@ -9,6 +9,12 @@ using System.Xml.Linq;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Base class for all database entity objects which track the creation and modification dates as well as implementing the <see cref="IDbEntity" /> interface.
+    /// This extends <see cref="NotifyDataErrorInfo" /> to facilitate change tracking and validation.
+    /// </summary>
+    /// <seealso cref="NotifyDataErrorInfo" />
+    /// <seealso cref="IDbEntity" />
     public abstract partial class DbEntity : NotifyDataErrorInfo, IDbEntity
     {
         #region Fields
@@ -20,17 +26,34 @@ namespace FsInfoCat
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the database entity creation date/time.
+        /// </summary>
+        /// <value>The date and time when the database entity was created.</value>
+        /// <remarks>This value is automatically updated before it is inserted into the database.
+        /// <para>For local databases, this value is the system-<see cref="DateTimeKind.Local" /> date and time. For upstream (remote) databases, this is the
+        /// <see cref="DateTimeKind.Utc">UTC</see> date and time.</para></remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
         public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
 
+        /// <summary>
+        /// Gets or sets the database entity modification date/time.
+        /// </summary>
+        /// <value>The date and time when the database entity was last modified.</value>
+        /// <remarks>This value is automatically updated before it is saved to the database.
+        /// <para>For local databases, this value is the system-<see cref="DateTimeKind.Local" /> date and time. For upstream (remote) databases, this is the
+        /// <see cref="DateTimeKind.Utc">UTC</see> date and time.</para></remarks>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
         public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
 
         #endregion
 
-        public DbEntity()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbEntity"/> class.
+        /// </summary>
+        protected DbEntity()
         {
             _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
         }
@@ -41,6 +64,11 @@ namespace FsInfoCat
             element.SetAttributeValue(nameof(ModifiedOn), XmlConvert.ToString(ModifiedOn, XmlDateTimeSerializationMode.RoundtripKind));
         }
 
+        /// <summary>
+        /// Determines whether the specified object is valid.
+        /// </summary>
+        /// <param name="validationContext">The validation context.</param>
+        /// <returns>A collection that holds failed-validation information.</returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> results = new();
@@ -65,6 +93,12 @@ namespace FsInfoCat
 
         void IDbEntity.BeforeSave(ValidationContext validationContext) => BeforeSave(validationContext);
 
+        /// <summary>
+        /// This gets called before the current entity is inserted or updated into the database.
+        /// </summary>
+        /// <param name="validationContext">The validation context.</param>
+        /// <remarks>This allows the entity to update relevant properties before being saved to the database, such as updating the <see cref="ModifiedOn"/>
+        /// value.</remarks>
         protected virtual void BeforeSave(ValidationContext validationContext)
         {
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))

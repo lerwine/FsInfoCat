@@ -6,7 +6,7 @@ namespace FsInfoCat.Local
     {
         new ILocalBinaryPropertySet BinaryProperties { get; set; }
 
-        new ILocalSummaryProperties SummaryProperties { get; set; }
+        new ILocalSummaryPropertySet SummaryProperties { get; set; }
 
         new ILocalDocumentPropertySet DocumentProperties { get; set; }
 

@@ -591,7 +591,7 @@ namespace FsInfoCat.Local
 
         IEnumerable<IComparison> IFile.ComparisonTargets => ComparisonSources.Cast<IComparison>();
 
-        ILocalSummaryProperties ILocalFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryPropertySet)value; }
+        ILocalSummaryPropertySet ILocalFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryPropertySet)value; }
         ILocalDocumentPropertySet ILocalFile.DocumentProperties { get => DocumentProperties; set => DocumentProperties = (DocumentPropertySet)value; }
         ILocalAudioPropertySet ILocalFile.AudioProperties { get => AudioProperties; set => AudioProperties = (AudioPropertySet)value; }
         ILocalDRMPropertySet ILocalFile.DRMProperties { get => DRMProperties; set => DRMProperties = (DRMPropertySet)value; }
@@ -792,7 +792,6 @@ namespace FsInfoCat.Local
                         ValidateName(validationContext, results);
                         break;
                 }
-
         }
 
         internal static async Task ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid parentId, XElement fileElement)
@@ -831,6 +830,7 @@ namespace FsInfoCat.Local
             };
             EntityEntry<DbFile> result = dbContext.Files.Add(file);
             ISummaryProperties summaryPropertySet = await fileDetailProvider.GetSummaryPropertiesAsync(cancellationToken);
+
             if (!doNotSaveChanges)
                 await dbContext.SaveChangesAsync(cancellationToken);
             return result;

@@ -793,7 +793,7 @@ namespace FsInfoCat.Local
 
         IEnumerable<ICrawlConfiguration> IDbContext.CrawlConfigurations => CrawlConfigurations.Cast<ICrawlConfiguration>();
 
-        IEnumerable<ILocalSummaryProperties> ILocalDbContext.SummaryPropertySets => SummaryPropertySets.Cast<ILocalSummaryProperties>();
+        IEnumerable<ILocalSummaryPropertySet> ILocalDbContext.SummaryPropertySets => SummaryPropertySets.Cast<ILocalSummaryPropertySet>();
 
         IEnumerable<ILocalDocumentPropertySet> ILocalDbContext.DocumentPropertySets => DocumentPropertySets.Cast<ILocalDocumentPropertySet>();
 

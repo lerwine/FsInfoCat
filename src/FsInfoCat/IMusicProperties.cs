@@ -20,6 +20,16 @@ namespace FsInfoCat
         /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 2 (MUSIC)</remarks>
         string[] Artist { get; }
 
+        /// <summary>Indicates the channel count for the audio file.</summary>
+        /// <value>
+        ///   <c>1</c> for monaural audio; <c>2</c> for stereo; otherwise, <span class="keyword"><span class="languageSpecificText"><span class="cs">null</span><span class="vb">Nothing</span><span class="cpp">nullptr</span></span></span><span class="nu">a null reference (<span class="keyword">Nothing</span> in Visual Basic)</span> if this value is not specified.
+        /// <list type="bullet">
+        /// <item><term>Reference</term><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-channelcount">System.Audio.ChannelCount</a></description></item>
+        /// <item><term>Format ID</term><description>64440490-4C8B-11D1-8B70-080036B11A03</description></item>
+        /// <item><term>Property ID</term><description>7</description></item>
+        /// </list></value>
+        uint? ChannelCount { get; }
+
         /// <summary>
         /// Gets the Composer
         /// </summary>
@@ -50,10 +60,9 @@ namespace FsInfoCat
         /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 37 (MUSIC)</remarks>
         string PartOfSet { get; }
 
-        /// <summary>
-        /// Gets the Period
-        /// </summary>
-        /// <remarks>ID: {64440492-4C8B-11D1-8B70-080036B11A03}, 31 (MEDIAFILESUMMARYINFORMATION)</remarks>
+        /// <summary>Gets the Period</summary>
+        /// <remarks>
+        /// ID: {64440492-4C8B-11D1-8B70-080036B11A03}, 31 (MEDIAFILESUMMARYINFORMATION)</remarks>
         string Period { get; }
 
         /// <summary>
