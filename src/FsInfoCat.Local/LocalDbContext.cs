@@ -513,56 +513,79 @@ namespace FsInfoCat.Local
 
         public async Task<SummaryPropertySet> FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
+
             throw new NotImplementedException();
         }
 
         public async Task<DocumentPropertySet> FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<AudioPropertySet> FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<DRMPropertySet> FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<GPSPropertySet> FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<ImagePropertySet> FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<MediaPropertySet> FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<MusicPropertySet> FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<PhotoPropertySet> FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<RecordedTVPropertySet> FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
         public async Task<VideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
         {
+            if (properties.IsNullOrEmpty())
+                return null;
             throw new NotImplementedException();
         }
 
