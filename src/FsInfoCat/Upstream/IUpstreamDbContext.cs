@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Upstream
@@ -175,88 +176,100 @@ namespace FsInfoCat.Upstream
         /// Finds the generic <see cref="IUpstreamSummaryPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="ISummaryProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamSummaryPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamSummaryPropertySet> FindMatchingAsync(ISummaryProperties properties);
+        new Task<IUpstreamSummaryPropertySet> FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamDocumentPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IDocumentProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamDocumentPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamDocumentPropertySet> FindMatchingAsync(IDocumentProperties properties);
+        new Task<IUpstreamDocumentPropertySet> FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamAudioPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IAudioProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamAudioPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamAudioPropertySet> FindMatchingAsync(IAudioProperties properties);
+        new Task<IUpstreamAudioPropertySet> FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamDRMPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IDRMProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamDRMPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamDRMPropertySet> FindMatchingAsync(IDRMProperties properties);
+        new Task<IUpstreamDRMPropertySet> FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamGPSPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IGPSProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamGPSPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamGPSPropertySet> FindMatchingAsync(IGPSProperties properties);
+        new Task<IUpstreamGPSPropertySet> FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamImagePropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IImageProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamImagePropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamImagePropertySet> FindMatchingAsync(IImageProperties properties);
+        new Task<IUpstreamImagePropertySet> FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamMediaPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IMediaProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamMediaPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamMediaPropertySet> FindMatchingAsync(IMediaProperties properties);
+        new Task<IUpstreamMediaPropertySet> FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamMusicPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IMusicProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamMusicPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamMusicPropertySet> FindMatchingAsync(IMusicProperties properties);
+        new Task<IUpstreamMusicPropertySet> FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamPhotoPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IPhotoProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamPhotoPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamPhotoPropertySet> FindMatchingAsync(IPhotoProperties properties);
+        new Task<IUpstreamPhotoPropertySet> FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamRecordedTVPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IRecordedTVProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamRecordedTVPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamRecordedTVPropertySet> FindMatchingAsync(IRecordedTVProperties properties);
+        new Task<IUpstreamRecordedTVPropertySet> FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamVideoPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IVideoProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamVideoPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        new Task<IUpstreamVideoPropertySet> FindMatchingAsync(IVideoProperties properties);
+        new Task<IUpstreamVideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken);
 
-        [Obsolete("Use ForceDeleteBinaryPropertiesAsync")]
-        void ForceDeleteBinaryProperties(IUpstreamBinaryPropertySet target);
+        [Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
+        void ForceDeleteBinaryPropertySet(IUpstreamBinaryPropertySet target);
 
         /// <summary>
         /// Deletes the specified <see cref="IUpstreamBinaryPropertySet"/> from the upstream (remote) database, including all nested dependencies.
         /// </summary>
         /// <param name="target">The <see cref="IUpstreamBinaryPropertySet"/> to delete.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteBinaryPropertiesAsync(IUpstreamBinaryPropertySet target);
+        Task<bool> ForceDeleteBinaryPropertySetAsync(IUpstreamBinaryPropertySet target, CancellationToken cancellationToken);
 
         [Obsolete("Use ForceDeleteRedundantSetAsync")]
         void ForceDeleteRedundantSet(IUpstreamRedundantSet target);
@@ -265,7 +278,8 @@ namespace FsInfoCat.Upstream
         /// Deletes the specified <see cref="IUpstreamRedundantSet"/> from the upstream (remote) database, including all nested dependencies.
         /// </summary>
         /// <param name="target">The <see cref="IUpstreamRedundantSet"/> to delete.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteRedundantSetAsync(IUpstreamRedundantSet target);
+        Task<bool> ForceDeleteRedundantSetAsync(IUpstreamRedundantSet target, CancellationToken cancellationToken);
     }
 }

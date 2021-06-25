@@ -17,7 +17,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string[]> _keywords;
         private readonly IPropertyChangeTracker<string> _subject;
         private readonly IPropertyChangeTracker<string> _title;
-        private readonly IPropertyChangeTracker<string[]> _category;
         private readonly IPropertyChangeTracker<string> _company;
         private readonly IPropertyChangeTracker<string> _contentType;
         private readonly IPropertyChangeTracker<string> _copyright;
@@ -49,7 +48,6 @@ namespace FsInfoCat.Local
         public string[] Keywords { get => _keywords.GetValue(); set => _keywords.SetValue(value); }
         public string Subject { get => _subject.GetValue(); set => _subject.SetValue(value); }
         public string Title { get => _title.GetValue(); set => _title.SetValue(value); }
-        public string[] Category { get => _category.GetValue(); set => _category.SetValue(value); }
         public string Company { get => _company.GetValue(); set => _company.SetValue(value); }
         public string ContentType { get => _contentType.GetValue(); set => _contentType.SetValue(value); }
         public string Copyright { get => _copyright.GetValue(); set => _copyright.SetValue(value); }
@@ -93,7 +91,6 @@ namespace FsInfoCat.Local
             _keywords = AddChangeTracker<string[]>(nameof(Keywords), null);
             _subject = AddChangeTracker<string>(nameof(Subject), null);
             _title = AddChangeTracker<string>(nameof(Title), null);
-            _category = AddChangeTracker<string[]>(nameof(Category), null);
             _company = AddChangeTracker<string>(nameof(Company), null);
             _contentType = AddChangeTracker<string>(nameof(ContentType), null);
             _copyright = AddChangeTracker<string>(nameof(Copyright), null);

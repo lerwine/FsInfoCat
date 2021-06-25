@@ -136,88 +136,100 @@ namespace FsInfoCat
         /// Finds the generic <see cref="ISummaryPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="ISummaryProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="ISummaryPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<ISummaryPropertySet> FindMatchingAsync(ISummaryProperties properties);
+        Task<ISummaryPropertySet> FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IDocumentPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IDocumentProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IDocumentPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IDocumentPropertySet> FindMatchingAsync(IDocumentProperties properties);
+        Task<IDocumentPropertySet> FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IAudioPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IAudioProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IAudioPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IAudioPropertySet> FindMatchingAsync(IAudioProperties properties);
+        Task<IAudioPropertySet> FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IDRMPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IDRMProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IDRMPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IDRMPropertySet> FindMatchingAsync(IDRMProperties properties);
+        Task<IDRMPropertySet> FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IGPSPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IGPSProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IGPSPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IGPSPropertySet> FindMatchingAsync(IGPSProperties properties);
+        Task<IGPSPropertySet> FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IImagePropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IImageProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IImagePropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IImagePropertySet> FindMatchingAsync(IImageProperties properties);
+        Task<IImagePropertySet> FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IMediaPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IMediaProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IMediaPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IMediaPropertySet> FindMatchingAsync(IMediaProperties properties);
+        Task<IMediaPropertySet> FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IMusicPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IMusicProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IMusicPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IMusicPropertySet> FindMatchingAsync(IMusicProperties properties);
+        Task<IMusicPropertySet> FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IPhotoPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IPhotoProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IPhotoPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IPhotoPropertySet> FindMatchingAsync(IPhotoProperties properties);
+        Task<IPhotoPropertySet> FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IRecordedTVPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IRecordedTVProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IRecordedTVPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IRecordedTVPropertySet> FindMatchingAsync(IRecordedTVProperties properties);
+        Task<IRecordedTVPropertySet> FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds the generic <see cref="IVideoPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="IVideoProperties"/> object containing the property values to match.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IVideoPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
-        Task<IVideoPropertySet> FindMatchingAsync(IVideoProperties properties);
+        Task<IVideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken);
 
-        [Obsolete("Use ForceDeleteBinaryPropertiesAsync")]
-        void ForceDeleteBinaryProperties(IBinaryPropertySet target);
+        [Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
+        void ForceDeleteBinaryPropertySet(IBinaryPropertySet target);
 
         /// <summary>
         /// Deletes the specified <see cref="IBinaryPropertySet"/> and all nested dependencies.
         /// </summary>
         /// <param name="target">The <see cref="IBinaryPropertySet"/> to delete.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteBinaryPropertiesAsync(IBinaryPropertySet target);
+        Task<bool> ForceDeleteBinaryPropertySetAsync(IBinaryPropertySet target, CancellationToken cancellationToken);
 
         [Obsolete("Use ForceDeleteRedundantSetAsync")]
         void ForceDeleteRedundantSet(IRedundantSet target);
@@ -226,8 +238,9 @@ namespace FsInfoCat
         /// Deletes the specified <see cref="IRedundantSet"/> and all nested dependencies.
         /// </summary>
         /// <param name="target">The <see cref="IRedundantSet"/> to delete.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteRedundantSetAsync(IRedundantSet target);
+        Task<bool> ForceDeleteRedundantSetAsync(IRedundantSet target, CancellationToken cancellationToken);
 
         /// <summary>
         /// Saves the changes.

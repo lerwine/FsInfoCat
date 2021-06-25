@@ -49,6 +49,7 @@ namespace FsInfoCat
         /// Gets the Producer
         /// </summary>
         /// <remarks>ID: {64440492-4C8B-11D1-8B70-080036B11A03}, 22 (MEDIAFILESUMMARYINFORMATION)</remarks>
+        // BUG: Can't be stored in database this way
         string[] Producer { get; }
 
         /// <summary>
@@ -88,6 +89,7 @@ namespace FsInfoCat
         /// Gets the Writer
         /// </summary>
         /// <remarks>ID: {64440492-4C8B-11D1-8B70-080036B11A03}, 23 (MEDIAFILESUMMARYINFORMATION)</remarks>
+        // BUG: Can't be stored in database this way
         string[] Writer { get; }
 
         /// <summary>
