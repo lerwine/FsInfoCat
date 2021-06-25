@@ -194,8 +194,7 @@ namespace FsInfoCat
             string.IsNullOrWhiteSpace(properties.SensitivityText) && string.IsNullOrWhiteSpace(properties.Trademarks) && string.IsNullOrWhiteSpace(properties.ProductName) &&
             !(properties.Rating.HasValue || properties.Sensitivity.HasValue || properties.SimpleRating.HasValue) &&
             properties.Author.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null && properties.Keywords.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null &&
-            properties.Category.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null && properties.ItemAuthors.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null &&
-            properties.Kind.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null);
+            properties.ItemAuthors.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null &&  properties.Kind.ElementsNotNullOrWhiteSpace().NullIfEmpty() is null);
 
         public static IAudioProperties NullIfEmpty(this IAudioProperties properties) => properties.IsNullOrEmpty() ? null : properties;
 

@@ -200,7 +200,8 @@ namespace FsInfoCat.Local
                     await Redundancy.ImportAsync(this, _logger, redundantSetId, element);
         }
 
-        public void ForceDeleteBinaryProperties(BinaryPropertySet target)
+        [Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
+        public void ForceDeleteBinaryPropertySet(BinaryPropertySet target)
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
@@ -510,6 +511,61 @@ namespace FsInfoCat.Local
             where TEntity : class
             where TProperty : class => await Entry(entity).GetRelatedCollectionAsync(propertyExpression, cancellationToken);
 
+        public async Task<SummaryPropertySet> FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<DocumentPropertySet> FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<AudioPropertySet> FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<DRMPropertySet> FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<GPSPropertySet> FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ImagePropertySet> FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<MediaPropertySet> FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<MusicPropertySet> FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<PhotoPropertySet> FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<RecordedTVPropertySet> FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<VideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         [Obsolete("Pass cancellation token")]
         private async Task<bool> RemoveIfNoReferencesAsync(BinaryPropertySet binaryProperties)
         {
@@ -728,6 +784,21 @@ namespace FsInfoCat.Local
             return true;
         }
 
+        public async Task<bool> ForceDeleteBinaryPropertySetAsync(BinaryPropertySet target, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> ForceDeleteRedundantSetAsync(RedundantSet target, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> ForceDeleteFileSystemAsync(FileSystem target, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         private void ForceDeleteRedundancy(Redundancy target)
         {
             if (target is null)
@@ -737,6 +808,36 @@ namespace FsInfoCat.Local
             SaveChanges();
             if (redundantSet.Redundancies.Count == 0)
                 RedundantSets.Remove(redundantSet);
+        }
+
+        public void ForceDeleteBinaryPropertySet(ILocalBinaryPropertySet target)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ForceDeleteBinaryPropertySetAsync(ILocalBinaryPropertySet target, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ForceDeleteRedundantSet(ILocalRedundantSet target)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ForceDeleteRedundantSetAsync(ILocalRedundantSet targe, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ForceDeleteFileSystem(ILocalFileSystem target)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ForceDeleteFileSystemAsync(ILocalFileSystem target, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         #region Explicit Members
@@ -837,15 +938,135 @@ namespace FsInfoCat.Local
 
         IEnumerable<IVideoPropertySet> IDbContext.VideoPropertySets => VideoPropertySets.Cast<IVideoPropertySet>();
 
-        void ILocalDbContext.ForceDeleteBinaryProperties(ILocalBinaryPropertySet target) => ForceDeleteBinaryProperties((BinaryPropertySet)target);
+        Task<ILocalSummaryPropertySet> ILocalDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
-        void ILocalDbContext.ForceDeleteRedundantSet(ILocalRedundantSet target) => ForceDeleteRedundantSet((RedundantSet)target);
+        Task<ILocalDocumentPropertySet> ILocalDbContext.FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
-        void ILocalDbContext.ForceDeleteFileSystem(ILocalFileSystem target) => ForceDeleteFileSystem((FileSystem)target);
+        Task<ILocalAudioPropertySet> ILocalDbContext.FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
-        void IDbContext.ForceDeleteBinaryProperties(IBinaryPropertySet target) => ForceDeleteBinaryProperties((BinaryPropertySet)target);
+        Task<ILocalDRMPropertySet> ILocalDbContext.FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
-        void IDbContext.ForceDeleteRedundantSet(IRedundantSet target) => ForceDeleteRedundantSet((RedundantSet)target);
+        Task<ILocalGPSPropertySet> ILocalDbContext.FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ILocalImagePropertySet> ILocalDbContext.FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ILocalMediaPropertySet> ILocalDbContext.FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ILocalMusicPropertySet> ILocalDbContext.FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ILocalPhotoPropertySet> ILocalDbContext.FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ILocalRecordedTVPropertySet> ILocalDbContext.FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ILocalVideoPropertySet> ILocalDbContext.FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ISummaryPropertySet> IDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IDocumentPropertySet> IDbContext.FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IAudioPropertySet> IDbContext.FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IDRMPropertySet> IDbContext.FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IGPSPropertySet> IDbContext.FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IImagePropertySet> IDbContext.FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IMediaPropertySet> IDbContext.FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IMusicPropertySet> IDbContext.FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IPhotoPropertySet> IDbContext.FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IRecordedTVPropertySet> IDbContext.FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IVideoPropertySet> IDbContext.FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IDbContext.ForceDeleteBinaryPropertySet(IBinaryPropertySet target)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IDbContext.ForceDeleteBinaryPropertySetAsync(IBinaryPropertySet target, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IDbContext.ForceDeleteRedundantSet(IRedundantSet target)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IDbContext.ForceDeleteRedundantSetAsync(IRedundantSet target, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
     }

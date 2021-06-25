@@ -40,12 +40,6 @@ namespace FsInfoCat
         string Title { get; }
 
         /// <summary>
-        /// Gets the Category
-        /// </summary>
-        /// <remarks>ID: {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 2 (DocumentSummaryInformation)</remarks>
-        string[] Category { get; }
-
-        /// <summary>
         /// Gets the company or publisher.
         /// </summary>
         /// <remarks>ID: {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 15 (DocumentSummaryInformation)</remarks>

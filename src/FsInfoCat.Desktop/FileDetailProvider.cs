@@ -267,8 +267,6 @@ namespace FsInfoCat.Desktop
                     .NonEmptyTrimmedElements().ToArray() : null;
             string[] keywords = defaultProperties.Contains(summaryProperties.Keywords.CanonicalName) ? summaryProperties.Keywords.Value?
                     .NonEmptyTrimmedElements().ToArray() : null;
-            string[] category = defaultProperties.Contains(summaryProperties.Category.CanonicalName) ? summaryProperties.Category.Value?
-                    .NonEmptyTrimmedElements().ToArray() : null;
             string[] itemAuthors = defaultProperties.Contains(summaryProperties.ItemAuthors.CanonicalName) ? summaryProperties.ItemAuthors.Value?
                     .NonEmptyTrimmedElements().ToArray() : null;
             string[] kind = defaultProperties.Contains(summaryProperties.Kind.CanonicalName) ? summaryProperties.Kind.Value?
@@ -281,7 +279,6 @@ namespace FsInfoCat.Desktop
                 Keywords = (keywords is null || keywords.Length == 0) ? null : keywords,
                 Subject = defaultProperties.Contains(summaryProperties.Subject.CanonicalName) ? summaryProperties.Subject.Value.TrimmedOrNullIfWhiteSpace() : null,
                 Title = defaultProperties.Contains(summaryProperties.Title.CanonicalName) ? summaryProperties.Title.Value.TrimmedOrNullIfWhiteSpace() : null,
-                Category = (category is null || category.Length == 0) ? null : category,
                 Company = defaultProperties.Contains(summaryProperties.Company.CanonicalName) ? summaryProperties.Company.Value.TrimmedOrNullIfWhiteSpace() : null,
                 ContentType = defaultProperties.Contains(summaryProperties.ContentType.CanonicalName) ? summaryProperties.ContentType.Value.TrimmedOrNullIfWhiteSpace() : null,
                 Copyright = defaultProperties.Contains(summaryProperties.Copyright.CanonicalName) ? summaryProperties.Copyright.Value.TrimmedOrNullIfWhiteSpace() : null,
@@ -290,7 +287,7 @@ namespace FsInfoCat.Desktop
                 ItemAuthors = (itemAuthors is null || itemAuthors.Length == 0) ? null : itemAuthors,
                 ItemType = defaultProperties.Contains(summaryProperties.ItemType.CanonicalName) ? summaryProperties.ItemType.Value.TrimmedOrNullIfWhiteSpace() : null,
                 ItemTypeText = defaultProperties.Contains(summaryProperties.ItemTypeText.CanonicalName) ? summaryProperties.ItemTypeText.Value.TrimmedOrNullIfWhiteSpace() : null,
-                Kind = (category is null || kind.Length == 0) ? null : kind,
+                Kind = (kind is null || kind.Length == 0) ? null : kind,
                 MIMEType = defaultProperties.Contains(summaryProperties.MIMEType.CanonicalName) ? summaryProperties.MIMEType.Value.TrimmedOrNullIfWhiteSpace() : null,
                 ParentalRatingReason = defaultProperties.Contains(summaryProperties.ParentalRatingReason.CanonicalName) ? summaryProperties.ParentalRatingReason.Value.TrimmedOrNullIfWhiteSpace() : null,
                 ParentalRatingsOrganization = defaultProperties.Contains(summaryProperties.ParentalRatingsOrganization.CanonicalName) ? summaryProperties.ParentalRatingsOrganization.Value.TrimmedOrNullIfWhiteSpace() : null,

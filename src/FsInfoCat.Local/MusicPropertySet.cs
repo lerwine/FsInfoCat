@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
@@ -14,6 +15,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _albumArtist;
         private readonly IPropertyChangeTracker<string> _albumTitle;
         private readonly IPropertyChangeTracker<string[]> _artist;
+        private readonly IPropertyChangeTracker<uint?> _channelCount;
         private readonly IPropertyChangeTracker<string[]> _composer;
         private readonly IPropertyChangeTracker<string[]> _conductor;
         private readonly IPropertyChangeTracker<string> _displayArtist;
@@ -32,6 +34,7 @@ namespace FsInfoCat.Local
         public string AlbumArtist { get => _albumArtist.GetValue(); set => _albumArtist.SetValue(value); }
         public string AlbumTitle { get => _albumTitle.GetValue(); set => _albumTitle.SetValue(value); }
         public string[] Artist { get => _artist.GetValue(); set => _artist.SetValue(value); }
+        public uint? ChannelCount { get => _channelCount.GetValue(); set => _channelCount.SetValue(value); }
         public string[] Composer { get => _composer.GetValue(); set => _composer.SetValue(value); }
         public string[] Conductor { get => _conductor.GetValue(); set => _conductor.SetValue(value); }
         public string DisplayArtist { get => _displayArtist.GetValue(); set => _displayArtist.SetValue(value); }
@@ -62,6 +65,7 @@ namespace FsInfoCat.Local
             _albumArtist = AddChangeTracker<string>(nameof(AlbumArtist), null);
             _albumTitle = AddChangeTracker<string>(nameof(AlbumTitle), null);
             _artist = AddChangeTracker<string[]>(nameof(Artist), null);
+            _channelCount = AddChangeTracker<uint?>(nameof(ChannelCount), null);
             _composer = AddChangeTracker<string[]>(nameof(Composer), null);
             _conductor = AddChangeTracker<string[]>(nameof(Conductor), null);
             _displayArtist = AddChangeTracker<string>(nameof(DisplayArtist), null);
@@ -71,7 +75,7 @@ namespace FsInfoCat.Local
             _trackNumber = AddChangeTracker<uint?>(nameof(TrackNumber), null);
         }
 
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
+        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
