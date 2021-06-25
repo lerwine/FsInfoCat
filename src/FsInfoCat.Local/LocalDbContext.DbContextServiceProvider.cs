@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 
 namespace FsInfoCat.Local
 {

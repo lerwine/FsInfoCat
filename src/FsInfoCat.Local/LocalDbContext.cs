@@ -140,12 +140,11 @@ namespace FsInfoCat.Local
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("dbo");
-            //modelBuilder.Entity<FileSystem>(FileSystem.BuildEntity);
             modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<Subdirectory>(Subdirectory.BuildEntity);
             modelBuilder.Entity<DbFile>(DbFile.BuildEntity);
-            modelBuilder.Entity<BinaryPropertySet>(Local.BinaryPropertySet.BuildEntity);
+            modelBuilder.Entity<BinaryPropertySet>(BinaryPropertySet.BuildEntity);
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
@@ -192,7 +191,7 @@ namespace FsInfoCat.Local
             if (document is null)
                 throw new ArgumentNullException(nameof(document));
 
-            var redundancySets = document.Root.Elements(nameof(BinaryPropertySets)).Select(e => Local.BinaryPropertySet.ImportAsync(this, _logger, e).Result).SelectMany(rs => rs).ToArray();
+            var redundancySets = document.Root.Elements(nameof(BinaryPropertySets)).Select(e => BinaryPropertySet.ImportAsync(this, _logger, e).Result).SelectMany(rs => rs).ToArray();
             foreach (XElement fileSystemElement in document.Root.Elements(nameof(FileSystem)))
                 await FileSystem.ImportAsync(this, _logger, fileSystemElement);
             foreach (var (redundantSetId, redundancies) in redundancySets)
@@ -206,7 +205,6 @@ namespace FsInfoCat.Local
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
             EntityEntry<BinaryPropertySet> targetEntry = Entry(target);
-#pragma warning disable CS0618 // Type or member is obsolete
             var redundantSets = (targetEntry.GetRelatedCollectionAsync(t => t.RedundantSets).Result).ToArray();
             if (redundantSets.Length > 0)
             {
@@ -280,7 +278,7 @@ namespace FsInfoCat.Local
                 if (hasChanges)
                     SaveChanges();
             }
-#pragma warning restore CS0618 // Type or member is obsolete
+
             BinaryPropertySets.Remove(target);
         }
 

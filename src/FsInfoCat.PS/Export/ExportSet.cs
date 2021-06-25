@@ -190,17 +190,17 @@ namespace FsInfoCat.PS.Export
                 photoProperties = file.GetPhotoProperties();
                 recordedTVProperties = file.GetRecordedTVProperties();
                 videoProperties = file.GetVideoProperties();
-                SummaryPropertySet sp = Export.SummaryPropertySet.Create(fileInfo);
-                DocumentPropertySet dp = Export.DocumentPropertySet.Create(fileInfo);
-                AudioPropertySet ap = Export.AudioPropertySet.Create(fileInfo);
-                DRMPropertySet drm = Export.DRMPropertySet.Create(fileInfo);
-                GPSPropertySet gp = Export.GPSPropertySet.Create(fileInfo);
-                ImagePropertySet ip = Export.ImagePropertySet.Create(fileInfo);
-                MediaPropertySet mdp = Export.MediaPropertySet.Create(fileInfo);
-                MusicPropertySet msp = Export.MusicPropertySet.Create(fileInfo);
-                PhotoPropertySet pp = Export.PhotoPropertySet.Create(fileInfo);
-                RecordedTVPropertySet rp = Export.RecordedTVPropertySet.Create(fileInfo);
-                VideoPropertySet vp = Export.VideoPropertySet.Create(fileInfo);
+                SummaryPropertySet sp = SummaryPropertySet.Create(fileInfo);
+                DocumentPropertySet dp = DocumentPropertySet.Create(fileInfo);
+                AudioPropertySet ap = AudioPropertySet.Create(fileInfo);
+                DRMPropertySet drm = DRMPropertySet.Create(fileInfo);
+                GPSPropertySet gp = GPSPropertySet.Create(fileInfo);
+                ImagePropertySet ip = ImagePropertySet.Create(fileInfo);
+                MediaPropertySet mdp = MediaPropertySet.Create(fileInfo);
+                MusicPropertySet msp = MusicPropertySet.Create(fileInfo);
+                PhotoPropertySet pp = PhotoPropertySet.Create(fileInfo);
+                RecordedTVPropertySet rp = RecordedTVPropertySet.Create(fileInfo);
+                VideoPropertySet vp = VideoPropertySet.Create(fileInfo);
                 if (!summaryProperties.Equals(sp))
                 {
                     if ((summaryProperties = SummaryPropertySets.FirstOrDefault(e => e.Equals(sp))) is null && sp is not null)
@@ -304,67 +304,67 @@ namespace FsInfoCat.PS.Export
                     BinaryPropertySets.Add(binaryProperties);
                 }
                 //SummaryProperties summaryProperties;
-                SummaryPropertySet sp = Export.SummaryPropertySet.Create(fileInfo);
+                SummaryPropertySet sp = SummaryPropertySet.Create(fileInfo);
                 if ((summaryProperties = SummaryPropertySets.FirstOrDefault(e => e.Equals(sp))) is null && sp is not null)
                 {
                     SummaryPropertySets.Add(sp);
                     summaryProperties = sp;
                 }
-                DocumentPropertySet dp = Export.DocumentPropertySet.Create(fileInfo);
+                DocumentPropertySet dp = DocumentPropertySet.Create(fileInfo);
                 if ((documentProperties = DocumentPropertySets.FirstOrDefault(e => e.Equals(dp))) is null && dp is not null)
                 {
                     DocumentPropertySets.Add(dp);
                     documentProperties = dp;
                 }
-                AudioPropertySet ap = Export.AudioPropertySet.Create(fileInfo);
+                AudioPropertySet ap = AudioPropertySet.Create(fileInfo);
                 if ((audioProperties = AudioPropertySets.FirstOrDefault(e => e.Equals(ap))) is null && ap is not null)
                 {
                     AudioPropertySets.Add(ap);
                     audioProperties = ap;
                 }
-                DRMPropertySet drm = Export.DRMPropertySet.Create(fileInfo);
+                DRMPropertySet drm = DRMPropertySet.Create(fileInfo);
                 if ((drmProperties = DRMPropertySets.FirstOrDefault(e => e.Equals(drm))) is null && drm is not null)
                 {
                     DRMPropertySets.Add(drm);
                     drmProperties = drm;
                 }
-                GPSPropertySet gp = Export.GPSPropertySet.Create(fileInfo);
+                GPSPropertySet gp = GPSPropertySet.Create(fileInfo);
                 if ((gpsProperties = GPSPropertySets.FirstOrDefault(e => e.Equals(gp))) is null && gp is not null)
                 {
                     GPSPropertySets.Add(gp);
                     gpsProperties = gp;
                 }
-                ImagePropertySet ip = Export.ImagePropertySet.Create(fileInfo);
+                ImagePropertySet ip = ImagePropertySet.Create(fileInfo);
                 if ((imageProperties = ImagePropertySets.FirstOrDefault(e => e.Equals(ip))) is null && ip is not null)
                 {
                     ImagePropertySets.Add(ip);
                     imageProperties = ip;
                 }
-                MediaPropertySet mdp = Export.MediaPropertySet.Create(fileInfo);
+                MediaPropertySet mdp = MediaPropertySet.Create(fileInfo);
                 if ((mediaProperties = MediaPropertySets.FirstOrDefault(e => e.Equals(mdp))) is null && mdp is not null)
                 {
                     MediaPropertySets.Add(mdp);
                     mediaProperties = mdp;
                 }
-                MusicPropertySet msp = Export.MusicPropertySet.Create(fileInfo);
+                MusicPropertySet msp = MusicPropertySet.Create(fileInfo);
                 if ((musicProperties = MusicPropertySets.FirstOrDefault(e => e.Equals(msp))) is null && msp is not null)
                 {
                     MusicPropertySets.Add(msp);
                     musicProperties = msp;
                 }
-                PhotoPropertySet pp = Export.PhotoPropertySet.Create(fileInfo);
+                PhotoPropertySet pp = PhotoPropertySet.Create(fileInfo);
                 if ((photoProperties = PhotoPropertySets.FirstOrDefault(e => e.Equals(pp))) is null && pp is not null)
                 {
                         PhotoPropertySets.Add(pp);
                     photoProperties = pp;
                 }
-                RecordedTVPropertySet rp = Export.RecordedTVPropertySet.Create(fileInfo);
+                RecordedTVPropertySet rp = RecordedTVPropertySet.Create(fileInfo);
                 if ((recordedTVProperties = RecordedTVPropertySets.FirstOrDefault(e => e.Equals(rp))) is null && rp is not null)
                 {
                     RecordedTVPropertySets.Add(rp);
                     recordedTVProperties = rp;
                 }
-                VideoPropertySet vp = Export.VideoPropertySet.Create(fileInfo);
+                VideoPropertySet vp = VideoPropertySet.Create(fileInfo);
                 if ((videoProperties = VideoPropertySets.FirstOrDefault(e => e.Equals(vp))) is null && vp is not null)
                 {
                     VideoPropertySets.Add(vp);
