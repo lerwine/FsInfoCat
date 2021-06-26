@@ -5,69 +5,128 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the Album Artist
         /// </summary>
-        /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 13 (MUSIC)</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Album Artist</description></item>
+        /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
+        /// <item><term>Property ID</term><description>13</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumartist">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string AlbumArtist { get; }
 
         /// <summary>
         /// Gets the Album Title
         /// </summary>
-        /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 4 (MUSIC)</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Album Title</description></item>
+        /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
+        /// <item><term>Property ID</term><description>4</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumtitle">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string AlbumTitle { get; }
 
         /// <summary>
-        /// Gets the Artist
+        /// Gets the Contributing Artist
         /// </summary>
-        /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 2 (MUSIC)</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Contributing Artist</description></item>
+        /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
+        /// <item><term>Property ID</term><description>2</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a></description></item>
+        /// </list></remarks>
         MultiStringValue Artist { get; }
 
-        /// <summary>Indicates the channel count for the audio file.</summary>
-        /// <value>
-        ///   <c>1</c> for monaural audio; <c>2</c> for stereo; otherwise, <span class="keyword"><span class="languageSpecificText"><span class="cs">null</span><span class="vb">Nothing</span><span class="cpp">nullptr</span></span></span><span class="nu">a null reference (<span class="keyword">Nothing</span> in Visual Basic)</span> if this value is not specified.
-        /// <list type="bullet">
-        /// <item><term>Reference</term><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-channelcount">System.Audio.ChannelCount</a></description></item>
-        /// <item><term>Format ID</term><description>64440490-4C8B-11D1-8B70-080036B11A03</description></item>
-        /// <item><term>Property ID</term><description>7</description></item>
-        /// </list></value>
+        /// <summary>
+        /// Gets the Channel Count.
+        /// </summary>
+        /// <value>Indicates the channel count for the audio file. Possible values are 1 for mono and 2 for stereo.</value>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Channel Count</description></item>
+        /// <item><term>Format ID</term><description>{64440490-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
+        /// <item><term>Property ID</term><description>2</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a></description></item>
+        /// </list></remarks>
         uint? ChannelCount { get; }
 
         /// <summary>
         /// Gets the Composer
         /// </summary>
-        /// <remarks>ID: {64440492-4C8B-11D1-8B70-080036B11A03}, 19 (MEDIAFILESUMMARYINFORMATION)</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Composer</description></item>
+        /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
+        /// <item><term>Property ID</term><description>19</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-composer">[Reference Link]</a></description></item>
+        /// </list></remarks>
         MultiStringValue Composer { get; }
 
         /// <summary>
         /// Gets the Conductor
         /// </summary>
-        /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 36 (MUSIC)</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Conductor</description></item>
+        /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
+        /// <item><term>Property ID</term><description>36</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-conductor">[Reference Link]</a></description></item>
+        /// </list></remarks>
         MultiStringValue Conductor { get; }
 
         /// <summary>
-        /// This property returns the best representation of Album Artist for a given music file based upon AlbumArtist, ContributingArtist and compilation info.
+        /// Gets the Album Artist (best match of relevant properties).
         /// </summary>
-        /// <remarks>ID: {FD122953-FA93-4EF7-92C3-04C946B2F7C8}, 100</remarks>
+        /// <value>
+        /// The best representation of Album Artist for a given music file based upon AlbumArtist, ContributingArtist and compilation info.
+        /// </value>
+        /// <remarks>
+        /// This property returns the best representation of the album artist for a specific music file based upon System.Music.AlbumArtist, System.Music.Artist, and System.Music.IsCompilation information.
+        /// <list type="bullet">
+        /// <item><term>Name</term><description>Display Artist</description></item>
+        /// <item><term>Format ID</term><description>{FD122953-FA93-4EF7-92C3-04C946B2F7C8} (Format)</description></item>
+        /// <item><term>Property ID</term><description>100</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-displayartist">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string DisplayArtist { get; }
 
         /// <summary>
         /// Gets the Genre
         /// </summary>
-        /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 11 (MUSIC)</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Genre</description></item>
+        /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
+        /// <item><term>Property ID</term><description>11</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-genre">[Reference Link]</a></description></item>
+        /// </list></remarks>
         MultiStringValue Genre { get; }
 
         /// <summary>
         /// Gets the Part of Set
         /// </summary>
-        /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 37 (MUSIC)</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Part of Set</description></item>
+        /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
+        /// <item><term>Property ID</term><description>37</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-partofset">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string PartOfSet { get; }
 
-        /// <summary>Gets the Period</summary>
-        /// <remarks>
-        /// ID: {64440492-4C8B-11D1-8B70-080036B11A03}, 31 (MEDIAFILESUMMARYINFORMATION)</remarks>
+        /// <summary>
+        /// Gets the Period
+        /// </summary>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Period</description></item>
+        /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
+        /// <item><term>Property ID</term><description>31</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-period">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string Period { get; }
 
         /// <summary>
         /// Gets the Track Number
         /// </summary>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>#</description></item>
+        /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
+        /// <item><term>Property ID</term><description>7</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-tracknumber">[Reference Link]</a></description></item>
+        /// </list></remarks>
         /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 7 (MUSIC)</remarks>
         uint? TrackNumber { get; }
     }

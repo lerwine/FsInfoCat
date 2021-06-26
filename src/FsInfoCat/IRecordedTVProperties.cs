@@ -3,62 +3,106 @@ namespace FsInfoCat
     public interface IRecordedTVProperties
     {
         /// <summary>
-        /// Gets the Channel Number.
+        /// Gets the Channel Number
         /// </summary>
-        /// <value>The channel number or <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>Example: 42
-        /// <para>ID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 7</para></remarks>
+        /// <value>
+        /// Example: 42 The recorded TV channels.
+        /// </value>
+        /// <remarks>
+        /// For example, 42, 5, 53.
+        /// <list type="bullet">
+        /// <item><term>Name</term><description>Channel Number</description></item>
+        /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
+        /// <item><term>Property ID</term><description>7</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-channelnumber">[Reference Link]</a></description></item>
+        /// </list></remarks>
         uint? ChannelNumber { get; }
 
         /// <summary>
-        /// Gets the Episode Name.
+        /// Gets the Episode Name
         /// </summary>
-        /// <value>The name of the episode or <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>Example: &quot;Nowhere to Hyde&quot;
-        /// <para>ID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 2</para></remarks>
+        /// <value>
+        /// Example: "Nowhere to Hyde" The names of recorded TV episodes.
+        /// </value>
+        /// <remarks>
+        /// For example, "Nowhere to Hyde".
+        /// <list type="bullet">
+        /// <item><term>Name</term><description>Episode Name</description></item>
+        /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
+        /// <item><term>Property ID</term><description>2</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-episodename">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string EpisodeName { get; }
 
         /// <summary>
-        /// Indicates whether the video is DTV.
+        /// Indicates whether the video is DTV
         /// </summary>
-        /// <value><see langword="true"/> if the video is DTV; <see langword="false"/> if it is not DTV; otherwise, <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>ID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 17</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Is DTV Content</description></item>
+        /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
+        /// <item><term>Property ID</term><description>17</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-isdtvcontent">[Reference Link]</a></description></item>
+        /// </list></remarks>
         bool? IsDTVContent { get; }
 
         /// <summary>
-        /// Indicates whether the video is HD.
+        /// Indicates whether the video is HDTV
         /// </summary>
-        /// <value><see langword="true"/> if the video is HD; <see langword="false"/> if it is not HD; otherwise, <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>ID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 18</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Is HDTV Content</description></item>
+        /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
+        /// <item><term>Property ID</term><description>18</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-ishdcontent">[Reference Link]</a></description></item>
+        /// </list></remarks>
         bool? IsHDContent { get; }
 
         /// <summary>
-        /// Gets the Network Affiliation.
+        /// Gets the Network Affiliation
         /// </summary>
-        /// <value>The name of the affiliated network or <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>ID: {2C53C813-FB63-4E22-A1AB-0B331CA1E273}, 100</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>TV Network Affiliation</description></item>
+        /// <item><term>Format ID</term><description>{2C53C813-FB63-4E22-A1AB-0B331CA1E273} (Format)</description></item>
+        /// <item><term>Property ID</term><description>100</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-networkaffiliation">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string NetworkAffiliation { get; }
 
         /// <summary>
-        /// Gets the Original Broadcast Date.
+        /// Gets the Original Broadcast Date
         /// </summary>
-        /// <value>The original broadcast date or <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>ID: {4684FE97-8765-4842-9C13-F006447B178C}, 100</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Original Broadcast Date</description></item>
+        /// <item><term>Format ID</term><description>{4684FE97-8765-4842-9C13-F006447B178C} (Format)</description></item>
+        /// <item><term>Property ID</term><description>100</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-originalbroadcastdate">[Reference Link]</a></description></item>
+        /// </list></remarks>
         System.DateTime? OriginalBroadcastDate { get; }
 
         /// <summary>
-        /// Gets the Program Description.
+        /// Gets the Program Description
         /// </summary>
-        /// <value>The program description or <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>ID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 3</remarks>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Program Description</description></item>
+        /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
+        /// <item><term>Property ID</term><description>3</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-programdescription">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string ProgramDescription { get; }
-
+        
         /// <summary>
-        /// Gets the Station Call Sign.
+        /// Gets the Station Call Sign
         /// </summary>
-        /// <value>The call sign of the broadcast station or <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>Example: &quot;TOONP&quot;
-        /// <para>ID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 5</para></remarks>
+        /// <value>
+        /// Example: "TOONP" Any recorded station call signs.
+        /// </value>
+        /// <remarks>
+        /// For example, "TOONP".
+        /// <list type="bullet">
+        /// <item><term>Name</term><description>Station Call Sign</description></item>
+        /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
+        /// <item><term>Property ID</term><description>5</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationcallsign">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string StationCallSign { get; }
 
         /// <summary>
@@ -66,6 +110,15 @@ namespace FsInfoCat
         /// </summary>
         /// <value>The  name of the broadcast station or <see langword="null"/> if this value is not specified.</value>
         /// <remarks>ID: {1B5439E7-EBA1-4AF8-BDD7-7AF1D4549493}, 100</remarks>
+        /// <summary>
+        /// Gets the Station Name
+        /// </summary>
+        /// <remarks><list type="bullet">
+        /// <item><term>Name</term><description>Station Name</description></item>
+        /// <item><term>Format ID</term><description>{1B5439E7-EBA1-4AF8-BDD7-7AF1D4549493} (Format)</description></item>
+        /// <item><term>Property ID</term><description>100</description></item>
+        /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationname">[Reference Link]</a></description></item>
+        /// </list></remarks>
         string StationName { get; }
     }
 }
