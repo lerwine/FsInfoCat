@@ -34,9 +34,9 @@ namespace FsInfoCat.Upstream
 
         IEnumerable<IFileAction> FileActions { get; }
 
-        new IEnumerable<IUpstreamComparison> ComparisonSources { get; }
+        new IEnumerable<IUpstreamComparison> BaselineComparisons { get; }
 
-        new IEnumerable<IUpstreamComparison> ComparisonTargets { get; }
+        new IEnumerable<IUpstreamComparison> CorrelativeComparisons { get; }
 
         new IEnumerable<IAccessError<IUpstreamFile>> AccessErrors { get; }
     }

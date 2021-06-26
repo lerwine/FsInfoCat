@@ -123,8 +123,8 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             builder.HasKey(nameof(BaselineId), nameof(CorrelativeId));
-            builder.HasOne(sn => sn.Baseline).WithMany(d => d.ComparisonSources).HasForeignKey(nameof(BaselineId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.Correlative).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.Baseline).WithMany(d => d.BaselineComparisons).HasForeignKey(nameof(BaselineId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.Correlative).WithMany(d => d.CorrelativeComparisons).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileId, XElement comparisonElement)

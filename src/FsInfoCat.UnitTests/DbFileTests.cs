@@ -67,10 +67,10 @@ namespace FsInfoCat.UnitTests
             Assert.IsNull(target.VideoProperties);
             Assert.IsNotNull(target.AccessErrors);
             Assert.AreEqual(0, target.AccessErrors.Count);
-            Assert.IsNotNull(target.ComparisonSources);
-            Assert.AreEqual(0, target.ComparisonSources.Count);
-            Assert.IsNotNull(target.ComparisonTargets);
-            Assert.AreEqual(0, target.ComparisonTargets.Count);
+            Assert.IsNotNull(target.BaselineComparisons);
+            Assert.AreEqual(0, target.BaselineComparisons.Count);
+            Assert.IsNotNull(target.CorrelativeComparisons);
+            Assert.AreEqual(0, target.CorrelativeComparisons.Count);
             Assert.IsNull(target.UpstreamId);
             Assert.IsNull(target.LastSynchronizedOn);
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
@@ -118,10 +118,10 @@ namespace FsInfoCat.UnitTests
             Assert.IsNull(target.VideoProperties);
             Assert.IsNotNull(target.AccessErrors);
             Assert.AreEqual(0, target.AccessErrors.Count);
-            Assert.IsNotNull(target.ComparisonSources);
-            Assert.AreEqual(0, target.ComparisonSources.Count);
-            Assert.IsNotNull(target.ComparisonTargets);
-            Assert.AreEqual(0, target.ComparisonTargets.Count);
+            Assert.IsNotNull(target.BaselineComparisons);
+            Assert.AreEqual(0, target.BaselineComparisons.Count);
+            Assert.IsNotNull(target.CorrelativeComparisons);
+            Assert.AreEqual(0, target.CorrelativeComparisons.Count);
             Assert.IsNull(target.UpstreamId);
             Assert.IsNull(target.LastSynchronizedOn);
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
@@ -587,29 +587,29 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("HashSet<FileComparison> ComparisonSources")]
-        public void ComparisonSourcesTestMethod()
+        [TestMethod("HashSet<FileComparison> BaselineComparisons")]
+        public void BaselineComparisonsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for HashSet<FileComparison> ComparisonSources
+            // TODO: Implement test for HashSet<FileComparison> BaselineComparisons
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             HashSet<FileComparison> expectedValue = default;
-            target.ComparisonSources = default;
-            HashSet<FileComparison> actualValue = target.ComparisonSources;
+            target.BaselineComparisons = default;
+            HashSet<FileComparison> actualValue = target.BaselineComparisons;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("HashSet<FileComparison> ComparisonTargets")]
-        public void ComparisonTargetsTestMethod()
+        [TestMethod("HashSet<FileComparison> CorrelativeComparisons")]
+        public void CorrelativeComparisonsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for HashSet<FileComparison> ComparisonTargets
+            // TODO: Implement test for HashSet<FileComparison> CorrelativeComparisons
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
             HashSet<FileComparison> expectedValue = default;
-            target.ComparisonTargets = default;
-            HashSet<FileComparison> actualValue = target.ComparisonTargets;
+            target.CorrelativeComparisons = default;
+            HashSet<FileComparison> actualValue = target.CorrelativeComparisons;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

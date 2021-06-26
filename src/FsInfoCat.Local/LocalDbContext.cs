@@ -244,8 +244,8 @@ namespace FsInfoCat.Local
                     e.GetRelatedReferenceAsync(f => f.RecordedTVProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
                 VideoPropertySet[] videoProperties = files.Select(e => e.Entity.VideoPropertySetId.HasValue ?
                     e.GetRelatedReferenceAsync(f => f.VideoProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                FileComparison[] comparisons = files.SelectMany(e => e.GetRelatedCollectionAsync(f => f.ComparisonSources).Result
-                    .Concat(e.GetRelatedCollectionAsync(f => f.ComparisonTargets).Result)).Distinct().ToArray();
+                FileComparison[] comparisons = files.SelectMany(e => e.GetRelatedCollectionAsync(f => f.BaselineComparisons).Result
+                    .Concat(e.GetRelatedCollectionAsync(f => f.CorrelativeComparisons).Result)).Distinct().ToArray();
                 FileAccessError[] accessErrors = files.SelectMany(e => e.GetRelatedCollectionAsync(f => f.AccessErrors).Result).ToArray();
                 bool hasChanges = comparisons.Length > 0;
                 if (hasChanges)
@@ -380,7 +380,7 @@ namespace FsInfoCat.Local
                 SaveChanges();
             }
             EntityEntry<DbFile> fileEntry = Entry(target);
-            var comparisons = (await fileEntry.GetRelatedCollectionAsync(p => p.ComparisonSources)).ToArray();
+            var comparisons = (await fileEntry.GetRelatedCollectionAsync(p => p.BaselineComparisons)).ToArray();
             bool hasChanges = comparisons.Length > 0;
             if (hasChanges)
                 Comparisons.RemoveRange(comparisons);
@@ -448,7 +448,7 @@ namespace FsInfoCat.Local
                 await SaveChangesAsync(cancellationToken);
             }
             EntityEntry<DbFile> fileEntry = Entry(target);
-            var comparisons = (await fileEntry.GetRelatedCollectionAsync(p => p.ComparisonSources, cancellationToken)).ToArray();
+            var comparisons = (await fileEntry.GetRelatedCollectionAsync(p => p.BaselineComparisons, cancellationToken)).ToArray();
             bool hasChanges = comparisons.Length > 0;
             if (hasChanges)
                 Comparisons.RemoveRange(comparisons);

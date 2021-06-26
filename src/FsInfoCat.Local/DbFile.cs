@@ -61,8 +61,8 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<RecordedTVPropertySet> _recordedTVProperties;
         private readonly IPropertyChangeTracker<VideoPropertySet> _videoProperties;
         private HashSet<FileAccessError> _accessErrors = new();
-        private HashSet<FileComparison> _comparisonSources = new();
-        private HashSet<FileComparison> _comparisonTargets = new();
+        private HashSet<FileComparison> _baselineComparisons = new();
+        private HashSet<FileComparison> _correlativeComparisons = new();
 
         #endregion
 
@@ -548,18 +548,18 @@ namespace FsInfoCat.Local
             set => CheckHashSetChanged(_accessErrors, value, h => _accessErrors = h);
         }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ComparisonSources), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual HashSet<FileComparison> ComparisonSources
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_BaselineComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual HashSet<FileComparison> BaselineComparisons
         {
-            get => _comparisonSources;
-            set => CheckHashSetChanged(_comparisonSources, value, h => _comparisonSources = h);
+            get => _baselineComparisons;
+            set => CheckHashSetChanged(_baselineComparisons, value, h => _baselineComparisons = h);
         }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ComparisonTargets), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual HashSet<FileComparison> ComparisonTargets
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CorrelativeComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual HashSet<FileComparison> CorrelativeComparisons
         {
-            get => _comparisonTargets;
-            set => CheckHashSetChanged(_comparisonTargets, value, h => _comparisonTargets = h);
+            get => _correlativeComparisons;
+            set => CheckHashSetChanged(_correlativeComparisons, value, h => _correlativeComparisons = h);
         }
 
         #endregion
@@ -578,13 +578,13 @@ namespace FsInfoCat.Local
 
         IRedundancy IFile.Redundancy => Redundancy;
 
-        IEnumerable<ILocalComparison> ILocalFile.ComparisonSources => ComparisonSources.Cast<ILocalComparison>();
+        IEnumerable<ILocalComparison> ILocalFile.BaselineComparisons => BaselineComparisons.Cast<ILocalComparison>();
 
-        IEnumerable<IComparison> IFile.ComparisonSources => ComparisonSources.Cast<IComparison>();
+        IEnumerable<IComparison> IFile.BaselineComparisons => BaselineComparisons.Cast<IComparison>();
 
-        IEnumerable<ILocalComparison> ILocalFile.ComparisonTargets => ComparisonSources.Cast<ILocalComparison>();
+        IEnumerable<ILocalComparison> ILocalFile.CorrelativeComparisons => CorrelativeComparisons.Cast<ILocalComparison>();
 
-        IEnumerable<IComparison> IFile.ComparisonTargets => ComparisonSources.Cast<IComparison>();
+        IEnumerable<IComparison> IFile.CorrelativeComparisons => CorrelativeComparisons.Cast<IComparison>();
 
         ILocalSummaryPropertySet ILocalFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryPropertySet)value; }
         ILocalDocumentPropertySet ILocalFile.DocumentProperties { get => DocumentProperties; set => DocumentProperties = (DocumentPropertySet)value; }

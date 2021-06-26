@@ -79,6 +79,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Baseline Comparisons.
+        /// </summary>
+        public static string DisplayName_BaselineComparisons {
+            get {
+                return ResourceManager.GetString("DisplayName_BaselineComparisons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case-sensitive Search.
         /// </summary>
         public static string DisplayName_CaseSensitiveSearch {
@@ -88,20 +97,11 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Comparisons (as source).
+        ///   Looks up a localized string similar to Correlative Comparisons.
         /// </summary>
-        public static string DisplayName_ComparisonSources {
+        public static string DisplayName_CorrelativeComparisons {
             get {
-                return ResourceManager.GetString("DisplayName_ComparisonSources", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Comparisons (as target).
-        /// </summary>
-        public static string DisplayName_ComparisonTargets {
-            get {
-                return ResourceManager.GetString("DisplayName_ComparisonTargets", resourceCulture);
+                return ResourceManager.GetString("DisplayName_CorrelativeComparisons", resourceCulture);
             }
         }
         

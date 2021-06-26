@@ -5,7 +5,7 @@ namespace FsInfoCat
     /// <summary>
     /// The results of a byte-for-byte comparison of 2 files.
     /// </summary>
-    /// <remarks></remarks>
+    /// <seealso cref="IDbEntity" />
     public interface IComparison : IDbEntity
     {
         /// <summary>
@@ -35,7 +35,7 @@ namespace FsInfoCat
         DateTime ComparedOn { get; set; }
 
         /// <summary>
-        /// Gets or sets the source file.
+        /// Gets or sets the baseline file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="IFile"/> that represents the baseline file in the comparison.</value>
         IFile Baseline { get; set; }

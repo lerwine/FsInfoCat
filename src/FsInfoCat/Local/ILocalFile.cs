@@ -32,9 +32,9 @@ namespace FsInfoCat.Local
 
         new ILocalRedundancy Redundancy { get; }
 
-        new IEnumerable<ILocalComparison> ComparisonSources { get; }
+        new IEnumerable<ILocalComparison> BaselineComparisons { get; }
 
-        new IEnumerable<ILocalComparison> ComparisonTargets { get; }
+        new IEnumerable<ILocalComparison> CorrelativeComparisons { get; }
 
         new IEnumerable<IAccessError<ILocalFile>> AccessErrors { get; }
     }

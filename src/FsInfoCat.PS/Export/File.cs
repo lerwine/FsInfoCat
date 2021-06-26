@@ -11,7 +11,7 @@ namespace FsInfoCat.PS.Export
     public class File : Subdirectory.FileBase
     {
         private string _notes;
-        private readonly ComparisonBase.Collection _comparisonSources;
+        private readonly ComparisonBase.Collection _correlativeComparisons;
         private readonly AccessError.Collection _accessErrors;
 
         [XmlAttribute(nameof(Options))]
@@ -334,20 +334,20 @@ namespace FsInfoCat.PS.Export
         }
 
         [XmlElement(nameof(Comparison))]
-        public Collection<Comparison> ComparisonSources
+        public Collection<Comparison> CorrelativeComparisons
         {
-            get => _comparisonSources;
+            get => _correlativeComparisons;
             set
             {
-                if (ReferenceEquals(_comparisonSources, value))
+                if (ReferenceEquals(_correlativeComparisons, value))
                     return;
                 if (value is ComparisonBase.Collection)
                     throw new InvalidOperationException();
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    _comparisonSources.Clear();
-                    _comparisonSources.AddRange(value);
+                    _correlativeComparisons.Clear();
+                    _correlativeComparisons.AddRange(value);
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -355,19 +355,19 @@ namespace FsInfoCat.PS.Export
 
         internal bool IsProcessed { get; set; }
 
-        public IEnumerable<Comparison> GetComparisonTargets()
+        public IEnumerable<Comparison> GetCorrelativeComparisons()
         {
             ExportSet exportSet = Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return Enumerable.Empty<Comparison>();
             Guid id = Id;
             return exportSet.FileSystems.SelectMany(fs => fs.Volumes.Select(v => v.RootDirectory).Where(d => d is not null))
-                .SelectMany(d => d.GetAllFiles()).SelectMany(f => f.ComparisonSources).Where(c => c.CorrelativeId == id);
+                .SelectMany(d => d.GetAllFiles()).SelectMany(f => f.CorrelativeComparisons).Where(c => c.CorrelativeId == id);
         }
 
         public File()
         {
-            _comparisonSources = new ComparisonBase.Collection(this);
+            _correlativeComparisons = new ComparisonBase.Collection(this);
             _accessErrors = new AccessError.Collection(this);
         }
 

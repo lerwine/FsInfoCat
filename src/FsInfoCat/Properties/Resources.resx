@@ -126,11 +126,11 @@
   <data name="DisplayName_CaseSensitiveSearch" xml:space="preserve">
     <value>Case-sensitive Search</value>
   </data>
-  <data name="DisplayName_ComparisonSources" xml:space="preserve">
-    <value>Comparisons (as source)</value>
+  <data name="DisplayName_BaselineComparisons" xml:space="preserve">
+    <value>Baseline Comparisons</value>
   </data>
-  <data name="DisplayName_ComparisonTargets" xml:space="preserve">
-    <value>Comparisons (as target)</value>
+  <data name="DisplayName_CorrelativeComparisons" xml:space="preserve">
+    <value>Correlative Comparisons</value>
   </data>
   <data name="DisplayName_CrawlConfiguration" xml:space="preserve">
     <value>Crawl Configuration</value>
