@@ -830,7 +830,7 @@ namespace FsInfoCat.Local
             };
             EntityEntry<DbFile> result = dbContext.Files.Add(file);
             ISummaryProperties summaryPropertySet = await fileDetailProvider.GetSummaryPropertiesAsync(cancellationToken);
-
+            // TODO: Apply all property sets
             if (!doNotSaveChanges)
                 await dbContext.SaveChangesAsync(cancellationToken);
             return result;
