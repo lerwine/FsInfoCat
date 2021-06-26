@@ -4,8 +4,7 @@ namespace FsInfoCat.Upstream
 {
     public interface IUpstreamVolume : IVolume, IUpstreamDbEntity
     {
-        // BUG: Needs a setter
-        IHostDevice HostDevice { get; }
+        IHostDevice HostDevice { get; set; }
 
         new IUpstreamFileSystem FileSystem { get; set; }
 
