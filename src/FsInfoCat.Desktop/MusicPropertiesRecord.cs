@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop
 {
     public record MusicPropertiesRecord : IMusicProperties
     {
@@ -6,15 +6,17 @@
 
         public string AlbumTitle { get; init; }
 
-        public string[] Artist { get; init; }
+        public MultiStringValue Artist { get; init; }
 
-        public string[] Composer { get; init; }
+        public uint? ChannelCount { get; init; }
 
-        public string[] Conductor { get; init; }
+        public MultiStringValue Composer { get; init; }
+
+        public MultiStringValue Conductor { get; init; }
 
         public string DisplayArtist { get; init; }
 
-        public string[] Genre { get; init; }
+        public MultiStringValue Genre { get; init; }
 
         public string PartOfSet { get; init; }
 

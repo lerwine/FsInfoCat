@@ -18,8 +18,7 @@ namespace FsInfoCat
         /// Gets the Artist
         /// </summary>
         /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 2 (MUSIC)</remarks>
-        // BUG: Can't be stored in database this way
-        string[] Artist { get; }
+        MultiStringValue Artist { get; }
 
         /// <summary>Indicates the channel count for the audio file.</summary>
         /// <value>
@@ -35,15 +34,13 @@ namespace FsInfoCat
         /// Gets the Composer
         /// </summary>
         /// <remarks>ID: {64440492-4C8B-11D1-8B70-080036B11A03}, 19 (MEDIAFILESUMMARYINFORMATION)</remarks>
-        // BUG: Can't be stored in database this way
-        string[] Composer { get; }
+        MultiStringValue Composer { get; }
 
         /// <summary>
         /// Gets the Conductor
         /// </summary>
         /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 36 (MUSIC)</remarks>
-        // BUG: Can't be stored in database this way
-        string[] Conductor { get; }
+        MultiStringValue Conductor { get; }
 
         /// <summary>
         /// This property returns the best representation of Album Artist for a given music file based upon AlbumArtist, ContributingArtist and compilation info.
@@ -55,8 +52,7 @@ namespace FsInfoCat
         /// Gets the Genre
         /// </summary>
         /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 11 (MUSIC)</remarks>
-        // BUG: Can't be stored in database this way
-        string[] Genre { get; }
+        MultiStringValue Genre { get; }
 
         /// <summary>
         /// Gets the Part of Set

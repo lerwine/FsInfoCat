@@ -1,8 +1,7 @@
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -14,11 +13,11 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _cameraManufacturer;
         private readonly IPropertyChangeTracker<string> _cameraModel;
         private readonly IPropertyChangeTracker<DateTime?> _dateTaken;
-        private readonly IPropertyChangeTracker<string[]> _event;
+        private readonly IPropertyChangeTracker<MultiStringValue> _event;
         private readonly IPropertyChangeTracker<string> _exifVersion;
         private readonly IPropertyChangeTracker<ushort?> _orientation;
         private readonly IPropertyChangeTracker<string> _orientationText;
-        private readonly IPropertyChangeTracker<string[]> _peopleNames;
+        private readonly IPropertyChangeTracker<MultiStringValue> _peopleNames;
         private HashSet<DbFile> _files = new();
 
         #endregion
@@ -30,11 +29,11 @@ namespace FsInfoCat.Local
         public string CameraManufacturer { get => _cameraManufacturer.GetValue(); set => _cameraManufacturer.SetValue(value); }
         public string CameraModel { get => _cameraModel.GetValue(); set => _cameraModel.SetValue(value); }
         public DateTime? DateTaken { get => _dateTaken.GetValue(); set => _dateTaken.SetValue(value); }
-        public string[] Event { get => _event.GetValue(); set => _event.SetValue(value); }
+        public MultiStringValue Event { get => _event.GetValue(); set => _event.SetValue(value); }
         public string EXIFVersion { get => _exifVersion.GetValue(); set => _exifVersion.SetValue(value); }
         public ushort? Orientation { get => _orientation.GetValue(); set => _orientation.SetValue(value); }
         public string OrientationText { get => _orientationText.GetValue(); set => _orientationText.SetValue(value); }
-        public string[] PeopleNames { get => _peopleNames.GetValue(); set => _peopleNames.SetValue(value); }
+        public MultiStringValue PeopleNames { get => _peopleNames.GetValue(); set => _peopleNames.SetValue(value); }
 
         public HashSet<DbFile> Files
         {
@@ -58,16 +57,17 @@ namespace FsInfoCat.Local
             _cameraManufacturer = AddChangeTracker<string>(nameof(CameraManufacturer), null);
             _cameraModel = AddChangeTracker<string>(nameof(CameraModel), null);
             _dateTaken = AddChangeTracker<System.DateTime?>(nameof(DateTaken), null);
-            _event = AddChangeTracker<string[]>(nameof(Event), null);
+            _event = AddChangeTracker<MultiStringValue>(nameof(Event), null);
             _exifVersion = AddChangeTracker<string>(nameof(EXIFVersion), null);
             _orientation = AddChangeTracker<ushort?>(nameof(Orientation), null);
             _orientationText = AddChangeTracker<string>(nameof(OrientationText), null);
-            _peopleNames = AddChangeTracker<string[]>(nameof(PeopleNames), null);
+            _peopleNames = AddChangeTracker<MultiStringValue>(nameof(PeopleNames), null);
         }
 
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
+        internal static void BuildEntity(EntityTypeBuilder<PhotoPropertySet> obj)
         {
-            throw new NotImplementedException();
+            obj.Property(nameof(Event)).HasConversion(MultiStringValue.Converter);
+            obj.Property(nameof(PeopleNames)).HasConversion(MultiStringValue.Converter);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace FsInfoCat.Desktop
     {
         public string Compression { get; init; }
 
-        public string[] Director { get; init; }
+        public MultiStringValue Director { get; init; }
 
         public uint? EncodingBitrate { get; init; }
 

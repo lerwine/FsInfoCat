@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat.Desktop
 {
@@ -6,7 +6,7 @@ namespace FsInfoCat.Desktop
     {
         public string ClientID { get; init; }
 
-        public string[] Contributor { get; init; }
+        public MultiStringValue Contributor { get; init; }
 
         public DateTime? DateCreated { get; init; }
 

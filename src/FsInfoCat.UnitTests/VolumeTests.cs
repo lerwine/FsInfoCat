@@ -293,18 +293,17 @@ namespace FsInfoCat.UnitTests
         }
 
         [DataTestMethod]
-        [DataRow(null, null, DisplayName = "int? MaxNameLength = null")]
-        [DataRow(1, null, DisplayName = "int? MaxNameLength = 1")]
+        [DataRow(null, null, DisplayName = "uint? MaxNameLength = null")]
+        [DataRow(1u, null, DisplayName = "uint? MaxNameLength = 1")]
         [DataRow(int.MaxValue, null, DisplayName = "int? MaxNameLength = int.MaxValue")]
-        [DataRow(0, "Maximum Name Length must be greater than zero.", DisplayName = "int ? MaxNameLength = 0")]
-        [DataRow(-1, "Maximum Name Length must be greater than zero.", DisplayName = "int ? MaxNameLength = -1")]
-        [TestMethod("int? MaxNameLength")]
+        [DataRow(0u, "Maximum Name Length must be greater than zero.", DisplayName = "uint? MaxNameLength = 0")]
+        [TestMethod("uint? MaxNameLength")]
         [TestProperty(TestHelper.TestProperty_Description, "Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
-        public void MaxNameLengthTestMethod(int? value, string errorMessage)
+        public void MaxNameLengthTestMethod(uint? value, string errorMessage)
         {
             Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
             target.MaxNameLength = value;
-            int? actualValue = target.MaxNameLength;
+            uint? actualValue = target.MaxNameLength;
             Assert.AreEqual(value, actualValue);
             Collection<ValidationResult> validationResults = new();
             bool isValid = Validator.TryValidateObject(target, new ValidationContext(target), validationResults, true);

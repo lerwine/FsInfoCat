@@ -227,7 +227,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { Event = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -411,7 +411,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { PeopleNames = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
             Collection<ValidationResult> results = new();

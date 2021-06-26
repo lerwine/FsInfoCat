@@ -12,8 +12,7 @@ namespace FsInfoCat
         /// Gets the Contributor
         /// </summary>
         /// <remarks>ID: {F334115E-DA1B-4509-9B3D-119504DC7ABB}, 100</remarks>
-        // BUG: Can't be stored in database this way
-        string[] Contributor { get; }
+        MultiStringValue Contributor { get; }
 
         /// <summary>
         /// Gets the Date Created

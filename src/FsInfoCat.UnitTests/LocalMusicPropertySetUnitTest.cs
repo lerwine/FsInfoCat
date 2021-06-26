@@ -183,7 +183,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Artist = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -229,7 +229,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Composer = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -275,7 +275,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Conductor = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -367,7 +367,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Genre = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();

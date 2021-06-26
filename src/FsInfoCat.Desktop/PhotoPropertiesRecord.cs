@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat.Desktop
 {
@@ -10,7 +10,7 @@ namespace FsInfoCat.Desktop
 
         public DateTime? DateTaken { get; init; }
 
-        public string[] Event { get; init; }
+        public MultiStringValue Event { get; init; }
 
         public string EXIFVersion { get; init; }
 
@@ -18,6 +18,6 @@ namespace FsInfoCat.Desktop
 
         public string OrientationText { get; init; }
 
-        public string[] PeopleNames { get; init; }
+        public MultiStringValue PeopleNames { get; init; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop
 {
     public record MediaPropertiesRecord : IMediaProperties
     {
@@ -16,7 +16,7 @@
 
         public uint? FrameCount { get; init; }
 
-        public string[] Producer { get; init; }
+        public MultiStringValue Producer { get; init; }
 
         public string ProtectionType { get; init; }
 
@@ -28,7 +28,7 @@
 
         public string Subtitle { get; init; }
 
-        public string[] Writer { get; init; }
+        public MultiStringValue Writer { get; init; }
 
         public uint? Year { get; init; }
     }

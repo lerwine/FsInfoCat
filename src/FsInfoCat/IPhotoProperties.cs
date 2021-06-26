@@ -27,8 +27,7 @@ namespace FsInfoCat
         /// Return the event at which the photo was taken
         /// </summary>
         /// <remarks>ID: {14B81DA1-0135-4D31-96D9-6CBFC9671A99}, 18248 (ImageProperties)</remarks>
-        // BUG: Can't be stored in database this way
-        string[] Event { get; }
+        MultiStringValue Event { get; }
 
         /// <summary>
         /// Returns the EXIF version.
@@ -54,7 +53,6 @@ namespace FsInfoCat
         /// The people tags on an image.
         /// </summary>
         /// <remarks>ID: {E8309B6E-084C-49B4-B1FC-90A80331B638}, 100</remarks>
-        // BUG: Can't be stored in database this way
-        string[] PeopleNames { get; }
+        MultiStringValue PeopleNames { get; }
     }
 }

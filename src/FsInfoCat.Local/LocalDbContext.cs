@@ -148,6 +148,13 @@ namespace FsInfoCat.Local
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
             modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
             modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
+            modelBuilder.Entity<SummaryPropertySet>(SummaryPropertySet.BuildEntity);
+            modelBuilder.Entity<DocumentPropertySet>(DocumentPropertySet.BuildEntity);
+            modelBuilder.Entity<GPSPropertySet>(GPSPropertySet.BuildEntity);
+            modelBuilder.Entity<MediaPropertySet>(MediaPropertySet.BuildEntity);
+            modelBuilder.Entity<MusicPropertySet>(MusicPropertySet.BuildEntity);
+            modelBuilder.Entity<PhotoPropertySet>(PhotoPropertySet.BuildEntity);
+            modelBuilder.Entity<VideoPropertySet>(VideoPropertySet.BuildEntity);
         }
 
         public static void AddDbContextPool(IServiceCollection services, Assembly assembly, string dbFileName) =>

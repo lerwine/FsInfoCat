@@ -137,7 +137,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { Director = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();

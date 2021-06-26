@@ -24,6 +24,6 @@ namespace FsInfoCat.Desktop
 
         public string ProcessingMethod { get; init; }
 
-        public byte[] VersionID { get; init; }
+        public ByteValues VersionID { get; init; }
     }
 }

@@ -7,10 +7,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace FsInfoCat.Local
@@ -84,10 +82,7 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, new string[] { nameof(Length) }));
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<BinaryPropertySet> obj)
-        {
-            obj.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
-        }
+        internal static void BuildEntity(EntityTypeBuilder<BinaryPropertySet> obj) => obj.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
 
         internal static async Task<(Guid redundantSetId, XElement[] redundancies)[]> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, XElement binaryPropertiesIdElement)
         {

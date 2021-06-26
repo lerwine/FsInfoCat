@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace FsInfoCat.Local
 
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _clientID;
-        private readonly IPropertyChangeTracker<string[]> _contributor;
+        private readonly IPropertyChangeTracker<MultiStringValue> _contributor;
         private readonly IPropertyChangeTracker<DateTime?> _dateCreated;
         private readonly IPropertyChangeTracker<string> _lastAuthor;
         private readonly IPropertyChangeTracker<string> _revisionNumber;
@@ -31,7 +32,7 @@ namespace FsInfoCat.Local
         public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string ClientID { get => _clientID.GetValue(); set => _clientID.SetValue(value); }
-        public string[] Contributor { get => _contributor.GetValue(); set => _contributor.SetValue(value); }
+        public MultiStringValue Contributor { get => _contributor.GetValue(); set => _contributor.SetValue(value); }
         public DateTime? DateCreated { get => _dateCreated.GetValue(); set => _dateCreated.SetValue(value); }
         public string LastAuthor { get => _lastAuthor.GetValue(); set => _lastAuthor.SetValue(value); }
         public string RevisionNumber { get => _revisionNumber.GetValue(); set => _revisionNumber.SetValue(value); }
@@ -62,8 +63,8 @@ namespace FsInfoCat.Local
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _clientID = AddChangeTracker<string>(nameof(ClientID), null);
-            _contributor = AddChangeTracker<string[]>(nameof(Contributor), null);
-            _dateCreated = AddChangeTracker<System.DateTime?>(nameof(DateCreated), null);
+            _contributor = AddChangeTracker<MultiStringValue>(nameof(Contributor), null);
+            _dateCreated = AddChangeTracker<DateTime?>(nameof(DateCreated), null);
             _lastAuthor = AddChangeTracker<string>(nameof(LastAuthor), null);
             _revisionNumber = AddChangeTracker<string>(nameof(RevisionNumber), null);
             _security = AddChangeTracker<int?>(nameof(Security), null);
@@ -78,5 +79,7 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        internal static void BuildEntity(EntityTypeBuilder<DocumentPropertySet> obj) => obj.Property(nameof(Contributor)).HasConversion(MultiStringValue.Converter);
     }
 }

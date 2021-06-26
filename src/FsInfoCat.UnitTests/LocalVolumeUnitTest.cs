@@ -653,7 +653,7 @@ namespace FsInfoCat.UnitTests
         public void VolumeMaxNameLengthTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            int expected = 0;
+            uint expected = 0;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume MaxNameLength FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume MaxNameLength Item", volumeName = "Volume_MaxNameLength_Name";
@@ -683,7 +683,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsTrue(target.MaxNameLength.HasValue);
             Assert.AreEqual(expected, target.MaxNameLength.Value);
 
-            expected = int.MaxValue;
+            expected = uint.MaxValue;
             target.MaxNameLength = expected;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
@@ -695,15 +695,6 @@ namespace FsInfoCat.UnitTests
             Assert.IsTrue(target.MaxNameLength.HasValue);
             Assert.AreEqual(expected, target.MaxNameLength.Value);
 
-            expected = -1;
-            target.MaxNameLength = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.Volume.MaxNameLength), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid, results[0].ErrorMessage);
             entityEntry = dbContext.Volumes.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);

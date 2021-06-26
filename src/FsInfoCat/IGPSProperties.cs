@@ -79,7 +79,6 @@ namespace FsInfoCat
         /// Indicates the version of the GPS information
         /// </summary>
         /// <remarks>ID: {22704DA4-C6B2-4A99-8E56-F16DF8C92599}, 100</remarks>
-        // BUG: Can't be stored in database this way
-        byte[] VersionID { get; }
+        ByteValues VersionID { get; }
     }
 }

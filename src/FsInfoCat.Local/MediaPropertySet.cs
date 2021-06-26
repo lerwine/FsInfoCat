@@ -1,8 +1,7 @@
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -18,13 +17,13 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<ulong?> _duration;
         private readonly IPropertyChangeTracker<string> _dvdID;
         private readonly IPropertyChangeTracker<uint?> _frameCount;
-        private readonly IPropertyChangeTracker<string[]> _producer;
+        private readonly IPropertyChangeTracker<MultiStringValue> _producer;
         private readonly IPropertyChangeTracker<string> _protectionType;
         private readonly IPropertyChangeTracker<string> _providerRating;
         private readonly IPropertyChangeTracker<string> _providerStyle;
         private readonly IPropertyChangeTracker<string> _publisher;
         private readonly IPropertyChangeTracker<string> _subtitle;
-        private readonly IPropertyChangeTracker<string[]> _writer;
+        private readonly IPropertyChangeTracker<MultiStringValue> _writer;
         private readonly IPropertyChangeTracker<uint?> _year;
         private HashSet<DbFile> _files = new();
 
@@ -41,13 +40,13 @@ namespace FsInfoCat.Local
         public ulong? Duration { get => _duration.GetValue(); set => _duration.SetValue(value); }
         public string DVDID { get => _dvdID.GetValue(); set => _dvdID.SetValue(value); }
         public uint? FrameCount { get => _frameCount.GetValue(); set => _frameCount.SetValue(value); }
-        public string[] Producer { get => _producer.GetValue(); set => _producer.SetValue(value); }
+        public MultiStringValue Producer { get => _producer.GetValue(); set => _producer.SetValue(value); }
         public string ProtectionType { get => _protectionType.GetValue(); set => _protectionType.SetValue(value); }
         public string ProviderRating { get => _providerRating.GetValue(); set => _providerRating.SetValue(value); }
         public string ProviderStyle { get => _providerStyle.GetValue(); set => _providerStyle.SetValue(value); }
         public string Publisher { get => _publisher.GetValue(); set => _publisher.SetValue(value); }
         public string Subtitle { get => _subtitle.GetValue(); set => _subtitle.SetValue(value); }
-        public string[] Writer { get => _writer.GetValue(); set => _writer.SetValue(value); }
+        public MultiStringValue Writer { get => _writer.GetValue(); set => _writer.SetValue(value); }
         public uint? Year { get => _year.GetValue(); set => _year.SetValue(value); }
 
         public HashSet<DbFile> Files
@@ -76,19 +75,20 @@ namespace FsInfoCat.Local
             _duration = AddChangeTracker<ulong?>(nameof(Duration), null);
             _dvdID = AddChangeTracker<string>(nameof(DVDID), null);
             _frameCount = AddChangeTracker<uint?>(nameof(FrameCount), null);
-            _producer = AddChangeTracker<string[]>(nameof(Producer), null);
+            _producer = AddChangeTracker<MultiStringValue>(nameof(Producer), null);
             _protectionType = AddChangeTracker<string>(nameof(ProtectionType), null);
             _providerRating = AddChangeTracker<string>(nameof(ProviderRating), null);
             _providerStyle = AddChangeTracker<string>(nameof(ProviderStyle), null);
             _publisher = AddChangeTracker<string>(nameof(Publisher), null);
             _subtitle = AddChangeTracker<string>(nameof(Subtitle), null);
-            _writer = AddChangeTracker<string[]>(nameof(Writer), null);
+            _writer = AddChangeTracker<MultiStringValue>(nameof(Writer), null);
             _year = AddChangeTracker<uint?>(nameof(Year), null);
         }
 
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
+        internal static void BuildEntity(EntityTypeBuilder<MediaPropertySet> obj)
         {
-            throw new NotImplementedException();
+            obj.Property(nameof(Producer)).HasConversion(MultiStringValue.Converter);
+            obj.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter);
         }
     }
 }

@@ -12,8 +12,7 @@ namespace FsInfoCat
         /// Gets the Author
         /// </summary>
         /// <remarks>ID: {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 4 (SummaryInformation)</remarks>
-        // BUG: Can't be stored in database this way
-        string[] Author { get; }
+        MultiStringValue Author { get; }
 
         /// <summary>
         /// Gets the comments
@@ -26,8 +25,7 @@ namespace FsInfoCat
         /// </summary>
         /// <remarks>Also referred to as tags.
         /// <para>ID: {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 5 (SummaryInformation)</para></remarks>
-        // BUG: Can't be stored in database this way
-        string[] Keywords { get; }
+        MultiStringValue Keywords { get; }
 
         /// <summary>
         /// Gets the Subject
@@ -77,8 +75,7 @@ namespace FsInfoCat
         /// </summary>
         /// <remarks>For example, the artist name for a track is the item author.
         /// <para>ID: {D0A04F0A-462A-48A4-BB2F-3706E88DBD7D}, 100</para></remarks>
-        // BUG: Can't be stored in database this way
-        string[] ItemAuthors { get; }
+        MultiStringValue ItemAuthors { get; }
 
         /// <summary>
         /// This is the canonical type of the item and is intended to be programmatically parsed.
@@ -99,8 +96,7 @@ namespace FsInfoCat
         /// </summary>
         /// <remarks>Extensions are mapped to Kinds at HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer\KindMap The list of kinds is not extensible.
         /// <para>ID: {1E3EE840-BC2B-476C-8237-2ACD1A839B22}, 3</para></remarks>
-        // BUG: Can't be stored in database this way
-        string[] Kind { get; }
+        MultiStringValue Kind { get; }
 
         /// <summary>
         /// The MIME type.

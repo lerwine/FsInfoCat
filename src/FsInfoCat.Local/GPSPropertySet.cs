@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _longitudeRef;
         private readonly IPropertyChangeTracker<string> _measureMode;
         private readonly IPropertyChangeTracker<string> _processingMethod;
-        private readonly IPropertyChangeTracker<byte[]> _versionID;
+        private readonly IPropertyChangeTracker<ByteValues> _versionID;
         private HashSet<DbFile> _files = new();
 
         #endregion
@@ -42,7 +43,7 @@ namespace FsInfoCat.Local
         public string LongitudeRef { get => _longitudeRef.GetValue(); set => _longitudeRef.SetValue(value); }
         public string MeasureMode { get => _measureMode.GetValue(); set => _measureMode.SetValue(value); }
         public string ProcessingMethod { get => _processingMethod.GetValue(); set => _processingMethod.SetValue(value); }
-        public byte[] VersionID { get => _versionID.GetValue(); set => _versionID.SetValue(value); }
+        public ByteValues VersionID { get => _versionID.GetValue(); set => _versionID.SetValue(value); }
 
         public HashSet<DbFile> Files
         {
@@ -73,12 +74,17 @@ namespace FsInfoCat.Local
             _longitudeRef = AddChangeTracker<string>(nameof(LongitudeRef), null);
             _measureMode = AddChangeTracker<string>(nameof(MeasureMode), null);
             _processingMethod = AddChangeTracker<string>(nameof(ProcessingMethod), null);
-            _versionID = AddChangeTracker<byte[]>(nameof(VersionID), null);
+            _versionID = AddChangeTracker<ByteValues>(nameof(VersionID), null);
         }
 
         public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<GPSPropertySet> obj)
+        {
+            obj.Property(nameof(VersionID)).HasConversion(ByteValues.Converter);
         }
     }
 }

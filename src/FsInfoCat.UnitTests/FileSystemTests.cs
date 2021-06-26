@@ -142,9 +142,9 @@ namespace FsInfoCat.UnitTests
             // TODO: Implement test for int MaxNameLength
 
             FileSystem target = default; // TODO: Create and initialize FileSystem instance
-            int expectedValue = default;
+            uint expectedValue = default;
             target.MaxNameLength = default;
-            int actualValue = target.MaxNameLength;
+            uint actualValue = target.MaxNameLength;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

@@ -1,9 +1,7 @@
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -14,12 +12,12 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _albumArtist;
         private readonly IPropertyChangeTracker<string> _albumTitle;
-        private readonly IPropertyChangeTracker<string[]> _artist;
+        private readonly IPropertyChangeTracker<MultiStringValue> _artist;
         private readonly IPropertyChangeTracker<uint?> _channelCount;
-        private readonly IPropertyChangeTracker<string[]> _composer;
-        private readonly IPropertyChangeTracker<string[]> _conductor;
+        private readonly IPropertyChangeTracker<MultiStringValue> _composer;
+        private readonly IPropertyChangeTracker<MultiStringValue> _conductor;
         private readonly IPropertyChangeTracker<string> _displayArtist;
-        private readonly IPropertyChangeTracker<string[]> _genre;
+        private readonly IPropertyChangeTracker<MultiStringValue> _genre;
         private readonly IPropertyChangeTracker<string> _partOfSet;
         private readonly IPropertyChangeTracker<string> _period;
         private readonly IPropertyChangeTracker<uint?> _trackNumber;
@@ -33,12 +31,12 @@ namespace FsInfoCat.Local
 
         public string AlbumArtist { get => _albumArtist.GetValue(); set => _albumArtist.SetValue(value); }
         public string AlbumTitle { get => _albumTitle.GetValue(); set => _albumTitle.SetValue(value); }
-        public string[] Artist { get => _artist.GetValue(); set => _artist.SetValue(value); }
+        public MultiStringValue Artist { get => _artist.GetValue(); set => _artist.SetValue(value); }
         public uint? ChannelCount { get => _channelCount.GetValue(); set => _channelCount.SetValue(value); }
-        public string[] Composer { get => _composer.GetValue(); set => _composer.SetValue(value); }
-        public string[] Conductor { get => _conductor.GetValue(); set => _conductor.SetValue(value); }
+        public MultiStringValue Composer { get => _composer.GetValue(); set => _composer.SetValue(value); }
+        public MultiStringValue Conductor { get => _conductor.GetValue(); set => _conductor.SetValue(value); }
         public string DisplayArtist { get => _displayArtist.GetValue(); set => _displayArtist.SetValue(value); }
-        public string[] Genre { get => _genre.GetValue(); set => _genre.SetValue(value); }
+        public MultiStringValue Genre { get => _genre.GetValue(); set => _genre.SetValue(value); }
         public string PartOfSet { get => _partOfSet.GetValue(); set => _partOfSet.SetValue(value); }
         public string Period { get => _period.GetValue(); set => _period.SetValue(value); }
         public uint? TrackNumber { get => _trackNumber.GetValue(); set => _trackNumber.SetValue(value); }
@@ -64,20 +62,23 @@ namespace FsInfoCat.Local
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _albumArtist = AddChangeTracker<string>(nameof(AlbumArtist), null);
             _albumTitle = AddChangeTracker<string>(nameof(AlbumTitle), null);
-            _artist = AddChangeTracker<string[]>(nameof(Artist), null);
+            _artist = AddChangeTracker<MultiStringValue>(nameof(Artist), null);
             _channelCount = AddChangeTracker<uint?>(nameof(ChannelCount), null);
-            _composer = AddChangeTracker<string[]>(nameof(Composer), null);
-            _conductor = AddChangeTracker<string[]>(nameof(Conductor), null);
+            _composer = AddChangeTracker<MultiStringValue>(nameof(Composer), null);
+            _conductor = AddChangeTracker<MultiStringValue>(nameof(Conductor), null);
             _displayArtist = AddChangeTracker<string>(nameof(DisplayArtist), null);
-            _genre = AddChangeTracker<string[]>(nameof(Genre), null);
+            _genre = AddChangeTracker<MultiStringValue>(nameof(Genre), null);
             _partOfSet = AddChangeTracker<string>(nameof(PartOfSet), null);
             _period = AddChangeTracker<string>(nameof(Period), null);
             _trackNumber = AddChangeTracker<uint?>(nameof(TrackNumber), null);
         }
 
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, CancellationToken cancellationToken)
+        internal static void BuildEntity(EntityTypeBuilder<MusicPropertySet> obj)
         {
-            throw new NotImplementedException();
+            obj.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter);
+            obj.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter);
+            obj.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
+            obj.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
         }
     }
 }

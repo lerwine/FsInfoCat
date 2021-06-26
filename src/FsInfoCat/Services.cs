@@ -222,7 +222,7 @@ namespace FsInfoCat
             string.IsNullOrWhiteSpace(properties.MeasureMode) && string.IsNullOrWhiteSpace(properties.ProcessingMethod) &&
             !(properties.LatitudeDegrees.HasValue || properties.LatitudeMinutes.HasValue || properties.LatitudeSeconds.HasValue ||
             properties.LongitudeDegrees.HasValue || properties.LongitudeMinutes.HasValue || properties.LongitudeSeconds.HasValue) &&
-            (properties.VersionID is null || properties.VersionID.Length == 0));
+            (properties.VersionID is null || properties.VersionID.Count == 0));
 
         public static IImageProperties NullIfEmpty(this IImageProperties properties) => properties.IsNullOrEmpty() ? null : properties;
 

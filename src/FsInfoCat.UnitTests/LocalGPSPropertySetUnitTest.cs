@@ -599,7 +599,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            byte[] expected = default; // DEFERRED: Set invalid value
+            ByteValues expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { VersionID = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();

@@ -54,7 +54,6 @@ namespace FsInfoCat.UnitTests
             Assert.IsNull(target.Keywords);
             Assert.IsNull(target.Subject);
             Assert.IsNull(target.Title);
-            Assert.IsNull(target.Category);
             Assert.IsNull(target.Company);
             Assert.IsNull(target.ContentType);
             Assert.IsNull(target.Copyright);
@@ -151,7 +150,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Author = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -243,7 +242,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Keywords = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -372,52 +371,6 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Title);
-        }
-
-        [TestMethod("SummaryPropertySet Category Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Category: TEXT")]
-        [Ignore]
-        public void SummaryPropertySetCategoryTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Category = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
-            Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.SummaryPropertySet.Category), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Category);
-
-            expected = default; // DEFERRED: Set valid value
-            target.Category = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Category);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.Category = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.SummaryPropertySet.Category), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.SummaryPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Category);
         }
 
         [TestMethod("SummaryPropertySet Company Validation Tests")]
@@ -657,7 +610,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string[] expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ItemAuthors = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -795,7 +748,7 @@ namespace FsInfoCat.UnitTests
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            string expected = default; // DEFERRED: Set invalid value
+            MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Kind = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();

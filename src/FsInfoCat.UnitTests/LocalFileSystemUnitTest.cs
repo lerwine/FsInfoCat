@@ -222,7 +222,7 @@ namespace FsInfoCat.UnitTests
         public void FileSystemMaxNameLengthTestMethod()
         {
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            int expected = 0;
+            uint expected = 0;
             Local.FileSystem target = new() { DisplayName = "FileSystem MaxNameLength Item", MaxNameLength = expected };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
@@ -257,15 +257,6 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.MaxNameLength);
 
-            expected = -1;
-            target.MaxNameLength = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.FileSystem.MaxNameLength), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
