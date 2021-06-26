@@ -356,7 +356,7 @@
         <Property Name="Kind" Type="string" Multiple="true">
             <Text DisplayName="Kind" Summary="System.Kind is used to map extensions to various Search folders."><![CDATA[Extensions are mapped to Kinds at HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer\KindMap The list of kinds is not extensible.]]></Text>
             <Win32 FormatID="{1E3EE840-BC2B-476C-8237-2ACD1A839B22}" ID="3" CppType="LPWSTR" CanonicalName="System.Kind" DefaultColumnWidth="20">https://docs.microsoft.com/en-us/windows/win32/properties/props-system-kind</Win32>
-            <Column Type="NVARCHAR(128)" NotNull="false" />
+            <Column Type="TEXT" NotNull="false" />
         </Property>
         <Property Name="MIMEType" Type="string">
             <Text DisplayName="MIMEType" Summary="The MIME type."><![CDATA[Eg, for EML files: 'message/rfc822'.]]></Text>
@@ -1613,7 +1613,7 @@
         <Property Name="VersionID" Type="byte" Multiple="true">
             <Text DisplayName="Version ID" Summary="Indicates the version of the GPS information">Indicates the version of the GPS information.</Text>
             <Win32 FormatID="{22704DA4-C6B2-4A99-8E56-F16DF8C92599}" ID="100" CppType="UI1" CanonicalName="System.GPS.VersionID" DefaultColumnWidth="20">https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-versionid</Win32>
-            <Column Type="BINARY(6)" NotNull="false" />
+            <Column Type="NVARCHAR(128)" NotNull="false" />
         </Property>
         <Property Name="Altitude" DefaultColumnWidth="20" Type="double">
             <Text DisplayName="Altitude" Summary="Indicates altitude based on the reference in PKEY_GPS_AltitudeRef." />
