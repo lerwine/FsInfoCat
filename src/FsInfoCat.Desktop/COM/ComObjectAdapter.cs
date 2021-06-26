@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 
 namespace FsInfoCat.Desktop.COM
 {
@@ -6,7 +7,7 @@ namespace FsInfoCat.Desktop.COM
     {
         private readonly Type _type;
         private readonly object _instance;
-        private bool disposedValue;
+        private bool _disposed;
 
         protected ComObjectAdapter(string progID)
         {
@@ -26,25 +27,19 @@ namespace FsInfoCat.Desktop.COM
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposed)
             {
                 if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                disposedValue = true;
+                    Marshal.ReleaseComObject(_instance);
+                _disposed = true;
             }
         }
 
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~ComObjectWrapper()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
+        ~ComObjectAdapter()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: false);
+        }
 
         public void Dispose()
         {
