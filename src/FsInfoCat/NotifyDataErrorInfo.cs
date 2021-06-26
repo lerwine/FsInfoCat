@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -49,9 +49,11 @@ namespace FsInfoCat
         {
             lock (SyncRoot)
             {
-                // TODO: Implement ClearError(string)
-                throw new NotImplementedException();
+                if (!_lastValidationResults.Remove(propertyName))
+                    return false;
             }
+            OnErrorsChanged(new DataErrorsChangedEventArgs(propertyName));
+            return true;
         }
 
         IEnumerable INotifyDataErrorInfo.GetErrors(string propertyName)
@@ -146,13 +148,21 @@ namespace FsInfoCat
                 OnErrorsChanged(item);
         }
 
-        protected bool SetError(string propertyName, string message)
+        protected bool SetError([DisallowNull] string propertyName, [DisallowNull] string message)
         {
             lock(SyncRoot)
             {
-                // TODO: Implement SetError(string, string)
-                throw new NotImplementedException();
+                if (_lastValidationResults.ContainsKey(propertyName))
+                {
+                    if (_lastValidationResults[propertyName].Length == 1 && _lastValidationResults[propertyName][0] == message)
+                        return false;
+                    _lastValidationResults[propertyName] = new string[] { propertyName };
+                }
+                else
+                    _lastValidationResults.Add(propertyName, new string[] { propertyName });
             }
+            OnErrorsChanged(new DataErrorsChangedEventArgs(propertyName));
+            return true;
         }
     }
 }
