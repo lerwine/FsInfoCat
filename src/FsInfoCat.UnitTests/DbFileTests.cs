@@ -34,10 +34,10 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(target.Name);
             Assert.AreEqual("", target.Name);
             Assert.AreEqual(FileCrawlOptions.None, target.Options);
+            Assert.AreEqual(FileCorrelationStatus.Dissociated, target.Status);
             Assert.IsNull(target.LastHashCalculation);
             Assert.IsNotNull(target.Notes);
             Assert.AreEqual("", target.Notes);
-            Assert.IsFalse(target.Deleted);
             Assert.AreEqual(Guid.Empty, target.ParentId);
             Assert.AreEqual(Guid.Empty, target.BinaryPropertySetId);
             Assert.IsNull(target.SummaryPropertySetId);
@@ -85,10 +85,10 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(target.Name);
             Assert.AreEqual("", target.Name);
             Assert.AreEqual(FileCrawlOptions.None, target.Options);
+            Assert.AreEqual(FileCorrelationStatus.Dissociated, target.Status);
             Assert.IsNull(target.LastHashCalculation);
             Assert.IsNotNull(target.Notes);
             Assert.AreEqual("", target.Notes);
-            Assert.IsFalse(target.Deleted);
             Assert.AreEqual(Guid.Empty, target.ParentId);
             Assert.AreEqual(Guid.Empty, target.BinaryPropertySetId);
             Assert.IsNull(target.SummaryPropertySetId);
@@ -210,16 +210,16 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, actualValue);
         }
 
-        [TestMethod("bool Deleted")]
-        public void DeletedTestMethod()
+        [TestMethod("FileCorrelationStatus Status")]
+        public void StatusTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool Deleted
+            // TODO: Implement test for FileCorrelationStatus Status
 
             DbFile target = default; // TODO: Create and initialize DbFile instance
-            bool expectedValue = default;
-            target.Deleted = default;
-            bool actualValue = target.Deleted;
+            FileCorrelationStatus expectedValue = default;
+            target.Status = default;
+            FileCorrelationStatus actualValue = target.Status;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

@@ -47,10 +47,10 @@
   <Class Name="FsInfoCat.Local.FileComparison" BaseTypeListCollapsed="true">
     <Position X="1" Y="7.5" Width="1.75" />
     <Members>
-      <Property Name="IComparison.SourceFile" Hidden="true" />
-      <Property Name="IComparison.TargetFile" Hidden="true" />
-      <Property Name="ILocalComparison.SourceFile" Hidden="true" />
-      <Property Name="ILocalComparison.TargetFile" Hidden="true" />
+      <Property Name="IComparison.Baseline" Hidden="true" />
+      <Property Name="IComparison.Correlative" Hidden="true" />
+      <Property Name="ILocalComparison.Baseline" Hidden="true" />
+      <Property Name="ILocalComparison.Correlative" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -60,8 +60,8 @@
       <FileName>FileComparison.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="SourceFile" />
-      <Property Name="TargetFile" />
+      <Property Name="Baseline" />
+      <Property Name="Correlative" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>

@@ -9,41 +9,41 @@ namespace FsInfoCat
     public interface IComparison : IDbEntity
     {
         /// <summary>
-        /// Gets or sets the primary key of the source file in the comparison.
+        /// Gets or sets the primary key of the baseline file in the comparison.
         /// </summary>
-        /// <value>The primary key of the <see cref="SourceFile"/>.</value>
+        /// <value>The primary key of the <see cref="Baseline"/>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
-        Guid SourceFileId { get; set; }
+        Guid BaselineId { get; set; }
 
         /// <summary>
-        /// Gets or sets the primary key of the target file in the comparison.
+        /// Gets or sets the primary key of the correlative file in the comparison.
         /// </summary>
-        /// <value>The primary key of the <see cref="TargetFile"/>.</value>
+        /// <value>The primary key of the <see cref="Correlative"/>, which is the new or changed file that is being compared to a <see cref="Baseline"/> file.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
-        Guid TargetFileId { get; set; }
+        Guid CorrelativeId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the <see cref="SourceFile"/> and <see cref="TargetFile"/> are identical byte-for-byte.
+        /// Gets or sets a value indicating whether the <see cref="Baseline"/> and <see cref="Correlative"/> are identical byte-for-byte.
         /// </summary>
-        /// <value><see langword="true"/> if <see cref="SourceFile"/> and <see cref="TargetFile"/> are identical byte-for-byte; otherwise, <see langword="false"/>.</value>
+        /// <value><see langword="true"/> if <see cref="Baseline"/> and <see cref="Correlative"/> are identical byte-for-byte; otherwise, <see langword="false"/>.</value>
         bool AreEqual { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when the files were compared.
         /// </summary>
-        /// <value>The date and time when <see cref="SourceFile"/> was compared to <see cref="TargetFile"/>.</value>
+        /// <value>The date and time when <see cref="Baseline"/> was compared to <see cref="Correlative"/>.</value>
         DateTime ComparedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the source file.
         /// </summary>
-        /// <value>The generic <see cref="IFile"/> that represents the source file.</value>
-        IFile SourceFile { get; set; }
+        /// <value>The generic <see cref="IFile"/> that represents the baseline file in the comparison.</value>
+        IFile Baseline { get; set; }
 
         /// <summary>
-        /// Gets or sets the target file.
+        /// Gets or sets the correlative file in the comparison.
         /// </summary>
-        /// <value>The generic <see cref="IFile"/> that represents the target file.</value>
-        IFile TargetFile { get; set; }
+        /// <value>The generic <see cref="IFile"/> that represents the correlative file, which is the new or changed file in the comparison.</value>
+        IFile Correlative { get; set; }
     }
 }

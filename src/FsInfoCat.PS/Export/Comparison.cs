@@ -7,13 +7,13 @@ namespace FsInfoCat.PS.Export
 {
     public class Comparison : File.ComparisonBase
     {
-        [XmlAttribute(nameof(TargetFileId))]
+        [XmlAttribute(nameof(CorrelativeId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles
-        public string __XML_TargetFileId { get => TargetFileId.ToGuidXml(); set => TargetFileId = value.FromXmlGuid(TargetFileId); }
+        public string __XML_CorrelativeId { get => CorrelativeId.ToGuidXml(); set => CorrelativeId = value.FromXmlGuid(CorrelativeId); }
 #pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
-        public Guid TargetFileId { get; set; }
+        public Guid CorrelativeId { get; set; }
 
         [XmlAttribute(nameof(AreEqual))]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -31,12 +31,12 @@ namespace FsInfoCat.PS.Export
         [XmlIgnore]
         public DateTime ComparedOn { get; set; }
 
-        public File GetTargetFile()
+        public File GeCorrelative()
         {
-            ExportSet exportSet = SourceFile?.Parent?.Volume?.FileSystem?.ExportSet;
+            ExportSet exportSet = Baseline?.Parent?.Volume?.FileSystem?.ExportSet;
             if (exportSet is null)
                 return null;
-            Guid id = TargetFileId;
+            Guid id = CorrelativeId;
             return exportSet.FileSystems.SelectMany(fs => fs.Volumes.Select(v => v.RootDirectory)).Where(d => d is not null)
                 .SelectMany(d => d.GetAllFiles()).FirstOrDefault(f => f.Id == id);
         }

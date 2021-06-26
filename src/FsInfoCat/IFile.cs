@@ -11,9 +11,9 @@ namespace FsInfoCat
     {
         FileCrawlOptions Options { get; set; }
 
-        DateTime? LastHashCalculation { get; set; }
+        FileCorrelationStatus Status { get; set; }
 
-        bool Deleted { get; }
+        DateTime? LastHashCalculation { get; set; }
 
         IBinaryPropertySet BinaryProperties { get; set; }
 

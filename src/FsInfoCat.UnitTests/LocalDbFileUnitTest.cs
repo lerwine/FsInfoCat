@@ -62,7 +62,7 @@ namespace FsInfoCat.UnitTests
 
             // DEFERRED: Validate default values
             Assert.IsNull(target.LastAccessed);
-            Assert.IsNull(target.Deleted);
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
             Assert.IsNull(target.LastHashCalculation);
             Assert.AreEqual(FileCrawlOptions.None, target.Options);
             Assert.AreEqual("", target.Notes);

@@ -362,7 +362,7 @@ namespace FsInfoCat.PS.Export
                 return Enumerable.Empty<Comparison>();
             Guid id = Id;
             return exportSet.FileSystems.SelectMany(fs => fs.Volumes.Select(v => v.RootDirectory).Where(d => d is not null))
-                .SelectMany(d => d.GetAllFiles()).SelectMany(f => f.ComparisonSources).Where(c => c.TargetFileId == id);
+                .SelectMany(d => d.GetAllFiles()).SelectMany(f => f.ComparisonSources).Where(c => c.CorrelativeId == id);
         }
 
         public File()
@@ -374,9 +374,9 @@ namespace FsInfoCat.PS.Export
         public abstract class ComparisonBase : ExportElement, IOwnedElement<File>
         {
             [XmlIgnore]
-            public File SourceFile { get; private set; }
+            public File Baseline { get; private set; }
 
-            File IOwnedElement<File>.Owner => SourceFile;
+            File IOwnedElement<File>.Owner => Baseline;
 
             internal class Collection : OwnedCollection<File, Comparison>
             {
@@ -384,9 +384,9 @@ namespace FsInfoCat.PS.Export
 
                 internal Collection(File owner, IEnumerable<Comparison> items) : base(owner, items) { }
 
-                protected override void OnItemAdding(Comparison item) => item.SourceFile = Owner;
+                protected override void OnItemAdding(Comparison item) => item.Baseline = Owner;
 
-                protected override void OnItemRemoved(Comparison item) => item.SourceFile = null;
+                protected override void OnItemRemoved(Comparison item) => item.Baseline = null;
             }
         }
 

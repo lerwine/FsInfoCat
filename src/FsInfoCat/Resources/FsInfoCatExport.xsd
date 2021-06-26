@@ -291,7 +291,7 @@
             <xs:annotation>
                 <xs:documentation>The Id of the file it was compared to.</xs:documentation>
                 <xs:appinfo xmlns:d="urn:schemas-microsoft-com:xml-msdata">
-                    <d:Relationship d:childKey="TargetFileId" />
+                    <d:Relationship d:childKey="CorrelativeId" />
                 </xs:appinfo>
             </xs:annotation>
             <xs:extension base="EntityId">
@@ -316,12 +316,12 @@
                     <xs:annotation>
                         <xs:documentation>A comparison where the current file was the source file.</xs:documentation>
                         <xs:appinfo xmlns:d="urn:schemas-microsoft-com:xml-msdata">
-                            <d:Relationship d:childKey="SourceFileId" />
+                            <d:Relationship d:childKey="BaselineId" />
                         </xs:appinfo>
                     </xs:annotation>
-                    <xs:keyref name="FK_ComparisonTargetFile" refer="PK_File">
+                    <xs:keyref name="FK_ComparisonCorrelative" refer="PK_File">
                         <xs:selector xpath="."/>
-                        <xs:field xpath="TargetFileId"/>
+                        <xs:field xpath="CorrelativeId"/>
                     </xs:keyref>
                 </xs:element>
                 <xs:element name="AccessError" type="IAccessError">

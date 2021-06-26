@@ -159,17 +159,17 @@
         </Text>
         <Text Message="Creating table 'Comparisons'">
             <![CDATA[CREATE TABLE "Comparisons" (
-    "SourceFileId" UNIQUEIDENTIFIER NOT NULL,
-    "TargetFileId" UNIQUEIDENTIFIER NOT NULL,
+    "BaselineId" UNIQUEIDENTIFIER NOT NULL,
+    "CorrelativeId" UNIQUEIDENTIFIER NOT NULL,
     "AreEqual" BIT NOT NULL DEFAULT 0,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_Comparisons" PRIMARY KEY("SourceFileId","TargetFileId"),
-	CONSTRAINT "FK_ComparisonSourceFile" FOREIGN KEY("SourceFileId") REFERENCES "Files"("Id"),
-	CONSTRAINT "FK_ComparisonTargetFile" FOREIGN KEY("TargetFileId") REFERENCES "Files"("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND SourceFileId<>TargetFileId AND
+	CONSTRAINT "PK_Comparisons" PRIMARY KEY("BaselineId","CorrelativeId"),
+	CONSTRAINT "FK_ComparisonBaseline" FOREIGN KEY("BaselineId") REFERENCES "Files"("Id"),
+	CONSTRAINT "FK_ComparisonCorrelative" FOREIGN KEY("CorrelativeId") REFERENCES "Files"("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND BaselineId<>CorrelativeId AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 )]]>
         </Text>

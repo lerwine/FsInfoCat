@@ -26,11 +26,11 @@ namespace FsInfoCat.Local
 
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _name;
+        private readonly IPropertyChangeTracker<FileCorrelationStatus> _status;
         private readonly IPropertyChangeTracker<FileCrawlOptions> _options;
         private readonly IPropertyChangeTracker<DateTime> _lastAccessed;
         private readonly IPropertyChangeTracker<DateTime?> _lastHashCalculation;
         private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<bool> _deleted;
         private readonly IPropertyChangeTracker<DateTime> _creationTime;
         private readonly IPropertyChangeTracker<DateTime> _lastWriteTime;
         private readonly IPropertyChangeTracker<Guid> _parentId;
@@ -78,23 +78,18 @@ namespace FsInfoCat.Local
         public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
 
         [Required]
+        public virtual FileCorrelationStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
+
+        [Required]
         public virtual FileCrawlOptions Options { get => _options.GetValue(); set => _options.SetValue(value); }
 
         [Required]
         public virtual DateTime LastAccessed { get => _lastAccessed.GetValue(); set => _lastAccessed.SetValue(value); }
 
-        public void SetDeleted(LocalDbContext dbContext)
-        {
-            throw new NotImplementedException();
-        }
-
         public virtual DateTime? LastHashCalculation { get => _lastHashCalculation.GetValue(); set => _lastHashCalculation.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
-
-        [Required]
-        public virtual bool Deleted { get => _deleted.GetValue(); set => _deleted.SetValue(value); }
 
         public DateTime CreationTime { get => _creationTime.GetValue(); set => _creationTime.SetValue(value); }
 
@@ -627,11 +622,11 @@ namespace FsInfoCat.Local
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
+            _status = AddChangeTracker(nameof(FileCorrelationStatus), FileCorrelationStatus.Dissociated);
             _options = AddChangeTracker(nameof(FileCrawlOptions), FileCrawlOptions.None);
             _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
             _lastHashCalculation = AddChangeTracker<DateTime?>(nameof(LastHashCalculation), null);
             _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _deleted = AddChangeTracker(nameof(Deleted), false);
             _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
             _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
             _parentId = AddChangeTracker(nameof(ParentId), Guid.Empty);
@@ -665,15 +660,20 @@ namespace FsInfoCat.Local
 
         internal async Task MarkDeletedAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
         {
-            if (Deleted)
+            if (Status == FileCorrelationStatus.Deleted)
                 return;
             EntityEntry<DbFile> dbEntry = dbContext.Entry(this);
             FileAccessError[] fileAccessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
             if (fileAccessErrors.Length > 0)
                 dbContext.FileAccessErrors.RemoveRange(fileAccessErrors);
-            Deleted = true;
+            Status = FileCorrelationStatus.Deleted;
             if (!doNotSaveChanges)
                 await dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        internal async Task MarkDissociatedAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        {
+            throw new NotImplementedException();
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)
@@ -757,8 +757,8 @@ namespace FsInfoCat.Local
             FileCrawlOptions options = Options;
             if (options != FileCrawlOptions.None)
                 result.SetAttributeValue(nameof(Options), Enum.GetName(typeof(FileCrawlOptions), Options));
-            if (Deleted)
-                result.SetAttributeValue(nameof(Deleted), Deleted);
+            if (Status != FileCorrelationStatus.Dissociated)
+                result.SetAttributeValue(nameof(Status), Enum.GetName(typeof(FileCorrelationStatus), Status));
             DateTime? lastHashCalculation = LastHashCalculation;
             if (lastHashCalculation.HasValue)
                 result.SetAttributeValue(nameof(LastHashCalculation), XmlConvert.ToString(lastHashCalculation.Value, XmlDateTimeSerializationMode.RoundtripKind));
@@ -802,8 +802,8 @@ namespace FsInfoCat.Local
                 .AppendGuid(nameof(BinaryPropertySetId)).AppendGuid(nameof(SummaryPropertySetId)).AppendGuid(nameof(DocumentPropertySetId)).AppendGuid(nameof(AudioPropertySetId))
                 .AppendGuid(nameof(DRMPropertySetId)).AppendGuid(nameof(GPSPropertySetId)).AppendGuid(nameof(ImagePropertySetId)).AppendGuid(nameof(MediaPropertySetId))
                 .AppendGuid(nameof(MusicPropertySetId)).AppendGuid(nameof(PhotoPropertySetId)).AppendGuid(nameof(RecordedTVPropertySetId))
-                .AppendGuid(nameof(VideoPropertySetId)).AppendEnum<FileCrawlOptions>(nameof(Options)).AppendDateTime(nameof(LastHashCalculation))
-                .AppendDateTime(nameof(LastHashCalculation)).AppendElementString(nameof(Notes)).AppendBoolean(nameof(Deleted)).AppendDateTime(nameof(CreationTime))
+                .AppendGuid(nameof(VideoPropertySetId)).AppendEnum<FileCrawlOptions>(nameof(Options)).AppendEnum<FileCorrelationStatus>(nameof(Status))
+                .AppendDateTime(nameof(LastHashCalculation)).AppendDateTime(nameof(LastHashCalculation)).AppendElementString(nameof(Notes)).AppendDateTime(nameof(CreationTime))
                 .AppendDateTime(nameof(LastWriteTime)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
                 .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             foreach (XElement accessErrorElement in fileElement.Elements(ElementName_AccessError))
@@ -835,6 +835,7 @@ namespace FsInfoCat.Local
             // TODO: Apply all property sets
             if (!doNotSaveChanges)
                 await dbContext.SaveChangesAsync(cancellationToken);
+            // TODO: Need to add code later to see where comparisons need to be made
             return result;
         }
     }

@@ -179,7 +179,8 @@ namespace FsInfoCat.Local
                     return (FS: fileInfo, DB: dbContext.Entry(dbFile));
                 }
                 Worker._logger.LogTrace("Updating file (Id={Id}; Name={Name})", dbFile.Id, dbFile.Name);
-                dbFile.Deleted = false;
+                if (!dbFile.Options.HasFlag(FileCrawlOptions.DoNotCompare))
+                    await dbFile.MarkDissociatedAsync(dbContext, cancellationToken);
                 return (FS: fileInfo, DB: await dbFile.RefreshAsync(dbContext, fileInfo.Length, fileInfo.CreationTime, fileInfo.LastWriteTime,
                     Worker._fileSystemDetailService.CreateFileDetailProvider(fileInfo.FullName, true), true, cancellationToken));
             }

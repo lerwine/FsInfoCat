@@ -30,11 +30,11 @@ namespace FsInfoCat.UnitTests
 
             EntityEntry<FileComparison> entry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entry.State);
-            Assert.AreEqual(Guid.Empty, target.SourceFileId);
-            Assert.AreEqual(Guid.Empty, target.TargetFileId);
+            Assert.AreEqual(Guid.Empty, target.BaselineId);
+            Assert.AreEqual(Guid.Empty, target.CorrelativeId);
             Assert.IsFalse(target.AreEqual);
-            Assert.IsNull(target.SourceFile);
-            Assert.IsNull(target.TargetFile);
+            Assert.IsNull(target.Baseline);
+            Assert.IsNull(target.Correlative);
             Assert.IsNull(target.UpstreamId);
             Assert.IsNull(target.LastSynchronizedOn);
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
@@ -45,40 +45,40 @@ namespace FsInfoCat.UnitTests
 
             dbContext.Comparisons.Add(target);
             Assert.AreEqual(EntityState.Added, entry.State);
-            Assert.AreEqual(Guid.Empty, target.SourceFileId);
-            Assert.AreEqual(Guid.Empty, target.TargetFileId);
+            Assert.AreEqual(Guid.Empty, target.BaselineId);
+            Assert.AreEqual(Guid.Empty, target.CorrelativeId);
             Assert.IsFalse(target.AreEqual);
-            Assert.IsNull(target.SourceFile);
-            Assert.IsNull(target.TargetFile);
+            Assert.IsNull(target.Baseline);
+            Assert.IsNull(target.Correlative);
             Assert.IsNull(target.UpstreamId);
             Assert.IsNull(target.LastSynchronizedOn);
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
             Assert.AreEqual(target.CreatedOn, target.ComparedOn);
         }
 
-        [TestMethod("Guid SourceFileId")]
-        public void SourceFileIdTestMethod()
+        [TestMethod("Guid BaselineId")]
+        public void BaselineIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid SourceFileId
+            // TODO: Implement test for Guid BaselineId
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             Guid expectedValue = default;
-            target.SourceFileId = default;
-            Guid actualValue = target.SourceFileId;
+            target.BaselineId = default;
+            Guid actualValue = target.BaselineId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid TargetFileId")]
-        public void TargetFileIdTestMethod()
+        [TestMethod("Guid CorrelativeId")]
+        public void CorrelativeIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid TargetFileId
+            // TODO: Implement test for Guid CorrelativeId
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             Guid expectedValue = default;
-            target.TargetFileId = default;
-            Guid actualValue = target.TargetFileId;
+            target.CorrelativeId = default;
+            Guid actualValue = target.CorrelativeId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
@@ -108,29 +108,29 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DbFile SourceFile")]
-        public void SourceFileTestMethod()
+        [TestMethod("DbFile Baseline")]
+        public void BaselineTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DbFile SourceFile
+            // TODO: Implement test for DbFile Baseline
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             DbFile expectedValue = default;
-            target.SourceFile = default;
-            DbFile actualValue = target.SourceFile;
+            target.Baseline = default;
+            DbFile actualValue = target.Baseline;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DbFile TargetFile")]
-        public void TargetFileTestMethod()
+        [TestMethod("DbFile Correlative")]
+        public void CorrelativeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DbFile TargetFile
+            // TODO: Implement test for DbFile Correlative
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             DbFile expectedValue = default;
-            target.TargetFile = default;
-            DbFile actualValue = target.TargetFile;
+            target.Correlative = default;
+            DbFile actualValue = target.Correlative;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

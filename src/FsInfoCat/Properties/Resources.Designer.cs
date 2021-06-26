@@ -340,6 +340,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Baseline File must be selected..
+        /// </summary>
+        public static string ErrorMessage_BaselineRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_BaselineRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Content Info must be selected.
         /// </summary>
         public static string ErrorMessage_BinaryPropertiesRequired {
@@ -354,6 +363,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_CircularReference {
             get {
                 return ResourceManager.GetString("ErrorMessage_CircularReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Correlative File must be selected..
+        /// </summary>
+        public static string ErrorMessage_CorrelativeRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_CorrelativeRequired", resourceCulture);
             }
         }
         
@@ -624,24 +642,6 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_ReferenceLength {
             get {
                 return ResourceManager.GetString("ErrorMessage_ReferenceLength", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Source File must be selected..
-        /// </summary>
-        public static string ErrorMessage_SourceFileRequired {
-            get {
-                return ResourceManager.GetString("ErrorMessage_SourceFileRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Target File must be selected..
-        /// </summary>
-        public static string ErrorMessage_TargetFileRequired {
-            get {
-                return ResourceManager.GetString("ErrorMessage_TargetFileRequired", resourceCulture);
             }
         }
         

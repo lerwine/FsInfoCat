@@ -306,11 +306,11 @@
   <data name="ErrorMessage_ReferenceLength" xml:space="preserve">
     <value>Reference too long.</value>
   </data>
-  <data name="ErrorMessage_SourceFileRequired" xml:space="preserve">
-    <value>Source File must be selected.</value>
+  <data name="ErrorMessage_BaselineRequired" xml:space="preserve">
+    <value>Baseline File must be selected.</value>
   </data>
-  <data name="ErrorMessage_TargetFileRequired" xml:space="preserve">
-    <value>Target File must be selected.</value>
+  <data name="ErrorMessage_CorrelativeRequired" xml:space="preserve">
+    <value>Correlative File must be selected.</value>
   </data>
   <data name="ErrorMessage_VolumeAndParent" xml:space="preserve">
     <value>Volume and Parent Subdirectory cannot be selected at the same time.</value>

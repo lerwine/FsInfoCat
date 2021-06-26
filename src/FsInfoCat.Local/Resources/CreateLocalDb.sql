@@ -397,12 +397,12 @@ CREATE TABLE IF NOT EXISTS "VideoPropertySets" (
 
 CREATE TABLE IF NOT EXISTS "Files" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE,
-    "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<15) DEFAULT 0,
+    "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim("Name"))>0) COLLATE NOCASE,
+    "Options" TINYINT  NOT NULL CHECK("Options">=0 AND "Options"<15) DEFAULT 0,
+    "Status" TINYINT  NOT NULL CHECK("Status">=0 AND "Status"<5) DEFAULT 0,
     "LastAccessed" DATETIME  NOT NULL,
     "LastHashCalculation" DATETIME DEFAULT NULL,
     "Notes" TEXT NOT NULL DEFAULT '',
-    "Deleted" BIT NOT NULL DEFAULT 0,
 	"CreationTime"	DATETIME NOT NULL,
 	"LastWriteTime"	DATETIME NOT NULL,
     "SummaryPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileSummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT,
@@ -469,15 +469,15 @@ CREATE TABLE IF NOT EXISTS "Redundancies" (
 );
 
 CREATE TABLE IF NOT EXISTS "Comparisons" (
-    "SourceFileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonSourceFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
-    "TargetFileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonTargetFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
+    "BaselineId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonBaseline" REFERENCES "Files"("Id") ON DELETE RESTRICT,
+    "CorrelativeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonCorrelative" REFERENCES "Files"("Id") ON DELETE RESTRICT,
     "AreEqual" BIT NOT NULL DEFAULT 0,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_Comparisons" PRIMARY KEY("SourceFileId","TargetFileId"),
-    CHECK(CreatedOn<=ModifiedOn AND SourceFileId<>TargetFileId AND
+	CONSTRAINT "PK_Comparisons" PRIMARY KEY("BaselineId","CorrelativeId"),
+    CHECK(CreatedOn<=ModifiedOn AND BaselineId<>CorrelativeId AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 

@@ -21,41 +21,41 @@ namespace FsInfoCat.Local
 
         public const string ELEMENT_NAME = "Comparison";
 
-        private readonly IPropertyChangeTracker<Guid> _sourceFileId;
-        private readonly IPropertyChangeTracker<Guid> _targetFileId;
+        private readonly IPropertyChangeTracker<Guid> _baselineId;
+        private readonly IPropertyChangeTracker<Guid> _correlativeId;
         private readonly IPropertyChangeTracker<bool> _areEqual;
         private readonly IPropertyChangeTracker<DateTime> _comparedOn;
-        private readonly IPropertyChangeTracker<DbFile> _sourceFile;
-        private readonly IPropertyChangeTracker<DbFile> _targetFile;
+        private readonly IPropertyChangeTracker<DbFile> _baseline;
+        private readonly IPropertyChangeTracker<DbFile> _correlative;
 
         #endregion
 
         #region Properties
 
-        public virtual Guid SourceFileId
+        public virtual Guid BaselineId
         {
-            get => _sourceFileId.GetValue();
+            get => _baselineId.GetValue();
             set
             {
-                if (_sourceFileId.SetValue(value))
+                if (_baselineId.SetValue(value))
                 {
-                    DbFile nav = _sourceFile.GetValue();
+                    DbFile nav = _baseline.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _sourceFile.SetValue(null);
+                        _baseline.SetValue(null);
                 }
             }
         }
 
-        public virtual Guid TargetFileId
+        public virtual Guid CorrelativeId
         {
-            get => _targetFileId.GetValue();
+            get => _correlativeId.GetValue();
             set
             {
-                if (_targetFileId.SetValue(value))
+                if (_correlativeId.SetValue(value))
                 {
-                    DbFile nav = _targetFile.GetValue();
+                    DbFile nav = _correlative.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _targetFile.SetValue(null);
+                        _correlative.SetValue(null);
                 }
             }
         }
@@ -66,32 +66,32 @@ namespace FsInfoCat.Local
         [Required]
         public virtual DateTime ComparedOn { get => _comparedOn.GetValue(); set => _comparedOn.SetValue(value); }
 
-        public virtual DbFile SourceFile
+        public virtual DbFile Baseline
         {
-            get => _sourceFile.GetValue();
+            get => _baseline.GetValue();
             set
             {
-                if (_sourceFile.SetValue(value))
+                if (_baseline.SetValue(value))
                 {
                     if (value is null)
-                        _sourceFileId.SetValue(Guid.Empty);
+                        _baselineId.SetValue(Guid.Empty);
                     else
-                        _sourceFileId.SetValue(value.Id);
+                        _baselineId.SetValue(value.Id);
                 }
             }
         }
 
-        public virtual DbFile TargetFile
+        public virtual DbFile Correlative
         {
-            get => _targetFile.GetValue();
+            get => _correlative.GetValue();
             set
             {
-                if (_targetFile.SetValue(value))
+                if (_correlative.SetValue(value))
                 {
                     if (value is null)
-                        _targetFileId.SetValue(Guid.Empty);
+                        _correlativeId.SetValue(Guid.Empty);
                     else
-                        _targetFileId.SetValue(value.Id);
+                        _correlativeId.SetValue(value.Id);
                 }
             }
         }
@@ -100,37 +100,37 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalFile ILocalComparison.SourceFile { get => SourceFile; set => SourceFile = (DbFile)value; }
+        ILocalFile ILocalComparison.Baseline { get => Baseline; set => Baseline = (DbFile)value; }
 
-        IFile IComparison.SourceFile { get => SourceFile; set => SourceFile = (DbFile)value; }
+        IFile IComparison.Baseline { get => Baseline; set => Baseline = (DbFile)value; }
 
-        ILocalFile ILocalComparison.TargetFile { get => TargetFile; set => TargetFile = (DbFile)value; }
+        ILocalFile ILocalComparison.Correlative { get => Correlative; set => Correlative = (DbFile)value; }
 
-        IFile IComparison.TargetFile { get => TargetFile; set => TargetFile = (DbFile)value; }
+        IFile IComparison.Correlative { get => Correlative; set => Correlative = (DbFile)value; }
 
         #endregion
 
         public FileComparison()
         {
-            _sourceFileId = AddChangeTracker(nameof(SourceFileId), Guid.Empty);
-            _targetFileId = AddChangeTracker(nameof(TargetFileId), Guid.Empty);
+            _baselineId = AddChangeTracker(nameof(BaselineId), Guid.Empty);
+            _correlativeId = AddChangeTracker(nameof(CorrelativeId), Guid.Empty);
             _areEqual = AddChangeTracker(nameof(AreEqual), false);
             _comparedOn = AddChangeTracker(nameof(ComparedOn), CreatedOn);
-            _sourceFile = AddChangeTracker<DbFile>(nameof(SourceFile), null);
-            _targetFile = AddChangeTracker<DbFile>(nameof(TargetFile), null);
+            _baseline = AddChangeTracker<DbFile>(nameof(Baseline), null);
+            _correlative = AddChangeTracker<DbFile>(nameof(Correlative), null);
         }
 
         internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
-            builder.HasKey(nameof(SourceFileId), nameof(TargetFileId));
-            builder.HasOne(sn => sn.SourceFile).WithMany(d => d.ComparisonSources).HasForeignKey(nameof(SourceFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.TargetFile).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(TargetFileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasKey(nameof(BaselineId), nameof(CorrelativeId));
+            builder.HasOne(sn => sn.Baseline).WithMany(d => d.ComparisonSources).HasForeignKey(nameof(BaselineId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sn => sn.Correlative).WithMany(d => d.ComparisonTargets).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileId, XElement comparisonElement)
         {
-            string n = nameof(TargetFileId);
-            return await new InsertQueryBuilder(nameof(LocalDbContext.Files), comparisonElement, n).AppendGuid(nameof(SourceFileId), fileId)
+            string n = nameof(CorrelativeId);
+            return await new InsertQueryBuilder(nameof(LocalDbContext.Files), comparisonElement, n).AppendGuid(nameof(BaselineId), fileId)
                 .AppendBoolean(nameof(AreEqual)).AppendDateTime(nameof(ComparedOn)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
                 .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
         }

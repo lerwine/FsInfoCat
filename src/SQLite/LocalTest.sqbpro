@@ -180,15 +180,15 @@ CREATE TABLE &quot;Redundancies&quot; (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 CREATE TABLE &quot;Comparisons&quot; (
-    &quot;SourceFileId&quot; UNIQUEIDENTIFIER NOT NULL CONSTRAINT &quot;FK_ComparisonSourceFile&quot; REFERENCES &quot;Files&quot;(&quot;Id&quot;) ON DELETE RESTRICT,
-    &quot;TargetFileId&quot; UNIQUEIDENTIFIER NOT NULL CONSTRAINT &quot;FK_ComparisonTargetFile&quot; REFERENCES &quot;Files&quot;(&quot;Id&quot;) ON DELETE RESTRICT,
+    &quot;BaselineId&quot; UNIQUEIDENTIFIER NOT NULL CONSTRAINT &quot;FK_ComparisonBaseline&quot; REFERENCES &quot;Files&quot;(&quot;Id&quot;) ON DELETE RESTRICT,
+    &quot;CorrelativeId&quot; UNIQUEIDENTIFIER NOT NULL CONSTRAINT &quot;FK_ComparisonCorrelative&quot; REFERENCES &quot;Files&quot;(&quot;Id&quot;) ON DELETE RESTRICT,
     &quot;AreEqual&quot; BIT NOT NULL DEFAULT 0,
     &quot;UpstreamId&quot; UNIQUEIDENTIFIER DEFAULT NULL,
     &quot;LastSynchronizedOn&quot; DATETIME DEFAULT NULL,
 	&quot;CreatedOn&quot;	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	&quot;ModifiedOn&quot;	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT &quot;PK_Comparisons&quot; PRIMARY KEY(&quot;SourceFileId&quot;,&quot;TargetFileId&quot;),
-    CHECK(CreatedOn&lt;=ModifiedOn AND SourceFileId&lt;&gt;TargetFileId AND
+	CONSTRAINT &quot;PK_Comparisons&quot; PRIMARY KEY(&quot;BaselineId&quot;,&quot;CorrelativeId&quot;),
+    CHECK(CreatedOn&lt;=ModifiedOn AND BaselineId&lt;&gt;CorrelativeId AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 CREATE TRIGGER validate_new_redundancy 
