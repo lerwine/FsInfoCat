@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop
 {
-    sealed class FileDetailProvider : IFileDetailProvider
+    class FileDetailProvider : IFileDetailProvider
     {
         private bool _isDisposed;
         private readonly bool _doNotSaveChanges;
@@ -323,13 +323,30 @@ namespace FsInfoCat.Desktop
             }.NullIfEmpty();
         }
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
             if (!_isDisposed)
             {
-                _task.Dispose();
+                if (disposing)
+                    _task.ContinueWith(t =>
+                    {
+                        if (t.IsCompletedSuccessfully)
+                            t.Result.Dispose();
+                    });
                 _isDisposed = true;
             }
+        }
+
+        ~FileDetailProvider()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }
