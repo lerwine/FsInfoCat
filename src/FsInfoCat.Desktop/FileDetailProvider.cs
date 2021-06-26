@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop
 {
-    class FileDetailProvider : IFileDetailProvider
+    sealed class FileDetailProvider : IFileDetailProvider
     {
         private bool _isDisposed;
         private readonly bool _doNotSaveChanges;
@@ -323,32 +323,13 @@ namespace FsInfoCat.Desktop
             }.NullIfEmpty();
         }
 
-        protected virtual void Dispose(bool disposing)
+        public void Dispose()
         {
             if (!_isDisposed)
             {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
+                _task.Dispose();
                 _isDisposed = true;
             }
-        }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~FileDetailProvider()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }
