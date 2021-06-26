@@ -815,8 +815,10 @@ namespace FsInfoCat.Local
         public async Task<EntityEntry<DbFile>> RefreshAsync(LocalDbContext dbContext, long length, DateTime creationTime, DateTime lastWriteTime,
             IFileDetailProvider fileDetailProvider, bool doNotSaveChanges, CancellationToken cancellationToken)
         {
+            // TODO: Update property sets
             throw new NotImplementedException();
         }
+
         public static async Task<EntityEntry<DbFile>> AddNewAsync(LocalDbContext dbContext, Guid parentId, string name, long length, DateTime creationTime,
             DateTime lastWriteTime, IFileDetailProvider fileDetailProvider, bool doNotSaveChanges, CancellationToken cancellationToken)
         {
