@@ -1,17 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -139,56 +132,6 @@ namespace FsInfoCat.Local
             var driveType = DefaultDriveType;
             if (driveType.HasValue && !Enum.IsDefined(driveType.Value))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(DefaultDriveType) }));
-        }
-
-        // TODO: Change to async with LocalDbContext
-        private XElement Export(IEnumerable<SymbolicName> symbolicNames, IEnumerable<Volume> volumes)
-        {
-            XElement result = new(nameof(FileSystem),
-                new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
-                new XAttribute(nameof(DisplayName), DisplayName)
-            );
-            if (CaseSensitiveSearch)
-                result.SetAttributeValue(nameof(CaseSensitiveSearch), CaseSensitiveSearch);
-            if (ReadOnly)
-                result.SetAttributeValue(nameof(ReadOnly), ReadOnly);
-            if (IsInactive)
-                result.SetAttributeValue(nameof(IsInactive), IsInactive);
-            if (MaxNameLength != DbConstants.DbColDefaultValue_MaxNameLength)
-                result.SetAttributeValue(nameof(MaxNameLength), MaxNameLength);
-            DriveType? defaultDriveType = DefaultDriveType;
-            if (defaultDriveType.HasValue)
-                result.SetAttributeValue(nameof(DefaultDriveType), Enum.GetName(typeof(DriveType), defaultDriveType.Value));
-            AddExportAttributes(result);
-            foreach (SymbolicName symbolicName in symbolicNames)
-                result.Add(symbolicName.Export());
-            foreach (Volume volume in volumes)
-                result.Add(volume.Export());
-            return result;
-        }
-
-        // TODO: Change to async with LocalDbContext
-        public XElement Export(bool includeSymbolicNames = false, bool includeVolumes = false) => Export(includeSymbolicNames ? SymbolicNames.AsEnumerable() : Enumerable.Empty<SymbolicName>(),
-            includeVolumes ? Volumes.AsEnumerable() : Enumerable.Empty<Volume>());
-
-        // TODO: Change to async with LocalDbContext
-        public XElement Export(Func<Volume, bool> filter, bool includeSymbolicNames = false) => Export(includeSymbolicNames ? SymbolicNames.AsEnumerable() : Enumerable.Empty<SymbolicName>(), Volumes.Where(filter));
-
-        // TODO: Change to async with LocalDbContext
-        public XElement Export(Func<SymbolicName, bool> filter, bool includeVolumes = false) => Export(SymbolicNames.Where(filter), includeVolumes ? Volumes.AsEnumerable() : Enumerable.Empty<Volume>());
-
-        // TODO: Change to async with LocalDbContext
-        public XElement Export(Func<SymbolicName, bool> symbolicNameFilter, Func<Volume, bool> volumeFilter) => Export(SymbolicNames.Where(symbolicNameFilter), Volumes.Where(volumeFilter));
-
-        internal static async Task ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, XElement fileSystemElement)
-        {
-            string n = nameof(Id);
-            Guid fileSystemId = fileSystemElement.GetAttributeGuid(n).Value;
-            logger.LogInformation($"Inserting {nameof(FileSystem)} with Id {{Id}}", fileSystemId);
-            foreach (XElement symbolicNameElement in fileSystemElement.Elements(nameof(SymbolicName)))
-                await SymbolicName.ImportAsync(dbContext, logger, fileSystemId, symbolicNameElement);
-            foreach (XElement volumeElement in fileSystemElement.Elements(nameof(Volume)))
-                await Volume.ImportAsync(dbContext, logger, fileSystemId, volumeElement);
         }
 
         private void ValidateDisplayName(ValidationContext validationContext, List<ValidationResult> results)

@@ -1,3 +1,5 @@
+using FsInfoCat.Collections;
+
 namespace FsInfoCat
 {
     public interface IMediaProperties

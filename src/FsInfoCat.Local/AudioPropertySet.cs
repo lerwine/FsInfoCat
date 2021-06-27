@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
@@ -65,7 +66,7 @@ namespace FsInfoCat.Local
             _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
         }
 
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
+        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

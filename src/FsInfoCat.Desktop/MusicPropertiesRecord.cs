@@ -1,3 +1,5 @@
+using FsInfoCat.Collections;
+
 namespace FsInfoCat.Desktop
 {
     public record MusicPropertiesRecord : IMusicProperties

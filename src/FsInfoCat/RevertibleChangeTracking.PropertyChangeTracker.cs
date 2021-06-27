@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace FsInfoCat
 {
@@ -19,9 +20,9 @@ namespace FsInfoCat
             {
                 lock (target.SyncRoot)
                 {
-                    if (target._changeTrackers.ContainsKey(propertyName))
+                    if (target._changeTrackers.Any(t => t.PropertyName.Equals(propertyName)))
                         throw new ArgumentOutOfRangeException(nameof(propertyName));
-                    target._changeTrackers.Add(propertyName, this);
+                    target._changeTrackers.AddLast(this);
                 }
                 Coersion = coersion ?? Coersion<T>.Default;
                 _value = Coersion.Normalize(initialValue);
@@ -62,7 +63,7 @@ namespace FsInfoCat
                         IsSet = _originalValueIsSet;
                         oldValue = _value;
                         newValue = _originalValue;
-                        if (Coersion.Equals(oldValue, newValue) || !(target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker)))
+                        if (Coersion.Equals(oldValue, newValue) || !target._changeTrackers.Any(t => ReferenceEquals(target, t)))
                             return;
                     }
                     target.RaisePropertyChanging(PropertyName);
@@ -98,7 +99,7 @@ namespace FsInfoCat
                         newValue = Coersion.Normalize(newValue);
                         if (Coersion.Equals(oldValue, newValue))
                             return false;
-                        if (!(target._changeTrackers.TryGetValue(PropertyName, out IPropertyChangeTracker changeTracker) && ReferenceEquals(target, changeTracker)))
+                        if (!target._changeTrackers.Any(t => ReferenceEquals(target, t)))
                         {
                             _value = newValue;
                             return true;
@@ -132,6 +133,14 @@ namespace FsInfoCat
             public bool IsEqualTo(T other) => Coersion.Equals(_value, other);
 
             bool IPropertyChangeTracker.IsEqualTo(object obj) => Coersion.TryCast(obj, out T t) && IsEqualTo(t);
+
+            public bool Equals(IPropertyChangeTracker other) => other is PropertyChangeTracker<T> tracker && (ReferenceEquals(this, tracker) || Coersion.Equals(_value, tracker._value));
+
+            public override bool Equals(object obj) => Equals(obj as IPropertyChangeTracker);
+
+            public override int GetHashCode() { unchecked { return (PropertyName.GetHashCode() * 3) ^ Coersion.GetHashCode(_value); } }
+
+            public override string ToString() => $"{PropertyName} = {ExtensionMethods.ToPseudoCsText(_value)}";
         }
     }
 }

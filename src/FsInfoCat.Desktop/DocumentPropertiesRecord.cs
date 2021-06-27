@@ -1,3 +1,4 @@
+using FsInfoCat.Collections;
 using System;
 
 namespace FsInfoCat.Desktop

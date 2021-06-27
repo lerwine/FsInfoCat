@@ -119,9 +119,9 @@ namespace FsInfoCat
         IEnumerable<IComparison> CorrelativeComparisons { get; }
 
         /// <summary>
-        /// Gets the access errors.
+        /// Gets the access errors that occurred while trying to open or read from the current file.
         /// </summary>
-        /// <value>The access errors.</value>
+        /// <value>The access errors that occurred while trying to open or read from the current file.</value>
         new IEnumerable<IAccessError<IFile>> AccessErrors { get; }
     }
 }

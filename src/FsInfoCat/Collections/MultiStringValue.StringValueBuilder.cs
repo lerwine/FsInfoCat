@@ -1,9 +1,14 @@
-﻿using System.Text;
+using System.Collections.Generic;
+using System.Text;
 
-namespace FsInfoCat
+namespace FsInfoCat.Collections
 {
     public partial class MultiStringValue
     {
+        public MultiStringValue(IList<string> list) : base(list)
+        {
+        }
+
         private class StringValueBuilder : IValueBuilder
         {
             private readonly string _value;

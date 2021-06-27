@@ -78,9 +78,6 @@ namespace FsInfoCat.PS.Export
             return exportSet.BinaryPropertySets.FirstOrDefault(e => e.Id == id);
         }
 
-        [Obsolete]
-        public Guid? ExtendedPropertyId { get; set; }
-
         [XmlAttribute(nameof(SummaryPropertySetId))]
         [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable IDE1006 // Naming Styles

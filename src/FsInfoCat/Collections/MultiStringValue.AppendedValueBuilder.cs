@@ -1,6 +1,6 @@
-﻿using System.Text;
+using System.Text;
 
-namespace FsInfoCat
+namespace FsInfoCat.Collections
 {
     public partial class MultiStringValue
     {

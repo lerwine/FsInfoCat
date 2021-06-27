@@ -2,18 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -740,37 +736,6 @@ namespace FsInfoCat.Local
             results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
 
-        // TODO: Change to async with LocalDbContext
-        internal XElement Export(bool includeParentId = false)
-        {
-            XElement result = new(nameof(TABLE_NAME),
-                new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
-                new XAttribute(nameof(Name), Name),
-                new XAttribute(nameof(BinaryPropertySetId), XmlConvert.ToString(BinaryPropertySetId))
-            );
-            if (includeParentId)
-            {
-                Guid parentId = ParentId;
-                if (!parentId.Equals(Guid.Empty))
-                    result.SetAttributeValue(nameof(ParentId), XmlConvert.ToString(parentId));
-            }
-            FileCrawlOptions options = Options;
-            if (options != FileCrawlOptions.None)
-                result.SetAttributeValue(nameof(Options), Enum.GetName(typeof(FileCrawlOptions), Options));
-            if (Status != FileCorrelationStatus.Dissociated)
-                result.SetAttributeValue(nameof(Status), Enum.GetName(typeof(FileCorrelationStatus), Status));
-            DateTime? lastHashCalculation = LastHashCalculation;
-            if (lastHashCalculation.HasValue)
-                result.SetAttributeValue(nameof(LastHashCalculation), XmlConvert.ToString(lastHashCalculation.Value, XmlDateTimeSerializationMode.RoundtripKind));
-            result.SetAttributeValue(nameof(LastAccessed), XmlConvert.ToString(LastAccessed, XmlDateTimeSerializationMode.RoundtripKind));
-            AddExportAttributes(result);
-            if (Notes.Length > 0)
-                result.Add(new XElement(nameof(Notes), new XCData(Notes)));
-            foreach (FileAccessError accessError in AccessErrors)
-                result.Add(accessError.Export());
-            return result;
-        }
-
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);
@@ -792,24 +757,6 @@ namespace FsInfoCat.Local
                         ValidateName(validationContext, results);
                         break;
                 }
-        }
-
-        internal static async Task ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid parentId, XElement fileElement)
-        {
-            string n = nameof(Id);
-            Guid fileId = fileElement.GetAttributeGuid(n).Value;
-            await new InsertQueryBuilder(nameof(LocalDbContext.Files), fileElement, n).AppendGuid(nameof(ParentId), parentId).AppendString(nameof(Name))
-                .AppendGuid(nameof(BinaryPropertySetId)).AppendGuid(nameof(SummaryPropertySetId)).AppendGuid(nameof(DocumentPropertySetId)).AppendGuid(nameof(AudioPropertySetId))
-                .AppendGuid(nameof(DRMPropertySetId)).AppendGuid(nameof(GPSPropertySetId)).AppendGuid(nameof(ImagePropertySetId)).AppendGuid(nameof(MediaPropertySetId))
-                .AppendGuid(nameof(MusicPropertySetId)).AppendGuid(nameof(PhotoPropertySetId)).AppendGuid(nameof(RecordedTVPropertySetId))
-                .AppendGuid(nameof(VideoPropertySetId)).AppendEnum<FileCrawlOptions>(nameof(Options)).AppendEnum<FileCorrelationStatus>(nameof(Status))
-                .AppendDateTime(nameof(LastHashCalculation)).AppendDateTime(nameof(LastHashCalculation)).AppendElementString(nameof(Notes)).AppendDateTime(nameof(CreationTime))
-                .AppendDateTime(nameof(LastWriteTime)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
-                .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
-            foreach (XElement accessErrorElement in fileElement.Elements(ElementName_AccessError))
-                await FileAccessError.ImportAsync(dbContext, logger, fileId, accessErrorElement);
-            foreach (XElement comparisonElement in fileElement.Elements(FileComparison.ELEMENT_NAME))
-                await FileComparison.ImportAsync(dbContext, logger, fileId, comparisonElement);
         }
 
         public async Task<EntityEntry<DbFile>> RefreshAsync(LocalDbContext dbContext, long length, DateTime creationTime, DateTime lastWriteTime,

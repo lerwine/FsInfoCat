@@ -1,24 +1,31 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Class FileComparison.
+    /// Implements the <see cref="FsInfoCat.Local.LocalDbEntity" />
+    /// Implements the <see cref="FsInfoCat.Local.ILocalComparison" />
+    /// </summary>
+    /// <seealso cref="FsInfoCat.Local.LocalDbEntity" />
+    /// <seealso cref="FsInfoCat.Local.ILocalComparison" />
     [Table(TABLE_NAME)]
     public class FileComparison : LocalDbEntity, ILocalComparison
     {
         #region Fields
 
+        /// <summary>
+        /// The table name
+        /// </summary>
         public const string TABLE_NAME = "Comparisons";
 
+        /// <summary>
+        /// The element name
+        /// </summary>
         public const string ELEMENT_NAME = "Comparison";
 
         private readonly IPropertyChangeTracker<Guid> _baselineId;
@@ -32,6 +39,11 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the primary key of the baseline file in the comparison.
+        /// </summary>
+        /// <value>The primary key of the <see cref="P:FsInfoCat.IComparison.Baseline" />.</value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
         public virtual Guid BaselineId
         {
             get => _baselineId.GetValue();
@@ -46,6 +58,11 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets or sets the primary key of the correlative file in the comparison.
+        /// </summary>
+        /// <value>The primary key of the <see cref="P:FsInfoCat.IComparison.Correlative" />, which is the new or changed file that is being compared to a <see cref="P:FsInfoCat.IComparison.Baseline" /> file.</value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
         public virtual Guid CorrelativeId
         {
             get => _correlativeId.GetValue();
@@ -60,12 +77,24 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the <see cref="P:FsInfoCat.IComparison.Baseline" /> and <see cref="P:FsInfoCat.IComparison.Correlative" /> are identical byte-for-byte.
+        /// </summary>
+        /// <value><see langword="true" /> if <see cref="P:FsInfoCat.IComparison.Baseline" /> and <see cref="P:FsInfoCat.IComparison.Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.</value>
         [Required]
         public virtual bool AreEqual { get => _areEqual.GetValue(); set => _areEqual.SetValue(value); }
 
+        /// <summary>
+        /// Gets or sets the date and time when the files were compared.
+        /// </summary>
+        /// <value>The date and time when <see cref="P:FsInfoCat.IComparison.Baseline" /> was compared to <see cref="P:FsInfoCat.IComparison.Correlative" />.</value>
         [Required]
         public virtual DateTime ComparedOn { get => _comparedOn.GetValue(); set => _comparedOn.SetValue(value); }
 
+        /// <summary>
+        /// Gets or sets the baseline file in the comparison.
+        /// </summary>
+        /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the baseline file in the comparison.</value>
         public virtual DbFile Baseline
         {
             get => _baseline.GetValue();
@@ -81,6 +110,10 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets or sets the correlative file in the comparison.
+        /// </summary>
+        /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
         public virtual DbFile Correlative
         {
             get => _correlative.GetValue();
@@ -110,6 +143,9 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileComparison"/> class.
+        /// </summary>
         public FileComparison()
         {
             _baselineId = AddChangeTracker(nameof(BaselineId), Guid.Empty);
@@ -125,14 +161,6 @@ namespace FsInfoCat.Local
             builder.HasKey(nameof(BaselineId), nameof(CorrelativeId));
             builder.HasOne(sn => sn.Baseline).WithMany(d => d.BaselineComparisons).HasForeignKey(nameof(BaselineId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(sn => sn.Correlative).WithMany(d => d.CorrelativeComparisons).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-        }
-
-        internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileId, XElement comparisonElement)
-        {
-            string n = nameof(CorrelativeId);
-            return await new InsertQueryBuilder(nameof(LocalDbContext.Files), comparisonElement, n).AppendGuid(nameof(BaselineId), fileId)
-                .AppendBoolean(nameof(AreEqual)).AppendDateTime(nameof(ComparedOn)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
-                .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
         }
     }
 }

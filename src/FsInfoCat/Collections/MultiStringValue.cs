@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace FsInfoCat
+namespace FsInfoCat.Collections
 {
     public partial class MultiStringValue : ReadOnlyCollection<string>, IEquatable<MultiStringValue>, IConvertible
     {
@@ -98,8 +98,6 @@ namespace FsInfoCat
                     yield return t;
             }
         }
-
-        public MultiStringValue(IList<string> values) : base(values) { }
 
         public MultiStringValue(string encodedText) : base(string.IsNullOrEmpty(encodedText) ? new List<string>() : Decode(encodedText).ToList()) { }
 

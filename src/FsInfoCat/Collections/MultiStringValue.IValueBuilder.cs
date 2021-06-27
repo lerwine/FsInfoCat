@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat
+namespace FsInfoCat.Collections
 {
     public partial class MultiStringValue
     {

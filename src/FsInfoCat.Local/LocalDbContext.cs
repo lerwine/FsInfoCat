@@ -193,19 +193,6 @@ namespace FsInfoCat.Local
             return Path.Combine(Services.GetAppDataPath(assembly), dbFileName);
         }
 
-        public async Task ImportAsync(XDocument document)
-        {
-            if (document is null)
-                throw new ArgumentNullException(nameof(document));
-
-            var redundancySets = document.Root.Elements(nameof(BinaryPropertySets)).Select(e => BinaryPropertySet.ImportAsync(this, _logger, e).Result).SelectMany(rs => rs).ToArray();
-            foreach (XElement fileSystemElement in document.Root.Elements(nameof(FileSystem)))
-                await FileSystem.ImportAsync(this, _logger, fileSystemElement);
-            foreach (var (redundantSetId, redundancies) in redundancySets)
-                foreach (XElement element in redundancies)
-                    await Redundancy.ImportAsync(this, _logger, redundantSetId, element);
-        }
-
         [Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
         public void ForceDeleteBinaryPropertySet(BinaryPropertySet target)
         {

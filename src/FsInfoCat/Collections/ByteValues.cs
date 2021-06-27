@@ -1,17 +1,16 @@
-using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace FsInfoCat
+namespace FsInfoCat.Collections
 {
     public class ByteValues : ReadOnlyCollection<byte>, IEquatable<ByteValues>, IConvertible
     {
         public static readonly ValueConverter<ByteValues, string> Converter = new(
-            v => (v == null) ? null : v.ToString(),
-            s => (s == null) ? null : new ByteValues(s)
+            v => v == null ? null : v.ToString(),
+            s => s == null ? null : new ByteValues(s)
         );
 
         public ByteValues(IList<byte> list) : base(list) { }
@@ -26,7 +25,7 @@ namespace FsInfoCat
 
         public override int GetHashCode() => Items.GetAggregateHashCode();
 
-        public override string ToString() => (Count > 0) ? Convert.ToBase64String(Items.ToArray(), Base64FormattingOptions.None) : "";
+        public override string ToString() => Count > 0 ? Convert.ToBase64String(Items.ToArray(), Base64FormattingOptions.None) : "";
 
         TypeCode IConvertible.GetTypeCode() => TypeCode.String;
         bool IConvertible.ToBoolean(IFormatProvider provider) => Convert.ToBoolean(ToString(), provider);
@@ -41,7 +40,7 @@ namespace FsInfoCat
         sbyte IConvertible.ToSByte(IFormatProvider provider) => Convert.ToSByte(ToString(), provider);
         float IConvertible.ToSingle(IFormatProvider provider) => Convert.ToSingle(ToString(), provider);
         string IConvertible.ToString(IFormatProvider provider) => ToString();
-        object IConvertible.ToType(Type conversionType, IFormatProvider provider) => (conversionType is not null && conversionType.IsInstanceOfType(this)) ? this :
+        object IConvertible.ToType(Type conversionType, IFormatProvider provider) => conversionType is not null && conversionType.IsInstanceOfType(this) ? this :
             Convert.ChangeType(ToString(), conversionType, provider);
         ushort IConvertible.ToUInt16(IFormatProvider provider) => Convert.ToUInt16(ToString(), provider);
         uint IConvertible.ToUInt32(IFormatProvider provider) => Convert.ToUInt32(ToString(), provider);
@@ -51,11 +50,11 @@ namespace FsInfoCat
 
         public static bool operator !=(ByteValues left, ByteValues right) => !(left == right);
 
-        public static implicit operator ByteValues(byte[] values) => (values is null) ? null : new(values);
+        public static implicit operator ByteValues(byte[] values) => values is null ? null : new(values);
 
         public static implicit operator byte[](ByteValues values) => values?.ToArray();
 
-        public static implicit operator ByteValues(string text) => (text is null) ? null : new(text);
+        public static implicit operator ByteValues(string text) => text is null ? null : new(text);
 
         public static implicit operator string(ByteValues values) => values?.ToString();
     }

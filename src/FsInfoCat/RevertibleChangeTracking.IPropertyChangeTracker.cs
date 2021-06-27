@@ -6,7 +6,7 @@ namespace FsInfoCat
 
     public abstract partial class RevertibleChangeTracking
     {
-        public interface IPropertyChangeTracker : IRevertibleChangeTracking
+        public interface IPropertyChangeTracker : IRevertibleChangeTracking, IEquatable<IPropertyChangeTracker>
         {
             event EventHandler ValueChanged;
 

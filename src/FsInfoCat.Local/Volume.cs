@@ -1,16 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -166,47 +162,6 @@ namespace FsInfoCat.Local
             base.OnPropertyChanging(args);
         }
 
-        // TODO: Change to async with LocalDbContext
-        internal XElement Export(bool includeFileSystemId = false)
-        {
-            XElement result = new(nameof(Volume),
-                new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
-                new XAttribute(nameof(DisplayName), DisplayName),
-                new XAttribute(nameof(Identifier), Identifier.ToString())
-            );
-            string volumeName = VolumeName;
-            if (volumeName.Length > 0)
-                result.SetAttributeValue(nameof(VolumeName), volumeName);
-            if (includeFileSystemId)
-            {
-                Guid fileSystemId = FileSystemId;
-                if (!fileSystemId.Equals(Guid.Empty))
-                    result.SetAttributeValue(nameof(fileSystemId), XmlConvert.ToString(fileSystemId));
-            }
-            bool? value = CaseSensitiveSearch;
-            if (value.HasValue)
-                result.SetAttributeValue(nameof(CaseSensitiveSearch), value.Value);
-            value = ReadOnly;
-            if (value.HasValue)
-                result.SetAttributeValue(nameof(ReadOnly), value.Value);
-            uint? maxNameLength = MaxNameLength;
-            if (maxNameLength.HasValue)
-                result.SetAttributeValue(nameof(MaxNameLength), maxNameLength.Value);
-            if (Type != DriveType.Unknown)
-                result.SetAttributeValue(nameof(Type), Enum.GetName(typeof(DriveType), Type));
-            if (Status != VolumeStatus.Unknown)
-                result.SetAttributeValue(nameof(Status), Enum.GetName(typeof(VolumeStatus), Status));
-            AddExportAttributes(result);
-            if (Notes.Length > 0)
-                result.Add(new XElement(nameof(Notes), new XCData(Notes)));
-            var rootDirectory = RootDirectory;
-            if (rootDirectory is not null)
-                result.Add(rootDirectory.Export());
-            foreach (VolumeAccessError accessError in AccessErrors)
-                result.Add(accessError.Export());
-            return result;
-        }
-
         internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
         {
             builder.HasOne(sn => sn.FileSystem).WithMany(d => d.Volumes).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
@@ -235,22 +190,6 @@ namespace FsInfoCat.Local
                         ValidateIdentifier(validationContext, results);
                         break;
                 }
-        }
-
-        internal static async Task ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement volumeElement)
-        {
-            Guid volumeId = volumeElement.GetAttributeGuid(nameof(Id)).Value;
-            logger.LogInformation($"Inserting {nameof(Volume)} with Id {{Id}}", volumeId);
-            await new InsertQueryBuilder(nameof(LocalDbContext.Volumes), volumeElement, nameof(Id)).AppendGuid(nameof(FileSystemId), fileSystemId)
-                .AppendString(nameof(DisplayName)).AppendString(nameof(VolumeName)).AppendString(nameof(Identifier)).AppendInnerText(nameof(Notes))
-                .AppendEnum<VolumeStatus>(nameof(Status)).AppendEnum<DriveType>(nameof(Type)).AppendBoolean(nameof(CaseSensitiveSearch))
-                .AppendBoolean(nameof(ReadOnly)).AppendInt32(nameof(MaxNameLength)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
-                .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
-            XElement rootDirectoryElement = volumeElement.Element(nameof(RootDirectory));
-            if (rootDirectoryElement is not null)
-                await Subdirectory.ImportAsync(dbContext, logger, volumeId, null, rootDirectoryElement);
-            foreach (XElement accessErrorElement in volumeElement.Elements(ElementName_AccessError))
-                await VolumeAccessError.ImportAsync(dbContext, logger, volumeId, accessErrorElement);
         }
 
         private void ValidateIdentifier(ValidationContext validationContext, List<ValidationResult> results)
