@@ -78,11 +78,6 @@ namespace FsInfoCat.Local
             _versionID = AddChangeTracker<ByteValues>(nameof(VersionID), null);
         }
 
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
         internal static void BuildEntity(EntityTypeBuilder<GPSPropertySet> obj)
         {
             obj.Property(nameof(VersionID)).HasConversion(ByteValues.Converter);

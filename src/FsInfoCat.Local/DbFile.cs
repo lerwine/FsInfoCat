@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -43,9 +44,9 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid?> _recordedTVPropertySetId;
         private readonly IPropertyChangeTracker<Guid?> _videoPropertySetId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
-        private readonly IPropertyChangeTracker<BinaryPropertySet> _binaryPropertySet;
+        private readonly IPropertyChangeTracker<BinaryPropertySet> _binaryProperties;
         private readonly IPropertyChangeTracker<Redundancy> _redundancy;
-        private readonly IPropertyChangeTracker<SummaryPropertySet> _summaryPropertySet;
+        private readonly IPropertyChangeTracker<SummaryPropertySet> _summaryProperties;
         private readonly IPropertyChangeTracker<DocumentPropertySet> _documentProperties;
         private readonly IPropertyChangeTracker<AudioPropertySet> _audioProperties;
         private readonly IPropertyChangeTracker<DRMPropertySet> _drmProperties;
@@ -112,9 +113,9 @@ namespace FsInfoCat.Local
             {
                 if (_binaryPropertySetId.SetValue(value))
                 {
-                    BinaryPropertySet nav = _binaryPropertySet.GetValue();
+                    BinaryPropertySet nav = _binaryProperties.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -126,14 +127,14 @@ namespace FsInfoCat.Local
             {
                 if (_summaryPropertySetId.SetValue(value))
                 {
-                    SummaryPropertySet nav = _summaryPropertySet.GetValue();
+                    SummaryPropertySet nav = _summaryProperties.GetValue();
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -149,10 +150,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -168,10 +169,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -187,10 +188,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -206,10 +207,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -225,10 +226,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -244,10 +245,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -263,10 +264,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -282,10 +283,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -301,10 +302,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -320,10 +321,10 @@ namespace FsInfoCat.Local
                     if (value.HasValue)
                     {
                         if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryPropertySet.SetValue(null);
+                            _binaryProperties.SetValue(null);
                     }
                     else if (!(nav is null))
-                        _binaryPropertySet.SetValue(null);
+                        _binaryProperties.SetValue(null);
                 }
             }
         }
@@ -331,10 +332,10 @@ namespace FsInfoCat.Local
 
         public virtual BinaryPropertySet BinaryProperties
         {
-            get => _binaryPropertySet.GetValue();
+            get => _binaryProperties.GetValue();
             set
             {
-                if (_binaryPropertySet.SetValue(value))
+                if (_binaryProperties.SetValue(value))
                 {
                     if (value is null)
                         _binaryPropertySetId.SetValue(Guid.Empty);
@@ -364,10 +365,10 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual SummaryPropertySet SummaryProperties
         {
-            get => _summaryPropertySet.GetValue();
+            get => _summaryProperties.GetValue();
             set
             {
-                if (_summaryPropertySet.SetValue(value))
+                if (_summaryProperties.SetValue(value))
                 {
                     if (value is null)
                         _summaryPropertySetId.SetValue(null);
@@ -639,9 +640,9 @@ namespace FsInfoCat.Local
             _recordedTVPropertySetId = AddChangeTracker<Guid?>(nameof(RecordedTVPropertySetId), null);
             _videoPropertySetId = AddChangeTracker<Guid?>(nameof(VideoPropertySetId), null);
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
-            _binaryPropertySet = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
+            _binaryProperties = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
             _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
-            _summaryPropertySet = AddChangeTracker<SummaryPropertySet>(nameof(SummaryProperties), null);
+            _summaryProperties = AddChangeTracker<SummaryPropertySet>(nameof(SummaryProperties), null);
             _documentProperties = AddChangeTracker<DocumentPropertySet>(nameof(DocumentProperties), null);
             _audioProperties = AddChangeTracker<AudioPropertySet>(nameof(AudioProperties), null);
             _drmProperties = AddChangeTracker<DRMPropertySet>(nameof(DRMProperties), null);
@@ -654,22 +655,324 @@ namespace FsInfoCat.Local
             _videoProperties = AddChangeTracker<VideoPropertySet>(nameof(VideoProperties), null);
         }
 
-        internal async Task MarkDeletedAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        private static async Task MarkDeletedAsync(EntityEntry<DbFile> dbEntry, CancellationToken cancellationToken)
         {
-            if (Status == FileCorrelationStatus.Deleted)
-                return;
-            EntityEntry<DbFile> dbEntry = dbContext.Entry(this);
-            FileAccessError[] fileAccessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
-            if (fileAccessErrors.Length > 0)
-                dbContext.FileAccessErrors.RemoveRange(fileAccessErrors);
-            Status = FileCorrelationStatus.Deleted;
-            if (!doNotSaveChanges)
+            if (dbEntry.Context is not LocalDbContext dbContext)
+                throw new InvalidOperationException();
+            Redundancy oldRedundancy = await dbEntry.GetRelatedReferenceAsync(f => f.Redundancy, cancellationToken);
+            EntityEntry<RedundantSet> oldRedundantSet;
+            if (oldRedundancy is null)
+                oldRedundantSet = null;
+            else
+            {
+                oldRedundantSet = await dbContext.Entry(oldRedundancy).GetRelatedTargetEntryAsync(r => r.RedundantSet, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                dbContext.Redundancies.Remove(oldRedundancy);
+                await dbContext.SaveChangesAsync(cancellationToken);
+                dbEntry.Entity.Redundancy = null;
+            }
+            EntityEntry<BinaryPropertySet> oldBinaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.BinaryProperties, cancellationToken);
+            if (oldBinaryPropertySet.Entity.Hash.HasValue || oldBinaryPropertySet.Entity.Length > 0)
+            {
+                BinaryPropertySet newBinaryPropertySet = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == 0L && p.Hash == null, cancellationToken);
+                if (newBinaryPropertySet is null)
+                {
+                    newBinaryPropertySet = new() { Length = 0L };
+                    cancellationToken.ThrowIfCancellationRequested();
+                    dbContext.BinaryPropertySets.Add(newBinaryPropertySet);
+                    await dbContext.SaveChangesAsync(cancellationToken);
+                }
+                dbEntry.Entity.BinaryProperties = newBinaryPropertySet;
+            }
+            FileAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (accessErrors.Length > 0)
+                dbContext.FileAccessErrors.RemoveRange(accessErrors);
+            FileComparison[] comparisons = (await dbEntry.GetRelatedCollectionAsync(f => f.BaselineComparisons, cancellationToken))
+                .Concat(await dbEntry.GetRelatedCollectionAsync(f => f.CorrelativeComparisons, cancellationToken)).ToArray();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (comparisons.Length > 0)
+                dbContext.Comparisons.RemoveRange(comparisons);
+            EntityEntry<SummaryPropertySet> oldSummaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.SummaryProperties, cancellationToken);
+            dbEntry.Entity.SummaryProperties = null;
+            EntityEntry<AudioPropertySet> oldAudioPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.AudioProperties, cancellationToken);
+            dbEntry.Entity.AudioProperties = null;
+            EntityEntry<DocumentPropertySet> oldDocumentPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DocumentProperties, cancellationToken);
+            dbEntry.Entity.DocumentProperties = null;
+            EntityEntry<DRMPropertySet> oldDRMPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DRMProperties, cancellationToken);
+            dbEntry.Entity.DRMProperties = null;
+            EntityEntry<GPSPropertySet> oldGPSPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.GPSProperties, cancellationToken);
+            dbEntry.Entity.GPSProperties = null;
+            EntityEntry<ImagePropertySet> oldImagePropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.ImageProperties, cancellationToken);
+            dbEntry.Entity.ImageProperties = null;
+            EntityEntry<MediaPropertySet> oldMediaPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MediaProperties, cancellationToken);
+            dbEntry.Entity.MediaProperties = null;
+            EntityEntry<MusicPropertySet> oldMusicPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MusicProperties, cancellationToken);
+            dbEntry.Entity.MusicProperties = null;
+            EntityEntry<PhotoPropertySet> oldPhotoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.PhotoProperties, cancellationToken);
+            dbEntry.Entity.PhotoProperties = null;
+            EntityEntry<RecordedTVPropertySet> oldRecordedTVPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.RecordedTVProperties, cancellationToken);
+            dbEntry.Entity.RecordedTVProperties = null;
+            EntityEntry<VideoPropertySet> oldVideoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.VideoProperties, cancellationToken);
+            dbEntry.Entity.SummaryProperties = null;
+            dbEntry.Entity.Status = FileCorrelationStatus.Deleted;
+            switch (dbEntry.Entity.Options)
+            {
+                case FileCrawlOptions.FlaggedForDeletion:
+                case FileCrawlOptions.FlaggedForRescan:
+                    dbEntry.Entity.Options = FileCrawlOptions.None;
+                    break;
+            }
+            Guid id = dbEntry.Entity.Id;
+            cancellationToken.ThrowIfCancellationRequested();
+            await dbContext.SaveChangesAsync(cancellationToken);
+            bool shouldSaveChanges = oldRedundantSet.Exists() && !(await oldRedundantSet.GetRelatedCollectionAsync(r => r.Redundancies, cancellationToken)).Any(r => r.FileId != id);
+            if (shouldSaveChanges)
+                dbContext.RedundantSets.Remove(oldRedundantSet.Entity);
+            if (oldBinaryPropertySet.Exists() && oldBinaryPropertySet.Entity.Hash.HasValue || oldBinaryPropertySet.Entity.Length > 0 &&
+                !(await oldBinaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.BinaryPropertySets.Remove(oldBinaryPropertySet.Entity);
+            }
+            if (oldSummaryPropertySet.Exists() && (await oldSummaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.SummaryPropertySets.Remove(oldSummaryPropertySet.Entity);
+            }
+            if (oldAudioPropertySet.Exists() && (await oldAudioPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.AudioPropertySets.Remove(oldAudioPropertySet.Entity);
+            }
+            if (oldDocumentPropertySet.Exists() && (await oldDocumentPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.DocumentPropertySets.Remove(oldDocumentPropertySet.Entity);
+            }
+            if (oldDRMPropertySet.Exists() && (await oldDRMPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.DRMPropertySets.Remove(oldDRMPropertySet.Entity);
+            }
+            if (oldGPSPropertySet.Exists() && (await oldGPSPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.GPSPropertySets.Remove(oldGPSPropertySet.Entity);
+            }
+            if (oldImagePropertySet.Exists() && (await oldImagePropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.ImagePropertySets.Remove(oldImagePropertySet.Entity);
+            }
+            if (oldMediaPropertySet.Exists() && (await oldMediaPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.MediaPropertySets.Remove(oldMediaPropertySet.Entity);
+            }
+            if (oldMusicPropertySet.Exists() && (await oldMusicPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.MusicPropertySets.Remove(oldMusicPropertySet.Entity);
+            }
+            if (oldPhotoPropertySet.Exists() && (await oldPhotoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.PhotoPropertySets.Remove(oldPhotoPropertySet.Entity);
+            }
+            if (oldRecordedTVPropertySet.Exists() && (await oldRecordedTVPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.RecordedTVPropertySets.Remove(oldRecordedTVPropertySet.Entity);
+            }
+            if (oldVideoPropertySet.Exists() && (await oldVideoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.VideoPropertySets.Remove(oldVideoPropertySet.Entity);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            if (shouldSaveChanges)
                 await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        internal async Task MarkDissociatedAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        public async Task MarkDeletedAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            EntityEntry<DbFile> dbEntry = dbContext.Entry(this);
+            switch (dbEntry.State)
+            {
+                case EntityState.Detached:
+                case EntityState.Deleted:
+                    throw new InvalidOperationException();
+            }
+            if (Status == FileCorrelationStatus.Deleted)
+                return;
+            if (dbContext.Database.CurrentTransaction is null)
+            {
+                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await MarkDeletedAsync(dbEntry, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await transaction.CommitAsync(cancellationToken);
+            }
+            else
+                await MarkDeletedAsync(dbEntry, cancellationToken);
+        }
+
+        private static async Task MarkDissociatedAsync(EntityEntry<DbFile> dbEntry, CancellationToken cancellationToken, bool doNotSaveChanges = false)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task MarkDissociatedAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            EntityEntry<DbFile> dbEntry = dbContext.Entry(this);
+            switch (dbEntry.State)
+            {
+                case EntityState.Detached:
+                case EntityState.Deleted:
+                    throw new InvalidOperationException();
+            }
+            if (Status == FileCorrelationStatus.Deleted)
+                return;
+            if (dbContext.Database.CurrentTransaction is null)
+            {
+                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await MarkDissociatedAsync(dbEntry, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await transaction.CommitAsync(cancellationToken);
+            }
+            else
+                await MarkDissociatedAsync(dbEntry, cancellationToken);
+        }
+
+        private static async Task<bool> ForceDeleteFromDbAsync(EntityEntry<DbFile> dbEntry, CancellationToken cancellationToken)
+        {
+            if (dbEntry.Context is not LocalDbContext dbContext)
+                throw new InvalidOperationException();
+            cancellationToken.ThrowIfCancellationRequested();
+            Redundancy oldRedundancy = await dbEntry.GetRelatedReferenceAsync(f => f.Redundancy, cancellationToken);
+            EntityEntry<RedundantSet> oldRedundantSet;
+            if (oldRedundancy is null)
+                oldRedundantSet = null;
+            else
+            {
+                oldRedundantSet = await dbContext.Entry(oldRedundancy).GetRelatedTargetEntryAsync(r => r.RedundantSet, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                dbContext.Redundancies.Remove(oldRedundancy);
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+            EntityEntry<BinaryPropertySet> oldBinaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.BinaryProperties, cancellationToken);
+            FileAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (accessErrors.Length > 0)
+                dbContext.FileAccessErrors.RemoveRange(accessErrors);
+            FileComparison[] comparisons = (await dbEntry.GetRelatedCollectionAsync(f => f.BaselineComparisons, cancellationToken))
+                .Concat(await dbEntry.GetRelatedCollectionAsync(f => f.CorrelativeComparisons, cancellationToken)).ToArray();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (comparisons.Length > 0)
+                dbContext.Comparisons.RemoveRange(comparisons);
+            EntityEntry<SummaryPropertySet> oldSummaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.SummaryProperties, cancellationToken);
+            EntityEntry<AudioPropertySet> oldAudioPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.AudioProperties, cancellationToken);
+            EntityEntry<DocumentPropertySet> oldDocumentPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DocumentProperties, cancellationToken);
+            EntityEntry<DRMPropertySet> oldDRMPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DRMProperties, cancellationToken);
+            EntityEntry<GPSPropertySet> oldGPSPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.GPSProperties, cancellationToken);
+            EntityEntry<ImagePropertySet> oldImagePropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.ImageProperties, cancellationToken);
+            EntityEntry<MediaPropertySet> oldMediaPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MediaProperties, cancellationToken);
+            EntityEntry<MusicPropertySet> oldMusicPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MusicProperties, cancellationToken);
+            EntityEntry<PhotoPropertySet> oldPhotoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.PhotoProperties, cancellationToken);
+            EntityEntry<RecordedTVPropertySet> oldRecordedTVPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.RecordedTVProperties, cancellationToken);
+            EntityEntry<VideoPropertySet> oldVideoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.VideoProperties, cancellationToken);
+            Guid id = dbEntry.Entity.Id;
+            cancellationToken.ThrowIfCancellationRequested();
+            await dbContext.SaveChangesAsync(cancellationToken);
+            bool shouldSaveChanges = oldRedundantSet.Exists() && !(await oldRedundantSet.GetRelatedCollectionAsync(r => r.Redundancies, cancellationToken)).Any(r => r.FileId != id);
+            if (shouldSaveChanges)
+                dbContext.RedundantSets.Remove(oldRedundantSet.Entity);
+            if (oldBinaryPropertySet.Exists() && !(await oldBinaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.BinaryPropertySets.Remove(oldBinaryPropertySet.Entity);
+            }
+            if (oldSummaryPropertySet.Exists() && (await oldSummaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.SummaryPropertySets.Remove(oldSummaryPropertySet.Entity);
+            }
+            if (oldAudioPropertySet.Exists() && (await oldAudioPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.AudioPropertySets.Remove(oldAudioPropertySet.Entity);
+            }
+            if (oldDocumentPropertySet.Exists() && (await oldDocumentPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.DocumentPropertySets.Remove(oldDocumentPropertySet.Entity);
+            }
+            if (oldDRMPropertySet.Exists() && (await oldDRMPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.DRMPropertySets.Remove(oldDRMPropertySet.Entity);
+            }
+            if (oldGPSPropertySet.Exists() && (await oldGPSPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.GPSPropertySets.Remove(oldGPSPropertySet.Entity);
+            }
+            if (oldImagePropertySet.Exists() && (await oldImagePropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.ImagePropertySets.Remove(oldImagePropertySet.Entity);
+            }
+            if (oldMediaPropertySet.Exists() && (await oldMediaPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.MediaPropertySets.Remove(oldMediaPropertySet.Entity);
+            }
+            if (oldMusicPropertySet.Exists() && (await oldMusicPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.MusicPropertySets.Remove(oldMusicPropertySet.Entity);
+            }
+            if (oldPhotoPropertySet.Exists() && (await oldPhotoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.PhotoPropertySets.Remove(oldPhotoPropertySet.Entity);
+            }
+            if (oldRecordedTVPropertySet.Exists() && (await oldRecordedTVPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.RecordedTVPropertySets.Remove(oldRecordedTVPropertySet.Entity);
+            }
+            if (oldVideoPropertySet.Exists() && (await oldVideoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+            {
+                shouldSaveChanges = true;
+                dbContext.VideoPropertySets.Remove(oldVideoPropertySet.Entity);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            if (shouldSaveChanges)
+                await dbContext.SaveChangesAsync(cancellationToken);
+            return true;
+        }
+
+        public async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            EntityEntry<DbFile> dbEntry = dbContext.Entry(this);
+            if (!dbEntry.Exists())
+                return false;
+            if (dbContext.Database.CurrentTransaction is null)
+            {
+                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                bool result = await ForceDeleteFromDbAsync(dbEntry, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await transaction.CommitAsync(cancellationToken);
+                return result;
+            }
+            return await ForceDeleteFromDbAsync(dbEntry, cancellationToken);
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)

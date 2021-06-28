@@ -199,6 +199,20 @@ namespace FsInfoCat
             return referenceEntry.CurrentValue;
         }
 
+        public static bool Exists(this EntityEntry entry)
+        {
+            if (entry is null)
+                return false;
+            switch (entry.State)
+            {
+                case EntityState.Unchanged:
+                case EntityState.Modified:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry,
             [NotNull] Expression<Func<TEntity, TProperty>> propertyExpression, CancellationToken cancellationToken)
             where TEntity : class
@@ -209,6 +223,18 @@ namespace FsInfoCat
             if (!referenceEntry.IsLoaded)
                 await referenceEntry.LoadAsync(cancellationToken);
             return referenceEntry.CurrentValue;
+        }
+
+        public static async Task<EntityEntry<TProperty>> GetRelatedTargetEntryAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry,
+            [NotNull] Expression<Func<TEntity, TProperty>> propertyExpression, CancellationToken cancellationToken)
+            where TEntity : class
+            where TProperty : class
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ReferenceEntry<TEntity, TProperty> referenceEntry = entry.Reference(propertyExpression);
+            if (!referenceEntry.IsLoaded)
+                await referenceEntry.LoadAsync(cancellationToken);
+            return referenceEntry.TargetEntry;
         }
 
         public static void RejectChanges<T>(this DbSet<T> dbSet, Func<T, EntityEntry<T>> getEntry) where T : class, IRevertibleChangeTracking

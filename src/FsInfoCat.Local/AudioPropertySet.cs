@@ -65,10 +65,5 @@ namespace FsInfoCat.Local
             _streamName = AddChangeTracker<string>(nameof(StreamName), null);
             _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
         }
-
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

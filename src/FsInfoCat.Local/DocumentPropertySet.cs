@@ -76,11 +76,6 @@ namespace FsInfoCat.Local
             _version = AddChangeTracker<string>(nameof(Version), null);
         }
 
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
         internal static void BuildEntity(EntityTypeBuilder<DocumentPropertySet> obj) => obj.Property(nameof(Contributor)).HasConversion(MultiStringValue.Converter);
     }
 }

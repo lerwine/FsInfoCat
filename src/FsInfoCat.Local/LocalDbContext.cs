@@ -199,7 +199,7 @@ namespace FsInfoCat.Local
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
             EntityEntry<BinaryPropertySet> targetEntry = Entry(target);
-            var redundantSets = (targetEntry.GetRelatedCollectionAsync(t => t.RedundantSets).Result).ToArray();
+            var redundantSets = targetEntry.GetRelatedCollectionAsync(t => t.RedundantSets).Result.ToArray();
             if (redundantSets.Length > 0)
             {
                 foreach (var r in redundantSets)

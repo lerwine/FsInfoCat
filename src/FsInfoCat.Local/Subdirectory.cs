@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -223,40 +224,121 @@ namespace FsInfoCat.Local
             _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
         }
 
-        internal async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        public static async Task MarkBranchIncompleteAsync(EntityEntry<Subdirectory> dbEntry, CancellationToken cancellationToken)
         {
+            if (dbEntry.Context is not LocalDbContext dbContext)
+                throw new InvalidOperationException();
+            dbEntry.Entity.Status = DirectoryStatus.Incomplete;
+            SubdirectoryAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(d => d.AccessErrors, cancellationToken)).ToArray();
+            if (accessErrors.Length > 0)
+                dbContext.SubdirectoryAccessErrors.RemoveRange(accessErrors);
+            foreach (Subdirectory subdirectory in await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken))
+                await MarkBranchIncompleteAsync(dbContext.Entry(subdirectory), cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
+            switch (dbEntry.State)
+            {
+                case EntityState.Detached:
+                case EntityState.Deleted:
+                    throw new InvalidOperationException();
+            }
             switch (Status)
             {
                 case DirectoryStatus.Deleted:
                 case DirectoryStatus.Incomplete:
                     return;
             }
-            Status = DirectoryStatus.Incomplete;
-            EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
-            SubdirectoryAccessError[] subdirectoryAccessErrors = (await dbEntry.GetRelatedCollectionAsync(d => d.AccessErrors, cancellationToken)).ToArray();
-            if (subdirectoryAccessErrors.Length > 0)
-                dbContext.SubdirectoryAccessErrors.RemoveRange(subdirectoryAccessErrors);
-            foreach (Subdirectory subdirectory in (await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken)))
-                await subdirectory.MarkBranchIncompleteAsync(dbContext, cancellationToken, true);
-            if (!doNotSaveChanges)
-                await dbContext.SaveChangesAsync(cancellationToken);
+            if (dbContext.Database.CurrentTransaction is null)
+            {
+                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await MarkBranchIncompleteAsync(dbEntry, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await transaction.CommitAsync(cancellationToken);
+            }
+            else
+                await MarkBranchIncompleteAsync(dbEntry, cancellationToken);
         }
 
-        internal async Task MarkBranchDeletedAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        public async Task MarkBranchDeletedAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             if (Status == DirectoryStatus.Deleted)
                 return;
-            Status = DirectoryStatus.Deleted;
             EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
-            SubdirectoryAccessError[] subdirectoryAccessErrors = (await dbEntry.GetRelatedCollectionAsync(d => d.AccessErrors, cancellationToken)).ToArray();
-            if (subdirectoryAccessErrors.Length > 0)
-                dbContext.SubdirectoryAccessErrors.RemoveRange(subdirectoryAccessErrors);
-            foreach (Subdirectory subdirectory in (await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken)))
-                await subdirectory.MarkBranchDeletedAsync(dbContext, cancellationToken, true);
-            foreach (DbFile file in (await dbEntry.GetRelatedCollectionAsync(d => d.Files, cancellationToken)))
-                await file.MarkDeletedAsync(dbContext, cancellationToken, true);
-            if (!doNotSaveChanges)
+            switch (dbEntry.State)
+            {
+                case EntityState.Detached:
+                case EntityState.Deleted:
+                    throw new InvalidOperationException();
+            }
+            if (dbContext.Database.CurrentTransaction is null)
+            {
+                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await MarkBranchDeletedAsync(dbContext, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await transaction.CommitAsync(cancellationToken);
+            }
+            else
+            {
+                Status = DirectoryStatus.Deleted;
+                SubdirectoryAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(d => d.AccessErrors, cancellationToken)).ToArray();
+                if (accessErrors.Length > 0)
+                    dbContext.SubdirectoryAccessErrors.RemoveRange(accessErrors);
+                foreach (Subdirectory subdirectory in await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken))
+                    await subdirectory.MarkBranchDeletedAsync(dbContext, cancellationToken);
+                foreach (DbFile file in await dbEntry.GetRelatedCollectionAsync(d => d.Files, cancellationToken))
+                    await file.MarkDeletedAsync(dbContext, cancellationToken);
                 await dbContext.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        public async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
+            if (!dbEntry.Exists())
+                return false;
+            if (dbContext.Database.CurrentTransaction is null)
+            {
+                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                bool result = await ForceDeleteFromDbAsync(dbContext, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                await transaction.CommitAsync(cancellationToken);
+                return result;
+            }
+            EntityEntry<CrawlConfiguration> oldCrawlConfiguration = await dbEntry.GetRelatedTargetEntryAsync(f => f.CrawlConfiguration, cancellationToken);
+            if (oldCrawlConfiguration.Exists())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                dbContext.CrawlConfigurations.Remove(oldCrawlConfiguration.Entity);
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+            SubdirectoryAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (accessErrors.Length > 0)
+                dbContext.SubdirectoryAccessErrors.RemoveRange(accessErrors);
+            foreach (DbFile file in (await dbEntry.GetRelatedCollectionAsync(f => f.Files, cancellationToken)).ToArray())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await file.ForceDeleteFromDbAsync(dbContext, cancellationToken);
+            }
+            foreach (Subdirectory dir in (await dbEntry.GetRelatedCollectionAsync(f => f.SubDirectories, cancellationToken)).ToArray())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await dir.ForceDeleteFromDbAsync(dbContext, cancellationToken);
+            }
+            Guid id = Id;
+            cancellationToken.ThrowIfCancellationRequested();
+            await dbContext.SaveChangesAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            return true;
         }
 
         public void SetError(LocalDbContext dbContext, ErrorCode errorCode, Exception exception, string message = null)

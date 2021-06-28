@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.Local.DbFile">
+    <Position X="4.5" Y="0.75" Width="2.25" />
+    <Members>
+      <Property Name="IDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="IDbFsItem.Parent" Hidden="true" />
+      <Property Name="IFile.AccessErrors" Hidden="true" />
+      <Property Name="IFile.AudioProperties" Hidden="true" />
+      <Property Name="IFile.BaselineComparisons" Hidden="true" />
+      <Property Name="IFile.BinaryProperties" Hidden="true" />
+      <Property Name="IFile.CorrelativeComparisons" Hidden="true" />
+      <Property Name="IFile.DocumentProperties" Hidden="true" />
+      <Property Name="IFile.DRMProperties" Hidden="true" />
+      <Property Name="IFile.GPSProperties" Hidden="true" />
+      <Property Name="IFile.ImageProperties" Hidden="true" />
+      <Property Name="IFile.MediaProperties" Hidden="true" />
+      <Property Name="IFile.MusicProperties" Hidden="true" />
+      <Property Name="IFile.PhotoProperties" Hidden="true" />
+      <Property Name="IFile.RecordedTVProperties" Hidden="true" />
+      <Property Name="IFile.Redundancy" Hidden="true" />
+      <Property Name="IFile.SummaryProperties" Hidden="true" />
+      <Property Name="IFile.VideoProperties" Hidden="true" />
+      <Property Name="ILocalDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="ILocalFile.AccessErrors" Hidden="true" />
+      <Property Name="ILocalFile.AudioProperties" Hidden="true" />
+      <Property Name="ILocalFile.BaselineComparisons" Hidden="true" />
+      <Property Name="ILocalFile.BinaryProperties" Hidden="true" />
+      <Property Name="ILocalFile.CorrelativeComparisons" Hidden="true" />
+      <Property Name="ILocalFile.DocumentProperties" Hidden="true" />
+      <Property Name="ILocalFile.DRMProperties" Hidden="true" />
+      <Property Name="ILocalFile.GPSProperties" Hidden="true" />
+      <Property Name="ILocalFile.ImageProperties" Hidden="true" />
+      <Property Name="ILocalFile.MediaProperties" Hidden="true" />
+      <Property Name="ILocalFile.MusicProperties" Hidden="true" />
+      <Property Name="ILocalFile.Parent" Hidden="true" />
+      <Property Name="ILocalFile.PhotoProperties" Hidden="true" />
+      <Property Name="ILocalFile.RecordedTVProperties" Hidden="true" />
+      <Property Name="ILocalFile.Redundancy" Hidden="true" />
+      <Property Name="ILocalFile.SummaryProperties" Hidden="true" />
+      <Property Name="ILocalFile.VideoProperties" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>lXi27AQGIcg0IUJRixfAS670DQWMI6mQShTAwBxI0gc=</HashCode>
+      <FileName>DbFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="AccessErrors" />
+      <Property Name="BaselineComparisons" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.FileAccessError">
+    <Position X="0.5" Y="0.75" Width="1.75" />
+    <Members>
+      <Property Name="IAccessError.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;IFile&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ILocalDbFsItem&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ILocalFile&gt;.Target" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAEAAAAFAAAAIEXABCAAQEgAACCAEAAAIAABAAA=</HashCode>
+      <FileName>FileAccessError.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Subdirectory">
+    <Position X="0.5" Y="8.75" Width="2.5" />
+    <Members>
+      <Property Name="IDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="IDbFsItem.Parent" Hidden="true" />
+      <Property Name="ILocalDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="ILocalSubdirectory.AccessErrors" Hidden="true" />
+      <Property Name="ILocalSubdirectory.CrawlConfiguration" Hidden="true" />
+      <Property Name="ILocalSubdirectory.Files" Hidden="true" />
+      <Property Name="ILocalSubdirectory.Parent" Hidden="true" />
+      <Property Name="ILocalSubdirectory.SubDirectories" Hidden="true" />
+      <Property Name="ILocalSubdirectory.Volume" Hidden="true" />
+      <Property Name="ISubdirectory.AccessErrors" Hidden="true" />
+      <Property Name="ISubdirectory.CrawlConfiguration" Hidden="true" />
+      <Property Name="ISubdirectory.Files" Hidden="true" />
+      <Property Name="ISubdirectory.SubDirectories" Hidden="true" />
+      <Property Name="ISubdirectory.Volume" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BFJ6IAAEIUAQIAkBHQVJQgYwCBWEIORSQgIggATQEJA=</HashCode>
+      <FileName>Subdirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="AccessErrors" />
+      <Property Name="Files" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.SubdirectoryAccessError">
+    <Position X="4.5" Y="13" Width="2" />
+    <Members>
+      <Property Name="IAccessError.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ILocalDbFsItem&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ILocalSubdirectory&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ISubdirectory&gt;.Target" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACIAEgAAAFAAAAIEHABCAAQEgAACCAEAAAIAABAAA=</HashCode>
+      <FileName>SubdirectoryAccessError.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Volume">
+    <Position X="7.75" Y="9" Width="1.75" />
+    <Members>
+      <Property Name="ILocalVolume.AccessErrors" Hidden="true" />
+      <Property Name="ILocalVolume.FileSystem" Hidden="true" />
+      <Property Name="ILocalVolume.RootDirectory" Hidden="true" />
+      <Property Name="IVolume.AccessErrors" Hidden="true" />
+      <Property Name="IVolume.FileSystem" Hidden="true" />
+      <Property Name="IVolume.RootDirectory" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>hEAyMACEAAAEABQAIEFAwAcAAAQEgCEAAQgIQABAsAI=</HashCode>
+      <FileName>Volume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RootDirectory" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="AccessErrors" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.VolumeAccessError">
+    <Position X="11" Y="11.5" Width="1.75" />
+    <Members>
+      <Property Name="IAccessError.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ILocalVolume&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;IVolume&gt;.Target" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAADAAgAAAAFAAAAIEHABCAAQEgAACCAEAAAIAABAAA=</HashCode>
+      <FileName>VolumeAccessError.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.BinaryPropertySet">
+    <Position X="7.75" Y="5" Width="2.25" />
+    <Members>
+      <Property Name="IBinaryPropertySet.Files" Hidden="true" />
+      <Property Name="IBinaryPropertySet.RedundantSets" Hidden="true" />
+      <Property Name="ILocalBinaryPropertySet.Files" Hidden="true" />
+      <Property Name="ILocalBinaryPropertySet.RedundantSets" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAQIEAAABAAHAAABAABAAACBgBAAAACBAEIA=</HashCode>
+      <FileName>BinaryPropertySet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Files" />
+      <Property Name="RedundantSets" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.RedundantSet">
+    <Position X="11" Y="0.75" Width="1.75" />
+    <Members>
+      <Property Name="ILocalRedundantSet.BinaryProperties" Hidden="true" />
+      <Property Name="ILocalRedundantSet.Redundancies" Hidden="true" />
+      <Property Name="IRedundantSet.BinaryProperties" Hidden="true" />
+      <Property Name="IRedundantSet.Redundancies" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AACyAACAAABEBABHEgBAAAAIADAAQCAAAEAAAgBAAIA=</HashCode>
+      <FileName>RedundantSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Redundancies" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Redundancy">
+    <Position X="7.75" Y="0.75" Width="1.5" />
+    <Members>
+      <Property Name="ILocalRedundancy.File" Hidden="true" />
+      <Property Name="ILocalRedundancy.RedundantSet" Hidden="true" />
+      <Property Name="IRedundancy.File" Hidden="true" />
+      <Property Name="IRedundancy.RedundantSet" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAxgACAIEAEAAABAAGAAAAAgBAUAAAAAAQAAAJAEAA=</HashCode>
+      <FileName>Redundancy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="File" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.FileComparison">
+    <Position X="0.5" Y="5.25" Width="1.5" />
+    <Members>
+      <Property Name="IComparison.Baseline" Hidden="true" />
+      <Property Name="IComparison.Correlative" Hidden="true" />
+      <Property Name="ILocalComparison.Baseline" Hidden="true" />
+      <Property Name="ILocalComparison.Correlative" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AMAIAYAAAAAAAEAQGEAAAABEAAAgAAARAAIQAgBAAAA=</HashCode>
+      <FileName>FileComparison.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Correlative" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.FileSystem">
+    <Position X="11" Y="6" Width="1.75" />
+    <Members>
+      <Property Name="IFileSystem.SymbolicNames" Hidden="true" />
+      <Property Name="IFileSystem.Volumes" Hidden="true" />
+      <Property Name="ILocalFileSystem.SymbolicNames" Hidden="true" />
+      <Property Name="ILocalFileSystem.Volumes" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgyEAAgAAEBAARAAAFAACQCQBgEgCUAABAIAEAAoAA=</HashCode>
+      <FileName>FileSystem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Volumes" />
+      <Property Name="SymbolicNames" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.SymbolicName">
+    <Position X="14.25" Y="6" Width="1.75" />
+    <Members>
+      <Property Name="ILocalSymbolicName.FileSystem" Hidden="true" />
+      <Property Name="ISymbolicName.FileSystem" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EQAyIACAAAAEAAAEAAFABAQCAAwAQCAAAAAAAABAgAA=</HashCode>
+      <FileName>SymbolicName.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

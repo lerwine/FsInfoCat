@@ -55,10 +55,5 @@ namespace FsInfoCat.Local
             _isProtected = AddChangeTracker<bool?>(nameof(IsProtected), null);
             _playCount = AddChangeTracker<uint?>(nameof(PlayCount), null);
         }
-
-        public static async Task ApplyAsync(EntityEntry<DbFile> fileEntry, LocalDbContext dbContext, System.Threading.CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

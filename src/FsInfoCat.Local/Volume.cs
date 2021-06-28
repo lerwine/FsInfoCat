@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -153,6 +157,29 @@ namespace FsInfoCat.Local
             _fileSystemId = AddChangeTracker(nameof(FileSystemId), Guid.Empty);
             _fileSystem = AddChangeTracker<FileSystem>(nameof(FileSystem), null);
             _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
+        }
+
+        internal async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            EntityEntry<Volume> dbEntry = dbContext.Entry(this);
+            if (!dbEntry.Exists())
+                return false;
+            cancellationToken.ThrowIfCancellationRequested();
+            IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+            Subdirectory oldSubdirectory = await dbEntry.GetRelatedReferenceAsync(f => f.RootDirectory, cancellationToken);
+            if (oldSubdirectory is not null)
+                await oldSubdirectory.ForceDeleteFromDbAsync(dbContext, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            VolumeAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
+            if (accessErrors.Length > 0)
+                dbContext.VolumeAccessErrors.RemoveRange(accessErrors);
+            Guid id = Id;
+            cancellationToken.ThrowIfCancellationRequested();
+            await dbContext.SaveChangesAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            await transaction.CommitAsync(cancellationToken);
+            return true;
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)
