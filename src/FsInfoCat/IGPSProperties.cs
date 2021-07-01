@@ -2,6 +2,15 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for GPS information.
+    /// </summary>
+    /// <seealso cref="IGPSPropertySet"/>
+    /// <seealso cref="Local.ILocalGPSPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamGPSPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IGPSProperties, IGPSProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetGPSPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IGPSProperties, System.Threading.CancellationToken)"/>
     public interface IGPSProperties
     {
         /// The name of the GPS area

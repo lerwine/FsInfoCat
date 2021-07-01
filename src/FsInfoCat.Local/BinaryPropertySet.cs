@@ -95,22 +95,39 @@ namespace FsInfoCat.Local
             return binaryPropertiesIdElement.Elements(nameof(RedundantSet)).Select(e => RedundantSet.ImportAsync(dbContext, logger, binaryPropertiesId, e).Result).ToArray();
         }
 
-        internal static async Task<EntityEntry<BinaryPropertySet>> GetBinaryPropertySetAsync(LocalDbContext dbContext, long length, MD5Hash? hash, bool doNotSaveChanges,
-            CancellationToken cancellationToken)
+        internal static async Task<BinaryPropertySet> GetBinaryPropertySetAsync(LocalDbContext dbContext, long length, CancellationToken cancellationToken)
+        {
+            BinaryPropertySet bps;
+            if (length == 0L)
+                bps = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == 0L && p.Hash != null, cancellationToken);
+            else
+                bps = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == length && p.Hash == null, cancellationToken);
+
+            if (bps is null)
+            {
+                dbContext.BinaryPropertySets.Add(bps = new()
+                {
+                    Length = length,
+                    Hash = (length == 0L) ? (MD5Hash?)await MD5Hash.CreateAsync(System.IO.Stream.Null, cancellationToken) : null
+                });
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+            return bps;
+        }
+
+        internal static async Task<BinaryPropertySet> GetBinaryPropertySetAsync(LocalDbContext dbContext, long length, MD5Hash hash, CancellationToken cancellationToken)
         {
             BinaryPropertySet bps = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == length && p.Hash == hash, cancellationToken);
             if (bps is null)
             {
-                EntityEntry<BinaryPropertySet> result = dbContext.BinaryPropertySets.Add(bps = new()
+                dbContext.BinaryPropertySets.Add(bps = new()
                 {
                     Length = length,
                     Hash = hash
                 });
-                if (!doNotSaveChanges)
-                    await dbContext.SaveChangesAsync(cancellationToken);
-                return result;
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
-            return dbContext.Entry(bps);
+            return bps;
         }
     }
 }

@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
@@ -221,37 +219,37 @@ namespace FsInfoCat.Local
         /// <returns>The generic <see cref="ILocalVideoPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
         new Task<ILocalVideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken);
 
-        [Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
-        void ForceDeleteBinaryPropertySet(ILocalBinaryPropertySet target);
+        //[Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
+        //void ForceDeleteBinaryPropertySet(ILocalBinaryPropertySet target);
 
-        /// <summary>
-        /// Deletes the specified <see cref="ILocalBinaryPropertySet"/> from the local database, including all nested dependencies.
-        /// </summary>
-        /// <param name="target">The <see cref="ILocalBinaryPropertySet"/> to delete.</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteBinaryPropertySetAsync(ILocalBinaryPropertySet target, CancellationToken cancellationToken);
+        ///// <summary>
+        ///// Deletes the specified <see cref="ILocalBinaryPropertySet"/> from the local database, including all nested dependencies.
+        ///// </summary>
+        ///// <param name="target">The <see cref="ILocalBinaryPropertySet"/> to delete.</param>
+        ///// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        ///// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
+        //Task<bool> ForceDeleteBinaryPropertySetAsync(ILocalBinaryPropertySet target, CancellationToken cancellationToken);
 
-        [Obsolete("Use ForceDeleteRedundantSetAsync")]
-        void ForceDeleteRedundantSet(ILocalRedundantSet target);
+        //[Obsolete("Use ForceDeleteRedundantSetAsync")]
+        //void ForceDeleteRedundantSet(ILocalRedundantSet target);
 
-        /// <summary>
-        /// Deletes the specified <see cref="ILocalRedundantSet"/> from the local database, including all nested dependencies.
-        /// </summary>
-        /// <param name="target">The <see cref="ILocalRedundantSet"/> to delete.</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteRedundantSetAsync(ILocalRedundantSet targe, CancellationToken cancellationToken);
+        ///// <summary>
+        ///// Deletes the specified <see cref="ILocalRedundantSet"/> from the local database, including all nested dependencies.
+        ///// </summary>
+        ///// <param name="target">The <see cref="ILocalRedundantSet"/> to delete.</param>
+        ///// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        ///// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
+        //Task<bool> ForceDeleteRedundantSetAsync(ILocalRedundantSet targe, CancellationToken cancellationToken);
 
-        [Obsolete("Use ForceDeleteFileSystemAsync")]
-        void ForceDeleteFileSystem(ILocalFileSystem target);
+        //[Obsolete("Use ForceDeleteFileSystemAsync")]
+        //void ForceDeleteFileSystem(ILocalFileSystem target);
 
-        /// <summary>
-        /// Deletes the specified <see cref="ILocalFileSystem"/> from the local database, including all nested dependencies.
-        /// </summary>
-        /// <param name="target">The <see cref="ILocalFileSystem"/> to delete.</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteFileSystemAsync(ILocalFileSystem target, CancellationToken cancellationToken);
+        ///// <summary>
+        ///// Deletes the specified <see cref="ILocalFileSystem"/> from the local database, including all nested dependencies.
+        ///// </summary>
+        ///// <param name="target">The <see cref="ILocalFileSystem"/> to delete.</param>
+        ///// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        ///// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
+        //Task<bool> ForceDeleteFileSystemAsync(ILocalFileSystem target, CancellationToken cancellationToken);
     }
 }

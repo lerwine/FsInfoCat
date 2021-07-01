@@ -1,8 +1,11 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -80,6 +83,14 @@ namespace FsInfoCat.Local
             obj.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter);
             obj.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
             obj.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
+        }
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            MusicPropertySet oldMusicPropertySet = entry.Entity.MusicPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.MusicProperties, cancellationToken) : null;
+            IMusicProperties currentMusicProperties = await fileDetailProvider.GetMusicPropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
         }
     }
 }

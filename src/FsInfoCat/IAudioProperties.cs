@@ -1,5 +1,14 @@
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for audio files.
+    /// </summary>
+    /// <seealso cref="IAudioPropertySet"/>
+    /// <seealso cref="Local.ILocalAudioPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamAudioPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IAudioProperties, IAudioProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetAudioPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IAudioProperties, System.Threading.CancellationToken)"/>
     public interface IAudioProperties
     {
         /// <summary>

@@ -1,6 +1,9 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -64,6 +67,14 @@ namespace FsInfoCat.Local
             _programDescription = AddChangeTracker<string>(nameof(ProgramDescription), null);
             _stationCallSign = AddChangeTracker<string>(nameof(StationCallSign), null);
             _stationName = AddChangeTracker<string>(nameof(StationName), null);
+        }
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            RecordedTVPropertySet oldRecordedTVPropertySet = entry.Entity.RecordedTVPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.RecordedTVProperties, cancellationToken) : null;
+            IRecordedTVProperties currentRecordedTVProperties = await fileDetailProvider.GetRecordedTVPropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
         }
     }
 }

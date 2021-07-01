@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
@@ -54,6 +55,14 @@ namespace FsInfoCat.Local
             _description = AddChangeTracker<string>(nameof(Description), null);
             _isProtected = AddChangeTracker<bool?>(nameof(IsProtected), null);
             _playCount = AddChangeTracker<uint?>(nameof(PlayCount), null);
+        }
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            DRMPropertySet oldDRMPropertySet = entry.Entity.DRMPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.DRMProperties, cancellationToken) : null;
+            IDRMProperties currentDRMProperties = await fileDetailProvider.GetDRMPropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
         }
     }
 }

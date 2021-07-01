@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
@@ -77,5 +78,13 @@ namespace FsInfoCat.Local
         }
 
         internal static void BuildEntity(EntityTypeBuilder<DocumentPropertySet> obj) => obj.Property(nameof(Contributor)).HasConversion(MultiStringValue.Converter);
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            DocumentPropertySet oldDocumentPropertySet = entry.Entity.DocumentPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.DocumentProperties, cancellationToken) : null;
+            IDocumentProperties currentDocumentProperties = await fileDetailProvider.GetDocumentPropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
+        }
     }
 }

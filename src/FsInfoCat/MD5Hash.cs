@@ -1,9 +1,13 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
@@ -144,23 +148,6 @@ namespace FsInfoCat
         #region Constructors
 
         /// <summary>
-        ///
-        /// </summary>
-        /// <param name="key0"></param>
-        /// <param name="key1"></param>
-        /// <param name="key2"></param>
-        /// <param name="key3"></param>
-        public MD5Hash(int key0, int key1, int key2, int key3)
-        {
-            _highBits = _lowBits = 0L;
-            _b0 = _b1 = _b2 = _b3 = _b4 = _b5 = _b6 = _b7 = _b8 = _b9 = _b10 = _b11 = _b12 = _b13 = _b14 = _b15 = (byte)0;
-            _key0 = key0;
-            _key1 = key1;
-            _key2 = key2;
-            _key3 = key3;
-        }
-
-        /// <summary>
         /// Initializes a new instance of <see cref="MD5Hash"/>.
         /// </summary>
         /// <param name="buffer">A <seealso cref="Byte"/> array representing the 128-bit MD5 checksum. A null value or empty array initializes a zero checksum value.</param>
@@ -286,6 +273,13 @@ namespace FsInfoCat
             }
             result = default;
             return false;
+        }
+
+        public static async Task<MD5Hash> CreateAsync(Stream stream, CancellationToken cancellationToken)
+        {
+            //System.Security.Cryptography.MD5
+            using MD5 md5 = MD5.Create();
+            return new MD5Hash(await md5.ComputeHashAsync(stream, cancellationToken));
         }
 
         #endregion

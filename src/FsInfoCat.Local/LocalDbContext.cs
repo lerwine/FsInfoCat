@@ -193,305 +193,6 @@ namespace FsInfoCat.Local
             return Path.Combine(Services.GetAppDataPath(assembly), dbFileName);
         }
 
-        [Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
-        public void ForceDeleteBinaryPropertySet(BinaryPropertySet target)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            EntityEntry<BinaryPropertySet> targetEntry = Entry(target);
-            var redundantSets = targetEntry.GetRelatedCollectionAsync(t => t.RedundantSets).Result.ToArray();
-            if (redundantSets.Length > 0)
-            {
-                foreach (var r in redundantSets)
-                    ForceDeleteRedundantSet(r);
-                SaveChanges();
-            }
-            var files = target.Files.AsEnumerable().Select(f => Entry(f)).ToArray();
-            if (files.Length > 0)
-            {
-                SummaryPropertySet[] summaryProperties = files.Select(e => e.Entity.SummaryPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.SummaryProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                DocumentPropertySet[] documentProperties = files.Select(e => e.Entity.DocumentPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.DocumentProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                AudioPropertySet[] audioProperties = files.Select(e => e.Entity.AudioPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.AudioProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                DRMPropertySet[] drmProperties = files.Select(e => e.Entity.DRMPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.DRMProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                GPSPropertySet[] gpsProperties = files.Select(e => e.Entity.GPSPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.GPSProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                ImagePropertySet[] imageProperties = files.Select(e => e.Entity.ImagePropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.ImageProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                MediaPropertySet[] mediaProperties = files.Select(e => e.Entity.MediaPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.MediaProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                MusicPropertySet[] musicProperties = files.Select(e => e.Entity.MusicPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.MusicProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                PhotoPropertySet[] photoProperties = files.Select(e => e.Entity.PhotoPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.PhotoProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                RecordedTVPropertySet[] recordedTVProperties = files.Select(e => e.Entity.RecordedTVPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.RecordedTVProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                VideoPropertySet[] videoProperties = files.Select(e => e.Entity.VideoPropertySetId.HasValue ?
-                    e.GetRelatedReferenceAsync(f => f.VideoProperties).Result : null).Where(p => p is not null).Distinct().ToArray();
-                FileComparison[] comparisons = files.SelectMany(e => e.GetRelatedCollectionAsync(f => f.BaselineComparisons).Result
-                    .Concat(e.GetRelatedCollectionAsync(f => f.CorrelativeComparisons).Result)).Distinct().ToArray();
-                FileAccessError[] accessErrors = files.SelectMany(e => e.GetRelatedCollectionAsync(f => f.AccessErrors).Result).ToArray();
-                bool hasChanges = comparisons.Length > 0;
-                if (hasChanges)
-                    Comparisons.RemoveRange(comparisons);
-                if (accessErrors.Length > 0)
-                {
-                    FileAccessErrors.RemoveRange(accessErrors);
-                    hasChanges = true;
-                }
-                if (hasChanges)
-                    SaveChanges();
-                Files.RemoveRange(files.Select(f => f.Entity));
-                SaveChanges();
-#pragma warning disable CA1827 // Do not use Count() or LongCount() when Any() can be used
-                hasChanges = summaryProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0;
-                if (documentProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (audioProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (drmProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (gpsProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (imageProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (mediaProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (musicProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (photoProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (recordedTVProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-                if (videoProperties.Count(p => RemoveIfNoReferencesAsync(p).Result) > 0)
-                    hasChanges = true;
-#pragma warning restore CA1827 // Do not use Count() or LongCount() when Any() can be used
-                if (hasChanges)
-                    SaveChanges();
-            }
-
-            BinaryPropertySets.Remove(target);
-        }
-
-        public void ForceDeleteRedundantSet(RedundantSet target)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            var redundancies = target.Redundancies.AsEnumerable().ToArray();
-            if (redundancies.Length > 0)
-            {
-                Redundancies.RemoveRange(redundancies);
-                SaveChanges();
-            }
-            RedundantSets.Remove(target);
-        }
-
-        public void ForceDeleteFileSystem(FileSystem target)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            var symbolicNames = target.SymbolicNames.AsEnumerable().ToArray();
-            if (symbolicNames.Length > 0)
-            {
-                SymbolicNames.RemoveRange(symbolicNames);
-                SaveChanges();
-            }
-            var volumes = target.Volumes.AsEnumerable().ToArray();
-            if (volumes.Length > 0)
-            {
-                foreach (var v in volumes)
-                    ForceDeleteVolume(v);
-                SaveChanges();
-            }
-            FileSystems.Remove(target);
-        }
-
-        private void ForceDeleteVolume(Volume target)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            if (target.RootDirectory is not null)
-            {
-                ForceDeleteSubdirectory(target.RootDirectory);
-                SaveChanges();
-            }
-            var accessErrors = target.AccessErrors.AsEnumerable().ToArray();
-            if (accessErrors.Length > 0)
-            {
-                VolumeAccessErrors.RemoveRange(accessErrors);
-                SaveChanges();
-            }
-            Volumes.Remove(target);
-        }
-
-        private void ForceDeleteSubdirectory(Subdirectory target)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            var subdirectories = target.SubDirectories.AsEnumerable().ToArray();
-            if (subdirectories.Length > 0)
-            {
-                foreach (var s in subdirectories)
-                    ForceDeleteSubdirectory(s);
-                SaveChanges();
-            }
-            var files = target.Files.AsEnumerable().ToArray();
-            if (files.Length > 0)
-            {
-                foreach (var f in files)
-#pragma warning disable CS0618 // Type or member is obsolete
-                    ForceDeleteFileAsync(f).Wait();
-#pragma warning restore CS0618 // Type or member is obsolete
-                SaveChanges();
-            }
-            var accessErrors = target.AccessErrors.AsEnumerable().ToArray();
-            if (accessErrors.Length > 0)
-            {
-                SubdirectoryAccessErrors.RemoveRange(accessErrors);
-                SaveChanges();
-            }
-            Subdirectories.Remove(target);
-        }
-
-        [Obsolete("Pass cancellation token")]
-        private async Task ForceDeleteFileAsync(DbFile target)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            if (target.Redundancy is not null)
-            {
-                ForceDeleteRedundancy(target.Redundancy);
-                SaveChanges();
-            }
-            EntityEntry<DbFile> fileEntry = Entry(target);
-            var comparisons = (await fileEntry.GetRelatedCollectionAsync(p => p.BaselineComparisons)).ToArray();
-            bool hasChanges = comparisons.Length > 0;
-            if (hasChanges)
-                Comparisons.RemoveRange(comparisons);
-
-            var accessErrors = (await fileEntry.GetRelatedCollectionAsync(p => p.AccessErrors)).ToArray();
-            if (accessErrors.Length > 0)
-            {
-                FileAccessErrors.RemoveRange(accessErrors);
-                hasChanges = true;
-            }
-            if (hasChanges)
-                await SaveChangesAsync();
-            var content = await fileEntry.GetRelatedReferenceAsync(f => f.BinaryProperties);
-            var summaryProperties = target.SummaryPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.SummaryProperties) : null;
-            var documentProperties = target.DocumentPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.DocumentProperties) : null;
-            var audioProperties = target.AudioPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.AudioProperties) : null;
-            var drmProperties = target.DRMPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.DRMProperties) : null;
-            var gpsProperties = target.GPSPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.GPSProperties) : null;
-            var imageProperties = target.ImagePropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.ImageProperties) : null;
-            var mediaProperties = target.MediaPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.MediaProperties) : null;
-            var musicProperties = target.MusicPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.MusicProperties) : null;
-            var photoProperties = target.PhotoPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.PhotoProperties) : null;
-            var recordedTVProperties = target.RecordedTVPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.RecordedTVProperties) : null;
-            var videoProperties = target.VideoPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.VideoProperties) : null;
-            Files.Remove(target);
-            await SaveChangesAsync();
-
-            hasChanges = await RemoveIfNoReferencesAsync(content);
-            if (content.Files.Count == 0)
-                BinaryPropertySets.Remove(content);
-            if (summaryProperties is not null && await RemoveIfNoReferencesAsync(summaryProperties))
-                hasChanges = true;
-            if (documentProperties is not null && await RemoveIfNoReferencesAsync(documentProperties))
-                hasChanges = true;
-            if (audioProperties is not null && await RemoveIfNoReferencesAsync(audioProperties))
-                hasChanges = true;
-            if (drmProperties is not null && await RemoveIfNoReferencesAsync(drmProperties))
-                hasChanges = true;
-            if (gpsProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties))
-                hasChanges = true;
-            if (imageProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties))
-                hasChanges = true;
-            if (mediaProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties))
-                hasChanges = true;
-            if (musicProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties))
-                hasChanges = true;
-            if (photoProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties))
-                hasChanges = true;
-            if (recordedTVProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties))
-                hasChanges = true;
-            if (videoProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties))
-                hasChanges = true;
-            if (hasChanges)
-                await SaveChangesAsync();
-        }
-
-        private async Task ForceDeleteFileAsync(DbFile target, CancellationToken cancellationToken)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            cancellationToken.ThrowIfCancellationRequested();
-            if (target.Redundancy is not null)
-            {
-                ForceDeleteRedundancy(target.Redundancy);
-                await SaveChangesAsync(cancellationToken);
-            }
-            EntityEntry<DbFile> fileEntry = Entry(target);
-            var comparisons = (await fileEntry.GetRelatedCollectionAsync(p => p.BaselineComparisons, cancellationToken)).ToArray();
-            bool hasChanges = comparisons.Length > 0;
-            if (hasChanges)
-                Comparisons.RemoveRange(comparisons);
-
-            var accessErrors = (await fileEntry.GetRelatedCollectionAsync(p => p.AccessErrors, cancellationToken)).ToArray();
-            if (accessErrors.Length > 0)
-            {
-                FileAccessErrors.RemoveRange(accessErrors);
-                hasChanges = true;
-            }
-            if (hasChanges)
-                await SaveChangesAsync(cancellationToken);
-            var content = await fileEntry.GetRelatedReferenceAsync(f => f.BinaryProperties, cancellationToken);
-            var summaryProperties = target.SummaryPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.SummaryProperties, cancellationToken) : null;
-            var documentProperties = target.DocumentPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.DocumentProperties, cancellationToken) : null;
-            var audioProperties = target.AudioPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.AudioProperties, cancellationToken) : null;
-            var drmProperties = target.DRMPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.DRMProperties, cancellationToken) : null;
-            var gpsProperties = target.GPSPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.GPSProperties, cancellationToken) : null;
-            var imageProperties = target.ImagePropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.ImageProperties, cancellationToken) : null;
-            var mediaProperties = target.MediaPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.MediaProperties, cancellationToken) : null;
-            var musicProperties = target.MusicPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.MusicProperties, cancellationToken) : null;
-            var photoProperties = target.PhotoPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.PhotoProperties, cancellationToken) : null;
-            var recordedTVProperties = target.RecordedTVPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.RecordedTVProperties, cancellationToken) : null;
-            var videoProperties = target.VideoPropertySetId.HasValue ? await fileEntry.GetRelatedReferenceAsync(f => f.VideoProperties, cancellationToken) : null;
-            Files.Remove(target);
-            await SaveChangesAsync(cancellationToken);
-
-            hasChanges = await RemoveIfNoReferencesAsync(content, cancellationToken);
-            if (content.Files.Count == 0)
-                BinaryPropertySets.Remove(content);
-            if (summaryProperties is not null && await RemoveIfNoReferencesAsync(summaryProperties, cancellationToken))
-                hasChanges = true;
-            if (documentProperties is not null && await RemoveIfNoReferencesAsync(documentProperties, cancellationToken))
-                hasChanges = true;
-            if (audioProperties is not null && await RemoveIfNoReferencesAsync(audioProperties, cancellationToken))
-                hasChanges = true;
-            if (drmProperties is not null && await RemoveIfNoReferencesAsync(drmProperties, cancellationToken))
-                hasChanges = true;
-            if (gpsProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties, cancellationToken))
-                hasChanges = true;
-            if (imageProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties, cancellationToken))
-                hasChanges = true;
-            if (mediaProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties, cancellationToken))
-                hasChanges = true;
-            if (musicProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties, cancellationToken))
-                hasChanges = true;
-            if (photoProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties, cancellationToken))
-                hasChanges = true;
-            if (recordedTVProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties, cancellationToken))
-                hasChanges = true;
-            if (videoProperties is not null && await RemoveIfNoReferencesAsync(gpsProperties, cancellationToken))
-                hasChanges = true;
-            if (hasChanges)
-                await SaveChangesAsync(cancellationToken);
-        }
-
         [Obsolete("Pass cancellation token")]
         public async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([NotNull] TEntity entity,
             [NotNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression)
@@ -507,78 +208,242 @@ namespace FsInfoCat.Local
         {
             if (properties.IsNullOrEmpty())
                 return null;
-
-            throw new NotImplementedException();
+            string applicationName = properties.ApplicationName.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(ISummaryProperties, CancellationToken);
+            return await SummaryPropertySets.FirstOrDefaultAsync(p => p.ApplicationName == applicationName);
         }
 
         public async Task<DocumentPropertySet> FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string clientID = properties.ClientID.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IDocumentProperties, CancellationToken);
+            return await DocumentPropertySets.FirstOrDefaultAsync(p => p.ClientID == clientID);
         }
 
         public async Task<AudioPropertySet> FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string format = properties.Format.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IAudioProperties, CancellationToken);
+            return await AudioPropertySets.FirstOrDefaultAsync(p => p.Format == format);
         }
 
         public async Task<DRMPropertySet> FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string description = properties.Description.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IDRMProperties, CancellationToken);
+            return await DRMPropertySets.FirstOrDefaultAsync(p => p.Description == description);
         }
 
         public async Task<GPSPropertySet> FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string areaInformation = properties.AreaInformation.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IGPSProperties, CancellationToken);
+            return await GPSPropertySets.FirstOrDefaultAsync(p => p.AreaInformation == areaInformation);
         }
 
         public async Task<ImagePropertySet> FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string imageID = properties.ImageID.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IImageProperties, CancellationToken);
+            return await ImagePropertySets.FirstOrDefaultAsync(p => p.ImageID == imageID);
         }
 
         public async Task<MediaPropertySet> FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string dvdID = properties.DVDID.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IMediaProperties, CancellationToken);
+            return await MediaPropertySets.FirstOrDefaultAsync(p => p.DVDID == dvdID);
         }
 
         public async Task<MusicPropertySet> FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string displayArtist = properties.DisplayArtist.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IMusicProperties, CancellationToken);
+            return await MusicPropertySets.FirstOrDefaultAsync(p => p.DisplayArtist == displayArtist);
         }
 
         public async Task<PhotoPropertySet> FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string exifVersion = properties.EXIFVersion.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IPhotoProperties, CancellationToken);
+            return await PhotoPropertySets.FirstOrDefaultAsync(p => p.EXIFVersion == exifVersion);
         }
 
         public async Task<RecordedTVPropertySet> FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string episodeName = properties.EpisodeName.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IRecordedTVProperties, CancellationToken);
+            return await RecordedTVPropertySets.FirstOrDefaultAsync(p => p.EpisodeName == episodeName);
         }
 
         public async Task<VideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
         {
             if (properties.IsNullOrEmpty())
                 return null;
-            throw new NotImplementedException();
+            string compression = properties.Compression.TrimmedOrNullIfWhiteSpace();
+            // TODO: Implement FindMatchingAsync(IVideoProperties, CancellationToken);
+            return await VideoPropertySets.FirstOrDefaultAsync(p => p.Compression == compression);
+        }
+
+        public async Task<SummaryPropertySet> GetMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            SummaryPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(ISummaryProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<DocumentPropertySet> GetMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            DocumentPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IDocumentProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<AudioPropertySet> GetMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            AudioPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IAudioProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<DRMPropertySet> GetMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            DRMPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IDRMProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<GPSPropertySet> GetMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            GPSPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IGPSProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<ImagePropertySet> GetMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            ImagePropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IImageProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<MediaPropertySet> GetMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            MediaPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IMediaProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<MusicPropertySet> GetMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            MusicPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IMusicProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<PhotoPropertySet> GetMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            PhotoPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IPhotoProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<RecordedTVPropertySet> GetMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            RecordedTVPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IRecordedTVProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
+        }
+
+        public async Task<VideoPropertySet> GetMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
+        {
+            if (properties.IsNullOrEmpty())
+                return null;
+            VideoPropertySet result = await FindMatchingAsync(properties, cancellationToken);
+            if (result is null)
+            {
+                // TODO: Implement GetMatchingAsync(IVideoProperties, CancellationToken);
+                throw new NotImplementedException();
+            }
+            return result;
         }
 
         [Obsolete("Pass cancellation token")]
@@ -799,21 +664,6 @@ namespace FsInfoCat.Local
             return true;
         }
 
-        public async Task<bool> ForceDeleteBinaryPropertySetAsync(BinaryPropertySet target, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> ForceDeleteRedundantSetAsync(RedundantSet target, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> ForceDeleteFileSystemAsync(FileSystem target, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
         private void ForceDeleteRedundancy(Redundancy target)
         {
             if (target is null)
@@ -823,36 +673,6 @@ namespace FsInfoCat.Local
             SaveChanges();
             if (redundantSet.Redundancies.Count == 0)
                 RedundantSets.Remove(redundantSet);
-        }
-
-        public void ForceDeleteBinaryPropertySet(ILocalBinaryPropertySet target)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> ForceDeleteBinaryPropertySetAsync(ILocalBinaryPropertySet target, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ForceDeleteRedundantSet(ILocalRedundantSet target)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> ForceDeleteRedundantSetAsync(ILocalRedundantSet targe, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ForceDeleteFileSystem(ILocalFileSystem target)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> ForceDeleteFileSystemAsync(ILocalFileSystem target, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
         }
 
         #region Explicit Members

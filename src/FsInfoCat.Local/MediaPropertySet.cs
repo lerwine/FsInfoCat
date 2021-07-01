@@ -1,8 +1,11 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -90,6 +93,14 @@ namespace FsInfoCat.Local
         {
             obj.Property(nameof(Producer)).HasConversion(MultiStringValue.Converter);
             obj.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter);
+        }
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            MediaPropertySet oldMediaPropertySet = entry.Entity.MediaPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.MediaProperties, cancellationToken) : null;
+            IMediaProperties currentMediaProperties = await fileDetailProvider.GetMediaPropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
         }
     }
 }

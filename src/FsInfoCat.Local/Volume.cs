@@ -163,13 +163,13 @@ namespace FsInfoCat.Local
         {
             cancellationToken.ThrowIfCancellationRequested();
             EntityEntry<Volume> dbEntry = dbContext.Entry(this);
-            if (!dbEntry.Exists())
+            if (!dbEntry.ExistsInDb())
                 return false;
             cancellationToken.ThrowIfCancellationRequested();
             IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
             Subdirectory oldSubdirectory = await dbEntry.GetRelatedReferenceAsync(f => f.RootDirectory, cancellationToken);
             if (oldSubdirectory is not null)
-                await oldSubdirectory.ForceDeleteFromDbAsync(dbContext, cancellationToken);
+                await oldSubdirectory.ExpungeAsync(dbContext, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             VolumeAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
             if (accessErrors.Length > 0)

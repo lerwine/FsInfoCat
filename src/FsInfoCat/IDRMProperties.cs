@@ -1,5 +1,14 @@
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for DRM information.
+    /// </summary>
+    /// <seealso cref="IDRMPropertySet"/>
+    /// <seealso cref="Local.ILocalDRMPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamDRMPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IDRMProperties, IDRMProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetDRMPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IDRMProperties, System.Threading.CancellationToken)"/>
     public interface IDRMProperties
     {
         /// <summary>

@@ -1,6 +1,9 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -70,6 +73,14 @@ namespace FsInfoCat.Local
             _resolutionUnit = AddChangeTracker<short?>(nameof(ResolutionUnit), null);
             _verticalResolution = AddChangeTracker<double?>(nameof(VerticalResolution), null);
             _verticalSize = AddChangeTracker<uint?>(nameof(VerticalSize), null);
+        }
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            ImagePropertySet oldImagePropertySet = entry.Entity.ImagePropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.ImageProperties, cancellationToken) : null;
+            IImageProperties currentImageProperties = await fileDetailProvider.GetImagePropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
         }
     }
 }

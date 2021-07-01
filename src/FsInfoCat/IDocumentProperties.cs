@@ -2,6 +2,15 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for document files.
+    /// </summary>
+    /// <seealso cref="IDocumentPropertySet"/>
+    /// <seealso cref="Local.ILocalDocumentPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamDocumentPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IDocumentProperties, IDocumentProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetDocumentPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IDocumentProperties, System.Threading.CancellationToken)"/>
     public interface IDocumentProperties
     {
         /// <summary>

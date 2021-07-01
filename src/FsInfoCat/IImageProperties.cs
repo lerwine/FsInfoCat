@@ -1,5 +1,14 @@
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for image files.
+    /// </summary>
+    /// <seealso cref="IImagePropertySet"/>
+    /// <seealso cref="Local.ILocalImagePropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamImagePropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IImageProperties, IImageProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetImagePropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IImageProperties, System.Threading.CancellationToken)"/>
     public interface IImageProperties
     {
         /// <summary>

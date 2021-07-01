@@ -2,6 +2,15 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for music files.
+    /// </summary>
+    /// <seealso cref="IMusicPropertySet"/>
+    /// <seealso cref="Local.ILocalMusicPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamMusicPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IMusicProperties, IMusicProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetMusicPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IMusicProperties, System.Threading.CancellationToken)"/>
     public interface IMusicProperties
     {
         /// <summary>

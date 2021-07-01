@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
@@ -81,6 +82,14 @@ namespace FsInfoCat.Local
         internal static void BuildEntity(EntityTypeBuilder<GPSPropertySet> obj)
         {
             obj.Property(nameof(VersionID)).HasConversion(ByteValues.Converter);
+        }
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            GPSPropertySet oldGPSPropertySet = entry.Entity.GPSPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.GPSProperties, cancellationToken) : null;
+            IGPSProperties currentGPSProperties = await fileDetailProvider.GetGPSPropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
         }
     }
 }

@@ -255,7 +255,7 @@ namespace FsInfoCat.Local
             }
             if (dbContext.Database.CurrentTransaction is null)
             {
-                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
                 await MarkBranchIncompleteAsync(dbEntry, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
@@ -278,7 +278,7 @@ namespace FsInfoCat.Local
             }
             if (dbContext.Database.CurrentTransaction is null)
             {
-                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
                 await MarkBranchDeletedAsync(dbContext, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
@@ -293,28 +293,58 @@ namespace FsInfoCat.Local
                 foreach (Subdirectory subdirectory in await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken))
                     await subdirectory.MarkBranchDeletedAsync(dbContext, cancellationToken);
                 foreach (DbFile file in await dbEntry.GetRelatedCollectionAsync(d => d.Files, cancellationToken))
-                    await file.MarkDeletedAsync(dbContext, cancellationToken);
+                    await file.SetStatusDeleted(dbContext, cancellationToken);
                 await dbContext.SaveChangesAsync(cancellationToken);
             }
         }
 
-        public async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
+        /// <summary>
+        /// Asynchronously expunges the current <see cref="DbFile"/> from the database if the <see cref="Status"/> is <see cref="DirectoryStatus.Deleted"/>
+        /// and <see cref="LocalDbEntity.UpstreamId"/> is <see langword="null"/>.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>
+        ///   <para>A <see cref="Task{TResult}">Task&lt;System.Boolean&gt;</see> returning a <span class="keyword"><span class="languageSpecificText"><span class="cs">true</span><span class="vb">True</span><span class="cpp">true</span></span></span><span class="nu"><span class="keyword">true</span> (<span class="keyword">True</span> in Visual Basic)</span> if the subdirectory was deleted; otherwise
+        /// <span class="keyword"><span class="languageSpecificText"><span class="cs">false</span><span class="vb">False</span><span class="cpp">false</span></span></span><span class="nu"><span class="keyword">false</span> (<span class="keyword">False</span> in Visual Basic)</span> if any of the following conditions occurred:</para>
+        ///   <list type="bullet">
+        ///     <item><see cref="Status"/> of the current or any nested subdirectory was not <see cref="DirectoryStatus.Deleted"/>.</item>
+        ///     <item><see cref="DbFile.Status"/> of one or more nested files is not <see cref="FileCorrelationStatus.Deleted"/>.</item>
+        ///     <item><see cref="LocalDbEntity.UpstreamId"/> of current subdirectory or any nested file or subdirectory is not null.</item>
+        ///   </list>
+        /// </returns>
+        public async Task<bool> ExpungeAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
-            if (!dbEntry.Exists())
-                return false;
             if (dbContext.Database.CurrentTransaction is null)
             {
-                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+                using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
-                bool result = await ForceDeleteFromDbAsync(dbContext, cancellationToken);
+                bool result = await ExpungeAsync(dbContext, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
-                await transaction.CommitAsync(cancellationToken);
+                if (result)
+                    await transaction.CommitAsync(cancellationToken);
+                else
+                    await transaction.RollbackAsync(cancellationToken);
                 return result;
             }
+            EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
+            if (Status != DirectoryStatus.Deleted || UpstreamId.HasValue || !dbEntry.ExistsInDb())
+                return false;
+            foreach (Subdirectory dir in (await dbEntry.GetRelatedCollectionAsync(f => f.SubDirectories, cancellationToken)).ToArray())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (!await dir.ExpungeAsync(dbContext, cancellationToken))
+                    return false;
+            }
+            foreach (DbFile file in (await dbEntry.GetRelatedCollectionAsync(f => f.Files, cancellationToken)).ToArray())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (!await file.ExpungeAsync(dbContext, cancellationToken))
+                    return false;
+            }
             EntityEntry<CrawlConfiguration> oldCrawlConfiguration = await dbEntry.GetRelatedTargetEntryAsync(f => f.CrawlConfiguration, cancellationToken);
-            if (oldCrawlConfiguration.Exists())
+            if (oldCrawlConfiguration.ExistsInDb())
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 dbContext.CrawlConfigurations.Remove(oldCrawlConfiguration.Entity);
@@ -324,16 +354,6 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if (accessErrors.Length > 0)
                 dbContext.SubdirectoryAccessErrors.RemoveRange(accessErrors);
-            foreach (DbFile file in (await dbEntry.GetRelatedCollectionAsync(f => f.Files, cancellationToken)).ToArray())
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await file.ForceDeleteFromDbAsync(dbContext, cancellationToken);
-            }
-            foreach (Subdirectory dir in (await dbEntry.GetRelatedCollectionAsync(f => f.SubDirectories, cancellationToken)).ToArray())
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await dir.ForceDeleteFromDbAsync(dbContext, cancellationToken);
-            }
             Guid id = Id;
             cancellationToken.ThrowIfCancellationRequested();
             await dbContext.SaveChangesAsync(cancellationToken);

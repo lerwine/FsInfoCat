@@ -2,6 +2,15 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for media files.
+    /// </summary>
+    /// <seealso cref="IMediaPropertySet"/>
+    /// <seealso cref="Local.ILocalMediaPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamMediaPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IMediaProperties, IMediaProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetMediaPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IMediaProperties, System.Threading.CancellationToken)"/>
     public interface IMediaProperties
     {
         /// <summary>

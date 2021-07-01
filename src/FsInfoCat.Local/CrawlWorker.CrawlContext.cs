@@ -167,21 +167,19 @@ namespace FsInfoCat.Local
                 {
                     Worker._logger.LogTrace("Adding file {FileName}", fileInfo.Name);
                     EntityEntry<DbFile> fileEntry = await DbFile.AddNewAsync(dbContext, DB.Id, fileInfo.Name, fileInfo.Length, fileInfo.CreationTime,
-                        fileInfo.LastWriteTime, Worker._fileSystemDetailService.CreateFileDetailProvider(fileInfo.FullName, true), true, cancellationToken);
+                        fileInfo.LastWriteTime, Worker._fileSystemDetailService.CreateFileDetailProvider(fileInfo.FullName, true), cancellationToken);
                     Worker._logger.LogTrace("Inserted file (Id={Id}; Name={Name})", fileEntry.Entity.Id, fileEntry.Entity.Name);
                     return (FS: fileInfo, DB: fileEntry);
                 }
                 if (fileInfo is null)
                 {
                     Worker._logger.LogTrace("Marking file deleted (Id={Id}; Name={Name})", dbFile.Id, dbFile.Name);
-                    await dbFile.MarkDeletedAsync(dbContext, cancellationToken);
+                    await dbFile.SetStatusDeleted(dbContext, cancellationToken);
                     return (FS: fileInfo, DB: dbContext.Entry(dbFile));
                 }
                 Worker._logger.LogTrace("Updating file (Id={Id}; Name={Name})", dbFile.Id, dbFile.Name);
-                if (!dbFile.Options.HasFlag(FileCrawlOptions.DoNotCompare))
-                    await dbFile.MarkDissociatedAsync(dbContext, cancellationToken);
                 return (FS: fileInfo, DB: await dbFile.RefreshAsync(dbContext, fileInfo.Length, fileInfo.CreationTime, fileInfo.LastWriteTime,
-                    Worker._fileSystemDetailService.CreateFileDetailProvider(fileInfo.FullName, true), true, cancellationToken));
+                    Worker._fileSystemDetailService.CreateFileDetailProvider(fileInfo.FullName, true), cancellationToken));
             }
 
             private async Task<CrawlContext> ProcessSubdirectory(LocalDbContext dbContext, DirectoryInfo directoryInfo, Subdirectory subdirectory, CancellationToken cancellationToken)

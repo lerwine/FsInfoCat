@@ -2,6 +2,15 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for photo files.
+    /// </summary>
+    /// <seealso cref="IPhotoPropertySet"/>
+    /// <seealso cref="Local.ILocalPhotoPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamPhotoPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IPhotoProperties, IPhotoProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetPhotoPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IPhotoProperties, System.Threading.CancellationToken)"/>
     public interface IPhotoProperties
     {
         /// <summary>

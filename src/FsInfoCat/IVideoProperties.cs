@@ -2,6 +2,15 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for video files.
+    /// </summary>
+    /// <seealso cref="IVideoPropertySet"/>
+    /// <seealso cref="Local.ILocalVideoPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamVideoPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IVideoProperties, IVideoProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetVideoPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IVideoProperties, System.Threading.CancellationToken)"/>
     public interface IVideoProperties
     {
         /// <summary>

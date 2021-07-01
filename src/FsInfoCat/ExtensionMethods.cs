@@ -199,7 +199,13 @@ namespace FsInfoCat
             return referenceEntry.CurrentValue;
         }
 
-        public static bool Exists(this EntityEntry entry)
+        /// <summary>
+        /// Indicates whether the entry exists in the target database.
+        /// </summary>
+        /// <param name="entry">The <see cref="EntityEntry"/> to test.</param>
+        /// <returns><see langword="true"/> if the <paramref name="entry"/> is not <see langword="null"/> and its <see cref="EntityEntry.State"/>
+        /// is <see cref="EntityState.Unchanged"/> or <see cref="EntityState.Modified"/>; otherwise, <see langword="false"/>.</returns>
+        public static bool ExistsInDb(this EntityEntry entry)
         {
             if (entry is null)
                 return false;
@@ -312,6 +318,10 @@ namespace FsInfoCat
 
         public static string GetDefaultIfNullOrWhiteSpace(this string text, Func<string> getDefaultValue) =>
             GetDefaultIf(text, string.IsNullOrWhiteSpace, getDefaultValue);
+
+        public static string NullIfEmpty(this string source) => string.IsNullOrEmpty(source) ? null : source;
+
+        public static string NullIfWhiteSpace(this string source) => string.IsNullOrWhiteSpace(source) ? null : source;
 
         public static string AsNonNullTrimmed(this string text) => string.IsNullOrWhiteSpace(text) ? "" : text.Trim();
 

@@ -65,5 +65,13 @@ namespace FsInfoCat.Local
             _streamName = AddChangeTracker<string>(nameof(StreamName), null);
             _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
         }
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            AudioPropertySet oldAudioPropertySet = entry.Entity.AudioPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.AudioProperties, cancellationToken) : null;
+            IAudioProperties currentAudioProperties = await fileDetailProvider.GetAudioPropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
+        }
     }
 }

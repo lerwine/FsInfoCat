@@ -2,6 +2,15 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file summary properties.
+    /// </summary>
+    /// <seealso cref="ISummaryPropertySet"/>
+    /// <seealso cref="Local.ILocalSummaryPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamSummaryPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(ISummaryProperties, ISummaryProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetSummaryPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(ISummaryProperties, System.Threading.CancellationToken)"/>
     public interface ISummaryProperties
     {
         /// <summary>

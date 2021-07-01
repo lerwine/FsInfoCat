@@ -1,5 +1,14 @@
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents extended file properties for recorded TV files.
+    /// </summary>
+    /// <seealso cref="IRecordedTVPropertySet"/>
+    /// <seealso cref="Local.ILocalRecordedTVPropertySet"/>
+    /// <seealso cref="Upstream.IUpstreamRecordedTVPropertySet"/>
+    /// <seealso cref="FilePropertiesComparer.Equals(IRecordedTVProperties, IRecordedTVProperties)"/>
+    /// <seealso cref="Local.IFileDetailProvider.GetRecordedTVPropertiesAsync(System.Threading.CancellationToken)"/>
+    /// <seealso cref="IDbContext.FindMatchingAsync(IRecordedTVProperties, System.Threading.CancellationToken)"/>
     public interface IRecordedTVProperties
     {
         /// <summary>

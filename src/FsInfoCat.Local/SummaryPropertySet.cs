@@ -1,8 +1,11 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -116,6 +119,23 @@ namespace FsInfoCat.Local
             obj.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter);
             obj.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter);
             obj.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter);
+        }
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            if (entry.Context is not LocalDbContext dbContext)
+                throw new ArgumentOutOfRangeException(nameof(entry));
+            DbFile entity = entry.Entity;
+            SummaryPropertySet oldSummaryPropertySet = entity.SummaryPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.SummaryProperties, cancellationToken) : null;
+            ISummaryProperties currentSummaryProperties = await fileDetailProvider.GetSummaryPropertiesAsync(cancellationToken);
+            if (FilePropertiesComparer.Equals(currentSummaryProperties, oldSummaryPropertySet))
+                return;
+
+            if (currentSummaryProperties is null)
+                entity.SummaryProperties = null;
+            else
+                entity.SummaryProperties = await dbContext.GetMatchingAsync(currentSummaryProperties, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

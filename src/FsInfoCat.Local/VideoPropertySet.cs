@@ -1,8 +1,11 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -72,5 +75,13 @@ namespace FsInfoCat.Local
         }
 
         internal static void BuildEntity(EntityTypeBuilder<VideoPropertySet> obj) => obj.Property(nameof(Director)).HasConversion(MultiStringValue.Converter);
+
+        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        {
+            VideoPropertySet oldVideoPropertySet = entry.Entity.VideoPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.VideoProperties, cancellationToken) : null;
+            IVideoProperties currentVideoProperties = await fileDetailProvider.GetVideoPropertiesAsync(cancellationToken);
+            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
+            throw new NotImplementedException();
+        }
     }
 }
