@@ -31,11 +31,11 @@ DROP TABLE IF EXISTS "FileSystems";
 
 CREATE TABLE IF NOT EXISTS "FileSystems" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"DisplayName"	NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) UNIQUE COLLATE NOCASE,
+	"DisplayName"	NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName")) = length("DisplayName") AND length("DisplayName")>0) UNIQUE COLLATE NOCASE,
 	"CaseSensitiveSearch"	BIT NOT NULL DEFAULT 0,
 	"ReadOnly"	BIT NOT NULL DEFAULT 0,
 	"MaxNameLength"	BIGINT NOT NULL CHECK("MaxNameLength">0 AND "MaxNameLength"<4294967296) DEFAULT 255,
-	"DefaultDriveType"	TINYINT CHECK(DefaultDriveType IS NULL OR (DefaultDriveType>=0 AND DefaultDriveType<7)),
+	"DefaultDriveType"	TINYINT CHECK("DefaultDriveType" IS NULL OR ("DefaultDriveType">=0 AND DefaultDriveType<7)),
 	"Notes"	TEXT NOT NULL DEFAULT '',
 	"IsInactive"	BIT NOT NULL DEFAULT 0,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS "FileSystems" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_FileSystem_DisplayName" ON "FileSystems" ("DisplayName" COLLATE NOCASE);
 
 CREATE TABLE IF NOT EXISTS "SymbolicNames" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -62,6 +64,10 @@ CREATE TABLE IF NOT EXISTS "SymbolicNames" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_SymbolicName_Name" ON "SymbolicNames" ("Name" COLLATE NOCASE);
+
+CREATE INDEX "IDX_SymbolicName_IsInactive" ON "SymbolicNames" ("IsInactive");
 
 CREATE TABLE IF NOT EXISTS "Volumes" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -83,6 +89,10 @@ CREATE TABLE IF NOT EXISTS "Volumes" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_Volume_Identifier" ON "Volumes" ("Identifier" COLLATE NOCASE);
+
+CREATE INDEX "IDX_Volume_Status" ON "Volumes" ("Status");
 
 CREATE TABLE IF NOT EXISTS "VolumeAccessErrors" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -113,6 +123,8 @@ CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
+CREATE INDEX "IDX_CrawlConfiguration_IsInactive" ON "CrawlConfigurations" ("IsInactive");
+
 CREATE TABLE IF NOT EXISTS "Subdirectories" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
@@ -135,6 +147,8 @@ CREATE TABLE IF NOT EXISTS "Subdirectories" (
         ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
         (ParentId IS NOT NULL AND VolumeId IS NULL AND length(trim(Name))>0)))
 );
+
+CREATE INDEX "IDX_Subdirectory_Status" ON "Subdirectories" ("Status");
 
 CREATE TABLE IF NOT EXISTS "SubdirectoryAccessErrors" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -161,6 +175,10 @@ CREATE TABLE IF NOT EXISTS "BinaryPropertySets" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_BinaryPropertySet_Length" ON "BinaryPropertySets" ("Length");
+
+CREATE INDEX "IDX_BinaryPropertySet_Hash" ON "BinaryPropertySets" ("Hash");
 
 CREATE TABLE IF NOT EXISTS "SummaryPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -427,6 +445,8 @@ CREATE TABLE IF NOT EXISTS "Files" (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
+CREATE INDEX "IDX_File_Status" ON "Files" ("Status");
+
 CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message")) = length("Message") AND length("Message")>0) COLLATE NOCASE,
@@ -453,6 +473,8 @@ CREATE TABLE IF NOT EXISTS "RedundantSets" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_File_RemediationStatus" ON "RedundantSets" ("RemediationStatus");
 
 CREATE TABLE IF NOT EXISTS "Redundancies" (
 	"FileId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
@@ -481,12 +503,76 @@ CREATE TABLE IF NOT EXISTS "Comparisons" (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
+CREATE TRIGGER IF NOT EXISTS validate_new_file_name
+   BEFORE INSERT
+   ON "Files"
+   WHEN (SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0 OR (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
+BEGIN
+    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_file_name_change
+   BEFORE UPDATE
+   ON "Files"
+   WHEN OLD."Name"<>NEW."Name" AND ((SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0 OR (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0)
+BEGIN
+    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_name
+   BEFORE INSERT
+   ON "Subdirectories"
+   WHEN NEW."ParentId" IS NOT NULL AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
+BEGIN
+    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_subdirectory_name_change
+   BEFORE UPDATE
+   ON "Subdirectories"
+   WHEN NEW."ParentId" IS NOT NULL AND OLD."Name"<>NEW."Name" AND (SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
+BEGIN
+    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_parent
+   BEFORE INSERT
+   ON "Subdirectories"
+   WHEN (NEW."ParentId" IS NULL) = (NEW."VolumeId" IS NULL)
+BEGIN
+    SELECT RAISE (ABORT,'ParentId and VolumeId are exclusive and cannot simultaneously be null or have a value.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_subdirectory_parent_change
+   BEFORE UPDATE
+   ON "Subdirectories"
+   WHEN (OLD."ParentId"<>NEW."ParentId" OR OLD."VolumeId"<>NEW."VolumeId") AND ("ParentId" IS NULL) = ("VolumeId" IS NULL)
+BEGIN
+    SELECT RAISE (ABORT,'ParentId and VolumeId are exclusive and cannot simultaneously be null or have a value.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_new_root_subdirectory
+   BEFORE INSERT
+   ON "Subdirectories"
+   WHEN NEW."VolumeId" IS NOT NULL AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Id"=NEW."VolumeId")>0
+BEGIN
+    SELECT RAISE (ABORT,'Volume already as a root subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_root_subdirectory_change
+   BEFORE UPDATE
+   ON "Subdirectories"
+   WHEN OLD."VolumeId"<>NEW."VolumeId" AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Id"=NEW."VolumeId")>0
+BEGIN
+    SELECT RAISE (ABORT,'Volume already as a root subdirectory.');
+END;
+
 CREATE TRIGGER IF NOT EXISTS validate_new_redundancy 
    BEFORE INSERT
    ON Redundancies
    WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
-    SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
+    SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
@@ -494,7 +580,7 @@ CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
    ON Redundancies
    WHEN (NEW.FileId<>OLD.FileID OR NEW.RedundantSetId<>OLD.RedundantSetId) AND (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
-    SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
+    SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_new_crawl_config
