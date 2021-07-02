@@ -64,16 +64,16 @@ namespace FsInfoCat.Local
         public MusicPropertySet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _albumArtist = AddChangeTracker<string>(nameof(AlbumArtist), null);
-            _albumTitle = AddChangeTracker<string>(nameof(AlbumTitle), null);
+            _albumArtist = AddChangeTracker(nameof(AlbumArtist), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _albumTitle = AddChangeTracker(nameof(AlbumTitle), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _artist = AddChangeTracker<MultiStringValue>(nameof(Artist), null);
             _channelCount = AddChangeTracker<uint?>(nameof(ChannelCount), null);
             _composer = AddChangeTracker<MultiStringValue>(nameof(Composer), null);
             _conductor = AddChangeTracker<MultiStringValue>(nameof(Conductor), null);
-            _displayArtist = AddChangeTracker<string>(nameof(DisplayArtist), null);
+            _displayArtist = AddChangeTracker(nameof(DisplayArtist), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _genre = AddChangeTracker<MultiStringValue>(nameof(Genre), null);
-            _partOfSet = AddChangeTracker<string>(nameof(PartOfSet), null);
-            _period = AddChangeTracker<string>(nameof(Period), null);
+            _partOfSet = AddChangeTracker(nameof(PartOfSet), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _period = AddChangeTracker(nameof(Period), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _trackNumber = AddChangeTracker<uint?>(nameof(TrackNumber), null);
         }
 

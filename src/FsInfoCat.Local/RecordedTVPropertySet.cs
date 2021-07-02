@@ -59,14 +59,14 @@ namespace FsInfoCat.Local
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _channelNumber = AddChangeTracker<uint?>(nameof(ChannelNumber), null);
-            _episodeName = AddChangeTracker<string>(nameof(EpisodeName), null);
+            _episodeName = AddChangeTracker(nameof(EpisodeName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _isDTVContent = AddChangeTracker<bool?>(nameof(IsDTVContent), null);
             _isHDContent = AddChangeTracker<bool?>(nameof(IsHDContent), null);
-            _networkAffiliation = AddChangeTracker<string>(nameof(NetworkAffiliation), null);
-            _originalBroadcastDate = AddChangeTracker<System.DateTime?>(nameof(OriginalBroadcastDate), null);
-            _programDescription = AddChangeTracker<string>(nameof(ProgramDescription), null);
-            _stationCallSign = AddChangeTracker<string>(nameof(StationCallSign), null);
-            _stationName = AddChangeTracker<string>(nameof(StationName), null);
+            _networkAffiliation = AddChangeTracker(nameof(NetworkAffiliation), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _originalBroadcastDate = AddChangeTracker<DateTime?>(nameof(OriginalBroadcastDate), null);
+            _programDescription = AddChangeTracker(nameof(ProgramDescription), null, FilePropertiesComparer.StringValueCoersion);
+            _stationCallSign = AddChangeTracker(nameof(StationCallSign), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _stationName = AddChangeTracker(nameof(StationName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
         }
 
         internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)

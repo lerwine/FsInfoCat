@@ -1,37 +1,29 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace FsInfoCat
 {
-    public class NonWhiteSpaceOrEmptyStringCoersion : ICoersion<string>
+    public class NullIfWhiteSpaceOrNormalizedStringCoersion : ICoersion<string>
     {
-        private static string EmptyUnlessHasNonWhitespace(string source) =>
-            (source is not null && (source.Length == 0 || source.Any(c => !(char.IsWhiteSpace(c) || char.IsControl(c))))) ? source : "";
-
-        private static string WhitespaceToEmpty([NotNull] string source) =>
-            (source.Length == 0 || source.Any(c => !(char.IsWhiteSpace(c) || char.IsControl(c)))) ? source : "";
-
-        public static readonly NonWhiteSpaceOrEmptyStringCoersion Default = new();
+        public static readonly NullIfWhiteSpaceOrNormalizedStringCoersion Default = new();
 
         IEqualityComparer<string> _backingComparer;
 
         Type ICoersion.ValueType => typeof(string);
 
-        public NonWhiteSpaceOrEmptyStringCoersion(IEqualityComparer<string> comparer)
+        public NullIfWhiteSpaceOrNormalizedStringCoersion(IEqualityComparer<string> comparer)
         {
             _backingComparer = comparer ?? StringComparer.InvariantCulture;
         }
 
-        private NonWhiteSpaceOrEmptyStringCoersion() : this(null) { }
+        private NullIfWhiteSpaceOrNormalizedStringCoersion() : this(null) { }
 
-        public virtual string Cast(object obj) => EmptyUnlessHasNonWhitespace((string)obj);
+        public virtual string Cast(object obj) => StringExtensionMethods.NullIfWhiteSpaceOrNormalized((string)obj);
 
-        public virtual string Coerce(object obj) => (obj is null) ? "" : WhitespaceToEmpty((obj is string text) ? text : obj.ToString());
+        public virtual string Coerce(object obj) => (obj is null) ? "" : StringExtensionMethods.NullIfWhiteSpaceOrNormalized((obj is string text) ? text : obj.ToString());
 
-        public virtual string Normalize(string obj) => EmptyUnlessHasNonWhitespace(obj);
+        public virtual string Normalize(string obj) => StringExtensionMethods.NullIfWhiteSpaceOrNormalized(obj);
 
         object ICoersion.Normalize(object obj) => Normalize((string)obj);
 
@@ -47,9 +39,9 @@ namespace FsInfoCat
         public virtual bool TryCast(object obj, out string result)
         {
             if (obj is null)
-                result = "";
+                result = null;
             else if (obj is string text)
-                result = WhitespaceToEmpty(text);
+                result = StringExtensionMethods.NullIfWhiteSpaceOrNormalized(text);
             else
             {
                 result = null;
@@ -68,12 +60,12 @@ namespace FsInfoCat
         public virtual bool TryCoerce(object obj, out string result)
         {
             if (obj is null)
-                result = "";
+                result = null;
             else if (obj is string text)
-                result = WhitespaceToEmpty(text);
+                result = StringExtensionMethods.NullIfWhiteSpaceOrNormalized(text);
             else
             {
-                try { result = WhitespaceToEmpty(obj.ToString()); }
+                try { result = StringExtensionMethods.NullIfWhiteSpaceOrNormalized(obj.ToString()); }
                 catch
                 {
                     result = null;

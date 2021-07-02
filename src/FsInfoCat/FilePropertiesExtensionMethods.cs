@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
@@ -6,7 +6,6 @@ namespace FsInfoCat
     {
         public static ISummaryProperties NullIfPropertiesEmpty(this ISummaryProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this ISummaryProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.ApplicationName) &&
             string.IsNullOrWhiteSpace(properties.Comment) && string.IsNullOrWhiteSpace(properties.Subject) &&
             string.IsNullOrWhiteSpace(properties.Title) && string.IsNullOrWhiteSpace(properties.Company) &&
@@ -21,14 +20,12 @@ namespace FsInfoCat
 
         public static IAudioProperties NullIfPropertiesEmpty(this IAudioProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IAudioProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.Compression) &&
             string.IsNullOrWhiteSpace(properties.Format) && string.IsNullOrWhiteSpace(properties.StreamName) && !(properties.EncodingBitrate.HasValue ||
             properties.IsVariableBitrate.HasValue || properties.SampleRate.HasValue || properties.SampleSize.HasValue || properties.StreamNumber.HasValue));
 
         public static IDocumentProperties NullIfPropertiesEmpty(this IDocumentProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IDocumentProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.ClientID) &&
             string.IsNullOrWhiteSpace(properties.LastAuthor) && string.IsNullOrWhiteSpace(properties.RevisionNumber) &&
             string.IsNullOrWhiteSpace(properties.Division) && string.IsNullOrWhiteSpace(properties.DocumentID) && string.IsNullOrWhiteSpace(properties.Manager) &&
@@ -37,13 +34,11 @@ namespace FsInfoCat
 
         public static IDRMProperties NullIfPropertiesEmpty(this IDRMProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IDRMProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.Description) &&
             !(properties.DatePlayExpires.HasValue || properties.DatePlayStarts.HasValue || properties.IsProtected.HasValue || properties.PlayCount.HasValue));
 
         public static IGPSProperties NullIfPropertiesEmpty(this IGPSProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IGPSProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.AreaInformation) &&
             string.IsNullOrWhiteSpace(properties.LatitudeRef) && string.IsNullOrWhiteSpace(properties.LongitudeRef) &&
             string.IsNullOrWhiteSpace(properties.MeasureMode) && string.IsNullOrWhiteSpace(properties.ProcessingMethod) &&
@@ -53,7 +48,6 @@ namespace FsInfoCat
 
         public static IImageProperties NullIfPropertiesEmpty(this IImageProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IImageProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.CompressionText) &&
             string.IsNullOrWhiteSpace(properties.ImageID) && !(properties.BitDepth.HasValue || properties.ColorSpace.HasValue ||
             properties.CompressedBitsPerPixel.HasValue || properties.Compression.HasValue || properties.HorizontalResolution.HasValue ||
@@ -61,7 +55,6 @@ namespace FsInfoCat
 
         public static IMediaProperties NullIfPropertiesEmpty(this IMediaProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IMediaProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.ContentDistributor) &&
             string.IsNullOrWhiteSpace(properties.CreatorApplication) && string.IsNullOrWhiteSpace(properties.CreatorApplicationVersion) &&
             string.IsNullOrWhiteSpace(properties.DateReleased) && string.IsNullOrWhiteSpace(properties.DVDID) && string.IsNullOrWhiteSpace(properties.ProtectionType) &&
@@ -72,7 +65,6 @@ namespace FsInfoCat
 
         public static IMusicProperties NullIfPropertiesEmpty(this IMusicProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IMusicProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.AlbumArtist) &&
             string.IsNullOrWhiteSpace(properties.AlbumTitle) && string.IsNullOrWhiteSpace(properties.DisplayArtist) && string.IsNullOrWhiteSpace(properties.PartOfSet) &&
             string.IsNullOrWhiteSpace(properties.Period) && !properties.TrackNumber.HasValue && MultiStringValue.NullOrNotAny(properties.Artist) &&
@@ -81,7 +73,6 @@ namespace FsInfoCat
 
         public static IPhotoProperties NullIfPropertiesEmpty(this IPhotoProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IPhotoProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.CameraManufacturer) &&
             string.IsNullOrWhiteSpace(properties.CameraModel) && string.IsNullOrWhiteSpace(properties.EXIFVersion) &&
             string.IsNullOrWhiteSpace(properties.OrientationText) && !(properties.DateTaken.HasValue || properties.Orientation.HasValue) &&
@@ -89,7 +80,6 @@ namespace FsInfoCat
 
         public static IRecordedTVProperties NullIfPropertiesEmpty(this IRecordedTVProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IRecordedTVProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.EpisodeName) &&
             string.IsNullOrWhiteSpace(properties.NetworkAffiliation) && string.IsNullOrWhiteSpace(properties.ProgramDescription) &&
             string.IsNullOrWhiteSpace(properties.StationCallSign) && string.IsNullOrWhiteSpace(properties.StationName) &&
@@ -97,11 +87,9 @@ namespace FsInfoCat
 
         public static IVideoProperties NullIfPropertiesEmpty(this IVideoProperties properties) => properties.ArePropertiesNullOrEmpty() ? null : properties;
 
-        // BUG: String checks should use common coersion instead
         public static bool ArePropertiesNullOrEmpty(this IVideoProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.Compression) &&
             string.IsNullOrWhiteSpace(properties.StreamName) && !(properties.EncodingBitrate.HasValue || properties.FrameHeight.HasValue ||
             properties.FrameRate.HasValue || properties.FrameWidth.HasValue || properties.HorizontalAspectRatio.HasValue || properties.StreamNumber.HasValue ||
             properties.VerticalAspectRatio.HasValue) && MultiStringValue.NullOrNotAny(properties.Director));
-
     }
 }

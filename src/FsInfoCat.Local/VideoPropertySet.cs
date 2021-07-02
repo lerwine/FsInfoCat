@@ -62,14 +62,14 @@ namespace FsInfoCat.Local
         public VideoPropertySet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _compression = AddChangeTracker<string>(nameof(Compression), null);
+            _compression = AddChangeTracker(nameof(Compression), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _director = AddChangeTracker<MultiStringValue>(nameof(Director), null);
             _encodingBitrate = AddChangeTracker<uint?>(nameof(EncodingBitrate), null);
             _frameHeight = AddChangeTracker<uint?>(nameof(FrameHeight), null);
             _frameRate = AddChangeTracker<uint?>(nameof(FrameRate), null);
             _frameWidth = AddChangeTracker<uint?>(nameof(FrameWidth), null);
             _horizontalAspectRatio = AddChangeTracker<uint?>(nameof(HorizontalAspectRatio), null);
-            _streamName = AddChangeTracker<string>(nameof(StreamName), null);
+            _streamName = AddChangeTracker(nameof(StreamName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
             _verticalAspectRatio = AddChangeTracker<uint?>(nameof(VerticalAspectRatio), null);
         }

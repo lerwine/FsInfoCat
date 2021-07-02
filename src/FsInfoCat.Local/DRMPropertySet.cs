@@ -52,7 +52,7 @@ namespace FsInfoCat.Local
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _datePlayExpires = AddChangeTracker<System.DateTime?>(nameof(DatePlayExpires), null);
             _datePlayStarts = AddChangeTracker<System.DateTime?>(nameof(DatePlayStarts), null);
-            _description = AddChangeTracker<string>(nameof(Description), null);
+            _description = AddChangeTracker(nameof(Description), null, FilePropertiesComparer.StringValueCoersion);
             _isProtected = AddChangeTracker<bool?>(nameof(IsProtected), null);
             _playCount = AddChangeTracker<uint?>(nameof(PlayCount), null);
         }

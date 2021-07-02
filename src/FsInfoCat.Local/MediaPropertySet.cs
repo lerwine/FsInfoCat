@@ -72,19 +72,19 @@ namespace FsInfoCat.Local
         public MediaPropertySet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _contentDistributor = AddChangeTracker<string>(nameof(ContentDistributor), null);
-            _creatorApplication = AddChangeTracker<string>(nameof(CreatorApplication), null);
-            _creatorApplicationVersion = AddChangeTracker<string>(nameof(CreatorApplicationVersion), null);
-            _dateReleased = AddChangeTracker<string>(nameof(DateReleased), null);
+            _contentDistributor = AddChangeTracker(nameof(ContentDistributor), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _creatorApplication = AddChangeTracker(nameof(CreatorApplication), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _creatorApplicationVersion = AddChangeTracker(nameof(CreatorApplicationVersion), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _dateReleased = AddChangeTracker(nameof(DateReleased), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _duration = AddChangeTracker<ulong?>(nameof(Duration), null);
-            _dvdID = AddChangeTracker<string>(nameof(DVDID), null);
+            _dvdID = AddChangeTracker(nameof(DVDID), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _frameCount = AddChangeTracker<uint?>(nameof(FrameCount), null);
             _producer = AddChangeTracker<MultiStringValue>(nameof(Producer), null);
-            _protectionType = AddChangeTracker<string>(nameof(ProtectionType), null);
-            _providerRating = AddChangeTracker<string>(nameof(ProviderRating), null);
-            _providerStyle = AddChangeTracker<string>(nameof(ProviderStyle), null);
-            _publisher = AddChangeTracker<string>(nameof(Publisher), null);
-            _subtitle = AddChangeTracker<string>(nameof(Subtitle), null);
+            _protectionType = AddChangeTracker(nameof(ProtectionType), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _providerRating = AddChangeTracker(nameof(ProviderRating), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _providerStyle = AddChangeTracker(nameof(ProviderStyle), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _publisher = AddChangeTracker(nameof(Publisher), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _subtitle = AddChangeTracker(nameof(Subtitle), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _writer = AddChangeTracker<MultiStringValue>(nameof(Writer), null);
             _year = AddChangeTracker<uint?>(nameof(Year), null);
         }

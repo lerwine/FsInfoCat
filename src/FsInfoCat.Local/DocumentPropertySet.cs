@@ -64,17 +64,17 @@ namespace FsInfoCat.Local
         public DocumentPropertySet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _clientID = AddChangeTracker<string>(nameof(ClientID), null);
+            _clientID = AddChangeTracker(nameof(ClientID), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _contributor = AddChangeTracker<MultiStringValue>(nameof(Contributor), null);
             _dateCreated = AddChangeTracker<DateTime?>(nameof(DateCreated), null);
-            _lastAuthor = AddChangeTracker<string>(nameof(LastAuthor), null);
-            _revisionNumber = AddChangeTracker<string>(nameof(RevisionNumber), null);
+            _lastAuthor = AddChangeTracker(nameof(LastAuthor), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _revisionNumber = AddChangeTracker(nameof(RevisionNumber), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _security = AddChangeTracker<int?>(nameof(Security), null);
-            _division = AddChangeTracker<string>(nameof(Division), null);
-            _documentID = AddChangeTracker<string>(nameof(DocumentID), null);
-            _manager = AddChangeTracker<string>(nameof(Manager), null);
-            _presentationFormat = AddChangeTracker<string>(nameof(PresentationFormat), null);
-            _version = AddChangeTracker<string>(nameof(Version), null);
+            _division = AddChangeTracker(nameof(Division), null, FilePropertiesComparer.StringValueCoersion);
+            _documentID = AddChangeTracker(nameof(DocumentID), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _manager = AddChangeTracker(nameof(Manager), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _presentationFormat = AddChangeTracker(nameof(PresentationFormat), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _version = AddChangeTracker(nameof(Version), null, FilePropertiesComparer.NormalizedStringValueCoersion);
         }
 
         internal static void BuildEntity(EntityTypeBuilder<DocumentPropertySet> obj) => obj.Property(nameof(Contributor)).HasConversion(MultiStringValue.Converter);

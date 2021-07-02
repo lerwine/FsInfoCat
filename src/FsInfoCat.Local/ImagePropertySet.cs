@@ -66,10 +66,10 @@ namespace FsInfoCat.Local
             _colorSpace = AddChangeTracker<ushort?>(nameof(ColorSpace), null);
             _compressedBitsPerPixel = AddChangeTracker<double?>(nameof(CompressedBitsPerPixel), null);
             _compression = AddChangeTracker<ushort?>(nameof(Compression), null);
-            _compressionText = AddChangeTracker<string>(nameof(CompressionText), null);
+            _compressionText = AddChangeTracker(nameof(CompressionText), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _horizontalResolution = AddChangeTracker<double?>(nameof(HorizontalResolution), null);
             _horizontalSize = AddChangeTracker<uint?>(nameof(HorizontalSize), null);
-            _imageID = AddChangeTracker<string>(nameof(ImageID), null);
+            _imageID = AddChangeTracker(nameof(ImageID), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _resolutionUnit = AddChangeTracker<short?>(nameof(ResolutionUnit), null);
             _verticalResolution = AddChangeTracker<double?>(nameof(VerticalResolution), null);
             _verticalSize = AddChangeTracker<uint?>(nameof(VerticalSize), null);

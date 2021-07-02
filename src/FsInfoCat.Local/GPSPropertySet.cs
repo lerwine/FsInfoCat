@@ -65,17 +65,17 @@ namespace FsInfoCat.Local
         public GPSPropertySet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _areaInformation = AddChangeTracker<string>(nameof(AreaInformation), null);
+            _areaInformation = AddChangeTracker(nameof(AreaInformation), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _latitudeDegrees = AddChangeTracker<double?>(nameof(LatitudeDegrees), null);
             _latitudeMinutes = AddChangeTracker<double?>(nameof(LatitudeMinutes), null);
             _latitudeSeconds = AddChangeTracker<double?>(nameof(LatitudeSeconds), null);
-            _latitudeRef = AddChangeTracker<string>(nameof(LatitudeRef), null);
+            _latitudeRef = AddChangeTracker(nameof(LatitudeRef), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _longitudeDegrees = AddChangeTracker<double?>(nameof(LongitudeDegrees), null);
             _longitudeMinutes = AddChangeTracker<double?>(nameof(LongitudeMinutes), null);
             _longitudeSeconds = AddChangeTracker<double?>(nameof(LongitudeSeconds), null);
-            _longitudeRef = AddChangeTracker<string>(nameof(LongitudeRef), null);
-            _measureMode = AddChangeTracker<string>(nameof(MeasureMode), null);
-            _processingMethod = AddChangeTracker<string>(nameof(ProcessingMethod), null);
+            _longitudeRef = AddChangeTracker(nameof(LongitudeRef), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _measureMode = AddChangeTracker(nameof(MeasureMode), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _processingMethod = AddChangeTracker(nameof(ProcessingMethod), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _versionID = AddChangeTracker<ByteValues>(nameof(VersionID), null);
         }
 

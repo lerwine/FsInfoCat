@@ -56,13 +56,13 @@ namespace FsInfoCat.Local
         public AudioPropertySet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _compression = AddChangeTracker<string>(nameof(Compression), null);
+            _compression = AddChangeTracker(nameof(Compression), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _encodingBitrate = AddChangeTracker<uint?>(nameof(EncodingBitrate), null);
-            _format = AddChangeTracker<string>(nameof(Format), null);
+            _format = AddChangeTracker(nameof(Format), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _isVariableBitrate = AddChangeTracker<bool?>(nameof(IsVariableBitrate), null);
             _sampleRate = AddChangeTracker<uint?>(nameof(SampleRate), null);
             _sampleSize = AddChangeTracker<uint?>(nameof(SampleSize), null);
-            _streamName = AddChangeTracker<string>(nameof(StreamName), null);
+            _streamName = AddChangeTracker(nameof(StreamName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
         }
 

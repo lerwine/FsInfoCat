@@ -58,13 +58,13 @@ namespace FsInfoCat.Local
         public PhotoPropertySet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _cameraManufacturer = AddChangeTracker<string>(nameof(CameraManufacturer), null);
-            _cameraModel = AddChangeTracker<string>(nameof(CameraModel), null);
-            _dateTaken = AddChangeTracker<System.DateTime?>(nameof(DateTaken), null);
+            _cameraManufacturer = AddChangeTracker(nameof(CameraManufacturer), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _cameraModel = AddChangeTracker(nameof(CameraModel), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _dateTaken = AddChangeTracker<DateTime?>(nameof(DateTaken), null);
             _event = AddChangeTracker<MultiStringValue>(nameof(Event), null);
-            _exifVersion = AddChangeTracker<string>(nameof(EXIFVersion), null);
+            _exifVersion = AddChangeTracker(nameof(EXIFVersion), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _orientation = AddChangeTracker<ushort?>(nameof(Orientation), null);
-            _orientationText = AddChangeTracker<string>(nameof(OrientationText), null);
+            _orientationText = AddChangeTracker(nameof(OrientationText), null, FilePropertiesComparer.StringValueCoersion);
             _peopleNames = AddChangeTracker<MultiStringValue>(nameof(PeopleNames), null);
         }
 
