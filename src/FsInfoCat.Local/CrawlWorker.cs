@@ -103,6 +103,7 @@ namespace FsInfoCat.Local
                 throw new InvalidOperationException($"Unexpected error: Could not build full path for {nameof(CrawlConfiguration)}.{nameof(CrawlConfiguration.Root)}.");
             await subdirectory.MarkBranchIncompleteAsync(dbContext, cancellationToken);
             CrawlContext context = new(this, 0, new DirectoryInfo(fullName), subdirectory);
+            // TODO: Figure out how to deal with it if context.FS.Exists is false because volume is not present - or see if that could ever happen
             await context.CrawlAsync(dbContext, crawlEventReceiver, cancellationToken);
         }
 
