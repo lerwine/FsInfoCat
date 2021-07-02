@@ -173,69 +173,94 @@ namespace FsInfoCat
         bool IEqualityComparer<IPhotoProperties>.Equals(IPhotoProperties x, IPhotoProperties y) => Equals(x, y);
         bool IEqualityComparer<IRecordedTVProperties>.Equals(IRecordedTVProperties x, IRecordedTVProperties y) => Equals(x, y);
         bool IEqualityComparer<IVideoProperties>.Equals(IVideoProperties x, IVideoProperties y) => Equals(x, y);
-
+        
         public int GetHashCode([DisallowNull] ISummaryProperties obj)
         {
-            // TODO: Implement GetHashCode(ISummaryProperties);
-            throw new NotImplementedException();
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
+            return (new int?[] { obj.Rating?.GetHashCode(), obj.Rating?.GetHashCode(), obj.Rating?.GetHashCode(), obj.Author?.GetHashCode(), obj.Keywords?.GetHashCode(), obj.ItemAuthors?.GetHashCode(), obj.Kind?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.Title, obj.Subject, obj.Company, obj.ContentType, obj.Copyright, obj.ParentalRating, obj.ItemType, obj.MIMEType, obj.ParentalRatingsOrganization, obj.ProductName })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s)))
+                .Concat((new string[] { obj.Comment, obj.ItemTypeText, obj.ParentalRatingReason, obj.SensitivityText, obj.Copyright }).Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IDocumentProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IDocumentProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IAudioProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IAudioProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IDRMProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IDRMProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IGPSProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IGPSProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IImageProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IImageProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IMediaProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IMediaProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IMusicProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IMusicProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IPhotoProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IPhotoProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IRecordedTVProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IRecordedTVProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IVideoProperties obj)
         {
+            if (obj.ArePropertiesNullOrEmpty())
+                return 0;
             // TODO: Implement GetHashCode(IVideoProperties);
             throw new NotImplementedException();
         }
