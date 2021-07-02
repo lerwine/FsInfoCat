@@ -88,29 +88,29 @@ namespace FsInfoCat.Local
         public SummaryPropertySet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _applicationName = AddChangeTracker<string>(nameof(ApplicationName), null);
+            _applicationName = AddChangeTracker(nameof(ApplicationName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _author = AddChangeTracker<MultiStringValue>(nameof(Author), null);
-            _comment = AddChangeTracker<string>(nameof(Comment), null);
+            _comment = AddChangeTracker(nameof(Comment), null, FilePropertiesComparer.StringValueCoersion);
             _keywords = AddChangeTracker<MultiStringValue>(nameof(Keywords), null);
-            _subject = AddChangeTracker<string>(nameof(Subject), null);
-            _title = AddChangeTracker<string>(nameof(Title), null);
-            _company = AddChangeTracker<string>(nameof(Company), null);
-            _contentType = AddChangeTracker<string>(nameof(ContentType), null);
-            _copyright = AddChangeTracker<string>(nameof(Copyright), null);
-            _parentalRating = AddChangeTracker<string>(nameof(ParentalRating), null);
+            _subject = AddChangeTracker(nameof(Subject), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _title = AddChangeTracker(nameof(Title), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _company = AddChangeTracker(nameof(Company), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _contentType = AddChangeTracker(nameof(ContentType), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _copyright = AddChangeTracker(nameof(Copyright), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _parentalRating = AddChangeTracker(nameof(ParentalRating), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _rating = AddChangeTracker<uint?>(nameof(Rating), null);
             _itemAuthors = AddChangeTracker<MultiStringValue>(nameof(ItemAuthors), null);
-            _itemType = AddChangeTracker<string>(nameof(ItemType), null);
-            _itemTypeText = AddChangeTracker<string>(nameof(ItemTypeText), null);
+            _itemType = AddChangeTracker(nameof(ItemType), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _itemTypeText = AddChangeTracker(nameof(ItemTypeText), null, FilePropertiesComparer.StringValueCoersion);
             _kind = AddChangeTracker<MultiStringValue>(nameof(Kind), null);
-            _mimeType = AddChangeTracker<string>(nameof(MIMEType), null);
-            _parentalRatingReason = AddChangeTracker<string>(nameof(ParentalRatingReason), null);
+            _mimeType = AddChangeTracker(nameof(MIMEType), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _parentalRatingReason = AddChangeTracker(nameof(ParentalRatingReason), null, FilePropertiesComparer.StringValueCoersion);
             _parentalRatingsOrganization = AddChangeTracker<string>(nameof(ParentalRatingsOrganization), null);
             _sensitivity = AddChangeTracker<ushort?>(nameof(Sensitivity), null);
-            _sensitivityText = AddChangeTracker<string>(nameof(SensitivityText), null);
+            _sensitivityText = AddChangeTracker(nameof(SensitivityText), null, FilePropertiesComparer.StringValueCoersion);
             _simpleRating = AddChangeTracker<uint?>(nameof(SimpleRating), null);
-            _trademarks = AddChangeTracker<string>(nameof(Trademarks), null);
-            _productName = AddChangeTracker<string>(nameof(ProductName), null);
+            _trademarks = AddChangeTracker(nameof(Trademarks), null, FilePropertiesComparer.StringValueCoersion);
+            _productName = AddChangeTracker(nameof(ProductName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
         }
 
         internal static void BuildEntity(EntityTypeBuilder<SummaryPropertySet> obj)

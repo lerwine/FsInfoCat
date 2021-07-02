@@ -10,7 +10,18 @@ namespace FsInfoCat.Collections
 {
     public partial class MultiStringValue : ReadOnlyCollection<string>, IEquatable<MultiStringValue>, IConvertible
     {
-        private static readonly StringComparer Comparer = StringComparer.InvariantCultureIgnoreCase;
+        public static bool NullOrNotAny(MultiStringValue source) => source is null || source.Count == 0;
+
+        public static MultiStringValue NullIfNotAny(MultiStringValue source) => (source is null || source.Count == 0) ? null : source;
+
+        public static readonly NullIfWhiteSpaceOrNormalizedStringCoersion Coersion = new(StringComparer.InvariantCultureIgnoreCase);
+
+        public static bool AreEqual(MultiStringValue x, MultiStringValue y)
+        {
+            if (NullOrNotAny(x))
+                return NullOrNotAny(y);
+            return x.Equals(y);
+        }
 
         public static readonly ValueConverter<MultiStringValue, string> Converter = new(
             v => (v == null) ? null : v.ToString(),
@@ -33,13 +44,13 @@ namespace FsInfoCat.Collections
             using IEnumerator<string> enumerator = rawValues.GetEnumerator();
             if (!enumerator.MoveNext())
                 return ESCAPED_EMPTY;
-            string text = enumerator.Current;
+            string text = Coersion.Normalize(enumerator.Current);
             if (!enumerator.MoveNext())
                 return (text is null) ? ESCAPED_NULL : text.Replace(UNESCAPED_LITERAL, ESCAPED_LITERAL);
             StringBuilder stringBuilder = new((text is null) ? ESCAPED_NULL : text.Replace(UNESCAPED_LITERAL, ESCAPED_LITERAL));
             do
             {
-                text = enumerator.Current;
+                text = Coersion.Normalize(enumerator.Current);
                 stringBuilder.Append(ESCAPE).Append(RECORD_SEPARATOR).Append((text is null) ? ESCAPED_NULL : text.Replace(UNESCAPED_LITERAL, ESCAPED_LITERAL));
             } while (enumerator.MoveNext());
             return stringBuilder.ToString();
@@ -103,13 +114,14 @@ namespace FsInfoCat.Collections
 
         public MultiStringValue() : base(Array.Empty<string>()) { }
 
-        public bool Equals(MultiStringValue other) => other is not null && ReferenceEquals(this, other) || Comparer.Equals(ToString(), other.ToString());
+        public bool Equals(MultiStringValue other) => (Count == 0) ? other is null || other.Count == 0 : ReferenceEquals(this, other) ||
+            (other is not null && other.Count > 0 && ToString().Equals(other.ToString().EmptyIfNullOrWhiteSpace(), StringComparison.InvariantCultureIgnoreCase));
 
         public override bool Equals(object obj) => obj is MultiStringValue other && Equals(other);
 
-        public override int GetHashCode() => Comparer.GetHashCode(ToString());
+        public override int GetHashCode() => Coersion.GetHashCode(ToString());
 
-        public override string ToString() => Encode(this);
+        public override string ToString() => (Count == 0) ? "" : Encode(this);
 
         TypeCode IConvertible.GetTypeCode() => TypeCode.String;
         bool IConvertible.ToBoolean(IFormatProvider provider) => Convert.ToBoolean(ToString(), provider);
@@ -134,11 +146,11 @@ namespace FsInfoCat.Collections
 
         public static bool operator !=(MultiStringValue left, MultiStringValue right) => !(left == right);
 
-        public static implicit operator MultiStringValue(string[] values) => (values is null) ? null : new(values);
+        public static implicit operator MultiStringValue(string[] values) => (values is null || values.Length == 0 || (values = values.Select(StringExtensionMethods.NullIfWhiteSpace).Where(t => t is not null).ToArray()).Length == 0) ? null : new(values);
 
         public static implicit operator string[](MultiStringValue values) => values?.ToArray();
 
-        public static implicit operator MultiStringValue(string text) => (text is null) ? null : new(text);
+        public static implicit operator MultiStringValue(string text) => string.IsNullOrWhiteSpace(text) ? null : new(text);
 
         public static implicit operator string(MultiStringValue values) => values?.ToString();
     }

@@ -9,6 +9,71 @@ namespace FsInfoCat.Collections
     /// </summary>
     public static class CollectionExtensions
     {
+        public static IEnumerable<T> NullIfNotAny<T>(this IEnumerable<T> source) => (source is null || !source.Any()) ? null : source;
+
+        public static IEnumerable<T> NonNullElements<T>(this IEnumerable<T> source) where T : class => source?.Where(s => s is not null);
+
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => (source is null) ? Array.Empty<T>() : source;
+
+        public static IEnumerable<IndexedValue<T>> ToIndexValuePairs<T>(this IEnumerable<T> source) => source?.Select((e, i) => new IndexedValue<T>(i, e));
+
+        public static IEnumerable<IndexedValue<TResult>> ToIndexValuePairs<TElement, TResult>(this IEnumerable<TElement> source, Func<TElement, TResult> transform)
+        {
+            if (transform is null)
+                throw new ArgumentNullException(nameof(transform));
+            return source?.Select((e, i) => new IndexedValue<TResult>(i, transform(e)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, int, TKey> getKey, Func<TSource, int, TValue> getValue)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            if (getValue is null)
+                throw new ArgumentNullException(nameof(getValue));
+            return source?.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), getValue(e, i)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, int, TKey> getKey, Func<TSource, TValue> getValue)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            if (getValue is null)
+                throw new ArgumentNullException(nameof(getValue));
+            return source?.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), getValue(e)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> getKey, Func<TSource, int, TValue> getValue)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            if (getValue is null)
+                throw new ArgumentNullException(nameof(getValue));
+            return source?.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e), getValue(e, i)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> getKey, Func<TSource, TValue> getValue)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            if (getValue is null)
+                throw new ArgumentNullException(nameof(getValue));
+            return source?.Select(e => new KeyValuePair<TKey, TValue>(getKey(e), getValue(e)));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, int, TKey> getKey)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            return source?.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), e));
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> getKey)
+        {
+            if (getKey is null)
+                throw new ArgumentNullException(nameof(getKey));
+            return source?.Select(e => new KeyValuePair<TKey, TValue>(getKey(e), e));
+        }
+
         //public static IEqualityComparer<T> ToEqualityComparer<T>(this IComparer<T> comparer)
         //{
         //    if (comparer is null)

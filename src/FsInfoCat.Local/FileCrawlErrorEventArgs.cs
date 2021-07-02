@@ -9,7 +9,7 @@ namespace FsInfoCat.Local
 
         public Exception Exception { get; }
 
-        public FileCrawlErrorEventArgs(CrawlWorker.CrawlContext crawlContext, AccessErrorCode errorCode, FileInfo fs, DbFile db, Exception exception)
+        public FileCrawlErrorEventArgs(CrawlTaskManager.CrawlContext crawlContext, AccessErrorCode errorCode, FileInfo fs, DbFile db, Exception exception)
             : base(crawlContext, fs, db)
         {
             ErrorCode = errorCode;

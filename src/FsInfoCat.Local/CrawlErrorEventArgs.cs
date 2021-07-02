@@ -6,7 +6,7 @@ namespace FsInfoCat.Local
     {
         public AggregateException Exception { get; }
 
-        public CrawlErrorEventArgs(CrawlWorker crawlWorker, AggregateException exception)
+        public CrawlErrorEventArgs(CrawlTaskManager crawlWorker, AggregateException exception)
         {
             throw new NotImplementedException();
         }

@@ -11,7 +11,7 @@ namespace FsInfoCat.Local
         public Subdirectory ParentDB { get; }
         public int Depth { get; }
 
-        public FileCrawlEventArgs(CrawlWorker.CrawlContext crawlContext, FileInfo fs, DbFile db) : base((crawlContext ?? throw new ArgumentNullException(nameof(crawlContext))).Worker)
+        public FileCrawlEventArgs(CrawlTaskManager.CrawlContext crawlContext, FileInfo fs, DbFile db) : base((crawlContext ?? throw new ArgumentNullException(nameof(crawlContext))).Worker)
         {
             FS = fs ?? throw new ArgumentNullException(nameof(fs));
             DB = db;

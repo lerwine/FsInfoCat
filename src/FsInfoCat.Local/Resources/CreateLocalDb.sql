@@ -31,11 +31,11 @@ DROP TABLE IF EXISTS "FileSystems";
 
 CREATE TABLE IF NOT EXISTS "FileSystems" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"DisplayName"	NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) UNIQUE COLLATE NOCASE,
+	"DisplayName"	NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName")) = length("DisplayName") AND length("DisplayName")>0) UNIQUE COLLATE NOCASE,
 	"CaseSensitiveSearch"	BIT NOT NULL DEFAULT 0,
 	"ReadOnly"	BIT NOT NULL DEFAULT 0,
 	"MaxNameLength"	BIGINT NOT NULL CHECK("MaxNameLength">0 AND "MaxNameLength"<4294967296) DEFAULT 255,
-	"DefaultDriveType"	TINYINT CHECK(DefaultDriveType IS NULL OR (DefaultDriveType>=0 AND DefaultDriveType<7)),
+	"DefaultDriveType"	TINYINT CHECK("DefaultDriveType" IS NULL OR ("DefaultDriveType">=0 AND DefaultDriveType<7)),
 	"Notes"	TEXT NOT NULL DEFAULT '',
 	"IsInactive"	BIT NOT NULL DEFAULT 0,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS "FileSystems" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_FileSystem_DisplayName" ON "FileSystems" ("DisplayName" COLLATE NOCASE);
 
 CREATE TABLE IF NOT EXISTS "SymbolicNames" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -62,6 +64,10 @@ CREATE TABLE IF NOT EXISTS "SymbolicNames" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_SymbolicName_Name" ON "SymbolicNames" ("Name" COLLATE NOCASE);
+
+CREATE INDEX "IDX_SymbolicName_IsInactive" ON "SymbolicNames" ("IsInactive");
 
 CREATE TABLE IF NOT EXISTS "Volumes" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -83,6 +89,10 @@ CREATE TABLE IF NOT EXISTS "Volumes" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_Volume_Identifier" ON "Volumes" ("Identifier" COLLATE NOCASE);
+
+CREATE INDEX "IDX_Volume_Status" ON "Volumes" ("Status");
 
 CREATE TABLE IF NOT EXISTS "VolumeAccessErrors" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -113,6 +123,8 @@ CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
+CREATE INDEX "IDX_CrawlConfiguration_IsInactive" ON "CrawlConfigurations" ("IsInactive");
+
 CREATE TABLE IF NOT EXISTS "Subdirectories" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
@@ -135,6 +147,8 @@ CREATE TABLE IF NOT EXISTS "Subdirectories" (
         ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
         (ParentId IS NOT NULL AND VolumeId IS NULL AND length(trim(Name))>0)))
 );
+
+CREATE INDEX "IDX_Subdirectory_Status" ON "Subdirectories" ("Status");
 
 CREATE TABLE IF NOT EXISTS "SubdirectoryAccessErrors" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
@@ -162,32 +176,36 @@ CREATE TABLE IF NOT EXISTS "BinaryPropertySets" (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
+CREATE INDEX "IDX_BinaryPropertySet_Length" ON "BinaryPropertySets" ("Length");
+
+CREATE INDEX "IDX_BinaryPropertySet_Hash" ON "BinaryPropertySets" ("Hash");
+
 CREATE TABLE IF NOT EXISTS "SummaryPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ApplicationName" NVARCHAR(1024) DEFAULT NULL,
-	"Author" TEXT DEFAULT NULL,
-	"Comment" TEXT DEFAULT NULL,
-	"Keywords" TEXT DEFAULT NULL,
-	"Subject" NVARCHAR(1024) DEFAULT NULL,
-	"Title" NVARCHAR(1024) DEFAULT NULL,
-	"Category" TEXT DEFAULT NULL,
-	"Company" NVARCHAR(1024) DEFAULT NULL,
-	"ContentType" NVARCHAR(1024) DEFAULT NULL,
-	"Copyright" NVARCHAR(1024) DEFAULT NULL,
-	"ParentalRating" NVARCHAR(32) DEFAULT NULL,
+	"ApplicationName" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"Author" TEXT DEFAULT NULL COLLATE NOCASE,
+	"Comment" TEXT DEFAULT NULL COLLATE NOCASE,
+	"Keywords" TEXT DEFAULT NULL COLLATE NOCASE,
+	"Subject" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"Title" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"Category" TEXT DEFAULT NULL COLLATE NOCASE,
+	"Company" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"ContentType" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"Copyright" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"ParentalRating" NVARCHAR(32) DEFAULT NULL COLLATE NOCASE,
 	"Rating" TINYINT CHECK("Rating" IS NULL OR ("Rating">0 AND "Rating"<100)) DEFAULT NULL,
-	"ItemAuthors" TEXT DEFAULT NULL,
-	"ItemType" NVARCHAR(32) DEFAULT NULL,
-	"ItemTypeText" NVARCHAR(64) DEFAULT NULL,
-	"Kind" TEXT DEFAULT NULL,
-	"MIMEType" NVARCHAR(1024) DEFAULT NULL,
-	"ParentalRatingReason" NVARCHAR(1024) DEFAULT NULL,
-	"ParentalRatingsOrganization" NVARCHAR(1024) DEFAULT NULL,
+	"ItemAuthors" TEXT DEFAULT NULL COLLATE NOCASE,
+	"ItemType" NVARCHAR(32) DEFAULT NULL COLLATE NOCASE,
+	"ItemTypeText" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
+	"Kind" TEXT DEFAULT NULL COLLATE NOCASE,
+	"MIMEType" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"ParentalRatingReason" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"ParentalRatingsOrganization" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
 	"Sensitivity" INT CHECK("Sensitivity" IS NULL OR ("Sensitivity">=0 AND "Sensitivity"<65536)) DEFAULT NULL,
-	"SensitivityText" NVARCHAR(1024) DEFAULT NULL,
+	"SensitivityText" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
 	"SimpleRating" TinyInt CHECK("SimpleRating" IS NULL OR ("SimpleRating">=0 AND "SimpleRating"<6)) DEFAULT NULL,
-	"Trademarks" NVARCHAR(1024) DEFAULT NULL,
-	"ProductName" NVARCHAR(256) DEFAULT NULL,
+	"Trademarks" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"ProductName" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -198,17 +216,17 @@ CREATE TABLE IF NOT EXISTS "SummaryPropertySets" (
 
 CREATE TABLE IF NOT EXISTS "DocumentPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ClientID" NVARCHAR(64) DEFAULT NULL,
-	"Contributor" TEXT DEFAULT NULL,
+	"ClientID" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
+	"Contributor" TEXT DEFAULT NULL COLLATE NOCASE,
 	"DateCreated" DATETIME DEFAULT NULL,
-	"LastAuthor" NVARCHAR(1024) DEFAULT NULL,
-	"RevisionNumber" NVARCHAR(64) DEFAULT NULL,
+	"LastAuthor" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"RevisionNumber" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
 	"Security" INT DEFAULT NULL,
-	"Division" NVARCHAR(256) DEFAULT NULL,
-	"DocumentID" NVARCHAR(64) DEFAULT NULL,
-	"Manager" NVARCHAR(256) DEFAULT NULL,
-	"PresentationFormat" NVARCHAR(256) DEFAULT NULL,
-	"Version" NVARCHAR(64) DEFAULT NULL,
+	"Division" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"DocumentID" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
+	"Manager" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"PresentationFormat" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"Version" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -219,9 +237,9 @@ CREATE TABLE IF NOT EXISTS "DocumentPropertySets" (
 
 CREATE TABLE IF NOT EXISTS "AudioPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"Compression" NVARCHAR(256) DEFAULT NULL,
+	"Compression" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"EncodingBitrate" BIGINT CHECK("EncodingBitrate" IS NULL OR ("EncodingBitrate">=0 AND "EncodingBitrate"<4294967296)) DEFAULT NULL,
-	"Format" NVARCHAR(256) DEFAULT NULL,
+	"Format" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"IsVariableBitrate" BIT DEFAULT NULL,
 	"SampleRate" BIGINT CHECK("SampleRate" IS NULL OR ("SampleRate">=0 AND "SampleRate"<4294967296)) DEFAULT NULL,
 	"SampleSize" BIGINT CHECK("SampleSize" IS NULL OR ("SampleSize">=0 AND "SampleSize"<4294967296)) DEFAULT NULL,
@@ -239,7 +257,7 @@ CREATE TABLE IF NOT EXISTS "DRMPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"DatePlayExpires" DATETIME DEFAULT NULL,
 	"DatePlayStarts" DATETIME DEFAULT NULL,
-	"Description" TEXT DEFAULT NULL,
+	"Description" TEXT DEFAULT NULL COLLATE NOCASE,
 	"IsProtected" BIT DEFAULT NULL,
 	"PlayCount" BIGINT CHECK("PlayCount" IS NULL OR ("PlayCount">=0 AND "PlayCount"<4294967296)) DEFAULT NULL,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
@@ -252,18 +270,18 @@ CREATE TABLE IF NOT EXISTS "DRMPropertySets" (
 
 CREATE TABLE IF NOT EXISTS "GPSPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"AreaInformation" NVARCHAR(1024) DEFAULT NULL,
+	"AreaInformation" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
 	"LatitudeDegrees" DOUBLE DEFAULT NULL,
 	"LatitudeMinutes" DOUBLE DEFAULT NULL,
 	"Latitude" DOUBLE DEFAULT NULL,
-	"LatitudeRef" NVARCHAR(256) DEFAULT NULL,
+	"LatitudeRef" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"LongitudeDegrees" DOUBLE DEFAULT NULL,
 	"LongitudeMinutes" DOUBLE DEFAULT NULL,
 	"LongitudeSeconds" DOUBLE DEFAULT NULL,
-	"LongitudeRef" NVARCHAR(256) DEFAULT NULL,
-	"MeasureMode" NVARCHAR(256) DEFAULT NULL,
+	"LongitudeRef" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"MeasureMode" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"ProcessingMethod" NVARCHAR(256) DEFAULT NULL,
-	"VersionID" NVARCHAR(128) DEFAULT NULL,
+	"VersionID" NVARCHAR(128) DEFAULT NULL COLLATE NOCASE,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -278,10 +296,10 @@ CREATE TABLE IF NOT EXISTS "ImagePropertySets" (
 	"ColorSpace" INT CHECK("ColorSpace" IS NULL OR ("ColorSpace">=0 AND "ColorSpace"<65536)) DEFAULT NULL,
 	"CompressedBitsPerPixel" DOUBLE DEFAULT NULL,
 	"Compression" INT CHECK("Compression" IS NULL OR ("Compression">=0 AND "Compression"<65536)) DEFAULT NULL,
-	"CompressionText" NVARCHAR(256) DEFAULT NULL,
+	"CompressionText" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"HorizontalResolution" DOUBLE DEFAULT NULL,
 	"HorizontalSize" BIGINT CHECK("HorizontalSize" IS NULL OR ("HorizontalSize">=0 AND "HorizontalSize"<4294967296)) DEFAULT NULL,
-	"ImageID" NVARCHAR(256) DEFAULT NULL,
+	"ImageID" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"ResolutionUnit" TINYINT DEFAULT NULL,
 	"VerticalResolution" DOUBLE DEFAULT NULL,
 	"VerticalSize" BIGINT CHECK("VerticalSize" IS NULL OR ("VerticalSize">=0 AND "VerticalSize"<4294967296)) DEFAULT NULL,
@@ -295,20 +313,20 @@ CREATE TABLE IF NOT EXISTS "ImagePropertySets" (
 
 CREATE TABLE IF NOT EXISTS "MediaPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ContentDistributor" NVARCHAR(256) DEFAULT NULL,
-	"CreatorApplication" NVARCHAR(256) DEFAULT NULL,
-	"CreatorApplicationVersion" NVARCHAR(64) DEFAULT NULL,
+	"ContentDistributor" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"CreatorApplication" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"CreatorApplicationVersion" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
 	"DateReleased" NVARCHAR(64) DEFAULT NULL,
 	"Duration" BIGINT DEFAULT NULL,
-	"DVDID" NVARCHAR(64) DEFAULT NULL,
+	"DVDID" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
 	"FrameCount" BIGINT CHECK("FrameCount" IS NULL OR ("FrameCount">=0 AND "FrameCount"<4294967296)) DEFAULT NULL,
-	"Producer" TEXT DEFAULT NULL,
-	"ProtectionType" NVARCHAR(256) DEFAULT NULL,
-	"ProviderRating" NVARCHAR(256) DEFAULT NULL,
-	"ProviderStyle" NVARCHAR(256) DEFAULT NULL,
-	"Publisher" NVARCHAR(256) DEFAULT NULL,
-	"Subtitle" NVARCHAR(256) DEFAULT NULL,
-	"Writer" TEXT DEFAULT NULL,
+	"Producer" TEXT DEFAULT NULL COLLATE NOCASE,
+	"ProtectionType" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"ProviderRating" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"ProviderStyle" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"Publisher" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"Subtitle" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"Writer" TEXT DEFAULT NULL COLLATE NOCASE,
 	"Year" BIGINT CHECK("Year" IS NULL OR ("Year">=0 AND "Year"<4294967296)) DEFAULT NULL,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
@@ -320,15 +338,15 @@ CREATE TABLE IF NOT EXISTS "MediaPropertySets" (
 
 CREATE TABLE IF NOT EXISTS "MusicPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"AlbumArtist" NVARCHAR(1024) DEFAULT NULL,
-	"AlbumTitle" NVARCHAR(1024) DEFAULT NULL,
-	"Artist" TEXT DEFAULT NULL,
-	"Composer" TEXT DEFAULT NULL,
-	"Conductor" TEXT DEFAULT NULL,
-	"DisplayArtist" TEXT DEFAULT NULL,
-	"Genre" TEXT DEFAULT NULL,
-	"PartOfSet" NVARCHAR(64) DEFAULT NULL,
-	"Period" NVARCHAR(64) DEFAULT NULL,
+	"AlbumArtist" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"AlbumTitle" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+	"Artist" TEXT DEFAULT NULL COLLATE NOCASE,
+	"Composer" TEXT DEFAULT NULL COLLATE NOCASE,
+	"Conductor" TEXT DEFAULT NULL COLLATE NOCASE,
+	"DisplayArtist" TEXT DEFAULT NULL COLLATE NOCASE,
+	"Genre" TEXT DEFAULT NULL COLLATE NOCASE,
+	"PartOfSet" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
+	"Period" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
 	"TrackNumber" BIGINT CHECK("TrackNumber" IS NULL OR ("TrackNumber">=0 AND "TrackNumber"<4294967296)) DEFAULT NULL,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
@@ -340,14 +358,14 @@ CREATE TABLE IF NOT EXISTS "MusicPropertySets" (
 
 CREATE TABLE IF NOT EXISTS "PhotoPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"CameraManufacturer" NVARCHAR(256) DEFAULT NULL,
-	"CameraModel" NVARCHAR(256) DEFAULT NULL,
+	"CameraManufacturer" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"CameraModel" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"DateTaken" DATETIME DEFAULT NULL,
-	"Event" TEXT DEFAULT NULL,
-	"EXIFVersion" NVARCHAR(256) DEFAULT NULL,
+	"Event" TEXT DEFAULT NULL COLLATE NOCASE,
+	"EXIFVersion" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"Orientation" INT CHECK("Orientation" IS NULL OR ("Orientation">=0 AND "Orientation"<65536)) DEFAULT NULL,
-	"OrientationText" NVARCHAR DEFAULT NULL,
-	"PeopleNames" TEXT DEFAULT NULL,
+	"OrientationText" NVARCHAR DEFAULT NULL COLLATE NOCASE,
+	"PeopleNames" TEXT DEFAULT NULL COLLATE NOCASE,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -359,14 +377,14 @@ CREATE TABLE IF NOT EXISTS "PhotoPropertySets" (
 CREATE TABLE IF NOT EXISTS "RecordedTVPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
 	"ChannelNumber" BIGINT CHECK("ChannelNumber" IS NULL OR ("ChannelNumber">=0 AND "ChannelNumber"<4294967296)) DEFAULT NULL,
-	"EpisodeName" NVARCHAR(1024) DEFAULT NULL,
+	"EpisodeName" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
 	"IsDTVContent" BIT DEFAULT NULL,
 	"IsHDContent" BIT DEFAULT NULL,
-	"NetworkAffiliation" NVARCHAR(256) DEFAULT NULL,
+	"NetworkAffiliation" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"OriginalBroadcastDate" DATETIME DEFAULT NULL,
 	"ProgramDescription" TEXT DEFAULT NULL,
-	"StationCallSign" NVARCHAR(32) DEFAULT NULL,
-	"StationName" NVARCHAR(256) DEFAULT NULL,
+	"StationCallSign" NVARCHAR(32) DEFAULT NULL COLLATE NOCASE,
+	"StationName" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
 	"LastSynchronizedOn" DATETIME DEFAULT NULL,
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -377,14 +395,14 @@ CREATE TABLE IF NOT EXISTS "RecordedTVPropertySets" (
 
 CREATE TABLE IF NOT EXISTS "VideoPropertySets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"Compression" NVARCHAR(256) DEFAULT NULL,
-	"Director" TEXT DEFAULT NULL,
+	"Compression" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+	"Director" TEXT DEFAULT NULL COLLATE NOCASE,
 	"EncodingBitrate" BIGINT CHECK("EncodingBitrate" IS NULL OR ("EncodingBitrate">=0 AND "EncodingBitrate"<4294967296)) DEFAULT NULL,
 	"FrameHeight" BIGINT CHECK("FrameHeight" IS NULL OR ("FrameHeight">=0 AND "FrameHeight"<4294967296)) DEFAULT NULL,
 	"FrameRate" BIGINT CHECK("FrameRate" IS NULL OR ("FrameRate">=0 AND "FrameRate"<4294967296)) DEFAULT NULL,
 	"FrameWidth" BIGINT CHECK("FrameWidth" IS NULL OR ("FrameWidth">=0 AND "FrameWidth"<4294967296)) DEFAULT NULL,
 	"HorizontalAspectRatio" BIGINT CHECK("HorizontalAspectRatio" IS NULL OR ("HorizontalAspectRatio">=0 AND "HorizontalAspectRatio"<4294967296)) DEFAULT NULL,
-	"StreamName" NVARCHAR(256) DEFAULT NULL,
+	"StreamName" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
 	"StreamNumber" INT CHECK("StreamNumber" IS NULL OR ("StreamNumber">=0 AND "StreamNumber"<65536)) DEFAULT NULL,
 	"VerticalAspectRatio" BIGINT CHECK("VerticalAspectRatio" IS NULL OR ("VerticalAspectRatio">=0 AND "VerticalAspectRatio"<4294967296)) DEFAULT NULL,
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
@@ -427,6 +445,8 @@ CREATE TABLE IF NOT EXISTS "Files" (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
+CREATE INDEX "IDX_File_Status" ON "Files" ("Status");
+
 CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message")) = length("Message") AND length("Message")>0) COLLATE NOCASE,
@@ -453,6 +473,8 @@ CREATE TABLE IF NOT EXISTS "RedundantSets" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
+
+CREATE INDEX "IDX_File_RemediationStatus" ON "RedundantSets" ("RemediationStatus");
 
 CREATE TABLE IF NOT EXISTS "Redundancies" (
 	"FileId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
@@ -481,12 +503,76 @@ CREATE TABLE IF NOT EXISTS "Comparisons" (
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
+CREATE TRIGGER IF NOT EXISTS validate_new_file_name
+   BEFORE INSERT
+   ON "Files"
+   WHEN (SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0 OR (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
+BEGIN
+    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_file_name_change
+   BEFORE UPDATE
+   ON "Files"
+   WHEN OLD."Name"<>NEW."Name" AND ((SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0 OR (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0)
+BEGIN
+    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_name
+   BEFORE INSERT
+   ON "Subdirectories"
+   WHEN NEW."ParentId" IS NOT NULL AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
+BEGIN
+    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_subdirectory_name_change
+   BEFORE UPDATE
+   ON "Subdirectories"
+   WHEN NEW."ParentId" IS NOT NULL AND OLD."Name"<>NEW."Name" AND (SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
+BEGIN
+    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_parent
+   BEFORE INSERT
+   ON "Subdirectories"
+   WHEN (NEW."ParentId" IS NULL) = (NEW."VolumeId" IS NULL)
+BEGIN
+    SELECT RAISE (ABORT,'ParentId and VolumeId are exclusive and cannot simultaneously be null or have a value.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_subdirectory_parent_change
+   BEFORE UPDATE
+   ON "Subdirectories"
+   WHEN (OLD."ParentId"<>NEW."ParentId" OR OLD."VolumeId"<>NEW."VolumeId") AND ("ParentId" IS NULL) = ("VolumeId" IS NULL)
+BEGIN
+    SELECT RAISE (ABORT,'ParentId and VolumeId are exclusive and cannot simultaneously be null or have a value.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_new_root_subdirectory
+   BEFORE INSERT
+   ON "Subdirectories"
+   WHEN NEW."VolumeId" IS NOT NULL AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Id"=NEW."VolumeId")>0
+BEGIN
+    SELECT RAISE (ABORT,'Volume already as a root subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_root_subdirectory_change
+   BEFORE UPDATE
+   ON "Subdirectories"
+   WHEN OLD."VolumeId"<>NEW."VolumeId" AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Id"=NEW."VolumeId")>0
+BEGIN
+    SELECT RAISE (ABORT,'Volume already as a root subdirectory.');
+END;
+
 CREATE TRIGGER IF NOT EXISTS validate_new_redundancy 
    BEFORE INSERT
    ON Redundancies
    WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
-    SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
+    SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
@@ -494,7 +580,7 @@ CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
    ON Redundancies
    WHEN (NEW.FileId<>OLD.FileID OR NEW.RedundantSetId<>OLD.RedundantSetId) AND (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
-    SELECT RAISE (ABORT,'File does not have content info as the redundancy set.');
+    SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_new_crawl_config

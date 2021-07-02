@@ -1,3 +1,4 @@
+using FsInfoCat.Collections;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -206,16 +207,17 @@ namespace FsInfoCat.Local
 
         public async Task<SummaryPropertySet> FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string applicationName = properties.ApplicationName.TrimmedOrNullIfWhiteSpace();
+            MultiStringValue author = MultiStringValue.NullIfNotAny(properties.Author);
             // TODO: Implement FindMatchingAsync(ISummaryProperties, CancellationToken);
             return await SummaryPropertySets.FirstOrDefaultAsync(p => p.ApplicationName == applicationName);
         }
 
         public async Task<DocumentPropertySet> FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string clientID = properties.ClientID.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IDocumentProperties, CancellationToken);
@@ -224,7 +226,7 @@ namespace FsInfoCat.Local
 
         public async Task<AudioPropertySet> FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string format = properties.Format.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IAudioProperties, CancellationToken);
@@ -233,7 +235,7 @@ namespace FsInfoCat.Local
 
         public async Task<DRMPropertySet> FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string description = properties.Description.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IDRMProperties, CancellationToken);
@@ -242,7 +244,7 @@ namespace FsInfoCat.Local
 
         public async Task<GPSPropertySet> FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string areaInformation = properties.AreaInformation.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IGPSProperties, CancellationToken);
@@ -251,7 +253,7 @@ namespace FsInfoCat.Local
 
         public async Task<ImagePropertySet> FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string imageID = properties.ImageID.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IImageProperties, CancellationToken);
@@ -260,7 +262,7 @@ namespace FsInfoCat.Local
 
         public async Task<MediaPropertySet> FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string dvdID = properties.DVDID.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IMediaProperties, CancellationToken);
@@ -269,7 +271,7 @@ namespace FsInfoCat.Local
 
         public async Task<MusicPropertySet> FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string displayArtist = properties.DisplayArtist.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IMusicProperties, CancellationToken);
@@ -278,7 +280,7 @@ namespace FsInfoCat.Local
 
         public async Task<PhotoPropertySet> FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string exifVersion = properties.EXIFVersion.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IPhotoProperties, CancellationToken);
@@ -287,7 +289,7 @@ namespace FsInfoCat.Local
 
         public async Task<RecordedTVPropertySet> FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string episodeName = properties.EpisodeName.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IRecordedTVProperties, CancellationToken);
@@ -296,7 +298,7 @@ namespace FsInfoCat.Local
 
         public async Task<VideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             string compression = properties.Compression.TrimmedOrNullIfWhiteSpace();
             // TODO: Implement FindMatchingAsync(IVideoProperties, CancellationToken);
@@ -305,7 +307,7 @@ namespace FsInfoCat.Local
 
         public async Task<SummaryPropertySet> GetMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             SummaryPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -318,7 +320,7 @@ namespace FsInfoCat.Local
 
         public async Task<DocumentPropertySet> GetMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             DocumentPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -331,7 +333,7 @@ namespace FsInfoCat.Local
 
         public async Task<AudioPropertySet> GetMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             AudioPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -344,7 +346,7 @@ namespace FsInfoCat.Local
 
         public async Task<DRMPropertySet> GetMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             DRMPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -357,7 +359,7 @@ namespace FsInfoCat.Local
 
         public async Task<GPSPropertySet> GetMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             GPSPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -370,7 +372,7 @@ namespace FsInfoCat.Local
 
         public async Task<ImagePropertySet> GetMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             ImagePropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -383,7 +385,7 @@ namespace FsInfoCat.Local
 
         public async Task<MediaPropertySet> GetMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             MediaPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -396,7 +398,7 @@ namespace FsInfoCat.Local
 
         public async Task<MusicPropertySet> GetMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             MusicPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -409,7 +411,7 @@ namespace FsInfoCat.Local
 
         public async Task<PhotoPropertySet> GetMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             PhotoPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -422,7 +424,7 @@ namespace FsInfoCat.Local
 
         public async Task<RecordedTVPropertySet> GetMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             RecordedTVPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
@@ -435,7 +437,7 @@ namespace FsInfoCat.Local
 
         public async Task<VideoPropertySet> GetMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
         {
-            if (properties.IsNullOrEmpty())
+            if (properties.ArePropertiesNullOrEmpty())
                 return null;
             VideoPropertySet result = await FindMatchingAsync(properties, cancellationToken);
             if (result is null)
