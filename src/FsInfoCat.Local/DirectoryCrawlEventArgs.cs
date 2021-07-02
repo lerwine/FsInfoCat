@@ -11,7 +11,7 @@ namespace FsInfoCat.Local
 
         public int Depth { get; }
 
-        public DirectoryCrawlEventArgs(CrawlWorker.CrawlContext crawlContext) : base((crawlContext ?? throw new ArgumentNullException(nameof(crawlContext))).Worker)
+        public DirectoryCrawlEventArgs(CrawlTaskManager.CrawlContext crawlContext) : base((crawlContext ?? throw new ArgumentNullException(nameof(crawlContext))).Worker)
         {
             FS = crawlContext.FS;
             DB = crawlContext.DB;

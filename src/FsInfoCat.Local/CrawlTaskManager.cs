@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public sealed partial class CrawlWorker : IDisposable
+    public sealed partial class CrawlTaskManager : IDisposable
     {
         private bool _isDisposed;
         private readonly Stopwatch _stopWatch = new();
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly Task _task;
         private readonly Func<bool> _isExpired;
-        private readonly ILogger<CrawlWorker> _logger;
+        private readonly ILogger<CrawlTaskManager> _logger;
         private readonly IFileSystemDetailService _fileSystemDetailService;
 
         public string StatusMessage { get; private set; } = "";
@@ -35,9 +35,9 @@ namespace FsInfoCat.Local
 
         public long ElapsedTicks => _stopWatch.ElapsedTicks;
 
-        public CrawlWorker([DisallowNull] CrawlConfiguration crawlConfiguration, DateTime stopAt, CrawlEventReceiver crawlEventReceiver = null)
+        public CrawlTaskManager([DisallowNull] CrawlConfiguration crawlConfiguration, DateTime stopAt, CrawlEventReceiver crawlEventReceiver = null)
         {
-            _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlWorker>>();
+            _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlTaskManager>>();
             _fileSystemDetailService = Services.ServiceProvider.GetRequiredService<IFileSystemDetailService>();
             DisplayName = crawlConfiguration.DisplayName;
             MaxRecursionDepth = crawlConfiguration.MaxRecursionDepth;
@@ -52,9 +52,9 @@ namespace FsInfoCat.Local
             _task.ContinueWith(OnCompleted, crawlEventReceiver);
         }
 
-        public CrawlWorker([DisallowNull] CrawlConfiguration crawlConfiguration, CrawlEventReceiver crawlEventReceiver = null)
+        public CrawlTaskManager([DisallowNull] CrawlConfiguration crawlConfiguration, CrawlEventReceiver crawlEventReceiver = null)
         {
-            _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlWorker>>();
+            _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlTaskManager>>();
             _fileSystemDetailService = Services.ServiceProvider.GetRequiredService<IFileSystemDetailService>();
             DisplayName = crawlConfiguration.DisplayName;
             MaxRecursionDepth = crawlConfiguration.MaxRecursionDepth;

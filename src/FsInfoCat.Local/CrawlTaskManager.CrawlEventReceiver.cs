@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FsInfoCat.Local
 {
-    public sealed partial class CrawlWorker
+    public sealed partial class CrawlTaskManager
     {
         public class CrawlEventReceiver
         {
@@ -18,13 +18,13 @@ namespace FsInfoCat.Local
             public event EventHandler<FileCrawlErrorEventArgs> FileAccessError;
             public event EventHandler<FileCrawlEventArgs> FileReadComplete;
 
-            internal void RaiseCrawlStarted(CrawlWorker crawlWorker) => OnCrawlStarted(new CrawlEventArgs(crawlWorker));
+            internal void RaiseCrawlStarted(CrawlTaskManager crawlWorker) => OnCrawlStarted(new CrawlEventArgs(crawlWorker));
 
-            internal void RaiseCrawlCanceled(CrawlWorker crawlWorker) => OnCrawlCanceled(new CrawlEventArgs(crawlWorker));
+            internal void RaiseCrawlCanceled(CrawlTaskManager crawlWorker) => OnCrawlCanceled(new CrawlEventArgs(crawlWorker));
 
-            internal void RaiseCrawlFaulted(CrawlWorker crawlWorker, AggregateException exception) => OnCrawlFaulted(new CrawlErrorEventArgs(crawlWorker, exception));
+            internal void RaiseCrawlFaulted(CrawlTaskManager crawlWorker, AggregateException exception) => OnCrawlFaulted(new CrawlErrorEventArgs(crawlWorker, exception));
 
-            internal void RaiseCrawlFinished(CrawlWorker crawlWorker) => OnCrawlFinished(new CrawlEventArgs(crawlWorker));
+            internal void RaiseCrawlFinished(CrawlTaskManager crawlWorker) => OnCrawlFinished(new CrawlEventArgs(crawlWorker));
 
             internal void RaiseEnterSubdirectory(CrawlContext crawlContext) => OnEnterSubdirectory(new DirectoryCrawlEventArgs(crawlContext));
 

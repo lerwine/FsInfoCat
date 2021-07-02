@@ -11,7 +11,7 @@ namespace FsInfoCat.PS
 {
     public class CrawlJob : Job
     {
-        private readonly CrawlWorker _crawlWorker;
+        private readonly CrawlTaskManager _crawlWorker;
         private readonly bool _disposeWorker;
 
         public override bool HasMoreData => throw new NotImplementedException();
@@ -20,7 +20,7 @@ namespace FsInfoCat.PS
 
         public override string StatusMessage => throw new NotImplementedException();
 
-        internal CrawlJob([DisallowNull] Local.CrawlWorker crawlWorker, bool doNotDisposeWorker = false)
+        internal CrawlJob([DisallowNull] Local.CrawlTaskManager crawlWorker, bool doNotDisposeWorker = false)
         {
             _crawlWorker = crawlWorker;
             _disposeWorker = !doNotDisposeWorker;

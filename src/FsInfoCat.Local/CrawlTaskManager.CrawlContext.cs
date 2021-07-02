@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public sealed partial class CrawlWorker
+    public sealed partial class CrawlTaskManager
     {
         record NameSet(DirectoryInfo[] FsDirectories, FileInfo[] FsFiles, Subdirectory[] DbDirectories, DbFile[] DbFiles);
 
         public class CrawlContext
         {
-            public CrawlWorker Worker { get; }
+            public CrawlTaskManager Worker { get; }
 
             public int Depth { get; }
 
@@ -25,7 +25,7 @@ namespace FsInfoCat.Local
 
             public Subdirectory DB { get; }
 
-            internal CrawlContext([DisallowNull] CrawlWorker worker, int depth, [DisallowNull] DirectoryInfo fs, [DisallowNull] Subdirectory db)
+            internal CrawlContext([DisallowNull] CrawlTaskManager worker, int depth, [DisallowNull] DirectoryInfo fs, [DisallowNull] Subdirectory db)
             {
                 Worker = worker ?? throw new ArgumentNullException(nameof(worker));
                 Depth = depth;

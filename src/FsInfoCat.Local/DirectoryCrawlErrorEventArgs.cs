@@ -8,7 +8,7 @@ namespace FsInfoCat.Local
 
         public Exception Exception { get; }
 
-        public DirectoryCrawlErrorEventArgs(CrawlWorker.CrawlContext crawlContext, AccessErrorCode errorCode, Exception exception) : base(crawlContext)
+        public DirectoryCrawlErrorEventArgs(CrawlTaskManager.CrawlContext crawlContext, AccessErrorCode errorCode, Exception exception) : base(crawlContext)
         {
             ErrorCode = errorCode;
             Exception = exception;
