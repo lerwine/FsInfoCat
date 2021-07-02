@@ -56,7 +56,7 @@ namespace FsInfoCat.Desktop
                 SampleSize = defaultProperties.Contains(audioProperties.SampleSize.CanonicalName) ? audioProperties.SampleSize.Value : null,
                 StreamName = defaultProperties.Contains(audioProperties.StreamName.CanonicalName) ? audioProperties.StreamName.Value.TrimmedOrNullIfWhiteSpace() : null,
                 StreamNumber = defaultProperties.Contains(audioProperties.StreamNumber.CanonicalName) ? audioProperties.StreamNumber.Value : null
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IDocumentProperties> GetDocumentPropertiesAsync(CancellationToken cancellationToken)
@@ -81,7 +81,7 @@ namespace FsInfoCat.Desktop
                 Manager = defaultProperties.Contains(documentProperties.Manager.CanonicalName) ? documentProperties.Manager.Value.TrimmedOrNullIfWhiteSpace() : null,
                 PresentationFormat = defaultProperties.Contains(documentProperties.PresentationFormat.CanonicalName) ? documentProperties.PresentationFormat.Value.TrimmedOrNullIfWhiteSpace() : null,
                 Version = defaultProperties.Contains(documentProperties.Version.CanonicalName) ? documentProperties.Version.Value.TrimmedOrNullIfWhiteSpace() : null
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IDRMProperties> GetDRMPropertiesAsync(CancellationToken cancellationToken)
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop
                 Description = defaultProperties.Contains(drmProperties.Description.CanonicalName) ? drmProperties.Description.Value.TrimmedOrNullIfWhiteSpace() : null,
                 IsProtected = defaultProperties.Contains(drmProperties.IsProtected.CanonicalName) ? drmProperties.IsProtected.Value : null,
                 PlayCount = defaultProperties.Contains(drmProperties.PlayCount.CanonicalName) ? drmProperties.PlayCount.Value : null
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IGPSProperties> GetGPSPropertiesAsync(CancellationToken cancellationToken)
@@ -125,7 +125,7 @@ namespace FsInfoCat.Desktop
                 MeasureMode = defaultProperties.Contains(gpsProperties.MeasureMode.CanonicalName) ? gpsProperties.MeasureMode.Value.TrimmedOrNullIfWhiteSpace() : null,
                 ProcessingMethod = defaultProperties.Contains(gpsProperties.ProcessingMethod.CanonicalName) ? gpsProperties.ProcessingMethod.Value.TrimmedOrNullIfWhiteSpace() : null,
                 VersionID = (versionID is null || versionID.Length == 0) ? null : versionID
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IImageProperties> GetImagePropertiesAsync(CancellationToken cancellationToken)
@@ -148,7 +148,7 @@ namespace FsInfoCat.Desktop
                 ResolutionUnit = defaultProperties.Contains(imageProperties.ResolutionUnit.CanonicalName) ? imageProperties.ResolutionUnit.Value : null,
                 VerticalResolution = defaultProperties.Contains(imageProperties.VerticalResolution.CanonicalName) ? imageProperties.VerticalResolution.Value : null,
                 VerticalSize = defaultProperties.Contains(imageProperties.VerticalSize.CanonicalName) ? imageProperties.VerticalSize.Value : null
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IMediaProperties> GetMediaPropertiesAsync(CancellationToken cancellationToken)
@@ -177,7 +177,7 @@ namespace FsInfoCat.Desktop
                 Subtitle = defaultProperties.Contains(mediaProperties.Subtitle.CanonicalName) ? mediaProperties.Subtitle.Value.TrimmedOrNullIfWhiteSpace() : null,
                 Writer = (writer is null || writer.Length == 0) ? null : writer,
                 Year = defaultProperties.Contains(mediaProperties.Year.CanonicalName) ? mediaProperties.Year.Value : null
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IMusicProperties> GetMusicPropertiesAsync(CancellationToken cancellationToken)
@@ -207,7 +207,7 @@ namespace FsInfoCat.Desktop
                 PartOfSet = defaultProperties.Contains(musicProperties.PartOfSet.CanonicalName) ? musicProperties.PartOfSet.Value.TrimmedOrNullIfWhiteSpace() : null,
                 Period = defaultProperties.Contains(musicProperties.Period.CanonicalName) ? musicProperties.Period.Value.TrimmedOrNullIfWhiteSpace() : null,
                 TrackNumber = defaultProperties.Contains(musicProperties.TrackNumber.CanonicalName) ? musicProperties.TrackNumber.Value : null
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IPhotoProperties> GetPhotoPropertiesAsync(CancellationToken cancellationToken)
@@ -231,7 +231,7 @@ namespace FsInfoCat.Desktop
                 Orientation = defaultProperties.Contains(photoProperties.Orientation.CanonicalName) ? photoProperties.Orientation.Value : null,
                 OrientationText = defaultProperties.Contains(photoProperties.OrientationText.CanonicalName) ? photoProperties.OrientationText.Value.TrimmedOrNullIfWhiteSpace() : null,
                 PeopleNames = (peopleNames is null || peopleNames.Length == 0) ? null : peopleNames
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IRecordedTVProperties> GetRecordedTVPropertiesAsync(CancellationToken cancellationToken)
@@ -252,7 +252,7 @@ namespace FsInfoCat.Desktop
                 ProgramDescription = defaultProperties.Contains(recordedTVProperties.ProgramDescription.CanonicalName) ? recordedTVProperties.ProgramDescription.Value.TrimmedOrNullIfWhiteSpace() : null,
                 StationCallSign = defaultProperties.Contains(recordedTVProperties.StationCallSign.CanonicalName) ? recordedTVProperties.StationCallSign.Value.TrimmedOrNullIfWhiteSpace() : null,
                 StationName = defaultProperties.Contains(recordedTVProperties.StationName.CanonicalName) ? recordedTVProperties.StationName.Value.TrimmedOrNullIfWhiteSpace() : null
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<ISummaryProperties> GetSummaryPropertiesAsync(CancellationToken cancellationToken)
@@ -296,7 +296,7 @@ namespace FsInfoCat.Desktop
                 SimpleRating = defaultProperties.Contains(summaryProperties.SimpleRating.CanonicalName) ? summaryProperties.SimpleRating.Value : null,
                 Trademarks = defaultProperties.Contains(summaryProperties.Trademarks.CanonicalName) ? summaryProperties.Trademarks.Value.TrimmedOrNullIfWhiteSpace() : null,
                 ProductName = defaultProperties.Contains(softwareProperties.ProductName.CanonicalName) ? softwareProperties.ProductName.Value.TrimmedOrNullIfWhiteSpace() : null
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         public async Task<IVideoProperties> GetVideoPropertiesAsync(CancellationToken cancellationToken)
@@ -320,7 +320,7 @@ namespace FsInfoCat.Desktop
                 StreamName = defaultProperties.Contains(videoProperties.StreamName.CanonicalName) ? videoProperties.StreamName.Value.TrimmedOrNullIfWhiteSpace() : null,
                 StreamNumber = defaultProperties.Contains(videoProperties.StreamNumber.CanonicalName) ? videoProperties.StreamNumber.Value : null,
                 VerticalAspectRatio = defaultProperties.Contains(videoProperties.VerticalAspectRatio.CanonicalName) ? videoProperties.VerticalAspectRatio.Value : null,
-            }.NullIfEmpty();
+            }.NullIfPropertiesEmpty();
         }
 
         protected virtual void Dispose(bool disposing)

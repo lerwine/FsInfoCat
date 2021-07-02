@@ -10,6 +10,10 @@ namespace FsInfoCat.Collections
 {
     public partial class MultiStringValue : ReadOnlyCollection<string>, IEquatable<MultiStringValue>, IConvertible
     {
+        public static bool NullOrNotAny(MultiStringValue source) => source is null || source.Count == 0;
+
+        public static MultiStringValue NullIfNotAny(MultiStringValue source) => (source is null || source.Count == 0) ? null : source;
+
         private static readonly StringComparer Comparer = StringComparer.InvariantCultureIgnoreCase;
 
         public static readonly ValueConverter<MultiStringValue, string> Converter = new(
@@ -103,7 +107,8 @@ namespace FsInfoCat.Collections
 
         public MultiStringValue() : base(Array.Empty<string>()) { }
 
-        public bool Equals(MultiStringValue other) => other is not null && ReferenceEquals(this, other) || Comparer.Equals(ToString(), other.ToString());
+        public bool Equals(MultiStringValue other) => (Count == 0) ? other is null || other.Count == 0 : ReferenceEquals(this, other) ||
+            (other is not null && other.Count > 0 && Comparer.Equals(ToString().EmptyIfNullOrWhiteSpace(), other.ToString().EmptyIfNullOrWhiteSpace()));
 
         public override bool Equals(object obj) => obj is MultiStringValue other && Equals(other);
 
@@ -134,11 +139,11 @@ namespace FsInfoCat.Collections
 
         public static bool operator !=(MultiStringValue left, MultiStringValue right) => !(left == right);
 
-        public static implicit operator MultiStringValue(string[] values) => (values is null) ? null : new(values);
+        public static implicit operator MultiStringValue(string[] values) => (values is null || values.Length == 0 || (values = values.Select(ExtensionMethods.NullIfWhiteSpace).Where(t => t is not null).ToArray()).Length == 0) ? null : new(values);
 
         public static implicit operator string[](MultiStringValue values) => values?.ToArray();
 
-        public static implicit operator MultiStringValue(string text) => (text is null) ? null : new(text);
+        public static implicit operator MultiStringValue(string text) => string.IsNullOrWhiteSpace(text) ? null : new(text);
 
         public static implicit operator string(MultiStringValue values) => values?.ToString();
     }

@@ -25,10 +25,11 @@ namespace FsInfoCat
     {
         public static readonly FilePropertiesComparer Default = new();
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(ISummaryProperties x, ISummaryProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.Rating == y.Rating && x.Sensitivity == y.Sensitivity && x.SimpleRating == y.SimpleRating &&
                 x.ApplicationName.NullIfWhiteSpace() == y.ApplicationName.NullIfWhiteSpace() && x.Comment.NullIfWhiteSpace() == y.Comment.NullIfWhiteSpace() &&
                 x.Title.NullIfWhiteSpace() == y.Title.NullIfWhiteSpace() && x.Subject.NullIfWhiteSpace() == y.Subject.NullIfWhiteSpace() &&
@@ -46,10 +47,11 @@ namespace FsInfoCat
                 x.Kind.EmptyIfNull().ElementsNotNullOrWhiteSpace().SequenceEqual(y.Kind.EmptyIfNull().ElementsNotNullOrWhiteSpace())));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IDocumentProperties x, IDocumentProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.DateCreated == y.DateCreated && x.Security == y.Security &&
                 x.ClientID.NullIfWhiteSpace() == y.ClientID.NullIfWhiteSpace() && x.LastAuthor.NullIfWhiteSpace() == y.LastAuthor.NullIfWhiteSpace() &&
                 x.RevisionNumber.NullIfWhiteSpace() == y.RevisionNumber.NullIfWhiteSpace() && x.Division.NullIfWhiteSpace() == y.Division.NullIfWhiteSpace() &&
@@ -58,28 +60,31 @@ namespace FsInfoCat
                 x.Contributor.EmptyIfNull().ElementsNotNullOrWhiteSpace().SequenceEqual(y.Contributor.EmptyIfNull().ElementsNotNullOrWhiteSpace())));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IAudioProperties x, IAudioProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.EncodingBitrate == y.EncodingBitrate && x.IsVariableBitrate == y.IsVariableBitrate &&
                 x.SampleRate == y.SampleRate && x.SampleSize == y.SampleSize && x.StreamNumber == y.StreamNumber &&
                 x.Compression.NullIfWhiteSpace() == y.Compression.NullIfWhiteSpace() &&
                 x.Format.NullIfWhiteSpace() == y.Format.NullIfWhiteSpace() && x.StreamName.NullIfWhiteSpace() == y.StreamName.NullIfWhiteSpace()));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IDRMProperties x, IDRMProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.DatePlayExpires == y.DatePlayExpires && x.DatePlayStarts == y.DatePlayStarts &&
                 x.IsProtected == y.IsProtected && x.PlayCount == y.PlayCount && x.Description.NullIfWhiteSpace() == y.Description.NullIfWhiteSpace()));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IGPSProperties x, IGPSProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.LatitudeDegrees == y.LatitudeDegrees && x.LatitudeMinutes == y.LatitudeMinutes &&
                 x.LatitudeSeconds == y.LatitudeSeconds && x.LongitudeDegrees == y.LongitudeDegrees && x.LongitudeMinutes == y.LongitudeMinutes &&
                 x.LongitudeSeconds == y.LongitudeSeconds && x.AreaInformation.NullIfWhiteSpace() == y.AreaInformation.NullIfWhiteSpace() &&
@@ -88,10 +93,11 @@ namespace FsInfoCat
                 x.VersionID.EmptyIfNull().SequenceEqual(y.VersionID.EmptyIfNull())));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IImageProperties x, IImageProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.BitDepth == y.BitDepth && x.ColorSpace == y.ColorSpace &&
                 x.CompressedBitsPerPixel == y.CompressedBitsPerPixel && x.Compression == y.Compression && x.HorizontalResolution == y.HorizontalResolution &&
                 x.HorizontalSize == y.HorizontalSize && x.ResolutionUnit == y.ResolutionUnit && x.VerticalResolution == y.VerticalResolution &&
@@ -99,10 +105,11 @@ namespace FsInfoCat
                 x.ImageID.NullIfWhiteSpace() == y.ImageID.NullIfWhiteSpace()));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IMediaProperties x, IMediaProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.Duration == y.Duration && x.FrameCount == y.FrameCount && x.Year == y.Year &&
                 x.ContentDistributor.NullIfWhiteSpace() == y.ContentDistributor.NullIfWhiteSpace() &&
                 x.CreatorApplication.NullIfWhiteSpace() == y.CreatorApplication.NullIfWhiteSpace() &&
@@ -115,10 +122,11 @@ namespace FsInfoCat
                 x.Writer.EmptyIfNull().ElementsNotNullOrWhiteSpace().SequenceEqual(y.Writer.EmptyIfNull().ElementsNotNullOrWhiteSpace())));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IMusicProperties x, IMusicProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.ChannelCount == y.ChannelCount && x.TrackNumber == y.TrackNumber &&
                 x.AlbumArtist.NullIfWhiteSpace() == y.AlbumArtist.NullIfWhiteSpace() && x.AlbumTitle.NullIfWhiteSpace() == y.AlbumTitle.NullIfWhiteSpace() &&
                 x.DisplayArtist.NullIfWhiteSpace() == y.DisplayArtist.NullIfWhiteSpace() && x.PartOfSet.NullIfWhiteSpace() == y.PartOfSet.NullIfWhiteSpace() &&
@@ -129,10 +137,11 @@ namespace FsInfoCat
                 x.Genre.EmptyIfNull().ElementsNotNullOrWhiteSpace().SequenceEqual(y.Genre.EmptyIfNull().ElementsNotNullOrWhiteSpace())));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IPhotoProperties x, IPhotoProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.DateTaken == y.DateTaken && x.Orientation == y.Orientation &&
                 x.CameraManufacturer.NullIfWhiteSpace() == y.CameraManufacturer.NullIfWhiteSpace() &&
                 x.CameraModel.NullIfWhiteSpace() == y.CameraModel.NullIfWhiteSpace() &&
@@ -141,10 +150,11 @@ namespace FsInfoCat
                 x.PeopleNames.EmptyIfNull().ElementsNotNullOrWhiteSpace().SequenceEqual(y.PeopleNames.EmptyIfNull().ElementsNotNullOrWhiteSpace())));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IRecordedTVProperties x, IRecordedTVProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.ChannelNumber == y.ChannelNumber && x.IsDTVContent == y.IsDTVContent &&
                 x.IsHDContent == y.IsHDContent && x.OriginalBroadcastDate == y.OriginalBroadcastDate &&
                 x.EpisodeName.NullIfWhiteSpace() == y.EpisodeName.NullIfWhiteSpace() &&
@@ -153,10 +163,11 @@ namespace FsInfoCat
                 x.StationCallSign.NullIfWhiteSpace() == y.StationCallSign.NullIfWhiteSpace() && x.StationName.NullIfWhiteSpace() == y.StationName.NullIfWhiteSpace()));
         }
 
+        // BUG: This is not using case-insensitive matching
         public static bool Equals(IVideoProperties x, IVideoProperties y)
         {
-            if (x.IsNullOrEmpty())
-                return y.IsNullOrEmpty();
+            if (x.ArePropertiesNullOrEmpty())
+                return y.ArePropertiesNullOrEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.EncodingBitrate == y.EncodingBitrate && x.FrameHeight == y.FrameHeight && x.FrameRate == y.FrameRate &&
                 x.FrameWidth == y.FrameWidth && x.HorizontalAspectRatio == y.HorizontalAspectRatio && x.StreamNumber == y.StreamNumber &&
                 x.VerticalAspectRatio == y.VerticalAspectRatio && x.Compression.NullIfWhiteSpace() == y.Compression.NullIfWhiteSpace() &&
@@ -175,58 +186,70 @@ namespace FsInfoCat
         bool IEqualityComparer<IPhotoProperties>.Equals(IPhotoProperties x, IPhotoProperties y) => Equals(x, y);
         bool IEqualityComparer<IRecordedTVProperties>.Equals(IRecordedTVProperties x, IRecordedTVProperties y) => Equals(x, y);
         bool IEqualityComparer<IVideoProperties>.Equals(IVideoProperties x, IVideoProperties y) => Equals(x, y);
+
         public int GetHashCode([DisallowNull] ISummaryProperties obj)
         {
+            // TODO: Implement GetHashCode(ISummaryProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IDocumentProperties obj)
         {
+            // TODO: Implement GetHashCode(IDocumentProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IAudioProperties obj)
         {
+            // TODO: Implement GetHashCode(IAudioProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IDRMProperties obj)
         {
+            // TODO: Implement GetHashCode(IDRMProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IGPSProperties obj)
         {
+            // TODO: Implement GetHashCode(IGPSProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IImageProperties obj)
         {
+            // TODO: Implement GetHashCode(IImageProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IMediaProperties obj)
         {
+            // TODO: Implement GetHashCode(IMediaProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IMusicProperties obj)
         {
+            // TODO: Implement GetHashCode(IMusicProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IPhotoProperties obj)
         {
+            // TODO: Implement GetHashCode(IPhotoProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IRecordedTVProperties obj)
         {
+            // TODO: Implement GetHashCode(IRecordedTVProperties);
             throw new NotImplementedException();
         }
 
         public int GetHashCode([DisallowNull] IVideoProperties obj)
         {
+            // TODO: Implement GetHashCode(IVideoProperties);
             throw new NotImplementedException();
         }
     }
