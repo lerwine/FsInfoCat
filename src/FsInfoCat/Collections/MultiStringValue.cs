@@ -139,7 +139,7 @@ namespace FsInfoCat.Collections
 
         public static bool operator !=(MultiStringValue left, MultiStringValue right) => !(left == right);
 
-        public static implicit operator MultiStringValue(string[] values) => (values is null || values.Length == 0 || (values = values.Select(ExtensionMethods.NullIfWhiteSpace).Where(t => t is not null).ToArray()).Length == 0) ? null : new(values);
+        public static implicit operator MultiStringValue(string[] values) => (values is null || values.Length == 0 || (values = values.Select(StringExtensionMethods.NullIfWhiteSpace).Where(t => t is not null).ToArray()).Length == 0) ? null : new(values);
 
         public static implicit operator string[](MultiStringValue values) => values?.ToArray();
 
