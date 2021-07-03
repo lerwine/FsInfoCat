@@ -1,14 +1,23 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Class MediaPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalMediaPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalMediaPropertySet" />
     public class MediaPropertySet : LocalDbEntity, ILocalMediaPropertySet
     {
         #region Fields
@@ -89,18 +98,54 @@ namespace FsInfoCat.Local
             _year = AddChangeTracker<uint?>(nameof(Year), null);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<MediaPropertySet> obj)
+        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<MediaPropertySet> builder)
         {
-            obj.Property(nameof(Producer)).HasConversion(MultiStringValue.Converter);
-            obj.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter);
+            if (builder is null)
+                throw new ArgumentOutOfRangeException(nameof(builder));
+            builder.Property(nameof(Producer)).HasConversion(MultiStringValue.Converter);
+            builder.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter);
         }
 
-        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
+            CancellationToken cancellationToken)
         {
-            MediaPropertySet oldMediaPropertySet = entry.Entity.MediaPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.MediaProperties, cancellationToken) : null;
-            IMediaProperties currentMediaProperties = await fileDetailProvider.GetMediaPropertiesAsync(cancellationToken);
-            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (entry is null)
+                throw new ArgumentNullException(nameof(entry));
+            if (fileDetailProvider is null)
+                throw new ArgumentNullException(nameof(fileDetailProvider));
+            switch (entry.State)
+            {
+                case EntityState.Detached:
+                    throw new ArgumentOutOfRangeException(nameof(entry), $"{nameof(DbFile)} is detached");
+                case EntityState.Deleted:
+                    throw new ArgumentOutOfRangeException(nameof(entry), $"{nameof(DbFile)} is flagged for deletion");
+            }
+            if (entry.Context is not LocalDbContext dbContext)
+                throw new ArgumentOutOfRangeException(nameof(entry), "Invalid database context");
+            DbFile entity;
+            MediaPropertySet oldPropertySet = (entity = entry.Entity).MediaPropertySetId.HasValue ?
+                await entry.GetRelatedReferenceAsync(f => f.MediaProperties, cancellationToken) : null;
+            IMediaProperties currentProperties = await fileDetailProvider.GetMediaPropertiesAsync(cancellationToken);
+            if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
+                return;
+            if (currentProperties.IsNullOrAllPropertiesEmpty())
+                entity.MediaProperties = null;
+            else
+                entity.MediaProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (oldPropertySet is null)
+                return;
+            switch (entry.State)
+            {
+                case EntityState.Unchanged:
+                case EntityState.Modified:
+                    Guid id = entity.Id;
+                    if (!(await dbContext.Entry(oldPropertySet).GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+                        dbContext.MediaPropertySets.Remove(oldPropertySet);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    break;
+            }
         }
     }
 }

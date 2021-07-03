@@ -290,7 +290,7 @@ namespace FsInfoCat.Fractions
             return (new Fraction64(this)).CompareTo(other);
         }
 
-        public int CompareTo(object obj) { return FractionExtensions.Compare<long>(this, obj); }
+        public int CompareTo(object obj) { return FractionExtensions.Compare(this, obj); }
 
         #endregion
 
@@ -410,7 +410,7 @@ namespace FsInfoCat.Fractions
             return (new Fraction64(this)).Equals(other);
         }
 
-        public override bool Equals(object obj) { return FractionExtensions.EqualTo<long>(this, obj); }
+        public override bool Equals(object obj) { return FractionExtensions.EqualTo(this, obj); }
 
         #endregion
 

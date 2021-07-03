@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,6 +12,13 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Class BinaryPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalBinaryPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalBinaryPropertySet" />
     public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet
     {
         #region Fields

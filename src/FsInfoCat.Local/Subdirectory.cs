@@ -406,7 +406,7 @@ namespace FsInfoCat.Local
             }).ToList();
         });
 
-        public static async Task<string> LookupFullNameAsync([NotNull] Subdirectory subdirectory, LocalDbContext dbContext = null)
+        public static async Task<string> LookupFullNameAsync([DisallowNull] Subdirectory subdirectory, LocalDbContext dbContext = null)
         {
             if (subdirectory is null)
                 throw new ArgumentNullException(nameof(subdirectory));

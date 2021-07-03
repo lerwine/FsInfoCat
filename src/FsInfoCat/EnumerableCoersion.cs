@@ -176,9 +176,9 @@ namespace FsInfoCat
             return false;
         }
 
-        protected abstract TEnumerable CreateFromEnumerable([MaybeNull] IEnumerable<TElement> elements);
+        protected abstract TEnumerable CreateFromEnumerable([AllowNull] IEnumerable<TElement> elements);
 
-        protected abstract bool TryCreateFromEnumerable([MaybeNull] IEnumerable<TElement> elements, out TEnumerable result);
+        protected abstract bool TryCreateFromEnumerable([AllowNull] IEnumerable<TElement> elements, out TEnumerable result);
 
         public virtual bool Equals(TEnumerable x, TEnumerable y) => _backingCoersion.Equals(x, y);
 

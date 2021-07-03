@@ -17,7 +17,7 @@ namespace FsInfoCat
 
             public EntityEntry Entry { get; }
 
-            internal DbValidationContext([NotNull] EntityEntry entry, [NotNull] ValidationContext validationContext, [NotNull] T dbContext)
+            internal DbValidationContext([DisallowNull] EntityEntry entry, [DisallowNull] ValidationContext validationContext, [DisallowNull] T dbContext)
             {
                 if (!ReferenceEquals(entry.Context, dbContext))
                     throw new ArgumentOutOfRangeException(nameof(entry));
@@ -29,9 +29,9 @@ namespace FsInfoCat
             public DbValidationContext(ValidationContext validationContext, T dbContext, object entity)
             {
                 if (entity is null)
-                    throw new System.ArgumentNullException(nameof(entity));
-                ValidationContext = validationContext ?? throw new System.ArgumentNullException(nameof(validationContext));
-                DbContext = dbContext ?? throw new System.ArgumentNullException(nameof(dbContext));
+                    throw new ArgumentNullException(nameof(entity));
+                ValidationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
+                DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
                 Entry = dbContext.Entry(entity);
             }
         }

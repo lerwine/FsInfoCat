@@ -111,7 +111,7 @@ namespace FsInfoCat.Local
             base.OnPropertyChanging(args);
         }
 
-        internal static void BuildEntity([NotNull] EntityTypeBuilder<SymbolicName> builder)
+        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<SymbolicName> builder)
         {
             builder.HasOne(sn => sn.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }

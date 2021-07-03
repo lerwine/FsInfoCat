@@ -11,14 +11,14 @@ namespace FsInfoCat
         /// <summary>
         /// Gets or sets the primary key of the baseline file in the comparison.
         /// </summary>
-        /// <value>The primary key of the <see cref="Baseline"/>.</value>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="Baseline"/> <see cref="IFile">file entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         Guid BaselineId { get; set; }
 
         /// <summary>
         /// Gets or sets the primary key of the correlative file in the comparison.
         /// </summary>
-        /// <value>The primary key of the <see cref="Correlative"/>, which is the new or changed file that is being compared to a <see cref="Baseline"/> file.</value>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="Correlative"/> <see cref="IFile">file entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         Guid CorrelativeId { get; set; }
 

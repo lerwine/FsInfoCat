@@ -7,6 +7,7 @@ namespace FsInfoCat
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="Local.ILocalGPSPropertySet"/>
     /// <seealso cref="Upstream.IUpstreamGPSPropertySet"/>
+    /// <seealso cref="IFile.GPSProperties"/>
     public interface IGPSPropertySet : IGPSProperties, IPropertySet
     {
     }

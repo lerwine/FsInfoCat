@@ -6,7 +6,8 @@ namespace FsInfoCat
     /// <summary>
     /// Represents a set of files that have the same file size and cryptographic hash.
     /// </summary>
-    /// <seealso cref="FsInfoCat.IDbEntity" />
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="IFile.BinaryProperties"/>
     public interface IBinaryPropertySet : IDbEntity
     {
         Guid Id { get; set; }

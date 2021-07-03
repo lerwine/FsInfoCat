@@ -32,8 +32,8 @@ namespace FsInfoCat
 
         public static bool Equals(ISummaryProperties x, ISummaryProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.Rating == y.Rating && x.Sensitivity == y.Sensitivity && x.SimpleRating == y.SimpleRating &&
                 NormalizedStringValueCoersion.Equals(x.ApplicationName, y.ApplicationName) && StringValueCoersion.Equals(x.Comment, y.Comment) &&
                 NormalizedStringValueCoersion.Equals(x.Title, y.Title) && NormalizedStringValueCoersion.Equals(x.Subject, y.Subject) &&
@@ -51,8 +51,8 @@ namespace FsInfoCat
 
         public static bool Equals(IDocumentProperties x, IDocumentProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.DateCreated == y.DateCreated && x.Security == y.Security &&
                 NormalizedStringValueCoersion.Equals(x.ClientID, y.ClientID) && NormalizedStringValueCoersion.Equals(x.LastAuthor, y.LastAuthor) &&
                 NormalizedStringValueCoersion.Equals(x.RevisionNumber, y.RevisionNumber) && StringValueCoersion.Equals(x.Division, y.Division) &&
@@ -63,8 +63,8 @@ namespace FsInfoCat
 
         public static bool Equals(IAudioProperties x, IAudioProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.EncodingBitrate == y.EncodingBitrate && x.IsVariableBitrate == y.IsVariableBitrate &&
                 x.SampleRate == y.SampleRate && x.SampleSize == y.SampleSize && x.StreamNumber == y.StreamNumber &&
                 NormalizedStringValueCoersion.Equals(x.Compression, y.Compression) &&
@@ -73,16 +73,16 @@ namespace FsInfoCat
 
         public static bool Equals(IDRMProperties x, IDRMProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.DatePlayExpires == y.DatePlayExpires && x.DatePlayStarts == y.DatePlayStarts &&
                 x.IsProtected == y.IsProtected && x.PlayCount == y.PlayCount && StringValueCoersion.Equals(x.Description, y.Description)));
         }
 
         public static bool Equals(IGPSProperties x, IGPSProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.LatitudeDegrees == y.LatitudeDegrees && x.LatitudeMinutes == y.LatitudeMinutes &&
                 x.LatitudeSeconds == y.LatitudeSeconds && x.LongitudeDegrees == y.LongitudeDegrees && x.LongitudeMinutes == y.LongitudeMinutes &&
                 x.LongitudeSeconds == y.LongitudeSeconds && NormalizedStringValueCoersion.Equals(x.AreaInformation, y.AreaInformation) &&
@@ -93,8 +93,8 @@ namespace FsInfoCat
 
         public static bool Equals(IImageProperties x, IImageProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.BitDepth == y.BitDepth && x.ColorSpace == y.ColorSpace &&
                 x.CompressedBitsPerPixel == y.CompressedBitsPerPixel && x.Compression == y.Compression && x.HorizontalResolution == y.HorizontalResolution &&
                 x.HorizontalSize == y.HorizontalSize && x.ResolutionUnit == y.ResolutionUnit && x.VerticalResolution == y.VerticalResolution &&
@@ -104,8 +104,8 @@ namespace FsInfoCat
 
         public static bool Equals(IMediaProperties x, IMediaProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.Duration == y.Duration && x.FrameCount == y.FrameCount && x.Year == y.Year &&
                 NormalizedStringValueCoersion.Equals(x.ContentDistributor, y.ContentDistributor) &&
                 NormalizedStringValueCoersion.Equals(x.CreatorApplication, y.CreatorApplication) &&
@@ -119,8 +119,8 @@ namespace FsInfoCat
 
         public static bool Equals(IMusicProperties x, IMusicProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.ChannelCount == y.ChannelCount && x.TrackNumber == y.TrackNumber &&
                 NormalizedStringValueCoersion.Equals(x.AlbumArtist, y.AlbumArtist) && NormalizedStringValueCoersion.Equals(x.AlbumTitle, y.AlbumTitle) &&
                 NormalizedStringValueCoersion.Equals(x.DisplayArtist, y.DisplayArtist) && NormalizedStringValueCoersion.Equals(x.PartOfSet, y.PartOfSet) &&
@@ -131,8 +131,8 @@ namespace FsInfoCat
 
         public static bool Equals(IPhotoProperties x, IPhotoProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.DateTaken == y.DateTaken && x.Orientation == y.Orientation &&
                 NormalizedStringValueCoersion.Equals(x.CameraManufacturer, y.CameraManufacturer) &&
                 NormalizedStringValueCoersion.Equals(x.CameraModel, y.CameraModel) &&
@@ -142,8 +142,8 @@ namespace FsInfoCat
 
         public static bool Equals(IRecordedTVProperties x, IRecordedTVProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.ChannelNumber == y.ChannelNumber && x.IsDTVContent == y.IsDTVContent &&
                 x.IsHDContent == y.IsHDContent && x.OriginalBroadcastDate == y.OriginalBroadcastDate &&
                 NormalizedStringValueCoersion.Equals(x.EpisodeName, y.EpisodeName) &&
@@ -154,8 +154,8 @@ namespace FsInfoCat
 
         public static bool Equals(IVideoProperties x, IVideoProperties y)
         {
-            if (x.ArePropertiesNullOrEmpty())
-                return y.ArePropertiesNullOrEmpty();
+            if (x.IsNullOrAllPropertiesEmpty())
+                return y.IsNullOrAllPropertiesEmpty();
             return y is not null && (ReferenceEquals(x, y) || (x.EncodingBitrate == y.EncodingBitrate && x.FrameHeight == y.FrameHeight && x.FrameRate == y.FrameRate &&
                 x.FrameWidth == y.FrameWidth && x.HorizontalAspectRatio == y.HorizontalAspectRatio && x.StreamNumber == y.StreamNumber &&
                 x.VerticalAspectRatio == y.VerticalAspectRatio && NormalizedStringValueCoersion.Equals(x.Compression, y.Compression) &&
@@ -176,7 +176,7 @@ namespace FsInfoCat
         
         public int GetHashCode([DisallowNull] ISummaryProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             return (new int?[] { obj.Rating?.GetHashCode(), obj.Rating?.GetHashCode(), obj.Rating?.GetHashCode(), obj.Author?.GetHashCode(), obj.Keywords?.GetHashCode(), obj.ItemAuthors?.GetHashCode(), obj.Kind?.GetHashCode() })
                 .Select(n => n ?? 0)
@@ -187,7 +187,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IDocumentProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IDocumentProperties);
             throw new NotImplementedException();
@@ -195,7 +195,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IAudioProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IAudioProperties);
             throw new NotImplementedException();
@@ -203,7 +203,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IDRMProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IDRMProperties);
             throw new NotImplementedException();
@@ -211,7 +211,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IGPSProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IGPSProperties);
             throw new NotImplementedException();
@@ -219,7 +219,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IImageProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IImageProperties);
             throw new NotImplementedException();
@@ -227,7 +227,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IMediaProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IMediaProperties);
             throw new NotImplementedException();
@@ -235,7 +235,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IMusicProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IMusicProperties);
             throw new NotImplementedException();
@@ -243,7 +243,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IPhotoProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IPhotoProperties);
             throw new NotImplementedException();
@@ -251,7 +251,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IRecordedTVProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IRecordedTVProperties);
             throw new NotImplementedException();
@@ -259,7 +259,7 @@ namespace FsInfoCat
 
         public int GetHashCode([DisallowNull] IVideoProperties obj)
         {
-            if (obj.ArePropertiesNullOrEmpty())
+            if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
             // TODO: Implement GetHashCode(IVideoProperties);
             throw new NotImplementedException();

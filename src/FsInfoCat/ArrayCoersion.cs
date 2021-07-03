@@ -12,9 +12,9 @@ namespace FsInfoCat
 
         public ArrayCoersion() : base() { }
 
-        protected override T[] CreateFromEnumerable([MaybeNull] IEnumerable<T> elements) => elements?.ToArray();
+        protected override T[] CreateFromEnumerable([AllowNull] IEnumerable<T> elements) => elements?.ToArray();
 
-        protected override bool TryCreateFromEnumerable([MaybeNull] IEnumerable<T> elements, out T[] result)
+        protected override bool TryCreateFromEnumerable([AllowNull] IEnumerable<T> elements, out T[] result)
         {
             result = elements?.ToArray();
             return true;

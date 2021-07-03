@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace FsInfoCat
 {
@@ -444,7 +443,7 @@ namespace FsInfoCat
             return TryParseBinHexPrivate(binHex, out result);
         }
 
-        private static IEnumerable<byte> ParseBinHexPrivate([NotNull] IEnumerable<char> binHex)
+        private static IEnumerable<byte> ParseBinHexPrivate([DisallowNull] IEnumerable<char> binHex)
         {
             bool hv = true;
             using (var enumerator = binHex.Select((Value, Index) => (Value, Index)).GetEnumerator())
@@ -583,7 +582,7 @@ namespace FsInfoCat
                 throw new FormatException("Uneven number of hexidecimal characters.");
         }
 
-        private static bool TryParseBinHexPrivate([NotNull] IEnumerable<char> binHex, out IEnumerable<byte> result)
+        private static bool TryParseBinHexPrivate([DisallowNull] IEnumerable<char> binHex, out IEnumerable<byte> result)
         {
             bool hv = true;
             LinkedEnumerableBuilder<byte> enumerable = new();
@@ -734,9 +733,9 @@ namespace FsInfoCat
             return false;
         }
 
-        protected override byte[] CreateFromEnumerable([MaybeNull] IEnumerable<byte> elements) => elements?.ToArray();
+        protected override byte[] CreateFromEnumerable([AllowNull] IEnumerable<byte> elements) => elements?.ToArray();
 
-        protected override bool TryCreateFromEnumerable([MaybeNull] IEnumerable<byte> elements, out byte[] result)
+        protected override bool TryCreateFromEnumerable([AllowNull] IEnumerable<byte> elements, out byte[] result)
         {
             result = elements?.ToArray();
             return true;

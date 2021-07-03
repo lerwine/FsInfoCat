@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace FsInfoCat
     public static class EntityExtensions
     {
         [Obsolete("Pass cancellation token")]
-        public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry, [NotNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression)
+        public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry, [DisallowNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression)
             where TEntity : class
             where TProperty : class
         {
@@ -24,8 +24,8 @@ namespace FsInfoCat
             return collectionEntry.CurrentValue;
         }
 
-        public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry,
-            [NotNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, CancellationToken cancellationToken)
+        public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
+            [DisallowNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, CancellationToken cancellationToken)
             where TEntity : class
             where TProperty : class
         {
@@ -37,7 +37,7 @@ namespace FsInfoCat
         }
 
         [Obsolete("Pass cancellation token")]
-        public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry, [NotNull] Expression<Func<TEntity, TProperty>> propertyExpression)
+        public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry, [DisallowNull] Expression<Func<TEntity, TProperty>> propertyExpression)
             where TEntity : class
             where TProperty : class
         {
@@ -67,8 +67,8 @@ namespace FsInfoCat
             }
         }
 
-        public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry,
-            [NotNull] Expression<Func<TEntity, TProperty>> propertyExpression, CancellationToken cancellationToken)
+        public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
+            [DisallowNull] Expression<Func<TEntity, TProperty>> propertyExpression, CancellationToken cancellationToken)
             where TEntity : class
             where TProperty : class
         {
@@ -79,8 +79,8 @@ namespace FsInfoCat
             return referenceEntry.CurrentValue;
         }
 
-        public static async Task<EntityEntry<TProperty>> GetRelatedTargetEntryAsync<TEntity, TProperty>([NotNull] this EntityEntry<TEntity> entry,
-            [NotNull] Expression<Func<TEntity, TProperty>> propertyExpression, CancellationToken cancellationToken)
+        public static async Task<EntityEntry<TProperty>> GetRelatedTargetEntryAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
+            [DisallowNull] Expression<Func<TEntity, TProperty>> propertyExpression, CancellationToken cancellationToken)
             where TEntity : class
             where TProperty : class
         {

@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
@@ -8,7 +7,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.UnitTests
 {
@@ -122,7 +120,7 @@ namespace FsInfoCat.UnitTests
                         process.WaitForExit();
                         if (!Directory.Exists($"{driveLetter}:\\"))
                             throw new AssertInconclusiveException($"Failed to substitute drive {driveLetter}: from \"{destinationDirectoryName}\".");
-                        
+
                         return new SubstituteDrive(driveLetter);
                     }
                     catch
@@ -189,7 +187,7 @@ namespace FsInfoCat.UnitTests
             }
         }
 
-        //private static bool CheckProperty<T>([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Func<XAttribute, T> ifPresent, out T result)
+        //private static bool CheckProperty<T>([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<XAttribute, T> ifPresent, out T result)
         //{
         //    XAttribute attribute = element.Attribute(attributeName);
         //    if (attribute is null)
@@ -201,7 +199,7 @@ namespace FsInfoCat.UnitTests
         //    return true;
         //}
 
-        //private static T CheckProperty<T>([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Func<XAttribute, T> ifPresent, [NotNull] Func<T> ifNotPresent)
+        //private static T CheckProperty<T>([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<XAttribute, T> ifPresent, [DisallowNull] Func<T> ifNotPresent)
         //{
         //    XAttribute attribute = element.Attribute(attributeName);
         //    if (attribute is null)
@@ -209,7 +207,7 @@ namespace FsInfoCat.UnitTests
         //    return ifPresent(attribute);
         //}
 
-        //private static T CheckProperty<T>([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Func<XAttribute, T> ifPresent, T ifNotPresent)
+        //private static T CheckProperty<T>([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<XAttribute, T> ifPresent, T ifNotPresent)
         //{
         //    XAttribute attribute = element.Attribute(attributeName);
         //    if (attribute is null)
@@ -217,7 +215,7 @@ namespace FsInfoCat.UnitTests
         //    return ifPresent(attribute);
         //}
 
-        //private static void EnsureStringProperty([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<string> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureStringProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<string> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => a.Value, out string result))
         //        ifPresent(result);
@@ -225,9 +223,9 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static string EnsureStringProperty([NotNull] XElement element, [NotNull] XName attributeName, string ifNotPresent) => CheckProperty(element, attributeName, a => a.Value, ifNotPresent);
+        //private static string EnsureStringProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, string ifNotPresent) => CheckProperty(element, attributeName, a => a.Value, ifNotPresent);
 
-        //private static void EnsureBooleanProperty([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<bool> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureBooleanProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<bool> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => XmlConvert.ToBoolean(a.Value), out bool result))
         //        ifPresent(result);
@@ -235,9 +233,9 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static bool EnsureBooleanProperty([NotNull] XElement element, [NotNull] XName attributeName, bool ifNotPresent) => CheckProperty(element, attributeName, a => XmlConvert.ToBoolean(a.Value), ifNotPresent);
+        //private static bool EnsureBooleanProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, bool ifNotPresent) => CheckProperty(element, attributeName, a => XmlConvert.ToBoolean(a.Value), ifNotPresent);
 
-        //private static void EnsureBooleanProperty([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<bool?> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureBooleanProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<bool?> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? XmlConvert.ToBoolean(a.Value) : null, out bool? result))
         //        ifPresent(result);
@@ -245,10 +243,10 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static bool? EnsureBooleanProperty([NotNull] XElement element, [NotNull] XName attributeName, bool? ifNotPresent) =>
+        //private static bool? EnsureBooleanProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, bool? ifNotPresent) =>
         //    CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? XmlConvert.ToBoolean(a.Value) : null, ifNotPresent);
 
-        //private static void EnsureInt32Property([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<int> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureInt32Property([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<int> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => XmlConvert.ToInt32(a.Value), out int result))
         //        ifPresent(result);
@@ -256,9 +254,9 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static int EnsureInt32Property([NotNull] XElement element, [NotNull] XName attributeName, int ifNotPresent) => CheckProperty(element, attributeName, a => XmlConvert.ToInt32(a.Value), ifNotPresent);
+        //private static int EnsureInt32Property([DisallowNull] XElement element, [DisallowNull] XName attributeName, int ifNotPresent) => CheckProperty(element, attributeName, a => XmlConvert.ToInt32(a.Value), ifNotPresent);
 
-        //private static void EnsureInt32Property([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<int?> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureInt32Property([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<int?> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? XmlConvert.ToInt32(a.Value) : null, out int? result))
         //        ifPresent(result);
@@ -266,9 +264,9 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static int? EnsureInt32Property([NotNull] XElement element, [NotNull] XName attributeName, int? ifNotPresent) => CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? XmlConvert.ToInt32(a.Value) : null, ifNotPresent);
+        //private static int? EnsureInt32Property([DisallowNull] XElement element, [DisallowNull] XName attributeName, int? ifNotPresent) => CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? XmlConvert.ToInt32(a.Value) : null, ifNotPresent);
 
-        //private static void EnsureDriveTypeProperty([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<DriveType> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureDriveTypeProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<DriveType> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => (DriveType)Enum.Parse(typeof(DriveType), a.Value), out DriveType result))
         //        ifPresent(result);
@@ -276,10 +274,10 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static DriveType EnsureDriveTypeProperty([NotNull] XElement element, [NotNull] XName attributeName, DriveType ifNotPresent) =>
+        //private static DriveType EnsureDriveTypeProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, DriveType ifNotPresent) =>
         //    CheckProperty(element, attributeName, a => (DriveType)Enum.Parse(typeof(DriveType), a.Value), ifNotPresent);
 
-        //private static void EnsureDriveTypeProperty([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<DriveType?> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureDriveTypeProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<DriveType?> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? (DriveType?)Enum.Parse(typeof(DriveType), a.Value) : null, out DriveType? result))
         //        ifPresent(result);
@@ -287,10 +285,10 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static DriveType? EnsureDriveTypeProperty([NotNull] XElement element, [NotNull] XName attributeName, DriveType? ifNotPresent) =>
+        //private static DriveType? EnsureDriveTypeProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, DriveType? ifNotPresent) =>
         //    CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? (DriveType?)Enum.Parse(typeof(DriveType), a.Value) : null, ifNotPresent);
 
-        //private static void EnsureGuidProperty([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<Guid?> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureGuidProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<Guid?> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? Guid.Parse(a.Value) : null, out Guid? result))
         //        ifPresent(result);
@@ -298,10 +296,10 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static Guid? EnsureGuidProperty([NotNull] XElement element, [NotNull] XName attributeName, Guid? ifNotPresent) =>
+        //private static Guid? EnsureGuidProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, Guid? ifNotPresent) =>
         //    CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? Guid.Parse(a.Value) : null, ifNotPresent);
 
-        //private static void EnsureDateTimeProperty([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<DateTime> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureDateTimeProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<DateTime> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => XmlConvert.ToDateTime(a.Value, XmlDateTimeSerializationMode.Local), out DateTime result))
         //        ifPresent(result);
@@ -309,10 +307,10 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static DateTime EnsureDateTimeProperty([NotNull] XElement element, [NotNull] XName attributeName, DateTime ifNotPresent) =>
+        //private static DateTime EnsureDateTimeProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, DateTime ifNotPresent) =>
         //    CheckProperty(element, attributeName, a => XmlConvert.ToDateTime(a.Value, XmlDateTimeSerializationMode.Local), ifNotPresent);
 
-        //private static void EnsureDateTimeProperty([NotNull] XElement element, [NotNull] XName attributeName, [NotNull] Action<DateTime?> ifPresent, Action ifNotPresent = null)
+        //private static void EnsureDateTimeProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, [DisallowNull] Action<DateTime?> ifPresent, Action ifNotPresent = null)
         //{
         //    if (CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? XmlConvert.ToDateTime(a.Value, XmlDateTimeSerializationMode.Local) : null, out DateTime? result))
         //        ifPresent(result);
@@ -320,16 +318,16 @@ namespace FsInfoCat.UnitTests
         //        ifNotPresent?.Invoke();
         //}
 
-        //private static DateTime? EnsureDateTimeProperty([NotNull] XElement element, [NotNull] XName attributeName, DateTime? ifNotPresent) =>
+        //private static DateTime? EnsureDateTimeProperty([DisallowNull] XElement element, [DisallowNull] XName attributeName, DateTime? ifNotPresent) =>
         //    CheckProperty(element, attributeName, a => (a.Value.Length > 0) ? XmlConvert.ToDateTime(a.Value, XmlDateTimeSerializationMode.Local) : null, ifNotPresent);
 
-        //private static void EnsureDbEntityProperties([NotNull] XElement element, DbEntity entity)
+        //private static void EnsureDbEntityProperties([DisallowNull] XElement element, DbEntity entity)
         //{
         //    EnsureDateTimeProperty(element, nameof(DbEntity.CreatedOn), dateTime => entity.CreatedOn = dateTime);
         //    EnsureDateTimeProperty(element, nameof(DbEntity.ModifiedOn), dateTime => entity.ModifiedOn = dateTime);
         //}
 
-        //private static void EnsureLocalDbEntityProperties([NotNull] XElement element, Local.LocalDbEntity entity)
+        //private static void EnsureLocalDbEntityProperties([DisallowNull] XElement element, Local.LocalDbEntity entity)
         //{
         //    entity.UpstreamId = EnsureGuidProperty(element, nameof(Local.LocalDbEntity.UpstreamId), null);
         //    entity.LastSynchronizedOn = EnsureDateTimeProperty(element, nameof(Local.LocalDbEntity.LastSynchronizedOn), null);

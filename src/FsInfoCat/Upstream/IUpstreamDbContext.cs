@@ -259,27 +259,5 @@ namespace FsInfoCat.Upstream
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The generic <see cref="IUpstreamVideoPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
         new Task<IUpstreamVideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken);
-
-        [Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
-        void ForceDeleteBinaryPropertySet(IUpstreamBinaryPropertySet target);
-
-        /// <summary>
-        /// Deletes the specified <see cref="IUpstreamBinaryPropertySet"/> from the upstream (remote) database, including all nested dependencies.
-        /// </summary>
-        /// <param name="target">The <see cref="IUpstreamBinaryPropertySet"/> to delete.</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteBinaryPropertySetAsync(IUpstreamBinaryPropertySet target, CancellationToken cancellationToken);
-
-        [Obsolete("Use ForceDeleteRedundantSetAsync")]
-        void ForceDeleteRedundantSet(IUpstreamRedundantSet target);
-
-        /// <summary>
-        /// Deletes the specified <see cref="IUpstreamRedundantSet"/> from the upstream (remote) database, including all nested dependencies.
-        /// </summary>
-        /// <param name="target">The <see cref="IUpstreamRedundantSet"/> to delete.</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteRedundantSetAsync(IUpstreamRedundantSet target, CancellationToken cancellationToken);
     }
 }

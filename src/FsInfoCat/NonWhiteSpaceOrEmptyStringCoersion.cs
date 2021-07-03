@@ -11,7 +11,7 @@ namespace FsInfoCat
         private static string EmptyUnlessHasNonWhitespace(string source) =>
             (source is not null && (source.Length == 0 || source.Any(c => !(char.IsWhiteSpace(c) || char.IsControl(c))))) ? source : "";
 
-        private static string WhitespaceToEmpty([NotNull] string source) =>
+        private static string WhitespaceToEmpty([DisallowNull] string source) =>
             (source.Length == 0 || source.Any(c => !(char.IsWhiteSpace(c) || char.IsControl(c)))) ? source : "";
 
         public static readonly NonWhiteSpaceOrEmptyStringCoersion Default = new();

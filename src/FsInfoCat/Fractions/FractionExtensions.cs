@@ -294,17 +294,17 @@ namespace FsInfoCat.Fractions
                 TypeCode typeCode = v.GetTypeCode();
                 return typeCode switch
                 {
-                    TypeCode.Decimal => EqualTo<T>(fraction, Convert.ToDecimal(obj)),
-                    TypeCode.Double => EqualTo<T>(fraction, Convert.ToDouble(obj)),
-                    TypeCode.Single => EqualTo<T>(fraction, Convert.ToSingle(obj)),
-                    TypeCode.Int16 => EqualTo<T>(fraction, Convert.ToInt16(obj)),
-                    TypeCode.Int32 => EqualTo<T>(fraction, Convert.ToInt32(obj)),
-                    TypeCode.Int64 => EqualTo<T>(fraction, Convert.ToInt64(obj)),
-                    TypeCode.Byte => EqualTo<T>(fraction, Convert.ToByte(obj)),
-                    TypeCode.SByte => EqualTo<T>(fraction, Convert.ToSByte(obj)),
-                    TypeCode.UInt32 => EqualTo<T>(fraction, Convert.ToUInt32(obj)),
-                    TypeCode.UInt64 => EqualTo<T>(fraction, Convert.ToUInt64(obj)),
-                    TypeCode.UInt16 => EqualTo<T>(fraction, Convert.ToUInt16(obj)),
+                    TypeCode.Decimal => EqualTo(fraction, Convert.ToDecimal(obj)),
+                    TypeCode.Double => EqualTo(fraction, Convert.ToDouble(obj)),
+                    TypeCode.Single => EqualTo(fraction, Convert.ToSingle(obj)),
+                    TypeCode.Int16 => EqualTo(fraction, Convert.ToInt16(obj)),
+                    TypeCode.Int32 => EqualTo(fraction, Convert.ToInt32(obj)),
+                    TypeCode.Int64 => EqualTo(fraction, Convert.ToInt64(obj)),
+                    TypeCode.Byte => EqualTo(fraction, Convert.ToByte(obj)),
+                    TypeCode.SByte => EqualTo(fraction, Convert.ToSByte(obj)),
+                    TypeCode.UInt32 => EqualTo(fraction, Convert.ToUInt32(obj)),
+                    TypeCode.UInt64 => EqualTo(fraction, Convert.ToUInt64(obj)),
+                    TypeCode.UInt16 => EqualTo(fraction, Convert.ToUInt16(obj)),
                     _ => fraction.ToString().Equals(obj.ToString()),
                 };
             }
@@ -341,17 +341,17 @@ namespace FsInfoCat.Fractions
                 TypeCode typeCode = v.GetTypeCode();
                 return typeCode switch
                 {
-                    TypeCode.Decimal => Compare<T>(fraction, Convert.ToDecimal(obj)),
-                    TypeCode.Double => Compare<T>(fraction, Convert.ToDouble(obj)),
-                    TypeCode.Single => Compare<T>(fraction, Convert.ToSingle(obj)),
-                    TypeCode.Int16 => Compare<T>(fraction, Convert.ToInt16(obj)),
-                    TypeCode.Int32 => Compare<T>(fraction, Convert.ToInt32(obj)),
-                    TypeCode.Int64 => Compare<T>(fraction, Convert.ToInt64(obj)),
-                    TypeCode.Byte => Compare<T>(fraction, Convert.ToByte(obj)),
-                    TypeCode.SByte => Compare<T>(fraction, Convert.ToSByte(obj)),
-                    TypeCode.UInt32 => Compare<T>(fraction, Convert.ToUInt32(obj)),
-                    TypeCode.UInt64 => Compare<T>(fraction, Convert.ToUInt64(obj)),
-                    TypeCode.UInt16 => Compare<T>(fraction, Convert.ToUInt16(obj)),
+                    TypeCode.Decimal => Compare(fraction, Convert.ToDecimal(obj)),
+                    TypeCode.Double => Compare(fraction, Convert.ToDouble(obj)),
+                    TypeCode.Single => Compare(fraction, Convert.ToSingle(obj)),
+                    TypeCode.Int16 => Compare(fraction, Convert.ToInt16(obj)),
+                    TypeCode.Int32 => Compare(fraction, Convert.ToInt32(obj)),
+                    TypeCode.Int64 => Compare(fraction, Convert.ToInt64(obj)),
+                    TypeCode.Byte => Compare(fraction, Convert.ToByte(obj)),
+                    TypeCode.SByte => Compare(fraction, Convert.ToSByte(obj)),
+                    TypeCode.UInt32 => Compare(fraction, Convert.ToUInt32(obj)),
+                    TypeCode.UInt64 => Compare(fraction, Convert.ToUInt64(obj)),
+                    TypeCode.UInt16 => Compare(fraction, Convert.ToUInt16(obj)),
                     _ => fraction.ToString().CompareTo(obj.ToString()),
                 };
             }

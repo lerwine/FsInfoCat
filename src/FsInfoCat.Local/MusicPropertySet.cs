@@ -1,14 +1,23 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Class MusicPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalMusicPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalMusicPropertySet" />
     public class MusicPropertySet : LocalDbEntity, ILocalMusicPropertySet
     {
         #region Fields
@@ -77,20 +86,56 @@ namespace FsInfoCat.Local
             _trackNumber = AddChangeTracker<uint?>(nameof(TrackNumber), null);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<MusicPropertySet> obj)
+        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<MusicPropertySet> builder)
         {
-            obj.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter);
-            obj.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter);
-            obj.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
-            obj.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
+            if (builder is null)
+                throw new ArgumentOutOfRangeException(nameof(builder));
+            builder.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter);
+            builder.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter);
+            builder.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
+            builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
         }
 
-        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
+            CancellationToken cancellationToken)
         {
-            MusicPropertySet oldMusicPropertySet = entry.Entity.MusicPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.MusicProperties, cancellationToken) : null;
-            IMusicProperties currentMusicProperties = await fileDetailProvider.GetMusicPropertiesAsync(cancellationToken);
-            // TODO: Implement RefreshAsync(EntityEntry<DbFile>, IFileDetailProvider, CancellationToken)
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (entry is null)
+                throw new ArgumentNullException(nameof(entry));
+            if (fileDetailProvider is null)
+                throw new ArgumentNullException(nameof(fileDetailProvider));
+            switch (entry.State)
+            {
+                case EntityState.Detached:
+                    throw new ArgumentOutOfRangeException(nameof(entry), $"{nameof(DbFile)} is detached");
+                case EntityState.Deleted:
+                    throw new ArgumentOutOfRangeException(nameof(entry), $"{nameof(DbFile)} is flagged for deletion");
+            }
+            if (entry.Context is not LocalDbContext dbContext)
+                throw new ArgumentOutOfRangeException(nameof(entry), "Invalid database context");
+            DbFile entity;
+            MusicPropertySet oldPropertySet = (entity = entry.Entity).MusicPropertySetId.HasValue ?
+                await entry.GetRelatedReferenceAsync(f => f.MusicProperties, cancellationToken) : null;
+            IMusicProperties currentProperties = await fileDetailProvider.GetMusicPropertiesAsync(cancellationToken);
+            if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
+                return;
+            if (currentProperties.IsNullOrAllPropertiesEmpty())
+                entity.MusicProperties = null;
+            else
+                entity.MusicProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (oldPropertySet is null)
+                return;
+            switch (entry.State)
+            {
+                case EntityState.Unchanged:
+                case EntityState.Modified:
+                    Guid id = entity.Id;
+                    if (!(await dbContext.Entry(oldPropertySet).GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+                        dbContext.MusicPropertySets.Remove(oldPropertySet);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    break;
+            }
         }
     }
 }

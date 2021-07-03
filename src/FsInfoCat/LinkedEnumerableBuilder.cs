@@ -27,7 +27,7 @@ namespace FsInfoCat
         {
             private Node _first;
             private Node _last;
-            internal Enumerable([NotNull] LinkedEnumerableBuilder<T> builder)
+            internal Enumerable([DisallowNull] LinkedEnumerableBuilder<T> builder)
             {
                 _first = builder._first;
                 _last = builder._last;

@@ -16,7 +16,7 @@ namespace FsInfoCat
 
             public event EventHandler ValueChanged;
 
-            internal PropertyChangeTracker([NotNull] RevertibleChangeTracking target, [NotNull] string propertyName, T initialValue, ICoersion<T> coersion)
+            internal PropertyChangeTracker([DisallowNull] RevertibleChangeTracking target, [DisallowNull] string propertyName, T initialValue, ICoersion<T> coersion)
             {
                 lock (target.SyncRoot)
                 {

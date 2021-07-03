@@ -46,7 +46,7 @@ namespace FsInfoCat
             }
         }
 
-        protected bool ClearError([NotNull] string propertyName)
+        protected bool ClearError([DisallowNull] string propertyName)
         {
             lock (SyncRoot)
             {
@@ -83,7 +83,7 @@ namespace FsInfoCat
                 else
                 {
                     string[] changed;
-                    lock(SyncRoot)
+                    lock (SyncRoot)
                     {
                         KeyValuePair<string, string[]>[] keyValuePairs = _lastValidationResults.ToArray();
                         IEnumerable<KeyValuePair<string, string[]>> added = validationResults.SelectMany(r =>
@@ -151,7 +151,7 @@ namespace FsInfoCat
 
         protected bool SetError([DisallowNull] string propertyName, [DisallowNull] string message)
         {
-            lock(SyncRoot)
+            lock (SyncRoot)
             {
                 if (_lastValidationResults.ContainsKey(propertyName))
                 {

@@ -8,11 +8,11 @@ namespace FsInfoCat.Local
 {
     /// <summary>
     /// Class FileComparison.
-    /// Implements the <see cref="FsInfoCat.Local.LocalDbEntity" />
-    /// Implements the <see cref="FsInfoCat.Local.ILocalComparison" />
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalComparison" />
     /// </summary>
-    /// <seealso cref="FsInfoCat.Local.LocalDbEntity" />
-    /// <seealso cref="FsInfoCat.Local.ILocalComparison" />
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalComparison" />
     [Table(TABLE_NAME)]
     public class FileComparison : LocalDbEntity, ILocalComparison
     {

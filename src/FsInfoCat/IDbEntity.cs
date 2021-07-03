@@ -10,6 +10,17 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IValidatableObject" />
     /// <seealso cref="IRevertibleChangeTracking" />
+    /// <seealso cref="IComparison" />
+    /// <seealso cref="ICrawlConfiguration" />
+    /// <seealso cref="IDbFsItem" />
+    /// <seealso cref="IFileSystem" />
+    /// <seealso cref="IPropertySet" />
+    /// <seealso cref="IRedundancy" />
+    /// <seealso cref="IRedundantSet" />
+    /// <seealso cref="ISymbolicName" />
+    /// <seealso cref="IVolume" />
+    /// <seealso cref="Local.ILocalDbEntity" />
+    /// <seealso cref="Upstream.IUpstreamDbEntity" />
     public interface IDbEntity : IValidatableObject, IRevertibleChangeTracking
     {
         /// <summary>
@@ -32,7 +43,8 @@ namespace FsInfoCat
         /// This gets called before the entity is inserted or updated into the database.
         /// </summary>
         /// <param name="validationContext">The validation context.</param>
-        /// <remarks>This allows the entity to update relevant properties before being saved to the database, such as updating the entity modification date/time.</remarks>
+        /// <remarks>This is called by <see cref="Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(bool, System.Threading.CancellationToken)"/> allows the entity to update relevant properties before being saved to the database, such as updating the entity modification date/time.</remarks>
+        [Obsolete("Use IEntityBeforeSave, IEntityBeforeInsert, IEntityBeforeSaveChanges or IEntityBeforeDelete")]
         void BeforeSave(ValidationContext validationContext);
     }
 }

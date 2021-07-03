@@ -10,6 +10,8 @@ namespace FsInfoCat
     /// <summary>
     /// Generic interface for FS InfoCat database context.
     /// </summary>
+    /// <seealso cref="Local.ILocalDbContext"/>
+    /// <seealso cref="Upstream.IUpstreamDbContext"/>
     public interface IDbContext : IDisposable
     {
         /// <summary>
@@ -220,28 +222,6 @@ namespace FsInfoCat
         /// <returns>The generic <see cref="IVideoPropertySet"/> for the matching entity or <see langword="null"/> if no match was found.</returns>
         Task<IVideoPropertySet> FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken);
 
-        [Obsolete("Use ForceDeleteBinaryPropertySetAsync")]
-        void ForceDeleteBinaryPropertySet(IBinaryPropertySet target);
-
-        /// <summary>
-        /// Deletes the specified <see cref="IBinaryPropertySet"/> and all nested dependencies.
-        /// </summary>
-        /// <param name="target">The <see cref="IBinaryPropertySet"/> to delete.</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteBinaryPropertySetAsync(IBinaryPropertySet target, CancellationToken cancellationToken);
-
-        [Obsolete("Use ForceDeleteRedundantSetAsync")]
-        void ForceDeleteRedundantSet(IRedundantSet target);
-
-        /// <summary>
-        /// Deletes the specified <see cref="IRedundantSet"/> and all nested dependencies.
-        /// </summary>
-        /// <param name="target">The <see cref="IRedundantSet"/> to delete.</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> ForceDeleteRedundantSetAsync(IRedundantSet target, CancellationToken cancellationToken);
-
         /// <summary>
         /// Saves the changes.
         /// </summary>
@@ -276,6 +256,6 @@ namespace FsInfoCat
         /// <typeparam name="TEntity">The type of the t entity.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <returns>EntityEntry&lt;TEntity&gt;.</returns>
-        EntityEntry<TEntity> Entry<TEntity>([NotNull] TEntity entity) where TEntity : class;
+        EntityEntry<TEntity> Entry<TEntity>([DisallowNull] TEntity entity) where TEntity : class;
     }
 }

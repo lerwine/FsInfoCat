@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -19,7 +16,7 @@ namespace FsInfoCat
 
         public static XName ToFsInfoCatExportXmlns(this string name) => XNamespace_FsInfoCatExport.GetName(name);
 
-        public static string AttributeValueOrDefault([AllowNull] this XElement element, [NotNull] XName attributeName, string ifNotPresent = null)
+        public static string AttributeValueOrDefault([AllowNull] this XElement element, [DisallowNull] XName attributeName, string ifNotPresent = null)
         {
             if (attributeName is null)
                 throw new ArgumentNullException(nameof(attributeName));
@@ -32,7 +29,7 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static string GetAttributeValue([AllowNull] this XElement element, [NotNull] XName attributeName, [NotNull] Func<string> ifNotPresent)
+        public static string GetAttributeValue([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string> ifNotPresent)
         {
             if (attributeName is null)
                 throw new ArgumentNullException(nameof(attributeName));
@@ -47,7 +44,7 @@ namespace FsInfoCat
             return ifNotPresent();
         }
 
-        public static bool TryGetAttributeValue([AllowNull] this XElement element, [NotNull] XName attributeName, out string result)
+        public static bool TryGetAttributeValue([AllowNull] this XElement element, [DisallowNull] XName attributeName, out string result)
         {
             if (attributeName is null)
                 throw new ArgumentNullException(nameof(attributeName));
@@ -64,7 +61,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static T AttributeValueOrDefault<T>([AllowNull] this XElement element, [NotNull] XName attributeName, [NotNull] Func<string, T> ifPresent, T ifNotPresent = default)
+        public static T AttributeValueOrDefault<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> ifPresent, T ifNotPresent = default)
         {
             if (attributeName is null)
                 throw new ArgumentNullException(nameof(attributeName));
@@ -79,7 +76,7 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static T GetAttributeValue<T>([AllowNull] this XElement element, [NotNull] XName attributeName, [NotNull] Func<string, T> ifPresent, [NotNull] Func<T> ifNotPresent)
+        public static T GetAttributeValue<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> ifPresent, [DisallowNull] Func<T> ifNotPresent)
         {
             if (attributeName is null)
                 throw new ArgumentNullException(nameof(attributeName));
@@ -96,7 +93,7 @@ namespace FsInfoCat
             return ifNotPresent();
         }
 
-        public static bool TryGetAttributeValue<T>([AllowNull] this XElement element, [NotNull] XName attributeName, [NotNull] Func<string, T> converter, out T result)
+        public static bool TryGetAttributeValue<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> converter, out T result)
         {
             if (attributeName is null)
                 throw new ArgumentNullException(nameof(attributeName));
@@ -229,7 +226,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool? GetAttributeBoolean([AllowNull] this XElement element, [NotNull] XName attributeName, bool? ifNotPresent = null)
+        public static bool? GetAttributeBoolean([AllowNull] this XElement element, [DisallowNull] XName attributeName, bool? ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -241,14 +238,14 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static bool GetAttributeBoolean([AllowNull] this XElement element, [NotNull] XName attributeName, bool ifNotPresent)
+        public static bool GetAttributeBoolean([AllowNull] this XElement element, [DisallowNull] XName attributeName, bool ifNotPresent)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToBoolean(value, out bool result))
                 return result;
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeBoolean([AllowNull] this XElement element, [NotNull] XName attributeName, out bool result)
+        public static bool TryGetAttributeBoolean([AllowNull] this XElement element, [DisallowNull] XName attributeName, out bool result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToBoolean(value, out result))
                 return true;
@@ -256,7 +253,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeBoolean([AllowNull] this XElement element, [NotNull] XName attributeName, out bool? result)
+        public static bool TryGetAttributeBoolean([AllowNull] this XElement element, [DisallowNull] XName attributeName, out bool? result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -275,7 +272,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static DateTime? GetAttributeDateTime([AllowNull] this XElement element, [NotNull] XName attributeName, DateTime? ifNotPresent = null, XmlDateTimeSerializationMode dateTimeOption = XmlDateTimeSerializationMode.RoundtripKind)
+        public static DateTime? GetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, DateTime? ifNotPresent = null, XmlDateTimeSerializationMode dateTimeOption = XmlDateTimeSerializationMode.RoundtripKind)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -287,14 +284,14 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static DateTime GetAttributeDateTime([AllowNull] this XElement element, [NotNull] XName attributeName, DateTime ifNotPresent, XmlDateTimeSerializationMode dateTimeOption = XmlDateTimeSerializationMode.RoundtripKind)
+        public static DateTime GetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, DateTime ifNotPresent, XmlDateTimeSerializationMode dateTimeOption = XmlDateTimeSerializationMode.RoundtripKind)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToDateTime(value, dateTimeOption, out DateTime result))
                 return result;
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [NotNull] XName attributeName, XmlDateTimeSerializationMode dateTimeOption, out DateTime result)
+        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, XmlDateTimeSerializationMode dateTimeOption, out DateTime result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToDateTime(value, dateTimeOption, out result))
                 return true;
@@ -302,9 +299,9 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [NotNull] XName attributeName, out DateTime result) => TryGetAttributeDateTime(element, attributeName, XmlDateTimeSerializationMode.RoundtripKind, out result);
+        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, out DateTime result) => TryGetAttributeDateTime(element, attributeName, XmlDateTimeSerializationMode.RoundtripKind, out result);
 
-        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [NotNull] XName attributeName, XmlDateTimeSerializationMode dateTimeOption, out DateTime? result)
+        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, XmlDateTimeSerializationMode dateTimeOption, out DateTime? result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -323,9 +320,9 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [NotNull] XName attributeName, out DateTime? result) => TryGetAttributeDateTime(element, attributeName, XmlDateTimeSerializationMode.RoundtripKind, out result);
+        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, out DateTime? result) => TryGetAttributeDateTime(element, attributeName, XmlDateTimeSerializationMode.RoundtripKind, out result);
 
-        public static TimeSpan? GetAttributeTimeSpan([AllowNull] this XElement element, [NotNull] XName attributeName, TimeSpan? ifNotPresent = null)
+        public static TimeSpan? GetAttributeTimeSpan([AllowNull] this XElement element, [DisallowNull] XName attributeName, TimeSpan? ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -337,14 +334,14 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static TimeSpan GetAttributeTimeSpan([AllowNull] this XElement element, [NotNull] XName attributeName, TimeSpan ifNotPresent)
+        public static TimeSpan GetAttributeTimeSpan([AllowNull] this XElement element, [DisallowNull] XName attributeName, TimeSpan ifNotPresent)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToTimeSpan(value, out TimeSpan result))
                 return result;
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeTimeSpan([AllowNull] this XElement element, [NotNull] XName attributeName, out TimeSpan result)
+        public static bool TryGetAttributeTimeSpan([AllowNull] this XElement element, [DisallowNull] XName attributeName, out TimeSpan result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToTimeSpan(value, out result))
                 return true;
@@ -352,7 +349,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeTimeSpan([AllowNull] this XElement element, [NotNull] XName attributeName, out TimeSpan? result)
+        public static bool TryGetAttributeTimeSpan([AllowNull] this XElement element, [DisallowNull] XName attributeName, out TimeSpan? result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -371,7 +368,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static short? GetAttributeInt16([AllowNull] this XElement element, [NotNull] XName attributeName, short? ifNotPresent = null)
+        public static short? GetAttributeInt16([AllowNull] this XElement element, [DisallowNull] XName attributeName, short? ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -383,14 +380,14 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static short GetAttributeInt16([AllowNull] this XElement element, [NotNull] XName attributeName, short ifNotPresent)
+        public static short GetAttributeInt16([AllowNull] this XElement element, [DisallowNull] XName attributeName, short ifNotPresent)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToInt16(value, out short result))
                 return result;
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeInt16([AllowNull] this XElement element, [NotNull] XName attributeName, out short result)
+        public static bool TryGetAttributeInt16([AllowNull] this XElement element, [DisallowNull] XName attributeName, out short result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToInt16(value, out result))
                 return true;
@@ -398,7 +395,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeInt16([AllowNull] this XElement element, [NotNull] XName attributeName, out short? result)
+        public static bool TryGetAttributeInt16([AllowNull] this XElement element, [DisallowNull] XName attributeName, out short? result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -417,7 +414,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static int? GetAttributeInt32([AllowNull] this XElement element, [NotNull] XName attributeName, int? ifNotPresent = null)
+        public static int? GetAttributeInt32([AllowNull] this XElement element, [DisallowNull] XName attributeName, int? ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -429,14 +426,14 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static int GetAttributeInt32([AllowNull] this XElement element, [NotNull] XName attributeName, int ifNotPresent)
+        public static int GetAttributeInt32([AllowNull] this XElement element, [DisallowNull] XName attributeName, int ifNotPresent)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToInt32(value, out int result))
                 return result;
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeInt32([AllowNull] this XElement element, [NotNull] XName attributeName, out int result)
+        public static bool TryGetAttributeInt32([AllowNull] this XElement element, [DisallowNull] XName attributeName, out int result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToInt32(value, out result))
                 return true;
@@ -444,7 +441,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeInt32([AllowNull] this XElement element, [NotNull] XName attributeName, out int? result)
+        public static bool TryGetAttributeInt32([AllowNull] this XElement element, [DisallowNull] XName attributeName, out int? result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -463,7 +460,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static long? GetAttributeInt64([AllowNull] this XElement element, [NotNull] XName attributeName, long? ifNotPresent = null)
+        public static long? GetAttributeInt64([AllowNull] this XElement element, [DisallowNull] XName attributeName, long? ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -475,14 +472,14 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static long GetAttributeInt64([AllowNull] this XElement element, [NotNull] XName attributeName, long ifNotPresent)
+        public static long GetAttributeInt64([AllowNull] this XElement element, [DisallowNull] XName attributeName, long ifNotPresent)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToInt64(value, out long result))
                 return result;
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeInt64([AllowNull] this XElement element, [NotNull] XName attributeName, out long result)
+        public static bool TryGetAttributeInt64([AllowNull] this XElement element, [DisallowNull] XName attributeName, out long result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToInt64(value, out result))
                 return true;
@@ -490,7 +487,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeInt64([AllowNull] this XElement element, [NotNull] XName attributeName, out long? result)
+        public static bool TryGetAttributeInt64([AllowNull] this XElement element, [DisallowNull] XName attributeName, out long? result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -509,7 +506,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static TEnum? GetAttributeEnumValue<TEnum>([AllowNull] this XElement element, [NotNull] XName attributeName, TEnum? ifNotPresent = null)
+        public static TEnum? GetAttributeEnumValue<TEnum>([AllowNull] this XElement element, [DisallowNull] XName attributeName, TEnum? ifNotPresent = null)
             where TEnum : struct, IComparable, IConvertible, IFormattable
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
@@ -522,7 +519,7 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static TEnum GetAttributeEnumValue<TEnum>([AllowNull] this XElement element, [NotNull] XName attributeName, TEnum ifNotPresent)
+        public static TEnum GetAttributeEnumValue<TEnum>([AllowNull] this XElement element, [DisallowNull] XName attributeName, TEnum ifNotPresent)
             where TEnum : struct, IComparable, IConvertible, IFormattable
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToEnumValue(value, out TEnum result))
@@ -530,7 +527,7 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeEnumValue<TEnum>([AllowNull] this XElement element, [NotNull] XName attributeName, out TEnum result)
+        public static bool TryGetAttributeEnumValue<TEnum>([AllowNull] this XElement element, [DisallowNull] XName attributeName, out TEnum result)
             where TEnum : struct, IComparable, IConvertible, IFormattable
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToEnumValue(value, out result))
@@ -539,7 +536,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeEnumValue<TEnum>([AllowNull] this XElement element, [NotNull] XName attributeName, out TEnum? result)
+        public static bool TryGetAttributeEnumValue<TEnum>([AllowNull] this XElement element, [DisallowNull] XName attributeName, out TEnum? result)
             where TEnum : struct, IComparable, IConvertible, IFormattable
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
@@ -559,7 +556,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static IEnumerable<TEnum> GetAttributeEnumFlags<TEnum>([AllowNull] this XElement element, [NotNull] XName attributeName)
+        public static IEnumerable<TEnum> GetAttributeEnumFlags<TEnum>([AllowNull] this XElement element, [DisallowNull] XName attributeName)
             where TEnum : struct, IComparable, IConvertible, IFormattable
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
@@ -567,7 +564,7 @@ namespace FsInfoCat
             return null;
         }
 
-        public static Guid? GetAttributeGuid([AllowNull] this XElement element, [NotNull] XName attributeName, Guid? ifNotPresent = null)
+        public static Guid? GetAttributeGuid([AllowNull] this XElement element, [DisallowNull] XName attributeName, Guid? ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -579,14 +576,14 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static Guid GetAttributeGuid([AllowNull] this XElement element, [NotNull] XName attributeName, Guid ifNotPresent)
+        public static Guid GetAttributeGuid([AllowNull] this XElement element, [DisallowNull] XName attributeName, Guid ifNotPresent)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToGuid(value, out Guid result))
                 return result;
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeGuid([AllowNull] this XElement element, [NotNull] XName attributeName, out Guid result)
+        public static bool TryGetAttributeGuid([AllowNull] this XElement element, [DisallowNull] XName attributeName, out Guid result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToGuid(value, out result))
                 return true;
@@ -594,7 +591,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeGuid([AllowNull] this XElement element, [NotNull] XName attributeName, out Guid? result)
+        public static bool TryGetAttributeGuid([AllowNull] this XElement element, [DisallowNull] XName attributeName, out Guid? result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -613,7 +610,7 @@ namespace FsInfoCat
             return false;
         }
 
-        public static byte[] GetAttributeBytes([AllowNull] this XElement element, [NotNull] XName attributeName, byte[] ifNotPresent = null)
+        public static byte[] GetAttributeBytes([AllowNull] this XElement element, [DisallowNull] XName attributeName, byte[] ifNotPresent = null)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -624,7 +621,7 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeBytes([AllowNull] this XElement element, [NotNull] XName attributeName, out byte[] result)
+        public static bool TryGetAttributeBytes([AllowNull] this XElement element, [DisallowNull] XName attributeName, out byte[] result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && ByteArrayCoersion.TryParse(value, out IEnumerable<byte> en))
             {

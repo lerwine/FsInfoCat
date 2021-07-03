@@ -1,12 +1,7 @@
 using FsInfoCat.Local;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -50,7 +45,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public Commands.RelayCommand DeleteCommand { get; }
 
-        internal CrawlConfigurationVM([NotNull] CrawlConfiguration model, string fullName, Guid rootId)
+        internal CrawlConfigurationVM([DisallowNull] CrawlConfiguration model, string fullName, Guid rootId)
         {
             FullName = fullName ?? "";
             Subdirectory root = (_crawlConfiguration = model).Root;
@@ -66,7 +61,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 finally { Deactivate?.Invoke(this, EventArgs.Empty); }
             }));
             DeleteCommand = new Commands.RelayCommand(() => Dispatcher.Invoke(() => Delete?.Invoke(this, EventArgs.Empty)));
-            
+
             model.PropertyChanged += Model_PropertyChanged;
             if (root is not null && root.Id != rootId)
                 Subdirectory.LookupFullNameAsync(root).ContinueWith(task =>

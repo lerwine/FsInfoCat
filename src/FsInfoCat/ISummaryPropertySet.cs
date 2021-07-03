@@ -7,6 +7,7 @@ namespace FsInfoCat
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="Local.ILocalSummaryPropertySet"/>
     /// <seealso cref="Upstream.IUpstreamSummaryPropertySet"/>
+    /// <seealso cref="IFile.SummaryProperties"/>
     public interface ISummaryPropertySet : ISummaryProperties, IPropertySet
     {
     }

@@ -1,14 +1,23 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Class SummaryPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalSummaryPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalSummaryPropertySet" />
     public class SummaryPropertySet : LocalDbEntity, ILocalSummaryPropertySet
     {
         #region Fields
@@ -113,29 +122,56 @@ namespace FsInfoCat.Local
             _productName = AddChangeTracker(nameof(ProductName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<SummaryPropertySet> obj)
+        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<SummaryPropertySet> builder)
         {
-            obj.Property(nameof(Author)).HasConversion(MultiStringValue.Converter);
-            obj.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter);
-            obj.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter);
-            obj.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter);
+            if (builder is null)
+                throw new ArgumentOutOfRangeException(nameof(builder));
+            builder.Property(nameof(Author)).HasConversion(MultiStringValue.Converter);
+            builder.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter);
+            builder.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter);
+            builder.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter);
         }
 
-        internal static async Task RefreshAsync(EntityEntry<DbFile> entry, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
+            CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (entry is null)
+                throw new ArgumentNullException(nameof(entry));
+            if (fileDetailProvider is null)
+                throw new ArgumentNullException(nameof(fileDetailProvider));
+            switch (entry.State)
+            {
+                case EntityState.Detached:
+                    throw new ArgumentOutOfRangeException(nameof(entry), $"{nameof(DbFile)} is detached");
+                case EntityState.Deleted:
+                    throw new ArgumentOutOfRangeException(nameof(entry), $"{nameof(DbFile)} is flagged for deletion");
+            }
             if (entry.Context is not LocalDbContext dbContext)
-                throw new ArgumentOutOfRangeException(nameof(entry));
-            DbFile entity = entry.Entity;
-            SummaryPropertySet oldSummaryPropertySet = entity.SummaryPropertySetId.HasValue ? await entry.GetRelatedReferenceAsync(f => f.SummaryProperties, cancellationToken) : null;
-            ISummaryProperties currentSummaryProperties = await fileDetailProvider.GetSummaryPropertiesAsync(cancellationToken);
-            if (FilePropertiesComparer.Equals(currentSummaryProperties, oldSummaryPropertySet))
+                throw new ArgumentOutOfRangeException(nameof(entry), "Invalid database context");
+            DbFile entity;
+            SummaryPropertySet oldPropertySet = (entity = entry.Entity).SummaryPropertySetId.HasValue ?
+                await entry.GetRelatedReferenceAsync(f => f.SummaryProperties, cancellationToken) : null;
+            ISummaryProperties currentProperties = await fileDetailProvider.GetSummaryPropertiesAsync(cancellationToken);
+            if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-
-            if (currentSummaryProperties is null)
+            if (currentProperties.IsNullOrAllPropertiesEmpty())
                 entity.SummaryProperties = null;
             else
-                entity.SummaryProperties = await dbContext.GetMatchingAsync(currentSummaryProperties, cancellationToken);
-            await dbContext.SaveChangesAsync(cancellationToken);
+                entity.SummaryProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (oldPropertySet is null)
+                return;
+            switch (entry.State)
+            {
+                case EntityState.Unchanged:
+                case EntityState.Modified:
+                    Guid id = entity.Id;
+                    if (!(await dbContext.Entry(oldPropertySet).GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
+                        dbContext.SummaryPropertySets.Remove(oldPropertySet);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    break;
+            }
         }
     }
 }

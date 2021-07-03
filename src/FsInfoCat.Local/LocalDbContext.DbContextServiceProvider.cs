@@ -12,7 +12,7 @@ namespace FsInfoCat.Local
             private readonly LocalDbContext _dbContext;
             private readonly Type _entityType;
 
-            internal DbContextServiceProvider([NotNull] LocalDbContext dbContext, [NotNull] object entity)
+            internal DbContextServiceProvider([DisallowNull] LocalDbContext dbContext, [DisallowNull] object entity)
                 : base(Services.ServiceProvider)
             {
                 _dbContext = dbContext;

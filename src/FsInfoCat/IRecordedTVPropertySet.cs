@@ -7,6 +7,7 @@ namespace FsInfoCat
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="Local.ILocalRecordedTVPropertySet"/>
     /// <seealso cref="Upstream.IUpstreamRecordedTVPropertySet"/>
+    /// <seealso cref="IFile.RecordedTVProperties"/>
     public interface IRecordedTVPropertySet : IRecordedTVProperties, IPropertySet
     {
     }
