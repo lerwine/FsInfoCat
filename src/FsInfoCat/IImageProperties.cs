@@ -79,8 +79,8 @@ namespace FsInfoCat
         /// <value>
         /// Not intended to be parsed programmatically.
         /// </value>
-        /// <remarks>
-        /// The user-friendly form of System.Image.Compression. Not intended to be parsed programmatically.
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <para>The user-friendly form of System.Image.Compression. Not intended to be parsed programmatically.</para>
         /// <list type="bullet">
         /// <item><term>Name</term><description>Compression</description></item>
         /// <item><term>Format ID</term><description>{3F08E66F-2F44-4BB9-A682-AC35D2562322} (Format)</description></item>
@@ -123,8 +123,7 @@ namespace FsInfoCat
         /// <value>
         /// System.
         /// </value>
-        /// <remarks>
-        /// Image.ImageID
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Image ID</description></item>
         /// <item><term>Format ID</term><description>{10DABE05-32AA-4C29-BF1A-63E2D220587F} (Format)</description></item>

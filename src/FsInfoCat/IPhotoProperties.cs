@@ -19,7 +19,8 @@ namespace FsInfoCat
         /// <value>
         /// The manufacturer name of the camera that took the photo, in a string format.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Camera Manufacturer</description></item>
         /// <item><term>Format ID</term><description>{14B81DA1-0135-4D31-96D9-6CBFC9671A99} (ImageProperties)</description></item>
         /// <item><term>Property ID</term><description>271</description></item>
@@ -33,7 +34,8 @@ namespace FsInfoCat
         /// <value>
         /// The model name of the camera that shot the photo, in string form.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Camera Model</description></item>
         /// <item><term>Format ID</term><description>{14B81DA1-0135-4D31-96D9-6CBFC9671A99} (ImageProperties)</description></item>
         /// <item><term>Property ID</term><description>272</description></item>
@@ -77,7 +79,8 @@ namespace FsInfoCat
         /// <value>
         /// The Exchangeable Image File (EXIF) version.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>EXIF Version</description></item>
         /// <item><term>Format ID</term><description>{D35F743A-EB2E-47F2-A286-844132CB1427} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
@@ -105,8 +108,8 @@ namespace FsInfoCat
         /// <value>
         /// The user-friendly form of System.
         /// </value>
-        /// <remarks>
-        /// Photo.Orientation. Not intended to be parsed programmatically.
+        /// <remarks>This value should be trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <para>Not intended to be parsed programmatically.</para>
         /// <list type="bullet">
         /// <item><term>Name</term><description>Orientation</description></item>
         /// <item><term>Format ID</term><description>{A9EA193C-C511-498A-A06B-58E2776DCC28} (Format)</description></item>

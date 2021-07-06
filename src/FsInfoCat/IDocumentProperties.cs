@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using System.ComponentModel;
 
 namespace FsInfoCat
 {
@@ -19,14 +20,14 @@ namespace FsInfoCat
         /// <value>
         /// System.
         /// </value>
-        /// <remarks>
-        /// Document.ClientID
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Client ID</description></item>
         /// <item><term>Format ID</term><description>{276D7BB0-5B34-4FB0-AA4B-158ED12A1809} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-clientid">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_ClientID)]
         string ClientID { get; }
 
         /// <summary>
@@ -42,6 +43,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-contributor">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_Contributor)]
         MultiStringValue Contributor { get; }
 
         /// <summary>
@@ -58,6 +60,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>12</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-datecreated">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_DateCreated)]
         System.DateTime? DateCreated { get; }
 
         /// <summary>
@@ -66,13 +69,14 @@ namespace FsInfoCat
         /// <value>
         /// The last person to save the document, as stored in the document.
         /// </value>
-        /// <remarks>
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Last Author</description></item>
         /// <item><term>Format ID</term><description>{F29F85E0-4FF9-1068-AB91-08002B27B3D9} (SummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>8</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-lastauthor">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_LastAuthor)]
         string LastAuthor { get; }
 
         /// <summary>
@@ -81,12 +85,14 @@ namespace FsInfoCat
         /// <value>
         /// The revision number.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Revision Number</description></item>
         /// <item><term>Format ID</term><description>{F29F85E0-4FF9-1068-AB91-08002B27B3D9} (SummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>9</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-revisionnumber">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_RevisionNumber)]
         string RevisionNumber { get; }
 
         /// <summary>
@@ -101,61 +107,72 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>19</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-security">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_Security)]
         int? Security { get; }
 
         /// <summary>
         /// Gets the Division
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Division</description></item>
         /// <item><term>Format ID</term><description>{1E005EE6-BF27-428B-B01C-79676ACD2870} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-division">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_Division)]
         string Division { get; }
 
         /// <summary>
         /// Gets the Document ID
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Document ID</description></item>
         /// <item><term>Format ID</term><description>{E08805C8-E395-40DF-80D2-54F0D6C43154} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-documentid">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_DocumentID)]
         string DocumentID { get; }
 
         /// <summary>
         /// Gets the Manager
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Manager</description></item>
         /// <item><term>Format ID</term><description>{D5CDD502-2E9C-101B-9397-08002B2CF9AE} (DocumentSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>14</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-manager">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_Manager)]
         string Manager { get; }
 
         /// <summary>
         /// Gets the Presentation Format
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Presentation Format</description></item>
         /// <item><term>Format ID</term><description>{D5CDD502-2E9C-101B-9397-08002B2CF9AE} (DocumentSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-presentationformat">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_PresentationFormat)]
         string PresentationFormat { get; }
 
         /// <summary>
         /// Gets the Version
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Version Number</description></item>
         /// <item><term>Format ID</term><description>{D5CDD502-2E9C-101B-9397-08002B2CF9AE} (DocumentSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>29</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-version">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_Version)]
         string Version { get; }
     }
 }

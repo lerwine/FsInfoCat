@@ -17,7 +17,8 @@ namespace FsInfoCat
         /// <value>
         /// Indicates the audio compression used on the audio file.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Compression Method</description></item>
         /// <item><term>Format ID</term><description>{64440490-4C8B-11D1-8B70-080036B11A03} (AudioSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>10</description></item>
@@ -45,7 +46,8 @@ namespace FsInfoCat
         /// <value>
         /// Indicates the format of the audio file.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Format</description></item>
         /// <item><term>Format ID</term><description>{64440490-4C8B-11D1-8B70-080036B11A03} (AudioSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>2</description></item>
@@ -102,7 +104,8 @@ namespace FsInfoCat
         /// <value>
         /// Identifies the name of the stream for the audio file.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Stream Name</description></item>
         /// <item><term>Format ID</term><description>{64440490-4C8B-11D1-8B70-080036B11A03} (AudioSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>9</description></item>

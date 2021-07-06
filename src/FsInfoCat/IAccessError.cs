@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -22,6 +23,7 @@ namespace FsInfoCat
         /// Gets or sets the error code.
         /// </summary>
         /// <value>The <see cref="AccessErrorCode"/> value that represents the numeric error code.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(Properties.Resources))]
         AccessErrorCode ErrorCode { get; set; }
 
         /// <summary>

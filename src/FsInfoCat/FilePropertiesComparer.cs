@@ -173,96 +173,129 @@ namespace FsInfoCat
         bool IEqualityComparer<IPhotoProperties>.Equals(IPhotoProperties x, IPhotoProperties y) => Equals(x, y);
         bool IEqualityComparer<IRecordedTVProperties>.Equals(IRecordedTVProperties x, IRecordedTVProperties y) => Equals(x, y);
         bool IEqualityComparer<IVideoProperties>.Equals(IVideoProperties x, IVideoProperties y) => Equals(x, y);
-        
+
         public int GetHashCode([DisallowNull] ISummaryProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            return (new int?[] { obj.Rating?.GetHashCode(), obj.Rating?.GetHashCode(), obj.Rating?.GetHashCode(), obj.Author?.GetHashCode(), obj.Keywords?.GetHashCode(), obj.ItemAuthors?.GetHashCode(), obj.Kind?.GetHashCode() })
+            return (new int?[] { obj.Rating?.GetHashCode(), obj.Rating?.GetHashCode(), obj.Rating?.GetHashCode(), obj.Author?.GetHashCode(), obj.Keywords?.GetHashCode(),
+                obj.ItemAuthors?.GetHashCode(), obj.Kind?.GetHashCode() })
                 .Select(n => n ?? 0)
-                .Concat((new string[] { obj.Title, obj.Subject, obj.Company, obj.ContentType, obj.Copyright, obj.ParentalRating, obj.ItemType, obj.MIMEType, obj.ParentalRatingsOrganization, obj.ProductName })
+                .Concat((new string[] { obj.Title, obj.Subject, obj.Company, obj.ContentType, obj.Copyright, obj.ParentalRating, obj.ItemType, obj.MIMEType,
+                    obj.ParentalRatingsOrganization, obj.ProductName })
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s)))
-                .Concat((new string[] { obj.Comment, obj.ItemTypeText, obj.ParentalRatingReason, obj.SensitivityText, obj.Copyright }).Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
+                .Concat((new string[] { obj.Comment, obj.ItemTypeText, obj.ParentalRatingReason, obj.SensitivityText, obj.Copyright })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IDocumentProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IDocumentProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.DateCreated?.GetHashCode(), obj.Security?.GetHashCode(), obj.Contributor?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.ClientID, obj.LastAuthor, obj.RevisionNumber, obj.DocumentID, obj.Manager, obj.PresentationFormat, obj.Version })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s)))
+                .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.Division) })).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IAudioProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IAudioProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.EncodingBitrate?.GetHashCode(), obj.Format?.GetHashCode(), obj.IsVariableBitrate?.GetHashCode(), obj.SampleRate?.GetHashCode(),
+                obj.SampleSize?.GetHashCode(), obj.StreamNumber?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.Compression, obj.StreamName })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IDRMProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IDRMProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.DatePlayExpires?.GetHashCode(), obj.DatePlayStarts?.GetHashCode(), obj.IsProtected?.GetHashCode(), obj.PlayCount?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.Description) })).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IGPSProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IGPSProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.LatitudeDegrees?.GetHashCode(), obj.LatitudeMinutes?.GetHashCode(), obj.LatitudeSeconds?.GetHashCode(), obj.LongitudeDegrees?.GetHashCode(),
+                obj.LongitudeMinutes?.GetHashCode(), obj.LongitudeSeconds?.GetHashCode(), obj.VersionID?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.AreaInformation, obj.LatitudeRef, obj.LongitudeRef, obj.MeasureMode, obj.ProcessingMethod })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IImageProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IImageProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.BitDepth?.GetHashCode(), obj.ColorSpace?.GetHashCode(), obj.CompressedBitsPerPixel?.GetHashCode(), obj.Compression?.GetHashCode(),
+                obj.HorizontalResolution?.GetHashCode(), obj.HorizontalSize?.GetHashCode(), obj.ResolutionUnit?.GetHashCode(), obj.VerticalResolution?.GetHashCode(),
+                obj.VerticalSize?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.CompressionText, obj.ImageID })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IMediaProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IMediaProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.Duration?.GetHashCode(), obj.FrameCount?.GetHashCode(), obj.Producer?.GetHashCode(),
+                obj.Writer?.GetHashCode(), obj.Year?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.ContentDistributor, obj.CreatorApplication, obj.CreatorApplicationVersion, obj.DateReleased, obj.DVDID, obj.ProtectionType,
+                    obj.ProviderRating, obj.ProviderStyle, obj.Publisher, obj.Subtitle })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IMusicProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IMusicProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.Artist?.GetHashCode(), obj.ChannelCount?.GetHashCode(), obj.Composer?.GetHashCode(), obj.Conductor?.GetHashCode(), obj.Genre?.GetHashCode(),
+                obj.TrackNumber?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.AlbumArtist, obj.AlbumTitle, obj.DisplayArtist, obj.PartOfSet, obj.Period })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IPhotoProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IPhotoProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.DateTaken?.GetHashCode(), obj.Event?.GetHashCode(), obj.Orientation?.GetHashCode(), obj.PeopleNames?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.CameraManufacturer, obj.CameraModel, obj.EXIFVersion })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s)))
+                .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.OrientationText) })).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IRecordedTVProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IRecordedTVProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.ChannelNumber?.GetHashCode(), obj.IsDTVContent?.GetHashCode(), obj.IsHDContent?.GetHashCode(), obj.OriginalBroadcastDate?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.EpisodeName, obj.NetworkAffiliation, obj.StationCallSign, obj.StationName })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s)))
+                .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.ProgramDescription) })).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] IVideoProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
-            // TODO: Implement GetHashCode(IVideoProperties);
-            throw new NotImplementedException();
+            return (new int?[] { obj.Director?.GetHashCode(), obj.EncodingBitrate?.GetHashCode(), obj.FrameHeight?.GetHashCode(), obj.FrameRate?.GetHashCode(),
+                obj.FrameWidth?.GetHashCode(), obj.HorizontalAspectRatio?.GetHashCode(), obj.StreamNumber?.GetHashCode(), obj.VerticalAspectRatio?.GetHashCode() })
+                .Select(n => n ?? 0)
+                .Concat((new string[] { obj.Compression, obj.StreamName })
+                    .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
     }
 }

@@ -52,13 +52,13 @@ namespace FsInfoCat
         /// <summary>
         /// Gets or sets the parent subdirectory of the current file system item.
         /// </summary>
-        /// <value>The parent <see cref="ISubdirectory"/> of the current file system item.</value>
+        /// <value>The parent <see cref="ISubdirectory"/> of the current file system item or <see langword="null"/> if this is the root subdirectory.</value>
         ISubdirectory Parent { get; set; }
 
         /// <summary>
-        /// Gets the access errors that occurred while attempting to access teh current file system item.
+        /// Gets the access errors that occurred while attempting to access the current file system item.
         /// </summary>
-        /// <value>The access errors that occurred while attempting to access teh current file system item.</value>
+        /// <value>The access errors that occurred while attempting to access the current file system item.</value>
         IEnumerable<IAccessError> AccessErrors { get; }
     }
 }

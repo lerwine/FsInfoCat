@@ -61,6 +61,69 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while trying to access the volume..
+        /// </summary>
+        public static string Description_VolumeStatus_AccessError {
+            get {
+                return ResourceManager.GetString("Description_VolumeStatus_AccessError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume is under corporate control / ownership..
+        /// </summary>
+        public static string Description_VolumeStatus_Controlled {
+            get {
+                return ResourceManager.GetString("Description_VolumeStatus_Controlled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume has been destroyed..
+        /// </summary>
+        public static string Description_VolumeStatus_Destroyed {
+            get {
+                return ResourceManager.GetString("Description_VolumeStatus_Destroyed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume is offline or unavailable..
+        /// </summary>
+        public static string Description_VolumeStatus_Offline {
+            get {
+                return ResourceManager.GetString("Description_VolumeStatus_Offline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ownership / control of volume has been relinquished to another entity..
+        /// </summary>
+        public static string Description_VolumeStatus_Relinquished {
+            get {
+                return ResourceManager.GetString("Description_VolumeStatus_Relinquished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume is being tracked, but is not under corporate control / ownership..
+        /// </summary>
+        public static string Description_VolumeStatus_Uncontrolled {
+            get {
+                return ResourceManager.GetString("Description_VolumeStatus_Uncontrolled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The status of the volume is uknown or unspecified..
+        /// </summary>
+        public static string Description_VolumeStatus_Unknown {
+            get {
+                return ResourceManager.GetString("Description_VolumeStatus_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Access Errors.
         /// </summary>
         public static string DisplayName_AccessErrors {
@@ -115,6 +178,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawl Operation Failed.
+        /// </summary>
+        public static string DisplayName_CrawlOperationFailed {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlOperationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Created On.
         /// </summary>
         public static string DisplayName_CreatedOn {
@@ -151,11 +223,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drive Type.
+        /// </summary>
+        public static string DisplayName_DriveType {
+            get {
+                return ResourceManager.GetString("DisplayName_DriveType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DRM Properties.
         /// </summary>
         public static string DisplayName_DRMProperties {
             get {
                 return ResourceManager.GetString("DisplayName_DRMProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Code.
+        /// </summary>
+        public static string DisplayName_ErrorCode {
+            get {
+                return ResourceManager.GetString("DisplayName_ErrorCode", resourceCulture);
             }
         }
         
@@ -192,6 +282,24 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_ImageProperties {
             get {
                 return ResourceManager.GetString("DisplayName_ImageProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Path Error.
+        /// </summary>
+        public static string DisplayName_InvalidPathError {
+            get {
+                return ResourceManager.GetString("DisplayName_InvalidPathError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IO Error.
+        /// </summary>
+        public static string DisplayName_IOError {
+            get {
+                return ResourceManager.GetString("DisplayName_IOError", resourceCulture);
             }
         }
         
@@ -250,11 +358,47 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string DisplayName_Name {
+            get {
+                return ResourceManager.GetString("DisplayName_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notes.
+        /// </summary>
+        public static string DisplayName_Notes {
+            get {
+                return ResourceManager.GetString("DisplayName_Notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path Too Long Error.
+        /// </summary>
+        public static string DisplayName_PathTooLongError {
+            get {
+                return ResourceManager.GetString("DisplayName_PathTooLongError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Photo Properties.
         /// </summary>
         public static string DisplayName_PhotoProperties {
             get {
                 return ResourceManager.GetString("DisplayName_PhotoProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Priority.
+        /// </summary>
+        public static string DisplayName_Priority {
+            get {
+                return ResourceManager.GetString("DisplayName_Priority", resourceCulture);
             }
         }
         
@@ -295,6 +439,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Security Exception.
+        /// </summary>
+        public static string DisplayName_SecurityException {
+            get {
+                return ResourceManager.GetString("DisplayName_SecurityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Summary Properties.
         /// </summary>
         public static string DisplayName_SummaryProperties {
@@ -309,6 +462,24 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_SymbolicNames {
             get {
                 return ResourceManager.GetString("DisplayName_SymbolicNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unauthorized Access Error.
+        /// </summary>
+        public static string DisplayName_UnauthorizedAccessError {
+            get {
+                return ResourceManager.GetString("DisplayName_UnauthorizedAccessError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected Error.
+        /// </summary>
+        public static string DisplayName_UnexpectedError {
+            get {
+                return ResourceManager.GetString("DisplayName_UnexpectedError", resourceCulture);
             }
         }
         
@@ -336,6 +507,87 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_VolumeName {
             get {
                 return ResourceManager.GetString("DisplayName_VolumeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volumes.
+        /// </summary>
+        public static string DisplayName_Volumes {
+            get {
+                return ResourceManager.GetString("DisplayName_Volumes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume Status.
+        /// </summary>
+        public static string DisplayName_VolumeStatus {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access Error.
+        /// </summary>
+        public static string DisplayName_VolumeStatus_AccessError {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeStatus_AccessError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controlled.
+        /// </summary>
+        public static string DisplayName_VolumeStatus_Controlled {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeStatus_Controlled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Destroyed.
+        /// </summary>
+        public static string DisplayName_VolumeStatus_Destroyed {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeStatus_Destroyed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Offline.
+        /// </summary>
+        public static string DisplayName_VolumeStatus_Offline {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeStatus_Offline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Relinquished.
+        /// </summary>
+        public static string DisplayName_VolumeStatus_Relinquished {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeStatus_Relinquished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uncontrolled.
+        /// </summary>
+        public static string DisplayName_VolumeStatus_Uncontrolled {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeStatus_Uncontrolled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string DisplayName_VolumeStatus_Unknown {
+            get {
+                return ResourceManager.GetString("DisplayName_VolumeStatus_Unknown", resourceCulture);
             }
         }
         
@@ -372,6 +624,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_CorrelativeRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_CorrelativeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The crawl operation has failed..
+        /// </summary>
+        public static string ErrorMessage_CrawlOperationFailed {
+            get {
+                return ResourceManager.GetString("ErrorMessage_CrawlOperationFailed", resourceCulture);
             }
         }
         
@@ -529,11 +790,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A path validation error has occurred..
+        /// </summary>
+        public static string ErrorMessage_InvalidPathError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidPathError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volume Status is invalid..
         /// </summary>
         public static string ErrorMessage_InvalidVolumeStatus {
             get {
                 return ResourceManager.GetString("ErrorMessage_InvalidVolumeStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An I/O error has occurred..
+        /// </summary>
+        public static string ErrorMessage_IOError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_IOError", resourceCulture);
             }
         }
         
@@ -628,6 +907,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An excessive path length error has occurred..
+        /// </summary>
+        public static string ErrorMessage_PathTooLongError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_PathTooLongError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Redundancy Set must be selected..
         /// </summary>
         public static string ErrorMessage_RedundantSetRequired {
@@ -642,6 +930,33 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_ReferenceLength {
             get {
                 return ResourceManager.GetString("ErrorMessage_ReferenceLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A security exception has occurred..
+        /// </summary>
+        public static string ErrorMessage_SecurityException {
+            get {
+                return ResourceManager.GetString("ErrorMessage_SecurityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An access authorization error has occurred..
+        /// </summary>
+        public static string ErrorMessage_UnauthorizedAccessError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UnauthorizedAccessError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected error has occurred..
+        /// </summary>
+        public static string ErrorMessage_UnexpectedError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UnexpectedError", resourceCulture);
             }
         }
         

@@ -45,37 +45,6 @@ namespace FsInfoCat.Local
                 element.SetAttributeValue(nameof(LastSynchronizedOn), XmlConvert.ToString(lastSynchronizedOn.Value, XmlDateTimeSerializationMode.RoundtripKind));
         }
 
-        protected override void BeforeSave(ValidationContext validationContext)
-        {
-            base.BeforeSave(validationContext);
-            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
-                switch (validationContext.MemberName)
-                {
-                    case nameof(ModifiedOn):
-                    case nameof(CreatedOn):
-                    case nameof(LastSynchronizedOn):
-                    case nameof(UpstreamId):
-                        break;
-                    default:
-                        return;
-                }
-            EntityEntry entry = validationContext.GetService<EntityEntry>();
-            if (entry is null)
-                return;
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    if (UpstreamId.HasValue && !LastSynchronizedOn.HasValue)
-                        LastSynchronizedOn = CreatedOn;
-                    break;
-                case EntityState.Modified:
-                    Guid? id = UpstreamId;
-                    if (id.HasValue && entry.Property(nameof(UpstreamId)).IsModified)
-                        LastSynchronizedOn = ModifiedOn;
-                    break;
-            }
-        }
-
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);

@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,72 +15,155 @@ namespace FsInfoCat
 {
     public abstract class BaseDbContext : DbContext, IDbContext
     {
-        private async Task<(object Entity, EntityState OldState)[]> RaiseBeforeSaveAsync(CancellationToken cancellationToken = default)
+        private static readonly object _syncRoot = new();
+        private readonly ILogger<BaseDbContext> _logger;
+        private static readonly Dictionary<Guid, List<int>> _scopes = new();
+        private readonly IDisposable _loggerScope;
+
+        public BaseDbContext([NotNull] DbContextOptions options) : base(options)
         {
+            _logger = Services.ServiceProvider.GetRequiredService<ILogger<BaseDbContext>>();
+            lock (_syncRoot)
+            {
+                if (_scopes.TryGetValue(ContextId.InstanceId, out List<int> list))
+                {
+                    if (list.Contains(ContextId.Lease))
+                    {
+                        _loggerScope = null;
+                        return;
+                    }
+                }
+                else
+                {
+                    list = new();
+                    _scopes.Add(ContextId.InstanceId, list);
+                }
+                list.Add(ContextId.Lease);
+            }
+            _loggerScope = _logger.BeginScope($"{{{nameof(Database.ProviderName)}}}: {nameof(DbContextId.InstanceId)}={{{nameof(DbContextId.InstanceId)}}}, {nameof(DbContextId.Lease)}={{{nameof(DbContextId.Lease)}}}, ConnectionString={{ConnectionString}}",
+                Database.ProviderName, ContextId.InstanceId, ContextId.Lease, Database.GetConnectionString());
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => base.OnConfiguring(optionsBuilder.AddInterceptors(new Interceptor(_logger)));
+
+        [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "Inherited class will have called SuppressFinalize if necessary.")]
+        public override void Dispose()
+        {
+            base.Dispose();
+            if (_loggerScope is not null)
+            {
+                lock (_syncRoot)
+                {
+                    if (!(_scopes.TryGetValue(ContextId.InstanceId, out List<int> list) && list.Remove(ContextId.Lease)))
+                        return;
+                    if (list.Count == 0)
+                        _scopes.Remove(ContextId.InstanceId);
+                }
+                _loggerScope.Dispose();
+            }
+        }
+
+        private async Task<(EntityEntry Entry, EntityState OldState)[]> RaiseBeforeSaveAsync(CancellationToken cancellationToken = default)
+        {
+            using IDisposable scope = _logger.BeginScope(nameof(RaiseBeforeSaveAsync));
             cancellationToken.ThrowIfCancellationRequested();
-            List<(object Entity, EntityState OldState)> toSave = new();
+            List<(EntityEntry Entry, EntityState OldState)> toSave = new();
             foreach (EntityEntry e in ChangeTracker.Entries())
             {
                 object entity = e.Entity;
-                ValidationContext validationContext = new(entity, new DbContextServiceProvider(this, e), null);
                 switch (e.State)
                 {
                     case EntityState.Added:
+                        _logger.LogTrace("Inserting {Name}: {Entity}", e.Metadata.Name, entity);
                         if (entity is IDbEntity adding)
                             OnBeforeAddEntity(adding, cancellationToken);
                         if (entity is IDbEntityBeforeSave beforeSave)
                             await beforeSave.BeforeSaveAsync(cancellationToken);
                         if (entity is IDbEntityBeforeInsert beforeInsert)
                             await beforeInsert.BeforeInsertAsync(cancellationToken);
-                        toSave.Add((Entity: entity, OldState: EntityState.Added));
+                        toSave.Add((Entry: e, OldState: EntityState.Added));
                         break;
                     case EntityState.Modified:
+                        _logger.LogTrace("Saving {Name}: {Entity}", e.Metadata.Name, entity);
                         if (entity is IDbEntity saving)
                             OnBeforeSaveChanges(saving, cancellationToken);
                         if (entity is IDbEntityBeforeSave beforeSave2)
                             await beforeSave2.BeforeSaveAsync(cancellationToken);
                         if (entity is IDbEntityBeforeSaveChanges beforeSaveChanges)
                             await beforeSaveChanges.BeforeSaveChangesAsync(cancellationToken);
-                        toSave.Add((Entity: entity, OldState: EntityState.Modified));
+                        toSave.Add((Entry: e, OldState: EntityState.Modified));
                         break;
                     case EntityState.Deleted:
+                        _logger.LogTrace("Deleting {Name}: {Entity}", e.Metadata.Name, entity);
                         if (entity is IDbEntityBeforeDelete beforeDelete)
+                        {
                             await beforeDelete.BeforeDeleteAsync(cancellationToken);
-                        toSave.Add((Entity: entity, OldState: EntityState.Deleted));
-                        break;
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+                        toSave.Add((Entry: e, OldState: EntityState.Deleted));
+                        continue;
+                    default:
+                        continue;
                 }
                 cancellationToken.ThrowIfCancellationRequested();
+                _logger.LogTrace("Validating {Name}: {Entity}", e.Metadata.Name, entity);
+                ValidationContext validationContext = new(entity, new DbContextServiceProvider(this, e), null);
                 Validator.ValidateObject(entity, validationContext, true);
             }
             cancellationToken.ThrowIfCancellationRequested();
+            _logger.LogTrace("Returning {Count} items", toSave.Count);
             return toSave.ToArray();
         }
 
-        private async Task RaiseAfterSaveAsync((object Entity, EntityState OldState)[] saved, CancellationToken cancellationToken = default)
+        private async Task RaiseAfterSaveAsync((EntityEntry Entry, EntityState OldState)[] saved, CancellationToken cancellationToken = default)
         {
+            using IDisposable scope = _logger.BeginScope(nameof(RaiseAfterSaveAsync));
             cancellationToken.ThrowIfCancellationRequested();
-            foreach ((object Entity, EntityState OldState) e in saved)
+            foreach ((EntityEntry Entry, EntityState OldState) e in saved)
             {
-                object entity = e.Entity;
+                EntityEntry entry = e.Entry;
+                object entity = entry.Entity;
                 switch (e.OldState)
                 {
                     case EntityState.Added:
-                        if (entity is IDbEntityAfterSave afterSave)
-                            await afterSave.AfterSaveAsync(cancellationToken);
-                        if (entity is IDbEntityAfterInsert afterInsert)
-                            await afterInsert.AfterInsertAsync(cancellationToken);
+                        if (entry.State != EntityState.Unchanged)
+                            _logger.LogWarning("Failed to insert {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
+                        else
+                        {
+                            _logger.LogTrace("Inserted {Name}: {Entity}", entry.Metadata.Name, entity);
+                            if (entity is IDbEntityAfterSave afterSave)
+                                await afterSave.AfterSaveAsync(cancellationToken);
+                            if (entity is IDbEntityAfterInsert afterInsert)
+                                await afterInsert.AfterInsertAsync(cancellationToken);
+                        }
                         break;
                     case EntityState.Modified:
-                        if (entity is IDbEntityAfterSave afterSave2)
-                            await afterSave2.AfterSaveAsync(cancellationToken);
-                        if (entity is IDbEntityAfterSaveChanges afterSaveChanges)
-                            await afterSaveChanges.AfterSaveChangesAsync(cancellationToken);
+                        if (entry.State != EntityState.Unchanged)
+                            _logger.LogWarning("Failed to update {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
+                        else
+                        {
+                            _logger.LogTrace("Updated {Name}: {Entity}", entry.Metadata.Name, entity);
+                            if (entity is IDbEntityAfterSave afterSave2)
+                                await afterSave2.AfterSaveAsync(cancellationToken);
+                            if (entity is IDbEntityAfterSaveChanges afterSaveChanges)
+                                await afterSaveChanges.AfterSaveChangesAsync(cancellationToken);
+                        }
                         break;
                     case EntityState.Deleted:
-                        if (entity is IDbEntityAfterDelete afterDelete)
-                            await afterDelete.AfterDeleteAsync(cancellationToken);
+                        if (entry.State != EntityState.Detached)
+                            _logger.LogWarning("Failed to delete {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
+                        else
+                        {
+                            _logger.LogTrace("Deleted {Name}: {Entity}", entry.Metadata.Name, entity);
+                            if (entity is IDbEntityAfterDelete afterDelete)
+                                await afterDelete.AfterDeleteAsync(cancellationToken);
+                        }
                         break;
+                    default:
+                        continue;
                 }
+                if (entity is IDbEntity dbEntity)
+                    dbEntity.AcceptChanges();
                 cancellationToken.ThrowIfCancellationRequested();
             }
         }
@@ -93,34 +180,44 @@ namespace FsInfoCat
 
         public override int SaveChanges()
         {
-            (object Entity, EntityState OldState)[] changes = RaiseBeforeSaveAsync().Result;
-            int result = base.SaveChanges();
+            using IDisposable scope = _logger.BeginScope("{MethodName}()", nameof(SaveChanges));
+            (EntityEntry Entry, EntityState OldState)[] changes = RaiseBeforeSaveAsync().Result;
+            int returnValue = base.SaveChanges();
             RaiseAfterSaveAsync(changes).Wait();
-            return result;
+            _logger.LogTrace("Returning {ReturnValue}", returnValue);
+            return returnValue;
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            (object Entity, EntityState OldState)[] changes = RaiseBeforeSaveAsync().Result;
-            int result = base.SaveChanges(acceptAllChangesOnSuccess);
+            using IDisposable scope = _logger.BeginScope($"{{MethodName}}({nameof(acceptAllChangesOnSuccess)}: {{{nameof(acceptAllChangesOnSuccess)}}})", nameof(SaveChanges),
+                acceptAllChangesOnSuccess);
+            (EntityEntry Entry, EntityState OldState)[] changes = RaiseBeforeSaveAsync().Result;
+            int returnValue = base.SaveChanges(acceptAllChangesOnSuccess);
             RaiseAfterSaveAsync(changes).Wait();
-            return result;
+            _logger.LogTrace("Returning {ReturnValue}", returnValue);
+            return returnValue;
         }
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
-            (object Entity, EntityState OldState)[] changes = await RaiseBeforeSaveAsync(cancellationToken);
-            int result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+            using IDisposable scope = _logger.BeginScope($"{{MethodName}}({nameof(acceptAllChangesOnSuccess)}: {{{nameof(acceptAllChangesOnSuccess)}}})", nameof(SaveChangesAsync),
+                acceptAllChangesOnSuccess);
+            (EntityEntry Entry, EntityState OldState)[] changes = await RaiseBeforeSaveAsync(cancellationToken);
+            int returnValue = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
             await RaiseAfterSaveAsync(changes, cancellationToken);
-            return result;
+            _logger.LogTrace("Returning {ReturnValue}", returnValue);
+            return returnValue;
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            (object Entity, EntityState OldState)[] changes = await RaiseBeforeSaveAsync(cancellationToken);
-            int result = await base.SaveChangesAsync(cancellationToken);
+            using IDisposable scope = _logger.BeginScope("{MethodName}()", nameof(SaveChangesAsync));
+            (EntityEntry Entry, EntityState OldState)[] changes = await RaiseBeforeSaveAsync(cancellationToken);
+            int returnValue = await base.SaveChangesAsync(cancellationToken);
             await RaiseAfterSaveAsync(changes, cancellationToken);
-            return result;
+            _logger.LogTrace("Returning {ReturnValue}", returnValue);
+            return returnValue;
         }
 
         protected abstract IEnumerable<IComparison> GetGenericComparisons();
@@ -287,6 +384,78 @@ namespace FsInfoCat
                     return service is not null;
                 }
                 return true;
+            }
+        }
+        public class Interceptor : DbCommandInterceptor
+        {
+            private readonly ILogger<BaseDbContext> _logger;
+
+            //public static Interceptor Instance { get; } = new Interceptor();
+
+            public Interceptor(ILogger<BaseDbContext> logger) { _logger = logger; }
+
+            public override InterceptionResult<int> NonQueryExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<int> result)
+            {
+                _logger.LogInformation("NonQueryExecuting: {CommandText}; ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode);
+                return base.NonQueryExecuting(command, eventData, result);
+            }
+
+            public override ValueTask<InterceptionResult<int>> NonQueryExecutingAsync(DbCommand command, CommandEventData eventData, InterceptionResult<int> result,
+                CancellationToken cancellationToken = default)
+            {
+                _logger.LogInformation("NonQueryExecutingAsync: {CommandText}; ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode);
+                return base.NonQueryExecutingAsync(command, eventData, result, cancellationToken);
+            }
+
+            public override InterceptionResult<DbDataReader> ReaderExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<DbDataReader> result)
+            {
+                _logger.LogInformation("ReaderExecuting: {CommandText}; ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode);
+                return base.ReaderExecuting(command, eventData, result);
+            }
+
+            public override ValueTask<InterceptionResult<DbDataReader>> ReaderExecutingAsync(DbCommand command, CommandEventData eventData, InterceptionResult<DbDataReader> result, CancellationToken cancellationToken = default)
+            {
+                _logger.LogInformation("ReaderExecutingAsync: {CommandText}; ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode);
+                return base.ReaderExecutingAsync(command, eventData, result, cancellationToken);
+            }
+
+            public override InterceptionResult<object> ScalarExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<object> result)
+            {
+                _logger.LogInformation("ScalarExecuting: {CommandText}; ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode);
+                return base.ScalarExecuting(command, eventData, result);
+            }
+
+            public override ValueTask<InterceptionResult<object>> ScalarExecutingAsync(DbCommand command, CommandEventData eventData, InterceptionResult<object> result, CancellationToken cancellationToken = default)
+            {
+                _logger.LogInformation("ScalarExecutingAsync: {CommandText}; ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode);
+                return base.ScalarExecutingAsync(command, eventData, result, cancellationToken);
+            }
+
+            public override DbCommand CommandCreated(CommandEndEventData eventData, DbCommand result)
+            {
+                _logger.LogInformation("CommandCreated: {CommandText}; ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    result.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode);
+                return base.CommandCreated(eventData, result);
+            }
+
+            public override void CommandFailed(DbCommand command, CommandErrorEventData eventData)
+            {
+                _logger.LogError(eventData.Exception, "CommandFailed: {Message}; CommandText={CommandText}, ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode, eventData.Exception.Message);
+                base.CommandFailed(command, eventData);
+            }
+
+            public override Task CommandFailedAsync(DbCommand command, CommandErrorEventData eventData, CancellationToken cancellationToken = default)
+            {
+                _logger.LogError(eventData.Exception, "CommandFailedAsync: {Message}; CommandText={CommandText}, ConnectionId={ConnectionId}, CommandId={CommandId}, EventId={EventId},EventIdCode= {EventIdCode}",
+                    command.CommandText, eventData.ConnectionId, eventData.CommandId, eventData.EventId, eventData.EventIdCode, eventData.Exception.Message);
+                return base.CommandFailedAsync(command, eventData, cancellationToken);
             }
         }
     }

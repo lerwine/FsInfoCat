@@ -328,4 +328,109 @@
   <data name="FsInfoCatExport" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\fsinfocatexport.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="DisplayName_CrawlOperationFailed" xml:space="preserve">
+    <value>Crawl Operation Failed</value>
+  </data>
+  <data name="DisplayName_InvalidPathError" xml:space="preserve">
+    <value>Invalid Path Error</value>
+  </data>
+  <data name="DisplayName_IOError" xml:space="preserve">
+    <value>IO Error</value>
+  </data>
+  <data name="DisplayName_PathTooLongError" xml:space="preserve">
+    <value>Path Too Long Error</value>
+  </data>
+  <data name="DisplayName_SecurityException" xml:space="preserve">
+    <value>Security Exception</value>
+  </data>
+  <data name="DisplayName_UnauthorizedAccessError" xml:space="preserve">
+    <value>Unauthorized Access Error</value>
+  </data>
+  <data name="DisplayName_UnexpectedError" xml:space="preserve">
+    <value>Unexpected Error</value>
+  </data>
+  <data name="Description_VolumeStatus_AccessError" xml:space="preserve">
+    <value>An error occurred while trying to access the volume.</value>
+  </data>
+  <data name="Description_VolumeStatus_Controlled" xml:space="preserve">
+    <value>Volume is under corporate control / ownership.</value>
+  </data>
+  <data name="Description_VolumeStatus_Destroyed" xml:space="preserve">
+    <value>Volume has been destroyed.</value>
+  </data>
+  <data name="Description_VolumeStatus_Offline" xml:space="preserve">
+    <value>Volume is offline or unavailable.</value>
+  </data>
+  <data name="Description_VolumeStatus_Relinquished" xml:space="preserve">
+    <value>Ownership / control of volume has been relinquished to another entity.</value>
+  </data>
+  <data name="Description_VolumeStatus_Uncontrolled" xml:space="preserve">
+    <value>Volume is being tracked, but is not under corporate control / ownership.</value>
+  </data>
+  <data name="Description_VolumeStatus_Unknown" xml:space="preserve">
+    <value>The status of the volume is uknown or unspecified.</value>
+  </data>
+  <data name="DisplayName_DriveType" xml:space="preserve">
+    <value>Drive Type</value>
+  </data>
+  <data name="DisplayName_ErrorCode" xml:space="preserve">
+    <value>Error Code</value>
+  </data>
+  <data name="DisplayName_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="DisplayName_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="DisplayName_Priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="DisplayName_Volumes" xml:space="preserve">
+    <value>Volumes</value>
+  </data>
+  <data name="DisplayName_VolumeStatus" xml:space="preserve">
+    <value>Volume Status</value>
+  </data>
+  <data name="DisplayName_VolumeStatus_AccessError" xml:space="preserve">
+    <value>Access Error</value>
+  </data>
+  <data name="DisplayName_VolumeStatus_Controlled" xml:space="preserve">
+    <value>Controlled</value>
+  </data>
+  <data name="DisplayName_VolumeStatus_Destroyed" xml:space="preserve">
+    <value>Destroyed</value>
+  </data>
+  <data name="DisplayName_VolumeStatus_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="DisplayName_VolumeStatus_Relinquished" xml:space="preserve">
+    <value>Relinquished</value>
+  </data>
+  <data name="DisplayName_VolumeStatus_Uncontrolled" xml:space="preserve">
+    <value>Uncontrolled</value>
+  </data>
+  <data name="DisplayName_VolumeStatus_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="ErrorMessage_CrawlOperationFailed" xml:space="preserve">
+    <value>The crawl operation has failed.</value>
+  </data>
+  <data name="ErrorMessage_InvalidPathError" xml:space="preserve">
+    <value>A path validation error has occurred.</value>
+  </data>
+  <data name="ErrorMessage_IOError" xml:space="preserve">
+    <value>An I/O error has occurred.</value>
+  </data>
+  <data name="ErrorMessage_PathTooLongError" xml:space="preserve">
+    <value>An excessive path length error has occurred.</value>
+  </data>
+  <data name="ErrorMessage_SecurityException" xml:space="preserve">
+    <value>A security exception has occurred.</value>
+  </data>
+  <data name="ErrorMessage_UnauthorizedAccessError" xml:space="preserve">
+    <value>An access authorization error has occurred.</value>
+  </data>
+  <data name="ErrorMessage_UnexpectedError" xml:space="preserve">
+    <value>An unexpected error has occurred.</value>
+  </data>
 </root>

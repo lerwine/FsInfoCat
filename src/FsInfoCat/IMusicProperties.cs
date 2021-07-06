@@ -16,7 +16,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the Album Artist
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Album Artist</description></item>
         /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
         /// <item><term>Property ID</term><description>13</description></item>
@@ -27,7 +28,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the Album Title
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Album Title</description></item>
         /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
         /// <item><term>Property ID</term><description>4</description></item>
@@ -86,8 +88,8 @@ namespace FsInfoCat
         /// <value>
         /// The best representation of Album Artist for a given music file based upon AlbumArtist, ContributingArtist and compilation info.
         /// </value>
-        /// <remarks>
-        /// This property returns the best representation of the album artist for a specific music file based upon System.Music.AlbumArtist, System.Music.Artist, and System.Music.IsCompilation information.
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <para>This property returns the best representation of the album artist for a specific music file based upon System.Music.AlbumArtist, System.Music.Artist, and System.Music.IsCompilation information.</para>
         /// <list type="bullet">
         /// <item><term>Name</term><description>Display Artist</description></item>
         /// <item><term>Format ID</term><description>{FD122953-FA93-4EF7-92C3-04C946B2F7C8} (Format)</description></item>
@@ -110,7 +112,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the Part of Set
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Part of Set</description></item>
         /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>
         /// <item><term>Property ID</term><description>37</description></item>
@@ -121,7 +124,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the Period
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Period</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>31</description></item>

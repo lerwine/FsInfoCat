@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -18,12 +17,11 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public partial class LocalDbContext : DbContext, ILocalDbContext
+    public partial class LocalDbContext : BaseDbContext, ILocalDbContext
     {
         private static readonly object _syncRoot = new();
         private static bool _connectionStringValidated;
         private readonly ILogger<LocalDbContext> _logger;
-        private readonly IDisposable _loggerScope;
 
         public virtual DbSet<FileSystem> FileSystems { get; set; }
 
@@ -75,11 +73,9 @@ namespace FsInfoCat.Local
 
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
+        //: base(Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>(), options)
         {
             _logger = Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>();
-            _loggerScope = _logger.BeginScope(ContextId);
-            _logger.LogInformation($"Creating new {nameof(LocalDbContext)}: {nameof(DbContextId.InstanceId)}={{{nameof(DbContextId.InstanceId)}}}, {nameof(DbContextId.Lease)}={{{nameof(DbContextId.Lease)}}}",
-                ContextId.InstanceId, ContextId.Lease);
             lock (_syncRoot)
             {
                 if (!_connectionStringValidated)
@@ -97,7 +93,7 @@ namespace FsInfoCat.Local
                         connection.Open();
                         foreach (var element in XDocument.Parse(Properties.Resources.DbCommands).Root.Elements("DbCreation").Elements("Text"))
                         {
-                            _logger.LogInformation($"{{Message}}; {nameof(SqliteCommand)}={{{nameof(SqliteCommand.CommandText)}}}",
+                            _logger.LogTrace($"{{Message}}; {nameof(SqliteCommand)}={{{nameof(SqliteCommand.CommandText)}}}",
                                 element.Attributes("Message").Select(a => a.Value).DefaultIfEmpty("").First(), element.Value);
                             using SqliteCommand command = connection.CreateCommand();
                             command.CommandText = element.Value;
@@ -115,27 +111,6 @@ namespace FsInfoCat.Local
             _logger.LogInformation($"Disposing {nameof(LocalDbContext)}: {nameof(DbContextId.InstanceId)}={{{nameof(DbContextId.InstanceId)}}}, {nameof(DbContextId.Lease)}={{{nameof(DbContextId.Lease)}}}",
                 ContextId.InstanceId, ContextId.Lease);
             base.Dispose();
-            _loggerScope.Dispose();
-        }
-
-        public override int SaveChanges()
-        {
-            var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
-            foreach (var e in entries)
-            {
-                ValidationContext validationContext = new(e.Entity, new DbContextServiceProvider(this, e), null);
-                if (e.Entity is IDbEntity dbEntity)
-                    dbEntity.BeforeSave(validationContext);
-                Validator.ValidateObject(e.Entity, validationContext, true);
-            }
-            int result = base.SaveChanges();
-            foreach (var e in entries)
-            {
-                if (e.State == EntityState.Unchanged && e.Entity is IDbEntity dbEntity)
-                    dbEntity.AcceptChanges();
-
-            }
-            return result;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -166,7 +141,7 @@ namespace FsInfoCat.Local
             string connectionString = GetConnectionString(dbPath);
             services.AddDbContextPool<LocalDbContext>(options =>
             {
-                options.AddInterceptors(Interceptor.Instance);
+                //options.AddInterceptors(ObsoleteInterceptor.Instance);
                 options.UseSqlite(connectionString);
             });
             // this.Model.GetDefaultSchema();
@@ -300,7 +275,7 @@ namespace FsInfoCat.Local
         {
             if (properties.IsNullOrAllPropertiesEmpty())
                 return null;
-            string compression = properties.Compression.TrimmedOrNullIfWhiteSpace();
+            string compression = properties.Compression.NullIfWhiteSpaceOrNormalized();
             // TODO: Implement FindMatchingAsync(IVideoProperties, CancellationToken);
             return await VideoPropertySets.FirstOrDefaultAsync(p => p.Compression == compression);
         }
@@ -677,235 +652,173 @@ namespace FsInfoCat.Local
                 RedundantSets.Remove(redundantSet);
         }
 
+        #region Overrides
+
+        protected override IEnumerable<IComparison> GetGenericComparisons() => Comparisons;
+
+        protected override IEnumerable<IBinaryPropertySet> GetGenericBinaryPropertySets() => BinaryPropertySets;
+
+        protected override IEnumerable<ISummaryPropertySet> GetGenericSummaryPropertySets() => SummaryPropertySets;
+
+        protected override IEnumerable<IDocumentPropertySet> GetGenericDocumentPropertySets() => DocumentPropertySets;
+
+        protected override IEnumerable<IAudioPropertySet> GetGenericAudioPropertySets() => AudioPropertySets;
+
+        protected override IEnumerable<IDRMPropertySet> GetGenericDRMPropertySets() => DRMPropertySets;
+
+        protected override IEnumerable<IGPSPropertySet> GetGenericGPSPropertySets() => GPSPropertySets;
+
+        protected override IEnumerable<IImagePropertySet> GetGenericImagePropertySets() => ImagePropertySets;
+
+        protected override IEnumerable<IMediaPropertySet> GetGenericMediaPropertySets() => MediaPropertySets;
+
+        protected override IEnumerable<IMusicPropertySet> GetGenericMusicPropertySets() => MusicPropertySets;
+
+        protected override IEnumerable<IPhotoPropertySet> GetGenericPhotoPropertySets() => PhotoPropertySets;
+
+        protected override IEnumerable<IRecordedTVPropertySet> GetGenericRecordedTVPropertySets() => RecordedTVPropertySets;
+
+        protected override IEnumerable<IVideoPropertySet> GetGenericVideoPropertySets() => VideoPropertySets;
+
+        protected override IEnumerable<IAccessError<IFile>> GetGenericFileAccessErrors() => FileAccessErrors;
+
+        protected override IEnumerable<IFile> GetGenericFiles() => Files;
+
+        protected override IEnumerable<IFileSystem> GetGenericFileSystems() => FileSystems;
+
+        protected override IEnumerable<IRedundancy> GetGenericRedundancies() => Redundancies;
+
+        protected override IEnumerable<IRedundantSet> GetGenericRedundantSets() => RedundantSets;
+
+        protected override IEnumerable<ISubdirectory> GetGenericSubdirectories() => Subdirectories;
+
+        protected override IEnumerable<IAccessError<ISubdirectory>> GetGenericSubdirectoryAccessErrors() => SubdirectoryAccessErrors;
+
+        protected override IEnumerable<ISymbolicName> GetGenericSymbolicNames() => SymbolicNames;
+
+        protected override IEnumerable<IAccessError<IVolume>> GetGenericVolumeAccessErrors() => VolumeAccessErrors;
+
+        protected override IEnumerable<IVolume> GetGenericVolumes() => Volumes;
+
+        protected override IEnumerable<ICrawlConfiguration> GetGenericCrawlConfigurations() => CrawlConfigurations;
+
+        protected async override Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IImagePropertySet> FindGenericMatchingAsync(IImageProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IMediaPropertySet> FindGenericMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IMusicPropertySet> FindGenericMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IPhotoPropertySet> FindGenericMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IRecordedTVPropertySet> FindGenericMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IVideoPropertySet> FindGenericMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<ISummaryPropertySet> FindGenericMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IDocumentPropertySet> FindGenericMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IAudioPropertySet> FindGenericMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        protected async override Task<IDRMPropertySet> FindGenericMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
+
+        #endregion
+
         #region Explicit Members
 
-        IEnumerable<ILocalComparison> ILocalDbContext.Comparisons => Comparisons.Cast<ILocalComparison>();
+        IEnumerable<ILocalComparison> ILocalDbContext.Comparisons => Comparisons;
 
-        IEnumerable<ILocalBinaryPropertySet> ILocalDbContext.BinaryPropertySets => BinaryPropertySets.Cast<ILocalBinaryPropertySet>();
+        IEnumerable<ILocalBinaryPropertySet> ILocalDbContext.BinaryPropertySets => BinaryPropertySets;
 
-        IEnumerable<IAccessError<ILocalFile>> ILocalDbContext.FileAccessErrors => FileAccessErrors.Cast<IAccessError<ILocalFile>>();
+        IEnumerable<ILocalSummaryPropertySet> ILocalDbContext.SummaryPropertySets => SummaryPropertySets;
 
-        IEnumerable<ILocalFile> ILocalDbContext.Files => Files.Cast<ILocalFile>();
+        IEnumerable<ILocalDocumentPropertySet> ILocalDbContext.DocumentPropertySets => DocumentPropertySets;
 
-        IEnumerable<ILocalFileSystem> ILocalDbContext.FileSystems => FileSystems.Cast<ILocalFileSystem>();
+        IEnumerable<ILocalAudioPropertySet> ILocalDbContext.AudioPropertySets => AudioPropertySets;
 
-        IEnumerable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies.Cast<ILocalRedundancy>();
+        IEnumerable<ILocalDRMPropertySet> ILocalDbContext.DRMPropertySets => DRMPropertySets;
 
-        IEnumerable<ILocalRedundantSet> ILocalDbContext.RedundantSets => RedundantSets.Cast<ILocalRedundantSet>();
+        IEnumerable<ILocalGPSPropertySet> ILocalDbContext.GPSPropertySets => GPSPropertySets;
 
-        IEnumerable<ILocalSubdirectory> ILocalDbContext.Subdirectories => Subdirectories.Cast<ILocalSubdirectory>();
+        IEnumerable<ILocalImagePropertySet> ILocalDbContext.ImagePropertySets => ImagePropertySets;
 
-        IEnumerable<IAccessError<ILocalSubdirectory>> ILocalDbContext.SubdirectoryAccessErrors => SubdirectoryAccessErrors.Cast<IAccessError<ILocalSubdirectory>>();
+        IEnumerable<ILocalMediaPropertySet> ILocalDbContext.MediaPropertySets => MediaPropertySets;
 
-        IEnumerable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames.Cast<ILocalSymbolicName>();
+        IEnumerable<ILocalMusicPropertySet> ILocalDbContext.MusicPropertySets => MusicPropertySets;
 
-        IEnumerable<IAccessError<ILocalVolume>> ILocalDbContext.VolumeAccessErrors => VolumeAccessErrors.Cast<IAccessError<ILocalVolume>>();
+        IEnumerable<ILocalPhotoPropertySet> ILocalDbContext.PhotoPropertySets => PhotoPropertySets;
 
-        IEnumerable<ILocalVolume> ILocalDbContext.Volumes => Volumes.Cast<ILocalVolume>();
+        IEnumerable<ILocalRecordedTVPropertySet> ILocalDbContext.RecordedTVPropertySets => RecordedTVPropertySets;
 
-        IEnumerable<ILocalCrawlConfiguration> ILocalDbContext.CrawlConfigurations => CrawlConfigurations.Cast<ILocalCrawlConfiguration>();
+        IEnumerable<ILocalVideoPropertySet> ILocalDbContext.VideoPropertySets => VideoPropertySets;
 
-        IEnumerable<IComparison> IDbContext.Comparisons => Comparisons.Cast<IComparison>();
+        IEnumerable<IAccessError<ILocalFile>> ILocalDbContext.FileAccessErrors => FileAccessErrors;
 
-        IEnumerable<IBinaryPropertySet> IDbContext.BinaryPropertySets => BinaryPropertySets.Cast<IBinaryPropertySet>();
+        IEnumerable<ILocalFile> ILocalDbContext.Files => Files;
 
-        IEnumerable<IAccessError<IFile>> IDbContext.FileAccessErrors => FileAccessErrors.Cast<IAccessError<IFile>>();
+        IEnumerable<ILocalFileSystem> ILocalDbContext.FileSystems => FileSystems;
 
-        IEnumerable<IFile> IDbContext.Files => Files.Cast<IFile>();
+        IEnumerable<ILocalRedundancy> ILocalDbContext.Redundancies => Redundancies;
 
-        IEnumerable<IFileSystem> IDbContext.FileSystems => FileSystems.Cast<IFileSystem>();
+        IEnumerable<ILocalRedundantSet> ILocalDbContext.RedundantSets => RedundantSets;
 
-        IEnumerable<IRedundancy> IDbContext.Redundancies => Redundancies.Cast<IRedundancy>();
+        IEnumerable<ILocalSubdirectory> ILocalDbContext.Subdirectories => Subdirectories;
 
-        IEnumerable<IRedundantSet> IDbContext.RedundantSets => RedundantSets.Cast<IRedundantSet>();
+        IEnumerable<IAccessError<ILocalSubdirectory>> ILocalDbContext.SubdirectoryAccessErrors => SubdirectoryAccessErrors;
 
-        IEnumerable<ISubdirectory> IDbContext.Subdirectories => Subdirectories.Cast<ISubdirectory>();
+        IEnumerable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames;
 
-        IEnumerable<IAccessError<ISubdirectory>> IDbContext.SubdirectoryAccessErrors => SubdirectoryAccessErrors.Cast<IAccessError<ISubdirectory>>();
+        IEnumerable<IAccessError<ILocalVolume>> ILocalDbContext.VolumeAccessErrors => VolumeAccessErrors;
 
-        IEnumerable<ISymbolicName> IDbContext.SymbolicNames => SymbolicNames.Cast<ISymbolicName>();
+        IEnumerable<ILocalVolume> ILocalDbContext.Volumes => Volumes;
 
-        IEnumerable<IAccessError<IVolume>> IDbContext.VolumeAccessErrors => VolumeAccessErrors.Cast<IAccessError<IVolume>>();
+        IEnumerable<ILocalCrawlConfiguration> ILocalDbContext.CrawlConfigurations => CrawlConfigurations;
 
-        IEnumerable<IVolume> IDbContext.Volumes => Volumes.Cast<IVolume>();
+        async Task<ILocalSummaryPropertySet> ILocalDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ICrawlConfiguration> IDbContext.CrawlConfigurations => CrawlConfigurations.Cast<ICrawlConfiguration>();
+        async Task<ILocalDocumentPropertySet> ILocalDbContext.FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalSummaryPropertySet> ILocalDbContext.SummaryPropertySets => SummaryPropertySets.Cast<ILocalSummaryPropertySet>();
+        async Task<ILocalAudioPropertySet> ILocalDbContext.FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalDocumentPropertySet> ILocalDbContext.DocumentPropertySets => DocumentPropertySets.Cast<ILocalDocumentPropertySet>();
+        async Task<ILocalDRMPropertySet> ILocalDbContext.FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalAudioPropertySet> ILocalDbContext.AudioPropertySets => AudioPropertySets.Cast<ILocalAudioPropertySet>();
+        async Task<ILocalGPSPropertySet> ILocalDbContext.FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalDRMPropertySet> ILocalDbContext.DRMPropertySets => DRMPropertySets.Cast<ILocalDRMPropertySet>();
+        async Task<ILocalImagePropertySet> ILocalDbContext.FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalGPSPropertySet> ILocalDbContext.GPSPropertySets => GPSPropertySets.Cast<ILocalGPSPropertySet>();
+        async Task<ILocalMediaPropertySet> ILocalDbContext.FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalImagePropertySet> ILocalDbContext.ImagePropertySets => ImagePropertySets.Cast<ILocalImagePropertySet>();
+        async Task<ILocalMusicPropertySet> ILocalDbContext.FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalMediaPropertySet> ILocalDbContext.MediaPropertySets => MediaPropertySets.Cast<ILocalMediaPropertySet>();
+        async Task<ILocalPhotoPropertySet> ILocalDbContext.FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalMusicPropertySet> ILocalDbContext.MusicPropertySets => MusicPropertySets.Cast<ILocalMusicPropertySet>();
+        async Task<ILocalRecordedTVPropertySet> ILocalDbContext.FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
-        IEnumerable<ILocalPhotoPropertySet> ILocalDbContext.PhotoPropertySets => PhotoPropertySets.Cast<ILocalPhotoPropertySet>();
-
-        IEnumerable<ILocalRecordedTVPropertySet> ILocalDbContext.RecordedTVPropertySets => RecordedTVPropertySets.Cast<ILocalRecordedTVPropertySet>();
-
-        IEnumerable<ILocalVideoPropertySet> ILocalDbContext.VideoPropertySets => VideoPropertySets.Cast<ILocalVideoPropertySet>();
-
-        IEnumerable<ISummaryPropertySet> IDbContext.SummaryPropertySets => SummaryPropertySets.Cast<ISummaryPropertySet>();
-
-        IEnumerable<IDocumentPropertySet> IDbContext.DocumentPropertySets => DocumentPropertySets.Cast<IDocumentPropertySet>();
-
-        IEnumerable<IAudioPropertySet> IDbContext.AudioPropertySets => AudioPropertySets.Cast<IAudioPropertySet>();
-
-        IEnumerable<IDRMPropertySet> IDbContext.DRMPropertySets => DRMPropertySets.Cast<IDRMPropertySet>();
-
-        IEnumerable<IGPSPropertySet> IDbContext.GPSPropertySets => GPSPropertySets.Cast<IGPSPropertySet>();
-
-        IEnumerable<IImagePropertySet> IDbContext.ImagePropertySets => ImagePropertySets.Cast<IImagePropertySet>();
-
-        IEnumerable<IMediaPropertySet> IDbContext.MediaPropertySets => MediaPropertySets.Cast<IMediaPropertySet>();
-
-        IEnumerable<IMusicPropertySet> IDbContext.MusicPropertySets => MusicPropertySets.Cast<IMusicPropertySet>();
-
-        IEnumerable<IPhotoPropertySet> IDbContext.PhotoPropertySets => PhotoPropertySets.Cast<IPhotoPropertySet>();
-
-        IEnumerable<IRecordedTVPropertySet> IDbContext.RecordedTVPropertySets => RecordedTVPropertySets.Cast<IRecordedTVPropertySet>();
-
-        IEnumerable<IVideoPropertySet> IDbContext.VideoPropertySets => VideoPropertySets.Cast<IVideoPropertySet>();
-
-        Task<ILocalSummaryPropertySet> ILocalDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(ISummaryProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalDocumentPropertySet> ILocalDbContext.FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IDocumentProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalAudioPropertySet> ILocalDbContext.FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IAudioProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalDRMPropertySet> ILocalDbContext.FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IDRMProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalGPSPropertySet> ILocalDbContext.FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IGPSProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalImagePropertySet> ILocalDbContext.FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IImageProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalMediaPropertySet> ILocalDbContext.FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IMediaProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalMusicPropertySet> ILocalDbContext.FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IMusicProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalPhotoPropertySet> ILocalDbContext.FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IPhotoProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalRecordedTVPropertySet> ILocalDbContext.FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IRecordedTVProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ILocalVideoPropertySet> ILocalDbContext.FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement ILocalDbContext.FindMatchingAsync(IVideoProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<ISummaryPropertySet> IDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(ISummaryProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IDocumentPropertySet> IDbContext.FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IDocumentProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IAudioPropertySet> IDbContext.FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IAudioProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IDRMPropertySet> IDbContext.FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IDRMProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IGPSPropertySet> IDbContext.FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IGPSProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IImagePropertySet> IDbContext.FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IImageProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IMediaPropertySet> IDbContext.FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IMediaProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IMusicPropertySet> IDbContext.FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IMusicProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IPhotoPropertySet> IDbContext.FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IPhotoProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IRecordedTVPropertySet> IDbContext.FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IRecordedTVProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
-
-        Task<IVideoPropertySet> IDbContext.FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
-        {
-            // TODO: Implement IDbContext.FindMatchingAsync(IVideoProperties, CancellationToken)
-            throw new NotImplementedException();
-        }
+        async Task<ILocalVideoPropertySet> ILocalDbContext.FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken) =>
+            await FindMatchingAsync(properties, cancellationToken);
 
         #endregion
     }

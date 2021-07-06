@@ -41,6 +41,7 @@ namespace FsInfoCat.Local
         public virtual string Details { get => _details.GetValue(); set => _details.SetValue(value); }
 
         [Required]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(Properties.Resources))]
         public AccessErrorCode ErrorCode { get => _errorCode.GetValue(); set => _errorCode.SetValue(value); }
 
         public virtual Guid TargetId

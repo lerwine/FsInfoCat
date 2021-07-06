@@ -90,38 +90,5 @@ namespace FsInfoCat
             if (CreatedOn.CompareTo(ModifiedOn) > 0)
                 results.Add(new ValidationResult(Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, new string[] { nameof(CreatedOn) }));
         }
-
-        void IDbEntity.BeforeSave(ValidationContext validationContext) => BeforeSave(validationContext);
-
-        /// <summary>
-        /// This gets called before the current entity is inserted or updated into the database.
-        /// </summary>
-        /// <param name="validationContext">The validation context.</param>
-        /// <remarks>This allows the entity to update relevant properties before being saved to the database, such as updating the <see cref="ModifiedOn"/>
-        /// value.</remarks>
-        protected virtual void BeforeSave(ValidationContext validationContext)
-        {
-            if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
-                switch (validationContext.MemberName)
-                {
-                    case nameof(CreatedOn):
-                    case nameof(ModifiedOn):
-                        break;
-                    default:
-                        return;
-                }
-            EntityEntry entry = validationContext.GetService<EntityEntry>();
-            if (entry is null)
-                return;
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    CreatedOn = ModifiedOn = DateTime.Now;
-                    break;
-                case EntityState.Modified:
-                    ModifiedOn = DateTime.Now;
-                    break;
-            }
-        }
     }
 }

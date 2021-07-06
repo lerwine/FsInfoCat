@@ -364,7 +364,7 @@ namespace FsInfoCat.Local
         public void SetError(LocalDbContext dbContext, ErrorCode errorCode, Exception exception, string message = null)
         {
             SetError(dbContext, errorCode.ToAccessErrorCode(), exception, message.GetDefaultIfNullOrWhiteSpace(() =>
-                errorCode.GetAmbientValue<ErrorCode, string>()));
+                errorCode.TryGetDescription(out string m) ? m : errorCode.GetDisplayName()));
         }
 
         public void SetError(LocalDbContext dbContext, AccessErrorCode errorCode, Exception exception, string message = null)

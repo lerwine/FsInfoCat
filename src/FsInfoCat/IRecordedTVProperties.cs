@@ -33,8 +33,8 @@ namespace FsInfoCat
         /// <value>
         /// Example: "Nowhere to Hyde" The names of recorded TV episodes.
         /// </value>
-        /// <remarks>
-        /// For example, "Nowhere to Hyde".
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <para>For example, "Nowhere to Hyde".</para>
         /// <list type="bullet">
         /// <item><term>Name</term><description>Episode Name</description></item>
         /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
@@ -46,7 +46,8 @@ namespace FsInfoCat
         /// <summary>
         /// Indicates whether the video is DTV
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Is DTV Content</description></item>
         /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
         /// <item><term>Property ID</term><description>17</description></item>
@@ -57,7 +58,8 @@ namespace FsInfoCat
         /// <summary>
         /// Indicates whether the video is HDTV
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Is HDTV Content</description></item>
         /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
         /// <item><term>Property ID</term><description>18</description></item>
@@ -68,7 +70,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the Network Affiliation
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>TV Network Affiliation</description></item>
         /// <item><term>Format ID</term><description>{2C53C813-FB63-4E22-A1AB-0B331CA1E273} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
@@ -90,22 +93,23 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the Program Description
         /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Program Description</description></item>
         /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-programdescription">[Reference Link]</a></description></item>
         /// </list></remarks>
         string ProgramDescription { get; }
-        
+
         /// <summary>
         /// Gets the Station Call Sign
         /// </summary>
         /// <value>
         /// Example: "TOONP" Any recorded station call signs.
         /// </value>
-        /// <remarks>
-        /// For example, "TOONP".
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <para>For example, "TOONP".</para>
         /// <list type="bullet">
         /// <item><term>Name</term><description>Station Call Sign</description></item>
         /// <item><term>Format ID</term><description>{6D748DE2-8D38-4CC3-AC60-F009B057C557} (Format)</description></item>
@@ -118,11 +122,8 @@ namespace FsInfoCat
         /// Gets the Station Name.
         /// </summary>
         /// <value>The  name of the broadcast station or <see langword="null"/> if this value is not specified.</value>
-        /// <remarks>ID: {1B5439E7-EBA1-4AF8-BDD7-7AF1D4549493}, 100</remarks>
-        /// <summary>
-        /// Gets the Station Name
-        /// </summary>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Station Name</description></item>
         /// <item><term>Format ID</term><description>{1B5439E7-EBA1-4AF8-BDD7-7AF1D4549493} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>

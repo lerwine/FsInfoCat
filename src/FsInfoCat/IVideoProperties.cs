@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using System.ComponentModel;
 
 namespace FsInfoCat
 {
@@ -19,12 +20,14 @@ namespace FsInfoCat
         /// <value>
         /// Specifies the video compression format.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Compression</description></item>
         /// <item><term>Format ID</term><description>{64440491-4C8B-11D1-8B70-080036B11A03} (VideoSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>10</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-compression">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_Compression)]
         string Compression { get; }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>20</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-director">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_Director)]
         MultiStringValue Director { get; }
 
         /// <summary>
@@ -55,6 +59,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>8</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-encodingbitrate">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_EncodingBitrate)]
         uint? EncodingBitrate { get; }
 
         /// <summary>
@@ -69,6 +74,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>4</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-frameheight">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_FrameHeight)]
         uint? FrameHeight { get; }
 
         /// <summary>
@@ -83,6 +89,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>6</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-framerate">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_FrameRate)]
         uint? FrameRate { get; }
 
         /// <summary>
@@ -97,6 +104,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-framewidth">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_FrameWidth)]
         uint? FrameWidth { get; }
 
         /// <summary>
@@ -113,6 +121,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>42</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-horizontalaspectratio">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_HorizontalAspectRatio)]
         uint? HorizontalAspectRatio { get; }
 
         /// <summary>
@@ -121,14 +130,14 @@ namespace FsInfoCat
         /// <value>
         /// Indicates the name for the video stream.
         /// </value>
-        /// <remarks>
-        /// "StreamName".
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Stream Name</description></item>
         /// <item><term>Format ID</term><description>{64440491-4C8B-11D1-8B70-080036B11A03} (VideoSummaryInformation)</description></item>
-        /// <item><term>Property ID</term><description>2</description></item>
+        /// <item><term>Property ID</term><description>2</description>< /item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamname">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_StreamName)]
         string StreamName { get; }
 
         /// <summary>
@@ -143,8 +152,9 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>11</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamnumber">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_StreamNumber)]
         ushort? StreamNumber { get; }
-        
+
         /// <summary>
         /// Indicates the vertical portion of the aspect ratio
         /// </summary>
@@ -159,6 +169,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>45</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-verticalaspectratio">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [DisplayName(DbConstants.DisplayName_VerticalAspectRatio)]
         uint? VerticalAspectRatio { get; }
     }
 }

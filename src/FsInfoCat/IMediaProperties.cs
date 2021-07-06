@@ -17,10 +17,9 @@ namespace FsInfoCat
         /// Gets the Content Distributor
         /// </summary>
         /// <value>
-        /// System.
+        /// The Content Distributor.
         /// </value>
-        /// <remarks>
-        /// Media.ContentDistributor
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Content Distributor</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
@@ -33,10 +32,9 @@ namespace FsInfoCat
         /// Gets the Creator Application
         /// </summary>
         /// <value>
-        /// System.
+        /// The creator application.
         /// </value>
-        /// <remarks>
-        /// Media.CreatorApplication
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Creator Application/Tool</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
@@ -49,10 +47,9 @@ namespace FsInfoCat
         /// Gets the Creator Application Version
         /// </summary>
         /// <value>
-        /// System.
+        /// The creator application version.
         /// </value>
-        /// <remarks>
-        /// Media.CreatorApplicationVersion
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Creator Application/Tool Version</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
@@ -62,13 +59,12 @@ namespace FsInfoCat
         string CreatorApplicationVersion { get; }
 
         /// <summary>
-        /// Gets the Date Released
+        /// Gets the Date Released.
         /// </summary>
         /// <value>
-        /// System.
+        /// The release data.
         /// </value>
-        /// <remarks>
-        /// Media.DateReleased
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Date Released</description></item>
         /// <item><term>Format ID</term><description>{DE41CC29-6971-4290-B472-F59F2E2F31E2} (Format)</description></item>
@@ -95,10 +91,9 @@ namespace FsInfoCat
         /// Gets the DVD ID
         /// </summary>
         /// <value>
-        /// System.
+        /// The DVD ID.
         /// </value>
-        /// <remarks>
-        /// Media.DVDID
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>DVD ID</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
@@ -143,7 +138,8 @@ namespace FsInfoCat
         /// <value>
         /// If media is protected, how is it protected? Describes the type of media protection.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Protection Type</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>38</description></item>
@@ -157,7 +153,8 @@ namespace FsInfoCat
         /// <value>
         /// Rating value ranges from 0 to 99, supplied by metadata provider The rating (0 - 99) supplied by metadata provider.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Provider Rating</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>39</description></item>
@@ -171,7 +168,8 @@ namespace FsInfoCat
         /// <value>
         /// Supplied by metadata provider The style of music or video, supplied by metadata provider.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Provider Style</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
         /// <item><term>Property ID</term><description>40</description></item>
@@ -183,10 +181,9 @@ namespace FsInfoCat
         /// Gets the Publisher
         /// </summary>
         /// <value>
-        /// System.
+        /// The Publisher.
         /// </value>
-        /// <remarks>
-        /// Media.Publisher
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Publisher</description></item>
         /// <item><term>Format ID</term><description>{64440492-4C8B-11D1-8B70-080036B11A03} (MediaFileSummaryInformation)</description></item>
@@ -199,10 +196,9 @@ namespace FsInfoCat
         /// Gets the Subtitle
         /// </summary>
         /// <value>
-        /// System.
+        /// The sub-title.
         /// </value>
-        /// <remarks>
-        /// Media.SubTitle
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
         /// <list type="bullet">
         /// <item><term>Name</term><description>Subtitle</description></item>
         /// <item><term>Format ID</term><description>{56A3372E-CE9C-11D2-9F0E-006097C686F6} (MUSIC)</description></item>

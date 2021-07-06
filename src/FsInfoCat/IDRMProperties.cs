@@ -46,7 +46,8 @@ namespace FsInfoCat
         /// <value>
         /// Displays the description for Digital Rights Management (DRM).
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>License Description</description></item>
         /// <item><term>Format ID</term><description>{AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED} (DRM)</description></item>
         /// <item><term>Property ID</term><description>3</description></item>

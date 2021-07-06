@@ -18,7 +18,8 @@ namespace FsInfoCat
         /// <value>
         /// The name of the GPS area.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Area Information</description></item>
         /// <item><term>Format ID</term><description>{972E333E-AC7E-49F1-8ADF-A70D07A9BCAB} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
@@ -74,8 +75,9 @@ namespace FsInfoCat
         /// <value>
         /// Indicates whether latitude is north or south.
         /// </value>
-        /// <remarks><list type="bullet">
-        /// <item><term>Name</term><description>Latitude Ref</description></item>
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
+        /// <item><term>Name</term><description>Latitude Reference</description></item>
         /// <item><term>Format ID</term><description>{029C0252-5B86-46C7-ACA0-2769FFC8E3D4} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latituderef">[Reference Link]</a></description></item>
@@ -136,8 +138,9 @@ namespace FsInfoCat
         /// <value>
         /// Indicates whether longitude is east or west.
         /// </value>
-        /// <remarks><list type="bullet">
-        /// <item><term>Name</term><description>Longitude Ref</description></item>
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
+        /// <item><term>Name</term><description>Longitude Reference</description></item>
         /// <item><term>Format ID</term><description>{33DCF22B-28D5-464C-8035-1EE9EFD25278} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longituderef">[Reference Link]</a></description></item>
@@ -150,7 +153,8 @@ namespace FsInfoCat
         /// <value>
         /// eg: 2-dimensional, 3-dimensional Indicates the GPS measurement mode (for example, two-dimensional, three-dimensional).
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Measure Mode</description></item>
         /// <item><term>Format ID</term><description>{A015ED5D-AAEA-4D58-8A86-3C586920EA0B} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>
@@ -164,7 +168,8 @@ namespace FsInfoCat
         /// <value>
         /// Indicates the name of the method used for finding locations.
         /// </value>
-        /// <remarks><list type="bullet">
+        /// <remarks>This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null"/>.
+        /// <list type="bullet">
         /// <item><term>Name</term><description>Processing Method</description></item>
         /// <item><term>Format ID</term><description>{59D49E61-840F-4AA9-A939-E2099B7F6399} (Format)</description></item>
         /// <item><term>Property ID</term><description>100</description></item>

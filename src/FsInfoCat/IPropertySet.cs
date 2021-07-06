@@ -7,8 +7,9 @@ namespace FsInfoCat
     /// Base interface for entities that represent a grouping of extended file properties.
     /// </summary>
     /// <seealso cref="IDbEntity" />
-    /// <seealso cref="IAudioPropertySet" />
     /// <seealso cref="IBinaryPropertySet" />
+    /// <seealso cref="ISummaryPropertySet" />
+    /// <seealso cref="IAudioPropertySet" />
     /// <seealso cref="IDocumentPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
@@ -17,7 +18,6 @@ namespace FsInfoCat
     /// <seealso cref="IMusicPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
-    /// <seealso cref="ISummaryPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
     public interface IPropertySet : IDbEntity
     {

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -23,6 +24,42 @@ namespace FsInfoCat
 
         public static TResult GetDefaultIf<TInput, TResult>(TInput inputValue, PredicatedProduction<TInput, TResult> producer, Func<TInput, TResult> defaultValueFunc) =>
             producer(inputValue, out TResult result) ? result : defaultValueFunc(inputValue);
+
+        public static bool TryGetDescription(this MemberInfo memberInfo, out string result)
+        {
+            if (memberInfo is null)
+            {
+                result = null;
+                return false;
+            }
+            DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
+            if (attribute is not null && (result = attribute.GetDescription().NullIfWhiteSpace()) is not null)
+                return true;
+            return (result = memberInfo.GetCustomAttributes<DescriptionAttribute>(true).Select(a => a.Description.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
+        }
+
+        public static bool TryGetDisplayName(this MemberInfo memberInfo, out string result)
+        {
+            if (memberInfo is null)
+            {
+                result = null;
+                return false;
+            }
+            DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
+            if (attribute is not null && (result = attribute.GetName().NullIfWhiteSpace()) is not null)
+                return true;
+            return (result = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
+        }
+
+        public static string GetDisplayName<TEnum>(this TEnum value) where TEnum : struct, Enum
+        {
+            FieldInfo fieldInfo = typeof(TEnum).GetField(Enum.GetName(value));
+            return fieldInfo.TryGetDisplayName(out string result) ? result : Enum.GetName(typeof(TEnum), value);
+        }
+
+        public static bool TryGetDisplayName<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum => typeof(TEnum).GetField(Enum.GetName(value)).TryGetDisplayName(out result);
+
+        public static bool TryGetDescription<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum => typeof(TEnum).GetField(Enum.GetName(value)).TryGetDescription(out result);
 
         public static bool TryGetAmbientValue<TEnum, TResult>(this TEnum value, out TResult result)
             where TEnum : struct, Enum
@@ -62,8 +99,7 @@ namespace FsInfoCat
 
         public static EventId ToEventId(this AccessErrorCode errorCode) => errorCode.ToErrorCode().ToEventId();
 
-        public static EventId ToEventId(this ErrorCode errorCode) =>
-            new((byte)errorCode, errorCode.TryGetAmbientValue(out string name) ? name : Enum.GetName(errorCode));
+        public static EventId ToEventId(this ErrorCode errorCode) => new((byte)errorCode, errorCode.TryGetDescription(out string name) ? name : errorCode.GetDisplayName());
 
         public static bool IsNullableType(this Type type) => (type ?? throw new ArgumentNullException(nameof(type))).IsValueType && type.IsGenericType &&
             typeof(Nullable<>).Equals(type.GetGenericTypeDefinition());
