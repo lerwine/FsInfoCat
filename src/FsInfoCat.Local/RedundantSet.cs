@@ -33,7 +33,6 @@ namespace FsInfoCat.Local
     (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
 )$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
         private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<RedundancyRemediationStatus> _remediationStatus;
         private readonly IPropertyChangeTracker<string> _reference;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<Guid> _binaryPropertiesId;
@@ -46,9 +45,6 @@ namespace FsInfoCat.Local
 
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
-
-        [Required]
-        public virtual RedundancyRemediationStatus RemediationStatus { get => _remediationStatus.GetValue(); set => _remediationStatus.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
@@ -110,7 +106,6 @@ namespace FsInfoCat.Local
         public RedundantSet()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _remediationStatus = AddChangeTracker(nameof(RemediationStatus), RedundancyRemediationStatus.Unconfirmed);
             _reference = AddChangeTracker(nameof(Reference), "", TrimmedNonNullStringCoersion.Default);
             _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _binaryPropertiesId = AddChangeTracker(nameof(BinaryPropertiesId), Guid.Empty);
@@ -135,9 +130,8 @@ namespace FsInfoCat.Local
             Guid redundantSetId = redundantSetElement.GetAttributeGuid(n).Value;
             logger.LogInformation($"Inserting {nameof(RedundantSet)} with Id {{Id}}", binaryPropertiesId);
             await new InsertQueryBuilder(nameof(LocalDbContext.RedundantSets), redundantSetElement, n).AppendGuid(nameof(BinaryPropertiesId), binaryPropertiesId)
-                .AppendString(nameof(Reference)).AppendElementString(nameof(Notes)).AppendEnum<RedundancyRemediationStatus>(nameof(RemediationStatus))
-                .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId))
-                .ExecuteSqlAsync(dbContext.Database);
+                .AppendString(nameof(Reference)).AppendElementString(nameof(Notes)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
+                .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             return (redundantSetId, redundantSetElement.Elements(nameof(Redundancy)).ToArray());
         }
     }

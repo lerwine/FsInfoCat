@@ -33,7 +33,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entry.State);
             Assert.IsNotNull(target.Reference);
             Assert.AreEqual("", target.Reference);
-            Assert.AreEqual(RedundancyRemediationStatus.Unconfirmed, target.RemediationStatus);
             Assert.IsNotNull(target.Notes);
             Assert.AreEqual("", target.Notes);
             Assert.AreEqual(Guid.Empty, target.BinaryPropertiesId);
@@ -52,7 +51,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Added, entry.State);
             Assert.IsNotNull(target.Reference);
             Assert.AreEqual("", target.Reference);
-            Assert.AreEqual(RedundancyRemediationStatus.Unconfirmed, target.RemediationStatus);
             Assert.IsNotNull(target.Notes);
             Assert.AreEqual("", target.Notes);
             Assert.AreEqual(Guid.Empty, target.BinaryPropertiesId);
@@ -77,19 +75,6 @@ namespace FsInfoCat.UnitTests
             actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
-        }
-
-        [TestMethod("RedundancyRemediationStatus RemediationStatus")]
-        public void RemediationStatusTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for RedundancyRemediationStatus RemediationStatus
-
-            RedundantSet target = default; // TODO: Create and initialize RedundantSet instance
-            RedundancyRemediationStatus expectedValue = default;
-            target.RemediationStatus = default;
-            RedundancyRemediationStatus actualValue = target.RemediationStatus;
-            Assert.AreEqual(expectedValue, actualValue);
         }
 
         [TestMethod("string Reference")]

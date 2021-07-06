@@ -13,14 +13,6 @@ namespace FsInfoCat.PS.Export
         private string _notes;
         private readonly RedundancyBase.Collection _redundancies;
 
-        [XmlAttribute(nameof(RemediationStatus))]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-#pragma warning disable IDE1006 // Naming Styles
-        public string __XML_RemediationStatus { get => RemediationStatus.ToRedundancyRemediationStatusXml(); set => RemediationStatus = value.FromXmlRedundancyRemediationStatus(RemediationStatus); }
-#pragma warning restore IDE1006 // Naming Styles
-        [XmlIgnore]
-        public RedundancyRemediationStatus RemediationStatus { get; set; }
-
         [XmlAttribute]
         public string Reference { get => _reference; set => _reference = value.TrimmedNotNull(); }
 

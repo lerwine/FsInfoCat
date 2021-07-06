@@ -417,7 +417,7 @@ CREATE TABLE IF NOT EXISTS "Files" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim("Name"))>0) COLLATE NOCASE,
     "Options" TINYINT  NOT NULL CHECK("Options">=0 AND "Options"<15) DEFAULT 0,
-    "Status" TINYINT  NOT NULL CHECK("Status">=0 AND "Status"<5) DEFAULT 0,
+    "Status" TINYINT  NOT NULL CHECK("Status">=0 AND "Status"<10) DEFAULT 0,
     "LastAccessed" DATETIME  NOT NULL,
     "LastHashCalculation" DATETIME DEFAULT NULL,
     "Notes" TEXT NOT NULL DEFAULT '',
@@ -461,7 +461,6 @@ CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
 
 CREATE TABLE IF NOT EXISTS "RedundantSets" (
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"RemediationStatus"	TINYINT NOT NULL DEFAULT 1 CHECK(RemediationStatus>=0 AND RemediationStatus<9),
     "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
 	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSetBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
@@ -473,8 +472,6 @@ CREATE TABLE IF NOT EXISTS "RedundantSets" (
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
-
-CREATE INDEX "IDX_File_RemediationStatus" ON "RedundantSets" ("RemediationStatus");
 
 CREATE TABLE IF NOT EXISTS "Redundancies" (
 	"FileId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,

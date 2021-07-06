@@ -70,14 +70,6 @@ namespace FsInfoCat.PS
 
         public static DirectoryStatus? FromXmlDirectoryStatus(this string value) => (DirectoryStatus?)value.FromXmlByte();
 
-        public static string ToRedundancyRemediationStatusXml(this RedundancyRemediationStatus value) => (value == default) ? null : XmlConvert.ToString((byte)value);
-
-        public static string ToRedundancyRemediationStatusXml(this RedundancyRemediationStatus? value) => value.HasValue ? XmlConvert.ToString((byte)value.Value) : null;
-
-        public static RedundancyRemediationStatus FromXmlRedundancyRemediationStatus(this string value, RedundancyRemediationStatus defaultValue) => (RedundancyRemediationStatus)FromXmlByte(value, (byte)defaultValue);
-
-        public static RedundancyRemediationStatus? FromXmlRedundancyRemediationStatus(this string value) => (RedundancyRemediationStatus?)value.FromXmlByte();
-
         public static string ToVolumeStatusXml(this VolumeStatus value) => (value == default) ? null : XmlConvert.ToString((byte)value);
 
         public static string ToVolumeStatusXml(this VolumeStatus? value) => value.HasValue ? XmlConvert.ToString((byte)value.Value) : null;

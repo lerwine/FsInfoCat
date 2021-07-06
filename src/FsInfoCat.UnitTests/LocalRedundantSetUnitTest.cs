@@ -111,52 +111,6 @@ namespace FsInfoCat.UnitTests
         [TestMethod("RedundantSet Reference Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
         [Ignore]
-        public void RedundantSetRemediationStatusTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            RedundancyRemediationStatus expected = default; // DEFERRED: Set invalid value
-            Local.RedundantSet target = new() { RemediationStatus = expected };
-            EntityEntry<Local.RedundantSet> entityEntry = dbContext.RedundantSets.Add(target);
-            Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RedundantSet.Reference), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_ReferenceLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Reference);
-
-            expected = default; // DEFERRED: Set valid value
-            target.RemediationStatus = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Reference);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.RemediationStatus = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RedundantSet.Reference), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_ReferenceLength, results[0].ErrorMessage);
-            entityEntry = dbContext.RedundantSets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Reference);
-        }
-
-        [TestMethod("RedundantSet Reference Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
-        [Ignore]
         public void RedundantSetReferenceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
