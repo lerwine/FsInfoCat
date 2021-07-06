@@ -1,5 +1,4 @@
 using FsInfoCat.Collections;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
