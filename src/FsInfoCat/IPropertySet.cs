@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -31,6 +32,7 @@ namespace FsInfoCat
         /// Gets the files that share the same property values as this property set.
         /// </summary>
         /// <value>The <see cref="IFile">files</see> that share the same property values as this property set.</value>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IFile> Files { get; }
     }
 }

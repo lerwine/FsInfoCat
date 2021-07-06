@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -26,24 +27,28 @@ namespace FsInfoCat
         /// Gets or sets a value indicating whether the <see cref="Baseline"/> and <see cref="Correlative"/> are identical byte-for-byte.
         /// </summary>
         /// <value><see langword="true"/> if <see cref="Baseline"/> and <see cref="Correlative"/> are identical byte-for-byte; otherwise, <see langword="false"/>.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AreEqual), ResourceType = typeof(Properties.Resources))]
         bool AreEqual { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when the files were compared.
         /// </summary>
         /// <value>The date and time when <see cref="Baseline"/> was compared to <see cref="Correlative"/>.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_ComparedOn), ResourceType = typeof(Properties.Resources))]
         DateTime ComparedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the baseline file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="IFile"/> that represents the baseline file in the comparison.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Baseline), ResourceType = typeof(Properties.Resources))]
         IFile Baseline { get; set; }
 
         /// <summary>
         /// Gets or sets the correlative file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="IFile"/> that represents the correlative file, which is the new or changed file in the comparison.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
         IFile Correlative { get; set; }
     }
 }

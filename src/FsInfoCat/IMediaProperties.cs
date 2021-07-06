@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -26,6 +27,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>18</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-contentdistributor">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ContentDistributor), ResourceType = typeof(Properties.Resources))]
         string ContentDistributor { get; }
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>27</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplication">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_CreatorApplication), ResourceType = typeof(Properties.Resources))]
         string CreatorApplication { get; }
 
         /// <summary>
@@ -56,6 +59,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>28</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplicationversion">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_CreatorApplicationVersion), ResourceType = typeof(Properties.Resources))]
         string CreatorApplicationVersion { get; }
 
         /// <summary>
@@ -71,6 +75,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-datereleased">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_DateReleased), ResourceType = typeof(Properties.Resources))]
         string DateReleased { get; }
 
         /// <summary>
@@ -85,6 +90,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-duration">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Duration), ResourceType = typeof(Properties.Resources))]
         ulong? Duration { get; }
 
         /// <summary>
@@ -100,6 +106,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>15</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-dvdid">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_DVDID), ResourceType = typeof(Properties.Resources))]
         string DVDID { get; }
 
         /// <summary>
@@ -114,6 +121,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>12</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-framecount">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_FrameCount), ResourceType = typeof(Properties.Resources))]
         uint? FrameCount { get; }
 
         /// <summary>
@@ -130,6 +138,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>22</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-producer">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Producer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Producer { get; }
 
         /// <summary>
@@ -145,6 +154,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>38</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-protectiontype">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ProtectionType), ResourceType = typeof(Properties.Resources))]
         string ProtectionType { get; }
 
         /// <summary>
@@ -160,6 +170,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>39</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerrating">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ProviderRating), ResourceType = typeof(Properties.Resources))]
         string ProviderRating { get; }
 
         /// <summary>
@@ -175,6 +186,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>40</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerstyle">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ProviderStyle), ResourceType = typeof(Properties.Resources))]
         string ProviderStyle { get; }
 
         /// <summary>
@@ -190,6 +202,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>30</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-publisher">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Publisher), ResourceType = typeof(Properties.Resources))]
         string Publisher { get; }
 
         /// <summary>
@@ -205,6 +218,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>38</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-subtitle">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Subtitle), ResourceType = typeof(Properties.Resources))]
         string Subtitle { get; }
 
         /// <summary>
@@ -221,6 +235,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>23</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-writer">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Writer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Writer { get; }
 
         /// <summary>
@@ -237,6 +252,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>5</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-year">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Year), ResourceType = typeof(Properties.Resources))]
         uint? Year { get; }
     }
 }

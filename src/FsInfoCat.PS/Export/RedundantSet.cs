@@ -48,7 +48,9 @@ namespace FsInfoCat.PS.Export
         {
             [XmlAttribute(nameof(FileId))]
             [EditorBrowsable(EditorBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
             public string __XML_FileId { get => FileId.ToGuidXml(); set => FileId = value.FromXmlGuid(FileId); }
+#pragma warning restore IDE1006 // Naming Styles
             [XmlIgnore]
             public Guid FileId { get; set; }
 

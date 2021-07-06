@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -18,12 +19,16 @@ namespace FsInfoCat
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         Guid RedundantSetId { get; set; }
 
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Reference), ResourceType = typeof(Properties.Resources))]
         string Reference { get; set; }
 
+        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; set; }
 
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_File), ResourceType = typeof(Properties.Resources))]
         IFile File { get; set; }
 
+        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(Properties.Resources))]
         IRedundantSet RedundantSet { get; set; }
     }
 }

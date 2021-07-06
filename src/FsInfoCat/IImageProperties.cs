@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace FsInfoCat
 {
     /// <summary>
@@ -25,6 +27,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>7</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-bitdepth">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_BitDepth), ResourceType = typeof(Properties.Resources))]
         uint? BitDepth { get; }
 
         /// <summary>
@@ -41,6 +44,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>40961</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-colorspace">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ColorSpace), ResourceType = typeof(Properties.Resources))]
         ushort? ColorSpace { get; }
 
         /// <summary>
@@ -57,6 +61,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compressedbitsperpixel">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_CompressedBitsPerPixel), ResourceType = typeof(Properties.Resources))]
         double? CompressedBitsPerPixel { get; }
 
         /// <summary>
@@ -71,6 +76,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>259</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compression">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         ushort? Compression { get; }
 
         /// <summary>
@@ -87,6 +93,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compressiontext">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         string CompressionText { get; }
 
         /// <summary>
@@ -101,6 +108,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>5</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-horizontalresolution">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalResolution), ResourceType = typeof(Properties.Resources))]
         double? HorizontalResolution { get; }
 
         /// <summary>
@@ -115,6 +123,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-horizontalsize">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalSize), ResourceType = typeof(Properties.Resources))]
         uint? HorizontalSize { get; }
 
         /// <summary>
@@ -130,6 +139,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-imageid">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ImageID), ResourceType = typeof(Properties.Resources))]
         string ImageID { get; }
 
         /// <summary>
@@ -146,6 +156,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-resolutionunit">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ResolutionUnit), ResourceType = typeof(Properties.Resources))]
         short? ResolutionUnit { get; }
 
         /// <summary>
@@ -160,6 +171,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>6</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-verticalresolution">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_VerticalResolution), ResourceType = typeof(Properties.Resources))]
         double? VerticalResolution { get; }
 
         /// <summary>
@@ -174,6 +186,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>4</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-verticalsize">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_VerticalSize), ResourceType = typeof(Properties.Resources))]
         uint? VerticalSize { get; }
     }
 }

@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -25,6 +26,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-areainformation">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_AreaInformation), ResourceType = typeof(Properties.Resources))]
         string AreaInformation { get; }
 
         /// <summary>
@@ -39,6 +41,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudedegrees">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeDegrees), ResourceType = typeof(Properties.Resources))]
         double? LatitudeDegrees { get; }
 
         /// <summary>
@@ -53,6 +56,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudeminutes">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeMinutes), ResourceType = typeof(Properties.Resources))]
         double? LatitudeMinutes { get; }
 
         /// <summary>
@@ -67,6 +71,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitude">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeSeconds), ResourceType = typeof(Properties.Resources))]
         double? LatitudeSeconds { get; }
 
         /// <summary>
@@ -82,6 +87,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latituderef">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeRef), ResourceType = typeof(Properties.Resources))]
         string LatitudeRef { get; }
 
         /// <summary>
@@ -98,6 +104,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudedegrees">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeDegrees), ResourceType = typeof(Properties.Resources))]
         double? LongitudeDegrees { get; }
 
         /// <summary>
@@ -114,6 +121,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeminutes">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeMinutes), ResourceType = typeof(Properties.Resources))]
         double? LongitudeMinutes { get; }
 
         /// <summary>
@@ -130,6 +138,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeseconds">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeSeconds), ResourceType = typeof(Properties.Resources))]
         double? LongitudeSeconds { get; }
 
         /// <summary>
@@ -145,6 +154,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longituderef">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeRef), ResourceType = typeof(Properties.Resources))]
         string LongitudeRef { get; }
 
         /// <summary>
@@ -160,6 +170,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-measuremode">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_MeasureMode), ResourceType = typeof(Properties.Resources))]
         string MeasureMode { get; }
 
         /// <summary>
@@ -175,6 +186,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-processingmethod">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ProcessingMethod), ResourceType = typeof(Properties.Resources))]
         string ProcessingMethod { get; }
 
         /// <summary>
@@ -189,6 +201,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-versionid">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_VersionID), ResourceType = typeof(Properties.Resources))]
         ByteValues VersionID { get; }
     }
 }

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace FsInfoCat
 {
     /// <summary>
@@ -25,6 +27,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>7</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-channelnumber">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ChannelNumber), ResourceType = typeof(Properties.Resources))]
         uint? ChannelNumber { get; }
 
         /// <summary>
@@ -41,6 +44,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>2</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-episodename">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_EpisodeName), ResourceType = typeof(Properties.Resources))]
         string EpisodeName { get; }
 
         /// <summary>
@@ -53,6 +57,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>17</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-isdtvcontent">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_IsDTVContent), ResourceType = typeof(Properties.Resources))]
         bool? IsDTVContent { get; }
 
         /// <summary>
@@ -65,6 +70,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>18</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-ishdcontent">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_IsHDContent), ResourceType = typeof(Properties.Resources))]
         bool? IsHDContent { get; }
 
         /// <summary>
@@ -77,6 +83,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-networkaffiliation">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_NetworkAffiliation), ResourceType = typeof(Properties.Resources))]
         string NetworkAffiliation { get; }
 
         /// <summary>
@@ -88,6 +95,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-originalbroadcastdate">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_OriginalBroadcastDate), ResourceType = typeof(Properties.Resources))]
         System.DateTime? OriginalBroadcastDate { get; }
 
         /// <summary>
@@ -100,6 +108,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-programdescription">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ProgramDescription), ResourceType = typeof(Properties.Resources))]
         string ProgramDescription { get; }
 
         /// <summary>
@@ -116,6 +125,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>5</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationcallsign">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_StationCallSign), ResourceType = typeof(Properties.Resources))]
         string StationCallSign { get; }
 
         /// <summary>
@@ -129,6 +139,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationname">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_StationName), ResourceType = typeof(Properties.Resources))]
         string StationName { get; }
     }
 }

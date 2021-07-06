@@ -1,3 +1,6 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace FsInfoCat
 {
     /// <summary>
@@ -23,7 +26,8 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>6</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-dateplayexpires">[Reference Link]</a></description></item>
         /// </list></remarks>
-        System.DateTime? DatePlayExpires { get; }
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayExpires), ResourceType = typeof(Properties.Resources))]
+        DateTime? DatePlayExpires { get; }
 
         /// <summary>
         /// Indicates when play starts for digital rights management.
@@ -37,7 +41,8 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>5</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-dateplaystarts">[Reference Link]</a></description></item>
         /// </list></remarks>
-        System.DateTime? DatePlayStarts { get; }
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayStarts), ResourceType = typeof(Properties.Resources))]
+        DateTime? DatePlayStarts { get; }
 
         /// <su
         /// <summary>
@@ -53,6 +58,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-description">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Description), ResourceType = typeof(Properties.Resources))]
         string Description { get; }
 
         /// <summary>
@@ -69,6 +75,7 @@ namespace FsInfoCat
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-isprotected">[Reference Link]</a></description></item>
         /// </list></remarks>
         /// <remarks>ID: {AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED}, 2 (DRM)</remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_IsProtected), ResourceType = typeof(Properties.Resources))]
         bool? IsProtected { get; }
 
         /// <summary>
@@ -83,6 +90,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>4</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-playcount">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_PlayCount), ResourceType = typeof(Properties.Resources))]
         uint? PlayCount { get; }
     }
 }

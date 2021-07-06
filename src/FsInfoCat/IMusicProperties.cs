@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -23,6 +24,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>13</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumartist">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_AlbumArtist), ResourceType = typeof(Properties.Resources))]
         string AlbumArtist { get; }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>4</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumtitle">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_AlbumTitle), ResourceType = typeof(Properties.Resources))]
         string AlbumTitle { get; }
 
         /// <summary>
@@ -46,6 +49,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>2</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Artist), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Artist { get; }
 
         /// <summary>
@@ -58,6 +62,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>2</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ChannelCount), ResourceType = typeof(Properties.Resources))]
         uint? ChannelCount { get; }
 
         /// <summary>
@@ -69,6 +74,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>19</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-composer">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Composer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Composer { get; }
 
         /// <summary>
@@ -80,6 +86,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>36</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-conductor">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Conductor), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Conductor { get; }
 
         /// <summary>
@@ -96,6 +103,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-displayartist">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_DisplayArtist), ResourceType = typeof(Properties.Resources))]
         string DisplayArtist { get; }
 
         /// <summary>
@@ -107,6 +115,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>11</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-genre">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Genre), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Genre { get; }
 
         /// <summary>
@@ -119,6 +128,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>37</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-partofset">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_PartOfSet), ResourceType = typeof(Properties.Resources))]
         string PartOfSet { get; }
 
         /// <summary>
@@ -131,6 +141,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>31</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-period">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Period), ResourceType = typeof(Properties.Resources))]
         string Period { get; }
 
         /// <summary>
@@ -143,6 +154,7 @@ namespace FsInfoCat
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-tracknumber">[Reference Link]</a></description></item>
         /// </list></remarks>
         /// <remarks>ID: {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 7 (MUSIC)</remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_TrackNumber), ResourceType = typeof(Properties.Resources))]
         uint? TrackNumber { get; }
     }
 }

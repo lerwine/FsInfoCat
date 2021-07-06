@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -26,6 +27,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>271</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-cameramanufacturer">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_CameraManufacturer), ResourceType = typeof(Properties.Resources))]
         string CameraManufacturer { get; }
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>272</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-cameramodel">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_CameraModel), ResourceType = typeof(Properties.Resources))]
         string CameraModel { get; }
 
         /// <summary>
@@ -55,6 +58,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>36867</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-datetaken">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_DateTaken), ResourceType = typeof(Properties.Resources))]
         System.DateTime? DateTaken { get; }
 
         /// <summary>
@@ -71,6 +75,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>18248</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-event">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Event), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Event { get; }
 
         /// <summary>
@@ -86,6 +91,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-exifversion">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_EXIFVersion), ResourceType = typeof(Properties.Resources))]
         string EXIFVersion { get; }
 
         /// <summary>
@@ -100,6 +106,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>274</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-orientation">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Orientation), ResourceType = typeof(Properties.Resources))]
         ushort? Orientation { get; }
 
         /// <summary>
@@ -116,6 +123,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-orientationtext">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_OrientationText), ResourceType = typeof(Properties.Resources))]
         string OrientationText { get; }
 
         /// <summary>
@@ -130,6 +138,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-peoplenames">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_PeopleNames), ResourceType = typeof(Properties.Resources))]
         MultiStringValue PeopleNames { get; }
     }
 }

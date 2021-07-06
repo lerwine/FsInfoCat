@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -18,6 +19,7 @@ namespace FsInfoCat
         /// <value>
         /// The file length in bytes.
         /// </value>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Length), ResourceType = typeof(Properties.Resources))]
         long Length { get; set; }
 
         /// <summary>
@@ -26,6 +28,7 @@ namespace FsInfoCat
         /// <value>
         /// The MD5 hash of the file's contents or <see langword="null"/> if the hash has not yet been calculated.
         /// </value>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Hash), ResourceType = typeof(Properties.Resources))]
         MD5Hash? Hash { get; set; }
 
         /// <summary>
@@ -34,6 +37,7 @@ namespace FsInfoCat
         /// <value>
         /// The files which have the same length and cryptographic hash..
         /// </value>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IFile> Files { get; }
 
         /// <summary>
@@ -42,6 +46,7 @@ namespace FsInfoCat
         /// <value>
         /// The sets of files which were determined to be duplicates.
         /// </value>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IRedundantSet> RedundantSets { get; }
     }
 }

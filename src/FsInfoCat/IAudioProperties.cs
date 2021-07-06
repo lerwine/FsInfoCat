@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace FsInfoCat
 {
     /// <summary>
@@ -24,6 +26,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>10</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-compression">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         string Compression { get; }
 
         /// <summary>
@@ -38,6 +41,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>4</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-encodingbitrate">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_EncodingBitrate), ResourceType = typeof(Properties.Resources))]
         uint? EncodingBitrate { get; }
 
         /// <summary>
@@ -53,6 +57,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>2</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-format">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Format), ResourceType = typeof(Properties.Resources))]
         string Format { get; }
 
         /// <summary>
@@ -68,6 +73,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-isvariablebitrate">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_IsVariableBitrate), ResourceType = typeof(Properties.Resources))]
         bool? IsVariableBitrate { get; }
 
         /// <summary>
@@ -82,6 +88,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>5</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-samplerate">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_SampleRate), ResourceType = typeof(Properties.Resources))]
         uint? SampleRate { get; }
 
         /// <summary>
@@ -96,6 +103,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>6</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-samplesize">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_SampleSize), ResourceType = typeof(Properties.Resources))]
         uint? SampleSize { get; }
 
         /// <summary>
@@ -111,6 +119,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>9</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-streamname">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_StreamName), ResourceType = typeof(Properties.Resources))]
         string StreamName { get; }
 
         /// <summary>
@@ -125,6 +134,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>8</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-streamnumber">[Reference Link]</a></description></item>
         /// </list></remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_StreamNumber), ResourceType = typeof(Properties.Resources))]
         ushort? StreamNumber { get; }
     }
 }

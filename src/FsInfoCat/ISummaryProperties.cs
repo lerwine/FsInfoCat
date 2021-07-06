@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -27,6 +28,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>18</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-applicationname">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ApplicationName), ResourceType = typeof(Properties.Resources))]
         string ApplicationName { get; }
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>4</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-author">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Author), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Author { get; }
 
         /// <summary>
@@ -56,6 +59,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>6</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-comment">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Comment), ResourceType = typeof(Properties.Resources))]
         string Comment { get; }
 
         /// <summary>
@@ -70,6 +74,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>5</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-keywords">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Keywords), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Keywords { get; }
 
         /// <summary>
@@ -86,6 +91,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-subject">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Subject), ResourceType = typeof(Properties.Resources))]
         string Subject { get; }
 
         /// <summary>
@@ -101,6 +107,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>2</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-title">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Title), ResourceType = typeof(Properties.Resources))]
         string Title { get; }
 
         /// <summary>
@@ -116,6 +123,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>15</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-company">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Company), ResourceType = typeof(Properties.Resources))]
         string Company { get; }
 
         /// <summary>
@@ -131,6 +139,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>26</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-contenttype">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ContentType), ResourceType = typeof(Properties.Resources))]
         string ContentType { get; }
 
         /// <summary>
@@ -146,6 +155,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>11</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-copyright">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Copyright), ResourceType = typeof(Properties.Resources))]
         string Copyright { get; }
 
         /// <summary>
@@ -161,6 +171,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>21</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalrating">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRating), ResourceType = typeof(Properties.Resources))]
         string ParentalRating { get; }
 
         /// <summary>
@@ -177,6 +188,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>9</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-rating">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Rating), ResourceType = typeof(Properties.Resources))]
         uint? Rating { get; }
 
         /// <summary>
@@ -193,6 +205,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemauthors">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ItemAuthors), ResourceType = typeof(Properties.Resources))]
         MultiStringValue ItemAuthors { get; }
 
         /// <summary>
@@ -211,6 +224,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>11</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemtype">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ItemType), ResourceType = typeof(Properties.Resources))]
         string ItemType { get; }
 
         /// <summary>
@@ -229,6 +243,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>4</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemtypetext">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ItemType), ResourceType = typeof(Properties.Resources))]
         string ItemTypeText { get; }
 
         /// <summary>
@@ -245,6 +260,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-kind">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Kind), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Kind { get; }
 
         /// <summary>
@@ -261,6 +277,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>5</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-mimetype">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_MIMEType), ResourceType = typeof(Properties.Resources))]
         string MIMEType { get; }
 
         /// <summary>
@@ -276,6 +293,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalratingreason">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRatingReason), ResourceType = typeof(Properties.Resources))]
         string ParentalRatingReason { get; }
 
         /// <summary>
@@ -292,6 +310,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalratingsorganization">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRatingsOrganization), ResourceType = typeof(Properties.Resources))]
         string ParentalRatingsOrganization { get; }
 
         /// <summary>
@@ -306,6 +325,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-sensitivity">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(Properties.Resources))]
         ushort? Sensitivity { get; }
 
         /// <summary>
@@ -322,6 +342,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-sensitivitytext">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(Properties.Resources))]
         string SensitivityText { get; }
 
         /// <summary>
@@ -336,6 +357,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-simplerating">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_SimpleRating), ResourceType = typeof(Properties.Resources))]
         uint? SimpleRating { get; }
 
         /// <summary>
@@ -351,6 +373,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>9</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-trademarks">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Trademarks), ResourceType = typeof(Properties.Resources))]
         string Trademarks { get; }
 
         /// <summary>
@@ -366,6 +389,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>7</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-software-productname">[Reference Link]</a></description></item>
         /// </list></remarks>
+        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_ProductName), ResourceType = typeof(Properties.Resources))]
         string ProductName { get; }
     }
 }
