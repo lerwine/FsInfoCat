@@ -1,5 +1,6 @@
 using FsInfoCat.Collections;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -27,7 +28,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-clientid">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_ClientID)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_ClientID), ResourceType = typeof(Properties.Resources))]
         string ClientID { get; }
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-contributor">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_Contributor)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_Contributor), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Contributor { get; }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>12</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-datecreated">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_DateCreated)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_DateCreated), ResourceType = typeof(Properties.Resources))]
         System.DateTime? DateCreated { get; }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>8</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-lastauthor">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_LastAuthor)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_LastAuthor), ResourceType = typeof(Properties.Resources))]
         string LastAuthor { get; }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>9</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-revisionnumber">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_RevisionNumber)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_RevisionNumber), ResourceType = typeof(Properties.Resources))]
         string RevisionNumber { get; }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>19</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-security">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_Security)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_Security), ResourceType = typeof(Properties.Resources))]
         int? Security { get; }
 
         /// <summary>
@@ -120,7 +121,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-division">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_Division)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_Division), ResourceType = typeof(Properties.Resources))]
         string Division { get; }
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>100</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-documentid">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_DocumentID)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_DocumentID), ResourceType = typeof(Properties.Resources))]
         string DocumentID { get; }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>14</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-manager">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_Manager)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_Manager), ResourceType = typeof(Properties.Resources))]
         string Manager { get; }
 
         /// <summary>
@@ -159,7 +160,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-presentationformat">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_PresentationFormat)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_PresentationFormat), ResourceType = typeof(Properties.Resources))]
         string PresentationFormat { get; }
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>29</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-version">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_Version)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_VersionNumber), ResourceType = typeof(Properties.Resources))]
         string Version { get; }
     }
 }

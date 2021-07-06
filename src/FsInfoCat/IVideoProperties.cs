@@ -1,5 +1,6 @@
 using FsInfoCat.Collections;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -27,7 +28,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>10</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-compression">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_Compression)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         string Compression { get; }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>20</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-director">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_Director)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_Director), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Director { get; }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>8</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-encodingbitrate">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_EncodingBitrate)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_EncodingBitrate), ResourceType = typeof(Properties.Resources))]
         uint? EncodingBitrate { get; }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>4</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-frameheight">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_FrameHeight)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_FrameHeight), ResourceType = typeof(Properties.Resources))]
         uint? FrameHeight { get; }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>6</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-framerate">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_FrameRate)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_FrameRate), ResourceType = typeof(Properties.Resources))]
         uint? FrameRate { get; }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>3</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-framewidth">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_FrameWidth)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_FrameWidth), ResourceType = typeof(Properties.Resources))]
         uint? FrameWidth { get; }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>42</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-horizontalaspectratio">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_HorizontalAspectRatio)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalAspectRatio), ResourceType = typeof(Properties.Resources))]
         uint? HorizontalAspectRatio { get; }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>2</description>< /item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamname">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_StreamName)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_StreamName), ResourceType = typeof(Properties.Resources))]
         string StreamName { get; }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>11</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamnumber">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_StreamNumber)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_StreamNumber), ResourceType = typeof(Properties.Resources))]
         ushort? StreamNumber { get; }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace FsInfoCat
         /// <item><term>Property ID</term><description>45</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-verticalaspectratio">[Reference Link]</a></description></item>
         /// </list></remarks>
-        [DisplayName(DbConstants.DisplayName_VerticalAspectRatio)]
+        [Display(Name = nameof(Properties.Resources.DisplayName_VerticalAspectRatio), ResourceType = typeof(Properties.Resources))]
         uint? VerticalAspectRatio { get; }
     }
 }

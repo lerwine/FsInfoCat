@@ -160,6 +160,33 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Client ID.
+        /// </summary>
+        public static string DisplayName_ClientID {
+            get {
+                return ResourceManager.GetString("DisplayName_ClientID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compression.
+        /// </summary>
+        public static string DisplayName_Compression {
+            get {
+                return ResourceManager.GetString("DisplayName_Compression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contributor.
+        /// </summary>
+        public static string DisplayName_Contributor {
+            get {
+                return ResourceManager.GetString("DisplayName_Contributor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Correlative Comparisons.
         /// </summary>
         public static string DisplayName_CorrelativeComparisons {
@@ -196,6 +223,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date Created.
+        /// </summary>
+        public static string DisplayName_DateCreated {
+            get {
+                return ResourceManager.GetString("DisplayName_DateCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Drive Type.
         /// </summary>
         public static string DisplayName_DefaultDriveType {
@@ -205,11 +241,38 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Director.
+        /// </summary>
+        public static string DisplayName_Director {
+            get {
+                return ResourceManager.GetString("DisplayName_Director", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Name.
         /// </summary>
         public static string DisplayName_DisplayName {
             get {
                 return ResourceManager.GetString("DisplayName_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Division.
+        /// </summary>
+        public static string DisplayName_Division {
+            get {
+                return ResourceManager.GetString("DisplayName_Division", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Document ID.
+        /// </summary>
+        public static string DisplayName_DocumentID {
+            get {
+                return ResourceManager.GetString("DisplayName_DocumentID", resourceCulture);
             }
         }
         
@@ -241,6 +304,24 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Encoding Bitrate.
+        /// </summary>
+        public static string DisplayName_EncodingBitrate {
+            get {
+                return ResourceManager.GetString("DisplayName_EncodingBitrate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encoding Data Rate.
+        /// </summary>
+        public static string DisplayName_EncodingDataRate {
+            get {
+                return ResourceManager.GetString("DisplayName_EncodingDataRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error Code.
         /// </summary>
         public static string DisplayName_ErrorCode {
@@ -259,11 +340,47 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Frame Height.
+        /// </summary>
+        public static string DisplayName_FrameHeight {
+            get {
+                return ResourceManager.GetString("DisplayName_FrameHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Frame Rate.
+        /// </summary>
+        public static string DisplayName_FrameRate {
+            get {
+                return ResourceManager.GetString("DisplayName_FrameRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Frame Width.
+        /// </summary>
+        public static string DisplayName_FrameWidth {
+            get {
+                return ResourceManager.GetString("DisplayName_FrameWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GPS Properties.
         /// </summary>
         public static string DisplayName_GPSProperties {
             get {
                 return ResourceManager.GetString("DisplayName_GPSProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Horizontal Aspect Ratio.
+        /// </summary>
+        public static string DisplayName_HorizontalAspectRatio {
+            get {
+                return ResourceManager.GetString("DisplayName_HorizontalAspectRatio", resourceCulture);
             }
         }
         
@@ -313,11 +430,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last Author.
+        /// </summary>
+        public static string DisplayName_LastAuthor {
+            get {
+                return ResourceManager.GetString("DisplayName_LastAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Synchronized On.
         /// </summary>
         public static string DisplayName_LastSynchronizedOn {
             get {
                 return ResourceManager.GetString("DisplayName_LastSynchronizedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manager.
+        /// </summary>
+        public static string DisplayName_Manager {
+            get {
+                return ResourceManager.GetString("DisplayName_Manager", resourceCulture);
             }
         }
         
@@ -394,6 +529,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PresentationFormat.
+        /// </summary>
+        public static string DisplayName_PresentationFormat {
+            get {
+                return ResourceManager.GetString("DisplayName_PresentationFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Priority.
         /// </summary>
         public static string DisplayName_Priority {
@@ -430,6 +574,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Revision Number.
+        /// </summary>
+        public static string DisplayName_RevisionNumber {
+            get {
+                return ResourceManager.GetString("DisplayName_RevisionNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Root Directory.
         /// </summary>
         public static string DisplayName_RootDirectory {
@@ -439,11 +592,38 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Security.
+        /// </summary>
+        public static string DisplayName_Security {
+            get {
+                return ResourceManager.GetString("DisplayName_Security", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Security Exception.
         /// </summary>
         public static string DisplayName_SecurityException {
             get {
                 return ResourceManager.GetString("DisplayName_SecurityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Name.
+        /// </summary>
+        public static string DisplayName_StreamName {
+            get {
+                return ResourceManager.GetString("DisplayName_StreamName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Number.
+        /// </summary>
+        public static string DisplayName_StreamNumber {
+            get {
+                return ResourceManager.GetString("DisplayName_StreamNumber", resourceCulture);
             }
         }
         
@@ -489,6 +669,24 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_UpstreamId {
             get {
                 return ResourceManager.GetString("DisplayName_UpstreamId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version Number.
+        /// </summary>
+        public static string DisplayName_VersionNumber {
+            get {
+                return ResourceManager.GetString("DisplayName_VersionNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vertical Aspect Ratio.
+        /// </summary>
+        public static string DisplayName_VerticalAspectRatio {
+            get {
+                return ResourceManager.GetString("DisplayName_VerticalAspectRatio", resourceCulture);
             }
         }
         

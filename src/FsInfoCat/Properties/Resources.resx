@@ -433,4 +433,70 @@
   <data name="ErrorMessage_UnexpectedError" xml:space="preserve">
     <value>An unexpected error has occurred.</value>
   </data>
+  <data name="DisplayName_ClientID" xml:space="preserve">
+    <value>Client ID</value>
+  </data>
+  <data name="DisplayName_Compression" xml:space="preserve">
+    <value>Compression</value>
+  </data>
+  <data name="DisplayName_Contributor" xml:space="preserve">
+    <value>Contributor</value>
+  </data>
+  <data name="DisplayName_DateCreated" xml:space="preserve">
+    <value>Date Created</value>
+  </data>
+  <data name="DisplayName_Director" xml:space="preserve">
+    <value>Director</value>
+  </data>
+  <data name="DisplayName_Division" xml:space="preserve">
+    <value>Division</value>
+  </data>
+  <data name="DisplayName_DocumentID" xml:space="preserve">
+    <value>Document ID</value>
+  </data>
+  <data name="DisplayName_EncodingBitrate" xml:space="preserve">
+    <value>Encoding Bitrate</value>
+  </data>
+  <data name="DisplayName_EncodingDataRate" xml:space="preserve">
+    <value>Encoding Data Rate</value>
+  </data>
+  <data name="DisplayName_FrameHeight" xml:space="preserve">
+    <value>Frame Height</value>
+  </data>
+  <data name="DisplayName_FrameRate" xml:space="preserve">
+    <value>Frame Rate</value>
+  </data>
+  <data name="DisplayName_FrameWidth" xml:space="preserve">
+    <value>Frame Width</value>
+  </data>
+  <data name="DisplayName_HorizontalAspectRatio" xml:space="preserve">
+    <value>Horizontal Aspect Ratio</value>
+  </data>
+  <data name="DisplayName_LastAuthor" xml:space="preserve">
+    <value>Last Author</value>
+  </data>
+  <data name="DisplayName_Manager" xml:space="preserve">
+    <value>Manager</value>
+  </data>
+  <data name="DisplayName_PresentationFormat" xml:space="preserve">
+    <value>PresentationFormat</value>
+  </data>
+  <data name="DisplayName_RevisionNumber" xml:space="preserve">
+    <value>Revision Number</value>
+  </data>
+  <data name="DisplayName_Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="DisplayName_StreamName" xml:space="preserve">
+    <value>Stream Name</value>
+  </data>
+  <data name="DisplayName_StreamNumber" xml:space="preserve">
+    <value>Stream Number</value>
+  </data>
+  <data name="DisplayName_VersionNumber" xml:space="preserve">
+    <value>Version Number</value>
+  </data>
+  <data name="DisplayName_VerticalAspectRatio" xml:space="preserve">
+    <value>Vertical Aspect Ratio</value>
+  </data>
 </root>
