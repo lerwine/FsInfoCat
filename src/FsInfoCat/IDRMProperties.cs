@@ -44,7 +44,6 @@ namespace FsInfoCat
         // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayStarts), ResourceType = typeof(Properties.Resources))]
         DateTime? DatePlayStarts { get; }
 
-        /// <su
         /// <summary>
         /// Displays the description for digital rights management.
         /// </summary>

@@ -2,10 +2,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamBinaryPropertySet : IBinaryPropertySet, IUpstreamDbEntity
+    public interface IUpstreamBinaryPropertySet : IBinaryPropertySet, IUpstreamPropertySet
     {
-        new IEnumerable<IUpstreamFile> Files { get; }
-
-        new IEnumerable<IUpstreamRedundantSet> RedundantSets { get; }
     }
 }

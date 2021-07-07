@@ -14,6 +14,7 @@ namespace FsInfoCat
     /// <seealso cref="IDbContext.FindMatchingAsync(IGPSProperties, System.Threading.CancellationToken)"/>
     public interface IGPSProperties
     {
+        /// <summary>
         /// The name of the GPS area
         /// </summary>
         /// <value>

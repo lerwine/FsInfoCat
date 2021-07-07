@@ -9,10 +9,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IFile.BinaryProperties"/>
-    public interface IBinaryPropertySet : IDbEntity
+    public interface IBinaryPropertySet : IPropertySet
     {
-        Guid Id { get; set; }
-
         /// <summary>
         /// Gets or sets the file length.
         /// </summary>
@@ -30,15 +28,6 @@ namespace FsInfoCat
         /// </value>
         // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Hash), ResourceType = typeof(Properties.Resources))]
         MD5Hash? Hash { get; set; }
-
-        /// <summary>
-        /// Gets the files which have the same length and cryptographic hash.
-        /// </summary>
-        /// <value>
-        /// The files which have the same length and cryptographic hash..
-        /// </value>
-        // TODO: Add [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
-        IEnumerable<IFile> Files { get; }
 
         /// <summary>
         /// Gets the sets of files which were determined to be duplicates.

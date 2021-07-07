@@ -134,7 +134,7 @@ namespace FsInfoCat
         /// <list type="bullet">
         /// <item><term>Name</term><description>Stream Name</description></item>
         /// <item><term>Format ID</term><description>{64440491-4C8B-11D1-8B70-080036B11A03} (VideoSummaryInformation)</description></item>
-        /// <item><term>Property ID</term><description>2</description>< /item>
+        /// <item><term>Property ID</term><description>2</description></item>
         /// <item><description><a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamname">[Reference Link]</a></description></item>
         /// </list></remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_StreamName), ResourceType = typeof(Properties.Resources))]
