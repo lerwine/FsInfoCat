@@ -563,13 +563,11 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalBinaryPropertySet ILocalFile.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryPropertySet)value; }
+        ILocalBinaryPropertySet ILocalFile.BinaryProperties { get => BinaryProperties; }
 
-        IBinaryPropertySet IFile.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryPropertySet)value; }
+        IBinaryPropertySet IFile.BinaryProperties { get => BinaryProperties; }
 
-        ILocalSubdirectory ILocalFile.Parent { get => Parent; set => Parent = (Subdirectory)value; }
-
-        ISubdirectory IDbFsItem.Parent { get => Parent; set => Parent = (Subdirectory)value; }
+        ISubdirectory IDbFsItem.Parent { get => Parent; }
 
         ILocalRedundancy ILocalFile.Redundancy => Redundancy;
 
@@ -583,35 +581,37 @@ namespace FsInfoCat.Local
 
         IEnumerable<IComparison> IFile.CorrelativeComparisons => CorrelativeComparisons.Cast<IComparison>();
 
-        ILocalSummaryPropertySet ILocalFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryPropertySet)value; }
-        ILocalDocumentPropertySet ILocalFile.DocumentProperties { get => DocumentProperties; set => DocumentProperties = (DocumentPropertySet)value; }
-        ILocalAudioPropertySet ILocalFile.AudioProperties { get => AudioProperties; set => AudioProperties = (AudioPropertySet)value; }
-        ILocalDRMPropertySet ILocalFile.DRMProperties { get => DRMProperties; set => DRMProperties = (DRMPropertySet)value; }
-        ILocalGPSPropertySet ILocalFile.GPSProperties { get => GPSProperties; set => GPSProperties = (GPSPropertySet)value; }
-        ILocalImagePropertySet ILocalFile.ImageProperties { get => ImageProperties; set => ImageProperties = (ImagePropertySet)value; }
-        ILocalMediaPropertySet ILocalFile.MediaProperties { get => MediaProperties; set => MediaProperties = (MediaPropertySet)value; }
-        ILocalMusicPropertySet ILocalFile.MusicProperties { get => MusicProperties; set => MusicProperties = (MusicPropertySet)value; }
-        ILocalPhotoPropertySet ILocalFile.PhotoProperties { get => PhotoProperties; set => PhotoProperties = (PhotoPropertySet)value; }
-        ILocalRecordedTVPropertySet ILocalFile.RecordedTVProperties { get => RecordedTVProperties; set => RecordedTVProperties = (RecordedTVPropertySet)value; }
-        ILocalVideoPropertySet ILocalFile.VideoProperties { get => VideoProperties; set => VideoProperties = (VideoPropertySet)value; }
-        ISummaryPropertySet IFile.SummaryProperties { get => SummaryProperties; set => SummaryProperties = (SummaryPropertySet)value; }
-        IDocumentPropertySet IFile.DocumentProperties { get => DocumentProperties; set => DocumentProperties = (DocumentPropertySet)value; }
-        IAudioPropertySet IFile.AudioProperties { get => AudioProperties; set => AudioProperties = (AudioPropertySet)value; }
-        IDRMPropertySet IFile.DRMProperties { get => DRMProperties; set => DRMProperties = (DRMPropertySet)value; }
-        IGPSPropertySet IFile.GPSProperties { get => GPSProperties; set => GPSProperties = (GPSPropertySet)value; }
-        IImagePropertySet IFile.ImageProperties { get => ImageProperties; set => ImageProperties = (ImagePropertySet)value; }
-        IMediaPropertySet IFile.MediaProperties { get => MediaProperties; set => MediaProperties = (MediaPropertySet)value; }
-        IMusicPropertySet IFile.MusicProperties { get => MusicProperties; set => MusicProperties = (MusicPropertySet)value; }
-        IPhotoPropertySet IFile.PhotoProperties { get => PhotoProperties; set => PhotoProperties = (PhotoPropertySet)value; }
-        IRecordedTVPropertySet IFile.RecordedTVProperties { get => RecordedTVProperties; set => RecordedTVProperties = (RecordedTVPropertySet)value; }
-        IVideoPropertySet IFile.VideoProperties { get => VideoProperties; set => VideoProperties = (VideoPropertySet)value; }
-        IEnumerable<IAccessError<ILocalFile>> ILocalFile.AccessErrors => AccessErrors.Cast<IAccessError<ILocalFile>>();
+        ILocalSummaryPropertySet ILocalFile.SummaryProperties { get => SummaryProperties; }
+        ILocalDocumentPropertySet ILocalFile.DocumentProperties { get => DocumentProperties; }
+        ILocalAudioPropertySet ILocalFile.AudioProperties { get => AudioProperties; }
+        ILocalDRMPropertySet ILocalFile.DRMProperties { get => DRMProperties; }
+        ILocalGPSPropertySet ILocalFile.GPSProperties { get => GPSProperties; }
+        ILocalImagePropertySet ILocalFile.ImageProperties { get => ImageProperties; }
+        ILocalMediaPropertySet ILocalFile.MediaProperties { get => MediaProperties; }
+        ILocalMusicPropertySet ILocalFile.MusicProperties { get => MusicProperties; }
+        ILocalPhotoPropertySet ILocalFile.PhotoProperties { get => PhotoProperties; }
+        ILocalRecordedTVPropertySet ILocalFile.RecordedTVProperties { get => RecordedTVProperties; }
+        ILocalVideoPropertySet ILocalFile.VideoProperties { get => VideoProperties; }
+        ISummaryPropertySet IFile.SummaryProperties { get => SummaryProperties; }
+        IDocumentPropertySet IFile.DocumentProperties { get => DocumentProperties; }
+        IAudioPropertySet IFile.AudioProperties { get => AudioProperties; }
+        IDRMPropertySet IFile.DRMProperties { get => DRMProperties; }
+        IGPSPropertySet IFile.GPSProperties { get => GPSProperties; }
+        IImagePropertySet IFile.ImageProperties { get => ImageProperties; }
+        IMediaPropertySet IFile.MediaProperties { get => MediaProperties; }
+        IMusicPropertySet IFile.MusicProperties { get => MusicProperties; }
+        IPhotoPropertySet IFile.PhotoProperties { get => PhotoProperties; }
+        IRecordedTVPropertySet IFile.RecordedTVProperties { get => RecordedTVProperties; }
+        IVideoPropertySet IFile.VideoProperties { get => VideoProperties; }
 
         IEnumerable<IAccessError<IFile>> IFile.AccessErrors => AccessErrors.Cast<IAccessError<IFile>>();
 
         IEnumerable<IAccessError<ILocalDbFsItem>> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError<ILocalDbFsItem>>();
+        IEnumerable<ILocalFileAccessError> ILocalFile.AccessErrors => throw new NotImplementedException();
 
-        IEnumerable<IAccessError> IDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError>();
+        ILocalSubdirectory ILocalDbFsItem.Parent => throw new NotImplementedException();
+
+        IEnumerable<IAccessError<IDbFsItem>> IDbFsItem.AccessErrors => throw new NotImplementedException();
 
         #endregion
 

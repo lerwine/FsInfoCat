@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace FsInfoCat
+namespace FsInfoCat.Old
 {
     /// <summary>
     /// Base interface for all database entity objects which track the creation and modification dates as well as implementing the

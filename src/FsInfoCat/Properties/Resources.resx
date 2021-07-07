@@ -518,7 +518,7 @@
     <value>File has been added to the database or modified and needs to be analyzed.</value>
   </data>
   <data name="Description_RemediationStatus_FileDeleted" xml:space="preserve">
-    <value />
+    <value>File Deleted</value>
   </data>
   <data name="Description_RemediationStatus_Insupportable" xml:space="preserve">
     <value>Files in the current redundant set should be deleted.</value>
@@ -633,5 +633,290 @@
   </data>
   <data name="DisplayName_Root" xml:space="preserve">
     <value>Root Subdirectory</value>
+  </data>
+  <data name="DisplayName_ApplicationName" xml:space="preserve">
+    <value>Application Name</value>
+  </data>
+  <data name="DisplayName_AreaInformation" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_AssignedTo" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_AssignmentGroup" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="DisplayName_Authors" xml:space="preserve">
+    <value>Authors</value>
+  </data>
+  <data name="DisplayName_BitDepth" xml:space="preserve">
+    <value>Bit Depth</value>
+  </data>
+  <data name="DisplayName_ColorSpace" xml:space="preserve">
+    <value>Color Space</value>
+  </data>
+  <data name="DisplayName_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="DisplayName_Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="DisplayName_CompressedBitsPerPixel" xml:space="preserve">
+    <value>Compressed Bits/Pixel</value>
+  </data>
+  <data name="DisplayName_ContentType" xml:space="preserve">
+    <value>Content Type</value>
+  </data>
+  <data name="DisplayName_Copyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="DisplayName_CreatedBy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_DatePlayExpires" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_DatePlayStarts" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_DefaultFsType" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="DisplayName_DirectoryCrawlOptions" xml:space="preserve">
+    <value>Directory Crawl Options</value>
+  </data>
+  <data name="DisplayName_DirectoryStatus" xml:space="preserve">
+    <value>Directory Status</value>
+  </data>
+  <data name="DisplayName_ExplicitRoles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_File" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_FileActions" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="DisplayName_FirstName" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Format" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Group" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Hash" xml:space="preserve">
+    <value>MD5 Hash</value>
+  </data>
+  <data name="DisplayName_HorizontalResolution" xml:space="preserve">
+    <value>Horizontal Resolution</value>
+  </data>
+  <data name="DisplayName_HorizontalSize" xml:space="preserve">
+    <value>Horizontal Size</value>
+  </data>
+  <data name="DisplayName_HostDevice" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_HostDevices" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_ImageID" xml:space="preserve">
+    <value>Image ID</value>
+  </data>
+  <data name="DisplayName_IsGroupAdmin" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_IsProtected" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_IsVariableBitrate" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Keywords" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="DisplayName_Kind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="DisplayName_LastName" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LatitudeDegrees" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LatitudeMinutes" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LatitudeRef" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LatitudeSeconds" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="DisplayName_LoginName" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LongitudeDegrees" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LongitudeMinutes" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LongitudeRef" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LongitudeSeconds" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MachineIdentifer" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MachineName" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MeasureMode" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MemberOf" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Members" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="DisplayName_MI" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MIMEType" xml:space="preserve">
+    <value>MIME Type</value>
+  </data>
+  <data name="DisplayName_ModifiedBy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_ParentalRating" xml:space="preserve">
+    <value>Parental Rating</value>
+  </data>
+  <data name="DisplayName_ParentalRatingReason" xml:space="preserve">
+    <value>Parental Rating Reason</value>
+  </data>
+  <data name="DisplayName_ParentalRatingsOrganization" xml:space="preserve">
+    <value>Parental Ratings Organization</value>
+  </data>
+  <data name="DisplayName_Platform" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PlayCount" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_ProcessingMethod" xml:space="preserve">
+    <value>Processing Method</value>
+  </data>
+  <data name="DisplayName_ProductName" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="DisplayName_RedundantSets" xml:space="preserve">
+    <value>Redundant Sets</value>
+  </data>
+  <data name="DisplayName_ResolutionUnit" xml:space="preserve">
+    <value>Resolution Unit</value>
+  </data>
+  <data name="DisplayName_Roles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SampleRate" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SampleSize" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Sensitivity" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_ShortDescription" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SID" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SimpleRating" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Source" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SubDirectories" xml:space="preserve">
+    <value>Sub-directories</value>
+  </data>
+  <data name="DisplayName_SubdirectoryActions" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SubdirectoryActionSources" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Subject" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="DisplayName_Suffix" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Target" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <data name="DisplayName_Task" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Tasks" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_TaskStatus" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="DisplayName_Trademarks" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="DisplayName_User" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Version" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_VersionID" xml:space="preserve">
+    <value>Version ID</value>
+  </data>
+  <data name="DisplayName_VerticalResolution" xml:space="preserve">
+    <value>Vertical Resolution</value>
+  </data>
+  <data name="DisplayName_VerticalSize" xml:space="preserve">
+    <value>Vertical Size</value>
+  </data>
+  <data name="DisplayName_Volume" xml:space="preserve">
+    <value>Volume</value>
   </data>
 </root>

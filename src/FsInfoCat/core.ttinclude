@@ -4,16 +4,20 @@
  *     EnvDTE80
  *     System.Core
  *     System.Xml
+ *     System.Xml.Linq
  * The following namespaces are required:
  *     EnvDTE
  *     EnvDTE80
  *     Microsoft.VisualStudio.TextTemplating
  *     System
  *     System.Collections.Generic
+ *     System.Collections.ObjectModel
  *     System.IO
  *     System.Linq
+ *     System.Reflection
  *     System.Text
  *     System.Xml
+ *     System.Xml.Linq
  */
 string TemplateFolder
 {
@@ -109,6 +113,91 @@ IEnumerable<FileInfo> GetProjectFiles(Func<EnvDTE.ProjectItem, System.IO.FileInf
 }
 IEnumerable<FileInfo> GetCodeProjectFiles() { return GetProjectFiles((EnvDTE.ProjectItem pi, System.IO.FileInfo fi) => pi.FileCodeModel != null); }
 IEnumerable<FileInfo> GetNonCodeProjectFiles() { return GetProjectFiles((EnvDTE.ProjectItem pi, System.IO.FileInfo fi) => pi.FileCodeModel == null); }
+static readonly Regex NewLineRegex = new Regex(@"\r\n?|[\n\p{Zl}\p{Zp}]", RegexOptions.Compiled);
+static readonly Regex NormalizeWsRegex = new Regex(@" ((?![\r\n])\s)*|(?! )((?![\r\n])\s)+", RegexOptions.Compiled);
+static readonly Regex NormalizeNewLineRegex = new Regex(@"[\v\t\p{Zl}\p{Zp}]|\r(?!\n)", RegexOptions.Compiled);
+static readonly Regex TrimOuterBlankLinesRegex = new Regex(@"^(\s*(\r\n?|\n))+|((\r\n?|\n)\s*)+$", RegexOptions.Compiled);
+static readonly Regex StripWsRegex = new Regex(@"^ [ \t\u0085\p{Zs}]+(?=[\r\n\v\t\p{Zl}\p{Zp}])|(?<=[\r\n\v\t\p{Zl}\p{Zp}])[ \t\u0085\p{Zs}]+", RegexOptions.Compiled);
+XText ToWhiteSpaceNormalized(XText source)
+{
+    string text = source.Value;
+    if (NormalizeNewLineRegex.IsMatch(text))
+        text = NormalizeNewLineRegex.Replace(text, Environment.NewLine);
+    if (TrimOuterBlankLinesRegex.IsMatch(text))
+        text = TrimOuterBlankLinesRegex.Replace(text, Environment.NewLine);
+    if (NormalizeWsRegex.IsMatch(text))
+        text = NormalizeWsRegex.Replace(text, " ");
+    return new XText(StripWsRegex.IsMatch(text) ? StripWsRegex.Replace(text, "") : text);
+}
+XElement WsNormalizedWithoutElementNamespace(XElement sourceParent)
+{
+    if (sourceParent.Name.LocalName == "langword")
+        return new XElement(XNamespace.None.GetName("see"), new XAttribute("langword", sourceParent.Value));
+    XElement resultElement = new XElement(XNamespace.None.GetName(sourceParent.Name.LocalName));
+    foreach (XAttribute attribute in sourceParent.Attributes())
+        resultElement.Add(new XAttribute(attribute));
+    XNode sourceNode = sourceParent.Nodes().FirstOrDefault(n => n is XElement || n is XText t && !string.IsNullOrWhiteSpace(t.Value));
+    if (sourceNode is null)
+        return resultElement;
+    if (sourceNode is XText text)
+        resultElement.Add(ToWhiteSpaceNormalized(text));
+    else
+        resultElement.Add(WsNormalizedWithoutElementNamespace((XElement)sourceNode));
+    while ((sourceNode = sourceNode.NodesAfterSelf().FirstOrDefault(n => n is XElement || n is XText t && (!string.IsNullOrWhiteSpace(t.Value) || (t.NextNode is not null && t.NextNode is not XText)))) is not null)
+    {
+        if (sourceNode is XText xText)
+            resultElement.Add(ToWhiteSpaceNormalized(xText));
+        else
+            resultElement.Add(WsNormalizedWithoutElementNamespace((XElement)sourceNode));
+    }
+    return resultElement;
+}
+XElement WithoutElementNamespace(XElement sourceParent)
+{
+    if (sourceParent.Name.LocalName == "langword")
+        return new XElement(XNamespace.None.GetName("see"), new XAttribute("langword", sourceParent.Value));
+    XElement resultElement = new XElement(XNamespace.None.GetName(sourceParent.Name.LocalName));
+    foreach (XAttribute attribute in sourceParent.Attributes())
+        resultElement.Add(new XAttribute(attribute));
+    XNode sourceNode = sourceParent.Nodes().FirstOrDefault(n => n is XElement || n is XText t && !string.IsNullOrWhiteSpace(t.Value));
+    if (sourceNode is null)
+        return resultElement;
+    if (sourceNode is XText text)
+        resultElement.Add(new XText(text));
+    else
+        resultElement.Add(WithoutElementNamespace((XElement)sourceNode));
+    while ((sourceNode = sourceNode.NodesAfterSelf().FirstOrDefault(n => n is XElement || n is XText t && (!string.IsNullOrWhiteSpace(t.Value) || (t.NextNode is not null && t.NextNode is not XText)))) is not null)
+    {
+        if (sourceNode is XText xText)
+            resultElement.Add(new XText(xText));
+        else
+            resultElement.Add(WithoutElementNamespace((XElement)sourceNode));
+    }
+    return resultElement;
+}
+IEnumerable<XElement> GetByNames(XElement source, params XName[] names) => names.SelectMany(n => source.Elements(n));
+string[] ToXmlLines(IEnumerable<XElement> elements)
+{
+    if (elements is null || !elements.Any())
+        return Array.Empty<string>();
+    using StringWriter stringWriter = new StringWriter();
+    XDocument doc = new XDocument(new XElement(WsNormalizedWithoutElementNamespace(elements.First())));
+    using (XmlWriter writer = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Indent = true, OmitXmlDeclaration = true }))
+    {
+        doc.WriteTo(writer);
+        writer.Flush();
+    }
+    foreach (XElement e in elements.Skip(1))
+    {
+        stringWriter.WriteLine();
+        using XmlWriter xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Indent = true, OmitXmlDeclaration = true });
+        doc = new XDocument(new XElement(WsNormalizedWithoutElementNamespace(e)));
+        doc.WriteTo(xmlWriter);
+        xmlWriter.Flush();
+    }
+    string result = stringWriter.ToString();
+    return NewLineRegex.IsMatch(result) ? NewLineRegex.Split(result) : new string[] { result };
+}
 Type ToUnderlyingType(Type type)
 {
     if (type is null)

@@ -133,13 +133,13 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalFile ILocalComparison.Baseline { get => Baseline; set => Baseline = (DbFile)value; }
+        ILocalFile ILocalComparison.Baseline { get => Baseline; }
 
-        IFile IComparison.Baseline { get => Baseline; set => Baseline = (DbFile)value; }
+        IFile IComparison.Baseline { get => Baseline; }
 
-        ILocalFile ILocalComparison.Correlative { get => Correlative; set => Correlative = (DbFile)value; }
+        ILocalFile ILocalComparison.Correlative { get => Correlative; }
 
-        IFile IComparison.Correlative { get => Correlative; set => Correlative = (DbFile)value; }
+        IFile IComparison.Correlative { get => Correlative; }
 
         #endregion
 

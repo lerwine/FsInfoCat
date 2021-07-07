@@ -78,13 +78,13 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalFile IAccessError<ILocalFile>.Target { get => Target; set => Target = (DbFile)value; }
+        ILocalFile IAccessError<ILocalFile>.Target { get => Target; }
 
-        IFile IAccessError<IFile>.Target { get => Target; set => Target = (DbFile)value; }
+        IFile IAccessError<IFile>.Target { get => Target; }
 
-        ILocalDbFsItem IAccessError<ILocalDbFsItem>.Target { get => Target; set => Target = (DbFile)value; }
+        ILocalDbFsItem IAccessError<ILocalDbFsItem>.Target { get => Target; }
 
-        IDbEntity IAccessError.Target { get => Target; set => Target = (DbFile)value; }
+        IDbEntity IAccessError.Target { get => Target; }
 
         #endregion
 

@@ -104,13 +104,13 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalFile ILocalRedundancy.File { get => File; set => File = (DbFile)value; }
+        ILocalFile ILocalRedundancy.File { get => File; }
 
-        IFile IRedundancy.File { get => File; set => File = (DbFile)value; }
+        IFile IRedundancy.File { get => File; }
 
-        ILocalRedundantSet ILocalRedundancy.RedundantSet { get => RedundantSet; set => RedundantSet = (RedundantSet)value; }
+        ILocalRedundantSet ILocalRedundancy.RedundantSet { get => RedundantSet; }
 
-        IRedundantSet IRedundancy.RedundantSet { get => RedundantSet; set => RedundantSet = (RedundantSet)value; }
+        IRedundantSet IRedundancy.RedundantSet { get => RedundantSet; }
 
         #endregion
 

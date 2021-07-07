@@ -130,7 +130,7 @@ namespace FsInfoCat.Upstream
         /// <summary>
         /// Enumerates generic crawl configuration entities from the upstream (remote) database.
         /// </summary>
-        new IEnumerable<IHostCrawlConfiguration> CrawlConfigurations { get; }
+        new IEnumerable<IUpstreamCrawlConfiguration> CrawlConfigurations { get; }
 
         /// <summary>
         /// Enumerates generic file action entities from the upstream (remote) database.

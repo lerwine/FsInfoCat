@@ -176,13 +176,11 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalSubdirectory ILocalSubdirectory.Parent { get => Parent; set => Parent = (Subdirectory)value; }
+        ISubdirectory IDbFsItem.Parent { get => Parent; }
 
-        ISubdirectory IDbFsItem.Parent { get => Parent; set => Parent = (Subdirectory)value; }
+        ILocalVolume ILocalSubdirectory.Volume { get => Volume; }
 
-        ILocalVolume ILocalSubdirectory.Volume { get => Volume; set => Volume = (Volume)value; }
-
-        IVolume ISubdirectory.Volume { get => Volume; set => Volume = (Volume)value; }
+        IVolume ISubdirectory.Volume { get => Volume; }
 
         IEnumerable<ILocalFile> ILocalSubdirectory.Files => Files.Cast<ILocalFile>();
 
@@ -192,17 +190,19 @@ namespace FsInfoCat.Local
 
         IEnumerable<ISubdirectory> ISubdirectory.SubDirectories => SubDirectories.Cast<ISubdirectory>();
 
-        IEnumerable<IAccessError<ILocalSubdirectory>> ILocalSubdirectory.AccessErrors => AccessErrors.Cast<IAccessError<ILocalSubdirectory>>();
-
-        IEnumerable<IAccessError<ISubdirectory>> ISubdirectory.AccessErrors => AccessErrors.Cast<IAccessError<ISubdirectory>>();
-
         IEnumerable<IAccessError<ILocalDbFsItem>> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError<ILocalDbFsItem>>();
 
-        ILocalCrawlConfiguration ILocalSubdirectory.CrawlConfiguration { get => CrawlConfiguration; set => CrawlConfiguration = (CrawlConfiguration)value; }
+        ILocalCrawlConfiguration ILocalSubdirectory.CrawlConfiguration { get => CrawlConfiguration; }
 
-        ICrawlConfiguration ISubdirectory.CrawlConfiguration { get => CrawlConfiguration; set => CrawlConfiguration = (CrawlConfiguration)value; }
+        ICrawlConfiguration ISubdirectory.CrawlConfiguration { get => CrawlConfiguration; }
 
-        IEnumerable<IAccessError> IDbFsItem.AccessErrors => throw new NotImplementedException();
+        IEnumerable<ILocalSubdirectoryAccessError> ILocalSubdirectory.AccessErrors => throw new NotImplementedException();
+
+        IEnumerable<ISubdirectoryAccessError> ISubdirectory.AccessErrors => throw new NotImplementedException();
+
+        ILocalSubdirectory ILocalDbFsItem.Parent => throw new NotImplementedException();
+
+        IEnumerable<IAccessError<IDbFsItem>> IDbFsItem.AccessErrors => throw new NotImplementedException();
 
         #endregion
 

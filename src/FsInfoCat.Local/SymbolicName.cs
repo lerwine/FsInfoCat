@@ -90,9 +90,9 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalFileSystem ILocalSymbolicName.FileSystem { get => FileSystem; set => FileSystem = (FileSystem)value; }
+        ILocalFileSystem ILocalSymbolicName.FileSystem { get => FileSystem; }
 
-        IFileSystem ISymbolicName.FileSystem { get => FileSystem; set => FileSystem = (FileSystem)value; }
+        IFileSystem ISymbolicName.FileSystem { get => FileSystem; }
 
         #endregion
 

@@ -131,17 +131,17 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalFileSystem ILocalVolume.FileSystem { get => FileSystem; set => FileSystem = (FileSystem)value; }
+        ILocalFileSystem ILocalVolume.FileSystem { get => FileSystem; }
 
-        IFileSystem IVolume.FileSystem { get => FileSystem; set => FileSystem = (FileSystem)value; }
+        IFileSystem IVolume.FileSystem { get => FileSystem; }
 
         ILocalSubdirectory ILocalVolume.RootDirectory => RootDirectory;
 
         ISubdirectory IVolume.RootDirectory => RootDirectory;
 
-        IEnumerable<IAccessError<ILocalVolume>> ILocalVolume.AccessErrors => AccessErrors.Cast<IAccessError<ILocalVolume>>();
+        IEnumerable<ILocalVolumeAccessError> ILocalVolume.AccessErrors => throw new NotImplementedException();
 
-        IEnumerable<IAccessError<IVolume>> IVolume.AccessErrors => AccessErrors.Cast<IAccessError<IVolume>>();
+        IEnumerable<IVolumeAccessError> IVolume.AccessErrors => throw new NotImplementedException();
 
         #endregion
 

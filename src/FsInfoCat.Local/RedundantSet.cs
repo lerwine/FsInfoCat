@@ -93,9 +93,9 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalBinaryPropertySet ILocalRedundantSet.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryPropertySet)value; }
+        ILocalBinaryPropertySet ILocalRedundantSet.BinaryProperties { get => BinaryProperties; }
 
-        IBinaryPropertySet IRedundantSet.BinaryProperties { get => BinaryProperties; set => BinaryProperties = (BinaryPropertySet)value; }
+        IBinaryPropertySet IRedundantSet.BinaryProperties { get => BinaryProperties; }
 
         IEnumerable<ILocalRedundancy> ILocalRedundantSet.Redundancies => Redundancies.Cast<ILocalRedundancy>();
 

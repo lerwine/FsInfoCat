@@ -78,11 +78,11 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalVolume IAccessError<ILocalVolume>.Target { get => Target; set => Target = (Volume)value; }
+        ILocalVolume IAccessError<ILocalVolume>.Target { get => Target; }
 
-        IVolume IAccessError<IVolume>.Target { get => Target; set => Target = (Volume)value; }
+        IVolume IAccessError<IVolume>.Target { get => Target; }
 
-        IDbEntity IAccessError.Target { get => Target; set => Target = (Volume)value; }
+        IDbEntity IAccessError.Target { get => Target; }
 
         #endregion
 

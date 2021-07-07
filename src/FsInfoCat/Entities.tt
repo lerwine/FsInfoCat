@@ -1,0 +1,469 @@
+<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Collections.ObjectModel" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ include file="core.ttinclude" #>
+<#@ output extension=".cs" #>
+using FsInfoCat.Collections;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+
+namespace <#=DefaultNamespace#>
+{<#
+    foreach (XElement entityElement in EntitiesDocument.Root.Elements(EntitiesNS.GetName("Entity")))
+    {
+#>
+
+<#
+        string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
+        string extends = string.Join(", ", entityElement.Elements(EntitiesNS.GetName("Extends")).Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        IEnumerable<XElement> docXElements = GetByNames(entityElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("typeparam"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+        docXElements = docXElements.Select(e => WithoutElementNamespace(e));
+        foreach (string entityDoc in ToXmlLines(docXElements))
+        {
+#>
+    /// <#=entityDoc#>
+<#
+        }
+        XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
+        IEnumerable<XElement> propertyElementList = entityElement.Elements(EntitiesNS.GetName("Property"));
+        if (propertyElementList.Any())
+        {
+#>
+    public interface <#=entityElement.Attribute("Name").Value.Replace('{', '<').Replace('}', '>')#><#=(extends.Length > 0) ? $" : {extends}" : ""#>
+    {<#
+            foreach (XElement propertyElement in propertyElementList)
+            {
+#>
+
+<#
+                docXElements = GetByNames(propertyElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("value"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+                docXElements = docXElements.Select(e => WithoutElementNamespace(e));
+                foreach (string entityDoc in ToXmlLines(docXElements))
+                {
+#>
+        /// <#=entityDoc#>
+<#
+                }
+                string propertyName = propertyElement.Attributes("DisplayNameResource").Select(a => a.Value).FirstOrDefault();
+                string typeName = propertyElement.Attributes("DescriptionResource").Select(a => a.Value).FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(typeName))
+                {
+                    if (!string.IsNullOrWhiteSpace(propertyName))
+                    {
+#>
+        [Display(Name = nameof(Properties.Resources.<#=propertyName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                    }
+                }
+                else if (string.IsNullOrWhiteSpace(propertyName))
+                {
+#>
+        [Display(Description = nameof(Properties.Resources.<#=typeName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                }
+                else
+                {
+#>
+        [Display(Name = nameof(Properties.Resources.<#=propertyName#>), Description = nameof(Properties.Resources.<#=typeName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                }
+                propertyName = propertyElement.Attribute("Name").Value;
+                typeName = propertyElement.Attribute("Type").Value.Replace('{', '<').Replace('}', '>');
+                if (!propertyElement.Attributes("NotNull").Any(a => a.Value == "true"))
+                    switch (typeName)
+                    {
+                        case "bool":
+                        case "byte":
+                        case "sbyte":
+                        case "short":
+                        case "ushort":
+                        case "int":
+                        case "uint":
+                        case "long":
+                        case "ulong":
+                        case "float":
+                        case "double":
+                        case "decimal":
+                        case "Guid":
+                        case "DateTime":
+                        case "DriveType":
+                        case "ErrorCode":
+                        case "AccessErrorCode":
+                        case "FileCrawlOptions":
+                        case "FileCorrelationStatus":
+                        case "DirectoryCrawlOptions":
+                        case "DirectoryStatus":
+                        case "VolumeStatus":
+                        case "VolumeIdentifier":
+                        case "MD5Hash":
+                            typeName = $"{typeName}?";
+                            break;
+                    }
+                if (extendedTypes.Any(t => TryGetPropertyByName(t, propertyName, out _)))
+                    typeName = $"new {typeName}";
+                string accessor = propertyElement.Attributes("GenericWritable").Any(a => a.Value == "true") ? "{ get; set; }" : "{ get; }";
+#>
+        <#=typeName#> <#=propertyName#> <#=accessor#>
+<#
+            }
+#>
+    }
+<#
+        }
+        else
+        {
+#>
+    public interface <#=entityElement.Attribute("Name").Value.Replace('{', '<').Replace('}', '>')#><#=(extends.Length > 0) ? $" : {extends}" : ""#> { }
+<#
+        }
+    }
+#>
+}
+
+namespace <#=DefaultNamespace#>.Local
+{<#
+    foreach (XElement entityElement in EntitiesDocument.Root.Elements(EntitiesNS.GetName("Local")).Elements(EntitiesNS.GetName("Entity")))
+    {
+#>
+
+<#
+        string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
+        string extends = string.Join(", ", entityElement.Elements(EntitiesNS.GetName("Extends")).Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        IEnumerable<XElement> docXElements = GetByNames(entityElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("typeparam"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+        docXElements = docXElements.Select(e => WithoutElementNamespace(e));
+        foreach (string entityDoc in ToXmlLines(docXElements))
+        {
+#>
+    /// <#=entityDoc#>
+<#
+        }
+        XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
+        IEnumerable<XElement> propertyElementList = entityElement.Elements(EntitiesNS.GetName("Property"));
+        if (propertyElementList.Any())
+        {
+#>
+    public interface <#=entityElement.Attribute("Name").Value.Replace('{', '<').Replace('}', '>')#><#=(extends.Length > 0) ? $" : {extends}" : ""#>
+    {<#
+            foreach (XElement propertyElement in propertyElementList)
+            {
+#>
+
+<#
+                docXElements = GetByNames(propertyElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("value"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+                docXElements = docXElements.Select(e => WithoutElementNamespace(e));
+                foreach (string entityDoc in ToXmlLines(docXElements))
+                {
+#>
+        /// <#=entityDoc#>
+<#
+                }
+                string propertyName = propertyElement.Attributes("DisplayNameResource").Select(a => a.Value).FirstOrDefault();
+                string typeName = propertyElement.Attributes("DescriptionResource").Select(a => a.Value).FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(typeName))
+                {
+                    if (!string.IsNullOrWhiteSpace(propertyName))
+                    {
+#>
+        [Display(Name = nameof(Properties.Resources.<#=propertyName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                    }
+                }
+                else if (string.IsNullOrWhiteSpace(propertyName))
+                {
+#>
+        [Display(Description = nameof(Properties.Resources.<#=typeName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                }
+                else
+                {
+#>
+        [Display(Name = nameof(Properties.Resources.<#=propertyName#>), Description = nameof(Properties.Resources.<#=typeName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                }
+                propertyName = propertyElement.Attribute("Name").Value;
+                typeName = propertyElement.Attribute("Type").Value.Replace('{', '<').Replace('}', '>');
+                if (!propertyElement.Attributes("NotNull").Any(a => a.Value == "true"))
+                    switch (typeName)
+                    {
+                        case "bool":
+                        case "byte":
+                        case "sbyte":
+                        case "short":
+                        case "ushort":
+                        case "int":
+                        case "uint":
+                        case "long":
+                        case "ulong":
+                        case "float":
+                        case "double":
+                        case "decimal":
+                        case "Guid":
+                        case "DateTime":
+                        case "DriveType":
+                        case "ErrorCode":
+                        case "AccessErrorCode":
+                        case "FileCrawlOptions":
+                        case "FileCorrelationStatus":
+                        case "DirectoryCrawlOptions":
+                        case "DirectoryStatus":
+                        case "VolumeStatus":
+                        case "VolumeIdentifier":
+                        case "MD5Hash":
+                            typeName = $"{typeName}?";
+                            break;
+                    }
+                if (extendedTypes.Any(t => TryGetPropertyByName(t, propertyName, out _)))
+                    typeName = $"new {typeName}";
+                string accessor = propertyElement.Attributes("GenericWritable").Any(a => a.Value == "true") ? "{ get; set; }" : "{ get; }";
+#>
+        <#=typeName#> <#=propertyName#> <#=accessor#>
+<#
+            }
+#>
+    }
+<#
+        }
+        else
+        {
+#>
+    public interface <#=entityElement.Attribute("Name").Value.Replace('{', '<').Replace('}', '>')#><#=(extends.Length > 0) ? $" : {extends}" : ""#> { }
+<#
+        }
+    }
+#>
+}
+
+namespace <#=DefaultNamespace#>.Upstream
+{<#
+    foreach (XElement entityElement in EntitiesDocument.Root.Elements(EntitiesNS.GetName("Upstream")).Elements(EntitiesNS.GetName("Entity")))
+    {
+#>
+
+<#
+        string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
+        string extends = string.Join(", ", entityElement.Elements(EntitiesNS.GetName("Extends")).Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        IEnumerable<XElement> docXElements = GetByNames(entityElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("typeparam"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+        docXElements = docXElements.Select(e => WithoutElementNamespace(e));
+        foreach (string entityDoc in ToXmlLines(docXElements))
+        {
+#>
+    /// <#=entityDoc#>
+<#
+        }
+        XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
+        IEnumerable<XElement> propertyElementList = entityElement.Elements(EntitiesNS.GetName("Property"));
+        if (propertyElementList.Any())
+        {
+#>
+    public interface <#=entityElement.Attribute("Name").Value.Replace('{', '<').Replace('}', '>')#><#=(extends.Length > 0) ? $" : {extends}" : ""#>
+    {<#
+            foreach (XElement propertyElement in propertyElementList)
+            {
+#>
+
+<#
+                docXElements = GetByNames(propertyElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("value"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+                docXElements = docXElements.Select(e => WithoutElementNamespace(e));
+                foreach (string entityDoc in ToXmlLines(docXElements))
+                {
+#>
+        /// <#=entityDoc#>
+<#
+                }
+                string propertyName = propertyElement.Attributes("DisplayNameResource").Select(a => a.Value).FirstOrDefault();
+                string typeName = propertyElement.Attributes("DescriptionResource").Select(a => a.Value).FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(typeName))
+                {
+                    if (!string.IsNullOrWhiteSpace(propertyName))
+                    {
+#>
+        [Display(Name = nameof(Properties.Resources.<#=propertyName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                    }
+                }
+                else if (string.IsNullOrWhiteSpace(propertyName))
+                {
+#>
+        [Display(Description = nameof(Properties.Resources.<#=typeName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                }
+                else
+                {
+#>
+        [Display(Name = nameof(Properties.Resources.<#=propertyName#>), Description = nameof(Properties.Resources.<#=typeName#>), ResourceType = typeof(<#=rt#>))]
+<#
+                }
+                propertyName = propertyElement.Attribute("Name").Value;
+                typeName = propertyElement.Attribute("Type").Value.Replace('{', '<').Replace('}', '>');
+                if (!propertyElement.Attributes("NotNull").Any(a => a.Value == "true"))
+                    switch (typeName)
+                    {
+                        case "bool":
+                        case "byte":
+                        case "sbyte":
+                        case "short":
+                        case "ushort":
+                        case "int":
+                        case "uint":
+                        case "long":
+                        case "ulong":
+                        case "float":
+                        case "double":
+                        case "decimal":
+                        case "Guid":
+                        case "DateTime":
+                        case "DriveType":
+                        case "ErrorCode":
+                        case "AccessErrorCode":
+                        case "FileCrawlOptions":
+                        case "FileCorrelationStatus":
+                        case "DirectoryCrawlOptions":
+                        case "DirectoryStatus":
+                        case "VolumeStatus":
+                        case "VolumeIdentifier":
+                        case "MD5Hash":
+                            typeName = $"{typeName}?";
+                            break;
+                    }
+                if (extendedTypes.Any(t => TryGetPropertyByName(t, propertyName, out _)))
+                    typeName = $"new {typeName}";
+                string accessor = propertyElement.Attributes("GenericWritable").Any(a => a.Value == "true") ? "{ get; set; }" : "{ get; }";
+#>
+        <#=typeName#> <#=propertyName#> <#=accessor#>
+<#
+            }
+#>
+    }
+<#
+        }
+        else
+        {
+#>
+    public interface <#=entityElement.Attribute("Name").Value.Replace('{', '<').Replace('}', '>')#><#=(extends.Length > 0) ? $" : {extends}" : ""#> { }
+<#
+        }
+    }
+#>
+}
+<#+
+XNamespace EntitiesNS = XNamespace.Get("https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat/Resources/Entities.xsd");
+private XDocument _entitiesDocument;
+XDocument EntitiesDocument
+{
+    get
+    {
+        if (_entitiesDocument is null)
+            _entitiesDocument = XDocument.Load(Path.Combine(TemplateFolder, "Resources\\Entities.xml"), LoadOptions.PreserveWhitespace);
+        return _entitiesDocument;
+    }
+}
+private Dictionary<string, XElement> _entitiesByTypeName;
+Dictionary<string, XElement> EntitiesByTypeName
+{
+    get
+    {
+        if (_entitiesByTypeName is null)
+        {
+            XName xName = EntitiesNS.GetName("Entity");
+            _entitiesByTypeName = EntitiesDocument.Root.Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e))
+                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Local")).Elements(xName).Select(e => (N: $"Local.{e.Attribute("Name").Value}", E: e)))
+                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Upstream")).Elements(xName).Select(e => (N: $"Upstream.{e.Attribute("Name").Value}", E: e)))
+                .ToDictionary(a => a.N, a => a.E);
+        }
+        return _entitiesByTypeName;
+    }
+}
+private Dictionary<string, XElement> _localEntitiesByTypeName;
+Dictionary<string, XElement> LocalEntitiesByTypeName
+{
+    get
+    {
+        if (_localEntitiesByTypeName is null)
+        {
+            XName xName = EntitiesNS.GetName("Entity");
+            _localEntitiesByTypeName = EntitiesDocument.Root.Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e))
+                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Local")).Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e)))
+                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Upstream")).Elements(xName).Select(e => (N: $"Upstream.{e.Attribute("Name").Value}", E: e)))
+                .ToDictionary(a => a.N, a => a.E);
+        }
+        return _localEntitiesByTypeName;
+    }
+}
+private Dictionary<string, XElement> _upstreamEntitiesByTypeName;
+Dictionary<string, XElement> UpstreamEntitiesByTypeName
+{
+    get
+    {
+        if (_upstreamEntitiesByTypeName is null)
+        {
+            XName xName = EntitiesNS.GetName("Entity");
+            _upstreamEntitiesByTypeName = EntitiesDocument.Root.Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e))
+                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Local")).Elements(xName).Select(e => (N: $"Local.{e.Attribute("Name").Value}", E: e)))
+                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Upstream")).Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e)))
+                .ToDictionary(a => a.N, a => a.E);
+        }
+        return _upstreamEntitiesByTypeName;
+    }
+}
+bool TryGetPropertyByName(XElement entityElement, string name, out XElement result)
+{
+    result = entityElement.Elements(EntitiesNS.GetName("Property")).FirstOrDefault(e => e.Attribute("Name").Value == name);
+    return result is not null;
+}
+IEnumerable<XElement> GetExtendedTypes(XElement element)
+{
+    Dictionary<string, XElement> dictionary;
+    switch ((element.Parent is XElement pe) ? pe.Name.LocalName : "")
+    {
+        case "Local":
+            dictionary = LocalEntitiesByTypeName;
+            break;
+        case "Upstream":
+            dictionary = UpstreamEntitiesByTypeName;
+            break;
+        default:
+            dictionary = EntitiesByTypeName;
+            break;
+    }
+    return GetExtendedTypeNames(element).Where(n => dictionary.ContainsKey(n)).Select(n => dictionary[n]);
+}
+IEnumerable<string> GetExtendedTypeNames(XElement element)
+{
+    XName xName = EntitiesNS.GetName("Entity");
+    IEnumerable<string> names = element.Elements(EntitiesNS.GetName("Extends")).Attributes("cref").Select(a => a.Value);
+    Dictionary<string, XElement> dictionary;
+    switch ((element.Parent is XElement pe) ? pe.Name.LocalName : "")
+    {
+        case "Local":
+            dictionary = LocalEntitiesByTypeName;
+            break;
+        case "Upstream":
+            dictionary = UpstreamEntitiesByTypeName;
+            break;
+        default:
+            dictionary = EntitiesByTypeName;
+            break;
+    }
+    return names.Concat(names.Where(n => dictionary.ContainsKey(n)).SelectMany(n => GetExtendedTypeNames(dictionary[n]))).Distinct();
+}
+
+#>
