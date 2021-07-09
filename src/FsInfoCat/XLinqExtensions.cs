@@ -16,6 +16,59 @@ namespace FsInfoCat
 
         public static XName ToFsInfoCatExportXmlns(this string name) => XNamespace_FsInfoCatExport.GetName(name);
 
+        public enum NormalizeXTextOption
+        {
+            /// <summary>
+            /// Merge adjacent text nodes as a single <see cref="XCData"/> node when any of the original text nodes are a <see cref="XCData"/> node.
+            /// </summary>
+            PreferCData,
+
+            /// <summary>
+            /// Merge adjacent text nodes as a single <see cref="XText"/> node when any of the original text nodes are not a <see cref="XCData"/> node.
+            /// </summary>
+            PreferXText,
+
+            /// <summary>
+            /// Replace/merge all <see cref="XCData"/> nodes with simple <see cref="XText"/> nodes.
+            /// </summary>
+            NoCData,
+
+            /// <summary>
+            /// Replace/merge all <see cref="XText"/> nodes with <see cref="XCData"/> nodes.
+            /// </summary>
+            AllCData,
+
+            /// <summary>
+            /// Replace all <see cref="XText"/> nodes containing at least one non-whitespace character into <see cref="XCData"/> nodes.
+            /// </summary>
+            /// <remarks>Merged adjacent <see cref="XText"/> nodes without non-whitespace characters follow the same behavior as <see cref="PreferCData"/>.</remarks>
+            NonWhiteSpaceToCData,
+
+            /// <summary>
+            /// Convert all <see cref="XText"/> nodes containing at least one line separator character into a <see cref="XCData"/> node.
+            /// </summary>
+            /// <remarks>Merged adjacent <see cref="XText"/> nodes without line separator characters follow the same behavior as <see cref="PreferCData"/>.</remarks>
+            MultilineToCData,
+
+            /// <summary>
+            /// Convert all <see cref="XText"/> nodes containing at least one non-whitespace or line separator character into a <see cref="XCData"/> node.
+            /// </summary>
+            /// <remarks>Merged adjacent <see cref="XText"/> nodes without line separator or non-whitespace characters follow the same behavior as <see cref="PreferCData"/>.</remarks>
+            MultilineOrNonWhiteSpaceToCData
+        }
+        public static IEnumerable<T> GetAdjacentNodes<T>([DisallowNull] this T node) where T : XNode
+        {
+            if (node is null)
+                throw new ArgumentNullException(nameof(node));
+            while (node.PreviousNode is T p)
+                node = p;
+            yield return node;
+            while (node.NextNode is T t)
+            {
+                yield return t;
+                node = t;
+            }
+        }
         public static string AttributeValueOrDefault([AllowNull] this XElement element, [DisallowNull] XName attributeName, string ifNotPresent = null)
         {
             if (attributeName is null)
@@ -632,4 +685,5 @@ namespace FsInfoCat
             return false;
         }
     }
+
 }

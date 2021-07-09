@@ -295,7 +295,7 @@ namespace FsInfoCat.UnitTests
         [DataTestMethod]
         [DataRow(null, null, DisplayName = "uint? MaxNameLength = null")]
         [DataRow(1u, null, DisplayName = "uint? MaxNameLength = 1")]
-        [DataRow(int.MaxValue, null, DisplayName = "int? MaxNameLength = int.MaxValue")]
+        [DataRow((uint)int.MaxValue, null, DisplayName = "int? MaxNameLength = int.MaxValue")]
         [DataRow(0u, "Maximum Name Length must be greater than zero.", DisplayName = "uint? MaxNameLength = 0")]
         [TestMethod("uint? MaxNameLength")]
         [TestProperty(TestHelper.TestProperty_Description, "Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]

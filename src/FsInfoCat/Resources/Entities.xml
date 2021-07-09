@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Entities xmlns="https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat/Resources/Entities.xsd">
+<Entities xsi:noNamespaceSchemaLocation="Entities.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Entity Name="IDbEntity">
         <summary>
             Base interface for all database entity objects which track the creation and modification dates as well as implementing the

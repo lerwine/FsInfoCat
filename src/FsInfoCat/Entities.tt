@@ -28,14 +28,14 @@ using System.IO;
 
 namespace <#=DefaultNamespace#>
 {<#
-    foreach (XElement entityElement in EntitiesDocument.Root.Elements(EntitiesNS.GetName("Entity")))
+    foreach (XElement entityElement in EntitiesDocument.Root.Elements("Entity"))
     {
 #>
 
 <#
         string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
-        string extends = string.Join(", ", entityElement.Elements(EntitiesNS.GetName("Extends")).Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
-        IEnumerable<XElement> docXElements = GetByNames(entityElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("typeparam"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+        string extends = string.Join(", ", entityElement.Elements("Extends").Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        IEnumerable<XElement> docXElements = GetByNames(entityElement, "summary", "typeparam", "remarks", "seealso");
         docXElements = docXElements.Select(e => WithoutElementNamespace(e));
         foreach (string entityDoc in ToXmlLines(docXElements))
         {
@@ -44,7 +44,7 @@ namespace <#=DefaultNamespace#>
 <#
         }
         XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
-        IEnumerable<XElement> propertyElementList = entityElement.Elements(EntitiesNS.GetName("Property"));
+        IEnumerable<XElement> propertyElementList = entityElement.Elements("Property");
         if (propertyElementList.Any())
         {
 #>
@@ -55,7 +55,7 @@ namespace <#=DefaultNamespace#>
 #>
 
 <#
-                docXElements = GetByNames(propertyElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("value"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+                docXElements = GetByNames(propertyElement, "summary", "value", "remarks", "seealso");
                 docXElements = docXElements.Select(e => WithoutElementNamespace(e));
                 foreach (string entityDoc in ToXmlLines(docXElements))
                 {
@@ -141,14 +141,14 @@ namespace <#=DefaultNamespace#>
 
 namespace <#=DefaultNamespace#>.Local
 {<#
-    foreach (XElement entityElement in EntitiesDocument.Root.Elements(EntitiesNS.GetName("Local")).Elements(EntitiesNS.GetName("Entity")))
+    foreach (XElement entityElement in EntitiesDocument.Root.Elements("Local").Elements("Entity"))
     {
 #>
 
 <#
         string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
-        string extends = string.Join(", ", entityElement.Elements(EntitiesNS.GetName("Extends")).Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
-        IEnumerable<XElement> docXElements = GetByNames(entityElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("typeparam"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+        string extends = string.Join(", ", entityElement.Elements("Extends").Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        IEnumerable<XElement> docXElements = GetByNames(entityElement, "summary", "typeparam", "remarks", "seealso");
         docXElements = docXElements.Select(e => WithoutElementNamespace(e));
         foreach (string entityDoc in ToXmlLines(docXElements))
         {
@@ -157,7 +157,7 @@ namespace <#=DefaultNamespace#>.Local
 <#
         }
         XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
-        IEnumerable<XElement> propertyElementList = entityElement.Elements(EntitiesNS.GetName("Property"));
+        IEnumerable<XElement> propertyElementList = entityElement.Elements("Property");
         if (propertyElementList.Any())
         {
 #>
@@ -168,7 +168,7 @@ namespace <#=DefaultNamespace#>.Local
 #>
 
 <#
-                docXElements = GetByNames(propertyElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("value"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+                docXElements = GetByNames(propertyElement, "summary", "value", "remarks", "seealso");
                 docXElements = docXElements.Select(e => WithoutElementNamespace(e));
                 foreach (string entityDoc in ToXmlLines(docXElements))
                 {
@@ -254,14 +254,14 @@ namespace <#=DefaultNamespace#>.Local
 
 namespace <#=DefaultNamespace#>.Upstream
 {<#
-    foreach (XElement entityElement in EntitiesDocument.Root.Elements(EntitiesNS.GetName("Upstream")).Elements(EntitiesNS.GetName("Entity")))
+    foreach (XElement entityElement in EntitiesDocument.Root.Elements("Upstream").Elements("Entity"))
     {
 #>
 
 <#
         string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
-        string extends = string.Join(", ", entityElement.Elements(EntitiesNS.GetName("Extends")).Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
-        IEnumerable<XElement> docXElements = GetByNames(entityElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("typeparam"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+        string extends = string.Join(", ", entityElement.Elements("Extends").Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        IEnumerable<XElement> docXElements = GetByNames(entityElement, "summary", "typeparam", "remarks", "seealso");
         docXElements = docXElements.Select(e => WithoutElementNamespace(e));
         foreach (string entityDoc in ToXmlLines(docXElements))
         {
@@ -270,7 +270,7 @@ namespace <#=DefaultNamespace#>.Upstream
 <#
         }
         XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
-        IEnumerable<XElement> propertyElementList = entityElement.Elements(EntitiesNS.GetName("Property"));
+        IEnumerable<XElement> propertyElementList = entityElement.Elements("Property");
         if (propertyElementList.Any())
         {
 #>
@@ -281,7 +281,7 @@ namespace <#=DefaultNamespace#>.Upstream
 #>
 
 <#
-                docXElements = GetByNames(propertyElement, EntitiesNS.GetName("summary"), EntitiesNS.GetName("value"), EntitiesNS.GetName("remarks"), EntitiesNS.GetName("seealso"));
+                docXElements = GetByNames(propertyElement, "summary", "value", "remarks", "seealso");
                 docXElements = docXElements.Select(e => WithoutElementNamespace(e));
                 foreach (string entityDoc in ToXmlLines(docXElements))
                 {
@@ -365,7 +365,6 @@ namespace <#=DefaultNamespace#>.Upstream
 #>
 }
 <#+
-XNamespace EntitiesNS = XNamespace.Get("https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat/Resources/Entities.xsd");
 private XDocument _entitiesDocument;
 XDocument EntitiesDocument
 {
@@ -383,10 +382,10 @@ Dictionary<string, XElement> EntitiesByTypeName
     {
         if (_entitiesByTypeName is null)
         {
-            XName xName = EntitiesNS.GetName("Entity");
+            XName xName = "Entity";
             _entitiesByTypeName = EntitiesDocument.Root.Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e))
-                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Local")).Elements(xName).Select(e => (N: $"Local.{e.Attribute("Name").Value}", E: e)))
-                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Upstream")).Elements(xName).Select(e => (N: $"Upstream.{e.Attribute("Name").Value}", E: e)))
+                .Concat(EntitiesDocument.Root.Elements("Local").Elements(xName).Select(e => (N: $"Local.{e.Attribute("Name").Value}", E: e)))
+                .Concat(EntitiesDocument.Root.Elements("Upstream").Elements(xName).Select(e => (N: $"Upstream.{e.Attribute("Name").Value}", E: e)))
                 .ToDictionary(a => a.N, a => a.E);
         }
         return _entitiesByTypeName;
@@ -399,10 +398,10 @@ Dictionary<string, XElement> LocalEntitiesByTypeName
     {
         if (_localEntitiesByTypeName is null)
         {
-            XName xName = EntitiesNS.GetName("Entity");
+            XName xName = "Entity";
             _localEntitiesByTypeName = EntitiesDocument.Root.Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e))
-                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Local")).Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e)))
-                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Upstream")).Elements(xName).Select(e => (N: $"Upstream.{e.Attribute("Name").Value}", E: e)))
+                .Concat(EntitiesDocument.Root.Elements("Local").Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e)))
+                .Concat(EntitiesDocument.Root.Elements("Upstream").Elements(xName).Select(e => (N: $"Upstream.{e.Attribute("Name").Value}", E: e)))
                 .ToDictionary(a => a.N, a => a.E);
         }
         return _localEntitiesByTypeName;
@@ -415,10 +414,10 @@ Dictionary<string, XElement> UpstreamEntitiesByTypeName
     {
         if (_upstreamEntitiesByTypeName is null)
         {
-            XName xName = EntitiesNS.GetName("Entity");
+            XName xName = "Entity";
             _upstreamEntitiesByTypeName = EntitiesDocument.Root.Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e))
-                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Local")).Elements(xName).Select(e => (N: $"Local.{e.Attribute("Name").Value}", E: e)))
-                .Concat(EntitiesDocument.Root.Elements(EntitiesNS.GetName("Upstream")).Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e)))
+                .Concat(EntitiesDocument.Root.Elements("Local").Elements(xName).Select(e => (N: $"Local.{e.Attribute("Name").Value}", E: e)))
+                .Concat(EntitiesDocument.Root.Elements("Upstream").Elements(xName).Select(e => (N: e.Attribute("Name").Value, E: e)))
                 .ToDictionary(a => a.N, a => a.E);
         }
         return _upstreamEntitiesByTypeName;
@@ -426,7 +425,7 @@ Dictionary<string, XElement> UpstreamEntitiesByTypeName
 }
 bool TryGetPropertyByName(XElement entityElement, string name, out XElement result)
 {
-    result = entityElement.Elements(EntitiesNS.GetName("Property")).FirstOrDefault(e => e.Attribute("Name").Value == name);
+    result = entityElement.Elements("Property").FirstOrDefault(e => e.Attribute("Name").Value == name);
     return result is not null;
 }
 IEnumerable<XElement> GetExtendedTypes(XElement element)
@@ -448,8 +447,8 @@ IEnumerable<XElement> GetExtendedTypes(XElement element)
 }
 IEnumerable<string> GetExtendedTypeNames(XElement element)
 {
-    XName xName = EntitiesNS.GetName("Entity");
-    IEnumerable<string> names = element.Elements(EntitiesNS.GetName("Extends")).Attributes("cref").Select(a => a.Value);
+    XName xName = "Entity";
+    IEnumerable<string> names = element.Elements("Extends").Attributes("cref").Select(a => a.Value);
     Dictionary<string, XElement> dictionary;
     switch ((element.Parent is XElement pe) ? pe.Name.LocalName : "")
     {

@@ -139,11 +139,7 @@ namespace FsInfoCat.Local
         public static void AddDbContextPool(IServiceCollection services, string dbPath)
         {
             string connectionString = GetConnectionString(dbPath);
-            services.AddDbContextPool<LocalDbContext>(options =>
-            {
-                //options.AddInterceptors(ObsoleteInterceptor.Instance);
-                options.UseSqlite(connectionString);
-            });
+            services.AddDbContextPool<LocalDbContext>(options => options.AddInterceptors(new Interceptor()).UseSqlite(connectionString));
             // this.Model.GetDefaultSchema();
         }
 

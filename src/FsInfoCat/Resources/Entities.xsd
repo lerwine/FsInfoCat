@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat/Resources/Entities.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:e="https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat/Resources/Entities.xsd">
+<xs:schema attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <xs:simpleType name="LangWord">
         <xs:restriction base="xs:NCName">
             <xs:enumeration value="true" />
@@ -20,37 +19,37 @@
     </xs:complexType>
     <xs:complexType mixed="true" name="XmlDocDescription">
         <xs:sequence minOccurs="0">
-            <xs:element name="a" type="e:XmlDocLink"/>
+            <xs:element name="a" type="XmlDocLink"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="XmlDocItem">
         <xs:sequence>
             <xs:element minOccurs="0" name="term" type="xs:string" />
-            <xs:element name="description" type="e:XmlDocDescription" />
+            <xs:element name="description" type="XmlDocDescription" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="XmlDocList">
         <xs:choice>
-            <xs:element maxOccurs="unbounded" name="item" type="e:XmlDocItem"/>
+            <xs:element maxOccurs="unbounded" name="item" type="XmlDocItem"/>
         </xs:choice>
         <xs:attribute name="type" type="xs:string" use="required" />
     </xs:complexType>
     <xs:complexType mixed="true" name="XmlDocPara">
         <xs:sequence minOccurs="0">
-            <xs:element maxOccurs="unbounded" name="see" type="e:XmlDocSee" />
+            <xs:element maxOccurs="unbounded" name="see" type="XmlDocSee" />
         </xs:sequence>
     </xs:complexType>
     <xs:group name="BlockXmlDoc">
         <xs:choice>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="see" type="e:XmlDocSee"/>
-            <xs:element name="langword" type="e:LangWord"/>
-            <xs:element minOccurs="0" name="para" type="e:XmlDocPara"/>
-            <xs:element minOccurs="0" name="list" type="e:XmlDocList"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="see" type="XmlDocSee"/>
+            <xs:element name="langword" type="LangWord"/>
+            <xs:element minOccurs="0" name="para" type="XmlDocPara"/>
+            <xs:element minOccurs="0" name="list" type="XmlDocList"/>
         </xs:choice>
     </xs:group>
     <xs:complexType mixed="true" name="XmlDocSummary">
         <xs:sequence minOccurs="0">
-            <xs:element maxOccurs="unbounded" name="see" type="e:XmlDocSee" />
+            <xs:element maxOccurs="unbounded" name="see" type="XmlDocSee" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="XmlDocTypeParam">
@@ -61,7 +60,7 @@
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType mixed="true" name="XmlDocRemarks">
-        <xs:group ref="e:BlockXmlDoc" minOccurs="0" maxOccurs="unbounded" />
+        <xs:group ref="BlockXmlDoc" minOccurs="0" maxOccurs="unbounded" />
     </xs:complexType>
     <xs:complexType mixed="true" name="XmlDocSeeAlso">
         <xs:attribute name="cref" type="xs:string" use="required" />
@@ -71,8 +70,8 @@
     </xs:complexType>
     <xs:complexType mixed="true" name="XmlDocValue">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element minOccurs="0" name="typeparamref" type="e:XmlDocTypeParamRef"/>
-            <xs:group ref="e:BlockXmlDoc" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element minOccurs="0" name="typeparamref" type="XmlDocTypeParamRef"/>
+            <xs:group ref="BlockXmlDoc" minOccurs="0" maxOccurs="unbounded" />
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="TypeExtends">
@@ -80,9 +79,9 @@
     </xs:complexType>
     <xs:complexType name="MemberProperty">
         <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="e:XmlDocSummary"/>
-            <xs:element minOccurs="0" name="value" type="e:XmlDocValue"/>
-            <xs:element minOccurs="0" name="remarks" type="e:XmlDocRemarks"/>
+            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
+            <xs:element minOccurs="0" name="value" type="XmlDocValue"/>
+            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
             <xs:element minOccurs="0" name="Default">
                 <xs:complexType mixed="true">
                     <xs:attribute name="CLR" type="xs:string" use="optional"/>
@@ -114,74 +113,74 @@
     </xs:complexType>
     <xs:complexType name="EntityType">
         <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="e:XmlDocSummary"/>
-            <xs:element minOccurs="0" name="typeparam" type="e:XmlDocTypeParam"/>
-            <xs:element minOccurs="0" name="remarks" type="e:XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="e:XmlDocSeeAlso"/>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="e:TypeExtends"/>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="Property" type="e:MemberProperty"/>
+            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
+            <xs:element minOccurs="0" name="typeparam" type="XmlDocTypeParam"/>
+            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
+            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Property" type="MemberProperty"/>
         </xs:sequence>
         <xs:attribute name="Name" type="xs:string" use="required" />
         <xs:attribute name="ResourceType" type="xs:NCName" use="optional" />
     </xs:complexType>
     <xs:group name="EnumFieldGroup">
         <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="e:XmlDocSummary"/>
-            <xs:element minOccurs="0" name="remarks" type="e:XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="e:XmlDocSeeAlso"/>
+            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
+            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
+            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
         </xs:sequence>
     </xs:group>
     <xs:complexType name="EnumByteField">
-        <xs:group ref="e:EnumFieldGroup"/>
+        <xs:group ref="EnumFieldGroup"/>
         <xs:attribute name="Name" type="xs:NCName" use="required" />
         <xs:attribute name="Value" type="xs:unsignedByte" use="required" />
         <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
         <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
     </xs:complexType>
     <xs:complexType name="EnumSByteField">
-        <xs:group ref="e:EnumFieldGroup"/>
+        <xs:group ref="EnumFieldGroup"/>
         <xs:attribute name="Name" type="xs:NCName" use="required" />
         <xs:attribute name="Value" type="xs:byte" use="required" />
         <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
         <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
     </xs:complexType>
     <xs:complexType name="EnumInt16Field">
-        <xs:group ref="e:EnumFieldGroup"/>
+        <xs:group ref="EnumFieldGroup"/>
         <xs:attribute name="Name" type="xs:NCName" use="required" />
         <xs:attribute name="Value" type="xs:short" use="required" />
         <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
         <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
     </xs:complexType>
     <xs:complexType name="EnumUInt16Field">
-        <xs:group ref="e:EnumFieldGroup"/>
+        <xs:group ref="EnumFieldGroup"/>
         <xs:attribute name="Name" type="xs:NCName" use="required" />
         <xs:attribute name="Value" type="xs:unsignedShort" use="required" />
         <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
         <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
     </xs:complexType>
     <xs:complexType name="EnumInt32Field">
-        <xs:group ref="e:EnumFieldGroup"/>
+        <xs:group ref="EnumFieldGroup"/>
         <xs:attribute name="Name" type="xs:NCName" use="required" />
         <xs:attribute name="Value" type="xs:int" use="required" />
         <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
         <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
     </xs:complexType>
     <xs:complexType name="EnumUInt32Field">
-        <xs:group ref="e:EnumFieldGroup"/>
+        <xs:group ref="EnumFieldGroup"/>
         <xs:attribute name="Name" type="xs:NCName" use="required" />
         <xs:attribute name="Value" type="xs:unsignedInt" use="required" />
         <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
         <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
     </xs:complexType>
     <xs:complexType name="EnumInt64Field">
-        <xs:group ref="e:EnumFieldGroup"/>
+        <xs:group ref="EnumFieldGroup"/>
         <xs:attribute name="Name" type="xs:NCName" use="required" />
         <xs:attribute name="Value" type="xs:long" use="required" />
         <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
         <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
     </xs:complexType>
     <xs:complexType name="EnumUInt64Field">
-        <xs:group ref="e:EnumFieldGroup"/>
+        <xs:group ref="EnumFieldGroup"/>
         <xs:attribute name="Name" type="xs:NCName" use="required" />
         <xs:attribute name="Value" type="xs:unsignedLong" use="required" />
         <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
@@ -189,24 +188,24 @@
     </xs:complexType>
     <xs:group name="EnumGroup">
         <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="e:XmlDocSummary"/>
-            <xs:element minOccurs="0" name="remarks" type="e:XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="e:XmlDocSeeAlso"/>
+            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
+            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
+            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
         </xs:sequence>
     </xs:group>
     <xs:complexType name="DbContextType">
         <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="e:XmlDocSummary"/>
-            <xs:element minOccurs="0" name="remarks" type="e:XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="e:XmlDocSeeAlso"/>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="e:TypeExtends"/>
+            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
+            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
+            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
             <xs:element maxOccurs="unbounded" name="Table">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="summary" type="e:XmlDocSummary"/>
-                        <xs:element minOccurs="0" name="remarks" type="e:XmlDocRemarks"/>
-                        <xs:element minOccurs="0" name="seealso" type="e:XmlDocSeeAlso"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="e:TypeExtends"/>
+                        <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
+                        <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
+                        <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:string" use="required" />
                     <xs:attribute name="Type" type="xs:string" use="optional" />
@@ -220,8 +219,8 @@
             <xs:element name="ByteEnum">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="e:EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="e:EnumByteField"/>
+                        <xs:group ref="EnumGroup"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumByteField"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:NCName" use="required" />
                 </xs:complexType>
@@ -229,8 +228,8 @@
             <xs:element name="SByteEnum">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="e:EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="e:EnumSByteField"/>
+                        <xs:group ref="EnumGroup"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumSByteField"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:NCName" use="required" />
                 </xs:complexType>
@@ -238,8 +237,8 @@
             <xs:element name="Int16Enum">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="e:EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="e:EnumInt16Field"/>
+                        <xs:group ref="EnumGroup"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumInt16Field"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:NCName" use="required" />
                 </xs:complexType>
@@ -247,8 +246,8 @@
             <xs:element name="UInt16Enum">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="e:EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="e:EnumUInt16Field"/>
+                        <xs:group ref="EnumGroup"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumUInt16Field"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:NCName" use="required" />
                 </xs:complexType>
@@ -256,8 +255,8 @@
             <xs:element name="Int32Enum">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="e:EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="e:EnumInt32Field"/>
+                        <xs:group ref="EnumGroup"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumInt32Field"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:NCName" use="required" />
                 </xs:complexType>
@@ -265,8 +264,8 @@
             <xs:element name="UInt32Enum">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="e:EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="e:EnumUInt32Field"/>
+                        <xs:group ref="EnumGroup"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumUInt32Field"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:NCName" use="required" />
                 </xs:complexType>
@@ -274,8 +273,8 @@
             <xs:element name="Int64Enum">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="e:EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="e:EnumInt64Field"/>
+                        <xs:group ref="EnumGroup"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumInt64Field"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:NCName" use="required" />
                 </xs:complexType>
@@ -283,8 +282,8 @@
             <xs:element name="UInt64Enum">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:group ref="e:EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="e:EnumUInt64Field"/>
+                        <xs:group ref="EnumGroup"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumUInt64Field"/>
                     </xs:sequence>
                     <xs:attribute name="Name" type="xs:NCName" use="required" />
                 </xs:complexType>
@@ -294,24 +293,24 @@
     <xs:element name="Entities">
         <xs:complexType>
             <xs:sequence>
-                <xs:group ref="e:EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element maxOccurs="unbounded" name="Entity" type="e:EntityType"/>
-                <xs:element name="DbContext" type="e:DbContextType"/>
+                <xs:group ref="EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element maxOccurs="unbounded" name="Entity" type="EntityType"/>
+                <xs:element name="DbContext" type="DbContextType"/>
                 <xs:element maxOccurs="unbounded" name="Local">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:group ref="e:EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
-                            <xs:element maxOccurs="unbounded" name="Entity" type="e:EntityType"/>
-                            <xs:element name="DbContext" type="e:DbContextType"/>
+                            <xs:group ref="EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element maxOccurs="unbounded" name="Entity" type="EntityType"/>
+                            <xs:element name="DbContext" type="DbContextType"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
                 <xs:element maxOccurs="unbounded" name="Upstream">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:group ref="e:EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
-                            <xs:element maxOccurs="unbounded" name="Entity" type="e:EntityType"/>
-                            <xs:element name="DbContext" type="e:DbContextType"/>
+                            <xs:group ref="EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element maxOccurs="unbounded" name="Entity" type="EntityType"/>
+                            <xs:element name="DbContext" type="DbContextType"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
