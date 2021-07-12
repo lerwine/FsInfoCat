@@ -16,51 +16,34 @@ namespace FsInfoCat.UnitTests.XNodeNormalizerTestHelpers
 
         public static IEnumerable<(XComment targetNode, TestXNodeNormalizer normalizer, int indentLevel, XComment expected)> GetTestData()
         {
-            yield return new(new(""), null, 0, new(""));
-            yield return new(new(""), null, 2, new(""));
-            yield return new(new(""), new(), 0, new(""));
-            yield return new(new(""), new(), 2, new(""));
-            yield return new(new(" "), null, 0, new(" "));
-            yield return new(new(" "), new(), 0, new(" "));
-            yield return new(new("\n"), null, 0, new(" "));
-            yield return new(new("\n"), null, 2, new(" "));
-            yield return new(new("\n"), new(), 0, new(" "));
-            yield return new(new("\n"), new(), 2, new(" "));
-            yield return new(new("Test1"), null, 0, new(" Test1 "));
-            yield return new(new("Test1"), new(), 0, new(" Test1 "));
-            yield return new(new("Test1\n"), null, 0, new(" Test1 "));
-            yield return new(new("Test1\n"), new(), 0, new(" Test1 "));
-            yield return new(new("\nTest1"), null, 0, new(" Test1 "));
-            yield return new(new("\nTest1"), new(), 0, new(" Test1 "));
-            yield return new(new("\n\nTest1\n\r\n"), null, 0, new(" Test1 "));
-            yield return new(new("\n\nTest2\n\r\n"), null, 2, new(" Test2 "));
-            yield return new(new("\n\rTest2\n\r\n"), new(), 0, new(" Test2 "));
-            yield return new(new("\n\nTest2\n\r\n"), new(), 2, new(" Test2 "));
-            yield return new(new("Test\nComment1"), null, 0, new($"{XNodeNormalizer.DefaultNewLine}Test\nComment1{XNodeNormalizer.DefaultNewLine}"));
-            yield return new(new("Test\nComment1"), new(), 0, new($"{XNodeNormalizer.DefaultNewLine}Test\nComment1{XNodeNormalizer.DefaultNewLine}"));
-            yield return new(new("Test\nComment1"), null, 1, new($"{XNodeNormalizer.DefaultNewLine}{XNodeNormalizer.DefaultIndent}Test" +
-                $"\n{XNodeNormalizer.DefaultIndent}Comment1{XNodeNormalizer.DefaultNewLine}"));
-            yield return new(new("Test\nComment1"), new(), 1, new($"{XNodeNormalizer.DefaultNewLine}{TestXNodeNormalizer.CustomIndent}Test" +
-                $"\n{TestXNodeNormalizer.CustomIndent}Comment1{XNodeNormalizer.DefaultNewLine}"));
-            yield return new(new("Test\nComment1"), null, 2, new($"{XNodeNormalizer.DefaultNewLine}{XNodeNormalizer.DefaultIndent}{XNodeNormalizer.DefaultIndent}Test" +
-                $"\n{XNodeNormalizer.DefaultIndent}{XNodeNormalizer.DefaultIndent}Comment1{XNodeNormalizer.DefaultNewLine}{XNodeNormalizer.DefaultIndent}"));
-            yield return new(new("Test\nComment1"), new(), 2, new($"{XNodeNormalizer.DefaultNewLine}{TestXNodeNormalizer.CustomIndent}{TestXNodeNormalizer.CustomIndent}Test" +
-                $"\n{TestXNodeNormalizer.CustomIndent}{TestXNodeNormalizer.CustomIndent}Comment1{XNodeNormalizer.DefaultNewLine}{TestXNodeNormalizer.CustomIndent}"));
-            yield return new(new("\r\n        Test\r\n        Comment1\r\n    "), null, 0, new($"{XNodeNormalizer.DefaultNewLine}Test" +
-                $"\r\nComment1{XNodeNormalizer.DefaultNewLine}"));
-            yield return new(new("\r\n        Test\r\n        Comment1\r\n    "), new(), 0, new($"{XNodeNormalizer.DefaultNewLine}Test" +
-                $"\r\nComment1{XNodeNormalizer.DefaultNewLine}"));
-            yield return new(new("\n\rTest\r\n\rComment2\n\r"), null, 0, new($"{XNodeNormalizer.DefaultNewLine}Test" +
-                $"\r\nComment2{XNodeNormalizer.DefaultNewLine}"));
-            yield return new(new("\n\rTest\r\n\rComment2\n\r"), new(), 0, new($"{XNodeNormalizer.DefaultNewLine}Test" +
-                $"\r\nComment2{XNodeNormalizer.DefaultNewLine}"));
-            yield return new(new("\n\rTest\r\n\rComment2\n\r"), null, 3, new($"{XNodeNormalizer.DefaultNewLine}{XNodeNormalizer.DefaultIndent}{XNodeNormalizer.DefaultIndent}{XNodeNormalizer.DefaultIndent}Test" +
-                $"\r\n{XNodeNormalizer.DefaultIndent}{XNodeNormalizer.DefaultIndent}{XNodeNormalizer.DefaultIndent}Comment2" +
-                $"{XNodeNormalizer.DefaultNewLine}{XNodeNormalizer.DefaultIndent}{XNodeNormalizer.DefaultIndent}"));
-            yield return new(new("\n\rTest\r\n\rComment2\n\r"), new(), 3,
-                new($"{XNodeNormalizer.DefaultNewLine}{TestXNodeNormalizer.CustomIndent}{TestXNodeNormalizer.CustomIndent}{TestXNodeNormalizer.CustomIndent}Test" +
-                $"\r\n{TestXNodeNormalizer.CustomIndent}{TestXNodeNormalizer.CustomIndent}{TestXNodeNormalizer.CustomIndent}Comment2" +
-                $"{XNodeNormalizer.DefaultNewLine}{TestXNodeNormalizer.CustomIndent}{TestXNodeNormalizer.CustomIndent}"));
+            foreach ((int IndentLevel, string DefaultLeadIndent, string DefaultTrailingIndent, string CustomLeadIndent, string CustomTrailingIndent) in XContainerTestDataAttribute.GetIndents())
+            {
+                yield return new(new(""), null, IndentLevel, new(""));
+                yield return new(new(""), new(), IndentLevel, new(""));
+                foreach (string commentText in new[] { " ", "  ", "\r", "\n", "\r\n", "\r\n\r", " \n \r\n " })
+                {
+                    yield return new(new(commentText), null, IndentLevel, new(" "));
+                    yield return new(new(commentText), new(), IndentLevel, new(" "));
+                }
+                foreach (string commentText in new[] { "Test", "Test  ", "  Test", "  Test  ", "Test\r", "\nTest", "\rTest\n", " \n\r\n Test \r\r\n " })
+                {
+                    yield return new(new(commentText), null, IndentLevel, new(" Test "));
+                    yield return new(new(commentText), new(), IndentLevel, new(" Test "));
+                }
+                foreach (string commentText in new[] { "Test\rComment", "Test\rComment  ", "  Test\rComment", "  Test\rComment  ", "Test\rComment\r", "\rTest\rComment", "\rTest\rComment\r", " \n\r\n\r Test\rComment \r\r\n ", " \n\r\n\r Test\r\t    Comment \r\r\n " })
+                {
+                    yield return new(new(commentText), null, IndentLevel, new($"{XNodeNormalizer.DefaultNewLine}{DefaultLeadIndent}Test{XNodeNormalizer.DefaultNewLine}{DefaultLeadIndent}Comment{XNodeNormalizer.DefaultNewLine}{DefaultTrailingIndent}"));
+                    yield return new(new(commentText), new(), IndentLevel, new($"{XNodeNormalizer.DefaultNewLine}{CustomLeadIndent}Test{XNodeNormalizer.DefaultNewLine}{CustomLeadIndent}Comment{XNodeNormalizer.DefaultNewLine}{CustomTrailingIndent}"));
+                }
+                foreach (string nl in new[] { "\n", "\r\n" })
+                {
+                    foreach (string commentText in new[] { $"Test{nl}Comment", $"Test{nl}Comment  ", $"  Test{nl}Comment", $"  Test{nl}Comment  ", $"Test{nl}Comment{nl}", $"{nl}Test{nl}Comment", $"{nl}Test{nl}Comment{nl}", $" \r\n{nl} Test{nl}\t    Comment {nl}\r " })
+                    {
+                        yield return new(new(commentText), null, IndentLevel, new($"{nl}{DefaultLeadIndent}Test{nl}{DefaultLeadIndent}Comment{nl}{DefaultTrailingIndent}"));
+                        yield return new(new(commentText), new(), IndentLevel, new($"{nl}{CustomLeadIndent}Test{nl}{CustomLeadIndent}Comment{nl}{CustomTrailingIndent}"));
+                    }
+                }
+            }
         }
 
         public IEnumerable<object[]> GetData(MethodInfo methodInfo)

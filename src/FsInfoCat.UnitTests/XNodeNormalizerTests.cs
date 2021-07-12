@@ -6,6 +6,9 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.UnitTests
 {
+    /// <summary>
+    /// Defines test methods for <see cref="XNodeNormalizer"/>.
+    /// </summary>
     [TestClass()]
     public class XNodeNormalizerTests
     {
@@ -293,11 +296,6 @@ namespace FsInfoCat.UnitTests
         /// otherwise, <see langword="null"/> if <see cref="Regex.IsMatch(string)"/> is expected to return <see langword="false"/>.</param>
         /// <param name="expected">The expected return value from the <see cref="Regex.Replace(string, string)"/> method invocation.
         /// This can be <see langword="null"/> if <see cref="Regex.IsMatch(string)"/> is expected to return <see langword="false"/>.</param>
-        [DataRow("  \n  \r\nabc123~!@\r\n  \n  ", "", "abc123~!@", DisplayName = "\"  \\n  \\r\\nabc123~!@\\r\\n  \\n  \"")]
-        [DataRow("\n\r\n  abc123~!@  ", "", "  abc123~!@  ", DisplayName = "\"\\n\\r\\n  abc123~!@  \"")]
-        [DataRow("\n\r\n  abc123~!@  \r\n\n", "", "  abc123~!@  ", DisplayName = "\"\\n\\r\\n  abc123~!@  \\r\\n\\n\"")]
-        [DataRow("\n\r\nabc123~!@\r\n\n", "", "abc123~!@", DisplayName = "\"\\n\\r\\nabc123~!@\\r\\n\\n\"")]
-
         [DataRow("", null, null, DisplayName = "(blank)")]
         [DataRow(" ", "", "", DisplayName = "(space)")]
         [DataRow("\t", "", "", DisplayName = "(tab)")]
@@ -312,6 +310,11 @@ namespace FsInfoCat.UnitTests
         [DataRow("\r\nabc123~!@\n", "", "abc123~!@", DisplayName = "\"\\r\\nabc123~!@\\n\"")]
         [DataRow("Test\n\nValue", "", "Test\nValue", DisplayName = "\"Test\\n\\nValue\"")]
         [DataRow("Test\n\nValue\n", "", "Test\nValue", DisplayName = "\"Test\\n\\nValue\\n\"")]
+        [DataRow("  \n  \r\nabc123~!@\r\n  \n  ", "", "abc123~!@", DisplayName = "\"  \\n  \\r\\nabc123~!@\\r\\n  \\n  \"")]
+        [DataRow("\n\r\n  abc123~!@  ", "", "  abc123~!@  ", DisplayName = "\"\\n\\r\\n  abc123~!@  \"")]
+        [DataRow("\n\r\n  abc123~!@  \r\n\n", "", "  abc123~!@  ", DisplayName = "\"\\n\\r\\n  abc123~!@  \\r\\n\\n\"")]
+        [DataRow("\n\r\nabc123~!@\r\n\n", "", "abc123~!@", DisplayName = "\"\\n\\r\\nabc123~!@\\r\\n\\n\"")]
+        [DataRow(" node  nested\r\nwithin text", null, null, DisplayName = " node  nested\\r\\nwithin text")]
         [DataTestMethod()]
         public void EmptyOrWhiteSpaceLineRegexTest([DisallowNull] string input, string replacement, string expected)
         {
@@ -427,61 +430,121 @@ namespace FsInfoCat.UnitTests
         }
 
         /// <summary>
-        /// Tests the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method without the optional parameters.
+        /// Tests the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method without the optional parameters.
         /// </summary>
-        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method.</param>
-        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method has been invoked.</param>
-        [XContainerTestData(ExcludeCustomNormalizer = true, ExcludeIndentLevel = true)]
+        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method.</param>
+        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method has been invoked.</param>
+        [XContainerTestData(true, ExcludeCustomNormalizer = true, ExcludeIndentLevel = true)]
         [DataTestMethod()]
-        public void NormalizeXContainerTest1([DisallowNull] XContainer targetNode, [DisallowNull] XContainer expected)
+        public void NormalizeXDocumentTest1([DisallowNull] XDocument targetNode, [DisallowNull] XDocument expected)
         {
-            XContainer actual = (targetNode is XDocument d) ? new XDocument(d) : new XElement((XElement)targetNode);
+            XDocument actual = new(targetNode);
             XNodeNormalizer.Normalize(actual);
             Assert.AreEqual(expected.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
         }
 
         /// <summary>
-        /// Tests the <see cref="XNodeNormalizer.Normalize(XContainer, int)"/> method.
+        /// Tests the <see cref="XNodeNormalizer.Normalize(XDocument, int)"/> method.
         /// </summary>
-        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XContainer, int)"/> method.</param>
-        /// <param name="indentLevel">The initial indent level to pass to the <see cref="XNodeNormalizer.Normalize(XContainer, int)"/> method.</param>
-        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XContainer, int)"/> method has been invoked.</param>
-        [XContainerTestData(ExcludeCustomNormalizer = true)]
+        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XDocument, int)"/> method.</param>
+        /// <param name="indentLevel">The initial indent level to pass to the <see cref="XNodeNormalizer.Normalize(XDocument, int)"/> method.</param>
+        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XDocument, int)"/> method has been invoked.</param>
+        [XContainerTestData(true, ExcludeCustomNormalizer = true)]
         [DataTestMethod()]
-        public void NormalizeXContainerTest2([DisallowNull] XContainer targetNode, int indentLevel, [DisallowNull] XContainer expected)
+        public void NormalizeXDocumentTest2([DisallowNull] XDocument targetNode, int indentLevel, [DisallowNull] XDocument expected)
         {
-            XContainer actual = (targetNode is XDocument d) ? new XDocument(d) : new XElement((XElement)targetNode);
+            XDocument actual = new(targetNode);
             XNodeNormalizer.Normalize(actual, indentLevel);
             Assert.AreEqual(expected.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
         }
 
         /// <summary>
-        /// Tests the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method.
+        /// Tests the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method.
         /// </summary>
-        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method.</param>
+        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method.</param>
         /// <param name="normalizer">The normalizer instance or <see langword="null"/>.</param>
-        /// <param name="indentLevel">The initial indent level to pass to the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method.</param>
-        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method has been invoked.</param>
-        [XContainerTestData()]
+        /// <param name="indentLevel">The initial indent level to pass to the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method.</param>
+        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method has been invoked.</param>
+        [XContainerTestData(true)]
         [DataTestMethod()]
-        public void NormalizeXContainerTest3([DisallowNull] XContainer targetNode, TestXNodeNormalizer normalizer, int indentLevel, [DisallowNull] XContainer expected)
+        public void NormalizeXDocumentTest3([DisallowNull] XDocument targetNode, TestXNodeNormalizer normalizer, int indentLevel, [DisallowNull] XDocument expected)
         {
-            XContainer actual = (targetNode is XDocument d) ? new XDocument(d) : new XElement((XElement)targetNode);
+            XDocument actual = new(targetNode);
             XNodeNormalizer.Normalize(actual, normalizer, indentLevel);
             Assert.AreEqual(expected.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
         }
 
         /// <summary>
-        /// Tests the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method without the last optional parameter.
+        /// Tests the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method without the last optional parameter.
         /// </summary>
-        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method.</param>
+        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method.</param>
         /// <param name="normalizer">The normalizer instance or <see langword="null"/>.</param>
-        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XContainer, XNodeNormalizer, int)"/> method has been invoked.</param>
-        [XContainerTestData(ExcludeIndentLevel = true)]
+        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XDocument, XNodeNormalizer, int)"/> method has been invoked.</param>
+        [XContainerTestData(true, ExcludeIndentLevel = true)]
         [DataTestMethod()]
-        public void NormalizeXContainerTest4([DisallowNull] XContainer targetNode, TestXNodeNormalizer normalizer, [DisallowNull] XContainer expected)
+        public void NormalizeXDocumentTest4([DisallowNull] XDocument targetNode, TestXNodeNormalizer normalizer, [DisallowNull] XDocument expected)
         {
-            XContainer actual = (targetNode is XDocument d) ? new XDocument(d) : new XElement((XElement)targetNode);
+            XDocument actual = new(targetNode);
+            XNodeNormalizer.Normalize(actual, normalizer);
+            Assert.AreEqual(expected.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
+        }
+
+        /// <summary>
+        /// Tests the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method without the optional parameters.
+        /// </summary>
+        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method.</param>
+        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method has been invoked.</param>
+        [XContainerTestData(false, ExcludeCustomNormalizer = true, ExcludeIndentLevel = true)]
+        [DataTestMethod()]
+        public void NormalizeXElementTest1([DisallowNull] XElement targetNode, [DisallowNull] XElement expected)
+        {
+            XElement actual = new(targetNode);
+            XNodeNormalizer.Normalize(actual);
+            Assert.AreEqual(expected.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
+        }
+
+        /// <summary>
+        /// Tests the <see cref="XNodeNormalizer.Normalize(XElement, int)"/> method.
+        /// </summary>
+        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XElement, int)"/> method.</param>
+        /// <param name="indentLevel">The initial indent level to pass to the <see cref="XNodeNormalizer.Normalize(XElement, int)"/> method.</param>
+        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XElement, int)"/> method has been invoked.</param>
+        [XContainerTestData(false, ExcludeCustomNormalizer = true)]
+        [DataTestMethod()]
+        public void NormalizeXElementTest2([DisallowNull] XElement targetNode, int indentLevel, [DisallowNull] XElement expected)
+        {
+            XElement actual = new(targetNode);
+            XNodeNormalizer.Normalize(actual, indentLevel);
+            Assert.AreEqual(expected.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
+        }
+
+        /// <summary>
+        /// Tests the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method.
+        /// </summary>
+        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method.</param>
+        /// <param name="normalizer">The normalizer instance or <see langword="null"/>.</param>
+        /// <param name="indentLevel">The initial indent level to pass to the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method.</param>
+        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method has been invoked.</param>
+        [XContainerTestData(false)]
+        [DataTestMethod()]
+        public void NormalizeXElementTest3([DisallowNull] XElement targetNode, TestXNodeNormalizer normalizer, int indentLevel, [DisallowNull] XElement expected)
+        {
+            XElement actual = new(targetNode);
+            XNodeNormalizer.Normalize(actual, normalizer, indentLevel);
+            Assert.AreEqual(expected.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
+        }
+
+        /// <summary>
+        /// Tests the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method without the last optional parameter.
+        /// </summary>
+        /// <param name="targetNode">The target node to pass to the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method.</param>
+        /// <param name="normalizer">The normalizer instance or <see langword="null"/>.</param>
+        /// <param name="expected">The expected contents of the <paramref name="targetNode"/> after the <see cref="XNodeNormalizer.Normalize(XElement, XNodeNormalizer, int)"/> method has been invoked.</param>
+        [XContainerTestData(false, ExcludeIndentLevel = true)]
+        [DataTestMethod()]
+        public void NormalizeXElementTest4([DisallowNull] XElement targetNode, TestXNodeNormalizer normalizer, [DisallowNull] XElement expected)
+        {
+            XElement actual = new(targetNode);
             XNodeNormalizer.Normalize(actual, normalizer);
             Assert.AreEqual(expected.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
         }

@@ -6,76 +6,262 @@ using System.Xml.Linq;
 
 namespace FsInfoCat
 {
-    public class XNodeNormalizer
+    /// <summary>
+    /// A class which handles normalization of <see cref="XContainer"/>, <see cref="XComment"/> and <see cref="XText"/> nodes.
+    /// </summary>
+    public partial class XNodeNormalizer
     {
+
+        /// <summary>
+        /// The default new line character sequence.
+        /// </summary>
         public const string DefaultNewLine = @"
 ";
+
+        /// <summary>
+        /// The default indent string.
+        /// </summary>
         public const string DefaultIndent = "    ";
+
+        /// <summary>
+        /// Matches non-normalized line separator characters.
+        /// </summary>
         public static readonly Regex NonNormalizedLineSeparatorRegex = new(@"\r(?!\n)|[\x00-\b\v\f\x0e-\x1f\p{Zl}\p{Zp}]", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Matches non-normalized white-space character sequences.
+        /// </summary>
+        /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
         public static readonly Regex NonNormalizedWhiteSpaceRegex = new(@" [^\r\n\S]+|[^\r\n\S ][^\r\n\S]*", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Matches white-space characters at the beginning or end of lines.
+        /// </summary>
+        /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
         public static readonly Regex ExtraneousLineWhitespaceRegex = new(@"(?<=[\r\n]|^)[^\r\n\S]+|[^\r\n\S]+(?=[\r\n]|$)", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Matches white-space characters at the beginning and end if inner lines (lines other than the first and last).
+        /// </summary>
+        /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
         public static readonly Regex ExtraneousInnerLineWSRegex = new(@"(?<=[\r\n\S])[^\r\n\S]+(?=[\r\n])|(?<=[\r\n])[^\r\n\S]+(?=\S)", RegexOptions.Compiled);
-        //public static readonly Regex TrailingInnerLineWsRegex = new(@"(?<=[\S\r\n])[^\r\n\S]+(?=\r\n?|\n)", RegexOptions.Compiled);
-        //public static readonly Regex LineStartWsRegex = new(@"(\r\n?|\n|^)[^\r\n\S]*", RegexOptions.Compiled);
-        public static readonly Regex LeadingNewLineWithOptWs = new(@"^(\r\n?|\n)([^\r\n\S]+)?", RegexOptions.Compiled);
-        public static readonly Regex TrailingNewLineWithOptWs = new(@"(\r\n?|\n)([^\r\n\S]+)?$", RegexOptions.Compiled);
-        public static readonly Regex LineSeparatorCharRegex = new(@"[\x00-\b\n-\x1f\p{Zl}\p{Zp}]", RegexOptions.Compiled);
 
-        //static readonly Regex BlankInnerLineRegex = new(@"(\r\n?|\n)((?![\r\n])\s)*(?=\r\n?|\n)", RegexOptions.Compiled);
-        //static readonly Regex BlankLinesOnlyRegex = new(@"^((?![\r\n])\s)*((\r\n?|\n)((?![\r\n])\s)*)+$", RegexOptions.Compiled);
-        //static readonly Regex BlankLeadingLinesRegex = new(@"^(((?![\r\n])\s)*(\r\n?|\n))+", RegexOptions.Compiled);
-        //static readonly Regex BlankTrailingLinesRegex = new(@"((\r\n?|\n)((?![\r\n])\s)*)+$", RegexOptions.Compiled);
-        // \r\nabc123
-        public static readonly Regex EmptyOrWhiteSpaceLineRegex = new(@"^(([^\r\n\S]*(\r\n?|\n))+([^\r\n\S]+$)?|[^\r\n\S]+$)|(\r\n?|\n)[^\r\n\S]*((?=[\r\n])|$)", RegexOptions.Compiled);
+        /// <summary>
+        /// Matches the leading newline sequence and any following white-space characters.
+        /// </summary>
+        /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
+        public static readonly Regex LeadingNewLineWithOptWs = new(@"^(\r\n|\n)([^\r\n\S]+)?", RegexOptions.Compiled);
 
-        //public static readonly Regex LineSeparatorOrNonWsRegex = new(@"\r\n?|[\x00-\b\n-\x1f\p{Zl}\p{Zp}\S]", RegexOptions.Compiled);
-        //public static readonly Regex LineSeparatorRegex = new(@"\r\n?|[\x00-\b\n-\x1f\p{Zl}\p{Zp}]", RegexOptions.Compiled);
-        public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
-        //public static readonly Regex IndentWsRegex = new(@"(?:^|(\r\n?|[\x00-\b\n-\x1f\p{Zl}\p{Zp}]))[\t\p{Zs}]*(?=\S)", RegexOptions.Compiled);
-        //public static readonly Regex InnerNewLineIndentRegex = new(@"(\r\n?|[\x00-\b\n-\x1f\p{Zl}\p{Zp}])[\t\p{Zs}]*(?=\S)", RegexOptions.Compiled);
+        /// <summary>
+        /// Matches the last newline sequence that does not precede any non-white-space charaters, including any following white-space characters.
+        /// </summary>
+        /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
+        public static readonly Regex TrailingNewLineWithOptWs = new(@"(\r\n|\n)([^\r\n\S]+)?$", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Matches any line that is empty or contains only white-space characters.
+        /// </summary>
+        /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
+        public static readonly Regex EmptyOrWhiteSpaceLineRegex = new(@"^(([^\r\n\S]*(\r\n|\n))+([^\r\n\S]+$)?|[^\r\n\S]+$)|(\r\n|\n)[^\r\n\S]*((?=[\r\n])|$)", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Matches a normalized new line character sequence.
+        /// </summary>
+        public static readonly Regex NewLineRegex = new(@"\r\n|\n", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Gets the indent string.
+        /// </summary>
+        /// <value>The string that will be inserted as an indenteation.</value>
+        [DisallowNull]
         protected virtual string IndentString => DefaultIndent;
+
+        /// <summary>
+        /// Gets the normalized fall-back new line character sequence.
+        /// </summary>
+        /// <value>The character sequence that will be used when a new line sequence is inserted or a non-normalized line separator is replaced.</value>
+        [DisallowNull]
         protected virtual string NewLine => DefaultNewLine;
-        public static void Normalize(XComment comment, XNodeNormalizer normalizer = null, int indentLevel = 0) => (normalizer ?? new()).BaseNormalize(comment ?? throw new ArgumentNullException(nameof(comment)), indentLevel);
-        public static void Normalize(XContainer container, XNodeNormalizer normalizer = null, int indentLevel = 0) => (normalizer ?? new()).BaseNormalize(container ?? throw new ArgumentNullException(nameof(container)), indentLevel);
-        public static void Normalize(XText text, XNodeNormalizer normalizer = null, int indentLevel = 0) => (normalizer ?? new()).BaseNormalize(text ?? throw new ArgumentNullException(nameof(text)), indentLevel);
-        public static void Normalize(XComment comment, int indentLevel) => Normalize(comment, null, indentLevel);
-        public static void Normalize(XContainer container, int indentLevel) => Normalize(container, null, indentLevel);
-        public static void Normalize(XText text, int indentLevel) => Normalize(text, null, indentLevel);
-        protected virtual void BaseNormalize(XComment comment, int indentLevel) => Normalize(comment, new Context(indentLevel, comment, this));
-        protected virtual void BaseNormalize(XContainer container, int indentLevel)
+
+        /// <summary>
+        /// Normalizes the specified text node.
+        /// </summary>
+        /// <param name="textNode">The <see cref="XText"/> node to normalize.</param>
+        /// <param name="normalizer">The <see cref="XNodeNormalizer"/> that ionstance will be used to normalize the target <see cref="XText"/> node or <see langword="null"/> to use a default instance.</param>
+        /// <param name="indentLevel">The number of times to indent each subsequent line within the <see cref="XText"/> node. The default value is <c>0</c>.</param>
+        /// <seealso cref="Normalize(XText, Context)"/>
+        public static void Normalize([DisallowNull] XText textNode, XNodeNormalizer normalizer = null, int indentLevel = 0) => (normalizer ?? new()).PrivateNormalize(textNode ?? throw new ArgumentNullException(nameof(textNode)), indentLevel);
+
+        /// <summary>
+        /// Normalizes the specified text node.
+        /// </summary>
+        /// <param name="textNode">The <see cref="XText"/> node to normalize.</param>
+        /// <param name="indentLevel">The number of times to indent each subsequent line within the <see cref="XText"/> node.</param>
+        /// <seealso cref="Normalize(XText, Context)"/>
+        public static void Normalize([DisallowNull] XText textNode, int indentLevel) => Normalize(textNode, null, indentLevel);
+
+        /// <summary>
+        /// Normalizes the specified comment node.
+        /// </summary>
+        /// <param name="commentNode">The <see cref="XComment"/> node to normalize.</param>
+        /// <param name="normalizer">The <see cref="XNodeNormalizer"/> instance that will be used to normalize the target <see cref="XComment"/> node or <see langword="null"/> to use a default instance.</param>
+        /// <param name="indentLevel">The number of times to indent the <see cref="XComment"/> node. The default value is <c>0</c>.</param>
+        /// <seealso cref="Normalize(XComment, Context)"/>
+        public static void Normalize([DisallowNull] XComment commentNode, XNodeNormalizer normalizer = null, int indentLevel = 0) => (normalizer ?? new()).PrivateNormalize(commentNode ?? throw new ArgumentNullException(nameof(commentNode)), indentLevel);
+
+        /// <summary>
+        /// Normalizes the specified comment node.
+        /// </summary>
+        /// <param name="commentNode">The <see cref="XComment"/> node to normalize.</param>
+        /// <param name="indentLevel">The number of times to indent the <see cref="XComment"/> node.</param>
+        /// <seealso cref="Normalize(XComment, Context)"/>
+        public static void Normalize([DisallowNull] XComment commentNode, int indentLevel) => Normalize(commentNode, null, indentLevel);
+
+        /// <summary>
+        /// Normalizes the specified container node.
+        /// </summary>
+        /// <param name="elementNode">The <see cref="XElement"/> node to normalize.</param>
+        /// <param name="normalizer">The <see cref="XNodeNormalizer"/> that ionstance will be used to normalize the target <see cref="XElement"/> node or <see langword="null"/> to use a default instance.</param>
+        /// <param name="indentLevel">The number of times that the <see cref="XElement"/> node is indented. The default value is <c>0</c>.</param>
+        /// <seealso cref="Normalize(XContainer, Context)"/>
+        public static void Normalize([DisallowNull] XElement elementNode, XNodeNormalizer normalizer = null, int indentLevel = 0) => (normalizer ?? new()).PrivateNormalize(elementNode ?? throw new ArgumentNullException(nameof(elementNode)), indentLevel);
+
+        /// <summary>
+        /// Normalizes the specified container node.
+        /// </summary>
+        /// <param name="elementNode">The <see cref="XElement"/> node to normalize.</param>
+        /// <param name="indentLevel">The number of times that the <see cref="XElement"/> node is indented. The default value is <c>0</c>.</param>
+        /// <seealso cref="Normalize(XContainer, Context)"/>
+        public static void Normalize([DisallowNull] XElement elementNode, int indentLevel) => Normalize(elementNode, null, indentLevel);
+
+        /// <summary>
+        /// Normalizes the specified container node.
+        /// </summary>
+        /// <param name="document">The <see cref="XDocument"/> node to normalize.</param>
+        /// <param name="normalizer">The <see cref="XNodeNormalizer"/> that ionstance will be used to normalize the target <see cref="XDocument"/> node or <see langword="null"/> to use a default instance.</param>
+        /// <param name="indentLevel">The number of times that the <see cref="XDocument.Root"/> node is indented. The default value is <c>0</c>.</param>
+        /// <seealso cref="Normalize(XContainer, Context)"/>
+        public static void Normalize([DisallowNull] XDocument document, XNodeNormalizer normalizer = null, int indentLevel = 0) => (normalizer ?? new()).PrivateNormalize(document ?? throw new ArgumentNullException(nameof(document)), indentLevel);
+
+        /// <summary>
+        /// Normalizes the specified container node.
+        /// </summary>
+        /// <param name="document">The <see cref="XDocument"/> node to normalize.</param>
+        /// <param name="indentLevel">The number of times that the <see cref="XDocument.Root"/> node is indented. The default value is <c>0</c>.</param>
+        /// <seealso cref="Normalize(XContainer, Context)"/>
+        public static void Normalize([DisallowNull] XDocument document, int indentLevel) => Normalize(document, null, indentLevel);
+
+        private void PrivateNormalize([DisallowNull] XText textNode, int indentLevel) => Normalize(textNode, new Context(indentLevel, textNode, this));
+
+        private void PrivateNormalize([DisallowNull] XComment commentNode, int indentLevel) => Normalize(commentNode, new Context(indentLevel, commentNode, this));
+
+        private void PrivateNormalize([DisallowNull] XElement elementNode, int indentLevel) => Normalize(elementNode, new Context(indentLevel, elementNode, this));
+
+        private void PrivateNormalize([DisallowNull] XDocument document, int indentLevel) => Normalize(document, new Context(indentLevel, document, this));
+
+        /// <summary>
+        /// Checks whether the target element should always have leading and trailing line break / indent sequences.
+        /// </summary>
+        /// <param name="targetElement">The target <see cref="XElement" /> being normalized.</param>
+        /// <param name="context">The normalization <see cref="Context"/> for the  target <see cref="XElement" />.</param>
+        /// <returns><see langword="true"/> if a new line / indent should always be inserted before and after the <paramref name="targetElement"/>; otherwise, <see langword="false"/>.</returns>
+        protected virtual bool ForceSurroundingLineBreaks([DisallowNull] XElement targetElement, [DisallowNull] Context context) => targetElement.Nodes().OfType<XText>().Any(t => NewLineRegex.IsMatch(t.Value)) || targetElement.Nodes().OfType<XComment>().Any(t => NewLineRegex.IsMatch(t.Value));
+
+        /// <summary>
+        /// Checks whether the target element contents should always be indented
+        /// </summary>
+        /// <param name="targetElement">The target <see cref="XElement" /> being normalized.</param>
+        /// <param name="context">The normalization <see cref="Context"/> for the  target <see cref="XElement" />.</param>
+        /// <returns><see langword="true"/> if the content of the <paramref name="targetElement"/> should always be indented; otherwise, <see langword="false"/>.</returns>
+        protected virtual bool ForceIndentContent([DisallowNull] XElement targetElement, [DisallowNull] Context context) => false;
+
+        /// <summary>
+        /// Normalizes the specified text node.
+        /// </summary>
+        /// <param name="targetTextNode">The <see cref="XText"/> node to normalize.</param>
+        /// <param name="context">The normalization <see cref="Context"/> object that includes the current indent string.</param>
+        /// <remarks>All lines that are empty or contain only whitespace characters will be removed. This will not indent the first line, but will indent any lines that follow.</remarks>
+        protected virtual void Normalize([DisallowNull] XText targetTextNode, [DisallowNull] Context context)
         {
-            if (container is XDocument document)
-                Normalize(document.Root, new Context(indentLevel, document.Root, this));
-            else
-                Normalize((XElement)container, new Context(indentLevel, container, this));
-        }
-        protected virtual void BaseNormalize(XText text, int indentLevel) => Normalize(text, new Context(indentLevel, text, this));
-
-        record NonWhiteSpaceCharacteristics(bool ContainsNewLine);
-
-        record OuterLineBreakCharacteristics(bool SurroundWithLineBreaks);
-
-        record LeadingNewLinex(string Value, bool? IncludesIndent);
-
-        record TrailingNewLinex(string Value, bool? IncludesIndent);
-
-        protected virtual bool ShouldForceLineBreak(XElement element, Context context) => element.DescendantNodes().OfType<XText>().Any(t => NewLineRegex.IsMatch(t.Value)) ||
-            element.DescendantNodes().OfType<XComment>().Any(t => NewLineRegex.IsMatch(t.Value));
-
-        protected virtual void Normalize(XComment comment, Context context)
-        {
-            comment.RemoveAnnotations<OuterLineBreakCharacteristics>();
-            if (comment.Value.Length == 0)
-            {
-                comment.AddAnnotation(new OuterLineBreakCharacteristics(false));
+            if (targetTextNode.Value.Length == 0)
                 return;
-            }
-            string text = NonNormalizedLineSeparatorRegex.IsMatch(comment.Value) ? NonNormalizedLineSeparatorRegex.Replace(comment.Value, NewLine) : comment.Value;
-            if ((text = text.Trim()).Length == 0)
+            targetTextNode.RemoveAnnotations<TextNodeCharacteristics>();
+            bool hasPrecedingContent = targetTextNode.NodesBeforeSelf().OfType<XContainer>().Any() || targetTextNode.NodesBeforeSelf().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value));
+            bool hasFollowingContent = targetTextNode.NodesAfterSelf().OfType<XContainer>().Any() || targetTextNode.NodesAfterSelf().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value));
+            string text = hasPrecedingContent ? (hasFollowingContent ? targetTextNode.Value : targetTextNode.Value.TrimEnd()) : hasFollowingContent ? targetTextNode.Value.TrimStart() : targetTextNode.Value.Trim();
+            if (text.Length > 0)
             {
-                comment.AddAnnotation(new OuterLineBreakCharacteristics(false));
+                if (NonNormalizedLineSeparatorRegex.IsMatch(text))
+                    text = NonNormalizedLineSeparatorRegex.Replace(text, NewLine);
+                Match leadingWsMatch = LeadingNewLineWithOptWs.Match(text);
+                Match trailingWsMatch = TrailingNewLineWithOptWs.Match(text);
+                if (EmptyOrWhiteSpaceLineRegex.IsMatch(text) && (text = EmptyOrWhiteSpaceLineRegex.Replace(text, "")).Length == 0)
+                {
+                    text = " ";
+                    targetTextNode.AddAnnotation(new TextNodeCharacteristics(false, false, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
+                        true, trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null, true));
+                }
+                else
+                {
+                    if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
+                        text = NonNormalizedWhiteSpaceRegex.Replace(text, " ");
+                    if (ExtraneousInnerLineWSRegex.IsMatch(text))
+                        text = ExtraneousInnerLineWSRegex.Replace(text, "");
+                    if (NewLineRegex.IsMatch(text))
+                    {
+                        if (context.CurrentIndent.Length > 0)
+                            text = NewLineRegex.Replace(text, m => $"{m.Value}{context.CurrentIndent}");
+                        targetTextNode.AddAnnotation(new TextNodeCharacteristics(true, true, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
+                            leadingWsMatch.Success ? leadingWsMatch.Groups[2].Success : char.IsWhiteSpace(text[0]),
+                            trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null,
+                            trailingWsMatch.Success ? trailingWsMatch.Groups[2].Success : char.IsWhiteSpace(text.Last())));
+                    }
+                    else
+                        targetTextNode.AddAnnotation(new TextNodeCharacteristics(false, true, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
+                            leadingWsMatch.Success ? leadingWsMatch.Groups[2].Success : char.IsWhiteSpace(text[0]),
+                            trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null,
+                            trailingWsMatch.Success ? trailingWsMatch.Groups[2].Success : char.IsWhiteSpace(text.Last())));
+                }
+            }
+            else if (hasPrecedingContent || hasFollowingContent)
+                targetTextNode.AddAnnotation(new TextNodeCharacteristics(false, false, null, false, null, false));
+            else
+            {
+                targetTextNode.AddAnnotation(new TextNodeCharacteristics(false, false, null, true, null, true));
                 text = " ";
             }
+            if (targetTextNode.Value != text)
+                targetTextNode.Value = text;
+        }
+
+        /// <summary>
+        /// Normalizes the specified comment.
+        /// </summary>
+        /// <param name="targetComment">The <see cref="XComment"/> node to normalize.</param>
+        /// <param name="context">The normalization <see cref="Context"/> object that includes the current indent string.</param>
+        /// <remarks>This does insert any sibling nodes before or after the target <see cref="XComment"/> node (does indent the opening <c>&lt;</c> character or add a new line sequence after the outer closing <c>&gt;</c> character).
+        /// Indenting will only occur if the <see cref="XComment"/> node contains 2 or more lines. Empty lines will be stripped.
+        /// Single-line content will result in a single-line comment.
+        /// <para>Following are the results when the <see cref="XComment"/> node contains 2 or more lines (after blank lines are removed):
+        /// <list type="bullet">
+        /// <item><term><code><paramref name="indentLevel"/> == 0</code></term>
+        ///     <description>The closing character sequence will not be indented; Each line of text will be indented once.</description></item>
+        /// <item><term><code><paramref name="indentLevel"/> &lt; 0</code></term>
+        ///     <description>Neither the closing character sequence nor any line of text will be indented.</description></item>
+        /// <item><term><code><paramref name="indentLevel"/> &gt; 0</code></term>
+        ///     <description>The closing character sequence the number of times indicated by the <paramref name="indentLevel"/> value; Each line of text will be indented one level greater.</description></item>
+        /// </list></para></remarks>
+        protected virtual void Normalize([DisallowNull] XComment targetComment, [DisallowNull] Context context)
+        {
+            if (targetComment.Value.Length == 0)
+            {
+                if (IndentContents(targetComment))
+                    targetComment.Value = " ";
+                return;
+            }
+            string text = NonNormalizedLineSeparatorRegex.IsMatch(targetComment.Value) ? NonNormalizedLineSeparatorRegex.Replace(targetComment.Value, NewLine) : targetComment.Value;
+            if ((text = text.Trim()).Length == 0)
+                text = " ";
             else
             {
                 Match leadingWsMatch = LeadingNewLineWithOptWs.Match(text);
@@ -88,36 +274,88 @@ namespace FsInfoCat
                     text = ExtraneousLineWhitespaceRegex.Replace(text, "");
                 if (NewLineRegex.IsMatch(text))
                 {
+                    IndentContents(targetComment, true);
+                    SurroundWithLineBreaks(targetComment, true);
+                }
+                if (IndentContents(targetComment))
+                {
+                    string indent = (context.CurrentIndent.Length > 0) ? $"{context.CurrentIndent}{IndentString}" : (context.IndentLevel < 0) ? "" : IndentString;
                     string leadingNewLine = (leadingWsMatch.Success) ? leadingWsMatch.Groups[0].Value : NewLine;
                     string trailingNewLIne = (trailingWsMatch.Success) ? leadingWsMatch.Groups[0].Value : NewLine;
-                    comment.AddAnnotation(new OuterLineBreakCharacteristics(true));
-                    if (context.CurrentIndent.Length > 0)
+                    if (indent.Length > 0)
                     {
-                        text = NewLineRegex.Replace(text, m => $"{m.Value}{context.CurrentIndent}");
-                        string indent = context.GetParentIndent();
-                        text = (indent.Length > 0) ? $"{leadingNewLine}{context.CurrentIndent}{text}{trailingNewLIne}{indent}" : $"{leadingNewLine}{context.CurrentIndent}{text}{trailingNewLIne}";
+                        text = NewLineRegex.Replace(text, m => $"{m.Value}{indent}");
+                        text = (context.CurrentIndent.Length > 0) ? $"{leadingNewLine}{indent}{text}{trailingNewLIne}{context.CurrentIndent}" : $"{leadingNewLine}{indent}{text}{trailingNewLIne}";
                     }
                     else
                         text = $"{leadingNewLine}{text}{trailingNewLIne}";
                 }
                 else
-                {
-                    comment.AddAnnotation(new OuterLineBreakCharacteristics(false));
                     text = $" {text} ";
-                }
             }
-            if (comment.Value != text)
-                comment.Value = text;
+            if (targetComment.Value != text)
+                targetComment.Value = text;
         }
 
-        protected virtual void Normalize(XElement container, Context context)
+        protected static TextNodeCharacteristics GetTextNodeCharacteristics(XText textNode)
         {
-            if (container.IsEmpty)
+            TextNodeCharacteristics textNodeCharacteristics = textNode.Annotation<TextNodeCharacteristics>();
+            if (textNodeCharacteristics is null)
+            {
+                string text = textNode.Value;
+                Match leadingWsMatch = LeadingNewLineWithOptWs.Match(textNode.Value);
+                Match trailingWsMatch = TrailingNewLineWithOptWs.Match(textNode.Value);
+                if (leadingWsMatch.Success)
+                {
+                    if (trailingWsMatch.Success)
+                    {
+                        StringValueCharacteristics trailingNewLine = new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, true);
+                        if (leadingWsMatch.Index != trailingWsMatch.Index)
+                        {
+                            text = text.Substring(leadingWsMatch.Groups[1].Length, trailingWsMatch.Index - leadingWsMatch.Groups[1].Length);
+                            textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
+                                new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, true), false, trailingNewLine, false);
+                        }
+                        else
+                        {
+                            text = text.Substring(leadingWsMatch.Groups[1].Length);
+                            textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), trailingNewLine, false, trailingNewLine, false);
+                        }
+                    }
+                    else
+                    {
+                        text = text.Substring(leadingWsMatch.Groups[1].Length);
+                        textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
+                            new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, true), false, null, false);
+                    }
+                }
+                else if (trailingWsMatch.Success)
+                {
+                    text = text.Substring(0, trailingWsMatch.Index);
+                    textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, true), false);
+                }
+                else
+                    textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, null, false);
+                textNode.AddAnnotation(textNodeCharacteristics);
+            }
+            return textNodeCharacteristics;
+        }
+
+        /// <summary>
+        /// Normalizes the specified element.
+        /// </summary>
+        /// <param name="targetElement">The <see cref="XElement"/> to normalize.</param>
+        /// <param name="context">The normalization <see cref="Context"/> object that includes the current indent string.</param>
+        /// <remarks>This does insert any sibling nodes before or after the target <see cref="XComment"/> node (does indent the opening <c>&lt;</c> character or add a new line sequence after the outer closing <c>&gt;</c> character).
+        /// <para>Elements which contain only text and do not have multiple non-blank lines are normalized as a single-line element.</para></remarks>
+        protected virtual void Normalize([DisallowNull] XElement targetElement, [DisallowNull] Context context)
+        {
+            if (targetElement.IsEmpty)
                 return;
 
             bool foundNewLine = false;
 
-            for (Context childContext = context.FirstNode(); childContext is not null; childContext = childContext.NextNode())
+            for (Context childContext = context.GetFirstNodeContext(); childContext is not null; childContext = childContext.NextNode())
             {
                 if (childContext.Node is XText textNode)
                 {
@@ -135,269 +373,244 @@ namespace FsInfoCat
                     }
                     Normalize(textNode, childContext);
                     if (!foundNewLine)
-                        foundNewLine = textNode.Annotations<NonWhiteSpaceCharacteristics>().Select(c => c.ContainsNewLine).DefaultIfEmpty(false).First();
+                        foundNewLine = textNode.Annotations<TextNodeCharacteristics>().Select(c => c.HasNewLine).DefaultIfEmpty(false).First();
                 }
                 else if (childContext.Node is XElement elementNode)
                 {
                     Normalize(elementNode, childContext);
                     if (!foundNewLine)
-                        foundNewLine = elementNode.Annotations<OuterLineBreakCharacteristics>().Select(c => c.SurroundWithLineBreaks).DefaultIfEmpty(false).First();
+                        foundNewLine = IndentContents(elementNode) || SurroundWithLineBreaks(elementNode);
                 }
                 else if (childContext.Node is XComment commentNode)
                 {
                     Normalize(commentNode, childContext);
                     if (!foundNewLine)
-                        foundNewLine = commentNode.Annotations<OuterLineBreakCharacteristics>().Select(c => c.SurroundWithLineBreaks).DefaultIfEmpty(false).First();
+                        foundNewLine = IndentContents(commentNode) || SurroundWithLineBreaks(commentNode);
                 }
             }
 
-            if (foundNewLine || ShouldForceLineBreak(container, context))
+            if (foundNewLine)
             {
-                container.RemoveAnnotations<OuterLineBreakCharacteristics>();
-                container.AddAnnotation(new OuterLineBreakCharacteristics(true));
-                for (XNode node = container.FirstNode; node is not null; node = node.NextNode)
+                IndentContents(targetElement, true);
+                SurroundWithLineBreaks(targetElement, true);
+            }
+            if (!IndentContents(targetElement))
+                return;
+
+            XNode currentNode = targetElement.FirstNode;
+            if (currentNode is null)
+            {
+                targetElement.Value = " ";
+                // TODO: Update TextNodeCharacteristics annotation
+                return;
+            }
+            string indent = (context.CurrentIndent.Length > 0) ? $"{context.CurrentIndent}{IndentString}" : (context.IndentLevel < 0) ? "" : IndentString;
+
+            if (currentNode is XText firstTextNode)
+            {
+                if (!(currentNode.NextNode is null && string.IsNullOrWhiteSpace(firstTextNode.Value)))
                 {
-                    if (node is not XText && node.Annotations<OuterLineBreakCharacteristics>().Select(c => c.SurroundWithLineBreaks).DefaultIfEmpty(false).First())
-                    {
-                        if (node.PreviousNode is XText previousTextNode)
-                        {
-                            TrailingNewLinex trailingNewLine = previousTextNode.Annotations<TrailingNewLinex>().FirstOrDefault();
-                            if (trailingNewLine is null)
-                            {
-                                if (string.IsNullOrWhiteSpace(previousTextNode.Value))
-                                    previousTextNode.Value = (context.CurrentIndent.Length > 0) ? $"{NewLine}{context.CurrentIndent}" : NewLine;
-                                else
-                                    previousTextNode.Value = (context.CurrentIndent.Length > 0) ? $"{previousTextNode.Value}{NewLine}{context.CurrentIndent}" : $"{previousTextNode.Value}{NewLine}";
-                            }
-                            else if (trailingNewLine.IncludesIndent.HasValue)
-                            {
-                                if (!trailingNewLine.IncludesIndent.Value && context.CurrentIndent.Length > 0)
-                                    previousTextNode.Value = $"{previousTextNode.Value}{context.CurrentIndent}";
-                            }
-                            else if (string.IsNullOrWhiteSpace(previousTextNode.Value))
-                                previousTextNode.Value = (context.CurrentIndent.Length > 0) ? $"{trailingNewLine.Value}{context.CurrentIndent}" : trailingNewLine.Value;
-                            else
-                                previousTextNode.Value = (context.CurrentIndent.Length > 0) ? $"{previousTextNode.Value}{trailingNewLine.Value}{context.CurrentIndent}" :
-                                    $"{previousTextNode.Value}{trailingNewLine.Value}";
-                        }
-                        else
-                            node.AddBeforeSelf(new XText((context.CurrentIndent.Length > 0) ? $"{NewLine}{context.CurrentIndent}" : NewLine));
-                        if (node.NextNode is XText nextTextNode)
-                        {
-                            LeadingNewLinex leadingNewLine = nextTextNode.Annotations<LeadingNewLinex>().FirstOrDefault();
-                            if (leadingNewLine is null)
-                            {
-                                if (string.IsNullOrWhiteSpace(nextTextNode.Value))
-                                {
-                                    nextTextNode.RemoveAnnotations<TrailingNewLinex>();
-                                    nextTextNode.AddAnnotation(new TrailingNewLinex(NewLine, context.CurrentIndent.Length == 0));
-                                    nextTextNode.Value = NewLine;
-                                }
-                                else
-                                    nextTextNode.Value = $"{nextTextNode.Value}{NewLine}";
-                            }
-                            else
-                            {
-                                if (string.IsNullOrWhiteSpace(nextTextNode.Value))
-                                {
-                                    nextTextNode.RemoveAnnotations<TrailingNewLinex>();
-                                    nextTextNode.AddAnnotation(new TrailingNewLinex(leadingNewLine.Value, context.CurrentIndent.Length == 0));
-                                    nextTextNode.Value = leadingNewLine.Value;
-                                }
-                                else
-                                    nextTextNode.Value = $"{nextTextNode.Value}{leadingNewLine.Value}";
-                            }
-                        }
-                        else
-                        {
-                            nextTextNode = new XText(NewLine);
-                            nextTextNode.AddAnnotation(new TrailingNewLinex(NewLine, context.CurrentIndent.Length == 0));
-                            node.AddAfterSelf(nextTextNode);
-                        }
-                    }
-                }
-                //string indent = context.GetParentIndent();
-                if (container.LastNode is XText lastTextNode)
-                {
-                    TrailingNewLinex trailingNewLine = lastTextNode.Annotations<TrailingNewLinex>().FirstOrDefault();
+                    TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(firstTextNode);
+                    StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
                     if (trailingNewLine is null)
                     {
-                        if (context.CurrentIndent.Length > 0)
-                            lastTextNode.Value = $"{lastTextNode.Value}{NewLine}{context.CurrentIndent}";
+                        if (indent.Length > 0)
+                            firstTextNode.Value = $"{NewLine}{indent}{firstTextNode.Value}";
                         else
-                            lastTextNode.Value = $"{lastTextNode.Value}{NewLine}";
+                            firstTextNode.Value = $"{NewLine}{firstTextNode.Value}";
+                        // TODO: Update TextNodeCharacteristics annotation
                     }
-                    else if (trailingNewLine.IncludesIndent.HasValue)
+                    else if (trailingNewLine.IsPresent)
                     {
-                        if (trailingNewLine.IncludesIndent.Value || context.CurrentIndent.Length == 0)
-                            lastTextNode.Value = $"{lastTextNode.Value}";
-                        else
-                            lastTextNode.Value = $"{lastTextNode.Value}{context.CurrentIndent}";
-                    }
-                    else if (context.CurrentIndent.Length > 0)
-                        lastTextNode.Value = $"{lastTextNode.Value}{trailingNewLine.Value}{context.CurrentIndent}";
-                    else
-                        lastTextNode.Value = $"{lastTextNode.Value}{trailingNewLine.Value}";
-                }
-                else
-                {
-                    lastTextNode = new XText((context.CurrentIndent.Length > 0) ? $"{NewLine}{context.CurrentIndent}" : NewLine);
-                    container.Add(lastTextNode);
-                }
-                string indent = (context.CurrentIndent.Length > 0) ? $"{context.CurrentIndent}{IndentString}" : (context.IndentLevel < 0) ? "" : IndentString;
-                if (container.FirstNode is XText firstTextNode)
-                {
-                    if (!(ReferenceEquals(lastTextNode, firstTextNode) && string.IsNullOrWhiteSpace(firstTextNode.Value)))
-                    {
-                        LeadingNewLinex leadingNewLine = firstTextNode.Annotations<LeadingNewLinex>().FirstOrDefault();
-                        if (leadingNewLine is null)
+                        if (!textNodeCharacteristics.IncludesTrailingIndent)
                         {
                             if (indent.Length > 0)
-                                lastTextNode.Value = $"{NewLine}{indent}{firstTextNode.Value}";
-                            else
-                                lastTextNode.Value = $"{NewLine}{firstTextNode.Value}";
+                                firstTextNode.Value = $"{indent}{firstTextNode.Value}";
+                            // TODO: Update TextNodeCharacteristics annotation
                         }
-                        else if (leadingNewLine.IncludesIndent.HasValue)
-                        {
-                            if (!leadingNewLine.IncludesIndent.Value && indent.Length > 0)
-                                lastTextNode.Value = $"{indent}{firstTextNode.Value}";
-                        }
-                        else if (indent.Length > 0)
-                            lastTextNode.Value = $"{leadingNewLine.Value}{indent}{firstTextNode.Value}";
-                        else
-                            lastTextNode.Value = $"{leadingNewLine.Value}{firstTextNode.Value}";
                     }
+                    else if (indent.Length > 0)
+                        firstTextNode.Value = $"{trailingNewLine.Value}{indent}{firstTextNode.Value}";
+                    else
+                        firstTextNode.Value = $"{trailingNewLine.Value}{firstTextNode.Value}";
                 }
-                else if (container.FirstNode is not null)
-                    container.FirstNode.AddBeforeSelf(new XText((indent.Length > 0) ? $"{NewLine}{indent}" : NewLine));
+            }
+            else if (targetElement.FirstNode is not null)
+            {
+                firstTextNode = new XText((indent.Length > 0) ? $"{NewLine}{indent}" : NewLine);
+                // TODO: Add TextNodeCharacteristics annotation
+                targetElement.FirstNode.AddBeforeSelf(firstTextNode);
+            }
+
+            for (XNode nextNode = currentNode.NextNode; nextNode is not null; nextNode = nextNode.NextNode)
+            {
+                // TODO: Prepend newline and indent to nextNode
+                currentNode = nextNode;
+            }
+
+            if (currentNode is XText lastTextNode)
+            {
+                // TODO: Append NewLine and CurrentIndent to lastTextNode
             }
             else
             {
-                container.RemoveAnnotations<OuterLineBreakCharacteristics>();
-                container.AddAnnotation(new OuterLineBreakCharacteristics(false));
-            }
-
-            foreach (XNode node in container.Nodes())
-            {
-                if (node is XText)
-                {
-                    node.RemoveAnnotations<NonWhiteSpaceCharacteristics>();
-                    node.RemoveAnnotations<LeadingNewLinex>();
-                    node.RemoveAnnotations<TrailingNewLinex>();
-                }
-                else if (node is XElement || node is XComment)
-                    node.RemoveAnnotations<OuterLineBreakCharacteristics>();
+                lastTextNode = new XText((context.CurrentIndent.Length > 0) ? $"{NewLine}{context.CurrentIndent}" : NewLine);
+                targetElement.Add(lastTextNode);
             }
         }
 
-        protected virtual void Normalize(XText textNode, Context context)
+        /// <summary>
+        /// Normalizes the specified document.
+        /// </summary>
+        /// <param name="document">The <see cref="XDocument"/> to normalize.</param>
+        /// <param name="context">The normalization <see cref="Context"/> object that includes the initial indent string.</param>
+        protected virtual void Normalize([DisallowNull] XDocument document, [DisallowNull] Context context)
         {
-            if (textNode.Value.Length == 0)
-                return;
-            textNode.RemoveAnnotations<NonWhiteSpaceCharacteristics>();
-            textNode.RemoveAnnotations<LeadingNewLinex>();
-            textNode.RemoveAnnotations<TrailingNewLinex>();
-            bool hasPrecedingContent = textNode.NodesBeforeSelf().OfType<XContainer>().Any() || textNode.NodesBeforeSelf().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value));
-            bool hasFollowingContent = textNode.NodesAfterSelf().OfType<XContainer>().Any() || textNode.NodesAfterSelf().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value));
-            string text = hasPrecedingContent ? (hasFollowingContent ? textNode.Value : textNode.Value.TrimEnd()) : hasFollowingContent ? textNode.Value.TrimStart() : textNode.Value.Trim();
-            if (text.Length > 0)
+            for (Context childContext = context.GetFirstNodeContext(); childContext is not null; childContext = childContext.NextNode())
             {
-                if (NonNormalizedLineSeparatorRegex.IsMatch(text))
-                    text = NonNormalizedLineSeparatorRegex.Replace(text, NewLine);
-                Match leadingWsMatch = LeadingNewLineWithOptWs.Match(text);
-                if (leadingWsMatch.Success)
-                    textNode.AddAnnotation(new LeadingNewLinex(leadingWsMatch.Groups[1].Value, null));
-                Match trailingWsMatch = TrailingNewLineWithOptWs.Match(text);
-                if (trailingWsMatch.Success)
-                    textNode.AddAnnotation(new TrailingNewLinex(trailingWsMatch.Groups[1].Value, null));
-                if (EmptyOrWhiteSpaceLineRegex.IsMatch(text) && (text = EmptyOrWhiteSpaceLineRegex.Replace(text, "")).Length == 0)
-                    text = " ";
-                else
+                if (childContext.Node is XText textNode)
                 {
-                    if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
-                        text = NonNormalizedWhiteSpaceRegex.Replace(text, " ");
-                    if (ExtraneousInnerLineWSRegex.IsMatch(text))
-                        text = ExtraneousInnerLineWSRegex.Replace(text, "");
-                    if (NewLineRegex.IsMatch(text))
+                    if (textNode.NextNode is XText consecutiveTextNode)
                     {
-                        if (context.CurrentIndent.Length > 0)
-                            text = NewLineRegex.Replace(text, m => $"{m.Value}{context.CurrentIndent}");
-                        textNode.AddAnnotation(new NonWhiteSpaceCharacteristics(true));
+                        string text = (consecutiveTextNode.Value.Length > 0) ? ((textNode.Value.Length > 0) ? $"{textNode.Value}{consecutiveTextNode.Value}" : consecutiveTextNode.Value) : textNode.Value;
+                        consecutiveTextNode.Remove();
+                        while (textNode.NextNode is XText t)
+                        {
+                            if (t.Value.Length > 0)
+                                text = $"{text}{t.Value}";
+                            t.Remove();
+                        }
+                        textNode.Value = text;
                     }
-                    else
-                        textNode.AddAnnotation(new NonWhiteSpaceCharacteristics(false));
+                    Normalize(textNode, childContext);
                 }
+                else if (childContext.Node is XElement elementNode)
+                    Normalize(elementNode, childContext);
+                else if (childContext.Node is XComment commentNode)
+                    Normalize(commentNode, childContext);
             }
-            else if (!(hasPrecedingContent || hasFollowingContent))
-                text = " ";
-            if (textNode.Value != text)
-                textNode.Value = text;
-        }
 
-        protected class Context
-        {
-            private readonly XNodeNormalizer _normalizer;
-            internal Context Parent { get; }
-            public int IndentLevel { get; }
-            public int Depth { get; }
-            public string CurrentIndent { get; }
-            public XNode Node { get; }
-            public XNode ParentNode { get; }
-            public string GetParentIndent()
+            while (document.FirstNode is XText leadingTextNode)
+                leadingTextNode.Remove();
+            XNode currentNode = document.FirstNode;
+            if (currentNode is null)
+                return;
+            string currentNewLine = NewLine;
+            while (currentNode.NextNode is XText initialTextNode)
             {
-                if (Parent is null)
-                    return (string.IsNullOrEmpty(_normalizer.IndentString) || IndentLevel < 2) ? "" : (IndentLevel == 2) ? _normalizer.IndentString : string.Join("", Enumerable.Repeat(_normalizer.IndentString, IndentLevel - 1));
-                return Parent.CurrentIndent;
+                TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(initialTextNode);
+                StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
+                if (trailingNewLine is null)
+                    currentNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
+                else
+                    currentNewLine = trailingNewLine.Value;
+                initialTextNode.Remove();
             }
-            internal Context(int indentLevel, XNode node, XNodeNormalizer normalizer) : this(indentLevel, 0, node ?? throw new ArgumentNullException(nameof(node)),
-                normalizer ?? throw new ArgumentNullException(nameof(normalizer)))
-            { }
-            private Context([DisallowNull] Context context, [DisallowNull] XNode node)
+            if (currentNode.NextNode is null)
+                return;
+            if (context.CurrentIndent.Length > 0)
             {
-                _normalizer = (Parent = context)._normalizer;
-                IndentLevel = context.IndentLevel;
-                Depth = context.Depth;
-                CurrentIndent = context.CurrentIndent;
-                ParentNode = (Node = node)?.Parent;
-            }
-            private Context(int indentLevel, int depth, [DisallowNull] XNode node, [DisallowNull] XNodeNormalizer normalizer)
-            {
-                _normalizer = normalizer;
-                IndentLevel = indentLevel;
-                Depth = depth;
-                string indent = normalizer.IndentString;
-                CurrentIndent = (string.IsNullOrEmpty(indent) || indentLevel < 1) ? "" : (indentLevel == 1) ? indent : string.Join("", Enumerable.Repeat(indent, indentLevel));
-                ParentNode = (Node = node)?.Parent;
-            }
-            internal Context FirstNode()
-            {
-                if (Node is XContainer container)
+                currentNode.AddBeforeSelf(new XText(context.CurrentIndent));
+                for (XNode nextNode = currentNode.NextNode; nextNode is not null; nextNode = nextNode.NextNode)
                 {
-                    XNode node = container.FirstNode;
-                    if (node is not null)
-                        return (container is XDocument) ? new Context(IndentLevel, Depth + 1, node, _normalizer) : new Context(IndentLevel + 1, Depth + 1, node, _normalizer);
+                    string nextNewLine = NewLine;
+                    while (nextNode.NextNode is XText nextTextNode)
+                    {
+                        TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
+                        StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
+                        if (trailingNewLine is null)
+                            nextNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
+                        else
+                            nextNewLine = trailingNewLine.Value;
+                        nextTextNode.Remove();
+                    }
+                    currentNode.AddAfterSelf(new XText($"{currentNewLine}{context.CurrentIndent}"));
+                    currentNode = nextNode;
+                    currentNewLine = nextNewLine;
                 }
-                return null;
             }
-            internal Context NextNode()
-            {
-                XNode node = Node.NextNode;
-                return (node is null) ? null : new Context(this, node);
-            }
-            internal Context Remove()
-            {
-                XNode node = Node.NextNode;
-                Node.Remove();
-                return (node is null) ? null : new Context(this, node);
-            }
-            internal Context ReplaceWith(XNode node)
-            {
-                Node.ReplaceWith(node);
-                return new Context(this, node);
-            }
-
-            internal Context Indented() => new(IndentLevel + 1, Depth, Node, _normalizer);
+            else for (XNode nextNode = currentNode.NextNode; nextNode is not null; nextNode = nextNode.NextNode)
+                {
+                    string nextNewLine = NewLine;
+                    while (nextNode.NextNode is XText nextTextNode)
+                    {
+                        TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
+                        StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
+                        if (trailingNewLine is null)
+                            nextNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
+                        else
+                            nextNewLine = trailingNewLine.Value;
+                        nextTextNode.Remove();
+                    }
+                    currentNode.AddAfterSelf(new XText(currentNewLine));
+                    currentNode = nextNode;
+                    currentNewLine = nextNewLine;
+                }
+            while (document.LastNode is XText lastTextNode)
+                lastTextNode.Remove();
         }
-    }
 
+        protected static void IndentContents(XElement elementNode, bool value)
+        {
+            LineBreakCharacteristics annotation = elementNode.Annotation<LineBreakCharacteristics>();
+            if (annotation is null)
+                elementNode.AddAnnotation(new LineBreakCharacteristics(false, value));
+            else if (annotation.IndentContents != value)
+            {
+                elementNode.RemoveAnnotations<LineBreakCharacteristics>();
+                elementNode.AddAnnotation(annotation with { IndentContents = value });
+            }
+        }
+
+        protected static void IndentContents(XComment commentNode, bool value)
+        {
+            LineBreakCharacteristics annotation = commentNode.Annotation<LineBreakCharacteristics>();
+            if (annotation is null)
+                commentNode.AddAnnotation(new LineBreakCharacteristics(false, value));
+            else if (annotation.IndentContents != value)
+            {
+                commentNode.RemoveAnnotations<LineBreakCharacteristics>();
+                commentNode.AddAnnotation(annotation with { IndentContents = value });
+            }
+        }
+
+        protected static bool IndentContents(XElement elementNode) => elementNode.Annotations<LineBreakCharacteristics>().Select(a => a.IndentContents).DefaultIfEmpty(false).First();
+
+        protected static bool IndentContents(XComment commentNode) => commentNode.Annotations<LineBreakCharacteristics>().Select(a => a.IndentContents).DefaultIfEmpty(false).First();
+
+        protected static void SurroundWithLineBreaks(XElement elementNode, bool value)
+        {
+            LineBreakCharacteristics annotation = elementNode.Annotation<LineBreakCharacteristics>();
+            if (annotation is null)
+                elementNode.AddAnnotation(new LineBreakCharacteristics(value, false));
+            else if (annotation.SurroundWithLineBreaks != value)
+            {
+                elementNode.RemoveAnnotations<LineBreakCharacteristics>();
+                elementNode.AddAnnotation(annotation with { SurroundWithLineBreaks = value });
+            }
+        }
+
+        protected static void SurroundWithLineBreaks(XComment commentNode, bool value)
+        {
+            LineBreakCharacteristics annotation = commentNode.Annotation<LineBreakCharacteristics>();
+            if (annotation is null)
+                commentNode.AddAnnotation(new LineBreakCharacteristics(value, false));
+            else if (annotation.SurroundWithLineBreaks != value)
+            {
+                commentNode.RemoveAnnotations<LineBreakCharacteristics>();
+                commentNode.AddAnnotation(annotation with { SurroundWithLineBreaks = value });
+            }
+        }
+
+        protected static bool SurroundWithLineBreaks(XElement elementNode) => elementNode.Annotations<LineBreakCharacteristics>().Select(a => a.SurroundWithLineBreaks).DefaultIfEmpty(false).First();
+
+        protected static bool SurroundWithLineBreaks(XComment commentNode) => commentNode.Annotations<LineBreakCharacteristics>().Select(a => a.SurroundWithLineBreaks).DefaultIfEmpty(false).First();
+
+        record LineBreakCharacteristics(bool SurroundWithLineBreaks, bool IndentContents);
+
+        protected record StringValueCharacteristics(string Value, bool IsPresent);
+
+        protected record TextNodeCharacteristics(bool HasNewLine, bool HasNonWhiteSpace, StringValueCharacteristics LeadingNewLine, bool IncludesLeadingIndent, StringValueCharacteristics TrailingNewLine,
+            bool IncludesTrailingIndent);
+    }
 }
