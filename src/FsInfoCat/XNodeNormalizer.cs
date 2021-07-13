@@ -59,6 +59,18 @@ namespace FsInfoCat
         public static readonly Regex TrailingNewLineWithOptWs = new(@"(\r\n|\n)([^\r\n\S]+)?$", RegexOptions.Compiled);
 
         /// <summary>
+        /// Matches the leading newline sequence and any following white-space characters or leading white-space characters with no preceding newline sequence.
+        /// </summary>
+        /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
+        public static readonly Regex LeadingNewLineAndOrWhiteSpace = new(@"^((?<n>\r\n|\n)(?<w>[^\r\n\S]+)?|(?<w>[^\r\n\S]+))", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Matches the trailing newline sequence and any following white-space characters or trailing white-space characters with no preceding newline sequence.
+        /// </summary>
+        /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
+        public static readonly Regex TrailingNewLineAndOrWhiteSpace = new(@"((?<n>\r\n|\n)(?<w>[^\r\n\S]+)?|(?<w>[^\r\n\S]+))$", RegexOptions.Compiled);
+
+        /// <summary>
         /// Matches any line that is empty or contains only white-space characters.
         /// </summary>
         /// <remarks>This assumes that the input string does not contain any character sequences that would be matched by the <see cref="NonNormalizedLineSeparatorRegex"/> pattern.</remarks>
@@ -185,7 +197,7 @@ namespace FsInfoCat
         {
             if (targetTextNode.Value.Length == 0)
                 return;
-            targetTextNode.RemoveAnnotations<TextNodeCharacteristics>();
+            targetTextNode.RemoveAnnotations<TextNodeCharacteristics2>();
             bool hasPrecedingContent = targetTextNode.NodesBeforeSelf().OfType<XContainer>().Any() || targetTextNode.NodesBeforeSelf().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value));
             bool hasFollowingContent = targetTextNode.NodesAfterSelf().OfType<XContainer>().Any() || targetTextNode.NodesAfterSelf().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value));
             string text = hasPrecedingContent ? (hasFollowingContent ? targetTextNode.Value : targetTextNode.Value.TrimEnd()) : hasFollowingContent ? targetTextNode.Value.TrimStart() : targetTextNode.Value.Trim();
@@ -198,7 +210,7 @@ namespace FsInfoCat
                 if (EmptyOrWhiteSpaceLineRegex.IsMatch(text) && (text = EmptyOrWhiteSpaceLineRegex.Replace(text, "")).Length == 0)
                 {
                     text = " ";
-                    targetTextNode.AddAnnotation(new TextNodeCharacteristics(false, false, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
+                    targetTextNode.AddAnnotation(new TextNodeCharacteristics2(false, false, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
                         true, trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null, true));
                 }
                 else
@@ -211,23 +223,23 @@ namespace FsInfoCat
                     {
                         if (context.CurrentIndent.Length > 0)
                             text = NewLineRegex.Replace(text, m => $"{m.Value}{context.CurrentIndent}");
-                        targetTextNode.AddAnnotation(new TextNodeCharacteristics(true, true, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
+                        targetTextNode.AddAnnotation(new TextNodeCharacteristics2(true, true, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
                             leadingWsMatch.Success ? leadingWsMatch.Groups[2].Success : char.IsWhiteSpace(text[0]),
                             trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null,
                             trailingWsMatch.Success ? trailingWsMatch.Groups[2].Success : char.IsWhiteSpace(text.Last())));
                     }
                     else
-                        targetTextNode.AddAnnotation(new TextNodeCharacteristics(false, true, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
+                        targetTextNode.AddAnnotation(new TextNodeCharacteristics2(false, true, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
                             leadingWsMatch.Success ? leadingWsMatch.Groups[2].Success : char.IsWhiteSpace(text[0]),
                             trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null,
                             trailingWsMatch.Success ? trailingWsMatch.Groups[2].Success : char.IsWhiteSpace(text.Last())));
                 }
             }
             else if (hasPrecedingContent || hasFollowingContent)
-                targetTextNode.AddAnnotation(new TextNodeCharacteristics(false, false, null, false, null, false));
+                targetTextNode.AddAnnotation(new TextNodeCharacteristics2(false, false, null, false, null, false));
             else
             {
-                targetTextNode.AddAnnotation(new TextNodeCharacteristics(false, false, null, true, null, true));
+                targetTextNode.AddAnnotation(new TextNodeCharacteristics2(false, false, null, true, null, true));
                 text = " ";
             }
             if (targetTextNode.Value != text)
@@ -297,9 +309,9 @@ namespace FsInfoCat
                 targetComment.Value = text;
         }
 
-        protected static TextNodeCharacteristics GetTextNodeCharacteristics(XText textNode)
+        protected static TextNodeCharacteristics2 GetTextNodeCharacteristics(XText textNode)
         {
-            TextNodeCharacteristics textNodeCharacteristics = textNode.Annotation<TextNodeCharacteristics>();
+            TextNodeCharacteristics2 textNodeCharacteristics = textNode.Annotation<TextNodeCharacteristics2>();
             if (textNodeCharacteristics is null)
             {
                 string text = textNode.Value;
@@ -313,29 +325,29 @@ namespace FsInfoCat
                         if (leadingWsMatch.Index != trailingWsMatch.Index)
                         {
                             text = text.Substring(leadingWsMatch.Groups[1].Length, trailingWsMatch.Index - leadingWsMatch.Groups[1].Length);
-                            textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
+                            textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
                                 new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, true), false, trailingNewLine, false);
                         }
                         else
                         {
                             text = text.Substring(leadingWsMatch.Groups[1].Length);
-                            textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), trailingNewLine, false, trailingNewLine, false);
+                            textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), trailingNewLine, false, trailingNewLine, false);
                         }
                     }
                     else
                     {
                         text = text.Substring(leadingWsMatch.Groups[1].Length);
-                        textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
+                        textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
                             new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, true), false, null, false);
                     }
                 }
                 else if (trailingWsMatch.Success)
                 {
                     text = text.Substring(0, trailingWsMatch.Index);
-                    textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, true), false);
+                    textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, true), false);
                 }
                 else
-                    textNodeCharacteristics = new TextNodeCharacteristics(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, null, false);
+                    textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, null, false);
                 textNode.AddAnnotation(textNodeCharacteristics);
             }
             return textNodeCharacteristics;
@@ -373,7 +385,7 @@ namespace FsInfoCat
                     }
                     Normalize(textNode, childContext);
                     if (!foundNewLine)
-                        foundNewLine = textNode.Annotations<TextNodeCharacteristics>().Select(c => c.HasNewLine).DefaultIfEmpty(false).First();
+                        foundNewLine = textNode.Annotations<TextNodeCharacteristics2>().Select(c => c.HasNewLine).DefaultIfEmpty(false).First();
                 }
                 else if (childContext.Node is XElement elementNode)
                 {
@@ -410,7 +422,7 @@ namespace FsInfoCat
             {
                 if (!(currentNode.NextNode is null && string.IsNullOrWhiteSpace(firstTextNode.Value)))
                 {
-                    TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(firstTextNode);
+                    TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(firstTextNode);
                     StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
                     if (trailingNewLine is null)
                     {
@@ -498,7 +510,7 @@ namespace FsInfoCat
             string currentNewLine = NewLine;
             while (currentNode.NextNode is XText initialTextNode)
             {
-                TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(initialTextNode);
+                TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(initialTextNode);
                 StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
                 if (trailingNewLine is null)
                     currentNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
@@ -516,7 +528,7 @@ namespace FsInfoCat
                     string nextNewLine = NewLine;
                     while (nextNode.NextNode is XText nextTextNode)
                     {
-                        TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
+                        TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
                         StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
                         if (trailingNewLine is null)
                             nextNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
@@ -534,7 +546,7 @@ namespace FsInfoCat
                     string nextNewLine = NewLine;
                     while (nextNode.NextNode is XText nextTextNode)
                     {
-                        TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
+                        TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
                         StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
                         if (trailingNewLine is null)
                             nextNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
@@ -592,14 +604,7 @@ namespace FsInfoCat
 
         protected static void SurroundWithLineBreaks(XComment commentNode, bool value)
         {
-            LineBreakCharacteristics annotation = commentNode.Annotation<LineBreakCharacteristics>();
-            if (annotation is null)
-                commentNode.AddAnnotation(new LineBreakCharacteristics(value, false));
-            else if (annotation.SurroundWithLineBreaks != value)
-            {
-                commentNode.RemoveAnnotations<LineBreakCharacteristics>();
-                commentNode.AddAnnotation(annotation with { SurroundWithLineBreaks = value });
-            }
+            throw new NotImplementedException();
         }
 
         protected static bool SurroundWithLineBreaks(XElement elementNode) => elementNode.Annotations<LineBreakCharacteristics>().Select(a => a.SurroundWithLineBreaks).DefaultIfEmpty(false).First();
@@ -610,7 +615,185 @@ namespace FsInfoCat
 
         protected record StringValueCharacteristics(string Value, bool IsPresent);
 
-        protected record TextNodeCharacteristics(bool HasNewLine, bool HasNonWhiteSpace, StringValueCharacteristics LeadingNewLine, bool IncludesLeadingIndent, StringValueCharacteristics TrailingNewLine,
+        protected record TextNodeCharacteristics2(bool HasNewLine, bool HasNonWhiteSpace, StringValueCharacteristics LeadingNewLine, bool IncludesLeadingIndent, StringValueCharacteristics TrailingNewLine,
             bool IncludesTrailingIndent);
+
+        public TextNodeCharacteristics GetTextNodeCharacteristics([DisallowNull] XText textNode, bool preferNotPresent = false, bool forceRefresh = false)
+        {
+            if (textNode is null)
+                throw new ArgumentNullException(nameof(textNode));
+            TextNodeCharacteristics result, current = textNode.Annotation<TextNodeCharacteristics>();
+            if (!(current is null || forceRefresh))
+                return current;
+            LineExtent start, end;
+            string text = textNode.Value;
+            if (text.Length > 0)
+            {
+                if (NonNormalizedLineSeparatorRegex.IsMatch(text))
+                    text = NonNormalizedLineSeparatorRegex.Replace(text, NewLine);
+                Match trailingMatch = TrailingNewLineAndOrWhiteSpace.Match(text);
+                if (trailingMatch.Success)
+                {
+                    end = trailingMatch.Groups["n"].Success ? new LineExtent
+                    {
+                        IsCrLf = new OptionalValue<bool> { Value = trailingMatch.Groups["n"].Length > 1, IsPresent = !preferNotPresent },
+                        WhiteSpace = trailingMatch.Groups["w"].Success ? new OptionalValue<string> { Value = trailingMatch.Groups["w"].Value, IsPresent = !preferNotPresent } : null
+                    } : new LineExtent { IsCrLf = null, WhiteSpace = new OptionalValue<string> { Value = trailingMatch.Groups["w"].Value, IsPresent = !preferNotPresent } };
+                    if (trailingMatch.Index == 0)
+                    {
+                        start = end;
+                        text = "";
+                    }
+                    else
+                    {
+                        text = text.Substring(0, trailingMatch.Index);
+                        Match leadingMatch = LeadingNewLineAndOrWhiteSpace.Match(text);
+                        if (leadingMatch.Success)
+                        {
+                            start = leadingMatch.Groups["n"].Success ? new LineExtent
+                            {
+                                IsCrLf = new OptionalValue<bool> { Value = leadingMatch.Groups["n"].Length > 1, IsPresent = !preferNotPresent },
+                                WhiteSpace = leadingMatch.Groups["w"].Success ? new OptionalValue<string> { Value = leadingMatch.Groups["w"].Value, IsPresent = !preferNotPresent } : null
+                            } : new LineExtent { IsCrLf = null, WhiteSpace = new OptionalValue<string> { Value = leadingMatch.Groups["w"].Value, IsPresent = !preferNotPresent } };
+                            text = (leadingMatch.Length < text.Length) ? text.Substring(leadingMatch.Length) : "";
+                        }
+                        else
+                            start = null;
+                    }
+                }
+                else
+                {
+                    end = null;
+                    Match leadingMatch = LeadingNewLineAndOrWhiteSpace.Match(text);
+                    if (leadingMatch.Success)
+                    {
+                        start = leadingMatch.Groups["n"].Success ? new LineExtent
+                        {
+                            IsCrLf = new OptionalValue<bool> { Value = leadingMatch.Groups["n"].Length > 1, IsPresent = !preferNotPresent },
+                            WhiteSpace = leadingMatch.Groups["w"].Success ? new OptionalValue<string> { Value = leadingMatch.Groups["w"].Value, IsPresent = !preferNotPresent } : null
+                        } : new LineExtent { IsCrLf = null, WhiteSpace = new OptionalValue<string> { Value = leadingMatch.Groups["w"].Value, IsPresent = !preferNotPresent } };
+                        text = (leadingMatch.Length < text.Length) ? text.Substring(leadingMatch.Length) : "";
+                    }
+                    else
+                        start = null;
+                }
+            }
+            else
+                start = end = null;
+            if (text.Length > 0)
+            {
+                if ((text = text.Trim()).Length > 0)
+                {
+                    if (EmptyOrWhiteSpaceLineRegex.IsMatch(text))
+                        text = NonNormalizedLineSeparatorRegex.Replace(text, "");
+                    if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
+                        text = NonNormalizedWhiteSpaceRegex.Replace(text, " ");
+                    result = (current is null) ? new TextNodeCharacteristics
+                    {
+                        HasNonWhiteSpace = true,
+                        IsMultiLine = NewLineRegex.IsMatch(text),
+                        Start = start,
+                        End = end
+                    } : new TextNodeCharacteristics
+                    {
+                        HasNonWhiteSpace = true,
+                        IsMultiLine = NewLineRegex.IsMatch(text),
+                        Start = LineExtent.Merge(start, current.Start, preferNotPresent),
+                        End = LineExtent.Merge(end, current.End, preferNotPresent)
+                    };
+                }
+                else
+                {
+                    text = " ";
+                    result = (current is null) ? new TextNodeCharacteristics
+                    {
+                        HasNonWhiteSpace = false,
+                        IsMultiLine = true,
+                        Start = start,
+                        End = end
+                    } : new TextNodeCharacteristics
+                    {
+                        HasNonWhiteSpace = false,
+                        IsMultiLine = true,
+                        Start = LineExtent.Merge(start, current.Start, preferNotPresent),
+                        End = LineExtent.Merge(end, current.End, preferNotPresent)
+                    };
+                }
+            }
+            else
+                result = (current is null) ? new TextNodeCharacteristics
+                {
+                    HasNonWhiteSpace = false,
+                    IsMultiLine = true,
+                    Start = start,
+                    End = end
+                } : new TextNodeCharacteristics
+                {
+                    HasNonWhiteSpace = false,
+                    IsMultiLine = true,
+                    Start = LineExtent.Merge(start, current.Start, preferNotPresent),
+                    End = LineExtent.Merge(end, current.End, preferNotPresent)
+                };
+            if (current is not null)
+                textNode.RemoveAnnotations<TextNodeCharacteristics>();
+            textNode.AddAnnotation(result);
+            if (result.Start?.WhiteSpace?.IsPresent ?? false)
+                text = $"{result.Start.WhiteSpace?.Value}{text}";
+            if (result.Start?.IsCrLf?.IsPresent ?? false)
+                text = $"{((result.Start.IsCrLf?.Value ?? false) ? "\r\n" : "\n")}{text}";
+            if (result.End?.WhiteSpace?.IsPresent ?? false)
+                text = $"{text}{result.End.WhiteSpace?.Value}";
+            if (result.End?.IsCrLf?.IsPresent ?? false)
+                text = $"{text}{((result.End.IsCrLf?.Value ?? false) ? "\r\n" : "\n")}";
+            if (textNode.Value != text)
+                textNode.Value = text;
+            return result;
+        }
+    }
+
+    public record OptionalValue<T>
+    {
+        public T Value { get; init; }
+        public bool IsPresent { get; init; }
+        public static OptionalValue<T> Merge(OptionalValue<T> x, OptionalValue<T> y, bool preferNotPresent = false) => (x is null) ? y :
+            (y is null || x.Equals(y) || (preferNotPresent ? (!x.IsPresent || y.IsPresent) : (x.IsPresent || !y.IsPresent))) ? x : x with { IsPresent = !preferNotPresent };
+    }
+
+    public record LineExtent
+    {
+        public OptionalValue<bool> IsCrLf { get; init; }
+        public OptionalValue<string> WhiteSpace { get; init; }
+        public static LineExtent Merge(LineExtent x, LineExtent y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y)) ? x : new LineExtent
+        {
+            IsCrLf = OptionalValue<bool>.Merge(x.IsCrLf, y.IsCrLf, preferNotPresent),
+            WhiteSpace = OptionalValue<string>.Merge(x.WhiteSpace, y.WhiteSpace, preferNotPresent)
+        };
+    }
+
+    public record TextNodeCharacteristics
+    {
+        public bool IsMultiLine { get; init; }
+        public bool HasNonWhiteSpace { get; init; }
+        public LineExtent Start { get; init; }
+        public LineExtent End { get; init; }
+        public static TextNodeCharacteristics Merge(TextNodeCharacteristics x, TextNodeCharacteristics y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y) ||
+            (((x.Start is null) ? y.Start is null : x.Start.Equals(y.Start)) && ((x.End is null) ? y.End is null : x.End.Equals(y.End)))) ? x : x with
+            {
+                Start = LineExtent.Merge(x.Start, y.Start, preferNotPresent),
+                End = LineExtent.Merge(x.End, y.End, preferNotPresent)
+            };
+    }
+
+    public record TagNodeCharacteristics
+    {
+        public bool IndentContents { get; init; }
+        public LineExtent Before { get; init; }
+        public LineExtent After { get; init; }
+        public static TagNodeCharacteristics Merge(TagNodeCharacteristics x, TagNodeCharacteristics y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y)) ? x : new TagNodeCharacteristics
+        {
+            IndentContents = x.IndentContents || y.IndentContents,
+            Before = LineExtent.Merge(x.Before, y.Before, preferNotPresent),
+            After = LineExtent.Merge(x.After, y.After, preferNotPresent)
+        };
     }
 }

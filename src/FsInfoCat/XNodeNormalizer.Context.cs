@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace FsInfoCat
@@ -72,24 +73,19 @@ namespace FsInfoCat
             /// <param name="node">The <see cref="XNode"/> to be normalized.</param>
             /// <param name="normalizer">The <see cref="XNodeNormalizer"/> instance that will perform the normalization.</param>
             internal Context(int indentLevel, [DisallowNull] XNode node, XNodeNormalizer normalizer)
-                : this(indentLevel, 0, node ?? throw new ArgumentNullException(nameof(node)), normalizer ?? throw new ArgumentNullException(nameof(normalizer))) { }
+                : this(indentLevel, 0, node ?? throw new ArgumentNullException(nameof(node)), normalizer ?? throw new ArgumentNullException(nameof(normalizer)), null,
+                      (string.IsNullOrEmpty(normalizer.IndentString) || indentLevel < 1) ? "" : (indentLevel == 1) ? normalizer.IndentString :
+                      string.Join("", Enumerable.Repeat(normalizer.IndentString, indentLevel))) { }
 
-            private Context([DisallowNull] Context context, [DisallowNull] XNode node)
-            {
-                _normalizer = (Parent = context)._normalizer;
-                IndentLevel = context.IndentLevel;
-                Depth = context.Depth;
-                CurrentIndent = context.CurrentIndent;
-                ParentNode = (Node = node).Parent;
-            }
+            private Context([DisallowNull] Context context, [DisallowNull] XNode node) : this(context.IndentLevel, context.Depth, node, context._normalizer, context, context.CurrentIndent) { }
 
-            private Context(int indentLevel, int depth, [DisallowNull] XNode node, [DisallowNull] XNodeNormalizer normalizer)
+            private Context(int indentLevel, int depth, [DisallowNull] XNode node, [DisallowNull] XNodeNormalizer normalizer, Context parent, string currentIndent)
             {
                 _normalizer = normalizer;
                 IndentLevel = indentLevel;
                 Depth = depth;
-                string indent = normalizer.IndentString;
-                CurrentIndent = (string.IsNullOrEmpty(indent) || indentLevel < 1) ? "" : (indentLevel == 1) ? indent : string.Join("", Enumerable.Repeat(indent, indentLevel));
+                CurrentIndent = currentIndent;
+                Parent = parent;
                 ParentNode = (Node = node).Parent;
             }
 
@@ -109,7 +105,10 @@ namespace FsInfoCat
                 {
                     XNode node = container.FirstNode;
                     if (node is not null)
-                        return (container is XDocument) ? new Context(IndentLevel, Depth + 1, node, _normalizer) : new Context(IndentLevel + 1, Depth + 1, node, _normalizer);
+                    {
+                        string indent = (string.IsNullOrEmpty(_normalizer.IndentString) || IndentLevel < 1) ? "" : (IndentLevel == 1) ? _normalizer.IndentString : string.Join("", Enumerable.Repeat(_normalizer.IndentString, IndentLevel));
+                        return (container is XDocument) ? new Context(IndentLevel, Depth + 1, node, _normalizer, this, indent) : new Context(IndentLevel + 1, Depth + 1, node, _normalizer, this, indent);
+                    }
                 }
                 return null;
             }
