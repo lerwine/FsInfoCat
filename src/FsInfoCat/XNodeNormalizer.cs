@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -187,6 +189,294 @@ namespace FsInfoCat
         /// <returns><see langword="true"/> if the content of the <paramref name="targetElement"/> should always be indented; otherwise, <see langword="false"/>.</returns>
         protected virtual bool ForceIndentContent([DisallowNull] XElement targetElement, [DisallowNull] Context context) => false;
 
+        private static void MergeFollowingTextNodesWithCData(XCData targetTextNode, StringBuilder sb)
+        {
+            while (targetTextNode.NextNode is XText nextText)
+            {
+                string n = nextText.Value;
+                nextText.Remove();
+                if (n.Length > 0)
+                    sb.Append(n);
+            }
+        }
+        private static XCData MergeFollowingTextNodesWithCData(XCData targetTextNode, out string text)
+        {
+            text = targetTextNode.Value;
+            if (text.Length > 0)
+                while (targetTextNode.NextNode is XText nextText)
+                {
+                    string n = nextText.Value;
+                    nextText.Remove();
+                    if (n.Length > 0)
+                    {
+                        StringBuilder sb = new StringBuilder(text).Append(n);
+                        MergeFollowingTextNodesWithCData(targetTextNode, sb);
+                        text = sb.ToString();
+                        return targetTextNode;
+                    }
+                }
+            else
+                while (targetTextNode.NextNode is XText nextText)
+                {
+                    if ((text = targetTextNode.Value).Length > 0)
+                    {
+                        if (nextText is XCData nextCData)
+                        {
+                            targetTextNode.Remove();
+                            targetTextNode = nextCData;
+                        }
+                        else
+                            nextText.Remove();
+                        while (targetTextNode.NextNode is XText n)
+                        {
+                            string t = n.Value;
+                            n.Remove();
+                            if (t.Length > 0)
+                            {
+                                StringBuilder sb = new StringBuilder(text).Append(t);
+                                MergeFollowingTextNodesWithCData(targetTextNode, sb);
+                                text = sb.ToString();
+                                return targetTextNode;
+                            }
+                        }
+                    }
+                }
+            return targetTextNode;
+        }
+        private static XText MergeFollowingTextNodesWithCData(string currentText, XCData targetTextNode, out string text)
+        {
+            text = currentText;
+            while (targetTextNode.NextNode is XText nextTextNode)
+            {
+                string t = nextTextNode.Value;
+                nextTextNode.Remove();
+                if (t.Length > 0)
+                {
+                    StringBuilder sb = new StringBuilder(text).Append(t);
+                    MergeFollowingTextNodesWithCData(targetTextNode, sb);
+                    targetTextNode.Value = text = sb.ToString();
+                    return targetTextNode;
+                }
+            }
+            if (text != targetTextNode.Value)
+                targetTextNode.Value = text;
+            return targetTextNode;
+        }
+        private static XText MergeFollowingTextNodes(string currentText, XText targetTextNode, out string text)
+        {
+            text = currentText;
+            while (targetTextNode.NextNode is XText nextNode)
+            {
+                string t = nextNode.Value;
+                if (nextNode is XCData nextCData)
+                {
+                    targetTextNode.Remove();
+                    if (t.Length > 0)
+                    {
+                        StringBuilder sb = new StringBuilder(text).Append(t);
+                        MergeFollowingTextNodesWithCData(nextCData, sb);
+                        nextCData.Value = text = sb.ToString();
+                        return nextCData;
+                    }
+                    return MergeFollowingTextNodesWithCData(text, nextCData, out text);
+                }
+                nextNode.Remove();
+                if (t.Length > 0)
+                {
+                    StringBuilder sb = new StringBuilder(text).Append(t);
+                    targetTextNode = MergeFollowingTextNodes(targetTextNode, sb);
+                    targetTextNode.Value = sb.ToString();
+                    return targetTextNode;
+                }
+            }
+            return targetTextNode;
+        }
+        private static XText MergeFollowingTextNodes(XText targetTextNode, out string text)
+        {
+            text = targetTextNode.Value;
+            if (targetTextNode is XCData targetXCData)
+            {
+                if (text.Length > 0)
+                    return MergeFollowingTextNodesWithCData(text, targetXCData, out text);
+                else
+                    while (targetXCData.NextNode is XText nextTextNode)
+                    {
+                        if ((text = nextTextNode.Value).Length > 0)
+                        {
+                            if (nextTextNode is XCData nextCData)
+                            {
+                                targetXCData.Remove();
+                                targetXCData = nextCData;
+                            }
+                            else
+                                nextTextNode.Remove();
+                            return MergeFollowingTextNodesWithCData(text, targetXCData, out text);
+                        }
+                        else
+                            nextTextNode.Remove();
+                    }
+                return targetXCData;
+            }
+            if (text.Length > 0)
+                return MergeFollowingTextNodes(text, targetTextNode, out text);
+            while (targetTextNode.NextNode is XText nextTextNode)
+            {
+                if (nextTextNode is XCData cData)
+                {
+                    targetTextNode.Remove();
+                    if ((text = cData.Value).Length > 0)
+                        return MergeFollowingTextNodesWithCData(text, cData, out text);
+                    while (cData.NextNode is XText ntn)
+                    {
+                        if ((text = ntn.Value).Length > 0)
+                        {
+                            if (ntn is XCData nextCData)
+                            {
+                                cData.Remove();
+                                cData = nextCData;
+                            }
+                            else
+                                ntn.Remove();
+                            return MergeFollowingTextNodesWithCData(text, cData, out text);
+                        }
+                        ntn.Remove();
+                    }
+                    return cData;
+                }
+                if ((text = nextTextNode.Value).Length > 0)
+                {
+                    targetTextNode.Remove();
+                    return MergeFollowingTextNodes(text, nextTextNode, out text);
+                }
+                nextTextNode.Remove();
+            }
+            return targetTextNode;
+        }
+        private static XText MergeFollowingTextNodes(XText targetTextNode, StringBuilder stringBuilder)
+        {
+            while (targetTextNode.NextNode is XText nextText)
+            {
+                if (nextText.Value.Length > 0)
+                    stringBuilder.Append(nextText.Value);
+                if (nextText is XCData)
+                {
+                    targetTextNode.Remove();
+                    while (nextText.NextNode is XText t)
+                    {
+                        if (t.Value.Length > 0)
+                            stringBuilder.Append(t.Value);
+                        t.Remove();
+                    }
+                    return nextText;
+                }
+                nextText.Remove();
+            }
+            return targetTextNode;
+        }
+
+        protected virtual XText Normalize([DisallowNull] XText targetTextNode, [DisallowNull] Context context, out bool isMultiLine, out bool hasNonWhiteSpace, out bool? leadsCrlf, out bool? trailsCrlf)
+        {
+            targetTextNode = MergeFollowingTextNodes(targetTextNode, out string text);
+            if (text.Length > 0)
+            {
+                if (NonNormalizedLineSeparatorRegex.IsMatch(text))
+                    text = NonNormalizedLineSeparatorRegex.Replace(text, NewLine);
+                Match trailingMatch = TrailingNewLineWithOptWs.Match(text);
+                if (trailingMatch.Success)
+                {
+                    trailsCrlf = trailingMatch.Groups[1].Length > 1;
+                    if (trailingMatch.Index == 0)
+                    {
+                        leadsCrlf = trailsCrlf;
+                        targetTextNode.Value = (targetTextNode.NodesBeforeSelf().Any(n => IsContentNode(n)) && targetTextNode.NodesAfterSelf().Any(n => IsContentNode(n))) ? " " : "";
+                        hasNonWhiteSpace = isMultiLine = false;
+                    }
+                    else
+                    {
+                        Match leadingMatch = LeadingNewLineWithOptWs.Match(text);
+                        if (leadingMatch.Success)
+                        {
+                            leadsCrlf = leadingMatch.Groups[1].Length > 1;
+                            int length = trailingMatch.Index - leadingMatch.Length;
+                            if (length > 0)
+                            {
+                                text = text.Substring(leadingMatch.Length, length);
+                                if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
+                                    text = NonNormalizedWhiteSpaceRegex.Replace(text, "");
+                                if (EmptyOrWhiteSpaceLineRegex.IsMatch(text))
+                                    text = EmptyOrWhiteSpaceLineRegex.Replace(text, "");
+                                if (ExtraneousLineWhitespaceRegex.IsMatch(text))
+                                    text = ExtraneousLineWhitespaceRegex.Replace(text, "");
+                                hasNonWhiteSpace = !string.IsNullOrWhiteSpace(text);
+                                isMultiLine = NewLineRegex.IsMatch(text);
+                            }
+                            else
+                            {
+                                targetTextNode.Value = (targetTextNode.NodesBeforeSelf().Any(n => IsContentNode(n)) && targetTextNode.NodesAfterSelf().Any(n => IsContentNode(n))) ? " " : "";
+                                hasNonWhiteSpace = isMultiLine = false;
+                            }
+                        }
+                        else
+                        {
+                            leadsCrlf = null;
+                            text = text.Substring(0, trailingMatch.Index);
+                            if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
+                                text = NonNormalizedWhiteSpaceRegex.Replace(text, "");
+                            if (EmptyOrWhiteSpaceLineRegex.IsMatch(text))
+                                text = EmptyOrWhiteSpaceLineRegex.Replace(text, "");
+                            if (ExtraneousLineWhitespaceRegex.IsMatch(text))
+                                text = ExtraneousLineWhitespaceRegex.Replace(text, "");
+                            hasNonWhiteSpace = !string.IsNullOrWhiteSpace(text);
+                            isMultiLine = NewLineRegex.IsMatch(text);
+                        }
+                    }
+                }
+                else
+                {
+                    trailsCrlf = null;
+                    Match leadingMatch = LeadingNewLineWithOptWs.Match(text);
+                    if (leadingMatch.Success)
+                    {
+                        leadsCrlf = leadingMatch.Groups[1].Length > 1;
+                        if (leadingMatch.Length < text.Length)
+                        {
+                            text = text.Substring(leadingMatch.Length);
+                            if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
+                                text = NonNormalizedWhiteSpaceRegex.Replace(text, "");
+                            if (EmptyOrWhiteSpaceLineRegex.IsMatch(text))
+                                text = EmptyOrWhiteSpaceLineRegex.Replace(text, "");
+                            if (ExtraneousLineWhitespaceRegex.IsMatch(text))
+                                text = ExtraneousLineWhitespaceRegex.Replace(text, "");
+                            hasNonWhiteSpace = !string.IsNullOrWhiteSpace(text);
+                            isMultiLine = NewLineRegex.IsMatch(text);
+                        }
+                        else
+                        {
+                            targetTextNode.Value = (targetTextNode.NodesBeforeSelf().Any(n => IsContentNode(n)) && targetTextNode.NodesAfterSelf().Any(n => IsContentNode(n))) ? " " : "";
+                            hasNonWhiteSpace = isMultiLine = false;
+                        }
+                    }
+                    else
+                    {
+                        leadsCrlf = null;
+                        if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
+                            text = NonNormalizedWhiteSpaceRegex.Replace(text, "");
+                        if (EmptyOrWhiteSpaceLineRegex.IsMatch(text))
+                            text = EmptyOrWhiteSpaceLineRegex.Replace(text, "");
+                        if (ExtraneousLineWhitespaceRegex.IsMatch(text))
+                            text = ExtraneousLineWhitespaceRegex.Replace(text, "");
+                        hasNonWhiteSpace = !string.IsNullOrWhiteSpace(text);
+                        isMultiLine = NewLineRegex.IsMatch(text);
+                    }
+                }
+            }
+            else
+            {
+                leadsCrlf = trailsCrlf = null;
+                hasNonWhiteSpace = isMultiLine = false;
+            }
+            return targetTextNode;
+        }
         /// <summary>
         /// Normalizes the specified text node.
         /// </summary>
@@ -195,55 +485,7 @@ namespace FsInfoCat
         /// <remarks>All lines that are empty or contain only whitespace characters will be removed. This will not indent the first line, but will indent any lines that follow.</remarks>
         protected virtual void Normalize([DisallowNull] XText targetTextNode, [DisallowNull] Context context)
         {
-            if (targetTextNode.Value.Length == 0)
-                return;
-            targetTextNode.RemoveAnnotations<TextNodeCharacteristics2>();
-            bool hasPrecedingContent = targetTextNode.NodesBeforeSelf().OfType<XContainer>().Any() || targetTextNode.NodesBeforeSelf().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value));
-            bool hasFollowingContent = targetTextNode.NodesAfterSelf().OfType<XContainer>().Any() || targetTextNode.NodesAfterSelf().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value));
-            string text = hasPrecedingContent ? (hasFollowingContent ? targetTextNode.Value : targetTextNode.Value.TrimEnd()) : hasFollowingContent ? targetTextNode.Value.TrimStart() : targetTextNode.Value.Trim();
-            if (text.Length > 0)
-            {
-                if (NonNormalizedLineSeparatorRegex.IsMatch(text))
-                    text = NonNormalizedLineSeparatorRegex.Replace(text, NewLine);
-                Match leadingWsMatch = LeadingNewLineWithOptWs.Match(text);
-                Match trailingWsMatch = TrailingNewLineWithOptWs.Match(text);
-                if (EmptyOrWhiteSpaceLineRegex.IsMatch(text) && (text = EmptyOrWhiteSpaceLineRegex.Replace(text, "")).Length == 0)
-                {
-                    text = " ";
-                    targetTextNode.AddAnnotation(new TextNodeCharacteristics2(false, false, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
-                        true, trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null, true));
-                }
-                else
-                {
-                    if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
-                        text = NonNormalizedWhiteSpaceRegex.Replace(text, " ");
-                    if (ExtraneousInnerLineWSRegex.IsMatch(text))
-                        text = ExtraneousInnerLineWSRegex.Replace(text, "");
-                    if (NewLineRegex.IsMatch(text))
-                    {
-                        if (context.CurrentIndent.Length > 0)
-                            text = NewLineRegex.Replace(text, m => $"{m.Value}{context.CurrentIndent}");
-                        targetTextNode.AddAnnotation(new TextNodeCharacteristics2(true, true, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
-                            leadingWsMatch.Success ? leadingWsMatch.Groups[2].Success : char.IsWhiteSpace(text[0]),
-                            trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null,
-                            trailingWsMatch.Success ? trailingWsMatch.Groups[2].Success : char.IsWhiteSpace(text.Last())));
-                    }
-                    else
-                        targetTextNode.AddAnnotation(new TextNodeCharacteristics2(false, true, leadingWsMatch.Success ? new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, false) : null,
-                            leadingWsMatch.Success ? leadingWsMatch.Groups[2].Success : char.IsWhiteSpace(text[0]),
-                            trailingWsMatch.Success ? new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, false) : null,
-                            trailingWsMatch.Success ? trailingWsMatch.Groups[2].Success : char.IsWhiteSpace(text.Last())));
-                }
-            }
-            else if (hasPrecedingContent || hasFollowingContent)
-                targetTextNode.AddAnnotation(new TextNodeCharacteristics2(false, false, null, false, null, false));
-            else
-            {
-                targetTextNode.AddAnnotation(new TextNodeCharacteristics2(false, false, null, true, null, true));
-                text = " ";
-            }
-            if (targetTextNode.Value != text)
-                targetTextNode.Value = text;
+            GetTextNodeCharacteristics(targetTextNode);
         }
 
         /// <summary>
@@ -282,8 +524,8 @@ namespace FsInfoCat
                     text = EmptyOrWhiteSpaceLineRegex.Replace(text, "");
                 if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
                     text = NonNormalizedWhiteSpaceRegex.Replace(text, " ");
-                if (ExtraneousLineWhitespaceRegex.IsMatch(text))
-                    text = ExtraneousLineWhitespaceRegex.Replace(text, "");
+                if (ExtraneousInnerLineWSRegex.IsMatch(text))
+                    text = ExtraneousInnerLineWSRegex.Replace(text, "");
                 if (NewLineRegex.IsMatch(text))
                 {
                     IndentContents(targetComment, true);
@@ -309,49 +551,49 @@ namespace FsInfoCat
                 targetComment.Value = text;
         }
 
-        protected static TextNodeCharacteristics2 GetTextNodeCharacteristics(XText textNode)
-        {
-            TextNodeCharacteristics2 textNodeCharacteristics = textNode.Annotation<TextNodeCharacteristics2>();
-            if (textNodeCharacteristics is null)
-            {
-                string text = textNode.Value;
-                Match leadingWsMatch = LeadingNewLineWithOptWs.Match(textNode.Value);
-                Match trailingWsMatch = TrailingNewLineWithOptWs.Match(textNode.Value);
-                if (leadingWsMatch.Success)
-                {
-                    if (trailingWsMatch.Success)
-                    {
-                        StringValueCharacteristics trailingNewLine = new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, true);
-                        if (leadingWsMatch.Index != trailingWsMatch.Index)
-                        {
-                            text = text.Substring(leadingWsMatch.Groups[1].Length, trailingWsMatch.Index - leadingWsMatch.Groups[1].Length);
-                            textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
-                                new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, true), false, trailingNewLine, false);
-                        }
-                        else
-                        {
-                            text = text.Substring(leadingWsMatch.Groups[1].Length);
-                            textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), trailingNewLine, false, trailingNewLine, false);
-                        }
-                    }
-                    else
-                    {
-                        text = text.Substring(leadingWsMatch.Groups[1].Length);
-                        textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
-                            new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, true), false, null, false);
-                    }
-                }
-                else if (trailingWsMatch.Success)
-                {
-                    text = text.Substring(0, trailingWsMatch.Index);
-                    textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, true), false);
-                }
-                else
-                    textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, null, false);
-                textNode.AddAnnotation(textNodeCharacteristics);
-            }
-            return textNodeCharacteristics;
-        }
+        //protected static TextNodeCharacteristics2 GetTextNodeCharacteristics(XText textNode)
+        //{
+        //    TextNodeCharacteristics2 textNodeCharacteristics = textNode.Annotation<TextNodeCharacteristics2>();
+        //    if (textNodeCharacteristics is null)
+        //    {
+        //        string text = textNode.Value;
+        //        Match leadingWsMatch = LeadingNewLineWithOptWs.Match(textNode.Value);
+        //        Match trailingWsMatch = TrailingNewLineWithOptWs.Match(textNode.Value);
+        //        if (leadingWsMatch.Success)
+        //        {
+        //            if (trailingWsMatch.Success)
+        //            {
+        //                StringValueCharacteristics trailingNewLine = new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, true);
+        //                if (leadingWsMatch.Index != trailingWsMatch.Index)
+        //                {
+        //                    text = text.Substring(leadingWsMatch.Groups[1].Length, trailingWsMatch.Index - leadingWsMatch.Groups[1].Length);
+        //                    textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
+        //                        new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, true), false, trailingNewLine, false);
+        //                }
+        //                else
+        //                {
+        //                    text = text.Substring(leadingWsMatch.Groups[1].Length);
+        //                    textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), trailingNewLine, false, trailingNewLine, false);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                text = text.Substring(leadingWsMatch.Groups[1].Length);
+        //                textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text),
+        //                    new StringValueCharacteristics(leadingWsMatch.Groups[1].Value, true), false, null, false);
+        //            }
+        //        }
+        //        else if (trailingWsMatch.Success)
+        //        {
+        //            text = text.Substring(0, trailingWsMatch.Index);
+        //            textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, new StringValueCharacteristics(trailingWsMatch.Groups[1].Value, true), false);
+        //        }
+        //        else
+        //            textNodeCharacteristics = new TextNodeCharacteristics2(NewLineRegex.IsMatch(text), !string.IsNullOrWhiteSpace(text), null, false, null, false);
+        //        textNode.AddAnnotation(textNodeCharacteristics);
+        //    }
+        //    return textNodeCharacteristics;
+        //}
 
         /// <summary>
         /// Normalizes the specified element.
@@ -365,27 +607,16 @@ namespace FsInfoCat
             if (targetElement.IsEmpty)
                 return;
 
+            NodeDisposition.FillNodeDispositions(targetElement);
             bool foundNewLine = false;
 
             for (Context childContext = context.GetFirstNodeContext(); childContext is not null; childContext = childContext.NextNode())
             {
                 if (childContext.Node is XText textNode)
                 {
-                    if (textNode.NextNode is XText consecutiveTextNode)
-                    {
-                        string text = (consecutiveTextNode.Value.Length > 0) ? ((textNode.Value.Length > 0) ? $"{textNode.Value}{consecutiveTextNode.Value}" : consecutiveTextNode.Value) : textNode.Value;
-                        consecutiveTextNode.Remove();
-                        while (textNode.NextNode is XText t)
-                        {
-                            if (t.Value.Length > 0)
-                                text = $"{text}{t.Value}";
-                            t.Remove();
-                        }
-                        textNode.Value = text;
-                    }
-                    Normalize(textNode, childContext);
-                    if (!foundNewLine)
-                        foundNewLine = textNode.Annotations<TextNodeCharacteristics2>().Select(c => c.HasNewLine).DefaultIfEmpty(false).First();
+                    Normalize(textNode, childContext, out bool isMultiLine, out bool hasNonWhiteSpace, out bool? leadsCrlf, out bool? trailsCrLf);
+                    if (isMultiLine)
+                        foundNewLine = true;
                 }
                 else if (childContext.Node is XElement elementNode)
                 {
@@ -422,9 +653,9 @@ namespace FsInfoCat
             {
                 if (!(currentNode.NextNode is null && string.IsNullOrWhiteSpace(firstTextNode.Value)))
                 {
-                    TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(firstTextNode);
-                    StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
-                    if (trailingNewLine is null)
+                    TextNodeCharacteristics textNodeCharacteristics = GetTextNodeCharacteristics(firstTextNode);
+                    LineExtent textEnding = textNodeCharacteristics.End;
+                    if (textEnding is null)
                     {
                         if (indent.Length > 0)
                             firstTextNode.Value = $"{NewLine}{indent}{firstTextNode.Value}";
@@ -432,19 +663,18 @@ namespace FsInfoCat
                             firstTextNode.Value = $"{NewLine}{firstTextNode.Value}";
                         // TODO: Update TextNodeCharacteristics annotation
                     }
-                    else if (trailingNewLine.IsPresent)
+                    else if (textEnding is not null)
                     {
-                        if (!textNodeCharacteristics.IncludesTrailingIndent)
+                        if (textEnding.WhiteSpace?.IsPresent ?? false)
                         {
-                            if (indent.Length > 0)
-                                firstTextNode.Value = $"{indent}{firstTextNode.Value}";
+                            throw new NotImplementedException();
                             // TODO: Update TextNodeCharacteristics annotation
                         }
                     }
                     else if (indent.Length > 0)
-                        firstTextNode.Value = $"{trailingNewLine.Value}{indent}{firstTextNode.Value}";
+                        throw new NotImplementedException();
                     else
-                        firstTextNode.Value = $"{trailingNewLine.Value}{firstTextNode.Value}";
+                        throw new NotImplementedException();
                 }
             }
             else if (targetElement.FirstNode is not null)
@@ -478,6 +708,7 @@ namespace FsInfoCat
         /// <param name="context">The normalization <see cref="Context"/> object that includes the initial indent string.</param>
         protected virtual void Normalize([DisallowNull] XDocument document, [DisallowNull] Context context)
         {
+            NodeDisposition.FillNodeDispositions(document);
             for (Context childContext = context.GetFirstNodeContext(); childContext is not null; childContext = childContext.NextNode())
             {
                 if (childContext.Node is XText textNode)
@@ -510,13 +741,14 @@ namespace FsInfoCat
             string currentNewLine = NewLine;
             while (currentNode.NextNode is XText initialTextNode)
             {
-                TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(initialTextNode);
-                StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
-                if (trailingNewLine is null)
-                    currentNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
-                else
-                    currentNewLine = trailingNewLine.Value;
-                initialTextNode.Remove();
+                throw new NotImplementedException();
+                //TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(initialTextNode);
+                //StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
+                //if (trailingNewLine is null)
+                //    currentNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
+                //else
+                //    currentNewLine = trailingNewLine.Value;
+                //initialTextNode.Remove();
             }
             if (currentNode.NextNode is null)
                 return;
@@ -528,13 +760,14 @@ namespace FsInfoCat
                     string nextNewLine = NewLine;
                     while (nextNode.NextNode is XText nextTextNode)
                     {
-                        TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
-                        StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
-                        if (trailingNewLine is null)
-                            nextNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
-                        else
-                            nextNewLine = trailingNewLine.Value;
-                        nextTextNode.Remove();
+                        throw new NotImplementedException();
+                        //TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
+                        //StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
+                        //if (trailingNewLine is null)
+                        //    nextNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
+                        //else
+                        //    nextNewLine = trailingNewLine.Value;
+                        //nextTextNode.Remove();
                     }
                     currentNode.AddAfterSelf(new XText($"{currentNewLine}{context.CurrentIndent}"));
                     currentNode = nextNode;
@@ -546,13 +779,14 @@ namespace FsInfoCat
                     string nextNewLine = NewLine;
                     while (nextNode.NextNode is XText nextTextNode)
                     {
-                        TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
-                        StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
-                        if (trailingNewLine is null)
-                            nextNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
-                        else
-                            nextNewLine = trailingNewLine.Value;
-                        nextTextNode.Remove();
+                        throw new NotImplementedException();
+                        //TextNodeCharacteristics2 textNodeCharacteristics = GetTextNodeCharacteristics(nextTextNode);
+                        //StringValueCharacteristics trailingNewLine = textNodeCharacteristics.TrailingNewLine;
+                        //if (trailingNewLine is null)
+                        //    nextNewLine = (textNodeCharacteristics.LeadingNewLine is null) ? NewLine : textNodeCharacteristics.LeadingNewLine.Value;
+                        //else
+                        //    nextNewLine = trailingNewLine.Value;
+                        //nextTextNode.Remove();
                     }
                     currentNode.AddAfterSelf(new XText(currentNewLine));
                     currentNode = nextNode;
@@ -613,19 +847,15 @@ namespace FsInfoCat
 
         record LineBreakCharacteristics(bool SurroundWithLineBreaks, bool IndentContents);
 
-        protected record StringValueCharacteristics(string Value, bool IsPresent);
-
-        protected record TextNodeCharacteristics2(bool HasNewLine, bool HasNonWhiteSpace, StringValueCharacteristics LeadingNewLine, bool IncludesLeadingIndent, StringValueCharacteristics TrailingNewLine,
-            bool IncludesTrailingIndent);
-
         public TextNodeCharacteristics GetTextNodeCharacteristics([DisallowNull] XText textNode, bool preferNotPresent = false, bool forceRefresh = false)
         {
             if (textNode is null)
                 throw new ArgumentNullException(nameof(textNode));
-            TextNodeCharacteristics result, current = textNode.Annotation<TextNodeCharacteristics>();
+            TextNodeCharacteristics current = textNode.Annotation<TextNodeCharacteristics>();
             if (!(current is null || forceRefresh))
                 return current;
             LineExtent start, end;
+            TextNodeCharacteristics result;
             string text = textNode.Value;
             if (text.Length > 0)
             {
@@ -686,6 +916,8 @@ namespace FsInfoCat
                 {
                     if (EmptyOrWhiteSpaceLineRegex.IsMatch(text))
                         text = NonNormalizedLineSeparatorRegex.Replace(text, "");
+                    if (ExtraneousInnerLineWSRegex.IsMatch(text))
+                        text = ExtraneousInnerLineWSRegex.Replace(text, "");
                     if (NonNormalizedWhiteSpaceRegex.IsMatch(text))
                         text = NonNormalizedWhiteSpaceRegex.Replace(text, " ");
                     result = (current is null) ? new TextNodeCharacteristics
@@ -749,51 +981,342 @@ namespace FsInfoCat
                 textNode.Value = text;
             return result;
         }
-    }
+        
+        public static XNode GetPreviousContentNode([AllowNull] XNode node) => (node is null || IsContentNode(node)) ? node : GetPreviousContentNode(node.PreviousNode);
 
-    public record OptionalValue<T>
-    {
-        public T Value { get; init; }
-        public bool IsPresent { get; init; }
-        public static OptionalValue<T> Merge(OptionalValue<T> x, OptionalValue<T> y, bool preferNotPresent = false) => (x is null) ? y :
-            (y is null || x.Equals(y) || (preferNotPresent ? (!x.IsPresent || y.IsPresent) : (x.IsPresent || !y.IsPresent))) ? x : x with { IsPresent = !preferNotPresent };
-    }
+        public static XNode GetNextContentNode([AllowNull] XNode node) => (node is null || IsContentNode(node)) ? node : GetNextContentNode(node.NextNode);
 
-    public record LineExtent
-    {
-        public OptionalValue<bool> IsCrLf { get; init; }
-        public OptionalValue<string> WhiteSpace { get; init; }
-        public static LineExtent Merge(LineExtent x, LineExtent y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y)) ? x : new LineExtent
+        public static bool IsContentNode([AllowNull] XNode node) => node is XText || node is XElement || node is XComment;
+
+        public static bool IsTagNode([AllowNull] XNode node) => node is XElement || node is XComment;
+
+        public record OptionalValue<T>
         {
-            IsCrLf = OptionalValue<bool>.Merge(x.IsCrLf, y.IsCrLf, preferNotPresent),
-            WhiteSpace = OptionalValue<string>.Merge(x.WhiteSpace, y.WhiteSpace, preferNotPresent)
-        };
-    }
+            public T Value { get; init; }
+            public bool IsPresent { get; init; }
+            public static OptionalValue<T> Merge(OptionalValue<T> x, OptionalValue<T> y, bool preferNotPresent = false) => (x is null) ? y :
+                (y is null || x.Equals(y) || (preferNotPresent ? (!x.IsPresent || y.IsPresent) : (x.IsPresent || !y.IsPresent))) ? x : x with { IsPresent = !preferNotPresent };
+        }
 
-    public record TextNodeCharacteristics
-    {
-        public bool IsMultiLine { get; init; }
-        public bool HasNonWhiteSpace { get; init; }
-        public LineExtent Start { get; init; }
-        public LineExtent End { get; init; }
-        public static TextNodeCharacteristics Merge(TextNodeCharacteristics x, TextNodeCharacteristics y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y) ||
-            (((x.Start is null) ? y.Start is null : x.Start.Equals(y.Start)) && ((x.End is null) ? y.End is null : x.End.Equals(y.End)))) ? x : x with
+        public record LineExtent
+        {
+            public OptionalValue<bool> IsCrLf { get; init; }
+            public OptionalValue<string> WhiteSpace { get; init; }
+            public static LineExtent Merge(LineExtent x, LineExtent y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y)) ? x : new LineExtent
             {
-                Start = LineExtent.Merge(x.Start, y.Start, preferNotPresent),
-                End = LineExtent.Merge(x.End, y.End, preferNotPresent)
+                IsCrLf = OptionalValue<bool>.Merge(x.IsCrLf, y.IsCrLf, preferNotPresent),
+                WhiteSpace = OptionalValue<string>.Merge(x.WhiteSpace, y.WhiteSpace, preferNotPresent)
             };
-    }
+        }
 
-    public record TagNodeCharacteristics
-    {
-        public bool IndentContents { get; init; }
-        public LineExtent Before { get; init; }
-        public LineExtent After { get; init; }
-        public static TagNodeCharacteristics Merge(TagNodeCharacteristics x, TagNodeCharacteristics y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y)) ? x : new TagNodeCharacteristics
+        public record TextNodeCharacteristics
         {
-            IndentContents = x.IndentContents || y.IndentContents,
-            Before = LineExtent.Merge(x.Before, y.Before, preferNotPresent),
-            After = LineExtent.Merge(x.After, y.After, preferNotPresent)
-        };
+            public bool IsMultiLine { get; init; }
+            public bool HasNonWhiteSpace { get; init; }
+            public LineExtent Start { get; init; }
+            public LineExtent End { get; init; }
+            public static TextNodeCharacteristics Merge(TextNodeCharacteristics x, TextNodeCharacteristics y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y) ||
+                (((x.Start is null) ? y.Start is null : x.Start.Equals(y.Start)) && ((x.End is null) ? y.End is null : x.End.Equals(y.End)))) ? x : x with
+                {
+                    Start = LineExtent.Merge(x.Start, y.Start, preferNotPresent),
+                    End = LineExtent.Merge(x.End, y.End, preferNotPresent)
+                };
+        }
+
+        public record TagNodeCharacteristics
+        {
+            public bool IndentContents { get; init; }
+            public LineExtent Before { get; init; }
+            public LineExtent After { get; init; }
+            public static TagNodeCharacteristics Merge(TagNodeCharacteristics x, TagNodeCharacteristics y, bool preferNotPresent = false) => (x is null) ? y : (y is null || x.Equals(y)) ? x : new TagNodeCharacteristics
+            {
+                IndentContents = x.IndentContents || y.IndentContents,
+                Before = LineExtent.Merge(x.Before, y.Before, preferNotPresent),
+                After = LineExtent.Merge(x.After, y.After, preferNotPresent)
+            };
+        }
+
+        public record NodeDisposition
+        {
+            public bool FollowsTagNode { get; init; }
+            public bool PrecedesTagNode { get; init; }
+            public bool FollowsTextNode { get; init; }
+            public bool PrecedesTextNode { get; init; }
+            public bool IsFirstContentNode { get; init; }
+            public bool IsLastContentNode { get; init; }
+            private static NodeDisposition GetExpectedDisposition(XNode node)
+            {
+                XNode previousNode = GetPreviousContentNode(node.PreviousNode);
+                XNode nextNode = GetNextContentNode(node.NextNode);
+                if (previousNode is null)
+                {
+                    bool isContentNode = IsContentNode(node);
+                    if (nextNode is null)
+                        return new NodeDisposition
+                        {
+                            FollowsTagNode = false,
+                            PrecedesTagNode = false,
+                            FollowsTextNode = false,
+                            PrecedesTextNode = false,
+                            IsFirstContentNode = isContentNode,
+                            IsLastContentNode = isContentNode
+                        };
+                    return new NodeDisposition
+                    {
+                        FollowsTagNode = false,
+                        PrecedesTagNode = nextNode is not XText,
+                        FollowsTextNode = false,
+                        PrecedesTextNode = nextNode is XText,
+                        IsFirstContentNode = isContentNode,
+                        IsLastContentNode = false
+                    };
+                }
+                if (nextNode is null)
+                    return new NodeDisposition
+                    {
+                        FollowsTagNode = previousNode is not XText,
+                        PrecedesTagNode = false,
+                        FollowsTextNode = previousNode is XText,
+                        PrecedesTextNode = false,
+                        IsFirstContentNode = false,
+                        IsLastContentNode = IsContentNode(node)
+                    };
+                return new NodeDisposition
+                {
+                    FollowsTagNode = previousNode is not XText,
+                    PrecedesTagNode = nextNode is XText,
+                    FollowsTextNode = previousNode is not XText,
+                    PrecedesTextNode = nextNode is XText,
+                    IsFirstContentNode = false,
+                    IsLastContentNode = false
+                };
+            }
+            public static NodeDisposition GetNodeDisposition([AllowNull] XNode node, bool verify = false)
+            {
+                if (node is null)
+                    return null;
+                NodeDisposition currentDisposition = node.Annotation<NodeDisposition>();
+                NodeDisposition result;
+                if (currentDisposition is null)
+                    result = GetExpectedDisposition(node);
+                else if (verify)
+                {
+                    result = GetExpectedDisposition(node);
+                    if (result.Equals(currentDisposition))
+                        return currentDisposition;
+                    node.RemoveAnnotations<NodeDisposition>();
+                }
+                else
+                    return currentDisposition;
+                node.AddAnnotation(result);
+                return result;
+            }
+            public static IEnumerable<(XNode Node, NodeDisposition Disposition)> FillNodeDispositions([DisallowNull] XContainer containerNode)
+            {
+                Queue<XNode> nonContentNodes = new Queue<XNode>();
+                NodeDisposition previousDisposition = new()
+                {
+                    FollowsTagNode = false,
+                    PrecedesTagNode = false,
+                    FollowsTextNode = false,
+                    PrecedesTextNode = false,
+                    IsFirstContentNode = false,
+                    IsLastContentNode = false
+                };
+                using IEnumerator<XNode> enumerator = containerNode.Nodes().GetEnumerator();
+                // Skip to first content node
+                XNode currentNode = null;
+                do
+                {
+                    if (!enumerator.MoveNext())
+                        break;
+                    currentNode = enumerator.Current;
+                    if (currentNode is XText textNode)
+                    {
+                        throw new NotImplementedException();
+                        //MergeFollowingTextNodes(textNode);
+                        //previousDisposition = previousDisposition with { PrecedesTextNode = true };
+                    }
+                    else if (IsTagNode(currentNode))
+                        previousDisposition = previousDisposition with { PrecedesTagNode = true };
+                    else
+                    {
+                        nonContentNodes.Enqueue(currentNode);
+                        currentNode = null;
+                    }
+                } while (currentNode is null);
+                // Apply annotation to non-content nodes
+                while (nonContentNodes.TryDequeue(out XNode n))
+                {
+                    n.RemoveAnnotations<NodeDisposition>();
+                    n.AddAnnotation(previousDisposition);
+                    yield return (n, previousDisposition);
+                }
+                if (currentNode is null)
+                    yield break;
+                NodeDisposition currentDisposition = new()
+                {
+                    FollowsTagNode = false,
+                    PrecedesTagNode = false,
+                    FollowsTextNode = false,
+                    PrecedesTextNode = false,
+                    IsFirstContentNode = true,
+                    IsLastContentNode = true
+                };
+                NodeDisposition nextDisposition = new()
+                {
+                    FollowsTagNode = previousDisposition.PrecedesTagNode,
+                    PrecedesTagNode = false,
+                    FollowsTextNode = previousDisposition.PrecedesTextNode,
+                    PrecedesTextNode = false,
+                    IsFirstContentNode = true,
+                    IsLastContentNode = true
+                };
+                // Skip to next content node
+                XNode nextNode = null;
+                do
+                {
+                    if (!enumerator.MoveNext())
+                        break;
+                    nextNode = enumerator.Current;
+                    if (nextNode is XText textNode)
+                    {
+                        throw new NotImplementedException();
+                        //MergeFollowingTextNodes(textNode);
+                        //currentDisposition = currentDisposition with { PrecedesTextNode = true };
+                        //nextDisposition = nextDisposition with { FollowsTextNode = true };
+                    }
+                    else if (IsTagNode(nextNode))
+                    {
+                        currentDisposition = currentDisposition with { PrecedesTagNode = true };
+                        nextDisposition = nextDisposition with { FollowsTagNode = true };
+                    }
+                    else
+                    {
+                        nonContentNodes.Enqueue(nextNode);
+                        nextNode = null;
+                    }
+                } while (nextNode is null);
+
+                if (nextNode is not null)
+                {
+                    // Apply annotation to current
+                    currentNode.RemoveAnnotations<NodeDisposition>();
+                    currentNode.AddAnnotation(currentDisposition);
+                    if (nonContentNodes.Count > 0)
+                    {
+                        // Apply annotation to non-content nodes
+                        currentDisposition = currentDisposition with { IsFirstContentNode = false };
+                        while (nonContentNodes.TryDequeue(out XNode n))
+                        {
+                            n.RemoveAnnotations<NodeDisposition>();
+                            n.AddAnnotation(currentDisposition);
+                            yield return (n, currentDisposition);
+                        }
+                    }
+
+                    // Shift next to current
+                    currentNode = nextNode;
+                    previousDisposition = currentDisposition;
+                    currentDisposition = nextDisposition;
+                    nextDisposition = new()
+                    {
+                        FollowsTagNode = previousDisposition.PrecedesTagNode,
+                        PrecedesTagNode = false,
+                        FollowsTextNode = previousDisposition.PrecedesTextNode,
+                        PrecedesTextNode = false,
+                        IsFirstContentNode = true,
+                        IsLastContentNode = true
+                    };
+                    // Skip to next content node
+                    nextNode = null;
+                    do
+                    {
+                        if (!enumerator.MoveNext())
+                            break;
+                        nextNode = enumerator.Current;
+                        if (nextNode is XText textNode)
+                        {
+                            throw new NotImplementedException();
+                            //MergeFollowingTextNodes(textNode);
+                            //currentDisposition = currentDisposition with { PrecedesTextNode = true };
+                            //nextDisposition = nextDisposition with { FollowsTextNode = true };
+                        }
+                        else if (IsTagNode(nextNode))
+                        {
+                            currentDisposition = currentDisposition with { PrecedesTagNode = true };
+                            nextDisposition = nextDisposition with { FollowsTagNode = true };
+                        }
+                        else
+                        {
+                            nonContentNodes.Enqueue(nextNode);
+                            nextNode = null;
+                        }
+                    } while (nextNode is null);
+
+                    while (nextNode is not null)
+                    {
+                        // Apply annotation to current
+                        currentNode.RemoveAnnotations<NodeDisposition>();
+                        currentNode.AddAnnotation(currentDisposition);
+                        // Apply annotation to non-content nodes
+                        while (nonContentNodes.TryDequeue(out XNode n))
+                        {
+                            n.RemoveAnnotations<NodeDisposition>();
+                            n.AddAnnotation(currentDisposition);
+                            yield return (n, currentDisposition);
+                        }
+                        // Shift next to current
+                        currentNode = nextNode;
+                        previousDisposition = currentDisposition;
+                        currentDisposition = nextDisposition;
+                        nextDisposition = new()
+                        {
+                            FollowsTagNode = previousDisposition.PrecedesTagNode,
+                            PrecedesTagNode = false,
+                            FollowsTextNode = previousDisposition.PrecedesTextNode,
+                            PrecedesTextNode = false,
+                            IsFirstContentNode = true,
+                            IsLastContentNode = true
+                        };
+                        // Skip to next content node
+                        nextNode = null;
+                        do
+                        {
+                            if (!enumerator.MoveNext())
+                                break;
+                            nextNode = enumerator.Current;
+                            if (nextNode is XText textNode)
+                            {
+                                throw new NotImplementedException();
+                                //MergeFollowingTextNodes(textNode);
+                                //currentDisposition = currentDisposition with { PrecedesTextNode = true };
+                                //nextDisposition = nextDisposition with { FollowsTextNode = true };
+                            }
+                            else if (IsTagNode(nextNode))
+                            {
+                                currentDisposition = currentDisposition with { PrecedesTagNode = true };
+                                nextDisposition = nextDisposition with { FollowsTagNode = true };
+                            }
+                            else
+                            {
+                                nonContentNodes.Enqueue(nextNode);
+                                nextNode = null;
+                            }
+                        } while (nextNode is null);
+                    }
+                }
+                // Apply annotation to final content node
+                currentDisposition = currentDisposition with { IsLastContentNode = true };
+                currentNode.RemoveAnnotations<NodeDisposition>();
+                currentNode.AddAnnotation(currentDisposition);
+                // Apply annotation to non-content nodes
+                while (nonContentNodes.TryDequeue(out XNode n))
+                {
+                    n.RemoveAnnotations<NodeDisposition>();
+                    n.AddAnnotation(nextDisposition);
+                }
+            }
+        }
     }
 }
