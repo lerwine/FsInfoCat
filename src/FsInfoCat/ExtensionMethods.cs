@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -13,17 +14,41 @@ namespace FsInfoCat
     {
         public static readonly Regex BackslashEscapablePattern = new(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
 
-        public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
+        public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?",
+            RegexOptions.Compiled);
 
-        public static T DefaultIf<T>(T inputValue, Func<T, bool> predicate, T defaultValue) => predicate(inputValue) ? defaultValue : inputValue;
+        public static T DefaultIf<T>(T inputValue, [DisallowNull] Func<T, bool> predicate, T defaultValue)
+        {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+            return predicate(inputValue) ? defaultValue : inputValue;
+        }
 
-        public static TResult DefaultIf<TInput, TResult>(TInput inputValue, PredicatedProduction<TInput, TResult> producer, TResult defaultValue) =>
-            producer(inputValue, out TResult result) ? result : defaultValue;
+        public static TResult DefaultIf<TInput, TResult>(TInput inputValue, [DisallowNull] PredicatedProduction<TInput, TResult> producer, TResult defaultValue)
+        {
+            if (producer is null)
+                throw new ArgumentNullException(nameof(producer));
+            return producer(inputValue, out TResult result) ? result : defaultValue;
+        }
 
-        public static T GetDefaultIf<T>(T inputValue, Func<T, bool> predicate, Func<T> defaultValueFunc) => predicate(inputValue) ? defaultValueFunc() : inputValue;
+        public static T GetDefaultIf<T>(T inputValue, [DisallowNull] Func<T, bool> predicate, [DisallowNull] Func<T> defaultValueFunc)
+        {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+            if (defaultValueFunc is null)
+                throw new ArgumentNullException(nameof(defaultValueFunc));
+            return predicate(inputValue) ? defaultValueFunc() : inputValue;
+        }
 
-        public static TResult GetDefaultIf<TInput, TResult>(TInput inputValue, PredicatedProduction<TInput, TResult> producer, Func<TInput, TResult> defaultValueFunc) =>
-            producer(inputValue, out TResult result) ? result : defaultValueFunc(inputValue);
+        public static TResult GetDefaultIf<TInput, TResult>(TInput inputValue, [DisallowNull] PredicatedProduction<TInput, TResult> producer,
+            [DisallowNull] Func<TInput, TResult> defaultValueFunc)
+        {
+            if (producer is null)
+                throw new ArgumentNullException(nameof(producer));
+            if (defaultValueFunc is null)
+                throw new ArgumentNullException(nameof(defaultValueFunc));
+            return producer(inputValue, out TResult result) ? result : defaultValueFunc(inputValue);
+        }
 
         public static bool TryGetDescription(this MemberInfo memberInfo, out string result)
         {

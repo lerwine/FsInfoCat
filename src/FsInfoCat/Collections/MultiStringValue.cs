@@ -37,7 +37,7 @@ namespace FsInfoCat.Collections
         private static readonly string ESCAPED_LITERAL = $"{ESCAPE}{ESCAPE}";
         private static readonly string UNESCAPED_LITERAL = $"{ESCAPE}";
 
-        public static string Encode(IEnumerable<string> rawValues)
+        public static string Encode([DisallowNull] IEnumerable<string> rawValues)
         {
             if (rawValues is null)
                 throw new ArgumentNullException(nameof(rawValues));

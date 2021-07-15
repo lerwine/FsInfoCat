@@ -56,6 +56,14 @@ namespace FsInfoCat
             /// <remarks>Merged adjacent <see cref="XText"/> nodes without line separator or non-whitespace characters follow the same behavior as <see cref="PreferCData"/>.</remarks>
             MultilineOrNonWhiteSpaceToCData
         }
+
+        /// <summary>
+        /// Gets the adjacent nodes that are of the same type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node">The node.</param>
+        /// <returns>IEnumerable&lt;T&gt;.</returns>
+        /// <exception cref="System.ArgumentNullException">node</exception>
         public static IEnumerable<T> GetAdjacentNodes<T>([DisallowNull] this T node) where T : XNode
         {
             if (node is null)
@@ -69,6 +77,7 @@ namespace FsInfoCat
                 node = t;
             }
         }
+
         public static string AttributeValueOrDefault([AllowNull] this XElement element, [DisallowNull] XName attributeName, string ifNotPresent = null)
         {
             if (attributeName is null)
