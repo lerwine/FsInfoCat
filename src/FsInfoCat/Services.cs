@@ -63,20 +63,24 @@ namespace FsInfoCat
         public static string GetAppDataPath(Assembly assembly, AppDataPathLevel level)
         {
             AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr.Company);
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr?.Company ?? "UnknownCompany");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             if (level == AppDataPathLevel.Company)
                 return path;
             AssemblyName assemblyName = assembly.GetName();
-            path = Path.Combine(path, assemblyName.Name);
+            path = Path.Combine(path, assemblyName.Name ?? "UnknownAssembly");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             if (level == AppDataPathLevel.Application)
                 return path;
-            path = Path.Combine(path, assemblyName.Version.ToString());
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            Version version = assemblyName.Version;
+            if (version is not null)
+            {
+                path = Path.Combine(path, version.ToString());
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+            }
             if (level == AppDataPathLevel.CurrentVersion)
                 return path;
             return GetAppDataPath(path, assemblyName.CultureInfo);

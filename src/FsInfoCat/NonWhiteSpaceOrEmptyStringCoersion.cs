@@ -15,8 +15,7 @@ namespace FsInfoCat
             (source.Length == 0 || source.Any(c => !(char.IsWhiteSpace(c) || char.IsControl(c)))) ? source : "";
 
         public static readonly NonWhiteSpaceOrEmptyStringCoersion Default = new();
-
-        IEqualityComparer<string> _backingComparer;
+        readonly IEqualityComparer<string> _backingComparer;
 
         Type ICoersion.ValueType => typeof(string);
 
@@ -29,7 +28,7 @@ namespace FsInfoCat
 
         public virtual string Cast(object obj) => EmptyUnlessHasNonWhitespace((string)obj);
 
-        public virtual string Coerce(object obj) => (obj is null) ? "" : WhitespaceToEmpty((obj is string text) ? text : obj.ToString());
+        public virtual string Coerce(object obj) => (obj is null) ? "" : WhitespaceToEmpty((obj is string text) ? text : obj?.ToString() ?? "");
 
         public virtual string Normalize(string obj) => EmptyUnlessHasNonWhitespace(obj);
 
@@ -73,7 +72,7 @@ namespace FsInfoCat
                 result = WhitespaceToEmpty(text);
             else
             {
-                try { result = WhitespaceToEmpty(obj.ToString()); }
+                try { result = WhitespaceToEmpty(obj.ToString() ?? ""); }
                 catch
                 {
                     result = null;

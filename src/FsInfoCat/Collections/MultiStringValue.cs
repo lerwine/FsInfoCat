@@ -136,8 +136,9 @@ namespace FsInfoCat.Collections
         sbyte IConvertible.ToSByte(IFormatProvider provider) => Convert.ToSByte(ToString(), provider);
         float IConvertible.ToSingle(IFormatProvider provider) => Convert.ToSingle(ToString(), provider);
         string IConvertible.ToString(IFormatProvider provider) => ToString();
-        object IConvertible.ToType(Type conversionType, IFormatProvider provider) => (conversionType is not null && conversionType.IsInstanceOfType(this)) ? this :
-            Convert.ChangeType(ToString(), conversionType, provider);
+        object IConvertible.ToType(Type conversionType, IFormatProvider provider) =>
+            (conversionType ?? throw new ArgumentNullException(nameof(conversionType))).IsInstanceOfType(this) ? this :
+                Convert.ChangeType(ToString(), conversionType, provider);
         ushort IConvertible.ToUInt16(IFormatProvider provider) => Convert.ToUInt16(ToString(), provider);
         uint IConvertible.ToUInt32(IFormatProvider provider) => Convert.ToUInt32(ToString(), provider);
         ulong IConvertible.ToUInt64(IFormatProvider provider) => Convert.ToUInt64(ToString(), provider);

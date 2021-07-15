@@ -53,22 +53,40 @@ namespace FsInfoCat
 
         public static string GetDisplayName<TEnum>(this TEnum value) where TEnum : struct, Enum
         {
-            FieldInfo fieldInfo = typeof(TEnum).GetField(Enum.GetName(value));
-            return fieldInfo.TryGetDisplayName(out string result) ? result : Enum.GetName(typeof(TEnum), value);
+            string name = Enum.GetName(value);
+            if (name is not null)
+            {
+                FieldInfo fieldInfo = typeof(TEnum).GetField(name);
+                if (fieldInfo.TryGetDisplayName(out string result))
+                    return result;
+            }
+            return  Enum.GetName(typeof(TEnum), value);
         }
 
-        public static bool TryGetDisplayName<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum => typeof(TEnum).GetField(Enum.GetName(value)).TryGetDisplayName(out result);
+        public static bool TryGetDisplayName<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum
+        {
+            result = Enum.GetName(value);
+            return result is not null && typeof(TEnum).GetField(result).TryGetDisplayName(out result);
+        }
 
-        public static bool TryGetDescription<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum => typeof(TEnum).GetField(Enum.GetName(value)).TryGetDescription(out result);
+        public static bool TryGetDescription<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum
+        {
+            result = Enum.GetName(value);
+            return result is not null && typeof(TEnum).GetField(result).TryGetDescription(out result);
+        }
 
         public static bool TryGetAmbientValue<TEnum, TResult>(this TEnum value, out TResult result)
             where TEnum : struct, Enum
         {
-            AmbientValueAttribute attribute = typeof(TEnum).GetField(Enum.GetName(value)).GetCustomAttribute<AmbientValueAttribute>();
-            if (attribute is not null && attribute.Value is TResult r)
+            string name = Enum.GetName(value);
+            if (name is not null)
             {
-                result = r;
-                return false;
+                AmbientValueAttribute attribute = typeof(TEnum).GetField(name)?.GetCustomAttribute<AmbientValueAttribute>();
+                if (attribute is not null && attribute.Value is TResult r)
+                {
+                    result = r;
+                    return false;
+                }
             }
             result = default;
             return false;
@@ -77,9 +95,13 @@ namespace FsInfoCat
         public static TResult GetAmbientValue<TEnum, TResult>(this TEnum value, TResult defaultValue = default)
             where TEnum : struct, Enum
         {
-            AmbientValueAttribute attribute = typeof(TEnum).GetField(Enum.GetName(value)).GetCustomAttribute<AmbientValueAttribute>();
-            if (attribute is not null && attribute.Value is TResult r)
-                return r;
+            string name = Enum.GetName(value);
+            if (name is not null)
+            {
+                AmbientValueAttribute attribute = typeof(TEnum).GetField(name)?.GetCustomAttribute<AmbientValueAttribute>();
+                if (attribute is not null && attribute.Value is TResult r)
+                    return r;
+            }
             return defaultValue;
         }
 
@@ -89,7 +111,9 @@ namespace FsInfoCat
             Type type = typeof(TEnum);
             if (type.GetCustomAttribute<FlagsAttribute>() is null)
                 return new[] { value };
+#pragma warning disable CA2248 // Provide correct 'enum' argument to 'Enum.HasFlag'
             return Enum.GetValues<TEnum>().Where(v => value.HasFlag(v));
+#pragma warning restore CA2248 // Provide correct 'enum' argument to 'Enum.HasFlag'
         }
 
         public static ErrorCode ToErrorCode(this AccessErrorCode errorCode) => errorCode.GetAmbientValue(ErrorCode.Unexpected);

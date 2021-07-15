@@ -25,8 +25,8 @@ namespace FsInfoCat
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
         private sealed class Enumerable : IEnumerable<T>
         {
-            private Node _first;
-            private Node _last;
+            private readonly Node _first;
+            private readonly Node _last;
             internal Enumerable([DisallowNull] LinkedEnumerableBuilder<T> builder)
             {
                 _first = builder._first;
@@ -52,8 +52,8 @@ namespace FsInfoCat
             private bool _isDisposed = false;
             private readonly object _syncRoot = new();
             private bool _enumerated = false;
-            private Node _first;
-            private Node _last;
+            private readonly Node _first;
+            private readonly Node _last;
             private Node _current;
 
             internal Enumerator([AllowNull] Node first, [AllowNull] Node last)
@@ -88,7 +88,7 @@ namespace FsInfoCat
                         throw new ObjectDisposedException(nameof(ByteArrayCoersion));
                     if (_enumerated)
                     {
-                        if (_current is null || (_current = _current.Next) is null)
+                        if (_current is null || (_current = _current?.Next) is null)
                             return false;
                         if (ReferenceEquals(_current, _last))
                         {

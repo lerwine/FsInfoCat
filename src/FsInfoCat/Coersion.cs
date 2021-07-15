@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat
 {
@@ -8,17 +9,22 @@ namespace FsInfoCat
     {
         protected TypeConverter Converter { get; } = TypeDescriptor.GetConverter(typeof(T));
 
+        [NotNull]
         public static Coersion<T> Default { get; }
 
         Type ICoersion.ValueType => typeof(T);
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         static Coersion()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             Type type = typeof(T);
             if (type.IsValueType)
             {
                 if (type.IsGenericType && typeof(Nullable<>).Equals(type.GetGenericTypeDefinition()))
+#pragma warning disable CS8604 // Possible null reference argument - preceding condition ensures GetUnderlyingType will not return null.
                     Default = (Coersion<T>)Activator.CreateInstance(typeof(NullableCoersion<>).MakeGenericType(Nullable.GetUnderlyingType(type)));
+#pragma warning restore CS8604 // Possible null reference argument.
                 else
                     Default = (Coersion<T>)Activator.CreateInstance(typeof(ValueCoersion<>).MakeGenericType(type));
             }
@@ -28,8 +34,12 @@ namespace FsInfoCat
                     Default = (Coersion<T>)(object)ByteArrayCoersion.Default;
                 else
                 {
+#pragma warning disable CS8604 // Possible null reference argument - type.IsArray ensures GetElementType will not return null.
                     type = typeof(ArrayCoersion<>).MakeGenericType(type.GetElementType());
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning disable CS8602 // Dereference of a possibly null reference - using nameof ensures GetField will not return null.
                     Default = (Coersion<T>)type.GetField(nameof(ArrayCoersion<object>.Default)).GetValue(null);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
             else

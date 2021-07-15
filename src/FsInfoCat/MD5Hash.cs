@@ -299,14 +299,13 @@ namespace FsInfoCat
         string IConvertible.ToString(IFormatProvider provider) => ToString();
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
-            if (!(conversionType is null))
-            {
-                if (conversionType.Equals(typeof(MD5Hash)))
-                    return this;
-                if (conversionType.Equals(typeof(byte[])) || conversionType.Equals(typeof(IList<byte>)) || conversionType.Equals(typeof(ICollection<byte>)) ||
-                    conversionType.Equals(typeof(IEnumerable<byte>)))
-                    return GetBuffer();
-            }
+            if (conversionType is null)
+                throw new ArgumentNullException(nameof(conversionType));
+            if (conversionType.Equals(typeof(MD5Hash)))
+                return this;
+            if (conversionType.Equals(typeof(byte[])) || conversionType.Equals(typeof(IList<byte>)) || conversionType.Equals(typeof(ICollection<byte>)) ||
+                conversionType.Equals(typeof(IEnumerable<byte>)))
+                return GetBuffer();
             return Convert.ChangeType(ToString(), conversionType, provider);
         }
 

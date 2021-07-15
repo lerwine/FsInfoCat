@@ -23,9 +23,11 @@ namespace FsInfoCat
             Type r = typeof(void);
             Type a = typeof(IServiceCollection);
             ParameterInfo[] parameters;
-            return type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static).Select(m => (Method: m, Attribute: m.GetCustomAttribute<ServiceBuilderHandlerAttribute>()))
-                .Where(t => t.Attribute is not null && t.Method.ReturnType.Equals(r) && (parameters = t.Method.GetParameters()).Length == 1 && parameters[0].ParameterType.Equals(a) && !(parameters[0].IsOut || parameters[0].IsRetval))
-                .OrderBy(t => t.Attribute.Priority).Select(t => t.Method);
+            return type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+                .Select(m => (Method: m, Attribute: m.GetCustomAttribute<ServiceBuilderHandlerAttribute>()))
+                .Where(t => t.Attribute is not null && t.Method.ReturnType.Equals(r) && (parameters = t.Method.GetParameters()).Length == 1 &&
+                    parameters[0].ParameterType.Equals(a) && !(parameters[0].IsOut || parameters[0].IsRetval))
+                .OrderBy(t => t.Attribute?.Priority ?? 0).Select(t => t.Method);
         }
 
         public static IEnumerable<MethodInfo> GetHandlers(Assembly assembly) => assembly.GetTypes().SelectMany(t => GetHandlers(t));

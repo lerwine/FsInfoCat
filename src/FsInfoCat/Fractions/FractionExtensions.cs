@@ -269,6 +269,9 @@ namespace FsInfoCat.Fractions
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             if (obj == null)
+                return fraction is null;
+
+            if (fraction is null)
                 return false;
 
             if (obj is IFraction n)
@@ -284,7 +287,7 @@ namespace FsInfoCat.Fractions
                 return fraction.ToDecimal().Equals(m);
 
             if (obj is string s)
-                return fraction.ToString().Equals(s);
+                return s.Equals(fraction.ToString());
 
             if (obj is IComparable c)
                 return c.CompareTo(fraction.ToDecimal()) == 0;
@@ -305,7 +308,7 @@ namespace FsInfoCat.Fractions
                     TypeCode.UInt32 => EqualTo(fraction, Convert.ToUInt32(obj)),
                     TypeCode.UInt64 => EqualTo(fraction, Convert.ToUInt64(obj)),
                     TypeCode.UInt16 => EqualTo(fraction, Convert.ToUInt16(obj)),
-                    _ => fraction.ToString().Equals(obj.ToString()),
+                    _ => fraction.ToString() == obj.ToString(),
                 };
             }
 
@@ -331,7 +334,7 @@ namespace FsInfoCat.Fractions
                 return fraction.ToDecimal().CompareTo(m);
 
             if (obj is string s)
-                return fraction.ToString().CompareTo(s);
+                return s.CompareTo(fraction.ToString());
 
             if (obj is IComparable c)
                 return 0 - c.CompareTo(fraction.ToDecimal());
@@ -352,7 +355,7 @@ namespace FsInfoCat.Fractions
                     TypeCode.UInt32 => Compare(fraction, Convert.ToUInt32(obj)),
                     TypeCode.UInt64 => Compare(fraction, Convert.ToUInt64(obj)),
                     TypeCode.UInt16 => Compare(fraction, Convert.ToUInt16(obj)),
-                    _ => fraction.ToString().CompareTo(obj.ToString()),
+                    _ => (fraction.ToString() ?? "").CompareTo(obj.ToString() ?? ""),
                 };
             }
 

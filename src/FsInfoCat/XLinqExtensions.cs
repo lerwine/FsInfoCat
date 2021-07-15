@@ -283,7 +283,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 if (TryConvertToBoolean(value, out bool result))
                     return result;
@@ -329,7 +329,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 if (TryConvertToDateTime(value, dateTimeOption, out DateTime result))
                     return result;
@@ -379,7 +379,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 if (TryConvertToTimeSpan(value, out TimeSpan result))
                     return result;
@@ -425,7 +425,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 if (TryConvertToInt16(value, out short result))
                     return result;
@@ -471,7 +471,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 if (TryConvertToInt32(value, out int result))
                     return result;
@@ -517,7 +517,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 if (TryConvertToInt64(value, out long result))
                     return result;
@@ -564,7 +564,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 if (TryConvertToEnumValue(value, out TEnum result))
                     return result;
@@ -621,7 +621,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 if (TryConvertToGuid(value, out Guid result))
                     return result;
@@ -667,7 +667,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
-                if (value is null && (value = value.Trim()).Length == 0)
+                if (value is null || (value = value.Trim()).Length == 0)
                     return null;
                 return ByteArrayCoersion.Parse(value).ToArray();
             }

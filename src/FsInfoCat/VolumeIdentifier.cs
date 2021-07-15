@@ -227,15 +227,14 @@ namespace FsInfoCat
         string IConvertible.ToString(IFormatProvider provider) => ToString();
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
-            if (!(conversionType is null))
-            {
-                if (conversionType.Equals(typeof(VolumeIdentifier)))
-                    return this;
-                if (conversionType.Equals(typeof(Uri)))
-                    return _location ?? Empty._location;
-                if (conversionType.Equals(typeof(Guid)) && _uuid.HasValue)
-                    return _uuid.Value;
-            }
+            if (conversionType is null)
+                throw new ArgumentNullException(nameof(conversionType));
+            if (conversionType.Equals(typeof(VolumeIdentifier)))
+                return this;
+            if (conversionType.Equals(typeof(Uri)))
+                return _location ?? Empty._location;
+            if (conversionType.Equals(typeof(Guid)) && _uuid.HasValue)
+                return _uuid.Value;
             return Convert.ChangeType(ToString(), conversionType, provider);
         }
         ushort IConvertible.ToUInt16(IFormatProvider provider) => _serialNumber.HasValue ? Convert.ToUInt16(_serialNumber.Value, provider) :
