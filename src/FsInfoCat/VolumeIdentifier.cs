@@ -8,11 +8,6 @@ namespace FsInfoCat
     [Serializable]
     public struct VolumeIdentifier : IEquatable<VolumeIdentifier>, IConvertible
     {
-        //public const string GROUP_NAME_UUID_NS = "u";
-        //public const string GROUP_NAME_VOLUME_NS = "n";
-        //public const string GROUP_NAME_ID_NS = "i";
-        //public const string GROUP_NAME_VALUE = "v";
-
         public static readonly ValueConverter<VolumeIdentifier, string> Converter = new(
             v => v.ToString(),
             s => Parse(s)
@@ -24,7 +19,6 @@ namespace FsInfoCat
         /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
         public static readonly Regex PathSeparatorNormalize = new(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)", RegexOptions.Compiled);
-        //public static readonly Regex NsPathRegex = new($@"^((?<{GROUP_NAME_UUID_NS}>uuid(:|$))|(?<{GROUP_NAME_VOLUME_NS}>volume(:(?<{GROUP_NAME_ID_NS}>id(:|$))?|$))?)(?<{GROUP_NAME_VALUE}>.+)?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         public static readonly Regex VsnRegex = new(@"^([a-f\d]{4})-([a-f\d]{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         public static readonly Regex UuidRegex = new(@"^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 

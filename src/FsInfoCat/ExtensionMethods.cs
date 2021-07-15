@@ -60,7 +60,7 @@ namespace FsInfoCat
                 if (fieldInfo.TryGetDisplayName(out string result))
                     return result;
             }
-            return  Enum.GetName(typeof(TEnum), value);
+            return Enum.GetName(typeof(TEnum), value);
         }
 
         public static bool TryGetDisplayName<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum

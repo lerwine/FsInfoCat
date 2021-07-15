@@ -1,13 +1,16 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Fractions
 {
     public static class FractionExtensions
     {
+        private static readonly Regex FractionParseRegex = new(@"^(?(?=-?\d+(\s|$))(?<w>-?\d+)(\s+(?<n>-?\d+)/(?<d>-?\d+))?|(?<n>-?\d+)/(?<d>-?\d+))$", RegexOptions.Compiled);
+
         #region Generic Methods
 
-        private static T GetGCD<T>(IValueHelper<T> valueHelper, T d1, params T[] denominators)
+        private static T GetGCD<T>([DisallowNull] IValueHelper<T> valueHelper, T d1, params T[] denominators)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             if (denominators == null || denominators.Length == 0)
@@ -34,7 +37,7 @@ namespace FsInfoCat.Fractions
             return gcd;
         }
 
-        private static T GetLCM<T>(IValueHelper<T> valueHelper, T d1, T d2, out T secondMultiplier)
+        private static T GetLCM<T>([DisallowNull] IValueHelper<T> valueHelper, T d1, T d2, out T secondMultiplier)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             T zero = default;
@@ -64,7 +67,7 @@ namespace FsInfoCat.Fractions
             return GetSimplifiedRational(valueHelper, valueHelper.Divide(secondMultiplier, d1), secondMultiplier, out secondMultiplier);
         }
 
-        private static T GetSimplifiedRational<T>(IValueHelper<T> valueHelper, T n, T d, out T denominator)
+        private static T GetSimplifiedRational<T>([DisallowNull] IValueHelper<T> valueHelper, T n, T d, out T denominator)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             if (valueHelper.IsZero(d))
@@ -92,7 +95,7 @@ namespace FsInfoCat.Fractions
             return valueHelper.Divide(n, gcd);
         }
 
-        private static T GetNormalizedRational<T>(IValueHelper<T> valueHelper, T w, T n, T d, out T numerator, out T denominator)
+        private static T GetNormalizedRational<T>([DisallowNull] IValueHelper<T> valueHelper, T w, T n, T d, out T numerator, out T denominator)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             n = GetSimplifiedRational(valueHelper, n, d, out denominator);
@@ -136,7 +139,7 @@ namespace FsInfoCat.Fractions
             return w;
         }
 
-        private static T GetInvertedRational<T>(IValueHelper<T> valueHelper, T w, T n, T d, out T numerator, out T denominator)
+        private static T GetInvertedRational<T>([DisallowNull] IValueHelper<T> valueHelper, T w, T n, T d, out T numerator, out T denominator)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             w = GetNormalizedRational(valueHelper, w, n, d, out numerator, out denominator);
@@ -156,7 +159,7 @@ namespace FsInfoCat.Fractions
             return GetNormalizedRational(valueHelper, valueHelper.Zero, d, valueHelper.Add(n, valueHelper.Multiply(d, w)), out numerator, out denominator);
         }
 
-        private static void ToCommonDenominator<T>(IValueHelper<T> valueHelper, ref T n1, ref T d1, ref T n2, ref T d2)
+        private static void ToCommonDenominator<T>([DisallowNull] IValueHelper<T> valueHelper, ref T n1, ref T d1, ref T n2, ref T d2)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             if (valueHelper.IsZero(d1) || valueHelper.IsZero(d2))
@@ -186,9 +189,7 @@ namespace FsInfoCat.Fractions
             }
         }
 
-        private static readonly Regex FractionParseRegex = new(@"^(?(?=-?\d+(\s|$))(?<w>-?\d+)(\s+(?<n>-?\d+)/(?<d>-?\d+))?|(?<n>-?\d+)/(?<d>-?\d+))$", RegexOptions.Compiled);
-
-        private static T Parse<T>(IValueHelper<T> valueHelper, string s, out T n, out T d)
+        private static T Parse<T>([DisallowNull] IValueHelper<T> valueHelper, [DisallowNull] string s, out T n, out T d)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             if (s == null)
@@ -224,7 +225,7 @@ namespace FsInfoCat.Fractions
             return w;
         }
 
-        private static bool TryParse<T>(IValueHelper<T> valueHelper, string s, out T w, out T n, out T d)
+        private static bool TryParse<T>([DisallowNull] IValueHelper<T> valueHelper, [DisallowNull] string s, out T w, out T n, out T d)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             Match m;
@@ -368,9 +369,9 @@ namespace FsInfoCat.Fractions
 
         public static long OneIfZero(this long value) => (value == 0L) ? 1L : value;
 
-        public static long Parse64(string s, out long n, out long d) { return Parse(ValueHelper64.Instance, s, out n, out d); }
+        public static long Parse64([DisallowNull] string s, out long n, out long d) { return Parse(ValueHelper64.Instance, s, out n, out d); }
 
-        public static bool TryParse64(string s, out long w, out long n, out long d) { return TryParse(ValueHelper64.Instance, s, out w, out n, out d); }
+        public static bool TryParse64([DisallowNull] string s, out long w, out long n, out long d) { return TryParse(ValueHelper64.Instance, s, out w, out n, out d); }
 
         public static long GetGCD64(long d1, params long[] denominators) { return GetGCD(ValueHelper64.Instance, d1, denominators); }
 
@@ -392,13 +393,13 @@ namespace FsInfoCat.Fractions
 
         public static uint OneIfZero(this uint value) => (value == 0) ? 1 : value;
 
-        public static int Parse32(string s, out int n, out int d) { return Parse(ValueHelper32.Instance, s, out n, out d); }
+        public static int Parse32([DisallowNull] string s, out int n, out int d) { return Parse(ValueHelper32.Instance, s, out n, out d); }
 
-        public static uint ParseU32(string s, out uint n, out uint d) { return Parse(ValueHelperU32.Instance, s, out n, out d); }
+        public static uint ParseU32([DisallowNull] string s, out uint n, out uint d) { return Parse(ValueHelperU32.Instance, s, out n, out d); }
 
-        public static bool TryParse32(string s, out int w, out int n, out int d) { return TryParse(ValueHelper32.Instance, s, out w, out n, out d); }
+        public static bool TryParse32([DisallowNull] string s, out int w, out int n, out int d) { return TryParse(ValueHelper32.Instance, s, out w, out n, out d); }
 
-        public static bool TryParseU32(string s, out uint w, out uint n, out uint d) { return TryParse(ValueHelperU32.Instance, s, out w, out n, out d); }
+        public static bool TryParseU32([DisallowNull] string s, out uint w, out uint n, out uint d) { return TryParse(ValueHelperU32.Instance, s, out w, out n, out d); }
 
         public static int GetGCD(int d1, params int[] denominators) { return GetGCD(ValueHelper32.Instance, d1, denominators); }
 
@@ -430,9 +431,9 @@ namespace FsInfoCat.Fractions
 
         public static short OneIfZero(this short value) => (value == 0) ? (short)1 : value;
 
-        public static short Parse16(string s, out short n, out short d) { return Parse(ValueHelper16.Instance, s, out n, out d); }
+        public static short Parse16([DisallowNull] string s, out short n, out short d) { return Parse(ValueHelper16.Instance, s, out n, out d); }
 
-        public static bool TryParse16(string s, out short w, out short n, out short d) { return TryParse(ValueHelper16.Instance, s, out w, out n, out d); }
+        public static bool TryParse16([DisallowNull] string s, out short w, out short n, out short d) { return TryParse(ValueHelper16.Instance, s, out w, out n, out d); }
 
         public static short GetGCD16(short d1, params short[] denominators) { return GetGCD(ValueHelper16.Instance, d1, denominators); }
 
@@ -452,9 +453,9 @@ namespace FsInfoCat.Fractions
 
         public static sbyte OneIfZero(this sbyte value) => (value == 0) ? (sbyte)1 : value;
 
-        public static sbyte Parse8(string s, out sbyte n, out sbyte d) { return Parse(ValueHelper8.Instance, s, out n, out d); }
+        public static sbyte Parse8([DisallowNull] string s, out sbyte n, out sbyte d) { return Parse(ValueHelper8.Instance, s, out n, out d); }
 
-        public static bool TryParse8(string s, out sbyte w, out sbyte n, out sbyte d) { return TryParse(ValueHelper8.Instance, s, out w, out n, out d); }
+        public static bool TryParse8([DisallowNull] string s, out sbyte w, out sbyte n, out sbyte d) { return TryParse(ValueHelper8.Instance, s, out w, out n, out d); }
 
         public static sbyte GetGCD8(sbyte d1, params sbyte[] denominators) { return GetGCD(ValueHelper8.Instance, d1, denominators); }
 
