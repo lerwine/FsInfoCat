@@ -392,6 +392,49 @@ bool TryGetRange(Type type, out object minValue, out object maxValue)
     minValue = maxValue = null;
     return false;
 }
+private XDocument _entitiesDocument;
+XDocument EntitiesDocument
+{
+    get
+    {
+        if (_entitiesDocument is null)
+            _entitiesDocument = XDocument.Load(Path.Combine(TemplateFolder, "Resources\\Entities.xml"), LoadOptions.PreserveWhitespace);
+        return _entitiesDocument;
+    }
+}
+IEnumerable<XElement> GetBaseEntityTypes(XElement entityElement)
+{
+    if (entityElement.Parent is XElement parentElement)
+    {
+        XName entityName = "Entity";
+        XName nameName = "Name";
+        if (ReferenceEquals(EntitiesDocument.Root, parentElement))
+            foreach (string typeName in entityElement.Elements("Extends").SelectMany(e => (e.Attribute("generic") is null) ? e.Attributes("cref") : e.Attributes("generic")).Select(a => a.Value))
+            {
+                XElement result = parentElement.Elements(entityName).FirstOrDefault(e => e.Attribute(nameName)?.Value == typeName);
+                if (result is not null)
+                    yield return result;
+            }
+        else
+            foreach (string typeName in entityElement.Elements("Extends").SelectMany(e => (e.Attribute("generic") is null) ? e.Attributes("cref") : e.Attributes("generic")).Select(a => a.Value))
+            {
+                XElement result = parentElement.Elements(entityName).FirstOrDefault(e => e.Attribute(nameName)?.Value == typeName);
+                if (result is null)
+                {
+                    result = EntitiesDocument.Root.Elements(entityName).FirstOrDefault(e => e.Attribute(nameName)?.Value == typeName);
+                    if (result is not null)
+                        yield return result;
+                }
+                else
+                    yield return result;
+            }
+    }
+}
+IEnumerable<XElement> GetAllBaseEntityTypes(XElement entityElement)
+{
+    IEnumerable<XElement> immediate = GetBaseEntityTypes(entityElement);
+    return immediate.Concat(immediate.SelectMany(e => GetAllBaseEntityTypes(e))).Distinct();
+}
 class ProjectInfoObject
 {
 	internal string Title { get { return GetProjectPropertyString("Title", ""); } }
