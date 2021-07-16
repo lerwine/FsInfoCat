@@ -42,6 +42,7 @@
             <xs:element name="seealso" type="SeeAlso" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="Name" type="CsIdentifier" use="required" />
+        <xs:attribute name="IsFlags" type="xs:boolean" use="optional" default="false"/>
     </xs:complexType>
     <xs:complexType name="EnumField">
         <xs:sequence>
@@ -191,7 +192,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="EntityProperty">
+    <xs:complexType name="EntityPropertyBase">
         <xs:sequence>
             <xs:element name="summary" type="CommentDoc" />
             <xs:element name="value" type="CommentDoc" />
@@ -202,8 +203,14 @@
         <xs:attribute name="DisplayNameResource" type="CsIdentifier" use="optional" />
         <xs:attribute name="ResourceType" type="xs:NCName" use="optional" />
         <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false"/>
-        <xs:attribute name="IsUnique" type="xs:boolean" use="optional" default="false"/>
-        <xs:attribute name="IsIndexed" type="xs:boolean" use="optional" default="false"/>
+    </xs:complexType>
+    <xs:complexType name="EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityPropertyBase">
+                <xs:attribute name="IsUnique" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="IsIndexed" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="ByteProperty">
         <xs:complexContent>
@@ -238,7 +245,18 @@
                     <xs:element name="Default" type="xs:base64Binary"/>
                     <xs:element name="DefaultNull" />
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="MultiStringValueProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="Default" type="xs:string"/>
+                    <xs:element name="DefaultNull" />
+                </xs:choice>
+                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -320,6 +338,19 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    <xs:complexType name="DoubleProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="Default" type="xs:double"/>
+                    <xs:element name="DefaultNull" />
+                </xs:choice>
+                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="MinValue" type="xs:double" use="optional"/>
+                <xs:attribute name="MaxValue" type="xs:double" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="NVarCharProperty">
         <xs:complexContent>
             <xs:extension base="EntityProperty">
@@ -370,6 +401,19 @@
     <xs:complexType name="UniqueIdentifierProperty">
         <xs:complexContent>
             <xs:extension base="EntityProperty">
+                <xs:sequence>
+                    <xs:element name="Navigation" minOccurs="0">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="EntityPropertyBase">
+                                    <xs:attribute name="Reference" type="CsIdentifier" use="required"/>
+                                    <xs:attribute name="PrimaryKey" type="CsIdentifier" use="optional"/>
+                                    <xs:attribute name="IsOneToOne" type="xs:boolean" use="optional" default="false"/>
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
                 <xs:attribute name="IsPrimaryKey" type="xs:boolean" use="optional" default="false"/>
                 <xs:attribute name="IsDefaultNull" type="xs:boolean" use="optional" default="false"/>
                 <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false"/>
@@ -383,6 +427,16 @@
                     <xs:element name="Default" type="xs:string"/>
                     <xs:element name="DefaultNull" />
                 </xs:choice>
+                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="MD5HashProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:sequence>
+                    <xs:element name="DefaultNull" minOccurs="0" maxOccurs="1" />
+                </xs:sequence>
                 <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false"/>
             </xs:extension>
         </xs:complexContent>
@@ -427,6 +481,7 @@
         <xs:complexContent>
             <xs:extension base="EntityProperty">
                 <xs:attribute name="ItemType" type="CsIdentifier" use="required"/>
+                <xs:attribute name="ForeignKey" type="CsIdentifier" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -435,12 +490,15 @@
             <xs:element name="Byte" type="ByteProperty" />
             <xs:element name="SByte" type="SByteProperty" />
             <xs:element name="ByteArray" type="ByteArrayProperty" />
+            <xs:element name="MultiStringValue" type="MultiStringValueProperty" />
+            <xs:element name="MD5Hash" type="MD5HashProperty" />
             <xs:element name="Short" type="ShortProperty" />
             <xs:element name="UShort" type="UShortProperty" />
             <xs:element name="Int" type="IntProperty" />
             <xs:element name="UInt" type="UIntProperty" />
             <xs:element name="Long" type="LongProperty" />
             <xs:element name="ULong" type="ULongProperty" />
+            <xs:element name="Double" type="DoubleProperty" />
             <xs:element name="NVarChar" type="NVarCharProperty" />
             <xs:element name="DateTime" type="DateTimeProperty" />
             <xs:element name="UniqueIdentifier" type="UniqueIdentifierProperty" />
@@ -449,7 +507,7 @@
             <xs:element name="VolumeIdentifier" type="VolumeIdentifierProperty"/>
             <xs:element name="DriveType" type="DriveTypeProperty"/>
             <xs:element name="Enum" type="EnumProperty"/>
-            <xs:element name="Navigation" type="NavigationProperty"/>
+            <!--<xs:element name="Navigation" type="NavigationProperty"/>-->
             <xs:element name="CollectionNavigation" type="CollectionNavigationProperty"/>
         </xs:choice>
     </xs:complexType>

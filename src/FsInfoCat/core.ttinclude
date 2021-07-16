@@ -402,6 +402,16 @@ XDocument EntitiesDocument
         return _entitiesDocument;
     }
 }
+private XDocument _entityDefinitionsDocument;
+XDocument EntityDefinitionsDocument
+{
+    get
+    {
+        if (_entityDefinitionsDocument is null)
+            _entityDefinitionsDocument = XDocument.Load(Path.Combine(Path.GetDirectoryName(Solution.FullName), "FsInfoCat\\Resources\\EntityDefinitions.xml"), LoadOptions.PreserveWhitespace);
+        return _entityDefinitionsDocument;
+    }
+}
 IEnumerable<XElement> GetBaseEntityTypes(XElement entityElement)
 {
     if (entityElement.Parent is XElement parentElement)
