@@ -194,26 +194,50 @@
             <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
         </xs:sequence>
     </xs:group>
-    <xs:complexType name="DbContextType">
+    <xs:complexType name="DbTableType">
         <xs:sequence>
             <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
             <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
             <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
             <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
-            <xs:element maxOccurs="unbounded" name="Table">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
-                        <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
-                        <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:string" use="required" />
-                    <xs:attribute name="Type" type="xs:string" use="optional" />
-                </xs:complexType>
-            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:NCName" use="required" />
+        <xs:attribute name="ItemType" type="xs:NCName" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ConcreteDbTableType">
+        <xs:complexContent>
+            <xs:extension base="DbTableType">
+                <xs:attribute name="ConcreteType" type="xs:NCName" use="required" />
+                <xs:attribute name="TableName" type="xs:NCName" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BaseDbContextType">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
+            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
+            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
         </xs:sequence>
         <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="DbContextType">
+        <xs:complexContent>
+            <xs:extension base="BaseDbContextType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="Table" type="DbTableType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ConcreteDbContextType">
+        <xs:complexContent>
+            <xs:extension base="BaseDbContextType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="Table" type="ConcreteDbTableType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:group name="EnumTypes">
         <xs:choice>
@@ -302,7 +326,7 @@
                         <xs:sequence>
                             <xs:group ref="EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element maxOccurs="unbounded" name="Entity" type="EntityType"/>
-                            <xs:element name="DbContext" type="DbContextType"/>
+                            <xs:element name="DbContext" type="ConcreteDbContextType"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -311,7 +335,7 @@
                         <xs:sequence>
                             <xs:group ref="EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element maxOccurs="unbounded" name="Entity" type="EntityType"/>
-                            <xs:element name="DbContext" type="DbContextType"/>
+                            <xs:element name="DbContext" type="ConcreteDbContextType"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

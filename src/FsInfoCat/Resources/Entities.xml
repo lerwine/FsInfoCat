@@ -4745,122 +4745,122 @@
         <summary>
             Generic interface for FS InfoCat database context.
         </summary>
-        <Table Name="Comparisons" Type="IEnumerable{IComparison}">
+        <Table Name="Comparisons" ItemType="IComparison">
             <summary>
                 Enumerates generic file comparison entities.
             </summary>
         </Table>
-        <Table Name="BinaryPropertySets" Type="IEnumerable{IBinaryPropertySet}">
+        <Table Name="BinaryPropertySets" ItemType="IBinaryPropertySet">
             <summary>
                 Enumerates generic binary property set entities.
             </summary>
         </Table>
-        <Table Name="SummaryPropertySets" Type="IEnumerable{ISummaryPropertySet}">
+        <Table Name="SummaryPropertySets" ItemType="ISummaryPropertySet">
             <summary>
                 Enumerates generic summary property set entities.
             </summary>
         </Table>
-        <Table Name="DocumentPropertySets" Type="IEnumerable{IDocumentPropertySet}">
+        <Table Name="DocumentPropertySets" ItemType="IDocumentPropertySet">
             <summary>
                 Enumerates generic document property set entities.
             </summary>
         </Table>
-        <Table Name="AudioPropertySets" Type="IEnumerable{IAudioPropertySet}">
+        <Table Name="AudioPropertySets" ItemType="IAudioPropertySet">
             <summary>
                 Enumerates generic audio property set entities.
             </summary>
         </Table>
-        <Table Name="DRMPropertySets" Type="IEnumerable{IDRMPropertySet}">
+        <Table Name="DRMPropertySets" ItemType="IDRMPropertySet">
             <summary>
                 Enumerates generic DRM property set entities.
             </summary>
         </Table>
-        <Table Name="GPSPropertySets" Type="IEnumerable{IGPSPropertySet}">
+        <Table Name="GPSPropertySets" ItemType="IGPSPropertySet">
             <summary>
                 Enumerates generic GPS property set entities.
             </summary>
         </Table>
-        <Table Name="ImagePropertySets" Type="IEnumerable{IImagePropertySet}">
+        <Table Name="ImagePropertySets" ItemType="IImagePropertySet">
             <summary>
                 Enumerates generic image property set entities.
             </summary>
         </Table>
-        <Table Name="MediaPropertySets" Type="IEnumerable{IMediaPropertySet}">
+        <Table Name="MediaPropertySets" ItemType="IMediaPropertySet">
             <summary>
                 Enumerates generic media property set entities.
             </summary>
         </Table>
-        <Table Name="MusicPropertySets" Type="IEnumerable{IMusicPropertySet}">
+        <Table Name="MusicPropertySets" ItemType="IMusicPropertySet">
             <summary>
                 Enumerates generic music property set entities.
             </summary>
         </Table>
-        <Table Name="PhotoPropertySets" Type="IEnumerable{IPhotoPropertySet}">
+        <Table Name="PhotoPropertySets" ItemType="IPhotoPropertySet">
             <summary>
                 Enumerates generic photo property set entities.
             </summary>
         </Table>
-        <Table Name="RecordedTVPropertySets" Type="IEnumerable{IRecordedTVPropertySet}">
+        <Table Name="RecordedTVPropertySets" ItemType="IRecordedTVPropertySet">
             <summary>
                 Enumerates generic recorded TV property set entities.
             </summary>
         </Table>
-        <Table Name="VideoPropertySets" Type="IEnumerable{IVideoPropertySet}">
+        <Table Name="VideoPropertySets" ItemType="IVideoPropertySet">
             <summary>
                 Enumerates generic video property set entities.
             </summary>
         </Table>
-        <Table Name="FileAccessErrors" Type="IEnumerable{IFileAccessError}">
+        <Table Name="FileAccessErrors" ItemType="IFileAccessError">
             <summary>
                 Enumerates generic file access error entities.
             </summary>
         </Table>
-        <Table Name="Files" Type="IEnumerable{IFile}">
+        <Table Name="Files" ItemType="IFile">
             <summary>
                 Enumerates generic file entities.
             </summary>
         </Table>
-        <Table Name="FileSystems" Type="IEnumerable{IFileSystem}">
+        <Table Name="FileSystems" ItemType="IFileSystem">
             <summary>
                 Enumerates generic file system entities.
             </summary>
         </Table>
-        <Table Name="Redundancies" Type="IEnumerable{IRedundancy}">
+        <Table Name="Redundancies" ItemType="IRedundancy">
             <summary>
                 Enumerates generic redundancy entities.
             </summary>
         </Table>
-        <Table Name="RedundantSets" Type="IEnumerable{IRedundantSet}">
+        <Table Name="RedundantSets" ItemType="IRedundantSet">
             <summary>
                 Enumerates generic redundant set entities.
             </summary>
         </Table>
-        <Table Name="Subdirectories" Type="IEnumerable{ISubdirectory}">
+        <Table Name="Subdirectories" ItemType="ISubdirectory">
             <summary>
                 Enumerates generic sub-directory entities.
             </summary>
         </Table>
-        <Table Name="SubdirectoryAccessErrors" Type="IEnumerable{ISubdirectoryAccessError}">
+        <Table Name="SubdirectoryAccessErrors" ItemType="ISubdirectoryAccessError">
             <summary>
                 Enumerates generic sub-directory access error entities.
             </summary>
         </Table>
-        <Table Name="SymbolicNames" Type="IEnumerable{ISymbolicName}">
+        <Table Name="SymbolicNames" ItemType="ISymbolicName">
             <summary>
                 Enumerates generic symbolic name entities.
             </summary>
         </Table>
-        <Table Name="VolumeAccessErrors" Type="IEnumerable{IVolumeAccessError}">
+        <Table Name="VolumeAccessErrors" ItemType="IVolumeAccessError">
             <summary>
                 Enumerates generic volume access error entities.
             </summary>
         </Table>
-        <Table Name="Volumes" Type="IEnumerable{IVolume}">
+        <Table Name="Volumes" ItemType="IVolume">
             <summary>
                 Enumerates generic volume entities.
             </summary>
         </Table>
-        <Table Name="CrawlConfigurations" Type="IEnumerable{ICrawlConfiguration}">
+        <Table Name="CrawlConfigurations" ItemType="ICrawlConfiguration">
             <summary>
                 Enumerates generic crawl configuration entities.
             </summary>
@@ -5367,122 +5367,122 @@
             <summary>
                 Generic interface for FS InfoCat database context.
             </summary>
-            <Table Name="Comparisons" Type="IEnumerable{ILocalComparison}">
+            <Table Name="Comparisons" ItemType="ILocalComparison">
                 <summary>
                     Enumerates generic file comparison entities.
                 </summary>
             </Table>
-            <Table Name="BinaryPropertySets" Type="IEnumerable{ILocalBinaryPropertySet}">
+            <Table Name="BinaryPropertySets" ItemType="ILocalBinaryPropertySet">
                 <summary>
                     Enumerates generic binary property set entities.
                 </summary>
             </Table>
-            <Table Name="SummaryPropertySets" Type="IEnumerable{ILocalSummaryPropertySet}">
+            <Table Name="SummaryPropertySets" ItemType="ILocalSummaryPropertySet">
                 <summary>
                     Enumerates generic summary property set entities.
                 </summary>
             </Table>
-            <Table Name="DocumentPropertySets" Type="IEnumerable{ILocalDocumentPropertySet}">
+            <Table Name="DocumentPropertySets" ItemType="ILocalDocumentPropertySet">
                 <summary>
                     Enumerates generic document property set entities.
                 </summary>
             </Table>
-            <Table Name="AudioPropertySets" Type="IEnumerable{ILocalAudioPropertySet}">
+            <Table Name="AudioPropertySets" ItemType="ILocalAudioPropertySet">
                 <summary>
                     Enumerates generic audio property set entities.
                 </summary>
             </Table>
-            <Table Name="DRMPropertySets" Type="IEnumerable{ILocalDRMPropertySet}">
+            <Table Name="DRMPropertySets" ItemType="ILocalDRMPropertySet">
                 <summary>
                     Enumerates generic DRM property set entities.
                 </summary>
             </Table>
-            <Table Name="GPSPropertySets" Type="IEnumerable{ILocalGPSPropertySet}">
+            <Table Name="GPSPropertySets" ItemType="ILocalGPSPropertySet">
                 <summary>
                     Enumerates generic GPS property set entities.
                 </summary>
             </Table>
-            <Table Name="ImagePropertySets" Type="IEnumerable{ILocalImagePropertySet}">
+            <Table Name="ImagePropertySets" ItemType="ILocalImagePropertySet">
                 <summary>
                     Enumerates generic image property set entities.
                 </summary>
             </Table>
-            <Table Name="MediaPropertySets" Type="IEnumerable{ILocalMediaPropertySet}">
+            <Table Name="MediaPropertySets" ItemType="ILocalMediaPropertySet">
                 <summary>
                     Enumerates generic media property set entities.
                 </summary>
             </Table>
-            <Table Name="MusicPropertySets" Type="IEnumerable{ILocalMusicPropertySet}">
+            <Table Name="MusicPropertySets" ItemType="ILocalMusicPropertySet">
                 <summary>
                     Enumerates generic music property set entities.
                 </summary>
             </Table>
-            <Table Name="PhotoPropertySets" Type="IEnumerable{ILocalPhotoPropertySet}">
+            <Table Name="PhotoPropertySets" ItemType="ILocalPhotoPropertySet">
                 <summary>
                     Enumerates generic photo property set entities.
                 </summary>
             </Table>
-            <Table Name="RecordedTVPropertySets" Type="IEnumerable{ILocalRecordedTVPropertySet}">
+            <Table Name="RecordedTVPropertySets" ItemType="ILocalRecordedTVPropertySet">
                 <summary>
                     Enumerates generic recorded TV property set entities.
                 </summary>
             </Table>
-            <Table Name="VideoPropertySets" Type="IEnumerable{ILocalVideoPropertySet}">
+            <Table Name="VideoPropertySets" ItemType="ILocalVideoPropertySet">
                 <summary>
                     Enumerates generic video property set entities.
                 </summary>
             </Table>
-            <Table Name="FileAccessErrors" Type="IEnumerable{ILocalFileAccessError}">
+            <Table Name="FileAccessErrors" ItemType="ILocalFileAccessError">
                 <summary>
                     Enumerates generic file access error entities.
                 </summary>
             </Table>
-            <Table Name="Files" Type="IEnumerable{ILocalFile}">
+            <Table Name="Files" ItemType="ILocalFile">
                 <summary>
                     Enumerates generic file entities.
                 </summary>
             </Table>
-            <Table Name="FileSystems" Type="IEnumerable{ILocalFileSystem}">
+            <Table Name="FileSystems" ItemType="ILocalFileSystem">
                 <summary>
                     Enumerates generic file system entities.
                 </summary>
             </Table>
-            <Table Name="Redundancies" Type="IEnumerable{ILocalRedundancy}">
+            <Table Name="Redundancies" ItemType="ILocalRedundancy">
                 <summary>
                     Enumerates generic redundancy entities.
                 </summary>
             </Table>
-            <Table Name="RedundantSets" Type="IEnumerable{ILocalRedundantSet}">
+            <Table Name="RedundantSets" ItemType="ILocalRedundantSet">
                 <summary>
                     Enumerates generic redundant set entities.
                 </summary>
             </Table>
-            <Table Name="Subdirectories" Type="IEnumerable{ILocalSubdirectory}">
+            <Table Name="Subdirectories" ItemType="ILocalSubdirectory">
                 <summary>
                     Enumerates generic sub-directory entities.
                 </summary>
             </Table>
-            <Table Name="SubdirectoryAccessErrors" Type="IEnumerable{ILocalSubdirectoryAccessError}">
+            <Table Name="SubdirectoryAccessErrors" ItemType="ILocalSubdirectoryAccessError">
                 <summary>
                     Enumerates generic sub-directory access error entities.
                 </summary>
             </Table>
-            <Table Name="SymbolicNames" Type="IEnumerable{ILocalSymbolicName}">
+            <Table Name="SymbolicNames" ItemType="ILocalSymbolicName">
                 <summary>
                     Enumerates generic symbolic name entities.
                 </summary>
             </Table>
-            <Table Name="VolumeAccessErrors" Type="IEnumerable{ILocalVolumeAccessError}">
+            <Table Name="VolumeAccessErrors" ItemType="ILocalVolumeAccessError">
                 <summary>
                     Enumerates generic volume access error entities.
                 </summary>
             </Table>
-            <Table Name="Volumes" Type="IEnumerable{ILocalVolume}">
+            <Table Name="Volumes" ItemType="ILocalVolume">
                 <summary>
                     Enumerates generic volume entities.
                 </summary>
             </Table>
-            <Table Name="CrawlConfigurations" Type="IEnumerable{ILocalCrawlConfiguration}">
+            <Table Name="CrawlConfigurations" ItemType="ILocalCrawlConfiguration">
                 <summary>
                     Enumerates generic crawl configuration entities.
                 </summary>
@@ -6259,122 +6259,122 @@
             <summary>
                 Generic interface for FS InfoCat database context.
             </summary>
-            <Table Name="Comparisons" Type="IEnumerable{IUpstreamComparison}">
+            <Table Name="Comparisons" ItemType="IUpstreamComparison">
                 <summary>
                     Enumerates generic file comparison entities.
                 </summary>
             </Table>
-            <Table Name="BinaryPropertySets" Type="IEnumerable{IUpstreamBinaryPropertySet}">
+            <Table Name="BinaryPropertySets" ItemType="IUpstreamBinaryPropertySet">
                 <summary>
                     Enumerates generic binary property set entities.
                 </summary>
             </Table>
-            <Table Name="SummaryPropertySets" Type="IEnumerable{IUpstreamSummaryPropertySet}">
+            <Table Name="SummaryPropertySets" ItemType="IUpstreamSummaryPropertySet">
                 <summary>
                     Enumerates generic summary property set entities.
                 </summary>
             </Table>
-            <Table Name="DocumentPropertySets" Type="IEnumerable{IUpstreamDocumentPropertySet}">
+            <Table Name="DocumentPropertySets" ItemType="IUpstreamDocumentPropertySet">
                 <summary>
                     Enumerates generic document property set entities.
                 </summary>
             </Table>
-            <Table Name="AudioPropertySets" Type="IEnumerable{IUpstreamAudioPropertySet}">
+            <Table Name="AudioPropertySets" ItemType="IUpstreamAudioPropertySet">
                 <summary>
                     Enumerates generic audio property set entities.
                 </summary>
             </Table>
-            <Table Name="DRMPropertySets" Type="IEnumerable{IUpstreamDRMPropertySet}">
+            <Table Name="DRMPropertySets" ItemType="IUpstreamDRMPropertySet">
                 <summary>
                     Enumerates generic DRM property set entities.
                 </summary>
             </Table>
-            <Table Name="GPSPropertySets" Type="IEnumerable{IUpstreamGPSPropertySet}">
+            <Table Name="GPSPropertySets" ItemType="IUpstreamGPSPropertySet">
                 <summary>
                     Enumerates generic GPS property set entities.
                 </summary>
             </Table>
-            <Table Name="ImagePropertySets" Type="IEnumerable{IUpstreamImagePropertySet}">
+            <Table Name="ImagePropertySets" ItemType="IUpstreamImagePropertySet">
                 <summary>
                     Enumerates generic image property set entities.
                 </summary>
             </Table>
-            <Table Name="MediaPropertySets" Type="IEnumerable{IUpstreamMediaPropertySet}">
+            <Table Name="MediaPropertySets" ItemType="IUpstreamMediaPropertySet">
                 <summary>
                     Enumerates generic media property set entities.
                 </summary>
             </Table>
-            <Table Name="MusicPropertySets" Type="IEnumerable{IUpstreamMusicPropertySet}">
+            <Table Name="MusicPropertySets" ItemType="IUpstreamMusicPropertySet">
                 <summary>
                     Enumerates generic music property set entities.
                 </summary>
             </Table>
-            <Table Name="PhotoPropertySets" Type="IEnumerable{IUpstreamPhotoPropertySet}">
+            <Table Name="PhotoPropertySets" ItemType="IUpstreamPhotoPropertySet">
                 <summary>
                     Enumerates generic photo property set entities.
                 </summary>
             </Table>
-            <Table Name="RecordedTVPropertySets" Type="IEnumerable{IUpstreamRecordedTVPropertySet}">
+            <Table Name="RecordedTVPropertySets" ItemType="IUpstreamRecordedTVPropertySet">
                 <summary>
                     Enumerates generic recorded TV property set entities.
                 </summary>
             </Table>
-            <Table Name="VideoPropertySets" Type="IEnumerable{IUpstreamVideoPropertySet}">
+            <Table Name="VideoPropertySets" ItemType="IUpstreamVideoPropertySet">
                 <summary>
                     Enumerates generic video property set entities.
                 </summary>
             </Table>
-            <Table Name="FileAccessErrors" Type="IEnumerable{IFileUpstreamAccessError}">
+            <Table Name="FileAccessErrors" ItemType="IFileUpstreamAccessError">
                 <summary>
                     Enumerates generic file access error entities.
                 </summary>
             </Table>
-            <Table Name="Files" Type="IEnumerable{IUpstreamFile}">
+            <Table Name="Files" ItemType="IUpstreamFile">
                 <summary>
                     Enumerates generic file entities.
                 </summary>
             </Table>
-            <Table Name="FileSystems" Type="IEnumerable{IUpstreamFileSystem}">
+            <Table Name="FileSystems" ItemType="IUpstreamFileSystem">
                 <summary>
                     Enumerates generic file system entities.
                 </summary>
             </Table>
-            <Table Name="Redundancies" Type="IEnumerable{IUpstreamRedundancy}">
+            <Table Name="Redundancies" ItemType="IUpstreamRedundancy">
                 <summary>
                     Enumerates generic redundancy entities.
                 </summary>
             </Table>
-            <Table Name="RedundantSets" Type="IEnumerable{IUpstreamRedundantSet}">
+            <Table Name="RedundantSets" ItemType="IUpstreamRedundantSet">
                 <summary>
                     Enumerates generic redundant set entities.
                 </summary>
             </Table>
-            <Table Name="Subdirectories" Type="IEnumerable{IUpstreamSubdirectory}">
+            <Table Name="Subdirectories" ItemType="IUpstreamSubdirectory">
                 <summary>
                     Enumerates generic sub-directory entities.
                 </summary>
             </Table>
-            <Table Name="SubdirectoryAccessErrors" Type="IEnumerable{IUpstreamSubdirectoryAccessError}">
+            <Table Name="SubdirectoryAccessErrors" ItemType="IUpstreamSubdirectoryAccessError">
                 <summary>
                     Enumerates generic sub-directory access error entities.
                 </summary>
             </Table>
-            <Table Name="SymbolicNames" Type="IEnumerable{IUpstreamSymbolicName}">
+            <Table Name="SymbolicNames" ItemType="IUpstreamSymbolicName">
                 <summary>
                     Enumerates generic symbolic name entities.
                 </summary>
             </Table>
-            <Table Name="VolumeAccessErrors" Type="IEnumerable{IUpstreamVolumeAccessError}">
+            <Table Name="VolumeAccessErrors" ItemType="IUpstreamVolumeAccessError">
                 <summary>
                     Enumerates generic volume access error entities.
                 </summary>
             </Table>
-            <Table Name="Volumes" Type="IEnumerable{IUpstreamVolume}">
+            <Table Name="Volumes" ItemType="IUpstreamVolume">
                 <summary>
                     Enumerates generic volume entities.
                 </summary>
             </Table>
-            <Table Name="CrawlConfigurations" Type="IEnumerable{IUpstreamCrawlConfiguration}">
+            <Table Name="CrawlConfigurations" ItemType="IUpstreamCrawlConfiguration">
                 <summary>
                     Enumerates generic crawl configuration entities.
                 </summary>
