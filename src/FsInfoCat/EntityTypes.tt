@@ -1,0 +1,317 @@
+<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Linq" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Collections.ObjectModel" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ include file="core.ttinclude" #>
+<#@ output extension=".cs" #>
+using FsInfoCat.Collections;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+
+namespace <#=DefaultNamespace#>
+{
+<#
+XName localName = XName.Get("Local");
+XName upstreamName = XName.Get("Local");
+
+PushIndent("    ");
+GenerateEntityTypes(EntityDefinitionsDocument.Root.Elements().Where(e => e.Name != localName && e.Name != upstreamName));
+PopIndent();
+#>
+}
+
+<#+
+
+bool IsSubsequentType { get; set; }
+
+void GenerateEntityTypes(IEnumerable<XElement> entityElements)
+{
+    IsSubsequentType = false;
+    foreach (XElement typeElement in entityElements)
+    {
+        if (typeElement.Name.NamespaceName.Length > 0)
+            continue;
+        switch (typeElement.Name.LocalName)
+        {
+            case "Entity":
+                GenerateEntityInterface(typeElement);
+                break;
+            case "ByteEnum":
+            case "SByteEnum":
+            case "ShortEnum":
+            case "UShortEnum":
+            case "IntEnum":
+            case "UIntEnum":
+            case "LongEnum":
+            case "ULongEnum":
+                break;
+        }
+    }
+}
+
+void GenerateEntityInterface(XElement entityElement)
+{
+    if (IsSubsequentType)
+        WriteLine("");
+    else
+        IsSubsequentType = true;
+    GenerateXmlDoc(entityElement.Element("summary"));
+    foreach (XElement e in entityElement.Elements("typeparam"))
+        GenerateXmlDoc(e);
+    GenerateXmlDoc(entityElement.Element("remarks"));
+    IEnumerable<string> implements = entityElement.Attributes("BaseInterface").Concat(entityElement.Elements("Implements").Attributes("Type")).Select(a => a.Value.Replace('{', '<').Replace('}', '>'));
+    foreach (XElement e in entityElement.Elements("seealso").Concat(implements.Select(s => new XElement("seealso", new XAttribute("cref", s)))))
+        GenerateXmlDoc(e);
+    Write("public interface ");
+    if (implements.Any())
+    {
+        Write(entityElement.Attribute("Name")?.Value);
+        Write("Test : ");
+        if (implements.Skip(1).Any())
+        {
+            foreach (string t in implements.Reverse().Skip(1).Reverse())
+            {
+                Write(t);
+                Write(", ");
+            }
+        }
+        WriteLine(implements.Last());
+    }
+    else
+    {
+        Write(entityElement.Attribute("Name")?.Value);
+        WriteLine("Test");
+    }
+    WriteLine("{");
+    PushIndent("    ");
+    bool isSubsequentMember = false;
+    foreach (XElement propertyElement in entityElement.Elements("Properties").Elements())
+    {
+        if (propertyElement.Name.NamespaceName.Length > 0)
+            continue;
+        if (isSubsequentMember)
+            WriteLine("");
+        else
+            isSubsequentMember = true;
+        GenerateXmlDoc(entityElement.Element("summary"));
+        GenerateXmlDoc(entityElement.Element("value"));
+        GenerateXmlDoc(entityElement.Element("remarks"));
+        foreach (XElement e in entityElement.Elements("seealso"))
+            GenerateXmlDoc(e);
+        switch (propertyElement.Name.LocalName)
+        {
+            case "Byte":
+            case "SByte":
+            case "Short":
+            case "UShort":
+            case "Int":
+            case "UInt":
+            case "Long":
+            case "ULong":
+            case "Double":
+                Write(propertyElement.Name.LocalName.ToLower());
+                Write(propertyElement.Attributes("IsNullable").Any(a => a.Value == "true") ? "? " : " ");
+                break;
+            case "ByteArray":
+                Write("byte[] ");
+                break;
+            case "Text":
+            case "NVarChar":
+                Write("string ");
+                break;
+            case "VolumeIdentifier":
+            case "DriveType":
+            case "MD5Hash":
+            case "DateTime":
+                Write(propertyElement.Name.LocalName);
+                Write(propertyElement.Attributes("IsNullable").Any(a => a.Value == "true") ? "? " : " ");
+                break;
+            case "MultiStringValue":
+                Write(propertyElement.Name.LocalName);
+                Write(" ");
+                break;
+            case "UniqueIdentifier":
+                Write(propertyElement.Attributes("IsNullable").Any(a => a.Value == "true") ? "Guid? " : "Guid ");
+                break;
+            case "Bit":
+                Write("bool ");
+                break;
+            case "Enum":
+                Write("object ");
+                break;
+            case "CollectionNavigation":
+                Write("object ");
+                break;
+            default:
+                Write("#warning Invalid element: ");
+                WriteLine(propertyElement.Name.LocalName);
+                Write("object ");
+                break;
+        }
+        Write(propertyElement.Attribute("Name")?.Value);
+        WriteLine(propertyElement.Attributes("IsGenericWritable").Any(a => a.Value == "true") ? " { get; set; }" : " { get; }");
+    }
+
+    PopIndent();
+    WriteLine("}");
+}
+
+void GenerateDateTimeProperty(XElement propertyElement)
+{
+}
+
+void GenerateUniqueIdentifierProperty(XElement propertyElement)
+{
+}
+
+/*
+    <xs:complexType name="EntityPropertyBase">
+        <xs:sequence>
+            <xs:element name="summary" type="CommentDoc" />
+            <xs:element name="value" type="CommentDoc" />
+            <xs:element name="remarks" type="CommentDoc" minOccurs="0"/>
+            <xs:element name="seealso" type="SeeAlso" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Name" type="CsIdentifier" use="required" />
+        <xs:attribute name="DisplayNameResource" type="CsIdentifier" use="optional" />
+        <xs:attribute name="ResourceType" type="xs:NCName" use="optional" />
+        <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false"/>
+    </xs:complexType>
+    <xs:complexType name="EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityPropertyBase">
+                <xs:attribute name="IsUnique" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="IsIndexed" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DateTimeProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="Default" type="xs:dateTime"/>
+                    <xs:element name="DefaultNow" />
+                    <xs:element name="DefaultNull" />
+                </xs:choice>
+                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UniqueIdentifierProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:sequence>
+                    <xs:element name="Navigation" minOccurs="0">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="EntityPropertyBase">
+                                    <xs:attribute name="Reference" type="CsIdentifier" use="required"/>
+                                    <xs:attribute name="PrimaryKey" type="CsIdentifier" use="optional"/>
+                                    <xs:attribute name="IsOneToOne" type="xs:boolean" use="optional" default="false"/>
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="IsPrimaryKey" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="IsDefaultNull" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    */
+Regex LeadingEmptyLine = new Regex(@"^([^\r\n\S]+)?(\r\n?|\n)", RegexOptions.Compiled);
+Regex TrailingEmptyLine = new Regex(@"(\r\n?|\n)([^\r\n\S]+)?$", RegexOptions.Compiled);
+Regex TrailingWsRegex = new Regex(@"\s+$", RegexOptions.Compiled);
+
+void GenerateXmlDoc(XElement xmlDocElement)
+{
+    if (xmlDocElement is null)
+        return;
+    if (xmlDocElement.LastNode is XText lastNode)
+    {
+        while (lastNode.PreviousNode is XText previousTextNode)
+        {
+            lastNode.Value = $"{previousTextNode.Value}{lastNode.Value}";
+            previousTextNode.Remove();
+        }
+        if (!TrailingEmptyLine.IsMatch(lastNode.Value))
+            lastNode.Value = $"{lastNode.Value}\n";
+    }
+    else
+    {
+        lastNode = new XText("\n");
+        xmlDocElement.Add(lastNode);
+    }
+    if (xmlDocElement.FirstNode is XText firstNode)
+    {
+        while (firstNode.NextNode is XText followingTextNode)
+        {
+            firstNode.Value = $"{firstNode.Value}{followingTextNode.Value}";
+            followingTextNode.Remove();
+        }
+        if (ReferenceEquals(firstNode, lastNode))
+        {
+            if (LeadingEmptyLine.Match(firstNode.Value).Length < firstNode.Value.Length)
+                firstNode.Value = $"\n{firstNode.Value}";
+        }
+        else if (!LeadingEmptyLine.IsMatch(firstNode.Value))
+            firstNode.Value = $"\n{firstNode.Value}";
+    }
+    else
+        xmlDocElement.FirstNode.AddBeforeSelf(new XText("\n"));
+    IEnumerable<string> lines = NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None));
+    if (!(lines.Skip(2).Any() && (lines = lines.Take(1).Concat(lines.Skip(1).SkipWhile(s => string.IsNullOrWhiteSpace(s))).ToArray()).Skip(3).Any() &&
+        (lines = lines.Reverse().Take(1).Concat(lines.Reverse().Skip(1).SkipWhile(s => string.IsNullOrWhiteSpace(s))).Reverse().ToArray()).Skip(3).Any()))
+    {
+        Write("/// ");
+        Write(lines.First());
+        if (lines.Skip(2).Any())
+            Write(lines.Skip(1).First().Trim());
+        WriteLine(lines.Last().Trim());
+        return;
+    }
+    
+    if (LeadingWsRegex.IsMatch(lines.Skip(1).First()))
+    {
+        int indent = lines.Skip(1).Reverse().Skip(1).Reverse().Select(s => LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
+        if (indent > 0)
+            lines = lines.Take(1).Concat(lines.Skip(1).Reverse().Skip(1).Reverse().Select(s => s.Substring(indent))).Concat(lines.Reverse().Take(1));
+    }
+    else
+    {
+        int indent = lines.Skip(2).Reverse().Skip(1).Reverse().Select(s => LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
+        if (indent > 0)
+            lines = lines.Take(2).Concat(lines.Skip(2).Reverse().Skip(1).Reverse().Select(s => s.Substring(indent))).Concat(lines.Reverse().Take(1));
+    }
+
+    Write("/// ");
+    WriteLine(lines.First());
+    foreach (string s in lines.Skip(1).Reverse().Skip(1).Reverse())
+    {
+        Write("/// ");
+        WriteLine(s.TrimEnd());
+    }
+    Write("/// ");
+    WriteLine(lines.Last().Trim());
+}
+#>
