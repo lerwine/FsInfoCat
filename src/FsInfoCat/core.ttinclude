@@ -398,7 +398,7 @@ XDocument EntitiesDocument
     get
     {
         if (_entitiesDocument is null)
-            _entitiesDocument = XDocument.Load(Path.Combine(TemplateFolder, "Resources\\Entities.xml"), LoadOptions.PreserveWhitespace);
+            _entitiesDocument = XDocument.Load(Path.Combine(Path.GetDirectoryName(Solution.FullName), "FsInfoCat\\Resources\\Entities.xml"), LoadOptions.PreserveWhitespace);
         return _entitiesDocument;
     }
 }
