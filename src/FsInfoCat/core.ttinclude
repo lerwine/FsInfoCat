@@ -39,14 +39,14 @@ string DefaultNamespace
 			return _defaultNamespace;
 		try
 		{
-			_defaultNamespace = System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint").ToString();
+			_defaultNamespace = System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint")?.ToString();
 			if (!String.IsNullOrEmpty(_defaultNamespace))
 				return _defaultNamespace;
 		}
 		catch { }
 		_defaultNamespace = GetCurrentItemPropertyString("RootNamespace");
 		if (String.IsNullOrEmpty(_defaultNamespace))
-			_defaultNamespace = (String.IsNullOrEmpty(_projectInfo.DefaultNamespace)) ? _projectInfo.RootNamespace ?? "" : _projectInfo.DefaultNamespace;
+			_defaultNamespace = (String.IsNullOrEmpty(ProjectInfo.DefaultNamespace)) ? ProjectInfo.RootNamespace ?? "" : ProjectInfo.DefaultNamespace;
 		return _defaultNamespace;
 	}
 }
@@ -118,6 +118,7 @@ static readonly Regex NormalizeWsRegex = new Regex(@" ((?![\r\n])\s)*|(?! )((?![
 static readonly Regex NormalizeNewLineRegex = new Regex(@"[\v\t\p{Zl}\p{Zp}]|\r(?!\n)", RegexOptions.Compiled);
 static readonly Regex TrimOuterBlankLinesRegex = new Regex(@"^(\s*(\r\n?|\n))+|((\r\n?|\n)\s*)+$", RegexOptions.Compiled);
 static readonly Regex StripWsRegex = new Regex(@"^ [ \t\u0085\p{Zs}]+(?=[\r\n\v\t\p{Zl}\p{Zp}])|(?<=[\r\n\v\t\p{Zl}\p{Zp}])[ \t\u0085\p{Zs}]+", RegexOptions.Compiled);
+static readonly Regex LeadingWsRegex = new Regex(@"^\s+", RegexOptions.Compiled);
 XText ToWhiteSpaceNormalized(XText source)
 {
     string text = source.Value;
@@ -196,7 +197,9 @@ string[] ToXmlLines(IEnumerable<XElement> elements)
         xmlWriter.Flush();
     }
     string result = stringWriter.ToString();
-    return NewLineRegex.IsMatch(result) ? NewLineRegex.Split(result) : new string[] { result };
+    string[] lines = NewLineRegex.IsMatch(result) ? NewLineRegex.Split(result) : new string[] { result };
+    int trimLength = lines.Select(t => LeadingWsRegex.Match(t)).Select(m => m.Success ? m.Length : 0).Min();
+    return (trimLength > 0) ? lines.Select(t => t.Substring(trimLength)).ToArray() : lines;
 }
 Type ToUnderlyingType(Type type)
 {

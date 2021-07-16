@@ -35,6 +35,7 @@ namespace <#=DefaultNamespace#>
 <#
         string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
         string extends = string.Join(", ", entityElement.Elements("Extends").Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        XElement[] allBaseEntityTypes =  GetAllBaseEntityTypes(entityElement).ToArray();
         IEnumerable<XElement> docXElements = GetByNames(entityElement, "summary", "typeparam", "remarks", "seealso");
         docXElements = docXElements.Select(e => WithoutElementNamespace(e));
         foreach (string entityDoc in ToXmlLines(docXElements))
@@ -43,7 +44,6 @@ namespace <#=DefaultNamespace#>
     /// <#=entityDoc#>
 <#
         }
-        XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
         IEnumerable<XElement> propertyElementList = entityElement.Elements("Property");
         if (propertyElementList.Any())
         {
@@ -118,7 +118,7 @@ namespace <#=DefaultNamespace#>
                             typeName = $"{typeName}?";
                             break;
                     }
-                if (extendedTypes.Any(t => TryGetPropertyByName(t, propertyName, out _)))
+                if (allBaseEntityTypes.Any(t =>  t.Elements("Property").Any(e => e.Attribute("Name")?.Value == propertyName)))
                     typeName = $"new {typeName}";
                 string accessor = propertyElement.Attributes("GenericWritable").Any(a => a.Value == "true") ? "{ get; set; }" : "{ get; }";
 #>
@@ -148,6 +148,7 @@ namespace <#=DefaultNamespace#>.Local
 <#
         string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
         string extends = string.Join(", ", entityElement.Elements("Extends").Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        XElement[] allBaseEntityTypes =  GetAllBaseEntityTypes(entityElement).ToArray();
         IEnumerable<XElement> docXElements = GetByNames(entityElement, "summary", "typeparam", "remarks", "seealso");
         docXElements = docXElements.Select(e => WithoutElementNamespace(e));
         foreach (string entityDoc in ToXmlLines(docXElements))
@@ -156,7 +157,6 @@ namespace <#=DefaultNamespace#>.Local
     /// <#=entityDoc#>
 <#
         }
-        XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
         IEnumerable<XElement> propertyElementList = entityElement.Elements("Property");
         if (propertyElementList.Any())
         {
@@ -231,7 +231,7 @@ namespace <#=DefaultNamespace#>.Local
                             typeName = $"{typeName}?";
                             break;
                     }
-                if (extendedTypes.Any(t => TryGetPropertyByName(t, propertyName, out _)))
+                if (allBaseEntityTypes.Any(t =>  t.Elements("Property").Any(e => e.Attribute("Name")?.Value == propertyName)))
                     typeName = $"new {typeName}";
                 string accessor = propertyElement.Attributes("GenericWritable").Any(a => a.Value == "true") ? "{ get; set; }" : "{ get; }";
 #>
@@ -261,6 +261,7 @@ namespace <#=DefaultNamespace#>.Upstream
 <#
         string rt = entityElement.Attributes("ResourceType").Select(a => a.Value).Where(s => !string.IsNullOrWhiteSpace(s)).DefaultIfEmpty("Properties.Resources").First();
         string extends = string.Join(", ", entityElement.Elements("Extends").Attributes("cref").Select(a => a.Value.Replace('{', '<').Replace('}', '>')));
+        XElement[] allBaseEntityTypes =  GetAllBaseEntityTypes(entityElement).ToArray();
         IEnumerable<XElement> docXElements = GetByNames(entityElement, "summary", "typeparam", "remarks", "seealso");
         docXElements = docXElements.Select(e => WithoutElementNamespace(e));
         foreach (string entityDoc in ToXmlLines(docXElements))
@@ -269,7 +270,6 @@ namespace <#=DefaultNamespace#>.Upstream
     /// <#=entityDoc#>
 <#
         }
-        XElement[] extendedTypes = GetExtendedTypes(entityElement).ToArray();
         IEnumerable<XElement> propertyElementList = entityElement.Elements("Property");
         if (propertyElementList.Any())
         {
@@ -344,7 +344,7 @@ namespace <#=DefaultNamespace#>.Upstream
                             typeName = $"{typeName}?";
                             break;
                     }
-                if (extendedTypes.Any(t => TryGetPropertyByName(t, propertyName, out _)))
+                if (allBaseEntityTypes.Any(t =>  t.Elements("Property").Any(e => e.Attribute("Name")?.Value == propertyName)))
                     typeName = $"new {typeName}";
                 string accessor = propertyElement.Attributes("GenericWritable").Any(a => a.Value == "true") ? "{ get; set; }" : "{ get; }";
 #>
@@ -423,46 +423,38 @@ Dictionary<string, XElement> UpstreamEntitiesByTypeName
         return _upstreamEntitiesByTypeName;
     }
 }
-bool TryGetPropertyByName(XElement entityElement, string name, out XElement result)
+IEnumerable<XElement> GetBaseEntityTypes(XElement entityElement)
 {
-    result = entityElement.Elements("Property").FirstOrDefault(e => e.Attribute("Name").Value == name);
-    return result is not null;
-}
-IEnumerable<XElement> GetExtendedTypes(XElement element)
-{
-    Dictionary<string, XElement> dictionary;
-    switch ((element.Parent is XElement pe) ? pe.Name.LocalName : "")
+    if (entityElement.Parent is XElement parentElement)
     {
-        case "Local":
-            dictionary = LocalEntitiesByTypeName;
-            break;
-        case "Upstream":
-            dictionary = UpstreamEntitiesByTypeName;
-            break;
-        default:
-            dictionary = EntitiesByTypeName;
-            break;
+        XName entityName = "Entity";
+        XName nameName = "Name";
+        if (ReferenceEquals(EntitiesDocument.Root, parentElement))
+            foreach (string typeName in entityElement.Elements("Extends").SelectMany(e => (e.Attribute("generic") is null) ? e.Attributes("cref") : e.Attributes("generic")).Select(a => a.Value))
+            {
+                XElement result = parentElement.Elements(entityName).FirstOrDefault(e => e.Attribute(nameName)?.Value == typeName);
+                if (result is not null)
+                    yield return result;
+            }
+        else
+            foreach (string typeName in entityElement.Elements("Extends").SelectMany(e => (e.Attribute("generic") is null) ? e.Attributes("cref") : e.Attributes("generic")).Select(a => a.Value))
+            {
+                XElement result = parentElement.Elements(entityName).FirstOrDefault(e => e.Attribute(nameName)?.Value == typeName);
+                if (result is null)
+                {
+                    result = EntitiesDocument.Root.Elements(entityName).FirstOrDefault(e => e.Attribute(nameName)?.Value == typeName);
+                    if (result is not null)
+                        yield return result;
+                }
+                else
+                    yield return result;
+            }
     }
-    return GetExtendedTypeNames(element).Where(n => dictionary.ContainsKey(n)).Select(n => dictionary[n]);
 }
-IEnumerable<string> GetExtendedTypeNames(XElement element)
+IEnumerable<XElement> GetAllBaseEntityTypes(XElement entityElement)
 {
-    XName xName = "Entity";
-    IEnumerable<string> names = element.Elements("Extends").Attributes("cref").Select(a => a.Value);
-    Dictionary<string, XElement> dictionary;
-    switch ((element.Parent is XElement pe) ? pe.Name.LocalName : "")
-    {
-        case "Local":
-            dictionary = LocalEntitiesByTypeName;
-            break;
-        case "Upstream":
-            dictionary = UpstreamEntitiesByTypeName;
-            break;
-        default:
-            dictionary = EntitiesByTypeName;
-            break;
-    }
-    return names.Concat(names.Where(n => dictionary.ContainsKey(n)).SelectMany(n => GetExtendedTypeNames(dictionary[n]))).Distinct();
+    IEnumerable<XElement> immediate = GetBaseEntityTypes(entityElement);
+    return immediate.Concat(immediate.SelectMany(e => GetAllBaseEntityTypes(e))).Distinct();
 }
 
 #>

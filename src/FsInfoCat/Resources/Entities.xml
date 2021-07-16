@@ -313,7 +313,7 @@
         <summary>
             Generic interface for volume access error entities.
         </summary>
-        <Extends cref="IAccessError{IVolume}" />
+        <Extends cref="IAccessError{IVolume}" generic="IAccessError{TTarget}" />
         <Property Name="Target" Type="IVolume" DisplayNameResource="DisplayName_Target">
             <summary>
                 Gets or sets the target volume to which the access error applies.
@@ -500,7 +500,7 @@
         <summary>
             Generic interface for subdirectory access error entities.
         </summary>
-        <Extends cref="IAccessError{ISubdirectory}" />
+        <Extends cref="IAccessError{ISubdirectory}" generic="IAccessError{TTarget}" />
         <Property Name="Target" Type="ISubdirectory" DisplayNameResource="DisplayName_Target">
             <summary>
                 Gets or sets the target subdirectory to which the access error applies.
@@ -4589,7 +4589,7 @@
         <summary>
             Generic interface for file access error entities.
         </summary>
-        <Extends cref="IAccessError{IFile}" />
+        <Extends cref="IAccessError{IFile}" generic="IAccessError{TTarget}" />
         <Property Name="Target" Type="IFile" DisplayNameResource="DisplayName_Target">
             <summary>
                 Gets or sets the target file to which the access error applies.
@@ -4942,7 +4942,7 @@
             <summary>
                 Generic interface for volume access error entities.
             </summary>
-            <Extends cref="IAccessError{ILocalVolume}" />
+            <Extends cref="IAccessError{ILocalVolume}" generic="IAccessError{TTarget}" />
             <Property Name="Target" Type="ILocalVolume" DisplayNameResource="DisplayName_Target">
                 <summary>
                     Gets or sets the target volume to which the access error applies.
@@ -5032,7 +5032,7 @@
             <summary>
                 Generic interface for subdirectory access error entities.
             </summary>
-            <Extends cref="IAccessError{ILocalSubdirectory}" />
+            <Extends cref="IAccessError{ILocalSubdirectory}" generic="IAccessError{TTarget}" />
             <Property Name="Target" Type="ILocalSubdirectory" DisplayNameResource="DisplayName_Target">
                 <summary>
                     Gets or sets the target subdirectory to which the access error applies.
@@ -5295,7 +5295,7 @@
             <summary>
                 Generic interface for file access error entities.
             </summary>
-            <Extends cref="IAccessError{ILocalFile}" />
+            <Extends cref="IAccessError{ILocalFile}" generic="IAccessError{TTarget}" />
             <Property Name="Target" Type="ILocalFile" DisplayNameResource="DisplayName_Target">
                 <summary>
                     Gets or sets the target file to which the access error applies.
@@ -5784,7 +5784,7 @@
             <summary>
                 Generic interface for volume access error entities.
             </summary>
-            <Extends cref="IAccessError{IUpstreamVolume}" />
+            <Extends cref="IAccessError{IUpstreamVolume}" generic="IAccessError{TTarget}" />
             <Property Name="Target" Type="IUpstreamVolume" DisplayNameResource="DisplayName_Target">
                 <summary>
                     Gets or sets the target volume to which the access error applies.
@@ -5884,7 +5884,7 @@
             <summary>
                 Generic interface for subdirectory access error entities.
             </summary>
-            <Extends cref="IAccessError{IUpstreamSubdirectory}" />
+            <Extends cref="IAccessError{IUpstreamSubdirectory}" generic="IAccessError{TTarget}" />
             <Property Name="Target" Type="IUpstreamSubdirectory" DisplayNameResource="DisplayName_Target">
                 <summary>
                     Gets or sets the target subdirectory to which the access error applies.
@@ -6171,7 +6171,7 @@
             <summary>
                 Generic interface for file access error entities.
             </summary>
-            <Extends cref="IAccessError{IUpstreamFile}" />
+            <Extends cref="IAccessError{IUpstreamFile}" generic="IAccessError{TTarget}" />
             <Property Name="Target" Type="IUpstreamFile" DisplayNameResource="DisplayName_Target">
                 <summary>
                     Gets or sets the target file to which the access error applies.

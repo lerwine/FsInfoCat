@@ -76,6 +76,7 @@
     </xs:complexType>
     <xs:complexType name="TypeExtends">
         <xs:attribute name="cref" type="xs:string" use="required" />
+        <xs:attribute name="generic" type="xs:string" use="optional" />
     </xs:complexType>
     <xs:complexType name="MemberProperty">
         <xs:sequence>

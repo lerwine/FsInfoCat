@@ -346,7 +346,7 @@ namespace FsInfoCat
         /// The <typeparamref name="IVolume" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        IVolume Target { get; }
+        new IVolume Target { get; }
     }
 
     /// <summary>
@@ -550,7 +550,7 @@ namespace FsInfoCat
         /// The <typeparamref name="ISubdirectory" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        ISubdirectory Target { get; }
+        new ISubdirectory Target { get; }
     }
 
     /// <summary>
@@ -3117,7 +3117,7 @@ namespace FsInfoCat
         /// The <typeparamref name="IFile" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        IFile Target { get; }
+        new IFile Target { get; }
     }
 
     /// <summary>
@@ -3360,7 +3360,7 @@ namespace FsInfoCat.Local
         /// The <typeparamref name="ILocalVolume" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        ILocalVolume Target { get; }
+        new ILocalVolume Target { get; }
     }
 
     /// <summary>
@@ -3456,7 +3456,7 @@ namespace FsInfoCat.Local
         /// The <typeparamref name="ILocalSubdirectory" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        ILocalSubdirectory Target { get; }
+        new ILocalSubdirectory Target { get; }
     }
 
     /// <summary>
@@ -3714,7 +3714,7 @@ namespace FsInfoCat.Local
         /// The <typeparamref name="ILocalFile" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        ILocalFile Target { get; }
+        new ILocalFile Target { get; }
     }
 
     /// <summary>
@@ -4127,7 +4127,7 @@ namespace FsInfoCat.Upstream
         /// The <typeparamref name="IUpstreamVolume" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        IUpstreamVolume Target { get; }
+        new IUpstreamVolume Target { get; }
     }
 
     /// <summary>
@@ -4236,7 +4236,7 @@ namespace FsInfoCat.Upstream
         /// The <typeparamref name="IUpstreamSubdirectory" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        IUpstreamSubdirectory Target { get; }
+        new IUpstreamSubdirectory Target { get; }
     }
 
     /// <summary />
@@ -4522,7 +4522,7 @@ namespace FsInfoCat.Upstream
         /// The <typeparamref name="IUpstreamFile" /> entity that this error applies to.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        IUpstreamFile Target { get; }
+        new IUpstreamFile Target { get; }
     }
 
     /// <summary />
