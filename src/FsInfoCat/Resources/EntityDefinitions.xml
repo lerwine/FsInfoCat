@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <EntityDefinitions xsi:noNamespaceSchemaLocation="EntityDefinitions.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Root>
         <EnumTypes>
@@ -116,7 +116,7 @@
                     </summary>
                 </Field>
             </Byte>
-            <Byte Name="DirectoryStatus" IsFlags="true">
+            <Byte Name="DirectoryStatus">
                 <summary>
                     Indicates crawl status for the a <see cref="ISubdirectory" />
                 </summary>
@@ -135,7 +135,7 @@
                         An error occurred while trying to enumerate items in the current <see cref="ISubdirectory" />.
                     </summary>
                 </Field>
-                <Field Name="Deleted" Value="32" FullName="DirectoryStatus.Deleted" DisplayNameResource="DisplayName_Deleted">
+                <Field Name="Deleted" Value="3" FullName="DirectoryStatus.Deleted" DisplayNameResource="DisplayName_Deleted">
                     <summary>
                         The current <see cref="ISubdirectory" /> has been deleted.
                     </summary>
@@ -340,7 +340,7 @@
                     <value>The maximum length of file system name components.</value>
                     <Default>255</Default>
                 </UInt>
-                <DriveType Name="DefaultDriveType" FullName="IFileSystem.DefaultDriveType">
+                <DriveType Name="DefaultDriveType" FullName="IFileSystem.DefaultDriveType" IsNullable="true">
                     <summary>
                         Gets or sets the default drive type for this file system.
                     </summary>
@@ -525,6 +525,22 @@
                 </CollectionNavigation>
             </Properties>
         </Entity>
+        <Entity Name="IVolumeAccessError">
+            <summary>
+                Generic interface for volume access error entities.
+            </summary>
+            <ExtendsGenericEntity Type="IAccessError{IVolume}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="IVolume" FullName="IVolumeAccessError.Target">
+                    <summary>
+                        Gets or sets the target volume to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="IVolume" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
         <Entity Name="ICrawlConfiguration">
             <summary>
                 Configuration of a file system crawl instance.
@@ -552,12 +568,12 @@
                     <value>The custom notes to associate with the current crawl configuration.</value>
                     <Default></Default>
                 </Text>
-                <!--<Property Name="Root" Type="ISubdirectory" DisplayNameResource="DisplayName_Root">
+                <RelatedEntity Name="Root" Reference="ISubdirectory" FullName="ICrawlConfiguration.Root">
                 <summary>
-                    Gets the root subdirectory of the configured subdirectory crawl.
-                </summary>
-                <value>The root subdirectory of the configured subdirectory crawl.</value>
-            </Property>-->
+                        Gets the root subdirectory of the configured subdirectory crawl.
+                    </summary>
+                    <value>The root subdirectory of the configured subdirectory crawl.</value>
+                </RelatedEntity>
                 <UShort Name="MaxRecursionDepth" FullName="ICrawlConfiguration.MaxRecursionDepth">
                     <summary>
                         Gets or sets the maximum recursion depth.
@@ -669,23 +685,12 @@
                     <value>The status value for the current subdirectory.</value>
                     <Default>Incomplete</Default>
                 </Enum>
-                <RelatedEntity Name="Parent" Reference="ISubdirectory" FullName="ISubdirectory.Parent">
-                    <summary>
-                        Gets or sets the parent subdirectory.
-                    </summary>
-                    <value>
-                        The parent <see cref="ISubdirectory" /> or <see langword="null" /> if this is the root subdirectory.
-                    </value>
-                    <remarks>
-                        If this is <see langword="null" />, then <see cref="ISubdirectory.Volume" /> should not be null, and vice-versa.
-                    </remarks>
-                </RelatedEntity>
-                <RelatedEntity Name="Volume" Reference="ISubdirectory" FullName="ISubdirectory.Volume">
+                <RelatedEntity Name="Volume" Reference="IVolume" FullName="ISubdirectory.Volume">
                     <summary>
                         Gets or sets the parent volume.
                     </summary>
                     <value>
-                        The parent volume (if this is the root subdirector) or <see langword="null" /> if this is a subdirectory.
+                        The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.
                     </value>
                     <remarks>
                         If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.
@@ -715,6 +720,22 @@
                     </summary>
                     <value>The access errors that occurred while attempting to access the current subdirectory.</value>
                 </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="ISubdirectoryAccessError">
+            <summary>
+                Generic interface for subdirectory access error entities.
+            </summary>
+            <ExtendsGenericEntity Type="IAccessError{ISubdirectory}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="ISubdirectory" FullName="ISubdirectoryAccessError.Target">
+                    <summary>
+                        Gets or sets the target subdirectory to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="ISubdirectory" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="IBinaryPropertySet">
@@ -4694,47 +4715,6 @@
             <Implements Type="IVideoProperties" />
             <Properties></Properties>
         </Entity>
-        <Entity Name="IRedundantSet">
-            <summary>
-                Represents a set of files that have the same size, Hash and remediation status.
-            </summary>
-            <ExtendsEntity Type="IDbEntity"/>
-            <Properties>
-                <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IRedundantSet.Id">
-                    <summary>
-                        Gets or sets the primary key value.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
-                    </value>
-                </UniqueIdentifier>
-                <NVarChar Name="Reference" FullName="IRedundantSet.Reference">
-                    <summary>
-                        Gets or sets the custom reference value.
-                    </summary>
-                    <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
-                </NVarChar>
-                <Text Name="Notes" FullName="IRedundantSet.Notes">
-                    <summary>
-                        Gets or sets custom notes to be associated with the current set of redunant files.
-                    </summary>
-                    <value>The custom notes to associate with the current set of redunant files.</value>
-                    <Default></Default>
-                </Text>
-                <RelatedEntity Name="BinaryProperties" Reference="IBinaryPropertySet" FullName="IRedundantSet.BinaryProperties">
-                    <summary>
-                        Gets or sets the binary properties in common with all files in the current redundant set.
-                    </summary>
-                    <value>The binary properties in common with all files in the current redundant set.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="Redundancies" ItemType="IRedundancy" ForeignKey="RedundantSetId" FullName="IRedundantSet.Redundancies">
-                    <summary>
-                        Gets the redundancy entities which represent links to redundant files.
-                    </summary>
-                    <value>The redundancy entities which represent links to redundant files.</value>
-                </CollectionNavigation>
-            </Properties>
-        </Entity>
         <Entity Name="IFile">
             <summary>
                 Represents a structural instance of file.
@@ -4757,7 +4737,7 @@
                         A <see cref="FileCorrelationStatus" /> value that indicates the file's correlation status.
                     </value>
                 </Enum>
-                <DateTime Name="LastHashCalculation" FullName="IFile.LastHashCalculation">
+                <DateTime Name="LastHashCalculation" FullName="IFile.LastHashCalculation" IsNullable="true">
                     <summary>
                         Gets or sets the date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file.
                     </summary>
@@ -4765,14 +4745,6 @@
                         The date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file or <see langword="null" /> if no <see cref="MD5Hash">MD5 hash</see> has been calculated, yet.
                     </value>
                 </DateTime>
-                <RelatedEntity Name="Parent" Reference="ISubdirectory" FullName="IFile.Parent">
-                    <summary>
-                        Gets or sets the parent subdirectory of the current file system item.
-                    </summary>
-                    <value>
-                        The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.
-                    </value>
-                </RelatedEntity>
                 <RelatedEntity Name="BinaryProperties" Reference="IBinaryPropertySet" FullName="IFile.BinaryProperties">
                     <summary>
                         Gets or sets the binary properties for the current file.
@@ -4902,6 +4874,63 @@
                 </CollectionNavigation>
             </Properties>
         </Entity>
+        <Entity Name="IFileAccessError">
+            <summary>
+                Generic interface for file access error entities.
+            </summary>
+            <ExtendsGenericEntity Type="IAccessError{IFile}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="IFile" FullName="IFileAccessError.Target">
+                    <summary>
+                        Gets or sets the target file to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="IFile" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IRedundantSet">
+            <summary>
+                Represents a set of files that have the same size, Hash and remediation status.
+            </summary>
+            <ExtendsEntity Type="IDbEntity"/>
+            <Properties>
+                <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IRedundantSet.Id">
+                    <summary>
+                        Gets or sets the primary key value.
+                    </summary>
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
+                    </value>
+                </UniqueIdentifier>
+                <NVarChar Name="Reference" FullName="IRedundantSet.Reference">
+                    <summary>
+                        Gets or sets the custom reference value.
+                    </summary>
+                    <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
+                </NVarChar>
+                <Text Name="Notes" FullName="IRedundantSet.Notes">
+                    <summary>
+                        Gets or sets custom notes to be associated with the current set of redunant files.
+                    </summary>
+                    <value>The custom notes to associate with the current set of redunant files.</value>
+                    <Default></Default>
+                </Text>
+                <RelatedEntity Name="BinaryProperties" Reference="IBinaryPropertySet" FullName="IRedundantSet.BinaryProperties">
+                    <summary>
+                        Gets or sets the binary properties in common with all files in the current redundant set.
+                    </summary>
+                    <value>The binary properties in common with all files in the current redundant set.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="Redundancies" ItemType="IRedundancy" ForeignKey="RedundantSetId" FullName="IRedundantSet.Redundancies">
+                    <summary>
+                        Gets the redundancy entities which represent links to redundant files.
+                    </summary>
+                    <value>The redundancy entities which represent links to redundant files.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
         <Entity Name="IRedundancy">
             <summary>.</summary>
             <ExtendsEntity Type="IDbEntity"/>
@@ -5006,54 +5035,6 @@
                     </summary>
                     <value>
                         The generic <see cref="IFile" /> that represents the correlative file, which is the new or changed file in the comparison.
-                    </value>
-                </RelatedEntity>
-            </Properties>
-        </Entity>
-        <Entity Name="IFileAccessError">
-            <summary>
-                Generic interface for file access error entities.
-            </summary>
-            <ExtendsGenericEntity Type="IAccessError{IFile}" TypeDef="IAccessError{TTarget}"/>
-            <Properties>
-                <RelatedEntity Name="Target" Reference="IFile" FullName="IFileAccessError.Target">
-                    <summary>
-                        Gets or sets the target file to which the access error applies.
-                    </summary>
-                    <value>
-                        The <typeparamref name="IFile" /> entity that this error applies to.
-                    </value>
-                </RelatedEntity>
-            </Properties>
-        </Entity>
-        <Entity Name="ISubdirectoryAccessError">
-            <summary>
-                Generic interface for subdirectory access error entities.
-            </summary>
-            <ExtendsGenericEntity Type="IAccessError{ISubdirectory}" TypeDef="IAccessError{TTarget}"/>
-            <Properties>
-                <RelatedEntity Name="Target" Reference="ISubdirectory" FullName="ISubdirectoryAccessError.Target">
-                    <summary>
-                        Gets or sets the target subdirectory to which the access error applies.
-                    </summary>
-                    <value>
-                        The <typeparamref name="ISubdirectory" /> entity that this error applies to.
-                    </value>
-                </RelatedEntity>
-            </Properties>
-        </Entity>
-        <Entity Name="IVolumeAccessError">
-            <summary>
-                Generic interface for volume access error entities.
-            </summary>
-            <ExtendsGenericEntity Type="IAccessError{IVolume}" TypeDef="IAccessError{TTarget}"/>
-            <Properties>
-                <RelatedEntity Name="Target" Reference="ISubdirectory" FullName="IVolumeAccessError.Target">
-                    <summary>
-                        Gets or sets the target volume to which the access error applies.
-                    </summary>
-                    <value>
-                        The <typeparamref name="IVolume" /> entity that this error applies to.
                     </value>
                 </RelatedEntity>
             </Properties>
@@ -5699,12 +5680,62 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
         <Entity Name="ILocalDbFsItem" RootInterface="IDbFsItem">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="Parent" Reference="ILocalSubdirectory" FullName="ILocalSubdirectory.Parent">
+                    <summary>
+                        Gets or sets the parent subdirectory.
+                    </summary>
+                    <value>
+                        The parent <see cref="ILocalSubdirectory" /> or <see langword="null" /> if this is the root <see cref="ILocalSubdirectory" />.
+                    </value>
+                    <remarks>
+                        If the current entity is a <see cref="ILocalSubdirectory" /> and this is <see langword="null" />,
+                        then <see cref="ILocalSubdirectory.Volume" /> should not be <see langword="null" />, and vice-versa;
+                        otherwise, if the current entity is a <see cref="ILocalFile" />, then this should never be <see langword="null" />.
+                    </remarks>
+                </RelatedEntity>
+            </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectory" RootInterface="ISubdirectory">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbFsItem"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="Volume" Reference="ILocalVolume" FullName="ILocalSubdirectory.Volume">
+                    <summary>
+                        Gets or sets the parent volume.
+                    </summary>
+                    <value>
+                        The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.
+                    </value>
+                    <remarks>
+                        If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.
+                    </remarks>
+                </RelatedEntity>
+                <RelatedEntity Name="CrawlConfiguration" Reference="ILocalCrawlConfiguration" FullName="ILocalSubdirectory.CrawlConfiguration">
+                    <summary>
+                        Gets or sets the crawl configuration that starts with the current subdirectory.
+                    </summary>
+                    <value>The crawl configuration that starts with the current subdirectory.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="Files" ItemType="ILocalFile" ForeignKey="ParentId" FullName="ILocalSubdirectory.Files">
+                    <summary>
+                        Gets the files directly contained within this subdirectory.
+                    </summary>
+                    <value>The files directly contained within this subdirectory.</value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="SubDirectories" ItemType="ILocalSubdirectory" ForeignKey="ParentId" FullName="ILocalSubdirectory.SubDirectories">
+                    <summary>
+                        Gets the nested subdirectories directly contained within this subdirectory.
+                    </summary>
+                    <value>The nested subdirectories directly contained within this subdirectory.</value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="AccessErrors" ItemType="ILocalSubdirectoryAccessError" ForeignKey="TargetId" FullName="ILocalSubdirectory.AccessErrors">
+                    <summary>
+                        Gets the access errors that occurred while attempting to access the current subdirectory.
+                    </summary>
+                    <value>The access errors that occurred while attempting to access the current subdirectory.</value>
+                </CollectionNavigation>
+            </Properties>
         </Entity>
         <Entity Name="ILocalPropertySet" RootInterface="IPropertySet">
             <summary></summary>

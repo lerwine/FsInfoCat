@@ -106,7 +106,6 @@ namespace FsInfoCat
     }
 
     /// <summary>Indicates crawl status for the a <see cref="ISubdirectory" /></summary>
-    [Flags]
     public enum DirectoryStatusTest : byte
     {
         /// <summary>Not all items in the current <see cref="ISubdirectory" /> have been crawled.</summary>
@@ -123,7 +122,7 @@ namespace FsInfoCat
 
         /// <summary>The current <see cref="ISubdirectory" /> has been deleted.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_Deleted), ResourceType = typeof(Properties.Resources))]
-        Deleted = 32
+        Deleted = 3
     }
 
     /// <summary>File-specific crawl options.</summary>
@@ -298,7 +297,7 @@ namespace FsInfoCat
         /// <summary>Gets or sets the default drive type for this file system.</summary>
         /// <value>The default drive type for this file system.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DefaultDriveType), ResourceType = typeof(Properties.Resources))]
-        DriveType DefaultDriveType { get; }
+        DriveType? DefaultDriveType { get; }
 
         /// <summary>Gets or sets the custom notes for this file system type.</summary>
         /// <value>The custom notes to associate with this file system type.</value>
@@ -383,12 +382,12 @@ namespace FsInfoCat
         /// <summary>Gets or sets a value indicating whether file name searches are case-sensitive.</summary>
         /// <value><see langword="true" /> if file name searches are case-sensitive; <see langword="false" /> if they are case-insensitive; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.CaseSensitiveSearch">file system type</see>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(Properties.Resources))]
-        bool CaseSensitiveSearch { get; }
+        bool? CaseSensitiveSearch { get; }
 
         /// <summary>Gets or sets a value indicating whether the current volume is read-only.</summary>
         /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.ReadOnly">file system type</see>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(Properties.Resources))]
-        bool ReadOnly { get; }
+        bool? ReadOnly { get; }
 
         /// <summary>Gets or sets the maximum length of file system name components.</summary>
         /// <value>The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.MaxNameLength">file system type</see>.</value>
@@ -426,6 +425,16 @@ namespace FsInfoCat
         IEnumerable<IVolumeAccessError> AccessErrors { get; }
     }
 
+    /// <summary>Generic interface for volume access error entities.</summary>
+    /// <seealso cref="IAccessError{IVolume}" />
+    public interface TestIVolumeAccessError : IAccessError<IVolume>
+    {
+        /// <summary>Gets or sets the target volume to which the access error applies.</summary>
+        /// <value>The <typeparamref name="IVolume" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new IVolume Target { get; }
+    }
+
     /// <summary>Configuration of a file system crawl instance.</summary>
     /// <seealso cref="IDbEntity" />
     public interface TestICrawlConfiguration : IDbEntity
@@ -444,6 +453,11 @@ namespace FsInfoCat
         /// <value>The custom notes to associate with the current crawl configuration.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
+
+        /// <summary>Gets the root subdirectory of the configured subdirectory crawl.</summary>
+        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
+        ISubdirectory Root { get; }
 
         /// <summary>Gets or sets the maximum recursion depth.</summary>
         /// <value>The maximum recursion depth.</value>
@@ -525,17 +539,11 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         DirectoryStatus Status { get; }
 
-        /// <summary>Gets or sets the parent subdirectory.</summary>
-        /// <value>The parent <see cref="ISubdirectory" /> or <see langword="null" /> if this is the root subdirectory.</value>
-        /// <remarks>If this is <see langword="null" />, then <see cref="ISubdirectory.Volume" /> should not be null, and vice-versa.</remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]
-        new ISubdirectory Parent { get; }
-
         /// <summary>Gets or sets the parent volume.</summary>
-        /// <value>The parent volume (if this is the root subdirector) or <see langword="null" /> if this is a subdirectory.</value>
+        /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
         /// <remarks>If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Volume), ResourceType = typeof(Properties.Resources))]
-        ISubdirectory Volume { get; }
+        IVolume Volume { get; }
 
         /// <summary>Gets or sets the crawl configuration that starts with the current subdirectory.</summary>
         /// <value>The crawl configuration that starts with the current subdirectory.</value>
@@ -556,6 +564,16 @@ namespace FsInfoCat
         /// <value>The access errors that occurred while attempting to access the current subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ISubdirectoryAccessError> AccessErrors { get; }
+    }
+
+    /// <summary>Generic interface for subdirectory access error entities.</summary>
+    /// <seealso cref="IAccessError{ISubdirectory}" />
+    public interface TestISubdirectoryAccessError : IAccessError<ISubdirectory>
+    {
+        /// <summary>Gets or sets the target subdirectory to which the access error applies.</summary>
+        /// <value>The <typeparamref name="ISubdirectory" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new ISubdirectory Target { get; }
     }
 
     /// <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
@@ -1624,7 +1642,7 @@ namespace FsInfoCat
         /// </list>.
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsVariableBitrate), ResourceType = typeof(Properties.Resources))]
-        bool IsVariableBitrate { get; }
+        bool? IsVariableBitrate { get; }
 
         /// <summary>Indicates the audio sample rate for the audio file in "samples per second".</summary>
         /// <value>Indicates the sample rate for the audio file in samples per second.</value>
@@ -1839,7 +1857,7 @@ namespace FsInfoCat
         /// </list>.
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsProtected), ResourceType = typeof(Properties.Resources))]
-        bool IsProtected { get; }
+        bool? IsProtected { get; }
 
         /// <summary>Indicates the play count for digital rights management.</summary>
         /// <value>Indicates the number of times the file has been played.</value>
@@ -3489,7 +3507,7 @@ namespace FsInfoCat
         /// </list>.
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsDTVContent), ResourceType = typeof(Properties.Resources))]
-        bool IsDTVContent { get; }
+        bool? IsDTVContent { get; }
 
         /// <summary>Indicates whether the video is HDTV.</summary>
         /// <value><see langword="true" /> if the video is HDTV; <see langword="false" /> if not HDTV; otherwise, <see langword="null" /> if not specified.</value>
@@ -3516,7 +3534,7 @@ namespace FsInfoCat
         /// </list>.
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsHDContent), ResourceType = typeof(Properties.Resources))]
-        bool IsHDContent { get; }
+        bool? IsHDContent { get; }
 
         /// <summary>Gets the Network Affiliation.</summary>
         /// <value>The Network Affiliation</value>
@@ -4014,36 +4032,6 @@ namespace FsInfoCat
     {
     }
 
-    /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
-    /// <seealso cref="IDbEntity" />
-    public interface TestIRedundantSet : IDbEntity
-    {
-        /// <summary>Gets or sets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
-        /// <summary>Gets or sets the custom reference value.</summary>
-        /// <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Reference), ResourceType = typeof(Properties.Resources))]
-        string Reference { get; }
-
-        /// <summary>Gets or sets custom notes to be associated with the current set of redunant files.</summary>
-        /// <value>The custom notes to associate with the current set of redunant files.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
-        string Notes { get; }
-
-        /// <summary>Gets or sets the binary properties in common with all files in the current redundant set.</summary>
-        /// <value>The binary properties in common with all files in the current redundant set.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
-        IBinaryPropertySet BinaryProperties { get; }
-
-        /// <summary>Gets the redundancy entities which represent links to redundant files.</summary>
-        /// <value>The redundancy entities which represent links to redundant files.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
-        IEnumerable<IRedundancy> Redundancies { get; }
-    }
-
     /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="IDbFsItem" />
     public interface TestIFile : IDbFsItem
@@ -4061,12 +4049,7 @@ namespace FsInfoCat
         /// <summary>Gets or sets the date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file.</summary>
         /// <value>The date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file or <see langword="null" /> if no <see cref="MD5Hash">MD5 hash</see> has been calculated, yet.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_LastHashCalculation), ResourceType = typeof(Properties.Resources))]
-        DateTime LastHashCalculation { get; }
-
-        /// <summary>Gets or sets the parent subdirectory of the current file system item.</summary>
-        /// <value>The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]
-        new ISubdirectory Parent { get; }
+        DateTime? LastHashCalculation { get; }
 
         /// <summary>Gets or sets the binary properties for the current file.</summary>
         /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>
@@ -4152,6 +4135,46 @@ namespace FsInfoCat
         new IEnumerable<IFileAccessError> AccessErrors { get; }
     }
 
+    /// <summary>Generic interface for file access error entities.</summary>
+    /// <seealso cref="IAccessError{IFile}" />
+    public interface TestIFileAccessError : IAccessError<IFile>
+    {
+        /// <summary>Gets or sets the target file to which the access error applies.</summary>
+        /// <value>The <typeparamref name="IFile" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new IFile Target { get; }
+    }
+
+    /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
+    /// <seealso cref="IDbEntity" />
+    public interface TestIRedundantSet : IDbEntity
+    {
+        /// <summary>Gets or sets the primary key value.</summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
+        Guid Id { get; }
+
+        /// <summary>Gets or sets the custom reference value.</summary>
+        /// <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Reference), ResourceType = typeof(Properties.Resources))]
+        string Reference { get; }
+
+        /// <summary>Gets or sets custom notes to be associated with the current set of redunant files.</summary>
+        /// <value>The custom notes to associate with the current set of redunant files.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        string Notes { get; }
+
+        /// <summary>Gets or sets the binary properties in common with all files in the current redundant set.</summary>
+        /// <value>The binary properties in common with all files in the current redundant set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
+        IBinaryPropertySet BinaryProperties { get; }
+
+        /// <summary>Gets the redundancy entities which represent links to redundant files.</summary>
+        /// <value>The redundancy entities which represent links to redundant files.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IRedundancy> Redundancies { get; }
+    }
+
     /// <summary>.</summary>
     /// <seealso cref="IDbEntity" />
     public interface TestIRedundancy : IDbEntity
@@ -4224,36 +4247,6 @@ namespace FsInfoCat
         /// <value>The generic <see cref="IFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
         IFile Correlative { get; }
-    }
-
-    /// <summary>Generic interface for file access error entities.</summary>
-    /// <seealso cref="IAccessError{IFile}" />
-    public interface TestIFileAccessError : IAccessError<IFile>
-    {
-        /// <summary>Gets or sets the target file to which the access error applies.</summary>
-        /// <value>The <typeparamref name="IFile" /> entity that this error applies to.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        new IFile Target { get; }
-    }
-
-    /// <summary>Generic interface for subdirectory access error entities.</summary>
-    /// <seealso cref="IAccessError{ISubdirectory}" />
-    public interface TestISubdirectoryAccessError : IAccessError<ISubdirectory>
-    {
-        /// <summary>Gets or sets the target subdirectory to which the access error applies.</summary>
-        /// <value>The <typeparamref name="ISubdirectory" /> entity that this error applies to.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        new ISubdirectory Target { get; }
-    }
-
-    /// <summary>Generic interface for volume access error entities.</summary>
-    /// <seealso cref="IAccessError{IVolume}" />
-    public interface TestIVolumeAccessError : IAccessError<IVolume>
-    {
-        /// <summary>Gets or sets the target volume to which the access error applies.</summary>
-        /// <value>The <typeparamref name="IVolume" /> entity that this error applies to.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        new ISubdirectory Target { get; }
     }
 }
 

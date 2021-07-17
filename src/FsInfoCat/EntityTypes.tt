@@ -430,7 +430,7 @@ void GenerateEntityInterface(XElement entityElement)
                 Write(propertyElement.Attributes("IsNullable").Any(a => a.Value == "true") ? "Guid? " : "Guid ");
                 break;
             case "Bit":
-                Write("bool ");
+                Write(propertyElement.Attributes("IsNullable").Any(a => a.Value == "true") ? "bool? " : "bool ");
                 break;
             case "Enum":
                 Write(propertyElement.Attribute("Type")?.Value);

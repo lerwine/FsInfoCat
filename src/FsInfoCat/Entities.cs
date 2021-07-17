@@ -3217,24 +3217,6 @@ namespace FsInfoCat
     public interface IComparison : IDbEntity
     {
         /// <summary>
-        /// Gets or sets the primary key of the baseline file in the comparison.
-        /// </summary>
-        /// <value>
-        /// The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Baseline" /><see cref="IFile">file entity</see>.
-        /// </value>
-        /// <remarks>This is also part of this entity's compound primary key.</remarks>
-        Guid BaselineId { get; }
-
-        /// <summary>
-        /// Gets or sets the primary key of the correlative file in the comparison.
-        /// </summary>
-        /// <value>
-        /// The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Correlative" /><see cref="IFile">file entity</see>.
-        /// </value>
-        /// <remarks>This is also part of this entity's compound primary key.</remarks>
-        Guid CorrelativeId { get; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte.
         /// </summary>
         /// <value>
@@ -3251,6 +3233,24 @@ namespace FsInfoCat
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ComparedOn), ResourceType = typeof(Properties.Resources))]
         DateTime ComparedOn { get; }
+
+        /// <summary>
+        /// Gets or sets the primary key of the baseline file in the comparison.
+        /// </summary>
+        /// <value>
+        /// The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Baseline" /><see cref="IFile">file entity</see>.
+        /// </value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
+        Guid BaselineId { get; }
+
+        /// <summary>
+        /// Gets or sets the primary key of the correlative file in the comparison.
+        /// </summary>
+        /// <value>
+        /// The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Correlative" /><see cref="IFile">file entity</see>.
+        /// </value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
+        Guid CorrelativeId { get; }
 
         /// <summary>
         /// Gets or sets the baseline file in the comparison.
