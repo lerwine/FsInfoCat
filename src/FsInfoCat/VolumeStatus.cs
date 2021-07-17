@@ -19,7 +19,7 @@ namespace FsInfoCat
         /// <summary>
         /// An error occurred while trying to access the volume.
         /// </summary>
-        [Display(Name = nameof(Properties.Resources.DisplayName_VolumeStatus_AccessError), Description = nameof(Properties.Resources.Description_VolumeStatus_AccessError), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessError), Description = nameof(Properties.Resources.Description_VolumeStatus_AccessError), ResourceType = typeof(Properties.Resources))]
         AccessError = 2,
 
         /// <summary>

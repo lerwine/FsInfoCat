@@ -34,76 +34,346 @@ XName localName = XName.Get("Local");
 XName upstreamName = XName.Get("Local");
 
 PushIndent("    ");
-GenerateEntityTypes(EntityDefinitionsDocument.Root.Elements().Where(e => e.Name != localName && e.Name != upstreamName));
+bool isSubsequentMember = GenerateEnumTypes(EntityDefinitionsDocument.Root.Elements("Root").Elements("EnumTypes").Elements());
+GenerateEntityTypes(EntityDefinitionsDocument.Root.Elements("Root").Elements("Entity"), isSubsequentMember);
 PopIndent();
 #>
 }
 
 <#+
 
-bool IsSubsequentType { get; set; }
-
-void GenerateEntityTypes(IEnumerable<XElement> entityElements)
+void GetAllBaseTypes(XElement entityElement, Collection<XElement> result, IEnumerable<XElement> scopeElements)
 {
-    IsSubsequentType = false;
-    foreach (XElement typeElement in entityElements)
+    int start = result.Count;
+    XAttribute attribute = entityElement.Elements("ExtendsEntity").Attributes("Type").FirstOrDefault();
+    if (attribute is not null)
     {
-        if (typeElement.Name.NamespaceName.Length > 0)
-            continue;
-        switch (typeElement.Name.LocalName)
+        string name = attribute.Value;
+        if ((attribute = scopeElements.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !(ReferenceEquals(entityElement, attribute.Parent) || result.Contains(attribute.Parent)))
+            result.Add(attribute.Parent);
+    }
+    attribute = entityElement.Elements("ExtendsGenericEntity").Attributes("TypeDef").FirstOrDefault();
+    if (attribute is not null)
+    {
+        string name = attribute.Value;
+        if ((attribute = scopeElements.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !(ReferenceEquals(entityElement, attribute.Parent) || result.Contains(attribute.Parent)))
+            result.Add(attribute.Parent);
+    }
+    attribute = entityElement.Attribute("RootInterface");
+    if (attribute is not null)
+    {
+        string name = attribute.Value;
+        if ((attribute = scopeElements.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !(ReferenceEquals(entityElement, attribute.Parent) || result.Contains(attribute.Parent)))
+            result.Add(attribute.Parent);
+    }
+    foreach (XAttribute attr in entityElement.Elements("Implements").Attributes("Type"))
+    {
+        string name = attr.Value;
+        if ((attribute = scopeElements.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !(ReferenceEquals(entityElement, attribute.Parent) || result.Contains(attribute.Parent)))
+            result.Add(attribute.Parent);
+    }
+    int end = result.Count;
+    for (int i = start; i < end; i++)
+        GetAllBaseTypes(result[i], result, scopeElements);
+}
+
+Collection<XElement> GetAllBaseTypes(XElement entityElement)
+{
+    Collection<XElement> result = new();
+    switch (entityElement.Parent.Name.LocalName)
+    {
+        case "Local":
+            GetAllBaseTypes(entityElement, result, EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity").Concat(EntityDefinitionsDocument.Root.Elements("Root").Elements("Entity")));
+            break;
+        case "Upstream":
+            GetAllBaseTypes(entityElement, result, EntityDefinitionsDocument.Root.Elements("Upstream").Elements("Entity").Concat(EntityDefinitionsDocument.Root.Elements("Root").Elements("Entity")));
+            break;
+        default:
+            GetAllBaseTypes(entityElement, result, EntityDefinitionsDocument.Root.Elements("Root").Elements("Entity"));
+            break;
+    }
+    return result;
+}
+
+IEnumerable<XElement> GetBaseTypes(XElement entityElement)
+{
+    IEnumerable<XElement> source;
+    switch (entityElement.Parent.Name.LocalName)
+    {
+        case "Local":
+            source = EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity").Concat(EntityDefinitionsDocument.Root.Elements("Root").Elements("Entity"));
+            break;
+        case "Upstream":
+            source = EntityDefinitionsDocument.Root.Elements("Upstream").Elements("Entity").Concat(EntityDefinitionsDocument.Root.Elements("Root").Elements("Entity"));
+            break;
+        default:
+            source = EntityDefinitionsDocument.Root.Elements("Root").Elements("Entity");
+            break;
+    }
+    XAttribute attribute = entityElement.Elements("ExtendsEntity").Attributes("Type").FirstOrDefault();
+    if (attribute is not null)
+    {
+        string name = attribute.Value;
+        if ((attribute = source.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !ReferenceEquals(entityElement, attribute.Parent))
+            yield return attribute.Parent;
+    }
+    attribute = entityElement.Elements("ExtendsGenericEntity").Attributes("TypeDef").FirstOrDefault();
+    if (attribute is not null)
+    {
+        string name = attribute.Value;
+        if ((attribute = source.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !ReferenceEquals(entityElement, attribute.Parent))
+            yield return attribute.Parent;
+    }
+    attribute = entityElement.Attribute("RootInterface");
+    if (attribute is not null)
+    {
+        string name = attribute.Value;
+        if ((attribute = source.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !ReferenceEquals(entityElement, attribute.Parent))
+            yield return attribute.Parent;
+    }
+    foreach (XAttribute attr in entityElement.Elements("Implements").Attributes("Type"))
+    {
+        string name = attr.Value;
+        if ((attribute = source.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !ReferenceEquals(entityElement, attribute.Parent))
+            yield return attribute.Parent;
+    }
+}
+
+bool GenerateEnumTypes(IEnumerable<XElement> enumElements)
+{
+    if (!enumElements.Any())
+        return false;
+    GenerateEnumType(enumElements.First());
+    foreach (XElement typeElement in enumElements.Skip(1))
+    {
+        WriteLine("");
+        GenerateEnumType(typeElement);
+    }
+    return true;
+}
+
+void WriteAmbientValueAttribute(XElement memberElement)
+{
+    string ambientValue = memberElement.Elements("AmbientString").Attributes("Value").Select(a => a.Value).FirstOrDefault();
+    if (ambientValue is not null)
+    {
+        Write("[AmbientValue(\"");
+        Write(ambientValue.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "\\r").Replace("\n", "\\n"));
+        WriteLine("\")]");
+        return;
+    }
+    foreach (string name in new[] { "AmbientEnum", "AmbientBoolean", "AmbientInt" })
+    {
+        ambientValue = memberElement.Elements(name).Attributes("Value").Select(a => a.Value).FirstOrDefault();
+        if (!string.IsNullOrWhiteSpace(ambientValue))
         {
-            case "Entity":
-                GenerateEntityInterface(typeElement);
-                break;
-            case "ByteEnum":
-            case "SByteEnum":
-            case "ShortEnum":
-            case "UShortEnum":
-            case "IntEnum":
-            case "UIntEnum":
-            case "LongEnum":
-            case "ULongEnum":
-                break;
+            Write("[AmbientValue(");
+            Write(ambientValue);
+            WriteLine(")]");
+            return;
         }
+    }
+    ambientValue = memberElement.Elements("AmbientUInt").Attributes("Value").Select(a => a.Value).FirstOrDefault();
+    if (!string.IsNullOrWhiteSpace(ambientValue))
+    {
+        Write("[AmbientValue(");
+        Write(ambientValue);
+        WriteLine("u)]");
+        return;
+    }
+    ambientValue = memberElement.Elements("AmbientLong").Attributes("Value").Select(a => a.Value).FirstOrDefault();
+    if (!string.IsNullOrWhiteSpace(ambientValue))
+    {
+        Write("[AmbientValue(");
+        Write(ambientValue);
+        WriteLine("L)]");
+        return;
+    }
+    ambientValue = memberElement.Elements("AmbientULong").Attributes("Value").Select(a => a.Value).FirstOrDefault();
+    if (!string.IsNullOrWhiteSpace(ambientValue))
+    {
+        Write("[AmbientValue(");
+        Write(ambientValue);
+        WriteLine("UL)]");
+        return;
+    }
+    ambientValue = memberElement.Elements("AmbientDouble").Attributes("Value").Select(a => a.Value).FirstOrDefault();
+    if (!string.IsNullOrWhiteSpace(ambientValue))
+    {
+        Write("[AmbientValue(");
+        Write(ambientValue);
+        WriteLine(ambientValue.Contains(".") ? ")]" : ".0)]");
+        return;
+    }
+    foreach (string name in new[] { "AmbientByte", "AmbientSByte", "AmbientShort", "AmbientUShort", "AmbientDouble" })
+    {
+        ambientValue = memberElement.Elements("AmbientByte").Attributes("Value").Select(a => a.Value).FirstOrDefault();
+        if (!string.IsNullOrWhiteSpace(ambientValue))
+        {
+            Write("[AmbientValue((");
+            Write(name.Substring(7).ToLower());
+            Write(")");
+            Write(ambientValue);
+            WriteLine(")]");
+            return;
+        }
+    }
+}
+
+string WriteDisplayAttribute(XElement memberElement, string typeName = null)
+{
+    string memberName = memberElement.Attribute("Name")?.Value;
+    string displayNameResource = memberElement.Attributes("DisplayNameResource").Select(a => a.Value).DefaultIfEmpty(string.IsNullOrWhiteSpace(typeName) ? $"DisplayName_{memberName}" : $"DisplayName_{typeName}_{memberName}").First();
+    string descriptionResource = memberElement.Attributes("DescriptionResource").Select(a => a.Value).FirstOrDefault();
+    string resourceType = memberElement.Attributes("ResourceType").Select(a => a.Value).DefaultIfEmpty("Properties.Resources").First();
+    if (string.IsNullOrWhiteSpace(displayNameResource))
+    {
+        if (!string.IsNullOrWhiteSpace(descriptionResource))
+        {
+            Write("[Display(Description = nameof(");
+            Write(resourceType);
+            Write(".");
+            Write(descriptionResource);
+            WriteLine("), ResourceType = typeof(Properties.Resources))]");
+        }
+    }
+    else
+    {
+        Write("[Display(Name = nameof(");
+        Write(resourceType);
+        Write(".");
+        Write(displayNameResource);
+        if (!string.IsNullOrWhiteSpace(descriptionResource))
+        {
+            Write("), Description = nameof(");
+            Write(resourceType);
+            Write(".");
+            Write(descriptionResource);
+        }
+        Write("), ResourceType = typeof(");
+        Write(resourceType);
+        WriteLine("))]");
+    }
+    return memberName;
+}
+
+void GenerateEnumType(XElement enumElement)
+{
+    GenerateXmlDoc(enumElement.Element("summary"));
+    GenerateXmlDoc(enumElement.Element("remarks"));
+    foreach (XElement e in enumElement.Elements("seealso"))
+    {
+        if (!e.IsEmpty && e.Value.Trim().Length == 0)
+            e.RemoveAll();
+        GenerateXmlDoc(e);
+    }
+    if (enumElement.Attributes("IsFlags").Any(a => a.Value == "true"))
+        WriteLine("[Flags]");
+    Write("public enum ");
+    string typeName = enumElement.Attribute("Name")?.Value;
+    Write(typeName);
+    Write("Test : ");
+    WriteLine(enumElement.Name.LocalName.ToLower());
+    WriteLine("{");
+    PushIndent("    ");
+    bool isSubsequentMember = false;
+    foreach (XElement fieldElement in enumElement.Elements("Field"))
+    {
+        if (isSubsequentMember)
+        {
+            WriteLine(",");
+            WriteLine("");
+            isSubsequentMember = true;
+        }
+        else
+            isSubsequentMember = true;
+        GenerateXmlDoc(fieldElement.Element("summary"));
+        GenerateXmlDoc(fieldElement.Element("remarks"));
+        foreach (XElement e in fieldElement.Elements("seealso"))
+        {
+            if (!e.IsEmpty && e.Value.Trim().Length == 0)
+                e.RemoveAll();
+            GenerateXmlDoc(e);
+        }
+        WriteAmbientValueAttribute(fieldElement);
+        string fieldName = WriteDisplayAttribute(fieldElement, typeName);
+        Write(fieldName);
+        Write(" = ");
+        Write(fieldElement.Attribute("Value")?.Value);
+    }
+
+    PopIndent();
+    WriteLine("");
+    WriteLine("}");
+}
+
+void GenerateEntityTypes(IEnumerable<XElement> entityElements, bool isSubsequentMember)
+{
+    if (isSubsequentMember)
+        WriteLine("");
+    GenerateEntityInterface(entityElements.First());
+    foreach (XElement typeElement in entityElements.Skip(1))
+    {
+        WriteLine("");
+        GenerateEntityInterface(typeElement);
     }
 }
 
 void GenerateEntityInterface(XElement entityElement)
 {
-    if (IsSubsequentType)
-        WriteLine("");
-    else
-        IsSubsequentType = true;
     GenerateXmlDoc(entityElement.Element("summary"));
     foreach (XElement e in entityElement.Elements("typeparam"))
         GenerateXmlDoc(e);
     GenerateXmlDoc(entityElement.Element("remarks"));
-    IEnumerable<string> implements = entityElement.Attributes("BaseInterface").Concat(entityElement.Elements("Implements").Attributes("Type")).Select(a => a.Value.Replace('{', '<').Replace('}', '>'));
+
+    Collection<string> implements = new();
+    XAttribute attribute = entityElement.Elements("ExtendsEntity").Attributes("Type").FirstOrDefault();
+    if (attribute is not null)
+        implements.Add(attribute.Value);
+    attribute = entityElement.Elements("ExtendsGenericEntity").Attributes("Type").FirstOrDefault();
+    if (attribute is not null)
+        implements.Add(attribute.Value);
+    attribute = entityElement.Elements("BaseType").Attributes("Type").FirstOrDefault();
+    if (attribute is not null)
+        implements.Add(attribute.Value);
+    attribute = entityElement.Attribute("RootInterface");
+    if (attribute is not null)
+        implements.Add(attribute.Value);
+    foreach (XAttribute attr in entityElement.Elements("Implements").Attributes("Type"))
+        implements.Add(attr.Value);
+
     foreach (XElement e in entityElement.Elements("seealso").Concat(implements.Select(s => new XElement("seealso", new XAttribute("cref", s)))))
-        GenerateXmlDoc(e);
-    Write("public interface ");
-    if (implements.Any())
     {
-        Write(entityElement.Attribute("Name")?.Value);
-        Write("Test : ");
+        if (!e.IsEmpty && e.Value.Trim().Length == 0)
+            e.RemoveAll();
+        GenerateXmlDoc(e);
+    }
+    string typeName = entityElement.Attribute("Name")?.Value.Replace("{", "<").Replace("}", ">");
+    Write("public interface ");
+    if (implements.Count > 0)
+    {
+        Write("Test");
+        Write(typeName);
+        Write(" : ");
         if (implements.Skip(1).Any())
         {
             foreach (string t in implements.Reverse().Skip(1).Reverse())
             {
-                Write(t);
+                Write(t.Replace("{", "<").Replace("}", ">"));
                 Write(", ");
             }
         }
-        WriteLine(implements.Last());
+        WriteLine(implements.Last().Replace("{", "<").Replace("}", ">"));
     }
     else
     {
-        Write(entityElement.Attribute("Name")?.Value);
-        WriteLine("Test");
+        Write("Test");
+        WriteLine(typeName);
     }
     WriteLine("{");
     PushIndent("    ");
     bool isSubsequentMember = false;
+    string[] baseProperties = GetAllBaseTypes(entityElement).Elements("Properties").Elements().Attributes("Name").Select(a => a.Value).Distinct().ToArray();
     foreach (XElement propertyElement in entityElement.Elements("Properties").Elements())
     {
         if (propertyElement.Name.NamespaceName.Length > 0)
@@ -112,11 +382,18 @@ void GenerateEntityInterface(XElement entityElement)
             WriteLine("");
         else
             isSubsequentMember = true;
-        GenerateXmlDoc(entityElement.Element("summary"));
-        GenerateXmlDoc(entityElement.Element("value"));
-        GenerateXmlDoc(entityElement.Element("remarks"));
-        foreach (XElement e in entityElement.Elements("seealso"))
+        GenerateXmlDoc(propertyElement.Element("summary"));
+        GenerateXmlDoc(propertyElement.Element("value"));
+        GenerateXmlDoc(propertyElement.Element("remarks"));
+        foreach (XElement e in propertyElement.Elements("seealso"))
+        {
+            if (!e.IsEmpty && e.Value.Trim().Length == 0)
+                e.RemoveAll();
             GenerateXmlDoc(e);
+        }
+        string propertyName = WriteDisplayAttribute(propertyElement);
+        if (baseProperties.Contains(propertyName))
+            Write("new ");
         switch (propertyElement.Name.LocalName)
         {
             case "Byte":
@@ -156,18 +433,26 @@ void GenerateEntityInterface(XElement entityElement)
                 Write("bool ");
                 break;
             case "Enum":
-                Write("object ");
+                Write(propertyElement.Attribute("Type")?.Value);
+                Write(propertyElement.Attributes("IsNullable").Any(a => a.Value == "true") ? "? " : " ");
                 break;
             case "CollectionNavigation":
-                Write("object ");
+                Write("IEnumerable<");
+                Write(propertyElement.Attribute("ItemType")?.Value);
+                Write("> ");
+                break;
+            case "RelatedEntity":
+                Write(propertyElement.Attribute("TypeParam")?.Value ?? propertyElement.Attribute("Reference")?.Value);
+                Write(" ");
                 break;
             default:
-                Write("#warning Invalid element: ");
+                Write("#warning Unknown element: ");
                 WriteLine(propertyElement.Name.LocalName);
                 Write("object ");
                 break;
         }
-        Write(propertyElement.Attribute("Name")?.Value);
+
+        Write(propertyName);
         WriteLine(propertyElement.Attributes("IsGenericWritable").Any(a => a.Value == "true") ? " { get; set; }" : " { get; }");
     }
 
@@ -175,70 +460,6 @@ void GenerateEntityInterface(XElement entityElement)
     WriteLine("}");
 }
 
-void GenerateDateTimeProperty(XElement propertyElement)
-{
-}
-
-void GenerateUniqueIdentifierProperty(XElement propertyElement)
-{
-}
-
-/*
-    <xs:complexType name="EntityPropertyBase">
-        <xs:sequence>
-            <xs:element name="summary" type="CommentDoc" />
-            <xs:element name="value" type="CommentDoc" />
-            <xs:element name="remarks" type="CommentDoc" minOccurs="0"/>
-            <xs:element name="seealso" type="SeeAlso" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="Name" type="CsIdentifier" use="required" />
-        <xs:attribute name="DisplayNameResource" type="CsIdentifier" use="optional" />
-        <xs:attribute name="ResourceType" type="xs:NCName" use="optional" />
-        <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false"/>
-    </xs:complexType>
-    <xs:complexType name="EntityProperty">
-        <xs:complexContent>
-            <xs:extension base="EntityPropertyBase">
-                <xs:attribute name="IsUnique" type="xs:boolean" use="optional" default="false"/>
-                <xs:attribute name="IsIndexed" type="xs:boolean" use="optional" default="false"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="DateTimeProperty">
-        <xs:complexContent>
-            <xs:extension base="EntityProperty">
-                <xs:choice minOccurs="0" maxOccurs="1">
-                    <xs:element name="Default" type="xs:dateTime"/>
-                    <xs:element name="DefaultNow" />
-                    <xs:element name="DefaultNull" />
-                </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UniqueIdentifierProperty">
-        <xs:complexContent>
-            <xs:extension base="EntityProperty">
-                <xs:sequence>
-                    <xs:element name="Navigation" minOccurs="0">
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EntityPropertyBase">
-                                    <xs:attribute name="Reference" type="CsIdentifier" use="required"/>
-                                    <xs:attribute name="PrimaryKey" type="CsIdentifier" use="optional"/>
-                                    <xs:attribute name="IsOneToOne" type="xs:boolean" use="optional" default="false"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-                <xs:attribute name="IsPrimaryKey" type="xs:boolean" use="optional" default="false"/>
-                <xs:attribute name="IsDefaultNull" type="xs:boolean" use="optional" default="false"/>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    */
 Regex LeadingEmptyLine = new Regex(@"^([^\r\n\S]+)?(\r\n?|\n)", RegexOptions.Compiled);
 Regex TrailingEmptyLine = new Regex(@"(\r\n?|\n)([^\r\n\S]+)?$", RegexOptions.Compiled);
 Regex TrailingWsRegex = new Regex(@"\s+$", RegexOptions.Compiled);
@@ -247,6 +468,15 @@ void GenerateXmlDoc(XElement xmlDocElement)
 {
     if (xmlDocElement is null)
         return;
+    if (xmlDocElement.IsEmpty)
+    {
+        foreach (string lt in NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None)))
+        {
+            Write("/// ");
+            WriteLine(lt.Trim());
+        }
+        return;
+    }
     if (xmlDocElement.LastNode is XText lastNode)
     {
         while (lastNode.PreviousNode is XText previousTextNode)
