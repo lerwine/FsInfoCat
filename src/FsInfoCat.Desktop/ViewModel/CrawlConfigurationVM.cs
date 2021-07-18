@@ -19,7 +19,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public string DisplayName => _crawlConfiguration.DisplayName;
 
-        public bool IsInactive => _crawlConfiguration.IsInactive;
+        public bool IsInactive => _crawlConfiguration.StatusValue == CrawlStatus.Disabled;
+
+        public CrawlStatus StatusValue => _crawlConfiguration.StatusValue;
 
         public ushort MaxRecursionDepth => _crawlConfiguration.MaxRecursionDepth;
 
@@ -28,6 +30,8 @@ namespace FsInfoCat.Desktop.ViewModel
         public string FullName { get; private set; }
 
         public string Notes => _crawlConfiguration.Notes;
+
+        // TODO: Add new properties from model
 
         public DateTime? LastSynchronizedOn => _crawlConfiguration.LastSynchronizedOn;
 
@@ -52,12 +56,16 @@ namespace FsInfoCat.Desktop.ViewModel
             EditCommand = new Commands.RelayCommand(() => Dispatcher.Invoke(() => Edit?.Invoke(this, EventArgs.Empty)));
             (ActivateCommand = new Commands.RelayCommand(() => Dispatcher.Invoke(() =>
             {
-                try { _crawlConfiguration.IsInactive = false; }
+                try
+                {
+                    if (_crawlConfiguration.StatusValue == CrawlStatus.Disabled)
+                        _crawlConfiguration.StatusValue = CrawlStatus.NotRunning;
+                }
                 finally { Activate?.Invoke(this, EventArgs.Empty); }
             }))).IsEnabled = false;
             DeactivateCommand = new Commands.RelayCommand(() => Dispatcher.Invoke(() =>
             {
-                try { _crawlConfiguration.IsInactive = true; }
+                try { _crawlConfiguration.StatusValue = CrawlStatus.Disabled; }
                 finally { Deactivate?.Invoke(this, EventArgs.Empty); }
             }));
             DeleteCommand = new Commands.RelayCommand(() => Dispatcher.Invoke(() => Delete?.Invoke(this, EventArgs.Empty)));
@@ -91,8 +99,8 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (e.PropertyName)
             {
-                case nameof(CrawlConfiguration.IsInactive):
-                    DeactivateCommand.IsEnabled = !(ActivateCommand.IsEnabled = _crawlConfiguration.IsInactive);
+                case nameof(CrawlConfiguration.StatusValue):
+                    DeactivateCommand.IsEnabled = !(ActivateCommand.IsEnabled = _crawlConfiguration.StatusValue == CrawlStatus.Disabled);
                     break;
                 case nameof(CrawlConfiguration.Root):
                     Subdirectory root = _crawlConfiguration.Root;

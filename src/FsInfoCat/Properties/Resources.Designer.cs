@@ -529,6 +529,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuration.
+        /// </summary>
+        public static string DisplayName_Configuration {
+            get {
+                return ResourceManager.GetString("DisplayName_Configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Content Distributor.
         /// </summary>
         public static string DisplayName_ContentDistributor {
@@ -601,11 +610,101 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawl End.
+        /// </summary>
+        public static string DisplayName_CrawlEnd {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawl Operation Failed.
         /// </summary>
         public static string DisplayName_CrawlOperationFailed {
             get {
                 return ResourceManager.GetString("DisplayName_CrawlOperationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawl Start.
+        /// </summary>
+        public static string DisplayName_CrawlStart {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allotted Execution Time Elapsed.
+        /// </summary>
+        public static string DisplayName_CrawlStatus_AllottedTimeElapsed {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStatus_AllottedTimeElapsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawl Job Canceled.
+        /// </summary>
+        public static string DisplayName_CrawlStatus_Canceled {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStatus_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        public static string DisplayName_CrawlStatus_Completed {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStatus_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawl Job Disabled.
+        /// </summary>
+        public static string DisplayName_CrawlStatus_Disabled {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStatus_Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawl Job Failed.
+        /// </summary>
+        public static string DisplayName_CrawlStatus_Failed {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStatus_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In Progresss.
+        /// </summary>
+        public static string DisplayName_CrawlStatus_InProgress {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStatus_InProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum Item Count Reached.
+        /// </summary>
+        public static string DisplayName_CrawlStatus_MaxItemCountReached {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStatus_MaxItemCountReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Running.
+        /// </summary>
+        public static string DisplayName_CrawlStatus_NotRunning {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlStatus_NotRunning", resourceCulture);
             }
         }
         
@@ -1456,6 +1555,24 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_LastCrawlEnd {
+            get {
+                return ResourceManager.GetString("DisplayName_LastCrawlEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_LastCrawlStart {
+            get {
+                return ResourceManager.GetString("DisplayName_LastCrawlStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Hash Calculation.
         /// </summary>
         public static string DisplayName_LastHashCalculation {
@@ -1542,6 +1659,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_LoginName {
             get {
                 return ResourceManager.GetString("DisplayName_LoginName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logs.
+        /// </summary>
+        public static string DisplayName_Logs {
+            get {
+                return ResourceManager.GetString("DisplayName_Logs", resourceCulture);
             }
         }
         
@@ -1740,6 +1866,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_NetworkAffiliation {
             get {
                 return ResourceManager.GetString("DisplayName_NetworkAffiliation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_NextScheduledStart {
+            get {
+                return ResourceManager.GetString("DisplayName_NextScheduledStart", resourceCulture);
             }
         }
         
@@ -2068,6 +2203,33 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_RescheduleAfterFail {
+            get {
+                return ResourceManager.GetString("DisplayName_RescheduleAfterFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_RescheduleFromJobEnd {
+            get {
+                return ResourceManager.GetString("DisplayName_RescheduleFromJobEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Periodic Reschedule Interval.
+        /// </summary>
+        public static string DisplayName_RescheduleInterval {
+            get {
+                return ResourceManager.GetString("DisplayName_RescheduleInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resolution Unit.
         /// </summary>
         public static string DisplayName_ResolutionUnit {
@@ -2109,6 +2271,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_RootDirectory {
             get {
                 return ResourceManager.GetString("DisplayName_RootDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Root Path.
+        /// </summary>
+        public static string DisplayName_RootPath {
+            get {
+                return ResourceManager.GetString("DisplayName_RootPath", resourceCulture);
             }
         }
         
@@ -2217,6 +2388,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Status {
             get {
                 return ResourceManager.GetString("DisplayName_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status Code.
+        /// </summary>
+        public static string DisplayName_StatusCode {
+            get {
+                return ResourceManager.GetString("DisplayName_StatusCode", resourceCulture);
             }
         }
         

@@ -40,6 +40,17 @@ PopIndent();
 #>
 }
 
+namespace <#=DefaultNamespace#>.Local
+{
+<#
+
+PushIndent("    ");
+isSubsequentMember = GenerateEnumTypes(EntityDefinitionsDocument.Root.Elements("Local").Elements("EnumTypes").Elements());
+GenerateEntityTypes(EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity"), isSubsequentMember);
+PopIndent();
+#>
+}
+
 <#+
 
 void GetAllBaseTypes(XElement entityElement, Collection<XElement> result, IEnumerable<XElement> scopeElements)
@@ -66,7 +77,13 @@ void GetAllBaseTypes(XElement entityElement, Collection<XElement> result, IEnume
         if ((attribute = scopeElements.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !(ReferenceEquals(entityElement, attribute.Parent) || result.Contains(attribute.Parent)))
             result.Add(attribute.Parent);
     }
-    foreach (XAttribute attr in entityElement.Elements("Implements").Attributes("Type"))
+    foreach (XAttribute attr in entityElement.Elements("ImplementsEntity").Attributes("Type"))
+    {
+        string name = attr.Value;
+        if ((attribute = scopeElements.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !(ReferenceEquals(entityElement, attribute.Parent) || result.Contains(attribute.Parent)))
+            result.Add(attribute.Parent);
+    }
+    foreach (XAttribute attr in entityElement.Elements("ImplementsGenericEntity").Attributes("TypeDef"))
     {
         string name = attr.Value;
         if ((attribute = scopeElements.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !(ReferenceEquals(entityElement, attribute.Parent) || result.Contains(attribute.Parent)))
@@ -131,7 +148,13 @@ IEnumerable<XElement> GetBaseTypes(XElement entityElement)
         if ((attribute = source.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !ReferenceEquals(entityElement, attribute.Parent))
             yield return attribute.Parent;
     }
-    foreach (XAttribute attr in entityElement.Elements("Implements").Attributes("Type"))
+    foreach (XAttribute attr in entityElement.Elements("ImplementsEntity").Attributes("Type"))
+    {
+        string name = attr.Value;
+        if ((attribute = source.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !ReferenceEquals(entityElement, attribute.Parent))
+            yield return attribute.Parent;
+    }
+    foreach (XAttribute attr in entityElement.Elements("ImplementsGenericEntity").Attributes("TypeDef"))
     {
         string name = attr.Value;
         if ((attribute = source.Attributes("Name").Where(a => a.Value == name).FirstOrDefault()) is not null && !ReferenceEquals(entityElement, attribute.Parent))
@@ -272,7 +295,7 @@ void GenerateEnumType(XElement enumElement)
     Write("public enum ");
     string typeName = enumElement.Attribute("Name")?.Value;
     Write(typeName);
-    Write("Test : ");
+    Write(" : ");
     WriteLine(enumElement.Name.LocalName.ToLower());
     WriteLine("{");
     PushIndent("    ");
@@ -339,6 +362,10 @@ void GenerateEntityInterface(XElement entityElement)
     attribute = entityElement.Attribute("RootInterface");
     if (attribute is not null)
         implements.Add(attribute.Value);
+    foreach (XAttribute attr in entityElement.Elements("ImplementsEntity").Attributes("Type"))
+        implements.Add(attr.Value);
+    foreach (XAttribute attr in entityElement.Elements("ImplementsGenericEntity").Attributes("Type"))
+        implements.Add(attr.Value);
     foreach (XAttribute attr in entityElement.Elements("Implements").Attributes("Type"))
         implements.Add(attr.Value);
 
@@ -352,7 +379,6 @@ void GenerateEntityInterface(XElement entityElement)
     Write("public interface ");
     if (implements.Count > 0)
     {
-        Write("Test");
         Write(typeName);
         Write(" : ");
         if (implements.Skip(1).Any())
@@ -366,10 +392,7 @@ void GenerateEntityInterface(XElement entityElement)
         WriteLine(implements.Last().Replace("{", "<").Replace("}", ">"));
     }
     else
-    {
-        Write("Test");
         WriteLine(typeName);
-    }
     WriteLine("{");
     PushIndent("    ");
     bool isSubsequentMember = false;
@@ -422,6 +445,7 @@ void GenerateEntityInterface(XElement entityElement)
                 Write(propertyElement.Name.LocalName);
                 Write(propertyElement.Attributes("IsNullable").Any(a => a.Value == "true") ? "? " : " ");
                 break;
+            case "ByteValues":
             case "MultiStringValue":
                 Write(propertyElement.Name.LocalName);
                 Write(" ");

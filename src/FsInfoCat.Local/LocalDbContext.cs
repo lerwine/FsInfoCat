@@ -119,6 +119,7 @@ namespace FsInfoCat.Local
             modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
             modelBuilder.Entity<Volume>(Volume.BuildEntity);
             modelBuilder.Entity<Subdirectory>(Subdirectory.BuildEntity);
+            modelBuilder.Entity<CrawlJobLog>(CrawlJobLog.BuildEntity);
             modelBuilder.Entity<DbFile>(DbFile.BuildEntity);
             modelBuilder.Entity<BinaryPropertySet>(BinaryPropertySet.BuildEntity);
             modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);

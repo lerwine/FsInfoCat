@@ -1102,4 +1102,64 @@
   <data name="DisplayName_Year" xml:space="preserve">
     <value>Year</value>
   </data>
+  <data name="DisplayName_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="DisplayName_CrawlEnd" xml:space="preserve">
+    <value>Crawl End</value>
+  </data>
+  <data name="DisplayName_CrawlStart" xml:space="preserve">
+    <value>Crawl Start</value>
+  </data>
+  <data name="DisplayName_CrawlStatus_AllottedTimeElapsed" xml:space="preserve">
+    <value>Allotted Execution Time Elapsed</value>
+  </data>
+  <data name="DisplayName_CrawlStatus_Canceled" xml:space="preserve">
+    <value>Crawl Job Canceled</value>
+  </data>
+  <data name="DisplayName_CrawlStatus_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="DisplayName_CrawlStatus_Disabled" xml:space="preserve">
+    <value>Crawl Job Disabled</value>
+  </data>
+  <data name="DisplayName_CrawlStatus_Failed" xml:space="preserve">
+    <value>Crawl Job Failed</value>
+  </data>
+  <data name="DisplayName_CrawlStatus_InProgress" xml:space="preserve">
+    <value>In Progresss</value>
+  </data>
+  <data name="DisplayName_CrawlStatus_MaxItemCountReached" xml:space="preserve">
+    <value>Maximum Item Count Reached</value>
+  </data>
+  <data name="DisplayName_CrawlStatus_NotRunning" xml:space="preserve">
+    <value>Not Running</value>
+  </data>
+  <data name="DisplayName_LastCrawlEnd" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_LastCrawlStart" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_Logs" xml:space="preserve">
+    <value>Logs</value>
+  </data>
+  <data name="DisplayName_NextScheduledStart" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_RescheduleAfterFail" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_RescheduleFromJobEnd" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_RescheduleInterval" xml:space="preserve">
+    <value>Periodic Reschedule Interval</value>
+  </data>
+  <data name="DisplayName_RootPath" xml:space="preserve">
+    <value>Root Path</value>
+  </data>
+  <data name="DisplayName_StatusCode" xml:space="preserve">
+    <value>Status Code</value>
+  </data>
 </root>

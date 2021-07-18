@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
-namespace FsInfoCat
+namespace FsInfoCat.Obsolete
 {
     /// <summary>
     /// Base interface for all database entity objects which track the creation and modification dates as well as implementing the
@@ -3217,24 +3217,6 @@ namespace FsInfoCat
     public interface IComparison : IDbEntity
     {
         /// <summary>
-        /// Gets or sets a value indicating whether the <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte.
-        /// </summary>
-        /// <value>
-        ///   <see langword="true" /> if <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.
-        /// </value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_AreEqual), ResourceType = typeof(Properties.Resources))]
-        bool AreEqual { get; }
-
-        /// <summary>
-        /// Gets or sets the date and time when the files were compared.
-        /// </summary>
-        /// <value>
-        /// The date and time when <see cref="IComparison.Baseline" /> was compared to <see cref="IComparison.Correlative" />.
-        /// </value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ComparedOn), ResourceType = typeof(Properties.Resources))]
-        DateTime ComparedOn { get; }
-
-        /// <summary>
         /// Gets or sets the primary key of the baseline file in the comparison.
         /// </summary>
         /// <value>
@@ -3251,6 +3233,24 @@ namespace FsInfoCat
         /// </value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         Guid CorrelativeId { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte.
+        /// </summary>
+        /// <value>
+        ///   <see langword="true" /> if <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AreEqual), ResourceType = typeof(Properties.Resources))]
+        bool AreEqual { get; }
+
+        /// <summary>
+        /// Gets or sets the date and time when the files were compared.
+        /// </summary>
+        /// <value>
+        /// The date and time when <see cref="IComparison.Baseline" /> was compared to <see cref="IComparison.Correlative" />.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_ComparedOn), ResourceType = typeof(Properties.Resources))]
+        DateTime ComparedOn { get; }
 
         /// <summary>
         /// Gets or sets the baseline file in the comparison.
@@ -3272,7 +3272,7 @@ namespace FsInfoCat
     }
 }
 
-namespace FsInfoCat.Local
+namespace FsInfoCat.Local.Obsolete
 {
     /// <summary />
     public interface ILocalDbEntity : IDbEntity

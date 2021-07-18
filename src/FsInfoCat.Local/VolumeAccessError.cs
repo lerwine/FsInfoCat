@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class VolumeAccessError : DbEntity, IAccessError<Volume>, IAccessError<ILocalVolume>, IAccessError<IVolume>
+    public class VolumeAccessError : DbEntity, IAccessError<Volume>, ILocalVolumeAccessError
     {
         #region Fields
 
@@ -78,11 +78,21 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalVolume IAccessError<ILocalVolume>.Target { get => Target; }
+        IDbEntity IAccessError.Target => Target;
 
-        IVolume IAccessError<IVolume>.Target { get => Target; }
+        IDbEntity IAccessError<Volume>.Target => Target;
 
-        IDbEntity IAccessError.Target { get => Target; }
+        ILocalVolume ILocalVolumeAccessError.Target => Target;
+
+        ILocalDbEntity ILocalAccessError.Target => Target;
+
+        IDbEntity IAccessError<ILocalDbEntity>.Target => Target;
+
+        IVolume IVolumeAccessError.Target => Target;
+
+        IDbEntity IAccessError<IVolume>.Target => Target;
+
+        IDbEntity IAccessError<ILocalVolume>.Target => Target;
 
         #endregion
 

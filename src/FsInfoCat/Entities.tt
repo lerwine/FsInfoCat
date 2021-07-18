@@ -26,13 +26,13 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
-namespace <#=DefaultNamespace#>
+namespace <#=DefaultNamespace#>.Obsolete
 {<#
     GenerateEntityInterface(EntitiesDocument.Root.Elements("Entity"));
 #>
 }
 
-namespace <#=DefaultNamespace#>.Local
+namespace <#=DefaultNamespace#>.Local.Obsolete
 {<#
     GenerateEntityInterface(EntitiesDocument.Root.Elements("Local").Elements("Entity"));
 #>

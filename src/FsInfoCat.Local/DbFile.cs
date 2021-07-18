@@ -604,14 +604,13 @@ namespace FsInfoCat.Local
         IRecordedTVPropertySet IFile.RecordedTVProperties { get => RecordedTVProperties; }
         IVideoPropertySet IFile.VideoProperties { get => VideoProperties; }
 
-        IEnumerable<IAccessError<IFile>> IFile.AccessErrors => AccessErrors.Cast<IAccessError<IFile>>();
+        IEnumerable<ILocalFileAccessError> ILocalFile.AccessErrors => AccessErrors.Cast<ILocalFileAccessError>();
 
-        IEnumerable<IAccessError<ILocalDbFsItem>> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError<ILocalDbFsItem>>();
-        IEnumerable<ILocalFileAccessError> ILocalFile.AccessErrors => throw new NotImplementedException();
+        ILocalSubdirectory ILocalDbFsItem.Parent => Parent;
 
-        ILocalSubdirectory ILocalDbFsItem.Parent => throw new NotImplementedException();
+        IEnumerable<ILocalAccessError> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<ILocalFileAccessError>();
 
-        IEnumerable<IAccessError<IDbFsItem>> IDbFsItem.AccessErrors => throw new NotImplementedException();
+        IEnumerable<IFileAccessError> IFile.AccessErrors => AccessErrors.Cast<ILocalFileAccessError>();
 
         #endregion
 

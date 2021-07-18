@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryAccessError : DbEntity, IAccessError<Subdirectory>, IAccessError<ILocalSubdirectory>, IAccessError<ISubdirectory>, IAccessError<ILocalDbFsItem>
+    public class SubdirectoryAccessError : DbEntity, IAccessError<Subdirectory>, ILocalSubdirectoryAccessError
     {
         #region Fields
 
@@ -78,13 +78,21 @@ namespace FsInfoCat.Local
 
         #region Explicit Members
 
-        ILocalSubdirectory IAccessError<ILocalSubdirectory>.Target { get => Target; }
+        IDbEntity IAccessError.Target => Target;
 
-        ISubdirectory IAccessError<ISubdirectory>.Target { get => Target; }
+        IDbEntity IAccessError<Subdirectory>.Target => Target;
 
-        ILocalDbFsItem IAccessError<ILocalDbFsItem>.Target { get => Target; }
+        IDbEntity IAccessError<ISubdirectory>.Target => Target;
 
-        IDbEntity IAccessError.Target { get => Target; }
+        ILocalSubdirectory ILocalSubdirectoryAccessError.Target => Target;
+
+        ILocalDbEntity ILocalAccessError.Target => Target;
+
+        IDbEntity IAccessError<ILocalDbEntity>.Target => Target;
+
+        ISubdirectory ISubdirectoryAccessError.Target => Target;
+
+        IDbEntity IAccessError<ILocalSubdirectory>.Target => Target;
 
         #endregion
 

@@ -190,19 +190,17 @@ namespace FsInfoCat.Local
 
         IEnumerable<ISubdirectory> ISubdirectory.SubDirectories => SubDirectories.Cast<ISubdirectory>();
 
-        IEnumerable<IAccessError<ILocalDbFsItem>> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError<ILocalDbFsItem>>();
-
         ILocalCrawlConfiguration ILocalSubdirectory.CrawlConfiguration { get => CrawlConfiguration; }
 
         ICrawlConfiguration ISubdirectory.CrawlConfiguration { get => CrawlConfiguration; }
 
-        IEnumerable<ILocalSubdirectoryAccessError> ILocalSubdirectory.AccessErrors => throw new NotImplementedException();
+        IEnumerable<ILocalSubdirectoryAccessError> ILocalSubdirectory.AccessErrors => AccessErrors.Cast<ILocalSubdirectoryAccessError>();
 
-        IEnumerable<ISubdirectoryAccessError> ISubdirectory.AccessErrors => throw new NotImplementedException();
+        IEnumerable<ISubdirectoryAccessError> ISubdirectory.AccessErrors => AccessErrors.Cast<ISubdirectoryAccessError>();
 
-        ILocalSubdirectory ILocalDbFsItem.Parent => throw new NotImplementedException();
+        ILocalSubdirectory ILocalDbFsItem.Parent => Parent;
 
-        IEnumerable<IAccessError<IDbFsItem>> IDbFsItem.AccessErrors => throw new NotImplementedException();
+        IEnumerable<ILocalAccessError> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<ILocalAccessError>();
 
         #endregion
 

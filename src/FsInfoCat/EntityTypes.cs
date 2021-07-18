@@ -7,8 +7,40 @@ using System.IO;
 
 namespace FsInfoCat
 {
+    /// <summary>Values for application error codes.</summary>
+    public enum ErrorCode : int
+    {
+        /// <summary>An unexpected error has occurred.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UnexpectedError), Description = nameof(Properties.Resources.ErrorMessage_UnexpectedError), ResourceType = typeof(Properties.Resources))]
+        Unexpected = 0,
+
+        /// <summary>An <see cref="System.IO.IOException" /> has occurred.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_IOError), Description = nameof(Properties.Resources.ErrorMessage_IOError), ResourceType = typeof(Properties.Resources))]
+        IOError = 1,
+
+        /// <summary>An <see cref="System.IO.UnauthorizedAccessException" /> has occurred.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UnauthorizedAccessError), Description = nameof(Properties.Resources.DisplayName_UnauthorizedAccessError), ResourceType = typeof(Properties.Resources))]
+        UnauthorizedAccess = 2,
+
+        /// <summary>An <see cref="System.IO.SecurityException" /> has occurred.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SecurityException), Description = nameof(Properties.Resources.ErrorMessage_SecurityException), ResourceType = typeof(Properties.Resources))]
+        SecurityException = 3,
+
+        /// <summary>The name of one or more files or subdirectories in the path contain a invalid character(s).</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_InvalidPathError), Description = nameof(Properties.Resources.ErrorMessage_InvalidPathError), ResourceType = typeof(Properties.Resources))]
+        InvalidPath = 4,
+
+        /// <summary>A <see cref="System.IO.PathTooLongException" /> has occurred, indicating that hhe specified path, file name, or both exceed the system-defined maximum length.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PathTooLongError), Description = nameof(Properties.Resources.ErrorMessage_PathTooLongError), ResourceType = typeof(Properties.Resources))]
+        PathTooLong = 5,
+
+        /// <summary>Crawl operation has failed and terminated before completion.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlOperationFailed), Description = nameof(Properties.Resources.ErrorMessage_CrawlOperationFailed), ResourceType = typeof(Properties.Resources))]
+        CrawlOperationFailed = 6
+    }
+
     /// <summary>Represents file system access error codes.</summary>
-    public enum AccessErrorCodeTest : byte
+    public enum AccessErrorCode : byte
     {
         /// <summary>An unknown/unspecified error has occurred.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_UnexpectedError), ResourceType = typeof(Properties.Resources))]
@@ -41,7 +73,7 @@ namespace FsInfoCat
     }
 
     /// <summary>Represents a volume status.</summary>
-    public enum VolumeStatusTest : byte
+    public enum VolumeStatus : byte
     {
         /// <summary>The status of the volume is uknown or unspecified.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_VolumeStatus_Unknown), Description = nameof(Properties.Resources.Description_VolumeStatus_Unknown), ResourceType = typeof(Properties.Resources))]
@@ -74,7 +106,7 @@ namespace FsInfoCat
 
     /// <summary>Directory-specific crawl option flags.</summary>
     [Flags]
-    public enum DirectoryCrawlOptionsTest : byte
+    public enum DirectoryCrawlOptions : byte
     {
         /// <summary>No options selected.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_NoOptionsSelected), ResourceType = typeof(Properties.Resources))]
@@ -106,7 +138,7 @@ namespace FsInfoCat
     }
 
     /// <summary>Indicates crawl status for the a <see cref="ISubdirectory" /></summary>
-    public enum DirectoryStatusTest : byte
+    public enum DirectoryStatus : byte
     {
         /// <summary>Not all items in the current <see cref="ISubdirectory" /> have been crawled.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_DirectoryStatus_Incomplete), ResourceType = typeof(Properties.Resources))]
@@ -127,7 +159,7 @@ namespace FsInfoCat
 
     /// <summary>File-specific crawl options.</summary>
     [Flags]
-    public enum FileCrawlOptionsTest : byte
+    public enum FileCrawlOptions : byte
     {
         /// <summary>No options selected.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_NoOptionsSelected), ResourceType = typeof(Properties.Resources))]
@@ -151,7 +183,7 @@ namespace FsInfoCat
     }
 
     /// <summary></summary>
-    public enum FileCorrelationStatusTest : byte
+    public enum FileCorrelationStatus : byte
     {
         /// <summary>File has been added to the database or modified and needs to be analyzed.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileCorrelationStatus_Dissociated), Description = nameof(Properties.Resources.Description_FileCorrelationStatus_Dissociated), ResourceType = typeof(Properties.Resources))]
@@ -198,13 +230,49 @@ namespace FsInfoCat
         Deleted = 9
     }
 
+    /// <summary>Values to represent the file crawl status.</summary>
+    public enum CrawlStatus : byte
+    {
+        /// <summary>File system crawl is not running.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStatus_NotRunning), ResourceType = typeof(Properties.Resources))]
+        NotRunning = 0,
+
+        /// <summary>File system crawl is in progress.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStatus_InProgress), ResourceType = typeof(Properties.Resources))]
+        InProgress = 1,
+
+        /// <summary>File system crawl ranto completion.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStatus_Completed), ResourceType = typeof(Properties.Resources))]
+        Completed = 2,
+
+        /// <summary>File system was stopped prior to completion because the alotted execution duration had been reached.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStatus_AllottedTimeElapsed), ResourceType = typeof(Properties.Resources))]
+        AllottedTimeElapsed = 3,
+
+        /// <summary>File system was stopped prior to completion because the maximum number of items had been processed.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStatus_MaxItemCountReached), ResourceType = typeof(Properties.Resources))]
+        MaxItemCountReached = 4,
+
+        /// <summary>File system crawl was manually canceled before completion.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStatus_Canceled), ResourceType = typeof(Properties.Resources))]
+        Canceled = 5,
+
+        /// <summary>File system crawl was aborted due to a failure.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStatus_Failed), ResourceType = typeof(Properties.Resources))]
+        Failed = 6,
+
+        /// <summary>File system crawl configuration is disabled.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStatus_Disabled), ResourceType = typeof(Properties.Resources))]
+        Disabled = 7
+    }
+
     /// <summary>
     /// Base interface for all database entity objects which track the creation and modification dates as well as implementing the
     /// <see cref="IValidatableObject" /> and <see cref="IRevertibleChangeTracking" /> interfaces.
     /// </summary>
     /// <seealso cref="IValidatableObject" />
     /// <seealso cref="IRevertibleChangeTracking" />
-    public interface TestIDbEntity : IValidatableObject, IRevertibleChangeTracking
+    public interface IDbEntity : IValidatableObject, IRevertibleChangeTracking
     {
         /// <summary>Gets or sets the database entity creation date/time.</summary>
         /// <value>The date and time when the database entity was created.</value>
@@ -227,29 +295,29 @@ namespace FsInfoCat
 
     /// <summary>Generic interface for access error entities.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIAccessError : IDbEntity
+    public interface IAccessError : IDbEntity
     {
-        /// <summary>Gets or sets the primary key value.</summary>
+        /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
 
-        /// <summary>Gets or sets the error code.</summary>
+        /// <summary>Gets the error code.</summary>
         /// <value>The <see cref="AccessErrorCode" /> value that represents the numeric error code.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(Properties.Resources))]
         AccessErrorCode ErrorCode { get; }
 
-        /// <summary>Gets or sets the brief error message.</summary>
+        /// <summary>Gets the brief error message.</summary>
         /// <value>The brief error message.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Message), ResourceType = typeof(Properties.Resources))]
         string Message { get; }
 
-        /// <summary>Gets or sets the error detail text.</summary>
+        /// <summary>Gets the error detail text.</summary>
         /// <value>The error detail text.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Details), ResourceType = typeof(Properties.Resources))]
         string Details { get; }
 
-        /// <summary>Gets or sets the target entity to which the access error applies.</summary>
+        /// <summary>Gets the target entity to which the access error applies.</summary>
         /// <value>The <see cref="IDbEntity" /> object that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         IDbEntity Target { get; }
@@ -257,99 +325,99 @@ namespace FsInfoCat
 
     /// <summary>Generic interface for access error entities.</summary>
     /// <seealso cref="IAccessError" />
-    public interface TestIAccessError<TTarget> : IAccessError
+    public interface IAccessError<TTarget> : IAccessError
     {
-        /// <summary>Gets or sets the target entity to which the access error applies.</summary>
+        /// <summary>Gets the target entity to which the access error applies.</summary>
         /// <value>The <see cref="IDbEntity" /> object that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        new TTarget Target { get; }
+        new IDbEntity Target { get; }
     }
 
     /// <summary>Interface for entities which represent a specific file system type.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIFileSystem : IDbEntity
+    public interface IFileSystem : IDbEntity
     {
-        /// <summary>Gets or sets the primary key value.</summary>
+        /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
 
-        /// <summary>Gets or sets the display name.</summary>
+        /// <summary>Gets the display name.</summary>
         /// <value>The display name of the file system.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
         string DisplayName { get; }
 
-        /// <summary>Gets or sets a value indicating whether file name searches are case-sensitive.</summary>
+        /// <summary>Gets a value indicating whether file name searches are case-sensitive.</summary>
         /// <value><see langword="true" /> if file name searches are case-sensitive; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(Properties.Resources))]
         bool CaseSensitiveSearch { get; }
 
-        /// <summary>Gets or sets a value indicating whether this is a read-only file system type.</summary>
+        /// <summary>Gets a value indicating whether this is a read-only file system type.</summary>
         /// <value><see langword="true" /> if this is a read-only file system type; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(Properties.Resources))]
         bool ReadOnly { get; }
 
-        /// <summary>Gets or sets the maximum length of file system name components.</summary>
+        /// <summary>Gets the maximum length of file system name components.</summary>
         /// <value>The maximum length of file system name components.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(Properties.Resources))]
         uint MaxNameLength { get; }
 
-        /// <summary>Gets or sets the default drive type for this file system.</summary>
+        /// <summary>Gets the default drive type for this file system.</summary>
         /// <value>The default drive type for this file system.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DefaultDriveType), ResourceType = typeof(Properties.Resources))]
         DriveType? DefaultDriveType { get; }
 
-        /// <summary>Gets or sets the custom notes for this file system type.</summary>
+        /// <summary>Gets the custom notes for this file system type.</summary>
         /// <value>The custom notes to associate with this file system type.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        /// <summary>Gets or sets a value indicating whether this file system type is inactive.</summary>
+        /// <summary>Gets a value indicating whether this file system type is inactive.</summary>
         /// <value><see langword="true" /> if this file system type is inactive; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
 
-        /// <summary>Gets the volumes that use this file system.</summary>
-        /// <value>The volumes that use this file system.</value>
+        /// <summary>Gets the volumes that share this file system type.</summary>
+        /// <value>The volumes that share this file system type.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Volumes), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IVolume> Volumes { get; }
 
-        /// <summary>Gets the symbolic names of the current file system.</summary>
-        /// <value>The symbolic names that are used to identify the current file system.</value>
+        /// <summary>Gets the symbolic names for the current file system type.</summary>
+        /// <value>The symbolic names that are used to identify the current file system type.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ISymbolicName> SymbolicNames { get; }
     }
 
     /// <summary>Interface for entities that represent a symbolic name for a file system type.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestISymbolicName : IDbEntity
+    public interface ISymbolicName : IDbEntity
     {
-        /// <summary>Gets or sets the primary key value.</summary>
+        /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
 
-        /// <summary>Gets or sets the symbolic name.</summary>
+        /// <summary>Gets the symbolic name.</summary>
         /// <value>The symbolic name which refers to a file system type..</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Name), ResourceType = typeof(Properties.Resources))]
         string Name { get; }
 
-        /// <summary>Gets or sets the custom notes for the current symbolic name.</summary>
+        /// <summary>Gets the custom notes for the current symbolic name.</summary>
         /// <value>The custom notes to associate with the current symblic name.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        /// <summary>Gets or sets the priority for this symbolic name.</summary>
+        /// <summary>Gets the priority for this symbolic name.</summary>
         /// <value>The priority of this symbolic name in relation to other symbolic names that refer to the same file system type, with lower values being higher priority.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Priority), ResourceType = typeof(Properties.Resources))]
         int Priority { get; }
 
-        /// <summary>Gets or sets a value indicating whether this symbolic name is inactive.</summary>
+        /// <summary>Gets a value indicating whether this symbolic name is inactive.</summary>
         /// <value><see langword="true" /> if this symbolic name  is inactive; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
 
-        /// <summary>Gets or sets the file system that this symbolic name refers to.</summary>
+        /// <summary>Gets the file system that this symbolic name refers to.</summary>
         /// <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
         IFileSystem FileSystem { get; }
@@ -357,54 +425,54 @@ namespace FsInfoCat
 
     /// <summary>Interface for entities which represent a logical file system volume.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIVolume : IDbEntity
+    public interface IVolume : IDbEntity
     {
-        /// <summary>Gets or sets the primary key value.</summary>
+        /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
 
-        /// <summary>Gets or sets the display name of the volume.</summary>
+        /// <summary>Gets the display name of the volume.</summary>
         /// <value>The display name of the volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
         string DisplayName { get; }
 
-        /// <summary>Gets or sets the name of the volume.</summary>
+        /// <summary>Gets the name of the volume.</summary>
         /// <value>The name of the volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_VolumeName), ResourceType = typeof(Properties.Resources))]
         string VolumeName { get; }
 
-        /// <summary>Gets or sets the unique volume identifier.</summary>
+        /// <summary>Gets the unique volume identifier.</summary>
         /// <value>The system-independent unique identifier, which identifies the volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Identifier), ResourceType = typeof(Properties.Resources))]
         VolumeIdentifier Identifier { get; }
 
-        /// <summary>Gets or sets a value indicating whether file name searches are case-sensitive.</summary>
+        /// <summary>Gets a value indicating whether file name searches are case-sensitive.</summary>
         /// <value><see langword="true" /> if file name searches are case-sensitive; <see langword="false" /> if they are case-insensitive; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.CaseSensitiveSearch">file system type</see>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(Properties.Resources))]
         bool? CaseSensitiveSearch { get; }
 
-        /// <summary>Gets or sets a value indicating whether the current volume is read-only.</summary>
+        /// <summary>Gets a value indicating whether the current volume is read-only.</summary>
         /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.ReadOnly">file system type</see>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(Properties.Resources))]
         bool? ReadOnly { get; }
 
-        /// <summary>Gets or sets the maximum length of file system name components.</summary>
+        /// <summary>Gets the maximum length of file system name components.</summary>
         /// <value>The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.MaxNameLength">file system type</see>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(Properties.Resources))]
         uint? MaxNameLength { get; }
 
-        /// <summary>Gets or sets the drive type for this volume.</summary>
+        /// <summary>Gets the drive type for this volume.</summary>
         /// <value>The drive type for this volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Type), ResourceType = typeof(Properties.Resources))]
         DriveType Type { get; }
 
-        /// <summary>Gets or sets the custom notes for this volume.</summary>
+        /// <summary>Gets the custom notes for this volume.</summary>
         /// <value>The custom notes to associate with this volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        /// <summary>Gets or sets the volume status.</summary>
+        /// <summary>Gets the volume status.</summary>
         /// <value>The volume status value.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         VolumeStatus Status { get; }
@@ -414,7 +482,7 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(Properties.Resources))]
         ISubdirectory RootDirectory { get; }
 
-        /// <summary>Gets or sets the file system type.</summary>
+        /// <summary>Gets the file system type.</summary>
         /// <value>The file system type for this volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
         IFileSystem FileSystem { get; }
@@ -427,125 +495,225 @@ namespace FsInfoCat
 
     /// <summary>Generic interface for volume access error entities.</summary>
     /// <seealso cref="IAccessError{IVolume}" />
-    public interface TestIVolumeAccessError : IAccessError<IVolume>
+    public interface IVolumeAccessError : IAccessError<IVolume>
     {
-        /// <summary>Gets or sets the target volume to which the access error applies.</summary>
+        /// <summary>Gets the target volume to which the access error applies.</summary>
         /// <value>The <typeparamref name="IVolume" /> entity that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         new IVolume Target { get; }
     }
 
-    /// <summary>Configuration of a file system crawl instance.</summary>
-    /// <seealso cref="IDbEntity" />
-    public interface TestICrawlConfiguration : IDbEntity
+    /// <summary>Specifies the settings for a file system crawl.</summary>
+    public interface ICrawlSettings
     {
-        /// <summary>Gets or sets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
-        /// <summary>Gets or sets the display name.</summary>
-        /// <value>The display name for the current crawl configuration.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
-        string DisplayName { get; }
-
-        /// <summary>Gets or sets the custom notes.</summary>
-        /// <value>The custom notes to associate with the current crawl configuration.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
-        string Notes { get; }
-
-        /// <summary>Gets the root subdirectory of the configured subdirectory crawl.</summary>
-        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
-        ISubdirectory Root { get; }
-
-        /// <summary>Gets or sets the maximum recursion depth.</summary>
-        /// <value>The maximum recursion depth.</value>
+        /// <summary>Gets the maximum recursion depth.</summary>
+        /// <value>
+        /// The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the <see cref="Root" /> <see cref="ISubdirectory" />,
+        /// a value will crawl 1 sub-folder deep, and so on.
+        /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MaxRecursionDepth), ResourceType = typeof(Properties.Resources))]
         ushort MaxRecursionDepth { get; }
 
-        /// <summary>Gets or sets the maximum total items to crawl.</summary>
+        /// <summary>Gets the maximum total items to crawl.</summary>
         /// <value>The maximum total items to crawl, including both files and subdirectories.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MaxTotalItems), ResourceType = typeof(Properties.Resources))]
         ulong MaxTotalItems { get; }
 
-        /// <summary>Gets or sets the maximum dudration of the crawl.</summary>
-        /// <value>The maximum dudration of the crawl, in seconds.</value>
+        /// <summary>Gets the maximum duration of the crawl.</summary>
+        /// <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>1</c>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_TTL), ResourceType = typeof(Properties.Resources))]
         long? TTL { get; }
-
-        /// <summary>Gets or sets a value indicating whether the current crawl configuration is inactive.</summary>
-        /// <value><see langword="true" /> if the current crawl configuration is inactive; otherwise, <see langword="false" />.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
-        bool IsInactive { get; }
     }
 
-    /// <summary>Base interface for a database entity that represents a file system node.</summary>
+    /// <summary>Specifies the configuration of a file system crawl.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIDbFsItem : IDbEntity
+    /// <seealso cref="ICrawlSettings" />
+    public interface ICrawlConfiguration : IDbEntity, ICrawlSettings
     {
-        /// <summary>Gets or sets the primary key value.</summary>
+        /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
 
-        /// <summary>Gets or sets the name of the current file system item.</summary>
+        /// <summary>Gets the display name.</summary>
+        /// <value>The display name for the current crawl configuration.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
+        string DisplayName { get; }
+
+        /// <summary>Gets the custom notes.</summary>
+        /// <value>The custom notes to associate with the current crawl configuration.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        string Notes { get; }
+
+        /// <summary>Gets a value indicating whether the current crawl configuration has been deactivated.</summary>
+        /// <value>
+        /// <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
+        /// available for use.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
+        CrawlStatus StatusValue { get; }
+
+        /// <summary>Gets the date and time when the last crawl was started.</summary>
+        /// <value>The date and time when the last crawl was started or <see langword="null" /> if no crawl hhas ever been started for this configuration.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_LastCrawlStart), ResourceType = typeof(Properties.Resources))]
+        DateTime? LastCrawlStart { get; }
+
+        /// <summary>Gets the date and time when the last crawl was finshed.</summary>
+        /// <value>
+        /// The date and time when the last crawl was finshed; otherwise, <see langword="null" /> if the current crawl is still active or if
+        /// no crawl has ever been started for this configuration.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_LastCrawlEnd), ResourceType = typeof(Properties.Resources))]
+        DateTime? LastCrawlEnd { get; }
+
+        /// <summary>Gets the date and time when the next true is to begin.</summary>
+        /// <value>The date and time when the next crawl is to begin or <see langword="null" /> if there is no scheduled crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_NextScheduledStart), ResourceType = typeof(Properties.Resources))]
+        DateTime? NextScheduledStart { get; }
+
+        /// <summary>Gets the length of time between automatic crawl re-scheduling.</summary>
+        /// <value>The length of time between automatic crawl re-scheduling, in seconds or <cref langword="null" /> to disable automatic re-scheduling.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RescheduleInterval), ResourceType = typeof(Properties.Resources))]
+        long? RescheduleInterval { get; }
+
+        /// <summary>Gets a value indicating whether automatic rescheduling is calculated from the completion time of the previous job, versus the start time.</summary>
+        /// <value>
+        /// <see langword="true" /> if crawl jobs are automatically scheduled <see cref="RescheduleInterval" /> seconds from the completion of the previous job;
+        /// otherwise, <see langword="false" /> if crawl jobs are automatically scheduled <see cref="RescheduleInterval" /> seconds from the value
+        /// of <see cref="NextScheduledStart" /> at the time the job is started.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RescheduleFromJobEnd), ResourceType = typeof(Properties.Resources))]
+        bool RescheduleFromJobEnd { get; }
+
+        /// <summary>Gets a value indicating whether crawl jobs are automatically rescheduled even if the previous job failed.</summary>
+        /// <value>
+        /// <see langword="true" /> if crawl jobs are always automatically re-scheduled; otherwise, <see langword="false" /> if crawl jobs are automatically
+        /// re-scheduled only if the preceding job did not fail.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(Properties.Resources))]
+        bool RescheduleAfterFail { get; }
+
+        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
+        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
+        ISubdirectory Root { get; }
+
+        /// <summary>Gets the crawl log entries.</summary>
+        /// <value>The crawl log entries.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<ICrawlJobLog> Logs { get; }
+    }
+
+    /// <summary>Log of crawl job results.</summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="ICrawlSettings" />
+    public interface ICrawlJobLog : IDbEntity, ICrawlSettings
+    {
+        /// <summary>Gets the primary key value.</summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
+        Guid Id { get; }
+
+        /// <summary>Gets root path of the crawl.</summary>
+        /// <value>The root path of the crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RootPath), ResourceType = typeof(Properties.Resources))]
+        string RootPath { get; }
+
+        /// <summary>Gets a value indicating whether the current crawl configuration has been deactivated.</summary>
+        /// <value>
+        /// <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
+        /// available for use.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_StatusCode), ResourceType = typeof(Properties.Resources))]
+        CrawlStatus StatusCode { get; }
+
+        /// <summary>Gets the date and time when the crawl was started.</summary>
+        /// <value>The date and time when the crawl was started.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlStart), ResourceType = typeof(Properties.Resources))]
+        DateTime CrawlStart { get; }
+
+        /// <summary>Gets the date and time when the crawl was finshed.</summary>
+        /// <value>The date and time when the crawl was finshed or <see langword="null" /> if the current crawl is still active.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlEnd), ResourceType = typeof(Properties.Resources))]
+        DateTime? CrawlEnd { get; }
+
+        /// <summary>Gets the status message.</summary>
+        /// <value>The crawl status message.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Message), ResourceType = typeof(Properties.Resources))]
+        string StatusMessage { get; }
+
+        /// <summary>Gets the status details.</summary>
+        /// <value>The status details.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Details), ResourceType = typeof(Properties.Resources))]
+        string StatusDetail { get; }
+
+        /// <summary>Gets the configuration source for the file system crawl.</summary>
+        /// <value>The configuration for the file system crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
+        ICrawlConfiguration Configuration { get; }
+    }
+
+    /// <summary>Base interface for a database entity that represents a file system node.</summary>
+    /// <seealso cref="IDbEntity" />
+    public interface IDbFsItem : IDbEntity
+    {
+        /// <summary>Gets the primary key value.</summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
+        Guid Id { get; }
+
+        /// <summary>Gets the name of the current file system item.</summary>
         /// <value>The name of the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Name), ResourceType = typeof(Properties.Resources))]
         string Name { get; }
 
-        /// <summary>Gets or sets the date and time last accessed.</summary>
+        /// <summary>Gets the date and time last accessed.</summary>
         /// <value>The last accessed for the purposes of this application.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_LastAccessed), ResourceType = typeof(Properties.Resources))]
         DateTime LastAccessed { get; }
 
-        /// <summary>Gets or sets custom notes to be associated with the current file system item.</summary>
+        /// <summary>Gets custom notes to be associated with the current file system item.</summary>
         /// <value>The custom notes to associate with the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        /// <summary>Gets or sets the file's creation time.</summary>
+        /// <summary>Gets the file's creation time.</summary>
         /// <value>The creation time as reported by the host file system.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_CreationTime), ResourceType = typeof(Properties.Resources))]
         DateTime CreationTime { get; }
 
-        /// <summary>Gets or sets the date and time the file system item was last written nto.</summary>
+        /// <summary>Gets the date and time the file system item was last written nto.</summary>
         /// <value>The last write time as reported by the host file system.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_LastWriteTime), ResourceType = typeof(Properties.Resources))]
         DateTime LastWriteTime { get; }
 
-        /// <summary>Gets or sets the parent subdirectory of the current file system item.</summary>
+        /// <summary>Gets the parent subdirectory of the current file system item.</summary>
         /// <value>The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]
         ISubdirectory Parent { get; }
-
-        /// <summary>Gets the access errors that occurred while attempting to access the current file system item.</summary>
-        /// <value>The access errors that occurred while attempting to access the current file system item.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
-        IEnumerable<IFileAccessError> AccessErrors { get; }
     }
 
     /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>
     /// <seealso cref="IDbFsItem" />
-    public interface TestISubdirectory : IDbFsItem
+    public interface ISubdirectory : IDbFsItem
     {
-        /// <summary>Gets or sets the crawl options for the current subdirectory.</summary>
+        /// <summary>Gets the crawl options for the current subdirectory.</summary>
         /// <value>The crawl options for the current subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Options), ResourceType = typeof(Properties.Resources))]
         DirectoryCrawlOptions Options { get; }
 
-        /// <summary>Gets or sets the status of the current subdirectory.</summary>
+        /// <summary>Gets the status of the current subdirectory.</summary>
         /// <value>The status value for the current subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         DirectoryStatus Status { get; }
 
-        /// <summary>Gets or sets the parent volume.</summary>
+        /// <summary>Gets the parent volume.</summary>
         /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
         /// <remarks>If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Volume), ResourceType = typeof(Properties.Resources))]
         IVolume Volume { get; }
 
-        /// <summary>Gets or sets the crawl configuration that starts with the current subdirectory.</summary>
+        /// <summary>Gets the crawl configuration that starts with the current subdirectory.</summary>
         /// <value>The crawl configuration that starts with the current subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(Properties.Resources))]
         ICrawlConfiguration CrawlConfiguration { get; }
@@ -563,14 +731,14 @@ namespace FsInfoCat
         /// <summary>Gets the access errors that occurred while attempting to access the current subdirectory.</summary>
         /// <value>The access errors that occurred while attempting to access the current subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
-        new IEnumerable<ISubdirectoryAccessError> AccessErrors { get; }
+        IEnumerable<ISubdirectoryAccessError> AccessErrors { get; }
     }
 
     /// <summary>Generic interface for subdirectory access error entities.</summary>
     /// <seealso cref="IAccessError{ISubdirectory}" />
-    public interface TestISubdirectoryAccessError : IAccessError<ISubdirectory>
+    public interface ISubdirectoryAccessError : IAccessError<ISubdirectory>
     {
-        /// <summary>Gets or sets the target subdirectory to which the access error applies.</summary>
+        /// <summary>Gets the target subdirectory to which the access error applies.</summary>
         /// <value>The <typeparamref name="ISubdirectory" /> entity that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         new ISubdirectory Target { get; }
@@ -578,14 +746,14 @@ namespace FsInfoCat
 
     /// <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIBinaryPropertySet : IDbEntity
+    public interface IBinaryPropertySet : IDbEntity
     {
-        /// <summary>Gets or sets the primary key value.</summary>
+        /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
 
-        /// <summary>Gets or sets the file length.</summary>
+        /// <summary>Gets the file length.</summary>
         /// <value>The file length in bytes.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Length), ResourceType = typeof(Properties.Resources))]
         long Length { get; }
@@ -607,7 +775,7 @@ namespace FsInfoCat
     }
 
     /// <summary>Represents extended file summary properties.</summary>
-    public interface TestISummaryProperties
+    public interface ISummaryProperties
     {
         /// <summary>Gets the Application Name.</summary>
         /// <value>The name of the application that created this file or item.</value>
@@ -631,7 +799,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-applicationname">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ApplicationName), ResourceType = typeof(Properties.Resources))]
         string ApplicationName { get; }
@@ -657,7 +825,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-author">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Author), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Author { get; }
@@ -684,7 +852,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-comment">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Comment), ResourceType = typeof(Properties.Resources))]
         string Comment { get; }
@@ -710,7 +878,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-keywords">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Keywords), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Keywords { get; }
@@ -737,7 +905,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-subject">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Subject), ResourceType = typeof(Properties.Resources))]
         string Subject { get; }
@@ -764,7 +932,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-title">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Title), ResourceType = typeof(Properties.Resources))]
         string Title { get; }
@@ -791,7 +959,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-company">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Company), ResourceType = typeof(Properties.Resources))]
         string Company { get; }
@@ -818,7 +986,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-contenttype">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ContentType), ResourceType = typeof(Properties.Resources))]
         string ContentType { get; }
@@ -845,7 +1013,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-copyright">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Copyright), ResourceType = typeof(Properties.Resources))]
         string Copyright { get; }
@@ -872,7 +1040,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalrating">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRating), ResourceType = typeof(Properties.Resources))]
         string ParentalRating { get; }
@@ -899,7 +1067,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-rating">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Rating), ResourceType = typeof(Properties.Resources))]
         uint? Rating { get; }
@@ -926,7 +1094,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemauthors">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ItemAuthors), ResourceType = typeof(Properties.Resources))]
         MultiStringValue ItemAuthors { get; }
@@ -957,7 +1125,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemtype">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ItemType), ResourceType = typeof(Properties.Resources))]
         string ItemType { get; }
@@ -988,7 +1156,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemtypetext">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ItemType), ResourceType = typeof(Properties.Resources))]
         string ItemTypeText { get; }
@@ -1015,7 +1183,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-kind">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Kind), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Kind { get; }
@@ -1042,7 +1210,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-mimetype">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_MIMEType), ResourceType = typeof(Properties.Resources))]
         string MIMEType { get; }
@@ -1069,7 +1237,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalratingreason">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRatingReason), ResourceType = typeof(Properties.Resources))]
         string ParentalRatingReason { get; }
@@ -1096,7 +1264,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalratingsorganization">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRatingsOrganization), ResourceType = typeof(Properties.Resources))]
         string ParentalRatingsOrganization { get; }
@@ -1122,7 +1290,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-sensitivity">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(Properties.Resources))]
         ushort? Sensitivity { get; }
@@ -1149,7 +1317,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-sensitivitytext">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(Properties.Resources))]
         string SensitivityText { get; }
@@ -1175,7 +1343,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-simplerating">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_SimpleRating), ResourceType = typeof(Properties.Resources))]
         uint? SimpleRating { get; }
@@ -1202,7 +1370,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-trademarks">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Trademarks), ResourceType = typeof(Properties.Resources))]
         string Trademarks { get; }
@@ -1229,14 +1397,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-software-productname">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ProductName), ResourceType = typeof(Properties.Resources))]
         string ProductName { get; }
     }
 
     /// <summary>Represents extended file properties for document files.</summary>
-    public interface TestIDocumentProperties
+    public interface IDocumentProperties
     {
         /// <summary>Gets the Client ID.</summary>
         /// <value>The Client ID.</value>
@@ -1260,7 +1428,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-clientid">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ClientID), ResourceType = typeof(Properties.Resources))]
         string ClientID { get; }
@@ -1286,7 +1454,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-contributor">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Contributor), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Contributor { get; }
@@ -1313,7 +1481,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-datecreated">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_DateCreated), ResourceType = typeof(Properties.Resources))]
         DateTime? DateCreated { get; }
@@ -1340,7 +1508,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-lastauthor">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LastAuthor), ResourceType = typeof(Properties.Resources))]
         string LastAuthor { get; }
@@ -1367,7 +1535,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-revisionnumber">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_RevisionNumber), ResourceType = typeof(Properties.Resources))]
         string RevisionNumber { get; }
@@ -1393,7 +1561,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-security">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Security), ResourceType = typeof(Properties.Resources))]
         int? Security { get; }
@@ -1420,7 +1588,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-division">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Division), ResourceType = typeof(Properties.Resources))]
         string Division { get; }
@@ -1447,7 +1615,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-documentid">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_DocumentID), ResourceType = typeof(Properties.Resources))]
         string DocumentID { get; }
@@ -1474,7 +1642,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-manager">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Manager), ResourceType = typeof(Properties.Resources))]
         string Manager { get; }
@@ -1501,7 +1669,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-presentationformat">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_PresentationFormat), ResourceType = typeof(Properties.Resources))]
         string PresentationFormat { get; }
@@ -1528,14 +1696,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-version">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Version), ResourceType = typeof(Properties.Resources))]
         string Version { get; }
     }
 
     /// <summary>Represents extended file properties for audio files.</summary>
-    public interface TestIAudioProperties
+    public interface IAudioProperties
     {
         /// <summary>Gets the Compression Method.</summary>
         /// <value>Indicates the audio compression used on the audio file.</value>
@@ -1559,7 +1727,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-compression">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         string Compression { get; }
@@ -1585,7 +1753,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-encodingbitrate">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_EncodingBitrate), ResourceType = typeof(Properties.Resources))]
         uint? EncodingBitrate { get; }
@@ -1612,7 +1780,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-format">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Format), ResourceType = typeof(Properties.Resources))]
         string Format { get; }
@@ -1639,7 +1807,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-isvariablebitrate">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsVariableBitrate), ResourceType = typeof(Properties.Resources))]
         bool? IsVariableBitrate { get; }
@@ -1665,7 +1833,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-samplerate">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_SampleRate), ResourceType = typeof(Properties.Resources))]
         uint? SampleRate { get; }
@@ -1691,7 +1859,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-samplesize">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_SampleSize), ResourceType = typeof(Properties.Resources))]
         uint? SampleSize { get; }
@@ -1718,7 +1886,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-streamname">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_StreamName), ResourceType = typeof(Properties.Resources))]
         string StreamName { get; }
@@ -1744,14 +1912,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-streamnumber">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_StreamNumber), ResourceType = typeof(Properties.Resources))]
         ushort? StreamNumber { get; }
     }
 
     /// <summary>Represents extended file properties for DRM information.</summary>
-    public interface TestIDRMProperties
+    public interface IDRMProperties
     {
         /// <summary>Indicates when play expires for digital rights management.</summary>
         /// <value>Indicates when play rights expire.</value>
@@ -1774,7 +1942,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-dateplayexpires">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayExpires), ResourceType = typeof(Properties.Resources))]
         DateTime? DatePlayExpires { get; }
@@ -1800,7 +1968,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-dateplaystarts">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayStarts), ResourceType = typeof(Properties.Resources))]
         DateTime? DatePlayStarts { get; }
@@ -1827,7 +1995,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-description">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Description), ResourceType = typeof(Properties.Resources))]
         string Description { get; }
@@ -1854,7 +2022,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-isprotected">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsProtected), ResourceType = typeof(Properties.Resources))]
         bool? IsProtected { get; }
@@ -1880,14 +2048,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-playcount">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_PlayCount), ResourceType = typeof(Properties.Resources))]
         uint? PlayCount { get; }
     }
 
     /// <summary>Represents extended file properties for GPS information.</summary>
-    public interface TestIGPSProperties
+    public interface IGPSProperties
     {
         /// <summary>Gets the name of the GPS area.</summary>
         /// <value>The name of the GPS area.</value>
@@ -1911,7 +2079,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-areainformation">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_AreaInformation), ResourceType = typeof(Properties.Resources))]
         string AreaInformation { get; }
@@ -1937,7 +2105,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudedegrees">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeDegrees), ResourceType = typeof(Properties.Resources))]
         double? LatitudeDegrees { get; }
@@ -1963,7 +2131,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudeminutes">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeMinutes), ResourceType = typeof(Properties.Resources))]
         double? LatitudeMinutes { get; }
@@ -1989,7 +2157,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitude">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeSeconds), ResourceType = typeof(Properties.Resources))]
         double? LatitudeSeconds { get; }
@@ -2016,7 +2184,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latituderef">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeRef), ResourceType = typeof(Properties.Resources))]
         string LatitudeRef { get; }
@@ -2043,7 +2211,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudedegrees">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeDegrees), ResourceType = typeof(Properties.Resources))]
         double? LongitudeDegrees { get; }
@@ -2070,7 +2238,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeminutes">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeMinutes), ResourceType = typeof(Properties.Resources))]
         double? LongitudeMinutes { get; }
@@ -2097,7 +2265,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeseconds">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeSeconds), ResourceType = typeof(Properties.Resources))]
         double? LongitudeSeconds { get; }
@@ -2124,7 +2292,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longituderef">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeRef), ResourceType = typeof(Properties.Resources))]
         string LongitudeRef { get; }
@@ -2151,7 +2319,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-measuremode">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_MeasureMode), ResourceType = typeof(Properties.Resources))]
         string MeasureMode { get; }
@@ -2178,7 +2346,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-processingmethod">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ProcessingMethod), ResourceType = typeof(Properties.Resources))]
         string ProcessingMethod { get; }
@@ -2204,14 +2372,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-versionid">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_VersionID), ResourceType = typeof(Properties.Resources))]
-        byte[] VersionID { get; }
+        ByteValues VersionID { get; }
     }
 
     /// <summary>Represents extended file properties for image files.</summary>
-    public interface TestIImageProperties
+    public interface IImageProperties
     {
         /// <summary>Gets the Bit Depth.</summary>
         /// <value>Indicates how many bits are used in each pixel of the image.</value>
@@ -2235,7 +2403,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-bitdepth">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_BitDepth), ResourceType = typeof(Properties.Resources))]
         uint? BitDepth { get; }
@@ -2262,7 +2430,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-colorspace">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ColorSpace), ResourceType = typeof(Properties.Resources))]
         ushort? ColorSpace { get; }
@@ -2289,7 +2457,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compressedbitsperpixel">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_CompressedBitsPerPixel), ResourceType = typeof(Properties.Resources))]
         double? CompressedBitsPerPixel { get; }
@@ -2315,7 +2483,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compression">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         ushort? Compression { get; }
@@ -2342,7 +2510,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compressiontext">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         string CompressionText { get; }
@@ -2368,7 +2536,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-horizontalresolution">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalResolution), ResourceType = typeof(Properties.Resources))]
         double? HorizontalResolution { get; }
@@ -2394,7 +2562,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-horizontalsize">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalSize), ResourceType = typeof(Properties.Resources))]
         uint? HorizontalSize { get; }
@@ -2421,7 +2589,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-imageid">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ImageID), ResourceType = typeof(Properties.Resources))]
         string ImageID { get; }
@@ -2448,7 +2616,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-resolutionunit">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ResolutionUnit), ResourceType = typeof(Properties.Resources))]
         short? ResolutionUnit { get; }
@@ -2474,7 +2642,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-verticalresolution">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_VerticalResolution), ResourceType = typeof(Properties.Resources))]
         double? VerticalResolution { get; }
@@ -2500,14 +2668,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-verticalsize">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_VerticalSize), ResourceType = typeof(Properties.Resources))]
         uint? VerticalSize { get; }
     }
 
     /// <summary>Represents extended file properties for media files.</summary>
-    public interface TestIMediaProperties
+    public interface IMediaProperties
     {
         /// <summary>Gets the Content Distributor.</summary>
         /// <value>The Content Distributor.</value>
@@ -2531,7 +2699,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-contentdistributor">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ContentDistributor), ResourceType = typeof(Properties.Resources))]
         string ContentDistributor { get; }
@@ -2558,7 +2726,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplication">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_CreatorApplication), ResourceType = typeof(Properties.Resources))]
         string CreatorApplication { get; }
@@ -2585,7 +2753,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplicationversion">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_CreatorApplicationVersion), ResourceType = typeof(Properties.Resources))]
         string CreatorApplicationVersion { get; }
@@ -2612,7 +2780,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-datereleased">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_DateReleased), ResourceType = typeof(Properties.Resources))]
         string DateReleased { get; }
@@ -2638,7 +2806,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-duration">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Duration), ResourceType = typeof(Properties.Resources))]
         ulong? Duration { get; }
@@ -2665,7 +2833,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-dvdid">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_DVDID), ResourceType = typeof(Properties.Resources))]
         string DVDID { get; }
@@ -2691,7 +2859,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-framecount">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_FrameCount), ResourceType = typeof(Properties.Resources))]
         uint? FrameCount { get; }
@@ -2718,7 +2886,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-producer">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Producer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Producer { get; }
@@ -2745,7 +2913,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-protectiontype">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ProtectionType), ResourceType = typeof(Properties.Resources))]
         string ProtectionType { get; }
@@ -2772,7 +2940,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerrating">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ProviderRating), ResourceType = typeof(Properties.Resources))]
         string ProviderRating { get; }
@@ -2799,7 +2967,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerstyle">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ProviderStyle), ResourceType = typeof(Properties.Resources))]
         string ProviderStyle { get; }
@@ -2826,7 +2994,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-publisher">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Publisher), ResourceType = typeof(Properties.Resources))]
         string Publisher { get; }
@@ -2853,7 +3021,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-subtitle">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Subtitle), ResourceType = typeof(Properties.Resources))]
         string Subtitle { get; }
@@ -2880,7 +3048,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-writer">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Writer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Writer { get; }
@@ -2907,14 +3075,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-year">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Year), ResourceType = typeof(Properties.Resources))]
         uint? Year { get; }
     }
 
     /// <summary>Represents extended file properties for music files.</summary>
-    public interface TestIMusicProperties
+    public interface IMusicProperties
     {
         /// <summary>Gets the Album Artist.</summary>
         /// <value>The Album Artist</value>
@@ -2938,7 +3106,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumartist">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_AlbumArtist), ResourceType = typeof(Properties.Resources))]
         string AlbumArtist { get; }
@@ -2965,7 +3133,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumtitle">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_AlbumTitle), ResourceType = typeof(Properties.Resources))]
         string AlbumTitle { get; }
@@ -2991,7 +3159,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Artist), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Artist { get; }
@@ -3017,7 +3185,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ChannelCount), ResourceType = typeof(Properties.Resources))]
         uint? ChannelCount { get; }
@@ -3043,7 +3211,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-composer">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Composer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Composer { get; }
@@ -3069,7 +3237,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-conductor">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Conductor), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Conductor { get; }
@@ -3096,7 +3264,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-displayartist">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_DisplayArtist), ResourceType = typeof(Properties.Resources))]
         string DisplayArtist { get; }
@@ -3122,7 +3290,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-genre">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Genre), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Genre { get; }
@@ -3149,7 +3317,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-partofset">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_PartOfSet), ResourceType = typeof(Properties.Resources))]
         string PartOfSet { get; }
@@ -3176,7 +3344,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-period">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Period), ResourceType = typeof(Properties.Resources))]
         string Period { get; }
@@ -3202,14 +3370,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-tracknumber">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_TrackNumber), ResourceType = typeof(Properties.Resources))]
         uint? TrackNumber { get; }
     }
 
     /// <summary>Represents extended file properties for photo files.</summary>
-    public interface TestIPhotoProperties
+    public interface IPhotoProperties
     {
         /// <summary>Gets the Camera Manufacturer.</summary>
         /// <value>The manufacturer name of the camera that took the photo, in a string format.</value>
@@ -3233,7 +3401,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-cameramanufacturer">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_CameraManufacturer), ResourceType = typeof(Properties.Resources))]
         string CameraManufacturer { get; }
@@ -3260,7 +3428,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-cameramodel">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_CameraModel), ResourceType = typeof(Properties.Resources))]
         string CameraModel { get; }
@@ -3286,7 +3454,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-datetaken">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_DateTaken), ResourceType = typeof(Properties.Resources))]
         DateTime? DateTaken { get; }
@@ -3313,7 +3481,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-event">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Event), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Event { get; }
@@ -3340,7 +3508,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-exifversion">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_EXIFVersion), ResourceType = typeof(Properties.Resources))]
         string EXIFVersion { get; }
@@ -3366,7 +3534,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-orientation">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Orientation), ResourceType = typeof(Properties.Resources))]
         ushort? Orientation { get; }
@@ -3393,7 +3561,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-orientationtext">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Orientation), ResourceType = typeof(Properties.Resources))]
         string OrientationText { get; }
@@ -3419,14 +3587,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-peoplenames">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_PeopleNames), ResourceType = typeof(Properties.Resources))]
         MultiStringValue PeopleNames { get; }
     }
 
     /// <summary>Represents extended file properties for recorded TV files.</summary>
-    public interface TestIRecordedTVProperties
+    public interface IRecordedTVProperties
     {
         /// <summary>Gets the Channel Number.</summary>
         /// <value>Example: 42 The recorded TV channels.</value>
@@ -3450,7 +3618,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-channelnumber">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ChannelNumber), ResourceType = typeof(Properties.Resources))]
         uint? ChannelNumber { get; }
@@ -3477,7 +3645,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-episodename">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_EpisodeName), ResourceType = typeof(Properties.Resources))]
         string EpisodeName { get; }
@@ -3504,7 +3672,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-isdtvcontent">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsDTVContent), ResourceType = typeof(Properties.Resources))]
         bool? IsDTVContent { get; }
@@ -3531,7 +3699,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-ishdcontent">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsHDContent), ResourceType = typeof(Properties.Resources))]
         bool? IsHDContent { get; }
@@ -3558,7 +3726,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-networkaffiliation">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_NetworkAffiliation), ResourceType = typeof(Properties.Resources))]
         string NetworkAffiliation { get; }
@@ -3584,7 +3752,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-originalbroadcastdate">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_OriginalBroadcastDate), ResourceType = typeof(Properties.Resources))]
         DateTime? OriginalBroadcastDate { get; }
@@ -3611,7 +3779,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-programdescription">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_ProgramDescription), ResourceType = typeof(Properties.Resources))]
         string ProgramDescription { get; }
@@ -3638,7 +3806,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationcallsign">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_StationCallSign), ResourceType = typeof(Properties.Resources))]
         string StationCallSign { get; }
@@ -3665,14 +3833,14 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationname">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_StationName), ResourceType = typeof(Properties.Resources))]
         string StationName { get; }
     }
 
     /// <summary>Represents extended file properties for video files.</summary>
-    public interface TestIVideoProperties
+    public interface IVideoProperties
     {
         /// <summary>Indicates the level of compression for the video stream.</summary>
         /// <value>Specifies the video compression format.</value>
@@ -3696,7 +3864,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-compression">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         string Compression { get; }
@@ -3722,7 +3890,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-director">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Director), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Director { get; }
@@ -3749,7 +3917,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-encodingbitrate">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_EncodingBitrate), ResourceType = typeof(Properties.Resources))]
         uint? EncodingBitrate { get; }
@@ -3775,7 +3943,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-frameheight">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_FrameHeight), ResourceType = typeof(Properties.Resources))]
         uint? FrameHeight { get; }
@@ -3801,7 +3969,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-framerate">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_FrameRate), ResourceType = typeof(Properties.Resources))]
         uint? FrameRate { get; }
@@ -3827,7 +3995,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-framewidth">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_FrameWidth), ResourceType = typeof(Properties.Resources))]
         uint? FrameWidth { get; }
@@ -3854,7 +4022,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-horizontalaspectratio">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalAspectRatio), ResourceType = typeof(Properties.Resources))]
         uint? HorizontalAspectRatio { get; }
@@ -3880,7 +4048,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamnumber">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_StreamNumber), ResourceType = typeof(Properties.Resources))]
         ushort? StreamNumber { get; }
@@ -3907,7 +4075,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamname">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_StreamName), ResourceType = typeof(Properties.Resources))]
         string StreamName { get; }
@@ -3934,7 +4102,7 @@ namespace FsInfoCat
         ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-verticalaspectratio">[Reference Link]</a>
         ///         </description>
         ///     </item>
-        /// </list>.
+        /// </list>
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_VerticalAspectRatio), ResourceType = typeof(Properties.Resources))]
         uint? VerticalAspectRatio { get; }
@@ -3942,9 +4110,9 @@ namespace FsInfoCat
 
     /// <summary>Base interface for entities that represent a grouping of extended file properties.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIPropertySet : IDbEntity
+    public interface IPropertySet : IDbEntity
     {
-        /// <summary>Gets or sets the primary key value.</summary>
+        /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
@@ -3958,155 +4126,155 @@ namespace FsInfoCat
     /// <summary>Interface for database objects that contain extended file summary property values.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="ISummaryProperties" />
-    public interface TestISummaryPropertySet : IPropertySet, ISummaryProperties
+    public interface ISummaryPropertySet : IPropertySet, ISummaryProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file property values of document files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IDocumentProperties" />
-    public interface TestIDocumentPropertySet : IPropertySet, IDocumentProperties
+    public interface IDocumentPropertySet : IPropertySet, IDocumentProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file property values of audio files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IAudioProperties" />
-    public interface TestIAudioPropertySet : IPropertySet, IAudioProperties
+    public interface IAudioPropertySet : IPropertySet, IAudioProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file DRM property values.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IDRMProperties" />
-    public interface TestIDRMPropertySet : IPropertySet, IDRMProperties
+    public interface IDRMPropertySet : IPropertySet, IDRMProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file GPS property values.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IGPSProperties" />
-    public interface TestIGPSPropertySet : IPropertySet, IGPSProperties
+    public interface IGPSPropertySet : IPropertySet, IGPSProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file property values of image files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IImageProperties" />
-    public interface TestIImagePropertySet : IPropertySet, IImageProperties
+    public interface IImagePropertySet : IPropertySet, IImageProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file property values of media files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IMediaProperties" />
-    public interface TestIMediaPropertySet : IPropertySet, IMediaProperties
+    public interface IMediaPropertySet : IPropertySet, IMediaProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file property values of music files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IMusicProperties" />
-    public interface TestIMusicPropertySet : IPropertySet, IMusicProperties
+    public interface IMusicPropertySet : IPropertySet, IMusicProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file property values of photo files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IPhotoProperties" />
-    public interface TestIPhotoPropertySet : IPropertySet, IPhotoProperties
+    public interface IPhotoPropertySet : IPropertySet, IPhotoProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file property values of recorded TV files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IRecordedTVProperties" />
-    public interface TestIRecordedTVPropertySet : IPropertySet, IRecordedTVProperties
+    public interface IRecordedTVPropertySet : IPropertySet, IRecordedTVProperties
     {
     }
 
     /// <summary>Interface for database objects that contain extended file property values of video files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IVideoProperties" />
-    public interface TestIVideoPropertySet : IPropertySet, IVideoProperties
+    public interface IVideoPropertySet : IPropertySet, IVideoProperties
     {
     }
 
     /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="IDbFsItem" />
-    public interface TestIFile : IDbFsItem
+    public interface IFile : IDbFsItem
     {
-        /// <summary>Gets or sets the visibility and crawl options for the current file.</summary>
+        /// <summary>Gets the visibility and crawl options for the current file.</summary>
         /// <value>A <see cref="FileCrawlOptions" /> value that contains the crawl options for the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Options), ResourceType = typeof(Properties.Resources))]
         FileCrawlOptions Options { get; }
 
-        /// <summary>Gets or sets the correlative status of the current file.</summary>
+        /// <summary>Gets the correlative status of the current file.</summary>
         /// <value>A <see cref="FileCorrelationStatus" /> value that indicates the file's correlation status.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         FileCorrelationStatus Status { get; }
 
-        /// <summary>Gets or sets the date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file.</summary>
+        /// <summary>Gets the date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file.</summary>
         /// <value>The date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file or <see langword="null" /> if no <see cref="MD5Hash">MD5 hash</see> has been calculated, yet.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_LastHashCalculation), ResourceType = typeof(Properties.Resources))]
         DateTime? LastHashCalculation { get; }
 
-        /// <summary>Gets or sets the binary properties for the current file.</summary>
+        /// <summary>Gets the binary properties for the current file.</summary>
         /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
         IBinaryPropertySet BinaryProperties { get; }
 
-        /// <summary>Gets or sets the summary properties for the current file.</summary>
+        /// <summary>Gets the summary properties for the current file.</summary>
         /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(Properties.Resources))]
         ISummaryPropertySet SummaryProperties { get; }
 
-        /// <summary>Gets or sets the document properties for the current file.</summary>
+        /// <summary>Gets the document properties for the current file.</summary>
         /// <value>The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DocumentProperties), ResourceType = typeof(Properties.Resources))]
         IDocumentPropertySet DocumentProperties { get; }
 
-        /// <summary>Gets or sets the audio properties for the current file.</summary>
+        /// <summary>Gets the audio properties for the current file.</summary>
         /// <value>The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AudioProperties), ResourceType = typeof(Properties.Resources))]
         IAudioPropertySet AudioProperties { get; }
 
-        /// <summary>Gets or sets the DRM properties for the current file.</summary>
+        /// <summary>Gets the DRM properties for the current file.</summary>
         /// <value>The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DRMProperties), ResourceType = typeof(Properties.Resources))]
         IDRMPropertySet DRMProperties { get; }
 
-        /// <summary>Gets or sets the GPS properties for the current file.</summary>
+        /// <summary>Gets the GPS properties for the current file.</summary>
         /// <value>The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_GPSProperties), ResourceType = typeof(Properties.Resources))]
         IGPSPropertySet GPSProperties { get; }
 
-        /// <summary>Gets or sets the image properties for the current file.</summary>
+        /// <summary>Gets the image properties for the current file.</summary>
         /// <value>The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ImageProperties), ResourceType = typeof(Properties.Resources))]
         IImagePropertySet ImageProperties { get; }
 
-        /// <summary>Gets or sets the media properties for the current file.</summary>
+        /// <summary>Gets the media properties for the current file.</summary>
         /// <value>The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MediaProperties), ResourceType = typeof(Properties.Resources))]
         IMediaPropertySet MediaProperties { get; }
 
-        /// <summary>Gets or sets the music properties for the current file.</summary>
+        /// <summary>Gets the music properties for the current file.</summary>
         /// <value>The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MusicProperties), ResourceType = typeof(Properties.Resources))]
         IMusicPropertySet MusicProperties { get; }
 
-        /// <summary>Gets or sets the photo properties for the current file.</summary>
+        /// <summary>Gets the photo properties for the current file.</summary>
         /// <value>The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(Properties.Resources))]
         IPhotoPropertySet PhotoProperties { get; }
 
-        /// <summary>Gets or sets the recorded tv properties for the current file.</summary>
+        /// <summary>Gets the recorded tv properties for the current file.</summary>
         /// <value>The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_RecordedTVProperties), ResourceType = typeof(Properties.Resources))]
         IRecordedTVPropertySet RecordedTVProperties { get; }
 
-        /// <summary>Gets or sets the video properties for the current file.</summary>
+        /// <summary>Gets the video properties for the current file.</summary>
         /// <value>The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_VideoProperties), ResourceType = typeof(Properties.Resources))]
         IVideoPropertySet VideoProperties { get; }
@@ -4132,14 +4300,14 @@ namespace FsInfoCat
         /// <summary>Gets the access errors that occurred while trying to open or read from the current file.</summary>
         /// <value>The access errors that occurred while trying to open or read from the current file.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
-        new IEnumerable<IFileAccessError> AccessErrors { get; }
+        IEnumerable<IFileAccessError> AccessErrors { get; }
     }
 
     /// <summary>Generic interface for file access error entities.</summary>
     /// <seealso cref="IAccessError{IFile}" />
-    public interface TestIFileAccessError : IAccessError<IFile>
+    public interface IFileAccessError : IAccessError<IFile>
     {
-        /// <summary>Gets or sets the target file to which the access error applies.</summary>
+        /// <summary>Gets the target file to which the access error applies.</summary>
         /// <value>The <typeparamref name="IFile" /> entity that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         new IFile Target { get; }
@@ -4147,24 +4315,24 @@ namespace FsInfoCat
 
     /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIRedundantSet : IDbEntity
+    public interface IRedundantSet : IDbEntity
     {
-        /// <summary>Gets or sets the primary key value.</summary>
+        /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
 
-        /// <summary>Gets or sets the custom reference value.</summary>
+        /// <summary>Gets the custom reference value.</summary>
         /// <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Reference), ResourceType = typeof(Properties.Resources))]
         string Reference { get; }
 
-        /// <summary>Gets or sets custom notes to be associated with the current set of redunant files.</summary>
+        /// <summary>Gets custom notes to be associated with the current set of redunant files.</summary>
         /// <value>The custom notes to associate with the current set of redunant files.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        /// <summary>Gets or sets the binary properties in common with all files in the current redundant set.</summary>
+        /// <summary>Gets the binary properties in common with all files in the current redundant set.</summary>
         /// <value>The binary properties in common with all files in the current redundant set.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
         IBinaryPropertySet BinaryProperties { get; }
@@ -4177,19 +4345,19 @@ namespace FsInfoCat
 
     /// <summary>.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIRedundancy : IDbEntity
+    public interface IRedundancy : IDbEntity
     {
-        /// <summary>Gets or sets the custom reference value.</summary>
+        /// <summary>Gets the custom reference value.</summary>
         /// <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Reference), ResourceType = typeof(Properties.Resources))]
         string Reference { get; }
 
-        /// <summary>Gets or sets custom notes to be associated with the current redundancy.</summary>
+        /// <summary>Gets custom notes to be associated with the current redundancy.</summary>
         /// <value>The custom notes to associate with the current redundancy.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        /// <summary>Gets or sets the primary key of the file in the that belongs to the redundancy set.</summary>
+        /// <summary>Gets the primary key of the file in the that belongs to the redundancy set.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IRedundancy.File" /><see cref="IFile">entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileId), ResourceType = typeof(Properties.Resources))]
@@ -4200,7 +4368,7 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_File), ResourceType = typeof(Properties.Resources))]
         IFile File { get; }
 
-        /// <summary>Gets or sets the primary key of the redundancy set file belongs to.</summary>
+        /// <summary>Gets the primary key of the redundancy set file belongs to.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IRedundancy.RedundantSet" /><see cref="IRedundantSet">entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSetId), ResourceType = typeof(Properties.Resources))]
@@ -4214,39 +4382,493 @@ namespace FsInfoCat
 
     /// <summary>The results of a byte-for-byte comparison of 2 files.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface TestIComparison : IDbEntity
+    public interface IComparison : IDbEntity
     {
-        /// <summary>Gets or sets a value indicating whether the <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte.</summary>
+        /// <summary>Gets a value indicating whether the <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte.</summary>
         /// <value><see langword="true" /> if <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AreEqual), ResourceType = typeof(Properties.Resources))]
         bool AreEqual { get; }
 
-        /// <summary>Gets or sets the date and time when the files were compared.</summary>
+        /// <summary>Gets the date and time when the files were compared.</summary>
         /// <value>The date and time when <see cref="IComparison.Baseline" /> was compared to <see cref="IComparison.Correlative" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ComparedOn), ResourceType = typeof(Properties.Resources))]
         DateTime ComparedOn { get; }
 
-        /// <summary>Gets or sets the primary key of the baseline file in the comparison.</summary>
+        /// <summary>Gets the primary key of the baseline file in the comparison.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Baseline" /><see cref="IFile">file entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_BaselineId), ResourceType = typeof(Properties.Resources))]
         Guid BaselineId { get; }
 
-        /// <summary>Gets or sets the baseline file in the comparison.</summary>
+        /// <summary>Gets the baseline file in the comparison.</summary>
         /// <value>The generic <see cref="IFile" /> that represents the baseline file in the comparison.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Baseline), ResourceType = typeof(Properties.Resources))]
         IFile Baseline { get; }
 
-        /// <summary>Gets or sets the primary key of the correlative file in the comparison.</summary>
+        /// <summary>Gets the primary key of the correlative file in the comparison.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Correlative" /><see cref="IFile">file entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_CorrelativeId), ResourceType = typeof(Properties.Resources))]
         Guid CorrelativeId { get; }
 
-        /// <summary>Gets or sets the correlative file in the comparison.</summary>
+        /// <summary>Gets the correlative file in the comparison.</summary>
         /// <value>The generic <see cref="IFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
         IFile Correlative { get; }
+    }
+}
+
+namespace FsInfoCat.Local
+{
+    /// <summary>Base interface for all database entity objects for the database which is hosted on the local machine.</summary>
+    /// <seealso cref="IDbEntity" />
+    public interface ILocalDbEntity : IDbEntity
+    {
+        /// <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
+        /// <value>
+        /// The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+        /// otherwise, <see langword="null" /> if there is no corresponding entity.
+        /// </value>
+        /// <remarks>
+        /// If this value is <see langword="null" />, then <see cref="LastSynchronizedOn" /> should also be <see langword="null" />.
+        /// Likewise, if this is not <see langword="null" />, then <see cref="LastSynchronizedOn" /> should not be <see langword="null" />, either.
+        /// </remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(Properties.Resources))]
+        Guid? UpstreamId { get; }
+
+        /// <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
+        /// <value>
+        /// The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+        /// otherwise, <see langword="null" /> if there is no corresponding entity.
+        /// </value>
+        /// <remarks>
+        /// If this value is <see langword="null" />, then <see cref="LastSynchronizedOn" /> should also be <see langword="null" />.
+        /// Likewise, if this is not <see langword="null" />, then <see cref="LastSynchronizedOn" /> should not be <see langword="null" />, either.
+        /// </remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
+        DateTime? LastSynchronizedOn { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IAccessError{ILocalDbEntity}" />
+    /// <seealso cref="IDbEntity" />
+    public interface ILocalAccessError : IAccessError<ILocalDbEntity>, IDbEntity
+    {
+        /// <summary>Gets the target entity to which the access error applies.</summary>
+        /// <value>The <see cref="ILocalDbEntity" /> object that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new ILocalDbEntity Target { get; }
+    }
+
+    /// <summary>Interface for entities which represent a specific file system type.</summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IFileSystem" />
+    public interface ILocalFileSystem : ILocalDbEntity, IFileSystem
+    {
+        /// <summary>Gets the volumes that share this file system type.</summary>
+        /// <value>The volumes that share this file system type.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Volumes), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalVolume> Volumes { get; }
+
+        /// <summary>Gets the symbolic names for the current file system type.</summary>
+        /// <value>The symbolic names that are used to identify the current file system type.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalSymbolicName> SymbolicNames { get; }
+    }
+
+    /// <summary>Interface for entities that represent a symbolic name for a file system type.</summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ISymbolicName" />
+    public interface ILocalSymbolicName : ILocalDbEntity, ISymbolicName
+    {
+        /// <summary>Gets the file system that this symbolic name refers to.</summary>
+        /// <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
+        new ILocalFileSystem FileSystem { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IVolume" />
+    public interface ILocalVolume : ILocalDbEntity, IVolume
+    {
+        /// <summary>Gets the root directory of this volume.</summary>
+        /// <value>The root directory of this volume.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(Properties.Resources))]
+        new ILocalSubdirectory RootDirectory { get; }
+
+        /// <summary>Gets the file system type.</summary>
+        /// <value>The file system type for this volume.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
+        new ILocalFileSystem FileSystem { get; }
+
+        /// <summary>Gets the access errors for this volume.</summary>
+        /// <value>The access errors that occurred while trying to access this volume.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalVolumeAccessError> AccessErrors { get; }
+    }
+
+    /// <summary>Generic interface for volume access error entities.</summary>
+    /// <seealso cref="ILocalAccessError" />
+    /// <seealso cref="IVolumeAccessError" />
+    /// <seealso cref="IAccessError{ILocalVolume}" />
+    public interface ILocalVolumeAccessError : ILocalAccessError, IVolumeAccessError, IAccessError<ILocalVolume>
+    {
+        /// <summary>Gets the target volume to which the access error applies.</summary>
+        /// <value>The <typeparamref name="ILocalVolume" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new ILocalVolume Target { get; }
+    }
+
+    /// <summary>Specifies the configuration of a file system crawl.</summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ICrawlConfiguration" />
+    public interface ILocalCrawlConfiguration : ILocalDbEntity, ICrawlConfiguration
+    {
+        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
+        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
+        new ILocalSubdirectory Root { get; }
+
+        /// <summary>Gets the crawl log entries.</summary>
+        /// <value>The crawl log entries.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalCrawlJobLog> Logs { get; }
+    }
+
+    /// <summary>Log of crawl job results.</summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ICrawlJobLog" />
+    public interface ILocalCrawlJobLog : ILocalDbEntity, ICrawlJobLog
+    {
+        /// <summary>Gets the configuration source for the file system crawl.</summary>
+        /// <value>The configuration for the file system crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
+        new ILocalCrawlConfiguration Configuration { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IDbFsItem" />
+    public interface ILocalDbFsItem : ILocalDbEntity, IDbFsItem
+    {
+        /// <summary>Gets the parent subdirectory.</summary>
+        /// <value>The parent <see cref="ILocalSubdirectory" /> or <see langword="null" /> if this is the root <see cref="ILocalSubdirectory" />.</value>
+        /// <remarks>
+        /// If the current entity is a <see cref="ILocalSubdirectory" /> and this is <see langword="null" />,
+        /// then <see cref="ILocalSubdirectory.Volume" /> should not be <see langword="null" />, and vice-versa;
+        /// otherwise, if the current entity is a <see cref="ILocalFile" />, then this should never be <see langword="null" />.
+        /// </remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]
+        new ILocalSubdirectory Parent { get; }
+
+        /// <summary>Gets the access errors that occurred while attempting to access the current file system item.</summary>
+        /// <value>The access errors that occurred while attempting to access the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<ILocalAccessError> AccessErrors { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbFsItem" />
+    /// <seealso cref="ISubdirectory" />
+    public interface ILocalSubdirectory : ILocalDbFsItem, ISubdirectory
+    {
+        /// <summary>Gets the parent volume.</summary>
+        /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
+        /// <remarks>If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.</remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Volume), ResourceType = typeof(Properties.Resources))]
+        new ILocalVolume Volume { get; }
+
+        /// <summary>Gets the crawl configuration that starts with the current subdirectory.</summary>
+        /// <value>The crawl configuration that starts with the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(Properties.Resources))]
+        new ILocalCrawlConfiguration CrawlConfiguration { get; }
+
+        /// <summary>Gets the files directly contained within this subdirectory.</summary>
+        /// <value>The files directly contained within this subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalFile> Files { get; }
+
+        /// <summary>Gets the nested subdirectories directly contained within this subdirectory.</summary>
+        /// <value>The nested subdirectories directly contained within this subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SubDirectories), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalSubdirectory> SubDirectories { get; }
+
+        /// <summary>Gets the access errors that occurred while attempting to access the current subdirectory.</summary>
+        /// <value>The access errors that occurred while attempting to access the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalSubdirectoryAccessError> AccessErrors { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalAccessError" />
+    /// <seealso cref="ISubdirectoryAccessError" />
+    /// <seealso cref="IAccessError{ILocalSubdirectory}" />
+    public interface ILocalSubdirectoryAccessError : ILocalAccessError, ISubdirectoryAccessError, IAccessError<ILocalSubdirectory>
+    {
+        /// <summary>Gets the target subdirectory to which the access error applies.</summary>
+        /// <value>The <typeparamref name="ISubdirectory" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new ILocalSubdirectory Target { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IBinaryPropertySet" />
+    public interface ILocalBinaryPropertySet : ILocalDbEntity, IBinaryPropertySet
+    {
+        /// <summary>Gets the files which have the same length and cryptographic hash.</summary>
+        /// <value>The files which have the same length and cryptographic hash..</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalFile> Files { get; }
+
+        /// <summary>Gets the sets of files which were determined to be duplicates.</summary>
+        /// <value>The sets of files which were determined to be duplicates.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalRedundantSet> RedundantSets { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IPropertySet" />
+    public interface ILocalPropertySet : ILocalDbEntity, IPropertySet
+    {
+        /// <summary>Gets the files that share the same property values as this property set.</summary>
+        /// <value>The <see cref="IFile">files</see> that share the same property values as this property set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalFile> Files { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="ISummaryPropertySet" />
+    public interface ILocalSummaryPropertySet : ILocalPropertySet, ISummaryPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IDocumentPropertySet" />
+    public interface ILocalDocumentPropertySet : ILocalPropertySet, IDocumentPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IAudioPropertySet" />
+    public interface ILocalAudioPropertySet : ILocalPropertySet, IAudioPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IDRMPropertySet" />
+    public interface ILocalDRMPropertySet : ILocalPropertySet, IDRMPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IGPSPropertySet" />
+    public interface ILocalGPSPropertySet : ILocalPropertySet, IGPSPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IImagePropertySet" />
+    public interface ILocalImagePropertySet : ILocalPropertySet, IImagePropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IMediaPropertySet" />
+    public interface ILocalMediaPropertySet : ILocalPropertySet, IMediaPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IMusicPropertySet" />
+    public interface ILocalMusicPropertySet : ILocalPropertySet, IMusicPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IPhotoPropertySet" />
+    public interface ILocalPhotoPropertySet : ILocalPropertySet, IPhotoPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IRecordedTVPropertySet" />
+    public interface ILocalRecordedTVPropertySet : ILocalPropertySet, IRecordedTVPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalPropertySet" />
+    /// <seealso cref="IVideoPropertySet" />
+    public interface ILocalVideoPropertySet : ILocalPropertySet, IVideoPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IRedundantSet" />
+    public interface ILocalRedundantSet : ILocalDbEntity, IRedundantSet
+    {
+        /// <summary>Gets the binary properties in common with all files in the current redundant set.</summary>
+        /// <value>The binary properties in common with all files in the current redundant set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalBinaryPropertySet BinaryProperties { get; }
+
+        /// <summary>Gets the redundancy entities which represent links to redundant files.</summary>
+        /// <value>The redundancy entities which represent links to redundant files.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalRedundancy> Redundancies { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbFsItem" />
+    /// <seealso cref="IFile" />
+    public interface ILocalFile : ILocalDbFsItem, IFile
+    {
+        /// <summary>Gets the binary properties for the current file.</summary>
+        /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalBinaryPropertySet BinaryProperties { get; }
+
+        /// <summary>Gets the summary properties for the current file.</summary>
+        /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalSummaryPropertySet SummaryProperties { get; }
+
+        /// <summary>Gets the document properties for the current file.</summary>
+        /// <value>The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DocumentProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalDocumentPropertySet DocumentProperties { get; }
+
+        /// <summary>Gets the audio properties for the current file.</summary>
+        /// <value>The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AudioProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalAudioPropertySet AudioProperties { get; }
+
+        /// <summary>Gets the DRM properties for the current file.</summary>
+        /// <value>The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DRMProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalDRMPropertySet DRMProperties { get; }
+
+        /// <summary>Gets the GPS properties for the current file.</summary>
+        /// <value>The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_GPSProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalGPSPropertySet GPSProperties { get; }
+
+        /// <summary>Gets the image properties for the current file.</summary>
+        /// <value>The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_ImageProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalImagePropertySet ImageProperties { get; }
+
+        /// <summary>Gets the media properties for the current file.</summary>
+        /// <value>The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_MediaProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalMediaPropertySet MediaProperties { get; }
+
+        /// <summary>Gets the music properties for the current file.</summary>
+        /// <value>The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_MusicProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalMusicPropertySet MusicProperties { get; }
+
+        /// <summary>Gets the photo properties for the current file.</summary>
+        /// <value>The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalPhotoPropertySet PhotoProperties { get; }
+
+        /// <summary>Gets the recorded tv properties for the current file.</summary>
+        /// <value>The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RecordedTVProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalRecordedTVPropertySet RecordedTVProperties { get; }
+
+        /// <summary>Gets the video properties for the current file.</summary>
+        /// <value>The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_VideoProperties), ResourceType = typeof(Properties.Resources))]
+        new ILocalVideoPropertySet VideoProperties { get; }
+
+        /// <summary>Gets the redundancy item that indicates the membership of a collection of redundant files.</summary>
+        /// <value>
+        /// A <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
+        /// or <see langword="null" /> if this file has not been identified as being redundant with any other.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Redundancy), ResourceType = typeof(Properties.Resources))]
+        new ILocalRedundancy Redundancy { get; }
+
+        /// <summary>Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.</summary>
+        /// <value>The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_BaselineComparisons), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalComparison> BaselineComparisons { get; }
+
+        /// <summary>Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.</summary>
+        /// <value>The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CorrelativeComparisons), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalComparison> CorrelativeComparisons { get; }
+
+        /// <summary>Gets the access errors that occurred while trying to open or read from the current file.</summary>
+        /// <value>The access errors that occurred while trying to open or read from the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalFileAccessError> AccessErrors { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IRedundancy" />
+    public interface ILocalRedundancy : ILocalDbEntity, IRedundancy
+    {
+        /// <summary>Gets the file that belongs to the redundancy set.</summary>
+        /// <value>The file that belongs to the redundancy set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_File), ResourceType = typeof(Properties.Resources))]
+        new ILocalFile File { get; }
+
+        /// <summary>Gets the redundancy set.</summary>
+        /// <value>The redundancy set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(Properties.Resources))]
+        new ILocalRedundantSet RedundantSet { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IComparison" />
+    public interface ILocalComparison : ILocalDbEntity, IComparison
+    {
+        /// <summary>Gets the baseline file in the comparison.</summary>
+        /// <value>The generic <see cref="ILocalFile" /> that represents the baseline file in the comparison.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Baseline), ResourceType = typeof(Properties.Resources))]
+        new ILocalFile Baseline { get; }
+
+        /// <summary>Gets the primary key of the correlative file in the comparison.</summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalComparison.Correlative" /><see cref="ILocalFile">file entity</see>.</value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CorrelativeId), ResourceType = typeof(Properties.Resources))]
+        new Guid CorrelativeId { get; }
+
+        /// <summary>Gets the correlative file in the comparison.</summary>
+        /// <value>The generic <see cref="ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
+        new ILocalFile Correlative { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="ILocalAccessError" />
+    /// <seealso cref="IFileAccessError" />
+    /// <seealso cref="IAccessError{ILocalFile}" />
+    public interface ILocalFileAccessError : ILocalAccessError, IFileAccessError, IAccessError<ILocalFile>
+    {
+        /// <summary>Gets the target file to which the access error applies.</summary>
+        /// <value>The <typeparamref name="ILocalFile" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new ILocalFile Target { get; }
     }
 }
 

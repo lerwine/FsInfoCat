@@ -2,6 +2,30 @@
 <EntityDefinitions xsi:noNamespaceSchemaLocation="EntityDefinitions.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Root>
         <EnumTypes>
+            <Int Name="ErrorCode">
+                <summary>Values for application error codes.</summary>
+                <Field Name="Unexpected" Value="0" DisplayNameResource="DisplayName_UnexpectedError" DescriptionResource="ErrorMessage_UnexpectedError" FullName="ErrorCode.Unexpected">
+                    <summary>An unexpected error has occurred.</summary>
+                </Field>
+                <Field Name="IOError" Value="1" DisplayNameResource="DisplayName_IOError" DescriptionResource="ErrorMessage_IOError" FullName="ErrorCode.IOError">
+                    <summary>An <see cref="System.IO.IOException"/> has occurred.</summary>
+                </Field>
+                <Field Name="UnauthorizedAccess" Value="2" DisplayNameResource="DisplayName_UnauthorizedAccessError" DescriptionResource="DisplayName_UnauthorizedAccessError" FullName="ErrorCode.UnauthorizedAccess">
+                    <summary>An <see cref="System.IO.UnauthorizedAccessException"/> has occurred.</summary>
+                </Field>
+                <Field Name="SecurityException" Value="3" DisplayNameResource="DisplayName_SecurityException" DescriptionResource="ErrorMessage_SecurityException" FullName="ErrorCode.SecurityException">
+                    <summary>An <see cref="System.IO.SecurityException"/> has occurred.</summary>
+                </Field>
+                <Field Name="InvalidPath" Value="4" DisplayNameResource="DisplayName_InvalidPathError" DescriptionResource="ErrorMessage_InvalidPathError" FullName="ErrorCode.InvalidPath">
+                    <summary>The name of one or more files or subdirectories in the path contain a invalid character(s).</summary>
+                </Field>
+                <Field Name="PathTooLong" Value="5" DisplayNameResource="DisplayName_PathTooLongError" DescriptionResource="ErrorMessage_PathTooLongError" FullName="ErrorCode.PathTooLong">
+                    <summary>A <see cref="System.IO.PathTooLongException"/> has occurred, indicating that hhe specified path, file name, or both exceed the system-defined maximum length.</summary>
+                </Field>
+                <Field Name="CrawlOperationFailed" Value="6" DisplayNameResource="DisplayName_CrawlOperationFailed" DescriptionResource="ErrorMessage_CrawlOperationFailed" FullName="ErrorCode.CrawlOperationFailed">
+                    <summary>Crawl operation has failed and terminated before completion.</summary>
+                </Field>
+            </Int>
             <Byte Name="AccessErrorCode">
                 <summary>
                     Represents file system access error codes.
@@ -204,6 +228,33 @@
                     <summary>The file has been deleted.</summary>
                 </Field>
             </Byte>
+            <Byte Name="CrawlStatus">
+                <summary>Values to represent the file crawl status.</summary>
+                <Field Name="NotRunning" Value="0" FullName="CrawlStatus.NotRunning">
+                    <summary>File system crawl is not running.</summary>
+                </Field>
+                <Field Name="InProgress" Value="1" FullName="CrawlStatus.InProgress">
+                    <summary>File system crawl is in progress.</summary>
+                </Field>
+                <Field Name="Completed" Value="2" FullName="CrawlStatus.Completed">
+                    <summary>File system crawl ranto completion.</summary>
+                </Field>
+                <Field Name="AllottedTimeElapsed" Value="3" FullName="CrawlStatus.AllottedTimeElapsed">
+                    <summary>File system was stopped prior to completion because the alotted execution duration had been reached.</summary>
+                </Field>
+                <Field Name="MaxItemCountReached" Value="4" FullName="CrawlStatus.MaxItemCountReached">
+                    <summary>File system was stopped prior to completion because the maximum number of items had been processed.</summary>
+                </Field>
+                <Field Name="Canceled" Value="5" FullName="CrawlStatus.Canceled">
+                    <summary>File system crawl was manually canceled before completion.</summary>
+                </Field>
+                <Field Name="Failed" Value="6" FullName="CrawlStatus.Failed">
+                    <summary>File system crawl was aborted due to a failure.</summary>
+                </Field>
+                <Field Name="Disabled" Value="7" FullName="CrawlStatus.Disabled">
+                    <summary>File system crawl configuration is disabled.</summary>
+                </Field>
+            </Byte>
         </EnumTypes>
         <Entity Name="IDbEntity">
             <summary>
@@ -245,7 +296,7 @@
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IAccessError.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
@@ -253,7 +304,7 @@
                 </UniqueIdentifier>
                 <Enum Name="ErrorCode" Type="AccessErrorCode" FullName="IAccessError.ErrorCode">
                     <summary>
-                        Gets or sets the error code.
+                        Gets the error code.
                     </summary>
                     <value>
                         The <see cref="AccessErrorCode" /> value that represents the numeric error code.
@@ -261,19 +312,19 @@
                 </Enum>
                 <NVarChar Name="Message" MaxLength="1024" MinLength="1" FullName="IAccessError.Message">
                     <summary>
-                        Gets or sets the brief error message.
+                        Gets the brief error message.
                     </summary>
                     <value>The brief error message.</value>
                 </NVarChar>
                 <Text Name="Details" FullName="IAccessError.Details">
                     <summary>
-                        Gets or sets the error detail text.
+                        Gets the error detail text.
                     </summary>
                     <value>The error detail text.</value>
                 </Text>
                 <RelatedEntity Name="Target" Reference="IDbEntity" FullName="IAccessError.Target">
                     <summary>
-                        Gets or sets the target entity to which the access error applies.
+                        Gets the target entity to which the access error applies.
                     </summary>
                     <value>
                         The <see cref="IDbEntity" /> object that this error applies to.
@@ -281,15 +332,15 @@
                 </RelatedEntity>
             </Properties>
         </Entity>
-        <Entity Name="IAccessError{TTarget}">
+        <Entity Name="IAccessError{TTarget}" TypeParam="TTarget">
             <summary>
                 Generic interface for access error entities.
             </summary>
             <ExtendsEntity Type="IAccessError"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="IDbEntity" TypeParam="TTarget" FullName="AccessError{TTarget}.Target">
+                <RelatedEntity Name="Target" Reference="IDbEntity" FullName="AccessError{TTarget}.Target">
                     <summary>
-                        Gets or sets the target entity to which the access error applies.
+                        Gets the target entity to which the access error applies.
                     </summary>
                     <value>
                         The <see cref="IDbEntity" /> object that this error applies to.
@@ -305,19 +356,19 @@
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IFileSystem.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
                 <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" IsIndexed="true" IsUnique="true" FullName="IFileSystem.DisplayName">
-                    <summary>Gets or sets the display name.</summary>
+                    <summary>Gets the display name.</summary>
                     <value>The display name of the file system.</value>
                 </NVarChar>
                 <Bit Name="CaseSensitiveSearch" FullName="IFileSystem.CaseSensitiveSearch">
                     <summary>
-                        Gets or sets a value indicating whether file name searches are case-sensitive.
+                        Gets a value indicating whether file name searches are case-sensitive.
                     </summary>
                     <value>
                         <see langword="true" /> if file name searches are case-sensitive; otherwise, <see langword="false" />.
@@ -326,7 +377,7 @@
                 </Bit>
                 <Bit Name="ReadOnly" FullName="IFileSystem.ReadOnly">
                     <summary>
-                        Gets or sets a value indicating whether this is a read-only file system type.
+                        Gets a value indicating whether this is a read-only file system type.
                     </summary>
                     <value>
                         <see langword="true" /> if this is a read-only file system type; otherwise, <see langword="false" />.
@@ -335,45 +386,45 @@
                 </Bit>
                 <UInt Name="MaxNameLength" FullName="IFileSystem.MaxNameLength">
                     <summary>
-                        Gets or sets the maximum length of file system name components.
+                        Gets the maximum length of file system name components.
                     </summary>
                     <value>The maximum length of file system name components.</value>
                     <Default>255</Default>
                 </UInt>
                 <DriveType Name="DefaultDriveType" FullName="IFileSystem.DefaultDriveType" IsNullable="true">
                     <summary>
-                        Gets or sets the default drive type for this file system.
+                        Gets the default drive type for this file system.
                     </summary>
                     <value>The default drive type for this file system.</value>
                     <DefaultNull />
                 </DriveType>
                 <Text Name="Notes" FullName="IFileSystem.Notes">
                     <summary>
-                        Gets or sets the custom notes for this file system type.
+                        Gets the custom notes for this file system type.
                     </summary>
                     <value>The custom notes to associate with this file system type.</value>
                     <Default></Default>
                 </Text>
                 <Bit Name="IsInactive" IsIndexed="true" FullName="IFileSystem.IsInactive">
                     <summary>
-                        Gets or sets a value indicating whether this file system type is inactive.
+                        Gets a value indicating whether this file system type is inactive.
                     </summary>
                     <value>
                         <see langword="true" /> if this file system type is inactive; otherwise, <see langword="false" />.
                     </value>
                     <Default>false</Default>
                 </Bit>
-                <CollectionNavigation Name="Volumes" ItemType="IVolume" ForeignKey="FileSystemId" FullName="IFileSystem.Volumes">
+                <CollectionNavigation Name="Volumes" ItemType="IVolume" FullName="IFileSystem.Volumes">
                     <summary>
-                        Gets the volumes that use this file system.
+                        Gets the volumes that share this file system type.
                     </summary>
-                    <value>The volumes that use this file system.</value>
+                    <value>The volumes that share this file system type.</value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="SymbolicNames" ItemType="ISymbolicName" ForeignKey="FileSystemId" FullName="IFileSystem.SymbolicNames">
+                <CollectionNavigation Name="SymbolicNames" ItemType="ISymbolicName" FullName="IFileSystem.SymbolicNames">
                     <summary>
-                        Gets the symbolic names of the current file system.
+                        Gets the symbolic names for the current file system type.
                     </summary>
-                    <value>The symbolic names that are used to identify the current file system.</value>
+                    <value>The symbolic names that are used to identify the current file system type.</value>
                 </CollectionNavigation>
             </Properties>
         </Entity>
@@ -385,7 +436,7 @@
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="ISymbolicName.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
@@ -393,26 +444,26 @@
                 </UniqueIdentifier>
                 <NVarChar Name="Name" IsIndexed="true" MinLength="1" MaxLength="256" FullName="ISymbolicName.Name">
                     <summary>
-                        Gets or sets the symbolic name.
+                        Gets the symbolic name.
                     </summary>
                     <value>The symbolic name which refers to a file system type..</value>
                 </NVarChar>
                 <Text Name="Notes" FullName="ISymbolicName.Notes">
                     <summary>
-                        Gets or sets the custom notes for the current symbolic name.
+                        Gets the custom notes for the current symbolic name.
                     </summary>
                     <value>The custom notes to associate with the current symblic name.</value>
                     <Default></Default>
                 </Text>
                 <Int Name="Priority" FullName="ISymbolicName.Priority">
                     <summary>
-                        Gets or sets the priority for this symbolic name.
+                        Gets the priority for this symbolic name.
                     </summary>
                     <value>The priority of this symbolic name in relation to other symbolic names that refer to the same file system type, with lower values being higher priority.</value>
                 </Int>
                 <Bit Name="IsInactive" IsIndexed="true" FullName="ISymbolicName.IsInactive">
                     <summary>
-                        Gets or sets a value indicating whether this symbolic name is inactive.
+                        Gets a value indicating whether this symbolic name is inactive.
                     </summary>
                     <value>
                         <see langword="true" /> if this symbolic name  is inactive; otherwise, <see langword="false" />.
@@ -421,7 +472,7 @@
                 </Bit>
                 <RelatedEntity Name="FileSystem" Reference="IFileSystem" FullName="ISymbolicName.FileSystem">
                     <summary>
-                        Gets or sets the file system that this symbolic name refers to.
+                        Gets the file system that this symbolic name refers to.
                     </summary>
                     <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
                 </RelatedEntity>
@@ -435,7 +486,7 @@
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IVolume.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
@@ -443,25 +494,25 @@
                 </UniqueIdentifier>
                 <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" FullName="IVolume.DisplayName">
                     <summary>
-                        Gets or sets the display name of the volume.
+                        Gets the display name of the volume.
                     </summary>
                     <value>The display name of the volume.</value>
                 </NVarChar>
                 <NVarChar Name="VolumeName" MaxLength="128" FullName="IVolume.VolumeName">
                     <summary>
-                        Gets or sets the name of the volume.
+                        Gets the name of the volume.
                     </summary>
                     <value>The name of the volume.</value>
                 </NVarChar>
                 <VolumeIdentifier Name="Identifier" FullName="IVolume.Identifier">
                     <summary>
-                        Gets or sets the unique volume identifier.
+                        Gets the unique volume identifier.
                     </summary>
                     <value>The system-independent unique identifier, which identifies the volume.</value>
                 </VolumeIdentifier>
                 <Bit Name="CaseSensitiveSearch" IsNullable="true" FullName="IVolume.CaseSensitiveSearch">
                     <summary>
-                        Gets or sets a value indicating whether file name searches are case-sensitive.
+                        Gets a value indicating whether file name searches are case-sensitive.
                     </summary>
                     <value>
                         <see langword="true" /> if file name searches are case-sensitive; <see langword="false" /> if they are case-insensitive; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.CaseSensitiveSearch">file system type</see>.
@@ -470,7 +521,7 @@
                 </Bit>
                 <Bit Name="ReadOnly" IsNullable="true" FullName="IVolume.ReadOnly">
                     <summary>
-                        Gets or sets a value indicating whether the current volume is read-only.
+                        Gets a value indicating whether the current volume is read-only.
                     </summary>
                     <value>
                         <see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.ReadOnly">file system type</see>.
@@ -479,7 +530,7 @@
                 </Bit>
                 <UInt Name="MaxNameLength" IsNullable="true" FullName="IVolume.MaxNameLength">
                     <summary>
-                        Gets or sets the maximum length of file system name components.
+                        Gets the maximum length of file system name components.
                     </summary>
                     <value>
                         The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.MaxNameLength">file system type</see>.
@@ -488,20 +539,20 @@
                 </UInt>
                 <DriveType Name="Type" FullName="IVolume.Type">
                     <summary>
-                        Gets or sets the drive type for this volume.
+                        Gets the drive type for this volume.
                     </summary>
                     <value>The drive type for this volume.</value>
                 </DriveType>
                 <Text Name="Notes" FullName="IVolume.Notes">
                     <summary>
-                        Gets or sets the custom notes for this volume.
+                        Gets the custom notes for this volume.
                     </summary>
                     <value>The custom notes to associate with this volume.</value>
                     <Default></Default>
                 </Text>
                 <Enum Name="Status" Type="VolumeStatus" FullName="IVolume.Status">
                     <summary>
-                        Gets or sets the volume status.
+                        Gets the volume status.
                     </summary>
                     <value>The volume status value.</value>
                 </Enum>
@@ -513,11 +564,11 @@
                 </RelatedEntity>
                 <RelatedEntity Name="FileSystem" Reference="IFileSystem" FullName="IVolume.FileSystem">
                     <summary>
-                        Gets or sets the file system type.
+                        Gets the file system type.
                     </summary>
                     <value>The file system type for this volume.</value>
                 </RelatedEntity>
-                <CollectionNavigation Name="AccessErrors" ItemType="IVolumeAccessError" ForeignKey="VolumeId" FullName="IVolume.AccessErrors">
+                <CollectionNavigation Name="AccessErrors" ItemType="IVolumeAccessError" FullName="IVolume.AccessErrors">
                     <summary>
                         Gets the access errors for this volume.
                     </summary>
@@ -533,7 +584,7 @@
             <Properties>
                 <RelatedEntity Name="Target" Reference="IVolume" FullName="IVolumeAccessError.Target">
                     <summary>
-                        Gets or sets the target volume to which the access error applies.
+                        Gets the target volume to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IVolume" /> entity that this error applies to.
@@ -541,15 +592,43 @@
                 </RelatedEntity>
             </Properties>
         </Entity>
+        <Entity Name="ICrawlSettings">
+            <summary>
+                Specifies the settings for a file system crawl.
+            </summary>
+            <Properties>
+                <UShort Name="MaxRecursionDepth" FullName="ICrawlSettings.MaxRecursionDepth">
+                    <summary>
+                        Gets the maximum recursion depth.
+                    </summary>
+                    <value>The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the <see cref="Root"/> <see cref="ISubdirectory"/>,
+                        a value will crawl 1 sub-folder deep, and so on.</value>
+                </UShort>
+                <ULong Name="MaxTotalItems" FullName="ICrawlSettings.MaxTotalItems">
+                    <summary>
+                        Gets the maximum total items to crawl.
+                    </summary>
+                    <value>The maximum total items to crawl, including both files and subdirectories.</value>
+                </ULong>
+                <Long Name="TTL" IsNullable="true" FullName="ICrawlSettings.TTL">
+                    <summary>
+                        Gets the maximum duration of the crawl.
+                    </summary>
+                    <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>1</c>.</value>
+                    <DefaultNull />
+                </Long>
+            </Properties>
+        </Entity>
         <Entity Name="ICrawlConfiguration">
             <summary>
-                Configuration of a file system crawl instance.
+                Specifies the configuration of a file system crawl.
             </summary>
             <ExtendsEntity Type="IDbEntity"/>
+            <ImplementsEntity Type="ICrawlSettings"/>
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="ICrawlConfiguration.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
@@ -557,51 +636,126 @@
                 </UniqueIdentifier>
                 <NVarChar Name="DisplayName" MinLength="1" DisplayNameResource="DisplayName_DisplayName" FullName="ICrawlConfiguration.DisplayName">
                     <summary>
-                        Gets or sets the display name.
+                        Gets the display name.
                     </summary>
                     <value>The display name for the current crawl configuration.</value>
                 </NVarChar>
                 <Text Name="Notes" FullName="ICrawlConfiguration.Notes">
                     <summary>
-                        Gets or sets the custom notes.
+                        Gets the custom notes.
                     </summary>
                     <value>The custom notes to associate with the current crawl configuration.</value>
                     <Default></Default>
                 </Text>
+                <Enum Name="StatusValue" IsIndexed="true" FullName="ICrawlConfiguration.StatusValue" Type="CrawlStatus" DisplayNameResource="DisplayName_Status">
+                    <summary>
+                        Gets a value indicating whether the current crawl configuration has been deactivated.
+                    </summary>
+                    <value>
+                        <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
+                        available for use.
+                    </value>
+                    <Default>CrawlStatus.NotRunning</Default>
+                </Enum>
+                <DateTime Name="LastCrawlStart" IsNullable="true" FullName="ICrawlConfiguration.LastCrawlStart">
+                    <summary>Gets the date and time when the last crawl was started.</summary>
+                    <value>The date and time when the last crawl was started or <see langword="null"/> if no crawl hhas ever been started for this configuration.</value>
+                    <DefaultNull />
+                </DateTime>
+                <DateTime Name="LastCrawlEnd" IsNullable="true" FullName="ICrawlConfiguration.LastCrawlEnd">
+                    <summary>Gets the date and time when the last crawl was finshed.</summary>
+                    <value>The date and time when the last crawl was finshed; otherwise, <see langword="null"/> if the current crawl is still active or if
+                        no crawl has ever been started for this configuration.</value>
+                    <DefaultNull />
+                </DateTime>
+                <DateTime Name="NextScheduledStart" IsNullable="true" FullName="ICrawlConfiguration.NextScheduledStart">
+                    <summary>Gets the date and time when the next true is to begin.</summary>
+                    <value>The date and time when the next crawl is to begin or <see langword="null"/> if there is no scheduled crawl.</value>
+                    <DefaultNull />
+                </DateTime>
+                <Long Name="RescheduleInterval" IsNullable="true" FullName="ICrawlConfiguration.RescheduleInterval">
+                    <summary>
+                        Gets the length of time between automatic crawl re-scheduling.
+                    </summary>
+                    <value>The length of time between automatic crawl re-scheduling, in seconds or <cref langword="null"/> to disable automatic re-scheduling.</value>
+                    <DefaultNull />
+                </Long>
+                <Bit Name="RescheduleFromJobEnd" FullName="ICrawlConfiguration.RescheduleFromJobEnd">
+                    <summary>Gets a value indicating whether automatic rescheduling is calculated from the completion time of the previous job, versus the start time.</summary>
+                    <value><see langword="true"/> if crawl jobs are automatically scheduled <see cref="RescheduleInterval"/> seconds from the completion of the previous job;
+                    otherwise, <see langword="false"/> if crawl jobs are automatically scheduled <see cref="RescheduleInterval"/> seconds from the value
+                    of <see cref="NextScheduledStart"/> at the time the job is started.</value>
+                    <Default>false</Default>
+                </Bit>
+                <Bit Name="RescheduleAfterFail" FullName="ICrawlConfiguration.RRescheduleAfterFail">
+                    <summary>Gets a value indicating whether crawl jobs are automatically rescheduled even if the previous job failed.</summary>
+                    <value><see langword="true"/> if crawl jobs are always automatically re-scheduled; otherwise, <see langword="false"/> if crawl jobs are automatically
+                    re-scheduled only if the preceding job did not fail.</value>
+                    <Default>false</Default>
+                </Bit>
                 <RelatedEntity Name="Root" Reference="ISubdirectory" FullName="ICrawlConfiguration.Root">
-                <summary>
-                        Gets the root subdirectory of the configured subdirectory crawl.
+                    <summary>
+                        Gets the starting subdirectory for the configured subdirectory crawl.
                     </summary>
                     <value>The root subdirectory of the configured subdirectory crawl.</value>
                 </RelatedEntity>
-                <UShort Name="MaxRecursionDepth" FullName="ICrawlConfiguration.MaxRecursionDepth">
+                <CollectionNavigation Name="Logs" ItemType="ICrawlJobLog" FullName="ICrawlConfiguration.Logs">
+                    <summary>Gets the crawl log entries.</summary>
+                    <value>The crawl log entries.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="ICrawlJobLog">
+            <summary>
+                Log of crawl job results.
+            </summary>
+            <ExtendsEntity Type="IDbEntity"/>
+            <ImplementsEntity Type="ICrawlSettings"/>
+            <Properties>
+                <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="ICrawlJobLog.Id">
                     <summary>
-                        Gets or sets the maximum recursion depth.
-                    </summary>
-                    <value>The maximum recursion depth.</value>
-                </UShort>
-                <ULong Name="MaxTotalItems" FullName="ICrawlConfiguration.MaxTotalItems">
-                    <summary>
-                        Gets or sets the maximum total items to crawl.
-                    </summary>
-                    <value>The maximum total items to crawl, including both files and subdirectories.</value>
-                </ULong>
-                <Long Name="TTL" IsNullable="true" FullName="ICrawlConfiguration.TTL">
-                    <summary>
-                        Gets or sets the maximum dudration of the crawl.
-                    </summary>
-                    <value>The maximum dudration of the crawl, in seconds.</value>
-                    <DefaultNull />
-                </Long>
-                <Bit Name="IsInactive" IsIndexed="true" FullName="ICrawlConfiguration.IsInactive">
-                    <summary>
-                        Gets or sets a value indicating whether the current crawl configuration is inactive.
+                        Gets the primary key value.
                     </summary>
                     <value>
-                        <see langword="true" /> if the current crawl configuration is inactive; otherwise, <see langword="false" />.
+                        The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
-                    <Default>false</Default>
-                </Bit>
+                </UniqueIdentifier>
+                <NVarChar Name="RootPath" MaxLength="4096" FullName="ICrawlJobLog.RootPath">
+                    <summary>Gets root path of the crawl.</summary>
+                    <value>The root path of the crawl.</value>
+                </NVarChar>
+                <Enum Name="StatusCode" IsIndexed="true" FullName="ICrawlJobLog.StatusCode" Type="CrawlStatus">
+                    <summary>
+                        Gets a value indicating whether the current crawl configuration has been deactivated.
+                    </summary>
+                    <value>
+                        <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
+                        available for use.
+                    </value>
+                    <Default>CrawlStatus.NotRunning</Default>
+                </Enum>
+                <DateTime Name="CrawlStart" FullName="ICrawlJobLog.LastCrawlStart">
+                    <summary>Gets the date and time when the crawl was started.</summary>
+                    <value>The date and time when the crawl was started.</value>
+                    <DefaultNull />
+                </DateTime>
+                <DateTime Name="CrawlEnd" IsNullable="true" FullName="ICrawlJobLog.LastCrawlEnd">
+                    <summary>Gets the date and time when the crawl was finshed.</summary>
+                    <value>The date and time when the crawl was finshed or <see langword="null"/> if the current crawl is still active.</value>
+                    <DefaultNull />
+                </DateTime>
+                <NVarChar Name="StatusMessage" MaxLength="1024" DisplayNameResource="DisplayName_Message" FullName="ICrawlJobLog.StatusMessage">
+                    <summary>Gets the status message.</summary>
+                    <value>The crawl status message.</value>
+                </NVarChar>
+                <Text Name="StatusDetail" DisplayNameResource="DisplayName_Details" FullName="ICrawlJobLog.StatusDetail">
+                    <summary>Gets the status details.</summary>
+                    <value>The status details.</value>
+                </Text>
+                <RelatedEntity Name="Configuration" Reference="ICrawlConfiguration" FullName="ICrawlJobLog.Configuration">
+                    <summary>Gets the configuration source for the file system crawl.</summary>
+                    <value>The configuration for the file system crawl.</value>
+                </RelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="IDbFsItem">
@@ -612,7 +766,7 @@
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IDbFsItem.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
@@ -620,49 +774,43 @@
                 </UniqueIdentifier>
                 <NVarChar Name="Name" FullName="IDbFsItem.Name">
                     <summary>
-                        Gets or sets the name of the current file system item.
+                        Gets the name of the current file system item.
                     </summary>
                     <value>The name of the current file system item.</value>
                 </NVarChar>
                 <DateTime Name="LastAccessed" FullName="IDbFsItem.LastAccessed">
                     <summary>
-                        Gets or sets the date and time last accessed.
+                        Gets the date and time last accessed.
                     </summary>
                     <value>The last accessed for the purposes of this application.</value>
                 </DateTime>
                 <Text Name="Notes" FullName="IDbFsItem.Notes">
                     <summary>
-                        Gets or sets custom notes to be associated with the current file system item.
+                        Gets custom notes to be associated with the current file system item.
                     </summary>
                     <value>The custom notes to associate with the current file system item.</value>
                     <Default></Default>
                 </Text>
                 <DateTime Name="CreationTime" FullName="IDbFsItem.CreationTime">
                     <summary>
-                        Gets or sets the file's creation time.
+                        Gets the file's creation time.
                     </summary>
                     <value>The creation time as reported by the host file system.</value>
                 </DateTime>
                 <DateTime Name="LastWriteTime" FullName="IDbFsItem.LastWriteTime">
                     <summary>
-                        Gets or sets the date and time the file system item was last written nto.
+                        Gets the date and time the file system item was last written nto.
                     </summary>
                     <value>The last write time as reported by the host file system.</value>
                 </DateTime>
                 <RelatedEntity Name="Parent" Reference="ISubdirectory" FullName="IDbFsItem.Parent">
                     <summary>
-                        Gets or sets the parent subdirectory of the current file system item.
+                        Gets the parent subdirectory of the current file system item.
                     </summary>
                     <value>
                         The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.
                     </value>
                 </RelatedEntity>
-                <CollectionNavigation Name="AccessErrors" ItemType="IFileAccessError" ForeignKey="TargetId" FullName="IDbFsItem.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while attempting to access the current file system item.
-                    </summary>
-                    <value>The access errors that occurred while attempting to access the current file system item.</value>
-                </CollectionNavigation>
             </Properties>
         </Entity>
         <Entity Name="ISubdirectory">
@@ -673,21 +821,21 @@
             <Properties>
                 <Enum Name="Options" Type="DirectoryCrawlOptions" FullName="ISubdirectory.Options">
                     <summary>
-                        Gets or sets the crawl options for the current subdirectory.
+                        Gets the crawl options for the current subdirectory.
                     </summary>
                     <value>The crawl options for the current subdirectory.</value>
-                    <Default>None</Default>
+                    <Default>DirectoryCrawlOptions.None</Default>
                 </Enum>
                 <Enum Name="Status" Type="DirectoryStatus" FullName="ISubdirectory.Status">
                     <summary>
-                        Gets or sets the status of the current subdirectory.
+                        Gets the status of the current subdirectory.
                     </summary>
                     <value>The status value for the current subdirectory.</value>
-                    <Default>Incomplete</Default>
+                    <Default>DirectoryStatus.Incomplete</Default>
                 </Enum>
                 <RelatedEntity Name="Volume" Reference="IVolume" FullName="ISubdirectory.Volume">
                     <summary>
-                        Gets or sets the parent volume.
+                        Gets the parent volume.
                     </summary>
                     <value>
                         The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.
@@ -698,23 +846,23 @@
                 </RelatedEntity>
                 <RelatedEntity Name="CrawlConfiguration" Reference="ICrawlConfiguration" FullName="ISubdirectory.CrawlConfiguration">
                     <summary>
-                        Gets or sets the crawl configuration that starts with the current subdirectory.
+                        Gets the crawl configuration that starts with the current subdirectory.
                     </summary>
                     <value>The crawl configuration that starts with the current subdirectory.</value>
                 </RelatedEntity>
-                <CollectionNavigation Name="Files" ItemType="IFile" ForeignKey="ParentId" FullName="ISubdirectory.Files">
+                <CollectionNavigation Name="Files" ItemType="IFile" FullName="ISubdirectory.Files">
                     <summary>
                         Gets the files directly contained within this subdirectory.
                     </summary>
                     <value>The files directly contained within this subdirectory.</value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="SubDirectories" ItemType="ISubdirectory" ForeignKey="ParentId" FullName="ISubdirectory.SubDirectories">
+                <CollectionNavigation Name="SubDirectories" ItemType="ISubdirectory" FullName="ISubdirectory.SubDirectories">
                     <summary>
                         Gets the nested subdirectories directly contained within this subdirectory.
                     </summary>
                     <value>The nested subdirectories directly contained within this subdirectory.</value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="ISubdirectoryAccessError" ForeignKey="TargetId" FullName="ISubdirectory.AccessErrors">
+                <CollectionNavigation Name="AccessErrors" ItemType="ISubdirectoryAccessError" FullName="ISubdirectory.AccessErrors">
                     <summary>
                         Gets the access errors that occurred while attempting to access the current subdirectory.
                     </summary>
@@ -730,7 +878,7 @@
             <Properties>
                 <RelatedEntity Name="Target" Reference="ISubdirectory" FullName="ISubdirectoryAccessError.Target">
                     <summary>
-                        Gets or sets the target subdirectory to which the access error applies.
+                        Gets the target subdirectory to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="ISubdirectory" /> entity that this error applies to.
@@ -746,7 +894,7 @@
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IBinaryPropertySet.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
@@ -754,7 +902,7 @@
                 </UniqueIdentifier>
                 <Long Name="Length" FullName="IBinaryPropertySet.Length">
                     <summary>
-                        Gets or sets the file length.
+                        Gets the file length.
                     </summary>
                     <value>
                         The file length in bytes.
@@ -768,7 +916,7 @@
                         The MD5 hash of the file's contents or <see langword="null" /> if the hash has not yet been calculated.
                     </value>
                 </MD5Hash>
-                <CollectionNavigation Name="Files" ItemType="IFile" ForeignKey="FileId" FullName="IBinaryPropertySet.Files">
+                <CollectionNavigation Name="Files" ItemType="IFile" FullName="IBinaryPropertySet.Files">
                     <summary>
                         Gets the files which have the same length and cryptographic hash.
                     </summary>
@@ -776,7 +924,7 @@
                         The files which have the same length and cryptographic hash..
                     </value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="RedundantSets" ItemType="IRedundantSet" ForeignKey="RedundantSetId" FullName="IBinaryPropertySet.RedundantSets">
+                <CollectionNavigation Name="RedundantSets" ItemType="IRedundantSet" FullName="IBinaryPropertySet.RedundantSets">
                     <summary>
                         Gets the sets of files which were determined to be duplicates.
                     </summary>
@@ -818,7 +966,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-applicationname">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -848,7 +996,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-author">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -879,7 +1027,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-comment">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -909,7 +1057,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-keywords">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -940,7 +1088,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-subject">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -971,7 +1119,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-title">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1002,7 +1150,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-company">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1033,7 +1181,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-contenttype">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1064,7 +1212,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-copyright">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1095,7 +1243,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalrating">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1126,7 +1274,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-rating">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -1157,7 +1305,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemauthors">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -1192,7 +1340,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemtype">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1227,7 +1375,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-itemtypetext">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1258,7 +1406,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-kind">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -1289,7 +1437,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-mimetype">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1320,7 +1468,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalratingreason">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1351,7 +1499,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-parentalratingsorganization">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1381,7 +1529,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-sensitivity">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UShort>
@@ -1412,7 +1560,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-sensitivitytext">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1442,7 +1590,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-simplerating">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -1473,7 +1621,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-trademarks">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1504,7 +1652,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-software-productname">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1542,7 +1690,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-clientid">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1572,7 +1720,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-contributor">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -1603,7 +1751,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-datecreated">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </DateTime>
@@ -1634,7 +1782,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-lastauthor">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1665,7 +1813,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-revisionnumber">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1695,7 +1843,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-security">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Int>
@@ -1724,7 +1872,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-division">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1753,7 +1901,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-documentid">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1782,7 +1930,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-manager">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1811,7 +1959,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-presentationformat">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1840,7 +1988,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-version">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1878,7 +2026,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-compression">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1908,7 +2056,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-encodingbitrate">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -1939,7 +2087,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-format">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -1970,7 +2118,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-isvariablebitrate">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Bit>
@@ -2000,7 +2148,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-samplerate">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -2030,7 +2178,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-samplesize">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -2061,7 +2209,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-streamname">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -2091,7 +2239,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-audio-streamnumber">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UShort>
@@ -2128,7 +2276,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-dateplayexpires">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </DateTime>
@@ -2158,7 +2306,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-dateplaystarts">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </DateTime>
@@ -2187,7 +2335,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-description">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -2218,7 +2366,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-isprotected">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Bit>
@@ -2248,7 +2396,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-drm-playcount">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -2284,7 +2432,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-areainformation">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -2314,7 +2462,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudedegrees">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2344,7 +2492,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudeminutes">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2374,7 +2522,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitude">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2405,7 +2553,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latituderef">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -2436,7 +2584,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudedegrees">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2467,7 +2615,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeminutes">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2498,7 +2646,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeseconds">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2529,7 +2677,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longituderef">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -2560,7 +2708,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-measuremode">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -2591,11 +2739,11 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-processingmethod">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <ByteArray Name="VersionID" FullName="IGPSProperties.VersionID">
+                <ByteValues Name="VersionID" AllowNull="true" IsDefaultNull="true" FullName="IGPSProperties.VersionID">
                     <summary>
                         Indicates the version of the GPS information.
                     </summary>
@@ -2621,10 +2769,9 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-versionid">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
-                    <DefaultNull />
-                </ByteArray>
+                </ByteValues>
             </Properties>
         </Entity>
         <Entity Name="IImageProperties">
@@ -2659,7 +2806,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-bitdepth">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -2690,7 +2837,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-colorspace">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UShort>
@@ -2721,7 +2868,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compressedbitsperpixel">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2751,7 +2898,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compression">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UShort>
@@ -2782,7 +2929,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-compressiontext">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -2812,7 +2959,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-horizontalresolution">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2842,7 +2989,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-horizontalsize">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -2873,7 +3020,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-imageid">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -2904,7 +3051,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-resolutionunit">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Short>
@@ -2934,7 +3081,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-verticalresolution">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Double>
@@ -2964,7 +3111,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-image-verticalsize">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -3002,7 +3149,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-contentdistributor">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3033,7 +3180,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplication">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3064,7 +3211,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplicationversion">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3095,7 +3242,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-datereleased">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3125,7 +3272,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-duration">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </ULong>
@@ -3156,7 +3303,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-dvdid">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3186,7 +3333,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-framecount">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -3217,7 +3364,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-producer">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -3248,7 +3395,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-protectiontype">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3279,7 +3426,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerrating">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3310,7 +3457,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerstyle">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3341,7 +3488,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-publisher">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3372,7 +3519,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-subtitle">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3403,7 +3550,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-writer">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -3434,7 +3581,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-year">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -3470,7 +3617,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumartist">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3499,7 +3646,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumtitle">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3527,7 +3674,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -3555,7 +3702,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -3583,7 +3730,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-composer">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -3611,7 +3758,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-conductor">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -3642,7 +3789,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-displayartist">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3670,7 +3817,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-genre">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -3699,7 +3846,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-partofset">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3728,7 +3875,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-period">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3756,7 +3903,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-tracknumber">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -3794,7 +3941,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-cameramanufacturer">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3825,7 +3972,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-cameramodel">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3855,7 +4002,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-datetaken">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </DateTime>
@@ -3886,7 +4033,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-event">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -3917,7 +4064,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-exifversion">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -3947,7 +4094,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-orientation">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UShort>
@@ -3978,7 +4125,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-orientationtext">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -4008,7 +4155,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-photo-peoplenames">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -4046,7 +4193,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-channelnumber">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -4077,7 +4224,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-episodename">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -4108,7 +4255,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-isdtvcontent">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Bit>
@@ -4139,7 +4286,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-ishdcontent">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </Bit>
@@ -4168,7 +4315,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-networkaffiliation">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -4196,7 +4343,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-originalbroadcastdate">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </DateTime>
@@ -4225,7 +4372,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-programdescription">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -4256,7 +4403,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationcallsign">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -4287,7 +4434,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationname">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -4325,7 +4472,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-compression">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -4355,7 +4502,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-director">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
@@ -4386,7 +4533,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-encodingbitrate">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -4416,7 +4563,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-frameheight">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -4446,7 +4593,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-framerate">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -4476,7 +4623,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-framewidth">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -4507,7 +4654,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-horizontalaspectratio">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -4537,7 +4684,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamnumber">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UShort>
@@ -4566,7 +4713,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-streamname">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
@@ -4597,7 +4744,7 @@
                                     <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-video-verticalaspectratio">[Reference Link]</a>
                                 </description>
                             </item>
-                        </list>.
+                        </list>
                     </remarks>
                     <DefaultNull />
                 </UInt>
@@ -4611,13 +4758,13 @@
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IPropertySet.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <CollectionNavigation Name="Files" ItemType="IFile" ForeignKey="FileId" FullName="IPropertySet.Files">
+                <CollectionNavigation Name="Files" ItemType="IFile" FullName="IPropertySet.Files">
                     <summary>
                         Gets the files that share the same property values as this property set.
                     </summary>
@@ -4723,7 +4870,7 @@
             <Properties>
                 <Enum Name="Options" Type="FileCrawlOptions" FullName="IFile.Options">
                     <summary>
-                        Gets or sets the visibility and crawl options for the current file.
+                        Gets the visibility and crawl options for the current file.
                     </summary>
                     <value>
                         A <see cref="FileCrawlOptions" /> value that contains the crawl options for the current file.
@@ -4731,7 +4878,7 @@
                 </Enum>
                 <Enum Name="Status" Type="FileCorrelationStatus" FullName="IFile.Status">
                     <summary>
-                        Gets or sets the correlative status of the current file.
+                        Gets the correlative status of the current file.
                     </summary>
                     <value>
                         A <see cref="FileCorrelationStatus" /> value that indicates the file's correlation status.
@@ -4739,7 +4886,7 @@
                 </Enum>
                 <DateTime Name="LastHashCalculation" FullName="IFile.LastHashCalculation" IsNullable="true">
                     <summary>
-                        Gets or sets the date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file.
+                        Gets the date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file.
                     </summary>
                     <value>
                         The date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file or <see langword="null" /> if no <see cref="MD5Hash">MD5 hash</see> has been calculated, yet.
@@ -4747,7 +4894,7 @@
                 </DateTime>
                 <RelatedEntity Name="BinaryProperties" Reference="IBinaryPropertySet" FullName="IFile.BinaryProperties">
                     <summary>
-                        Gets or sets the binary properties for the current file.
+                        Gets the binary properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
@@ -4755,7 +4902,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="SummaryProperties" Reference="ISummaryPropertySet" FullName="IFile.SummaryProperties">
                     <summary>
-                        Gets or sets the summary properties for the current file.
+                        Gets the summary properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
@@ -4763,7 +4910,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="DocumentProperties" Reference="IDocumentPropertySet" FullName="IFile.DocumentProperties">
                     <summary>
-                        Gets or sets the document properties for the current file.
+                        Gets the document properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
@@ -4771,7 +4918,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="AudioProperties" Reference="IAudioPropertySet" FullName="IFile.AudioProperties">
                     <summary>
-                        Gets or sets the audio properties for the current file.
+                        Gets the audio properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
@@ -4779,7 +4926,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="DRMProperties" Reference="IDRMPropertySet" FullName="IFile.DRMProperties">
                     <summary>
-                        Gets or sets the DRM properties for the current file.
+                        Gets the DRM properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
@@ -4787,7 +4934,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="GPSProperties" Reference="IGPSPropertySet" FullName="IFile.GPSProperties">
                     <summary>
-                        Gets or sets the GPS properties for the current file.
+                        Gets the GPS properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
@@ -4795,7 +4942,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="ImageProperties" Reference="IImagePropertySet" FullName="IFile.ImageProperties">
                     <summary>
-                        Gets or sets the image properties for the current file.
+                        Gets the image properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
@@ -4803,7 +4950,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="MediaProperties" Reference="IMediaPropertySet" FullName="IFile.MediaProperties">
                     <summary>
-                        Gets or sets the media properties for the current file.
+                        Gets the media properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
@@ -4811,7 +4958,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="MusicProperties" Reference="IMusicPropertySet" FullName="IFile.MusicProperties">
                     <summary>
-                        Gets or sets the music properties for the current file.
+                        Gets the music properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
@@ -4819,7 +4966,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="PhotoProperties" Reference="IPhotoPropertySet" FullName="IFile.PhotoProperties">
                     <summary>
-                        Gets or sets the photo properties for the current file.
+                        Gets the photo properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
@@ -4827,7 +4974,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="RecordedTVProperties" Reference="IRecordedTVPropertySet" FullName="IFile.RecordedTVProperties">
                     <summary>
-                        Gets or sets the recorded tv properties for the current file.
+                        Gets the recorded tv properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
@@ -4835,7 +4982,7 @@
                 </RelatedEntity>
                 <RelatedEntity Name="VideoProperties" Reference="IVideoPropertySet" FullName="IFile.VideoProperties">
                     <summary>
-                        Gets or sets the video properties for the current file.
+                        Gets the video properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
@@ -4850,7 +4997,7 @@
                         or <see langword="null" /> if this file has not been identified as being redundant with any other.
                     </value>
                 </RelatedEntity>
-                <CollectionNavigation Name="BaselineComparisons" ItemType="IComparison" ForeignKey="BaselineFileId" FullName="IFile.BaselineComparisons">
+                <CollectionNavigation Name="BaselineComparisons" ItemType="IComparison" FullName="IFile.BaselineComparisons">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
                     </summary>
@@ -4858,7 +5005,7 @@
                         The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
                     </value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="CorrelativeComparisons" ItemType="IComparison" ForeignKey="CorrelativeFileId" FullName="IFile.CorrelativeComparisons">
+                <CollectionNavigation Name="CorrelativeComparisons" ItemType="IComparison" FullName="IFile.CorrelativeComparisons">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
                     </summary>
@@ -4866,7 +5013,7 @@
                         The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
                     </value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="IFileAccessError" ForeignKey="TargetId" FullName="IFile.AccessErrors">
+                <CollectionNavigation Name="AccessErrors" ItemType="IFileAccessError" FullName="IFile.AccessErrors">
                     <summary>
                         Gets the access errors that occurred while trying to open or read from the current file.
                     </summary>
@@ -4882,7 +5029,7 @@
             <Properties>
                 <RelatedEntity Name="Target" Reference="IFile" FullName="IFileAccessError.Target">
                     <summary>
-                        Gets or sets the target file to which the access error applies.
+                        Gets the target file to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IFile" /> entity that this error applies to.
@@ -4898,7 +5045,7 @@
             <Properties>
                 <UniqueIdentifier Name="Id" IsPrimaryKey="true" FullName="IRedundantSet.Id">
                     <summary>
-                        Gets or sets the primary key value.
+                        Gets the primary key value.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
@@ -4906,24 +5053,24 @@
                 </UniqueIdentifier>
                 <NVarChar Name="Reference" FullName="IRedundantSet.Reference">
                     <summary>
-                        Gets or sets the custom reference value.
+                        Gets the custom reference value.
                     </summary>
                     <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
                 </NVarChar>
                 <Text Name="Notes" FullName="IRedundantSet.Notes">
                     <summary>
-                        Gets or sets custom notes to be associated with the current set of redunant files.
+                        Gets custom notes to be associated with the current set of redunant files.
                     </summary>
                     <value>The custom notes to associate with the current set of redunant files.</value>
                     <Default></Default>
                 </Text>
                 <RelatedEntity Name="BinaryProperties" Reference="IBinaryPropertySet" FullName="IRedundantSet.BinaryProperties">
                     <summary>
-                        Gets or sets the binary properties in common with all files in the current redundant set.
+                        Gets the binary properties in common with all files in the current redundant set.
                     </summary>
                     <value>The binary properties in common with all files in the current redundant set.</value>
                 </RelatedEntity>
-                <CollectionNavigation Name="Redundancies" ItemType="IRedundancy" ForeignKey="RedundantSetId" FullName="IRedundantSet.Redundancies">
+                <CollectionNavigation Name="Redundancies" ItemType="IRedundancy" FullName="IRedundantSet.Redundancies">
                     <summary>
                         Gets the redundancy entities which represent links to redundant files.
                     </summary>
@@ -4937,20 +5084,20 @@
             <Properties>
                 <NVarChar Name="Reference" FullName="IRedundancy.Reference">
                     <summary>
-                        Gets or sets the custom reference value.
+                        Gets the custom reference value.
                     </summary>
                     <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
                 </NVarChar>
                 <Text Name="Notes" FullName="IRedundancy.Notes">
                     <summary>
-                        Gets or sets custom notes to be associated with the current redundancy.
+                        Gets custom notes to be associated with the current redundancy.
                     </summary>
                     <value>The custom notes to associate with the current redundancy.</value>
                     <Default></Default>
                 </Text>
                 <UniqueIdentifier Name="FileId" FullName="IRedundancy.FileId" Navigation="File">
                     <summary>
-                        Gets or sets the primary key of the file in the that belongs to the redundancy set.
+                        Gets the primary key of the file in the that belongs to the redundancy set.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IRedundancy.File" /><see cref="IFile">entity</see>.
@@ -4965,7 +5112,7 @@
                 </RelatedEntity>
                 <UniqueIdentifier Name="RedundantSetId" FullName="IRedundancy.RedundantSetId" Navigation="RedundantSet">
                     <summary>
-                        Gets or sets the primary key of the redundancy set file belongs to.
+                        Gets the primary key of the redundancy set file belongs to.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IRedundancy.RedundantSet" /><see cref="IRedundantSet">entity</see>.
@@ -4988,7 +5135,7 @@
             <Properties>
                 <Bit Name="AreEqual" FullName="IComparison.AreEqual">
                     <summary>
-                        Gets or sets a value indicating whether the <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte.
+                        Gets a value indicating whether the <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte.
                     </summary>
                     <value>
                         <see langword="true" /> if <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.
@@ -4997,7 +5144,7 @@
                 </Bit>
                 <DateTime Name="ComparedOn" FullName="IComparison.ComparedOn">
                     <summary>
-                        Gets or sets the date and time when the files were compared.
+                        Gets the date and time when the files were compared.
                     </summary>
                     <value>
                         The date and time when <see cref="IComparison.Baseline" /> was compared to <see cref="IComparison.Correlative" />.
@@ -5005,7 +5152,7 @@
                 </DateTime>
                 <UniqueIdentifier Name="BaselineId" FullName="IComparison.BaselineId" Navigation="Baseline">
                     <summary>
-                        Gets or sets the primary key of the baseline file in the comparison.
+                        Gets the primary key of the baseline file in the comparison.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Baseline" /><see cref="IFile">file entity</see>.
@@ -5014,7 +5161,7 @@
                 </UniqueIdentifier>
                 <RelatedEntity Name="Baseline" Reference="IFile" FullName="IComparison.Baseline">
                     <summary>
-                        Gets or sets the baseline file in the comparison.
+                        Gets the baseline file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="IFile" /> that represents the baseline file in the comparison.
@@ -5022,7 +5169,7 @@
                 </RelatedEntity>
                 <UniqueIdentifier Name="CorrelativeId" FullName="IComparison.CorrelativeId" Navigation="Correlative">
                     <summary>
-                        Gets or sets the primary key of the correlative file in the comparison.
+                        Gets the primary key of the correlative file in the comparison.
                     </summary>
                     <value>
                         The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Correlative" /><see cref="IFile">file entity</see>.
@@ -5031,7 +5178,7 @@
                 </UniqueIdentifier>
                 <RelatedEntity Name="Correlative" Reference="IFile" FullName="IComparison.Correlative">
                     <summary>
-                        Gets or sets the correlative file in the comparison.
+                        Gets the correlative file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="IFile" /> that represents the correlative file, which is the new or changed file in the comparison.
@@ -5654,28 +5801,145 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
 
 -->
         <Entity Name="ILocalDbEntity" RootInterface="IDbEntity">
+            <summary>
+                Base interface for all database entity objects for the database which is hosted on the local machine.
+            </summary>
+            <Properties>
+                <UniqueIdentifier Name="UpstreamId" IsNullable="true" FullName="ILocalDbEntity.UpstreamId" IsDefaultNull="true">
+                    <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
+                    <value>The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+                        otherwise, <see langword="null"/> if there is no corresponding entity.</value>
+                    <remarks>If this value is <see langword="null"/>, then <see cref="LastSynchronizedOn"/> should also be <see langword="null"/>.
+                        Likewise, if this is not <see langword="null"/>, then <see cref="LastSynchronizedOn"/> should not be <see langword="null"/>, either.</remarks>
+                </UniqueIdentifier>
+                <DateTime Name="LastSynchronizedOn" IsNullable="true" FullName="ILocalDbEntity.LastSynchronizedOn">
+                    <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
+                    <value>The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+                        otherwise, <see langword="null"/> if there is no corresponding entity.</value>
+                    <remarks>If this value is <see langword="null"/>, then <see cref="LastSynchronizedOn"/> should also be <see langword="null"/>.
+                        Likewise, if this is not <see langword="null"/>, then <see cref="LastSynchronizedOn"/> should not be <see langword="null"/>, either.</remarks>
+                    <DefaultNull />
+                </DateTime>
+            </Properties>
+        </Entity>
+        <Entity Name="ILocalAccessError" RootInterface="IDbEntity">
             <summary></summary>
-            <Properties></Properties>
+            <ExtendsGenericEntity Type="IAccessError{ILocalDbEntity}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="ILocalDbEntity" FullName="ILocalAccessError.Target">
+                    <summary>
+                        Gets the target entity to which the access error applies.
+                    </summary>
+                    <value>
+                        The <see cref="ILocalDbEntity" /> object that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
         </Entity>
         <Entity Name="ILocalFileSystem" RootInterface="IFileSystem">
-            <summary></summary>
+            <summary>
+                Interface for entities which represent a specific file system type.
+            </summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <CollectionNavigation Name="Volumes" ItemType="ILocalVolume" FullName="ILocalFileSystem.Volumes">
+                    <summary>
+                        Gets the volumes that share this file system type.
+                    </summary>
+                    <value>The volumes that share this file system type.</value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="SymbolicNames" ItemType="ILocalSymbolicName" FullName="ILocalFileSystem.SymbolicNames">
+                    <summary>
+                        Gets the symbolic names for the current file system type.
+                    </summary>
+                    <value>The symbolic names that are used to identify the current file system type.</value>
+                </CollectionNavigation>
+            </Properties>
         </Entity>
         <Entity Name="ILocalSymbolicName" RootInterface="ISymbolicName">
-            <summary></summary>
+            <summary>
+                Interface for entities that represent a symbolic name for a file system type.
+            </summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="FileSystem" Reference="ILocalFileSystem" FullName="ILocalSymbolicName.FileSystem">
+                    <summary>
+                        Gets the file system that this symbolic name refers to.
+                    </summary>
+                    <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
+                </RelatedEntity>
+            </Properties>
         </Entity>
         <Entity Name="ILocalVolume" RootInterface="IVolume">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="RootDirectory" Reference="ILocalSubdirectory" FullName="ILocalVolume.RootDirectory">
+                    <summary>
+                        Gets the root directory of this volume.
+                    </summary>
+                    <value>The root directory of this volume.</value>
+                </RelatedEntity>
+                <RelatedEntity Name="FileSystem" Reference="ILocalFileSystem" FullName="ILocalVolume.FileSystem">
+                    <summary>
+                        Gets the file system type.
+                    </summary>
+                    <value>The file system type for this volume.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="AccessErrors" ItemType="ILocalVolumeAccessError" FullName="ILocalVolume.AccessErrors">
+                    <summary>
+                        Gets the access errors for this volume.
+                    </summary>
+                    <value>The access errors that occurred while trying to access this volume.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="ILocalVolumeAccessError" RootInterface="IVolumeAccessError">
+            <summary>
+                Generic interface for volume access error entities.
+            </summary>
+            <ExtendsEntity Type="ILocalAccessError" />
+            <ImplementsGenericEntity Type="IAccessError{ILocalVolume}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="ILocalVolume" FullName="ILocalVolumeAccessError.Target">
+                    <summary>
+                        Gets the target volume to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="ILocalVolume" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
         </Entity>
         <Entity Name="ILocalCrawlConfiguration" RootInterface="ICrawlConfiguration">
-            <summary></summary>
+            <summary>
+                Specifies the configuration of a file system crawl.
+            </summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="Root" Reference="ILocalSubdirectory" FullName="ILocalCrawlConfiguration.Root">
+                    <summary>
+                        Gets the starting subdirectory for the configured subdirectory crawl.
+                    </summary>
+                    <value>The root subdirectory of the configured subdirectory crawl.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="Logs" ItemType="ILocalCrawlJobLog" FullName="ILocalCrawlConfiguration.Logs">
+                    <summary>Gets the crawl log entries.</summary>
+                    <value>The crawl log entries.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="ILocalCrawlJobLog" RootInterface="ICrawlJobLog">
+            <summary>
+                Log of crawl job results.
+            </summary>
+            <ExtendsEntity Type="ILocalDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="Configuration" Reference="ILocalCrawlConfiguration" FullName="ILocalCrawlJobLog.Configuration">
+                    <summary>Gets the configuration source for the file system crawl.</summary>
+                    <value>The configuration for the file system crawl.</value>
+                </RelatedEntity>
+            </Properties>
         </Entity>
         <Entity Name="ILocalDbFsItem" RootInterface="IDbFsItem">
             <summary></summary>
@@ -5683,7 +5947,7 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <Properties>
                 <RelatedEntity Name="Parent" Reference="ILocalSubdirectory" FullName="ILocalSubdirectory.Parent">
                     <summary>
-                        Gets or sets the parent subdirectory.
+                        Gets the parent subdirectory.
                     </summary>
                     <value>
                         The parent <see cref="ILocalSubdirectory" /> or <see langword="null" /> if this is the root <see cref="ILocalSubdirectory" />.
@@ -5694,6 +5958,12 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                         otherwise, if the current entity is a <see cref="ILocalFile" />, then this should never be <see langword="null" />.
                     </remarks>
                 </RelatedEntity>
+                <CollectionNavigation Name="AccessErrors" ItemType="ILocalAccessError" FullName="ILocalDbFsItem.AccessErrors">
+                    <summary>
+                        Gets the access errors that occurred while attempting to access the current file system item.
+                    </summary>
+                    <value>The access errors that occurred while attempting to access the current file system item.</value>
+                </CollectionNavigation>
             </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectory" RootInterface="ISubdirectory">
@@ -5702,7 +5972,7 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <Properties>
                 <RelatedEntity Name="Volume" Reference="ILocalVolume" FullName="ILocalSubdirectory.Volume">
                     <summary>
-                        Gets or sets the parent volume.
+                        Gets the parent volume.
                     </summary>
                     <value>
                         The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.
@@ -5713,23 +5983,23 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                 </RelatedEntity>
                 <RelatedEntity Name="CrawlConfiguration" Reference="ILocalCrawlConfiguration" FullName="ILocalSubdirectory.CrawlConfiguration">
                     <summary>
-                        Gets or sets the crawl configuration that starts with the current subdirectory.
+                        Gets the crawl configuration that starts with the current subdirectory.
                     </summary>
                     <value>The crawl configuration that starts with the current subdirectory.</value>
                 </RelatedEntity>
-                <CollectionNavigation Name="Files" ItemType="ILocalFile" ForeignKey="ParentId" FullName="ILocalSubdirectory.Files">
+                <CollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalSubdirectory.Files">
                     <summary>
                         Gets the files directly contained within this subdirectory.
                     </summary>
                     <value>The files directly contained within this subdirectory.</value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="SubDirectories" ItemType="ILocalSubdirectory" ForeignKey="ParentId" FullName="ILocalSubdirectory.SubDirectories">
+                <CollectionNavigation Name="SubDirectories" ItemType="ILocalSubdirectory" FullName="ILocalSubdirectory.SubDirectories">
                     <summary>
                         Gets the nested subdirectories directly contained within this subdirectory.
                     </summary>
                     <value>The nested subdirectories directly contained within this subdirectory.</value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="ILocalSubdirectoryAccessError" ForeignKey="TargetId" FullName="ILocalSubdirectory.AccessErrors">
+                <CollectionNavigation Name="AccessErrors" ItemType="ILocalSubdirectoryAccessError" FullName="ILocalSubdirectory.AccessErrors">
                     <summary>
                         Gets the access errors that occurred while attempting to access the current subdirectory.
                     </summary>
@@ -5737,10 +6007,56 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                 </CollectionNavigation>
             </Properties>
         </Entity>
+        <Entity Name="ILocalSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError">
+            <summary></summary>
+            <ExtendsEntity Type="ILocalAccessError" />
+            <ImplementsGenericEntity Type="IAccessError{ILocalSubdirectory}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="ILocalSubdirectory" FullName="ILocalSubdirectoryAccessError.Target">
+                    <summary>
+                        Gets the target subdirectory to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="ISubdirectory" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="ILocalBinaryPropertySet" RootInterface="IBinaryPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="ILocalDbEntity"/>
+            <Properties>
+                <CollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalBinaryPropertySet.Files">
+                    <summary>
+                        Gets the files which have the same length and cryptographic hash.
+                    </summary>
+                    <value>
+                        The files which have the same length and cryptographic hash..
+                    </value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="RedundantSets" ItemType="ILocalRedundantSet" FullName="ILocalBinaryPropertySet.RedundantSets">
+                    <summary>
+                        Gets the sets of files which were determined to be duplicates.
+                    </summary>
+                    <value>
+                        The sets of files which were determined to be duplicates.
+                    </value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
         <Entity Name="ILocalPropertySet" RootInterface="IPropertySet">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <CollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalPropertySet.Files">
+                    <summary>
+                        Gets the files that share the same property values as this property set.
+                    </summary>
+                    <value>
+                        The <see cref="IFile">files</see> that share the same property values as this property set.
+                    </value>
+                </CollectionNavigation>
+            </Properties>
         </Entity>
         <Entity Name="ILocalSummaryPropertySet" RootInterface="ISummaryPropertySet">
             <summary></summary>
@@ -5797,317 +6113,248 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <ExtendsEntity Type="ILocalPropertySet"/>
             <Properties></Properties>
         </Entity>
-        <Entity Name="ILocalBinaryPropertySet" RootInterface="IBinaryPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
-        </Entity>
         <Entity Name="ILocalRedundantSet" RootInterface="IRedundantSet">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="BinaryProperties" Reference="ILocalBinaryPropertySet" FullName="ILocalRedundantSet.BinaryProperties">
+                    <summary>
+                        Gets the binary properties in common with all files in the current redundant set.
+                    </summary>
+                    <value>The binary properties in common with all files in the current redundant set.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="Redundancies" ItemType="ILocalRedundancy" FullName="ILocalRedundantSet.Redundancies">
+                    <summary>
+                        Gets the redundancy entities which represent links to redundant files.
+                    </summary>
+                    <value>The redundancy entities which represent links to redundant files.</value>
+                </CollectionNavigation>
+            </Properties>
         </Entity>
         <Entity Name="ILocalFile" RootInterface="IFile">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbFsItem"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="BinaryProperties" Reference="ILocalBinaryPropertySet" FullName="ILocalFile.BinaryProperties">
+                    <summary>
+                        Gets the binary properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="SummaryProperties" Reference="ILocalSummaryPropertySet" FullName="ILocalFile.SummaryProperties">
+                    <summary>
+                        Gets the summary properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="DocumentProperties" Reference="ILocalDocumentPropertySet" FullName="ILocalFile.DocumentProperties">
+                    <summary>
+                        Gets the document properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="AudioProperties" Reference="ILocalAudioPropertySet" FullName="ILocalFile.AudioProperties">
+                    <summary>
+                        Gets the audio properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="DRMProperties" Reference="ILocalDRMPropertySet" FullName="ILocalFile.DRMProperties">
+                    <summary>
+                        Gets the DRM properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="GPSProperties" Reference="ILocalGPSPropertySet" FullName="ILocalFile.GPSProperties">
+                    <summary>
+                        Gets the GPS properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="ImageProperties" Reference="ILocalImagePropertySet" FullName="ILocalFile.ImageProperties">
+                    <summary>
+                        Gets the image properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="MediaProperties" Reference="ILocalMediaPropertySet" FullName="ILocalFile.MediaProperties">
+                    <summary>
+                        Gets the media properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="MusicProperties" Reference="ILocalMusicPropertySet" FullName="ILocalFile.MusicProperties">
+                    <summary>
+                        Gets the music properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="PhotoProperties" Reference="ILocalPhotoPropertySet" FullName="ILocalFile.PhotoProperties">
+                    <summary>
+                        Gets the photo properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="RecordedTVProperties" Reference="ILocalRecordedTVPropertySet" FullName="ILocalFile.RecordedTVProperties">
+                    <summary>
+                        Gets the recorded tv properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="VideoProperties" Reference="ILocalVideoPropertySet" FullName="ILocalFile.VideoProperties">
+                    <summary>
+                        Gets the video properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="Redundancy" Reference="ILocalRedundancy" FullName="ILocalFile.Redundancy">
+                    <summary>
+                        Gets the redundancy item that indicates the membership of a collection of redundant files.
+                    </summary>
+                    <value>
+                        A <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
+                        or <see langword="null" /> if this file has not been identified as being redundant with any other.
+                    </value>
+                </RelatedEntity>
+                <CollectionNavigation Name="BaselineComparisons" ItemType="ILocalComparison" FullName="ILocalFile.BaselineComparisons">
+                    <summary>
+                        Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
+                    </summary>
+                    <value>
+                        The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
+                    </value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="CorrelativeComparisons" ItemType="ILocalComparison" FullName="ILocalFile.CorrelativeComparisons">
+                    <summary>
+                        Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
+                    </summary>
+                    <value>
+                        The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
+                    </value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="AccessErrors" ItemType="ILocalFileAccessError" FullName="ILocalFile.AccessErrors">
+                    <summary>
+                        Gets the access errors that occurred while trying to open or read from the current file.
+                    </summary>
+                    <value>The access errors that occurred while trying to open or read from the current file.</value>
+                </CollectionNavigation>
+            </Properties>
         </Entity>
         <Entity Name="ILocalRedundancy" RootInterface="IRedundancy">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="File" Reference="ILocalFile" FullName="ILocalRedundancy.File">
+                    <summary>
+                        Gets the file that belongs to the redundancy set.
+                    </summary>
+                    <value>The file that belongs to the redundancy set.</value>
+                </RelatedEntity>
+                <RelatedEntity Name="RedundantSet" Reference="ILocalRedundantSet" FullName="ILocalRedundancy.RedundantSet">
+                    <summary>
+                        Gets the redundancy set.
+                    </summary>
+                    <value>The redundancy set.</value>
+                </RelatedEntity>
+            </Properties>
         </Entity>
         <Entity Name="ILocalComparison" RootInterface="IComparison">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
-            <Properties></Properties>
+            <Properties>
+                <RelatedEntity Name="Baseline" Reference="ILocalFile" FullName="ILocalComparison.Baseline">
+                    <summary>
+                        Gets the baseline file in the comparison.
+                    </summary>
+                    <value>
+                        The generic <see cref="ILocalFile" /> that represents the baseline file in the comparison.
+                    </value>
+                </RelatedEntity>
+                <UniqueIdentifier Name="CorrelativeId" FullName="ILocalComparison.CorrelativeId" Navigation="Correlative">
+                    <summary>
+                        Gets the primary key of the correlative file in the comparison.
+                    </summary>
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalComparison.Correlative" /><see cref="ILocalFile">file entity</see>.
+                    </value>
+                    <remarks>This is also part of this entity's compound primary key.</remarks>
+                </UniqueIdentifier>
+                <RelatedEntity Name="Correlative" Reference="ILocalFile" FullName="ILocalComparison.Correlative">
+                    <summary>
+                        Gets the correlative file in the comparison.
+                    </summary>
+                    <value>
+                        The generic <see cref="ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.
+                    </value>
+                </RelatedEntity>
+            </Properties>
         </Entity>
         <Entity Name="ILocalFileAccessError" RootInterface="IFileAccessError">
             <summary></summary>
-            <ExtendsGenericEntity Type="IAccessError{ILocalFile}" TypeDef="IAccessError{TTarget}"/>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="ILocalSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError">
-            <summary></summary>
-            <ExtendsGenericEntity Type="IAccessError{ILocalSubdirectory}" TypeDef="IAccessError{TTarget}"/>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="ILocalVolumeAccessError" RootInterface="IVolumeAccessError">
-            <summary></summary>
-            <ExtendsGenericEntity Type="IAccessError{ILocalVolume}" TypeDef="IAccessError{TTarget}"/>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="LocalDbEntity" RootInterface="ILocalDbEntity">
-            <summary></summary>
-            <ExtendsEntity Type="DbEntity"/>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="FileSystem" TableName="FileSystems"  RootInterface="ILocalFileSystem">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity"/>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="SymbolicName" TableName="SymbolicNames" RootInterface="ILocalSymbolicName">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity"/>
+            <ExtendsEntity Type="ILocalAccessError" />
+            <ImplementsGenericEntity Type="IAccessError{ILocalFile}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <UniqueIdentifier Name="FileSystemId" FullName="SymbolicName.FileSystemId" Navigation="FileSystem">
+                <RelatedEntity Name="Target" Reference="ILocalFile" FullName="ILocalFileAccessError.Target">
                     <summary>
-                        Gets or sets the Id of the file system that this symbolic name refers to.
+                        Gets the target file to which the access error applies.
                     </summary>
                     <value>
-                        The <see cref="Guid">unique identifier</see> used as the primary key of the file system that this symbolic name refers to.
-                    </value>
-                </UniqueIdentifier>
-                <RelatedEntity Name="FileSystem" Reference="FileSystem" FullName="SymbolicName.FileSystem">
-                    <summary>
-                        Gets or sets the file system that this symbolic name refers to.
-                    </summary>
-                    <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
-                </RelatedEntity>
-            </Properties>
-        </Entity>
-        <Entity Name="Volume" TableName="Volumes" RootInterface="ILocalVolume">
-            <summary></summary>
-            <Properties>
-                <UniqueIdentifier Name="FileSystemId" FullName="Volume.FileSystemId" Navigation="FileSystem">
-                    <summary>
-                        Gets or sets the Id of the file system type.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> of the file system type.
-                    </value>
-                </UniqueIdentifier>
-                <RelatedEntity Name="FileSystem" Reference="FileSystem" FullName="Volume.FileSystem">
-                    <summary>
-                        Gets or sets the file system type.
-                    </summary>
-                    <value>The file system type for this volume.</value>
-                </RelatedEntity>
-            </Properties>
-        </Entity>
-        <Entity Name="CrawlConfiguration" TableName="CrawlConfigurations" RootInterface="ILocalCrawlConfiguration">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="Subdirectory" TableName="Subdirectories" RootInterface="ILocalSubdirectory">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="SummaryPropertySet" TableName="SummaryPropertySets" RootInterface="ILocalSummaryPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="DocumentPropertySet" TableName="DocumentPropertySets" RootInterface="ILocalDocumentPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="AudioPropertySet" TableName="AudioPropertySets" RootInterface="ILocalAudioPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="DRMPropertySet" TableName="DRMPropertySets" RootInterface="ILocalDRMPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="GPSPropertySet" TableName="GPSPropertySets" RootInterface="ILocalGPSPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="ImagePropertySet" TableName="ImagePropertySets" RootInterface="ILocalImagePropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="MediaPropertySet" TableName="MediaPropertySets" RootInterface="ILocalMediaPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="MusicPropertySet" TableName="MusicPropertySets" RootInterface="ILocalMusicPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="PhotoPropertySet" TableName="PhotoPropertySets" RootInterface="ILocalPhotoPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="RecordedTVPropertySet" TableName="RecordedTVPropertySets" RootInterface="ILocalRecordedTVPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="VideoPropertySet" TableName="VideoPropertySets" RootInterface="ILocalVideoPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="BinaryPropertySet" TableName="BinaryPropertySets" RootInterface="ILocalBinaryPropertySet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="RedundantSet" TableName="RedundantSets" RootInterface="ILocalRedundantSet">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="DbFile" TableName="Files" RootInterface="ILocalFile">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="Redundancy" TableName="Redundancies" RootInterface="ILocalRedundancy">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="FileComparison" TableName="FileComparisons" RootInterface="ILocalComparison">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="FileAccessError" TableName="FileAccessErrors" RootInterface="ILocalFileAccessError">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Implements Type="IAccessError{ILocalFile}" />
-            <Properties>
-                <UniqueIdentifier Name="TargetId" FullName="FileAccessError.TargetId" Navigation="Target">
-                    <summary>
-                        Gets or sets Id of the target entity to which the access error applies.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the target entity's primary key the database.
-                    </value>
-                </UniqueIdentifier>
-                <RelatedEntity Name="Target" Reference="IDbEntity" FullName="FileAccessError.Target">
-                    <summary>
-                        Gets or sets the target entity to which the access error applies.
-                    </summary>
-                    <value>
-                        The <see cref="IDbEntity" /> object that this error applies to.
+                        The <typeparamref name="ILocalFile" /> entity that this error applies to.
                     </value>
                 </RelatedEntity>
             </Properties>
-        </Entity>
-        <Entity Name="SubdirectoryAccessError" TableName="SubdirectoryAccessErrors" RootInterface="ILocalSubdirectoryAccessError">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Implements Type="IAccessError{ILocalSubdirectory}" />
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="VolumeAccessError" TableName="VolumeAccessErrors" RootInterface="ILocalVolumeAccessError">
-            <summary></summary>
-            <ExtendsEntity Type="LocalDbEntity" />
-            <Implements Type="IAccessError{ILocalVolume}" />
-            <Properties></Properties>
         </Entity>
     </Local>
     <Upstream>
-        <Entity Name="FileSystem" TableName="FileSystems" RootInterface="IUpstreamFileSystem">
-            <summary></summary>
-            <Properties></Properties>
+        <Entity Name="IUpstreamDbEntity" RootInterface="IDbEntity">
+            <summary>
+                Base interface for all database entity objects for the database which is hosted on the local machine.
+            </summary>
+            <Properties>
+                <RelatedEntity Name="CreatedBy" Reference="IUserProfile" FullName="IUpstreamDbEntity.CreatedBy">
+                    <summary>Gets the user who created the current record.</summary>
+                    <value>The user who created the current record.</value>
+                </RelatedEntity>
+                <RelatedEntity Name="ModifiedBy" Reference="IUserProfile" FullName="IUpstreamDbEntity.ModifiedBy">
+                    <summary>Gets the user who last modified the current record.</summary>
+                    <value>The user who last modified the current record.</value>
+                </RelatedEntity>
+            </Properties>
         </Entity>
-        <Entity Name="SymbolicName" TableName="SymbolicNames" RootInterface="IUpstreamSymbolicName">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="Volume" TableName="Volumes" RootInterface="IUpstreamVolume">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="CrawlConfiguration" TableName="CrawlConfigurations" RootInterface="IUpstreamCrawlConfiguration">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="Subdirectory" TableName="Subdirectories" RootInterface="IUpstreamSubdirectory">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="SummaryPropertySet" TableName="SummaryPropertySets" RootInterface="IUpstreamSummaryPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="DocumentPropertySet" TableName="DocumentPropertySets" RootInterface="IUpstreamDocumentPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="AudioPropertySet" TableName="AudioPropertySets" RootInterface="IUpstreamAudioPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="DRMPropertySet" TableName="DRMPropertySets" RootInterface="IUpstreamDRMPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="GPSPropertySet" TableName="GPSPropertySets" RootInterface="IUpstreamGPSPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="ImagePropertySet" TableName="ImagePropertySets" RootInterface="IUpstreamImagePropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="MediaPropertySet" TableName="MediaPropertySets" RootInterface="IUpstreamMediaPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="MusicPropertySet" TableName="MusicPropertySets" RootInterface="IUpstreamMusicPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="PhotoPropertySet" TableName="PhotoPropertySets" RootInterface="IUpstreamPhotoPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="RecordedTVPropertySet" TableName="RecordedTVPropertySets" RootInterface="IUpstreamRecordedTVPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="VideoPropertySet" TableName="VideoPropertySets" RootInterface="IUpstreamVideoPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="BinaryPropertySet" TableName="BinaryPropertySets" RootInterface="IUpstreamBinaryPropertySet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="RedundantSet" TableName="RedundantSets" RootInterface="IUpstreamRedundantSet">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="DbFile" TableName="Files" RootInterface="IUpstreamFile">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="Redundancy" TableName="Redundancies" RootInterface="IUpstreamRedundancy">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="FileComparison" TableName="FileComparisons" RootInterface="IUpstreamComparison">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="FileAccessError" TableName="FileAccessErrors" RootInterface="IUpstreamFileAccessError">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="SubdirectoryAccessError" TableName="SubdirectoryAccessErrors" RootInterface="IUpstreamSubdirectoryAccessError">
-            <summary></summary>
-            <Properties></Properties>
-        </Entity>
-        <Entity Name="VolumeAccessError" TableName="VolumeAccessErrors" RootInterface="IUpstreamVolumeAccessError">
-            <summary></summary>
-            <Properties></Properties>
+        <Entity Name="IUserProfile" RootInterface="IUpstreamDbEntity">
+            <summary>
+                Base interface for user profile database entities.
+            </summary>
+            <Properties>
+                <NVarChar Name="DisplayName" FullName="IUserProfile.DisplayName">
+                    <summary>Gets the user's display name</summary>
+                    <value>The user's display name</value>
+                </NVarChar>
+            </Properties>
         </Entity>
     </Upstream>
 </EntityDefinitions>
