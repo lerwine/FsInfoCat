@@ -1135,6 +1135,9 @@
   <data name="DisplayName_CrawlStatus_NotRunning" xml:space="preserve">
     <value>Not Running</value>
   </data>
+  <data name="DisplayName_DbPrincipalId" xml:space="preserve">
+    <value />
+  </data>
   <data name="DisplayName_LastCrawlEnd" xml:space="preserve">
     <value />
   </data>
@@ -1145,6 +1148,42 @@
     <value>Logs</value>
   </data>
   <data name="DisplayName_NextScheduledStart" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PlatformType_Android" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PlatformType_IOS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PlatformType_Linux" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PlatformType_OSX" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PlatformType_Other" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PlatformType_Unknown" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PlatformType_Windows" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PriorityLevel_Critical" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PriorityLevel_Deferred" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PriorityLevel_High" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PriorityLevel_Low" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PriorityLevel_Normal" xml:space="preserve">
     <value />
   </data>
   <data name="DisplayName_RescheduleAfterFail" xml:space="preserve">
@@ -1161,5 +1200,47 @@
   </data>
   <data name="DisplayName_StatusCode" xml:space="preserve">
     <value>Status Code</value>
+  </data>
+  <data name="DisplayName_TaskStatus_Active" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_TaskStatus_Canceled" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_TaskStatus_Completed" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_TaskStatus_New" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_TaskStatus_Open" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_TaskStatus_Pending" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UserRole_AppAdministrator" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UserRole_Auditor" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UserRole_ChangeAdministrator" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UserRole_Contributor" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UserRole_ITSupport" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UserRole_None" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UserRole_Reader" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UserRole_SystemAdmin" xml:space="preserve">
+    <value />
   </data>
 </root>

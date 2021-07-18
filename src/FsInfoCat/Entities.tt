@@ -38,7 +38,7 @@ namespace <#=DefaultNamespace#>.Local.Obsolete
 #>
 }
 
-namespace <#=DefaultNamespace#>.Upstream
+namespace <#=DefaultNamespace#>.Upstream.Obsolete
 {<#
     GenerateEntityInterface(EntitiesDocument.Root.Elements("Upstream").Elements("Entity"));
 #>

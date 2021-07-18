@@ -799,6 +799,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_DbPrincipalId {
+            get {
+                return ResourceManager.GetString("DisplayName_DbPrincipalId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Drive Type.
         /// </summary>
         public static string DisplayName_DefaultDriveType {
@@ -2014,6 +2023,69 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PlatformType_Android {
+            get {
+                return ResourceManager.GetString("DisplayName_PlatformType_Android", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PlatformType_IOS {
+            get {
+                return ResourceManager.GetString("DisplayName_PlatformType_IOS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PlatformType_Linux {
+            get {
+                return ResourceManager.GetString("DisplayName_PlatformType_Linux", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PlatformType_OSX {
+            get {
+                return ResourceManager.GetString("DisplayName_PlatformType_OSX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PlatformType_Other {
+            get {
+                return ResourceManager.GetString("DisplayName_PlatformType_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PlatformType_Unknown {
+            get {
+                return ResourceManager.GetString("DisplayName_PlatformType_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PlatformType_Windows {
+            get {
+                return ResourceManager.GetString("DisplayName_PlatformType_Windows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play Count.
         /// </summary>
         public static string DisplayName_PlayCount {
@@ -2037,6 +2109,51 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Priority {
             get {
                 return ResourceManager.GetString("DisplayName_Priority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PriorityLevel_Critical {
+            get {
+                return ResourceManager.GetString("DisplayName_PriorityLevel_Critical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PriorityLevel_Deferred {
+            get {
+                return ResourceManager.GetString("DisplayName_PriorityLevel_Deferred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PriorityLevel_High {
+            get {
+                return ResourceManager.GetString("DisplayName_PriorityLevel_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PriorityLevel_Low {
+            get {
+                return ResourceManager.GetString("DisplayName_PriorityLevel_Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_PriorityLevel_Normal {
+            get {
+                return ResourceManager.GetString("DisplayName_PriorityLevel_Normal", resourceCulture);
             }
         }
         
@@ -2527,6 +2644,60 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_TaskStatus_Active {
+            get {
+                return ResourceManager.GetString("DisplayName_TaskStatus_Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_TaskStatus_Canceled {
+            get {
+                return ResourceManager.GetString("DisplayName_TaskStatus_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_TaskStatus_Completed {
+            get {
+                return ResourceManager.GetString("DisplayName_TaskStatus_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_TaskStatus_New {
+            get {
+                return ResourceManager.GetString("DisplayName_TaskStatus_New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_TaskStatus_Open {
+            get {
+                return ResourceManager.GetString("DisplayName_TaskStatus_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_TaskStatus_Pending {
+            get {
+                return ResourceManager.GetString("DisplayName_TaskStatus_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
         public static string DisplayName_Title {
@@ -2604,6 +2775,78 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_User {
             get {
                 return ResourceManager.GetString("DisplayName_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_UserRole_AppAdministrator {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_AppAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_UserRole_Auditor {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_Auditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_UserRole_ChangeAdministrator {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_ChangeAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_UserRole_Contributor {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_Contributor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_UserRole_ITSupport {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_ITSupport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_UserRole_None {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_UserRole_Reader {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_Reader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DisplayName_UserRole_SystemAdmin {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_SystemAdmin", resourceCulture);
             }
         }
         

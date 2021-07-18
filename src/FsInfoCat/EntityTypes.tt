@@ -51,6 +51,17 @@ PopIndent();
 #>
 }
 
+namespace <#=DefaultNamespace#>.Upstream
+{
+<#
+
+PushIndent("    ");
+isSubsequentMember = GenerateEnumTypes(EntityDefinitionsDocument.Root.Elements("Upstream").Elements("EnumTypes").Elements());
+GenerateEntityTypes(EntityDefinitionsDocument.Root.Elements("Upstream").Elements("Entity"), isSubsequentMember);
+PopIndent();
+#>
+}
+
 <#+
 
 void GetAllBaseTypes(XElement entityElement, Collection<XElement> result, IEnumerable<XElement> scopeElements)

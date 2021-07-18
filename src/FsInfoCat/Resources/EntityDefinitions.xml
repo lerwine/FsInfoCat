@@ -6264,6 +6264,21 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                 </CollectionNavigation>
             </Properties>
         </Entity>
+        <Entity Name="ILocalFileAccessError" RootInterface="IFileAccessError">
+            <summary></summary>
+            <ExtendsEntity Type="ILocalAccessError" />
+            <ImplementsGenericEntity Type="IAccessError{ILocalFile}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="ILocalFile" FullName="ILocalFileAccessError.Target">
+                    <summary>
+                        Gets the target file to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="ILocalFile" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
         <Entity Name="ILocalRedundancy" RootInterface="IRedundancy">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
@@ -6313,23 +6328,100 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                 </RelatedEntity>
             </Properties>
         </Entity>
-        <Entity Name="ILocalFileAccessError" RootInterface="IFileAccessError">
-            <summary></summary>
-            <ExtendsEntity Type="ILocalAccessError" />
-            <ImplementsGenericEntity Type="IAccessError{ILocalFile}" TypeDef="IAccessError{TTarget}"/>
-            <Properties>
-                <RelatedEntity Name="Target" Reference="ILocalFile" FullName="ILocalFileAccessError.Target">
-                    <summary>
-                        Gets the target file to which the access error applies.
-                    </summary>
-                    <value>
-                        The <typeparamref name="ILocalFile" /> entity that this error applies to.
-                    </value>
-                </RelatedEntity>
-            </Properties>
-        </Entity>
     </Local>
     <Upstream>
+        <EnumTypes>
+            <Byte Name="UserRole" IsFlags="true">
+                <summary></summary>
+                <Field Name="None" Value="0" FullName="UserRole.None">
+                    <summary></summary>
+                </Field>
+                <Field Name="Reader" Value="1" FullName="UserRole.Reader">
+                    <summary></summary>
+                </Field>
+                <Field Name="Auditor" Value="2" FullName="UserRole.Auditor">
+                    <summary></summary>
+                </Field>
+                <Field Name="Contributor" Value="4" FullName="UserRole.Contributor">
+                    <summary></summary>
+                </Field>
+                <Field Name="ITSupport" Value="8" FullName="UserRole.ITSupport">
+                    <summary></summary>
+                </Field>
+                <Field Name="ChangeAdministrator" Value="16" FullName="UserRole.ChangeAdministrator">
+                    <summary></summary>
+                </Field>
+                <Field Name="AppAdministrator" Value="32" FullName="UserRole.AppAdministrator">
+                    <summary></summary>
+                </Field>
+                <Field Name="SystemAdmin" Value="64" FullName="UserRole.SystemAdmin">
+                    <summary></summary>
+                </Field>
+            </Byte>
+            <Byte Name="TaskStatus">
+                <summary></summary>
+                <Field Name="New" Value="0" FullName="TaskStatus.New">
+                    <summary></summary>
+                </Field>
+                <Field Name="Open" Value="1" FullName="TaskStatus.Open">
+                    <summary></summary>
+                </Field>
+                <Field Name="Active" Value="2" FullName="TaskStatus.Active">
+                    <summary></summary>
+                </Field>
+                <Field Name="Pending" Value="3" FullName="TaskStatus.Pending">
+                    <summary></summary>
+                </Field>
+                <Field Name="Canceled" Value="4" FullName="TaskStatus.Canceled">
+                    <summary></summary>
+                </Field>
+                <Field Name="Completed" Value="5" FullName="TaskStatus.Completed">
+                    <summary></summary>
+                </Field>
+            </Byte>
+            <Byte Name="PriorityLevel">
+                <summary></summary>
+                <Field Name="Deferred" Value="0" FullName="PriorityLevel.Deferred">
+                    <summary></summary>
+                </Field>
+                <Field Name="Critical" Value="1" FullName="PriorityLevel.Critical">
+                    <summary></summary>
+                </Field>
+                <Field Name="High" Value="2" FullName="PriorityLevel.High">
+                    <summary></summary>
+                </Field>
+                <Field Name="Normal" Value="3" FullName="PriorityLevel.Normal">
+                    <summary></summary>
+                </Field>
+                <Field Name="Low" Value="4" FullName="PriorityLevel.Low">
+                    <summary></summary>
+                </Field>
+            </Byte>
+            <Byte Name="PlatformType">
+                <summary></summary>
+                <Field Name="Unknown" Value="0" FullName="PlatformType.Unknown">
+                    <summary></summary>
+                </Field>
+                <Field Name="Windows" Value="1" FullName="PlatformType.Windows">
+                    <summary></summary>
+                </Field>
+                <Field Name="Linux" Value="2" FullName="PlatformType.Linux">
+                    <summary></summary>
+                </Field>
+                <Field Name="OSX" Value="3" FullName="PlatformType.OSX">
+                    <summary></summary>
+                </Field>
+                <Field Name="Android" Value="4" FullName="PlatformType.Android">
+                    <summary></summary>
+                </Field>
+                <Field Name="IOS" Value="5" FullName="PlatformType.IOS">
+                    <summary></summary>
+                </Field>
+                <Field Name="Other" Value="255" FullName="PlatformType.Other">
+                    <summary></summary>
+                </Field>
+            </Byte>
+        </EnumTypes>
         <Entity Name="IUpstreamDbEntity" RootInterface="IDbEntity">
             <summary>
                 Base interface for all database entity objects for the database which is hosted on the local machine.
@@ -6345,6 +6437,20 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                 </RelatedEntity>
             </Properties>
         </Entity>
+        <Entity Name="IUpstreamAccessError" RootInterface="IDbEntity">
+            <summary></summary>
+            <ExtendsGenericEntity Type="IAccessError{IUpstreamDbEntity}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="IUpstreamDbEntity" FullName="IUpstreamAccessError.Target">
+                    <summary>
+                        Gets the target entity to which the access error applies.
+                    </summary>
+                    <value>
+                        The <see cref="IUpstreamDbEntity" /> object that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
         <Entity Name="IUserProfile" RootInterface="IUpstreamDbEntity">
             <summary>
                 Base interface for user profile database entities.
@@ -6354,6 +6460,742 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                     <summary>Gets the user's display name</summary>
                     <value>The user's display name</value>
                 </NVarChar>
+                <NVarChar Name="FirstName" FullName="IUserProfile.FirstName">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <NVarChar Name="LastName" FullName="IUserProfile.LastName">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <NVarChar Name="MI" FullName="IUserProfile.MI">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <NVarChar Name="Suffix" FullName="IUserProfile.Suffix">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <NVarChar Name="Title" FullName="IUserProfile.Title">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <Int Name="DbPrincipalId" IsNullable="true" FullName="IUserProfile.DbPrincipalId">
+                    <summary></summary>
+                    <value></value>
+                    <DefaultNull/>
+                </Int>
+                <ByteValues Name="SID" FullName="IUserProfile.SID">
+                    <summary></summary>
+                    <value></value>
+                </ByteValues>
+                <Text Name="Notes" FullName="IUserProfile.Notes">
+                    <summary></summary>
+                    <value></value>
+                </Text>
+                <Bit Name="IsInactive" FullName="IUserProfile.IsInactive">
+                    <summary></summary>
+                    <value></value>
+                </Bit>
+                <CollectionNavigation Name="MemberOf" ItemType="IGroupMembership" FullName="IUserProfile.MemberOf">
+                    <summary></summary>
+                    <value></value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="Tasks" ItemType="IMitigationTask" FullName="IUserProfile.Tasks">
+                    <summary></summary>
+                    <value></value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUserGroup" RootInterface="IUpstreamDbEntity">
+            <summary>
+            </summary>
+            <Properties>
+                <NVarChar Name="Name" FullName="IUserGroup.Name">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <Enum Name="Roles" Type="UserRole" FullName="IUserGroup.Roles">
+                    <summary></summary>
+                    <value></value>
+                </Enum>
+                <Text Name="Notes" FullName="IUserGroup.Notes">
+                    <summary></summary>
+                    <value></value>
+                </Text>
+                <CollectionNavigation Name="Members" ItemType="IGroupMembership" FullName="IUserGroup.Members">
+                    <summary></summary>
+                    <value></value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="Tasks" ItemType="IMitigationTask" FullName="IUserGroup.Tasks">
+                    <summary></summary>
+                    <value></value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IGroupMembership" RootInterface="IUpstreamDbEntity">
+            <summary>
+            </summary>
+            <Properties>
+                <Bit Name="IsGroupAdmin" FullName="IGroupMembership.IsGroupAdmin">
+                    <summary></summary>
+                    <value></value>
+                    <Default>false</Default>
+                </Bit>
+                <RelatedEntity Name="Group" Reference="IUserGroup" FullName="IGroupMembership.Group">
+                    <summary></summary>
+                    <value></value>
+                </RelatedEntity>
+                <RelatedEntity Name="User" Reference="IUserProfile" FullName="IGroupMembership.User">
+                    <summary></summary>
+                    <value></value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IMitigationTask" RootInterface="IUpstreamDbEntity">
+            <summary>
+            </summary>
+            <Properties>
+                <NVarChar Name="ShortDescription" FullName="IMitigationTask.ShortDescription">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <Text Name="Notes" FullName="IMitigationTask.Notes">
+                    <summary></summary>
+                    <value></value>
+                </Text>
+                <Enum Name="Status" Type="TaskStatus" FullName="IMitigationTask.Status">
+                    <summary></summary>
+                    <value></value>
+                </Enum>
+                <Enum Name="Priority" Type="PriorityLevel" FullName="IMitigationTask.Priority">
+                    <summary></summary>
+                    <value></value>
+                </Enum>
+                <RelatedEntity Name="AssignmentGroup" Reference="IUserGroup" FullName="IMitigationTask.AssignmentGroup">
+                    <summary></summary>
+                    <value></value>
+                </RelatedEntity>
+                <RelatedEntity Name="AssignedTo" Reference="IUserProfile" FullName="IMitigationTask.AssignedTo">
+                    <summary></summary>
+                    <value></value>
+                </RelatedEntity>
+                <CollectionNavigation Name="FileActions" ItemType="IFileAction" FullName="IMitigationTask.FileActions">
+                    <summary></summary>
+                    <value></value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="SubdirectoryActions" ItemType="ISubdirectoryAction" FullName="IMitigationTask.SubdirectoryActions">
+                    <summary></summary>
+                    <value></value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IHostPlatform" RootInterface="IUpstreamDbEntity">
+            <summary>
+            </summary>
+            <Properties>
+                <NVarChar Name="DisplayName" FullName="IHostPlatform.DisplayName">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <Enum Name="Type" Type="PlatformType" FullName="IHostPlatform.Type">
+                    <summary></summary>
+                    <value></value>
+                </Enum>
+                <Text Name="Notes" FullName="IHostPlatform.Notes">
+                    <summary></summary>
+                    <value></value>
+                </Text>
+                <Bit Name="IsInactive" FullName="IHostPlatform.IsInactive">
+                    <summary></summary>
+                    <value></value>
+                </Bit>
+                <RelatedEntity Name="DefaultFsType" Reference="IUpstreamFileSystem" FullName="IHostPlatform.DefaultFsType">
+                    <summary></summary>
+                    <value></value>
+                </RelatedEntity>
+                <CollectionNavigation Name="HostDevices" ItemType="IHostDevice" FullName="IHostPlatform.HostDevices">
+                    <summary></summary>
+                    <value></value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IHostDevice" RootInterface="IUpstreamDbEntity">
+            <summary>
+            </summary>
+            <Properties>
+                <NVarChar Name="DisplayName" FullName="IHostDevice.DisplayName">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <NVarChar Name="MachineIdentifer" FullName="IHostDevice.MachineIdentifer">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <NVarChar Name="MachineName" FullName="IHostDevice.MachineName">
+                    <summary></summary>
+                    <value></value>
+                </NVarChar>
+                <Text Name="Notes" FullName="IHostDevice.Notes">
+                    <summary></summary>
+                    <value></value>
+                </Text>
+                <Bit Name="IsInactive" FullName="IHostDevice.IsInactive">
+                    <summary></summary>
+                    <value></value>
+                </Bit>
+                <RelatedEntity Name="Platform" Reference="IHostPlatform" FullName="IHostDevice.Platform">
+                    <summary></summary>
+                    <value></value>
+                </RelatedEntity>
+                <CollectionNavigation Name="Volumes" ItemType="IUpstreamVolume" FullName="IHostDevice.Volumes">
+                    <summary></summary>
+                    <value></value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamFileSystem" RootInterface="IFileSystem">
+            <summary>
+                Interface for entities which represent a specific file system type.
+            </summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <CollectionNavigation Name="Volumes" ItemType="IUpstreamVolume" FullName="IUpstreamFileSystem.Volumes">
+                    <summary>
+                        Gets the volumes that share this file system type.
+                    </summary>
+                    <value>The volumes that share this file system type.</value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="SymbolicNames" ItemType="IUpstreamSymbolicName" FullName="IUpstreamFileSystem.SymbolicNames">
+                    <summary>
+                        Gets the symbolic names for the current file system type.
+                    </summary>
+                    <value>The symbolic names that are used to identify the current file system type.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamSymbolicName" RootInterface="ISymbolicName">
+            <summary>
+                Interface for entities that represent a symbolic name for a file system type.
+            </summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="FileSystem" Reference="IUpstreamFileSystem" FullName="IUpstreamSymbolicName.FileSystem">
+                    <summary>
+                        Gets the file system that this symbolic name refers to.
+                    </summary>
+                    <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamVolume" RootInterface="IVolume">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="HostDevice" Reference="IHostDevice" FullName="IUpstreamVolume.HostDevice">
+                    <summary>
+                        Gets the host device for this volume.
+                    </summary>
+                    <value>The host device for this volume.</value>
+                </RelatedEntity>
+                <RelatedEntity Name="RootDirectory" Reference="IUpstreamSubdirectory" FullName="IUpstreamVolume.RootDirectory">
+                    <summary>
+                        Gets the root directory of this volume.
+                    </summary>
+                    <value>The root directory of this volume.</value>
+                </RelatedEntity>
+                <RelatedEntity Name="FileSystem" Reference="IUpstreamFileSystem" FullName="IUpstreamVolume.FileSystem">
+                    <summary>
+                        Gets the file system type.
+                    </summary>
+                    <value>The file system type for this volume.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="AccessErrors" ItemType="IUpstreamVolumeAccessError" FullName="IUpstreamVolume.AccessErrors">
+                    <summary>
+                        Gets the access errors for this volume.
+                    </summary>
+                    <value>The access errors that occurred while trying to access this volume.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamVolumeAccessError" RootInterface="IVolumeAccessError">
+            <summary>
+                Generic interface for volume access error entities.
+            </summary>
+            <ExtendsEntity Type="IUpstreamAccessError" />
+            <ImplementsGenericEntity Type="IAccessError{IUpstreamVolume}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="IUpstreamVolume" FullName="IUpstreamVolumeAccessError.Target">
+                    <summary>
+                        Gets the target volume to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="IUpstreamVolume" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamCrawlConfiguration" RootInterface="ICrawlConfiguration">
+            <summary>
+                Specifies the configuration of a file system crawl.
+            </summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="Root" Reference="IUpstreamSubdirectory" FullName="IUpstreamCrawlConfiguration.Root">
+                    <summary>
+                        Gets the starting subdirectory for the configured subdirectory crawl.
+                    </summary>
+                    <value>The root subdirectory of the configured subdirectory crawl.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="Logs" ItemType="IUpstreamCrawlJobLog" FullName="IUpstreamCrawlConfiguration.Logs">
+                    <summary>Gets the crawl log entries.</summary>
+                    <value>The crawl log entries.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamCrawlJobLog" RootInterface="ICrawlJobLog">
+            <summary>
+                Log of crawl job results.
+            </summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="Configuration" Reference="IUpstreamCrawlConfiguration" FullName="IUpstreamCrawlJobLog.Configuration">
+                    <summary>Gets the configuration source for the file system crawl.</summary>
+                    <value>The configuration for the file system crawl.</value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamDbFsItem" RootInterface="IDbFsItem">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="Parent" Reference="IUpstreamSubdirectory" FullName="IUpstreamSubdirectory.Parent">
+                    <summary>
+                        Gets the parent subdirectory.
+                    </summary>
+                    <value>
+                        The parent <see cref="IUpstreamSubdirectory" /> or <see langword="null" /> if this is the root <see cref="IUpstreamSubdirectory" />.
+                    </value>
+                    <remarks>
+                        If the current entity is a <see cref="IUpstreamSubdirectory" /> and this is <see langword="null" />,
+                        then <see cref="IUpstreamSubdirectory.Volume" /> should not be <see langword="null" />, and vice-versa;
+                        otherwise, if the current entity is a <see cref="IUpstreamFile" />, then this should never be <see langword="null" />.
+                    </remarks>
+                </RelatedEntity>
+                <CollectionNavigation Name="AccessErrors" ItemType="IUpstreamAccessError" FullName="IUpstreamDbFsItem.AccessErrors">
+                    <summary>
+                        Gets the access errors that occurred while attempting to access the current file system item.
+                    </summary>
+                    <value>The access errors that occurred while attempting to access the current file system item.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamSubdirectory" RootInterface="ISubdirectory">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbFsItem"/>
+            <Properties>
+                <RelatedEntity Name="Volume" Reference="IUpstreamVolume" FullName="IUpstreamSubdirectory.Volume">
+                    <summary>
+                        Gets the parent volume.
+                    </summary>
+                    <value>
+                        The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.
+                    </value>
+                    <remarks>
+                        If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.
+                    </remarks>
+                </RelatedEntity>
+                <RelatedEntity Name="CrawlConfiguration" Reference="IUpstreamCrawlConfiguration" FullName="IUpstreamSubdirectory.CrawlConfiguration">
+                    <summary>
+                        Gets the crawl configuration that starts with the current subdirectory.
+                    </summary>
+                    <value>The crawl configuration that starts with the current subdirectory.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamSubdirectory.Files">
+                    <summary>
+                        Gets the files directly contained within this subdirectory.
+                    </summary>
+                    <value>The files directly contained within this subdirectory.</value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="SubDirectories" ItemType="IUpstreamSubdirectory" FullName="IUpstreamSubdirectory.SubDirectories">
+                    <summary>
+                        Gets the nested subdirectories directly contained within this subdirectory.
+                    </summary>
+                    <value>The nested subdirectories directly contained within this subdirectory.</value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="AccessErrors" ItemType="IUpstreamSubdirectoryAccessError" FullName="IUpstreamSubdirectory.AccessErrors">
+                    <summary>
+                        Gets the access errors that occurred while attempting to access the current subdirectory.
+                    </summary>
+                    <value>The access errors that occurred while attempting to access the current subdirectory.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamAccessError" />
+            <ImplementsGenericEntity Type="IAccessError{IUpstreamSubdirectory}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="IUpstreamSubdirectory" FullName="IUpstreamSubdirectoryAccessError.Target">
+                    <summary>
+                        Gets the target subdirectory to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="ISubdirectory" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="ISubdirectoryAction" RootInterface="IUpstreamDbEntity">
+            <summary></summary>
+            <Properties>
+                <RelatedEntity Name="Task" Reference="IMitigationTask" FullName="ISubdirectoryAction.Task">
+                    <summary>
+                    </summary>
+                    <value>
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="Source" Reference="IUpstreamSubdirectory" FullName="ISubdirectoryAction.Source">
+                    <summary>
+                    </summary>
+                    <value>
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="Target" Reference="IUpstreamSubdirectory" FullName="ISubdirectoryAction.Target">
+                    <summary>
+                    </summary>
+                    <value>
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamBinaryPropertySet" RootInterface="IBinaryPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <CollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamBinaryPropertySet.Files">
+                    <summary>
+                        Gets the files which have the same length and cryptographic hash.
+                    </summary>
+                    <value>
+                        The files which have the same length and cryptographic hash..
+                    </value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="RedundantSets" ItemType="IUpstreamRedundantSet" FullName="IUpstreamBinaryPropertySet.RedundantSets">
+                    <summary>
+                        Gets the sets of files which were determined to be duplicates.
+                    </summary>
+                    <value>
+                        The sets of files which were determined to be duplicates.
+                    </value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamPropertySet" RootInterface="IPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <CollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamPropertySet.Files">
+                    <summary>
+                        Gets the files that share the same property values as this property set.
+                    </summary>
+                    <value>
+                        The <see cref="IFile">files</see> that share the same property values as this property set.
+                    </value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamSummaryPropertySet" RootInterface="ISummaryPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamDocumentPropertySet" RootInterface="IDocumentPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamAudioPropertySet" RootInterface="IAudioPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamDRMPropertySet" RootInterface="IDRMPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamGPSPropertySet" RootInterface="IGPSPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamImagePropertySet" RootInterface="IImagePropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamMediaPropertySet" RootInterface="IMediaPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamMusicPropertySet" RootInterface="IMusicPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamPhotoPropertySet" RootInterface="IPhotoPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamRecordedTVPropertySet" RootInterface="IRecordedTVPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamVideoPropertySet" RootInterface="IVideoPropertySet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamPropertySet"/>
+            <Properties></Properties>
+        </Entity>
+        <Entity Name="IUpstreamRedundantSet" RootInterface="IRedundantSet">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="BinaryProperties" Reference="IUpstreamBinaryPropertySet" FullName="IUpstreamRedundantSet.BinaryProperties">
+                    <summary>
+                        Gets the binary properties in common with all files in the current redundant set.
+                    </summary>
+                    <value>The binary properties in common with all files in the current redundant set.</value>
+                </RelatedEntity>
+                <CollectionNavigation Name="Redundancies" ItemType="IUpstreamRedundancy" FullName="IUpstreamRedundantSet.Redundancies">
+                    <summary>
+                        Gets the redundancy entities which represent links to redundant files.
+                    </summary>
+                    <value>The redundancy entities which represent links to redundant files.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamFile" RootInterface="IFile">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbFsItem"/>
+            <Properties>
+                <RelatedEntity Name="BinaryProperties" Reference="IUpstreamBinaryPropertySet" FullName="IUpstreamFile.BinaryProperties">
+                    <summary>
+                        Gets the binary properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="SummaryProperties" Reference="IUpstreamSummaryPropertySet" FullName="IUpstreamFile.SummaryProperties">
+                    <summary>
+                        Gets the summary properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="DocumentProperties" Reference="IUpstreamDocumentPropertySet" FullName="IUpstreamFile.DocumentProperties">
+                    <summary>
+                        Gets the document properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="AudioProperties" Reference="IUpstreamAudioPropertySet" FullName="IUpstreamFile.AudioProperties">
+                    <summary>
+                        Gets the audio properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="DRMProperties" Reference="IUpstreamDRMPropertySet" FullName="IUpstreamFile.DRMProperties">
+                    <summary>
+                        Gets the DRM properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="GPSProperties" Reference="IUpstreamGPSPropertySet" FullName="IUpstreamFile.GPSProperties">
+                    <summary>
+                        Gets the GPS properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="ImageProperties" Reference="IUpstreamImagePropertySet" FullName="IUpstreamFile.ImageProperties">
+                    <summary>
+                        Gets the image properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="MediaProperties" Reference="IUpstreamMediaPropertySet" FullName="IUpstreamFile.MediaProperties">
+                    <summary>
+                        Gets the media properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="MusicProperties" Reference="IUpstreamMusicPropertySet" FullName="IUpstreamFile.MusicProperties">
+                    <summary>
+                        Gets the music properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="PhotoProperties" Reference="IUpstreamPhotoPropertySet" FullName="IUpstreamFile.PhotoProperties">
+                    <summary>
+                        Gets the photo properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="RecordedTVProperties" Reference="IUpstreamRecordedTVPropertySet" FullName="IUpstreamFile.RecordedTVProperties">
+                    <summary>
+                        Gets the recorded tv properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="VideoProperties" Reference="IUpstreamVideoPropertySet" FullName="IUpstreamFile.VideoProperties">
+                    <summary>
+                        Gets the video properties for the current file.
+                    </summary>
+                    <value>
+                        The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="Redundancy" Reference="IUpstreamRedundancy" FullName="IUpstreamFile.Redundancy">
+                    <summary>
+                        Gets the redundancy item that indicates the membership of a collection of redundant files.
+                    </summary>
+                    <value>
+                        A <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
+                        or <see langword="null" /> if this file has not been identified as being redundant with any other.
+                    </value>
+                </RelatedEntity>
+                <CollectionNavigation Name="BaselineComparisons" ItemType="IUpstreamComparison" FullName="IUpstreamFile.BaselineComparisons">
+                    <summary>
+                        Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
+                    </summary>
+                    <value>
+                        The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
+                    </value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="CorrelativeComparisons" ItemType="IUpstreamComparison" FullName="IUpstreamFile.CorrelativeComparisons">
+                    <summary>
+                        Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
+                    </summary>
+                    <value>
+                        The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
+                    </value>
+                </CollectionNavigation>
+                <CollectionNavigation Name="AccessErrors" ItemType="IUpstreamFileAccessError" FullName="IUpstreamFile.AccessErrors">
+                    <summary>
+                        Gets the access errors that occurred while trying to open or read from the current file.
+                    </summary>
+                    <value>The access errors that occurred while trying to open or read from the current file.</value>
+                </CollectionNavigation>
+            </Properties>
+        </Entity>
+        <Entity Name="IFileAction" RootInterface="IUpstreamDbEntity">
+            <summary></summary>
+            <Properties>
+                <RelatedEntity Name="Task" Reference="IMitigationTask" FullName="IFileAction.Task">
+                    <summary>
+                    </summary>
+                    <value>
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="Source" Reference="IUpstreamFile" FullName="IFileAction.Source">
+                    <summary>
+                    </summary>
+                    <value>
+                    </value>
+                </RelatedEntity>
+                <RelatedEntity Name="Target" Reference="IUpstreamSubdirectory" FullName="IFileAction.Target">
+                    <summary>
+                    </summary>
+                    <value>
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamFileAccessError" RootInterface="IFileAccessError">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamAccessError" />
+            <ImplementsGenericEntity Type="IAccessError{IUpstreamFile}" TypeDef="IAccessError{TTarget}"/>
+            <Properties>
+                <RelatedEntity Name="Target" Reference="IUpstreamFile" FullName="IUpstreamFileAccessError.Target">
+                    <summary>
+                        Gets the target file to which the access error applies.
+                    </summary>
+                    <value>
+                        The <typeparamref name="IUpstreamFile" /> entity that this error applies to.
+                    </value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamRedundancy" RootInterface="IRedundancy">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="File" Reference="IUpstreamFile" FullName="IUpstreamRedundancy.File">
+                    <summary>
+                        Gets the file that belongs to the redundancy set.
+                    </summary>
+                    <value>The file that belongs to the redundancy set.</value>
+                </RelatedEntity>
+                <RelatedEntity Name="RedundantSet" Reference="IUpstreamRedundantSet" FullName="IUpstreamRedundancy.RedundantSet">
+                    <summary>
+                        Gets the redundancy set.
+                    </summary>
+                    <value>The redundancy set.</value>
+                </RelatedEntity>
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamComparison" RootInterface="IComparison">
+            <summary></summary>
+            <ExtendsEntity Type="IUpstreamDbEntity"/>
+            <Properties>
+                <RelatedEntity Name="Baseline" Reference="IUpstreamFile" FullName="IUpstreamComparison.Baseline">
+                    <summary>
+                        Gets the baseline file in the comparison.
+                    </summary>
+                    <value>
+                        The generic <see cref="IUpstreamFile" /> that represents the baseline file in the comparison.
+                    </value>
+                </RelatedEntity>
+                <UniqueIdentifier Name="CorrelativeId" FullName="IUpstreamComparison.CorrelativeId" Navigation="Correlative">
+                    <summary>
+                        Gets the primary key of the correlative file in the comparison.
+                    </summary>
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamComparison.Correlative" /><see cref="IUpstreamFile">file entity</see>.
+                    </value>
+                    <remarks>This is also part of this entity's compound primary key.</remarks>
+                </UniqueIdentifier>
+                <RelatedEntity Name="Correlative" Reference="IUpstreamFile" FullName="IUpstreamComparison.Correlative">
+                    <summary>
+                        Gets the correlative file in the comparison.
+                    </summary>
+                    <value>
+                        The generic <see cref="IUpstreamFile" /> that represents the correlative file, which is the new or changed file in the comparison.
+                    </value>
+                </RelatedEntity>
             </Properties>
         </Entity>
     </Upstream>

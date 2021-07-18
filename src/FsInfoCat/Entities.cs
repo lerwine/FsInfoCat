@@ -3779,7 +3779,7 @@ namespace FsInfoCat.Local.Obsolete
     }
 }
 
-namespace FsInfoCat.Upstream
+namespace FsInfoCat.Upstream.Obsolete
 {
     /// <summary />
     public interface IUpstreamDbEntity : IDbEntity

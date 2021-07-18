@@ -4822,6 +4822,18 @@ namespace FsInfoCat.Local
     }
 
     /// <summary></summary>
+    /// <seealso cref="ILocalAccessError" />
+    /// <seealso cref="IFileAccessError" />
+    /// <seealso cref="IAccessError{ILocalFile}" />
+    public interface ILocalFileAccessError : ILocalAccessError, IFileAccessError, IAccessError<ILocalFile>
+    {
+        /// <summary>Gets the target file to which the access error applies.</summary>
+        /// <value>The <typeparamref name="ILocalFile" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new ILocalFile Target { get; }
+    }
+
+    /// <summary></summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundancy" />
     public interface ILocalRedundancy : ILocalDbEntity, IRedundancy
@@ -4858,17 +4870,846 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
         new ILocalFile Correlative { get; }
     }
+}
+
+namespace FsInfoCat.Upstream
+{
+    /// <summary></summary>
+    [Flags]
+    public enum UserRole : byte
+    {
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_None), ResourceType = typeof(Properties.Resources))]
+        None = 0,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_Reader), ResourceType = typeof(Properties.Resources))]
+        Reader = 1,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_Auditor), ResourceType = typeof(Properties.Resources))]
+        Auditor = 2,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_Contributor), ResourceType = typeof(Properties.Resources))]
+        Contributor = 4,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_ITSupport), ResourceType = typeof(Properties.Resources))]
+        ITSupport = 8,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_ChangeAdministrator), ResourceType = typeof(Properties.Resources))]
+        ChangeAdministrator = 16,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_AppAdministrator), ResourceType = typeof(Properties.Resources))]
+        AppAdministrator = 32,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_SystemAdmin), ResourceType = typeof(Properties.Resources))]
+        SystemAdmin = 64
+    }
 
     /// <summary></summary>
-    /// <seealso cref="ILocalAccessError" />
+    public enum TaskStatus : byte
+    {
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_New), ResourceType = typeof(Properties.Resources))]
+        New = 0,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Open), ResourceType = typeof(Properties.Resources))]
+        Open = 1,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Active), ResourceType = typeof(Properties.Resources))]
+        Active = 2,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Pending), ResourceType = typeof(Properties.Resources))]
+        Pending = 3,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Canceled), ResourceType = typeof(Properties.Resources))]
+        Canceled = 4,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Completed), ResourceType = typeof(Properties.Resources))]
+        Completed = 5
+    }
+
+    /// <summary></summary>
+    public enum PriorityLevel : byte
+    {
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_Deferred), ResourceType = typeof(Properties.Resources))]
+        Deferred = 0,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_Critical), ResourceType = typeof(Properties.Resources))]
+        Critical = 1,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_High), ResourceType = typeof(Properties.Resources))]
+        High = 2,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_Normal), ResourceType = typeof(Properties.Resources))]
+        Normal = 3,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_Low), ResourceType = typeof(Properties.Resources))]
+        Low = 4
+    }
+
+    /// <summary></summary>
+    public enum PlatformType : byte
+    {
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Unknown), ResourceType = typeof(Properties.Resources))]
+        Unknown = 0,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Windows), ResourceType = typeof(Properties.Resources))]
+        Windows = 1,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Linux), ResourceType = typeof(Properties.Resources))]
+        Linux = 2,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_OSX), ResourceType = typeof(Properties.Resources))]
+        OSX = 3,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Android), ResourceType = typeof(Properties.Resources))]
+        Android = 4,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_IOS), ResourceType = typeof(Properties.Resources))]
+        IOS = 5,
+
+        /// <summary></summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Other), ResourceType = typeof(Properties.Resources))]
+        Other = 255
+    }
+
+    /// <summary>Base interface for all database entity objects for the database which is hosted on the local machine.</summary>
+    /// <seealso cref="IDbEntity" />
+    public interface IUpstreamDbEntity : IDbEntity
+    {
+        /// <summary>Gets the user who created the current record.</summary>
+        /// <value>The user who created the current record.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CreatedBy), ResourceType = typeof(Properties.Resources))]
+        IUserProfile CreatedBy { get; }
+
+        /// <summary>Gets the user who last modified the current record.</summary>
+        /// <value>The user who last modified the current record.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_ModifiedBy), ResourceType = typeof(Properties.Resources))]
+        IUserProfile ModifiedBy { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IAccessError{IUpstreamDbEntity}" />
+    /// <seealso cref="IDbEntity" />
+    public interface IUpstreamAccessError : IAccessError<IUpstreamDbEntity>, IDbEntity
+    {
+        /// <summary>Gets the target entity to which the access error applies.</summary>
+        /// <value>The <see cref="IUpstreamDbEntity" /> object that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamDbEntity Target { get; }
+    }
+
+    /// <summary>Base interface for user profile database entities.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IUserProfile : IUpstreamDbEntity
+    {
+        /// <summary>Gets the user's display name</summary>
+        /// <value>The user's display name</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
+        string DisplayName { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_FirstName), ResourceType = typeof(Properties.Resources))]
+        string FirstName { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_LastName), ResourceType = typeof(Properties.Resources))]
+        string LastName { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_MI), ResourceType = typeof(Properties.Resources))]
+        string MI { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Suffix), ResourceType = typeof(Properties.Resources))]
+        string Suffix { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Title), ResourceType = typeof(Properties.Resources))]
+        string Title { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DbPrincipalId), ResourceType = typeof(Properties.Resources))]
+        int? DbPrincipalId { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SID), ResourceType = typeof(Properties.Resources))]
+        ByteValues SID { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        string Notes { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
+        bool IsInactive { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_MemberOf), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IGroupMembership> MemberOf { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Tasks), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IMitigationTask> Tasks { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IUserGroup : IUpstreamDbEntity
+    {
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Name), ResourceType = typeof(Properties.Resources))]
+        string Name { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Roles), ResourceType = typeof(Properties.Resources))]
+        UserRole Roles { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        string Notes { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Members), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IGroupMembership> Members { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Tasks), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IMitigationTask> Tasks { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IGroupMembership : IUpstreamDbEntity
+    {
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_IsGroupAdmin), ResourceType = typeof(Properties.Resources))]
+        bool IsGroupAdmin { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Group), ResourceType = typeof(Properties.Resources))]
+        IUserGroup Group { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_User), ResourceType = typeof(Properties.Resources))]
+        IUserProfile User { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IMitigationTask : IUpstreamDbEntity
+    {
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_ShortDescription), ResourceType = typeof(Properties.Resources))]
+        string ShortDescription { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        string Notes { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
+        TaskStatus Status { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Priority), ResourceType = typeof(Properties.Resources))]
+        PriorityLevel Priority { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AssignmentGroup), ResourceType = typeof(Properties.Resources))]
+        IUserGroup AssignmentGroup { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AssignedTo), ResourceType = typeof(Properties.Resources))]
+        IUserProfile AssignedTo { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_FileActions), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IFileAction> FileActions { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SubdirectoryActions), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<ISubdirectoryAction> SubdirectoryActions { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IHostPlatform : IUpstreamDbEntity
+    {
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
+        string DisplayName { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Type), ResourceType = typeof(Properties.Resources))]
+        PlatformType Type { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        string Notes { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
+        bool IsInactive { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DefaultFsType), ResourceType = typeof(Properties.Resources))]
+        IUpstreamFileSystem DefaultFsType { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_HostDevices), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IHostDevice> HostDevices { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IHostDevice : IUpstreamDbEntity
+    {
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
+        string DisplayName { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_MachineIdentifer), ResourceType = typeof(Properties.Resources))]
+        string MachineIdentifer { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_MachineName), ResourceType = typeof(Properties.Resources))]
+        string MachineName { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        string Notes { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
+        bool IsInactive { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Platform), ResourceType = typeof(Properties.Resources))]
+        IHostPlatform Platform { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Volumes), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IUpstreamVolume> Volumes { get; }
+    }
+
+    /// <summary>Interface for entities which represent a specific file system type.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IFileSystem" />
+    public interface IUpstreamFileSystem : IUpstreamDbEntity, IFileSystem
+    {
+        /// <summary>Gets the volumes that share this file system type.</summary>
+        /// <value>The volumes that share this file system type.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Volumes), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamVolume> Volumes { get; }
+
+        /// <summary>Gets the symbolic names for the current file system type.</summary>
+        /// <value>The symbolic names that are used to identify the current file system type.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamSymbolicName> SymbolicNames { get; }
+    }
+
+    /// <summary>Interface for entities that represent a symbolic name for a file system type.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="ISymbolicName" />
+    public interface IUpstreamSymbolicName : IUpstreamDbEntity, ISymbolicName
+    {
+        /// <summary>Gets the file system that this symbolic name refers to.</summary>
+        /// <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamFileSystem FileSystem { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IVolume" />
+    public interface IUpstreamVolume : IUpstreamDbEntity, IVolume
+    {
+        /// <summary>Gets the host device for this volume.</summary>
+        /// <value>The host device for this volume.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_HostDevice), ResourceType = typeof(Properties.Resources))]
+        IHostDevice HostDevice { get; }
+
+        /// <summary>Gets the root directory of this volume.</summary>
+        /// <value>The root directory of this volume.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamSubdirectory RootDirectory { get; }
+
+        /// <summary>Gets the file system type.</summary>
+        /// <value>The file system type for this volume.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamFileSystem FileSystem { get; }
+
+        /// <summary>Gets the access errors for this volume.</summary>
+        /// <value>The access errors that occurred while trying to access this volume.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamVolumeAccessError> AccessErrors { get; }
+    }
+
+    /// <summary>Generic interface for volume access error entities.</summary>
+    /// <seealso cref="IUpstreamAccessError" />
+    /// <seealso cref="IVolumeAccessError" />
+    /// <seealso cref="IAccessError{IUpstreamVolume}" />
+    public interface IUpstreamVolumeAccessError : IUpstreamAccessError, IVolumeAccessError, IAccessError<IUpstreamVolume>
+    {
+        /// <summary>Gets the target volume to which the access error applies.</summary>
+        /// <value>The <typeparamref name="IUpstreamVolume" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamVolume Target { get; }
+    }
+
+    /// <summary>Specifies the configuration of a file system crawl.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="ICrawlConfiguration" />
+    public interface IUpstreamCrawlConfiguration : IUpstreamDbEntity, ICrawlConfiguration
+    {
+        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
+        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamSubdirectory Root { get; }
+
+        /// <summary>Gets the crawl log entries.</summary>
+        /// <value>The crawl log entries.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamCrawlJobLog> Logs { get; }
+    }
+
+    /// <summary>Log of crawl job results.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="ICrawlJobLog" />
+    public interface IUpstreamCrawlJobLog : IUpstreamDbEntity, ICrawlJobLog
+    {
+        /// <summary>Gets the configuration source for the file system crawl.</summary>
+        /// <value>The configuration for the file system crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamCrawlConfiguration Configuration { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IDbFsItem" />
+    public interface IUpstreamDbFsItem : IUpstreamDbEntity, IDbFsItem
+    {
+        /// <summary>Gets the parent subdirectory.</summary>
+        /// <value>The parent <see cref="IUpstreamSubdirectory" /> or <see langword="null" /> if this is the root <see cref="IUpstreamSubdirectory" />.</value>
+        /// <remarks>
+        /// If the current entity is a <see cref="IUpstreamSubdirectory" /> and this is <see langword="null" />,
+        /// then <see cref="IUpstreamSubdirectory.Volume" /> should not be <see langword="null" />, and vice-versa;
+        /// otherwise, if the current entity is a <see cref="IUpstreamFile" />, then this should never be <see langword="null" />.
+        /// </remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamSubdirectory Parent { get; }
+
+        /// <summary>Gets the access errors that occurred while attempting to access the current file system item.</summary>
+        /// <value>The access errors that occurred while attempting to access the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        IEnumerable<IUpstreamAccessError> AccessErrors { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbFsItem" />
+    /// <seealso cref="ISubdirectory" />
+    public interface IUpstreamSubdirectory : IUpstreamDbFsItem, ISubdirectory
+    {
+        /// <summary>Gets the parent volume.</summary>
+        /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
+        /// <remarks>If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.</remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Volume), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamVolume Volume { get; }
+
+        /// <summary>Gets the crawl configuration that starts with the current subdirectory.</summary>
+        /// <value>The crawl configuration that starts with the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamCrawlConfiguration CrawlConfiguration { get; }
+
+        /// <summary>Gets the files directly contained within this subdirectory.</summary>
+        /// <value>The files directly contained within this subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamFile> Files { get; }
+
+        /// <summary>Gets the nested subdirectories directly contained within this subdirectory.</summary>
+        /// <value>The nested subdirectories directly contained within this subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SubDirectories), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamSubdirectory> SubDirectories { get; }
+
+        /// <summary>Gets the access errors that occurred while attempting to access the current subdirectory.</summary>
+        /// <value>The access errors that occurred while attempting to access the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamSubdirectoryAccessError> AccessErrors { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamAccessError" />
+    /// <seealso cref="ISubdirectoryAccessError" />
+    /// <seealso cref="IAccessError{IUpstreamSubdirectory}" />
+    public interface IUpstreamSubdirectoryAccessError : IUpstreamAccessError, ISubdirectoryAccessError, IAccessError<IUpstreamSubdirectory>
+    {
+        /// <summary>Gets the target subdirectory to which the access error applies.</summary>
+        /// <value>The <typeparamref name="ISubdirectory" /> entity that this error applies to.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamSubdirectory Target { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface ISubdirectoryAction : IUpstreamDbEntity
+    {
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Task), ResourceType = typeof(Properties.Resources))]
+        IMitigationTask Task { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Source), ResourceType = typeof(Properties.Resources))]
+        IUpstreamSubdirectory Source { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        IUpstreamSubdirectory Target { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IBinaryPropertySet" />
+    public interface IUpstreamBinaryPropertySet : IUpstreamDbEntity, IBinaryPropertySet
+    {
+        /// <summary>Gets the files which have the same length and cryptographic hash.</summary>
+        /// <value>The files which have the same length and cryptographic hash..</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamFile> Files { get; }
+
+        /// <summary>Gets the sets of files which were determined to be duplicates.</summary>
+        /// <value>The sets of files which were determined to be duplicates.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamRedundantSet> RedundantSets { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IPropertySet" />
+    public interface IUpstreamPropertySet : IUpstreamDbEntity, IPropertySet
+    {
+        /// <summary>Gets the files that share the same property values as this property set.</summary>
+        /// <value>The <see cref="IFile">files</see> that share the same property values as this property set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamFile> Files { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="ISummaryPropertySet" />
+    public interface IUpstreamSummaryPropertySet : IUpstreamPropertySet, ISummaryPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IDocumentPropertySet" />
+    public interface IUpstreamDocumentPropertySet : IUpstreamPropertySet, IDocumentPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IAudioPropertySet" />
+    public interface IUpstreamAudioPropertySet : IUpstreamPropertySet, IAudioPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IDRMPropertySet" />
+    public interface IUpstreamDRMPropertySet : IUpstreamPropertySet, IDRMPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IGPSPropertySet" />
+    public interface IUpstreamGPSPropertySet : IUpstreamPropertySet, IGPSPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IImagePropertySet" />
+    public interface IUpstreamImagePropertySet : IUpstreamPropertySet, IImagePropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IMediaPropertySet" />
+    public interface IUpstreamMediaPropertySet : IUpstreamPropertySet, IMediaPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IMusicPropertySet" />
+    public interface IUpstreamMusicPropertySet : IUpstreamPropertySet, IMusicPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IPhotoPropertySet" />
+    public interface IUpstreamPhotoPropertySet : IUpstreamPropertySet, IPhotoPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IRecordedTVPropertySet" />
+    public interface IUpstreamRecordedTVPropertySet : IUpstreamPropertySet, IRecordedTVPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamPropertySet" />
+    /// <seealso cref="IVideoPropertySet" />
+    public interface IUpstreamVideoPropertySet : IUpstreamPropertySet, IVideoPropertySet
+    {
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IRedundantSet" />
+    public interface IUpstreamRedundantSet : IUpstreamDbEntity, IRedundantSet
+    {
+        /// <summary>Gets the binary properties in common with all files in the current redundant set.</summary>
+        /// <value>The binary properties in common with all files in the current redundant set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamBinaryPropertySet BinaryProperties { get; }
+
+        /// <summary>Gets the redundancy entities which represent links to redundant files.</summary>
+        /// <value>The redundancy entities which represent links to redundant files.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamRedundancy> Redundancies { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbFsItem" />
+    /// <seealso cref="IFile" />
+    public interface IUpstreamFile : IUpstreamDbFsItem, IFile
+    {
+        /// <summary>Gets the binary properties for the current file.</summary>
+        /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamBinaryPropertySet BinaryProperties { get; }
+
+        /// <summary>Gets the summary properties for the current file.</summary>
+        /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamSummaryPropertySet SummaryProperties { get; }
+
+        /// <summary>Gets the document properties for the current file.</summary>
+        /// <value>The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DocumentProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamDocumentPropertySet DocumentProperties { get; }
+
+        /// <summary>Gets the audio properties for the current file.</summary>
+        /// <value>The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AudioProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamAudioPropertySet AudioProperties { get; }
+
+        /// <summary>Gets the DRM properties for the current file.</summary>
+        /// <value>The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DRMProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamDRMPropertySet DRMProperties { get; }
+
+        /// <summary>Gets the GPS properties for the current file.</summary>
+        /// <value>The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_GPSProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamGPSPropertySet GPSProperties { get; }
+
+        /// <summary>Gets the image properties for the current file.</summary>
+        /// <value>The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_ImageProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamImagePropertySet ImageProperties { get; }
+
+        /// <summary>Gets the media properties for the current file.</summary>
+        /// <value>The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_MediaProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamMediaPropertySet MediaProperties { get; }
+
+        /// <summary>Gets the music properties for the current file.</summary>
+        /// <value>The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_MusicProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamMusicPropertySet MusicProperties { get; }
+
+        /// <summary>Gets the photo properties for the current file.</summary>
+        /// <value>The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamPhotoPropertySet PhotoProperties { get; }
+
+        /// <summary>Gets the recorded tv properties for the current file.</summary>
+        /// <value>The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RecordedTVProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamRecordedTVPropertySet RecordedTVProperties { get; }
+
+        /// <summary>Gets the video properties for the current file.</summary>
+        /// <value>The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_VideoProperties), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamVideoPropertySet VideoProperties { get; }
+
+        /// <summary>Gets the redundancy item that indicates the membership of a collection of redundant files.</summary>
+        /// <value>
+        /// A <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
+        /// or <see langword="null" /> if this file has not been identified as being redundant with any other.
+        /// </value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Redundancy), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamRedundancy Redundancy { get; }
+
+        /// <summary>Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.</summary>
+        /// <value>The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_BaselineComparisons), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamComparison> BaselineComparisons { get; }
+
+        /// <summary>Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.</summary>
+        /// <value>The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CorrelativeComparisons), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamComparison> CorrelativeComparisons { get; }
+
+        /// <summary>Gets the access errors that occurred while trying to open or read from the current file.</summary>
+        /// <value>The access errors that occurred while trying to open or read from the current file.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamFileAccessError> AccessErrors { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IFileAction : IUpstreamDbEntity
+    {
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Task), ResourceType = typeof(Properties.Resources))]
+        IMitigationTask Task { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Source), ResourceType = typeof(Properties.Resources))]
+        IUpstreamFile Source { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        IUpstreamSubdirectory Target { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="IFileAccessError" />
-    /// <seealso cref="IAccessError{ILocalFile}" />
-    public interface ILocalFileAccessError : ILocalAccessError, IFileAccessError, IAccessError<ILocalFile>
+    /// <seealso cref="IAccessError{IUpstreamFile}" />
+    public interface IUpstreamFileAccessError : IUpstreamAccessError, IFileAccessError, IAccessError<IUpstreamFile>
     {
         /// <summary>Gets the target file to which the access error applies.</summary>
-        /// <value>The <typeparamref name="ILocalFile" /> entity that this error applies to.</value>
+        /// <value>The <typeparamref name="IUpstreamFile" /> entity that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
-        new ILocalFile Target { get; }
+        new IUpstreamFile Target { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IRedundancy" />
+    public interface IUpstreamRedundancy : IUpstreamDbEntity, IRedundancy
+    {
+        /// <summary>Gets the file that belongs to the redundancy set.</summary>
+        /// <value>The file that belongs to the redundancy set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_File), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamFile File { get; }
+
+        /// <summary>Gets the redundancy set.</summary>
+        /// <value>The redundancy set.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamRedundantSet RedundantSet { get; }
+    }
+
+    /// <summary></summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IComparison" />
+    public interface IUpstreamComparison : IUpstreamDbEntity, IComparison
+    {
+        /// <summary>Gets the baseline file in the comparison.</summary>
+        /// <value>The generic <see cref="IUpstreamFile" /> that represents the baseline file in the comparison.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Baseline), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamFile Baseline { get; }
+
+        /// <summary>Gets the primary key of the correlative file in the comparison.</summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamComparison.Correlative" /><see cref="IUpstreamFile">file entity</see>.</value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CorrelativeId), ResourceType = typeof(Properties.Resources))]
+        new Guid CorrelativeId { get; }
+
+        /// <summary>Gets the correlative file in the comparison.</summary>
+        /// <value>The generic <see cref="IUpstreamFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamFile Correlative { get; }
     }
 }
 
