@@ -612,6 +612,8 @@ namespace FsInfoCat.Local
 
         IEnumerable<IFileAccessError> IFile.AccessErrors => AccessErrors.Cast<ILocalFileAccessError>();
 
+        IEnumerable<IAccessError> IDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError>();
+
         #endregion
 
         public DbFile()

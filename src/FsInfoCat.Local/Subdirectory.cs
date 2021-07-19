@@ -202,6 +202,8 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalAccessError> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<ILocalAccessError>();
 
+        IEnumerable<IAccessError> IDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError>();
+
         #endregion
 
         public Subdirectory()

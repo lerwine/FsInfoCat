@@ -108,7 +108,7 @@ IEnumerable<FileInfo> GetProjectFiles(Func<EnvDTE.ProjectItem, System.IO.FileInf
 
 	if (predicate == null)
 		return items.SelectMany(pi => GetProjectItemFiles(pi));
-		
+
 	return items.SelectMany(pi => GetProjectItemFiles(pi).Where(fi => predicate(pi, fi)));
 }
 IEnumerable<FileInfo> GetCodeProjectFiles() { return GetProjectFiles((EnvDTE.ProjectItem pi, System.IO.FileInfo fi) => pi.FileCodeModel != null); }
@@ -402,16 +402,26 @@ XDocument EntitiesDocument
         return _entitiesDocument;
     }
 }
+List<ValidationEventArgs> ValidationErrors { get; } = new();
 private XDocument _entityDefinitionsDocument;
 XDocument EntityDefinitionsDocument
 {
     get
     {
         if (_entityDefinitionsDocument is null)
-            _entityDefinitionsDocument = XDocument.Load(Path.Combine(Path.GetDirectoryName(Solution.FullName), "FsInfoCat\\Resources\\EntityDefinitions.xml"), LoadOptions.PreserveWhitespace);
+        {
+            XmlReaderSettings readerSettings = new XmlReaderSettings();
+            readerSettings.Schemas.Add("", Path.Combine(Path.GetDirectoryName(Solution.FullName), "FsInfoCat\\Resources\\EntityDefinitions.xsd"));
+            readerSettings.ValidationType = ValidationType.Schema;
+            readerSettings.ValidationEventHandler += XmlValidationEventHandler;
+            using XmlReader reader = XmlReader.Create(Path.Combine(Path.GetDirectoryName(Solution.FullName), "FsInfoCat\\Resources\\EntityDefinitions.xml"), readerSettings);
+            _entityDefinitionsDocument = XDocument.Load(reader, LoadOptions.PreserveWhitespace);
+        }
         return _entityDefinitionsDocument;
     }
 }
+void XmlValidationEventHandler(object sender, ValidationEventArgs e) { ValidationErrors.Add(e); }
+
 IEnumerable<XElement> GetBaseEntityTypes(XElement entityElement)
 {
     if (entityElement.Parent is XElement parentElement)
