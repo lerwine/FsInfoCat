@@ -332,20 +332,14 @@
                 </RelatedEntity>
             </Properties>
         </Entity>
-        <Entity Name="IAccessError{TTarget}" TypeParam="TTarget">
+        <Entity Name="IAccessError{TTarget}">
             <summary>
                 Generic interface for access error entities.
             </summary>
+            <typeparam name="TTarget">The target entity type.</typeparam>
             <ExtendsEntity Type="IAccessError"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="IDbEntity" FullName="AccessError{TTarget}.Target">
-                    <summary>
-                        Gets the target entity to which the access error applies.
-                    </summary>
-                    <value>
-                        The <see cref="IDbEntity" /> object that this error applies to.
-                    </value>
-                </RelatedEntity>
+                <NewRelatedEntity Name="Target" Reference="IDbEntity" FullName="AccessError{TTarget}.Target" />
             </Properties>
         </Entity>
         <Entity Name="IFileSystem">
@@ -391,7 +385,7 @@
                     <value>The maximum length of file system name components.</value>
                     <Default>255</Default>
                 </UInt>
-                <DriveType Name="DefaultDriveType" FullName="IFileSystem.DefaultDriveType" IsNullable="true">
+                <DriveType Name="DefaultDriveType" FullName="IFileSystem.DefaultDriveType" AllowNull="true">
                     <summary>
                         Gets the default drive type for this file system.
                     </summary>
@@ -510,7 +504,7 @@
                     </summary>
                     <value>The system-independent unique identifier, which identifies the volume.</value>
                 </VolumeIdentifier>
-                <Bit Name="CaseSensitiveSearch" IsNullable="true" FullName="IVolume.CaseSensitiveSearch">
+                <Bit Name="CaseSensitiveSearch" AllowNull="true" FullName="IVolume.CaseSensitiveSearch">
                     <summary>
                         Gets a value indicating whether file name searches are case-sensitive.
                     </summary>
@@ -519,7 +513,7 @@
                     </value>
                     <DefaultNull />
                 </Bit>
-                <Bit Name="ReadOnly" IsNullable="true" FullName="IVolume.ReadOnly">
+                <Bit Name="ReadOnly" AllowNull="true" FullName="IVolume.ReadOnly">
                     <summary>
                         Gets a value indicating whether the current volume is read-only.
                     </summary>
@@ -528,7 +522,7 @@
                     </value>
                     <DefaultNull />
                 </Bit>
-                <UInt Name="MaxNameLength" IsNullable="true" FullName="IVolume.MaxNameLength">
+                <UInt Name="MaxNameLength" AllowNull="true" FullName="IVolume.MaxNameLength">
                     <summary>
                         Gets the maximum length of file system name components.
                     </summary>
@@ -568,12 +562,7 @@
                     </summary>
                     <value>The file system type for this volume.</value>
                 </RelatedEntity>
-                <CollectionNavigation Name="AccessErrors" ItemType="IVolumeAccessError" FullName="IVolume.AccessErrors">
-                    <summary>
-                        Gets the access errors for this volume.
-                    </summary>
-                    <value>The access errors that occurred while trying to access this volume.</value>
-                </CollectionNavigation>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="IVolumeAccessError" FullName="IVolume.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="IVolumeAccessError">
@@ -582,14 +571,14 @@
             </summary>
             <ExtendsGenericEntity Type="IAccessError{IVolume}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="IVolume" FullName="IVolumeAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="IVolume" FullName="IVolumeAccessError.Target">
                     <summary>
                         Gets the target volume to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IVolume" /> entity that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="ICrawlSettings">
@@ -610,7 +599,7 @@
                     </summary>
                     <value>The maximum total items to crawl, including both files and subdirectories.</value>
                 </ULong>
-                <Long Name="TTL" IsNullable="true" FullName="ICrawlSettings.TTL">
+                <Long Name="TTL" AllowNull="true" FullName="ICrawlSettings.TTL">
                     <summary>
                         Gets the maximum duration of the crawl.
                     </summary>
@@ -634,7 +623,7 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="DisplayName" MinLength="1" DisplayNameResource="DisplayName_DisplayName" FullName="ICrawlConfiguration.DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" DisplayNameResource="DisplayName_DisplayName" FullName="ICrawlConfiguration.DisplayName">
                     <summary>
                         Gets the display name.
                     </summary>
@@ -657,23 +646,23 @@
                     </value>
                     <Default>CrawlStatus.NotRunning</Default>
                 </Enum>
-                <DateTime Name="LastCrawlStart" IsNullable="true" FullName="ICrawlConfiguration.LastCrawlStart">
+                <DateTime Name="LastCrawlStart" AllowNull="true" FullName="ICrawlConfiguration.LastCrawlStart">
                     <summary>Gets the date and time when the last crawl was started.</summary>
                     <value>The date and time when the last crawl was started or <see langword="null"/> if no crawl hhas ever been started for this configuration.</value>
                     <DefaultNull />
                 </DateTime>
-                <DateTime Name="LastCrawlEnd" IsNullable="true" FullName="ICrawlConfiguration.LastCrawlEnd">
+                <DateTime Name="LastCrawlEnd" AllowNull="true" FullName="ICrawlConfiguration.LastCrawlEnd">
                     <summary>Gets the date and time when the last crawl was finshed.</summary>
                     <value>The date and time when the last crawl was finshed; otherwise, <see langword="null"/> if the current crawl is still active or if
                         no crawl has ever been started for this configuration.</value>
                     <DefaultNull />
                 </DateTime>
-                <DateTime Name="NextScheduledStart" IsNullable="true" FullName="ICrawlConfiguration.NextScheduledStart">
+                <DateTime Name="NextScheduledStart" AllowNull="true" FullName="ICrawlConfiguration.NextScheduledStart">
                     <summary>Gets the date and time when the next true is to begin.</summary>
                     <value>The date and time when the next crawl is to begin or <see langword="null"/> if there is no scheduled crawl.</value>
                     <DefaultNull />
                 </DateTime>
-                <Long Name="RescheduleInterval" IsNullable="true" FullName="ICrawlConfiguration.RescheduleInterval">
+                <Long Name="RescheduleInterval" AllowNull="true" FullName="ICrawlConfiguration.RescheduleInterval">
                     <summary>
                         Gets the length of time between automatic crawl re-scheduling.
                     </summary>
@@ -739,7 +728,7 @@
                     <value>The date and time when the crawl was started.</value>
                     <DefaultNull />
                 </DateTime>
-                <DateTime Name="CrawlEnd" IsNullable="true" FullName="ICrawlJobLog.LastCrawlEnd">
+                <DateTime Name="CrawlEnd" AllowNull="true" FullName="ICrawlJobLog.LastCrawlEnd">
                     <summary>Gets the date and time when the crawl was finshed.</summary>
                     <value>The date and time when the crawl was finshed or <see langword="null"/> if the current crawl is still active.</value>
                     <DefaultNull />
@@ -772,7 +761,7 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="Name" FullName="IDbFsItem.Name">
+                <NVarChar Name="Name" MaxLength="1024" FullName="IDbFsItem.Name">
                     <summary>
                         Gets the name of the current file system item.
                     </summary>
@@ -862,12 +851,7 @@
                     </summary>
                     <value>The nested subdirectories directly contained within this subdirectory.</value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="ISubdirectoryAccessError" FullName="ISubdirectory.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while attempting to access the current subdirectory.
-                    </summary>
-                    <value>The access errors that occurred while attempting to access the current subdirectory.</value>
-                </CollectionNavigation>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="ISubdirectoryAccessError" FullName="ISubdirectory.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="ISubdirectoryAccessError">
@@ -876,14 +860,14 @@
             </summary>
             <ExtendsGenericEntity Type="IAccessError{ISubdirectory}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="ISubdirectory" FullName="ISubdirectoryAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="ISubdirectory" FullName="ISubdirectoryAccessError.Target">
                     <summary>
                         Gets the target subdirectory to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="ISubdirectory" /> entity that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="IBinaryPropertySet">
@@ -908,13 +892,14 @@
                         The file length in bytes.
                     </value>
                 </Long>
-                <MD5Hash Name="Hash" FullName="IBinaryPropertySet.Hash" IsDefaultNull="true" IsNullable="true">
+                <MD5Hash Name="Hash" FullName="IBinaryPropertySet.Hash" AllowNull="true">
                     <summary>
                         Gets the MD5 hash of the file's contents.
                     </summary>
                     <value>
                         The MD5 hash of the file's contents or <see langword="null" /> if the hash has not yet been calculated.
                     </value>
+                    <DefaultNull/>
                 </MD5Hash>
                 <CollectionNavigation Name="Files" ItemType="IFile" FullName="IBinaryPropertySet.Files">
                     <summary>
@@ -939,7 +924,7 @@
                 Represents extended file summary properties.
             </summary>
             <Properties>
-                <NVarChar Name="ApplicationName" AllowNull="true" FullName="ISummaryProperties.ApplicationName">
+                <NVarChar Name="ApplicationName" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.ApplicationName">
                     <summary>
                         Gets the Application Name.
                     </summary>
@@ -1000,7 +985,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="Comment" AllowNull="true" FullName="ISummaryProperties.Comment">
+                <NVarChar Name="Comment" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Comment">
                     <summary>
                         Gets the comments.
                     </summary>
@@ -1061,7 +1046,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="Subject" AllowNull="true" FullName="ISummaryProperties.Subject">
+                <NVarChar Name="Subject" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Subject">
                     <summary>
                         Gets the Subject.
                     </summary>
@@ -1092,7 +1077,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Title" AllowNull="true" FullName="ISummaryProperties.Title">
+                <NVarChar Name="Title" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Title">
                     <summary>
                         Gets the Title of the item.
                     </summary>
@@ -1123,7 +1108,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Company" AllowNull="true" FullName="ISummaryProperties.Company">
+                <NVarChar Name="Company" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Company">
                     <summary>
                         Gets the company or publisher.
                     </summary>
@@ -1154,7 +1139,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ContentType" AllowNull="true" FullName="ISummaryProperties.ContentType">
+                <NVarChar Name="ContentType" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.ContentType">
                     <summary>
                         Gets the Content Type.
                     </summary>
@@ -1185,7 +1170,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Copyright" AllowNull="true" FullName="ISummaryProperties.Copyright">
+                <NVarChar Name="Copyright" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Copyright">
                     <summary>
                         Gets the Copyright.
                     </summary>
@@ -1216,7 +1201,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ParentalRating" AllowNull="true" FullName="ISummaryProperties.ParentalRating">
+                <NVarChar Name="ParentalRating" MaxLength="32" AllowNull="true" FullName="ISummaryProperties.ParentalRating">
                     <summary>
                         Gets the Parental Rating.
                     </summary>
@@ -1247,7 +1232,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UInt Name="Rating" IsNullable="true" FullName="ISummaryProperties.Rating">
+                <UInt Name="Rating" AllowNull="true" FullName="ISummaryProperties.Rating">
                     <summary>
                         Indicates the users preference rating of an item on a scale of 1-99
                     </summary>
@@ -1309,7 +1294,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="ItemType" AllowNull="true" FullName="ISummaryProperties.ItemType">
+                <NVarChar Name="ItemType" MaxLength="32" AllowNull="true" FullName="ISummaryProperties.ItemType">
                     <summary>
                         Gets the canonical item type.
                     </summary>
@@ -1344,7 +1329,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ItemTypeText" AllowNull="true" FullName="ISummaryProperties.ItemTypeText" DisplayNameResource="DisplayName_ItemType">
+                <NVarChar Name="ItemTypeText" MaxLength="64" AllowNull="true" FullName="ISummaryProperties.ItemTypeText" DisplayNameResource="DisplayName_ItemType">
                     <summary>
                         Gets the item type name.
                     </summary>
@@ -1410,7 +1395,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="MIMEType" AllowNull="true" FullName="ISummaryProperties.MIMEType">
+                <NVarChar Name="MIMEType" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.MIMEType">
                     <summary>
                         Gets the MIME type.
                     </summary>
@@ -1441,7 +1426,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ParentalRatingReason" AllowNull="true" FullName="ISummaryProperties.ParentalRatingReason">
+                <NVarChar Name="ParentalRatingReason" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.ParentalRatingReason">
                     <summary>
                         Gets the Parental Rating Reason.
                     </summary>
@@ -1472,7 +1457,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ParentalRatingsOrganization" AllowNull="true" FullName="ISummaryProperties.ParentalRatingsOrganization">
+                <NVarChar Name="ParentalRatingsOrganization" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.ParentalRatingsOrganization">
                     <summary>
                         Gets the Parental Ratings Organization.
                     </summary>
@@ -1503,7 +1488,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UShort Name="Sensitivity" IsNullable="true" FullName="ISummaryProperties.Sensitivity">
+                <UShort Name="Sensitivity" AllowNull="true" FullName="ISummaryProperties.Sensitivity">
                     <summary>
                         Gets the Sensitivity.
                     </summary>
@@ -1533,7 +1518,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <NVarChar Name="SensitivityText" AllowNull="true" FullName="ISummaryProperties.SensitivityText" DisplayNameResource="DisplayName_Sensitivity">
+                <NVarChar Name="SensitivityText" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.SensitivityText" DisplayNameResource="DisplayName_Sensitivity">
                     <summary>
                         Gets the user-friendly Sensitivity value.
                     </summary>
@@ -1564,7 +1549,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UInt Name="SimpleRating" IsNullable="true" FullName="ISummaryProperties.SimpleRating">
+                <UInt Name="SimpleRating" AllowNull="true" FullName="ISummaryProperties.SimpleRating">
                     <summary>
                         Indicates the users preference rating of an item on a scale of 0-5
                     </summary>
@@ -1594,7 +1579,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="Trademarks" AllowNull="true" FullName="ISummaryProperties.Trademarks">
+                <NVarChar Name="Trademarks" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Trademarks">
                     <summary>
                         Gets the Legal Trademarks.
                     </summary>
@@ -1625,7 +1610,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ProductName" AllowNull="true" FullName="ISummaryProperties.ProductName">
+                <NVarChar Name="ProductName" MaxLength="256" AllowNull="true" FullName="ISummaryProperties.ProductName">
                     <summary>
                         Gets the Product Name.
                     </summary>
@@ -1663,7 +1648,7 @@
                 Represents extended file properties for document files.
             </summary>
             <Properties>
-                <NVarChar Name="ClientID" AllowNull="true" FullName="IDocumentProperties.ClientID">
+                <NVarChar Name="ClientID" MaxLength="64" AllowNull="true" FullName="IDocumentProperties.ClientID">
                     <summary>
                         Gets the Client ID.
                     </summary>
@@ -1724,7 +1709,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <DateTime Name="DateCreated" IsNullable="true" FullName="IDocumentProperties.DateCreated">
+                <DateTime Name="DateCreated" AllowNull="true" FullName="IDocumentProperties.DateCreated">
                     <summary>
                         Gets the Date Created.
                     </summary>
@@ -1755,7 +1740,7 @@
                     </remarks>
                     <DefaultNull />
                 </DateTime>
-                <NVarChar Name="LastAuthor" AllowNull="true" FullName="IDocumentProperties.LastAuthor">
+                <NVarChar Name="LastAuthor" MaxLength="1024" AllowNull="true" FullName="IDocumentProperties.LastAuthor">
                     <summary>
                         Gets the Last Author.
                     </summary>
@@ -1786,7 +1771,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="RevisionNumber" AllowNull="true" FullName="IDocumentProperties.RevisionNumber">
+                <NVarChar Name="RevisionNumber" MaxLength="64" AllowNull="true" FullName="IDocumentProperties.RevisionNumber">
                     <summary>
                         Gets the Revision Number.
                     </summary>
@@ -1817,7 +1802,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <Int Name="Security" IsNullable="true" FullName="IDocumentProperties.Security">
+                <Int Name="Security" AllowNull="true" FullName="IDocumentProperties.Security">
                     <summary>
                         Access control information, from SummaryInfo propset.
                     </summary>
@@ -1847,7 +1832,7 @@
                     </remarks>
                     <DefaultNull />
                 </Int>
-                <NVarChar Name="Division" AllowNull="true" FullName="IDocumentProperties.Division">
+                <NVarChar Name="Division" MaxLength="256" AllowNull="true" FullName="IDocumentProperties.Division">
                     <summary>
                         Gets the Division.
                     </summary>
@@ -1876,7 +1861,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="DocumentID" AllowNull="true" FullName="IDocumentProperties.DocumentID">
+                <NVarChar Name="DocumentID" MaxLength="64" AllowNull="true" FullName="IDocumentProperties.DocumentID">
                     <summary>
                         Gets the Document ID.
                     </summary>
@@ -1905,7 +1890,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Manager" AllowNull="true" FullName="IDocumentProperties.Manager">
+                <NVarChar Name="Manager" MaxLength="256" AllowNull="true" FullName="IDocumentProperties.Manager">
                     <summary>
                         Gets the Manager.
                     </summary>
@@ -1934,7 +1919,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="PresentationFormat" AllowNull="true" FullName="IDocumentProperties.PresentationFormat">
+                <NVarChar Name="PresentationFormat" MaxLength="256" AllowNull="true" FullName="IDocumentProperties.PresentationFormat">
                     <summary>
                         Gets the Presentation Format.
                     </summary>
@@ -1963,7 +1948,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Version" AllowNull="true" FullName="IDocumentProperties.Version">
+                <NVarChar Name="Version" MaxLength="64" AllowNull="true" FullName="IDocumentProperties.Version">
                     <summary>
                         Gets the Version.
                     </summary>
@@ -1999,7 +1984,7 @@
                 Represents extended file properties for audio files.
             </summary>
             <Properties>
-                <NVarChar Name="Compression" AllowNull="true" FullName="IAudioProperties.Compression">
+                <NVarChar Name="Compression" MaxLength="256" AllowNull="true" FullName="IAudioProperties.Compression">
                     <summary>
                         Gets the Compression Method.
                     </summary>
@@ -2030,7 +2015,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UInt Name="EncodingBitrate" IsNullable="true" FullName="IAudioProperties.EncodingBitrate">
+                <UInt Name="EncodingBitrate" AllowNull="true" FullName="IAudioProperties.EncodingBitrate">
                     <summary>
                         Indicates the average data rate in Hz for the audio file in "bits per second".
                     </summary>
@@ -2060,7 +2045,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="Format" AllowNull="true" FullName="IAudioProperties.Format">
+                <NVarChar Name="Format" MaxLength="256" AllowNull="true" FullName="IAudioProperties.Format">
                     <summary>
                         Indicates the format of the audio file.
                     </summary>
@@ -2091,7 +2076,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <Bit Name="IsVariableBitrate" IsNullable="true" FullName="IAudioProperties.IsVariableBitrate">
+                <Bit Name="IsVariableBitrate" AllowNull="true" FullName="IAudioProperties.IsVariableBitrate">
                     <summary>
                         Indicates whether Bit Rate of the audio is variable.
                     </summary>
@@ -2122,7 +2107,7 @@
                     </remarks>
                     <DefaultNull />
                 </Bit>
-                <UInt Name="SampleRate" IsNullable="true" FullName="IAudioProperties.SampleRate">
+                <UInt Name="SampleRate" AllowNull="true" FullName="IAudioProperties.SampleRate">
                     <summary>
                         Indicates the audio sample rate for the audio file in "samples per second".
                     </summary>
@@ -2152,7 +2137,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <UInt Name="SampleSize" IsNullable="true" FullName="IAudioProperties.SampleSize">
+                <UInt Name="SampleSize" AllowNull="true" FullName="IAudioProperties.SampleSize">
                     <summary>
                         Indicates the audio sample size for the audio file in "bits per sample".
                     </summary>
@@ -2182,7 +2167,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="StreamName" AllowNull="true" FullName="IAudioProperties.StreamName">
+                <NVarChar MaxLength="256" Name="StreamName" AllowNull="true" FullName="IAudioProperties.StreamName">
                     <summary>
                         Gets the Stream Name.
                     </summary>
@@ -2213,7 +2198,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UShort Name="StreamNumber" IsNullable="true" FullName="IAudioProperties.StreamNumber">
+                <UShort Name="StreamNumber" AllowNull="true" FullName="IAudioProperties.StreamNumber">
                     <summary>
                         Gets the Stream Number.
                     </summary>
@@ -2250,7 +2235,7 @@
                 Represents extended file properties for DRM information.
             </summary>
             <Properties>
-                <DateTime Name="DatePlayExpires" IsNullable="true" FullName="IDRMProperties.DatePlayExpires">
+                <DateTime Name="DatePlayExpires" AllowNull="true" FullName="IDRMProperties.DatePlayExpires">
                     <summary>
                         Indicates when play expires for digital rights management.
                     </summary>
@@ -2280,7 +2265,7 @@
                     </remarks>
                     <DefaultNull />
                 </DateTime>
-                <DateTime Name="DatePlayStarts" IsNullable="true" FullName="IDRMProperties.DatePlayStarts">
+                <DateTime Name="DatePlayStarts" AllowNull="true" FullName="IDRMProperties.DatePlayStarts">
                     <summary>
                         Indicates when play starts for digital rights management.
                     </summary>
@@ -2310,7 +2295,7 @@
                     </remarks>
                     <DefaultNull />
                 </DateTime>
-                <NVarChar Name="Description" AllowNull="true" FullName="IDRMProperties.Description">
+                <Text Name="Description" AllowNull="true" FullName="IDRMProperties.Description">
                     <summary>
                         Displays the description for digital rights management.
                     </summary>
@@ -2338,8 +2323,8 @@
                         </list>
                     </remarks>
                     <DefaultNull />
-                </NVarChar>
-                <Bit Name="IsProtected" IsNullable="true" FullName="IDRMProperties.IsProtected">
+                </Text>
+                <Bit Name="IsProtected" AllowNull="true" FullName="IDRMProperties.IsProtected">
                     <summary>
                         Indicates whether the content is protected.
                     </summary>
@@ -2370,7 +2355,7 @@
                     </remarks>
                     <DefaultNull />
                 </Bit>
-                <UInt Name="PlayCount" IsNullable="true" FullName="IDRMProperties.PlayCount">
+                <UInt Name="PlayCount" AllowNull="true" FullName="IDRMProperties.PlayCount">
                     <summary>
                         Indicates the play count for digital rights management.
                     </summary>
@@ -2407,7 +2392,7 @@
                 Represents extended file properties for GPS information.
             </summary>
             <Properties>
-                <NVarChar Name="AreaInformation" AllowNull="true" FullName="IGPSProperties.AreaInformation">
+                <NVarChar Name="AreaInformation" MaxLength="1024" AllowNull="true" FullName="IGPSProperties.AreaInformation">
                     <summary>
                         Gets the name of the GPS area.
                     </summary>
@@ -2436,7 +2421,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <Double Name="LatitudeDegrees" IsNullable="true" FullName="IGPSProperties.LatitudeDegrees">
+                <Double Name="LatitudeDegrees" AllowNull="true" FullName="IGPSProperties.LatitudeDegrees">
                     <summary>
                         Indicates the latitude degrees.
                     </summary>
@@ -2466,7 +2451,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <Double Name="LatitudeMinutes" IsNullable="true" FullName="IGPSProperties.LatitudeMinutes">
+                <Double Name="LatitudeMinutes" AllowNull="true" FullName="IGPSProperties.LatitudeMinutes">
                     <summary>
                         Indicates the latitude minutes.
                     </summary>
@@ -2496,7 +2481,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <Double Name="LatitudeSeconds" IsNullable="true" FullName="IGPSProperties.LatitudeSeconds">
+                <Double Name="LatitudeSeconds" AllowNull="true" FullName="IGPSProperties.LatitudeSeconds">
                     <summary>
                         Indicates the latitude seconds.
                     </summary>
@@ -2526,7 +2511,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <NVarChar Name="LatitudeRef" AllowNull="true" FullName="IGPSProperties.LatitudeRef">
+                <NVarChar Name="LatitudeRef" MaxLength="256" AllowNull="true" FullName="IGPSProperties.LatitudeRef">
                     <summary>
                         Indicates whether latitude is north or south latitude.
                     </summary>
@@ -2557,7 +2542,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <Double Name="LongitudeDegrees" IsNullable="true" FullName="IGPSProperties.LongitudeDegrees">
+                <Double Name="LongitudeDegrees" AllowNull="true" FullName="IGPSProperties.LongitudeDegrees">
                     <summary>
                         Indicates the longitude degrees.
                     </summary>
@@ -2588,7 +2573,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <Double Name="LongitudeMinutes" IsNullable="true" FullName="IGPSProperties.LongitudeMinutes">
+                <Double Name="LongitudeMinutes" AllowNull="true" FullName="IGPSProperties.LongitudeMinutes">
                     <summary>
                         Indicates the longitude minutes.
                     </summary>
@@ -2619,7 +2604,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <Double Name="LongitudeSeconds" IsNullable="true" FullName="IGPSProperties.LongitudeSeconds">
+                <Double Name="LongitudeSeconds" AllowNull="true" FullName="IGPSProperties.LongitudeSeconds">
                     <summary>
                         Indicates the longitude seconds.
                     </summary>
@@ -2650,7 +2635,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <NVarChar Name="LongitudeRef" AllowNull="true" FullName="IGPSProperties.LongitudeRef">
+                <NVarChar Name="LongitudeRef" MaxLength="256" AllowNull="true" FullName="IGPSProperties.LongitudeRef">
                     <summary>
                         Indicates whether longitude is east or west longitude.
                     </summary>
@@ -2681,7 +2666,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="MeasureMode" AllowNull="true" FullName="IGPSProperties.MeasureMode">
+                <NVarChar Name="MeasureMode" MaxLength="256" AllowNull="true" FullName="IGPSProperties.MeasureMode">
                     <summary>
                         Indicates the GPS measurement mode.
                     </summary>
@@ -2712,7 +2697,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ProcessingMethod" AllowNull="true" FullName="IGPSProperties.ProcessingMethod">
+                <NVarChar Name="ProcessingMethod" MaxLength="256" AllowNull="true" FullName="IGPSProperties.ProcessingMethod">
                     <summary>
                         Indicates the name of the method used for location finding.
                     </summary>
@@ -2743,7 +2728,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <ByteValues Name="VersionID" AllowNull="true" IsDefaultNull="true" FullName="IGPSProperties.VersionID">
+                <ByteValues Name="VersionID" AllowNull="true" FullName="IGPSProperties.VersionID">
                     <summary>
                         Indicates the version of the GPS information.
                     </summary>
@@ -2771,6 +2756,7 @@
                             </item>
                         </list>
                     </remarks>
+                    <DefaultNull/>
                 </ByteValues>
             </Properties>
         </Entity>
@@ -2779,7 +2765,7 @@
                 Represents extended file properties for image files.
             </summary>
             <Properties>
-                <UInt Name="BitDepth" IsNullable="true" FullName="IImageProperties.BitDepth">
+                <UInt Name="BitDepth" AllowNull="true" FullName="IImageProperties.BitDepth">
                     <summary>
                         Gets the Bit Depth.
                     </summary>
@@ -2810,7 +2796,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <UShort Name="ColorSpace" IsNullable="true" FullName="IImageProperties.ColorSpace">
+                <UShort Name="ColorSpace" AllowNull="true" FullName="IImageProperties.ColorSpace">
                     <summary>
                         Gets the Color Space.
                     </summary>
@@ -2841,7 +2827,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <Double Name="CompressedBitsPerPixel" IsNullable="true" FullName="IImageProperties.CompressedBitsPerPixel">
+                <Double Name="CompressedBitsPerPixel" AllowNull="true" FullName="IImageProperties.CompressedBitsPerPixel">
                     <summary>
                         Gets the Compressed Bits-per-Pixel.
                     </summary>
@@ -2872,7 +2858,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <UShort Name="Compression" IsNullable="true" FullName="IImageProperties.Compression">
+                <UShort Name="Compression" AllowNull="true" FullName="IImageProperties.Compression">
                     <summary>
                         Indicates the image compression level.
                     </summary>
@@ -2902,7 +2888,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <NVarChar Name="CompressionText" AllowNull="true" FullName="IImageProperties.CompressionText" DisplayNameResource="DisplayName_Compression">
+                <NVarChar Name="CompressionText" MaxLength="256" AllowNull="true" FullName="IImageProperties.CompressionText" DisplayNameResource="DisplayName_Compression">
                     <summary>
                         This is the user-friendly form of System.Image.Compression.
                     </summary>
@@ -2933,7 +2919,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <Double Name="HorizontalResolution" IsNullable="true" FullName="IImageProperties.HorizontalResolution">
+                <Double Name="HorizontalResolution" AllowNull="true" FullName="IImageProperties.HorizontalResolution">
                     <summary>
                         Gets the Horizontal Resolution.
                     </summary>
@@ -2963,7 +2949,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <UInt Name="HorizontalSize" IsNullable="true" FullName="IImageProperties.HorizontalSize">
+                <UInt Name="HorizontalSize" AllowNull="true" FullName="IImageProperties.HorizontalSize">
                     <summary>
                         Gets the Horizontal Size.
                     </summary>
@@ -2993,7 +2979,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="ImageID" AllowNull="true" FullName="IImageProperties.ImageID">
+                <NVarChar Name="ImageID" MaxLength="256" AllowNull="true" FullName="IImageProperties.ImageID">
                     <summary>
                         Gets the Image ID.
                     </summary>
@@ -3024,7 +3010,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <Short Name="ResolutionUnit" IsNullable="true" FullName="IImageProperties.ResolutionUnit">
+                <Short Name="ResolutionUnit" AllowNull="true" FullName="IImageProperties.ResolutionUnit">
                     <summary>
                         Gets the Resolution Unit.
                     </summary>
@@ -3055,7 +3041,7 @@
                     </remarks>
                     <DefaultNull />
                 </Short>
-                <Double Name="VerticalResolution" IsNullable="true" FullName="IImageProperties.VerticalResolution">
+                <Double Name="VerticalResolution" AllowNull="true" FullName="IImageProperties.VerticalResolution">
                     <summary>
                         Gets the Vertical Resolution.
                     </summary>
@@ -3085,7 +3071,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <UInt Name="VerticalSize" IsNullable="true" FullName="IImageProperties.VerticalSize">
+                <UInt Name="VerticalSize" AllowNull="true" FullName="IImageProperties.VerticalSize">
                     <summary>
                         Gets the Vertical Size.
                     </summary>
@@ -3122,7 +3108,7 @@
                 Represents extended file properties for media files.
             </summary>
             <Properties>
-                <NVarChar Name="ContentDistributor" AllowNull="true" FullName="IMediaProperties.ContentDistributor">
+                <NVarChar Name="ContentDistributor" MaxLength="256" AllowNull="true" FullName="IMediaProperties.ContentDistributor">
                     <summary>
                         Gets the Content Distributor.
                     </summary>
@@ -3153,7 +3139,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="CreatorApplication" AllowNull="true" FullName="IMediaProperties.CreatorApplication">
+                <NVarChar Name="CreatorApplication" MaxLength="256" AllowNull="true" FullName="IMediaProperties.CreatorApplication">
                     <summary>
                         Gets the Creator Application.
                     </summary>
@@ -3184,7 +3170,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="CreatorApplicationVersion" AllowNull="true" FullName="IMediaProperties.CreatorApplicationVersion">
+                <NVarChar Name="CreatorApplicationVersion" MaxLength="64" AllowNull="true" FullName="IMediaProperties.CreatorApplicationVersion">
                     <summary>
                         Gets the Creator Application Version.
                     </summary>
@@ -3215,7 +3201,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="DateReleased" AllowNull="true" FullName="IMediaProperties.DateReleased">
+                <NVarChar Name="DateReleased" MaxLength="64" AllowNull="true" FullName="IMediaProperties.DateReleased">
                     <summary>
                         Gets the Date Released.
                     </summary>
@@ -3246,7 +3232,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <ULong Name="Duration" IsNullable="true" FullName="IMediaProperties.Duration">
+                <ULong Name="Duration" AllowNull="true" FullName="IMediaProperties.Duration">
                     <summary>
                         Gets the duration.
                     </summary>
@@ -3276,7 +3262,7 @@
                     </remarks>
                     <DefaultNull />
                 </ULong>
-                <NVarChar Name="DVDID" AllowNull="true" FullName="IMediaProperties.DVDID">
+                <NVarChar Name="DVDID" MaxLength="64" AllowNull="true" FullName="IMediaProperties.DVDID">
                     <summary>
                         Gets the DVD ID.
                     </summary>
@@ -3307,7 +3293,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UInt Name="FrameCount" IsNullable="true" FullName="IMediaProperties.FrameCount">
+                <UInt Name="FrameCount" AllowNull="true" FullName="IMediaProperties.FrameCount">
                     <summary>
                         Indicates the frame count for the image.
                     </summary>
@@ -3368,7 +3354,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="ProtectionType" AllowNull="true" FullName="IMediaProperties.ProtectionType">
+                <NVarChar Name="ProtectionType" MaxLength="256" AllowNull="true" FullName="IMediaProperties.ProtectionType">
                     <summary>
                         Gets the Protection Type.
                     </summary>
@@ -3399,7 +3385,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ProviderRating" AllowNull="true" FullName="IMediaProperties.ProviderRating">
+                <NVarChar Name="ProviderRating" MaxLength="256" AllowNull="true" FullName="IMediaProperties.ProviderRating">
                     <summary>
                         Gets the Provider Rating.
                     </summary>
@@ -3430,7 +3416,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ProviderStyle" AllowNull="true" FullName="IMediaProperties.ProviderStyle">
+                <NVarChar Name="ProviderStyle" MaxLength="256" AllowNull="true" FullName="IMediaProperties.ProviderStyle">
                     <summary>
                         Style of music or video.
                     </summary>
@@ -3461,7 +3447,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Publisher" AllowNull="true" FullName="IMediaProperties.Publisher">
+                <NVarChar Name="Publisher" MaxLength="256" AllowNull="true" FullName="IMediaProperties.Publisher">
                     <summary>
                         Gets the Publisher.
                     </summary>
@@ -3492,7 +3478,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Subtitle" AllowNull="true" FullName="IMediaProperties.Subtitle">
+                <NVarChar Name="Subtitle" MaxLength="256" AllowNull="true" FullName="IMediaProperties.Subtitle">
                     <summary>
                         Gets the Subtitle.
                     </summary>
@@ -3554,7 +3540,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <UInt Name="Year" IsNullable="true" FullName="IMediaProperties.Year">
+                <UInt Name="Year" AllowNull="true" FullName="IMediaProperties.Year">
                     <summary>
                         Gets the Publication Year.
                     </summary>
@@ -3592,7 +3578,7 @@
                 Represents extended file properties for music files.
             </summary>
             <Properties>
-                <NVarChar Name="AlbumArtist" AllowNull="true" FullName="IMusicProperties.AlbumArtist">
+                <NVarChar Name="AlbumArtist" MaxLength="1024" AllowNull="true" FullName="IMusicProperties.AlbumArtist">
                     <summary>
                         Gets the Album Artist.
                     </summary>
@@ -3621,7 +3607,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="AlbumTitle" AllowNull="true" FullName="IMusicProperties.AlbumTitle">
+                <NVarChar Name="AlbumTitle" MaxLength="1024" AllowNull="true" FullName="IMusicProperties.AlbumTitle">
                     <summary>
                         Gets the Album Title.
                     </summary>
@@ -3678,7 +3664,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <UInt Name="ChannelCount" IsNullable="true" FullName="IMusicProperties.ChannelCount">
+                <UInt Name="ChannelCount" AllowNull="true" FullName="IMusicProperties.ChannelCount">
                     <summary>
                         Gets the Channel Count.
                     </summary>
@@ -3762,7 +3748,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="DisplayArtist" AllowNull="true" FullName="IMusicProperties.DisplayArtist">
+                <Text Name="DisplayArtist" AllowNull="true" FullName="IMusicProperties.DisplayArtist">
                     <summary>
                         Gets the Album Artist (best match of relevant properties).
                     </summary>
@@ -3792,7 +3778,7 @@
                         </list>
                     </remarks>
                     <DefaultNull />
-                </NVarChar>
+                </Text>
                 <MultiStringValue Name="Genre" AllowNull="true" FullName="IMusicProperties.Genre">
                     <summary>
                         Gets the Genre.
@@ -3821,7 +3807,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="PartOfSet" AllowNull="true" FullName="IMusicProperties.PartOfSet">
+                <NVarChar Name="PartOfSet" MaxLength="64" AllowNull="true" FullName="IMusicProperties.PartOfSet">
                     <summary>
                         Gets the Part of the Set.
                     </summary>
@@ -3850,7 +3836,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Period" AllowNull="true" FullName="IMusicProperties.Period">
+                <NVarChar Name="Period" MaxLength="64" AllowNull="true" FullName="IMusicProperties.Period">
                     <summary>
                         Gets the Period.
                     </summary>
@@ -3879,7 +3865,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UInt Name="TrackNumber" IsNullable="true" FullName="IMusicProperties.TrackNumber">
+                <UInt Name="TrackNumber" AllowNull="true" FullName="IMusicProperties.TrackNumber">
                     <summary>
                         Gets the Track Number.
                     </summary>
@@ -3914,7 +3900,7 @@
                 Represents extended file properties for photo files.
             </summary>
             <Properties>
-                <NVarChar Name="CameraManufacturer" AllowNull="true" FullName="IPhotoProperties.CameraManufacturer">
+                <NVarChar Name="CameraManufacturer" MaxLength="256" AllowNull="true" FullName="IPhotoProperties.CameraManufacturer">
                     <summary>
                         Gets the Camera Manufacturer.
                     </summary>
@@ -3945,7 +3931,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="CameraModel" AllowNull="true" FullName="IPhotoProperties.CameraModel">
+                <NVarChar Name="CameraModel" MaxLength="256" AllowNull="true" FullName="IPhotoProperties.CameraModel">
                     <summary>
                         Gets the Camera Model.
                     </summary>
@@ -3976,7 +3962,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <DateTime Name="DateTaken" IsNullable="true" FullName="IPhotoProperties.DateTaken">
+                <DateTime Name="DateTaken" AllowNull="true" FullName="IPhotoProperties.DateTaken">
                     <summary>
                         Gets the Date Taken.
                     </summary>
@@ -4037,7 +4023,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="EXIFVersion" AllowNull="true" FullName="IPhotoProperties.EXIFVersion">
+                <NVarChar Name="EXIFVersion" MaxLength="256" AllowNull="true" FullName="IPhotoProperties.EXIFVersion">
                     <summary>
                         Returns the EXIF version.
                     </summary>
@@ -4068,7 +4054,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UShort Name="Orientation" IsNullable="true" FullName="IPhotoProperties.Orientation">
+                <UShort Name="Orientation" AllowNull="true" FullName="IPhotoProperties.Orientation">
                     <summary>
                         Gets the Orientation.
                     </summary>
@@ -4098,7 +4084,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <NVarChar Name="OrientationText" AllowNull="true" FullName="IPhotoProperties.OrientationText" DisplayNameResource="DisplayName_Orientation">
+                <NVarChar Name="OrientationText" MaxLength="256" AllowNull="true" FullName="IPhotoProperties.OrientationText" DisplayNameResource="DisplayName_Orientation">
                     <summary>
                         Gets the user-friendly form of System.Photo.Orientation.
                     </summary>
@@ -4166,7 +4152,7 @@
                 Represents extended file properties for recorded TV files.
             </summary>
             <Properties>
-                <UInt Name="ChannelNumber" IsNullable="true" FullName="IRecordedTVProperties.ChannelNumber">
+                <UInt Name="ChannelNumber" AllowNull="true" FullName="IRecordedTVProperties.ChannelNumber">
                     <summary>
                         Gets the Channel Number.
                     </summary>
@@ -4197,7 +4183,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="EpisodeName" AllowNull="true" FullName="IRecordedTVProperties.EpisodeName">
+                <NVarChar Name="EpisodeName" MaxLength="1024" AllowNull="true" FullName="IRecordedTVProperties.EpisodeName">
                     <summary>
                         Gets the Episode Name.
                     </summary>
@@ -4228,7 +4214,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <Bit Name="IsDTVContent" IsNullable="true" FullName="IRecordedTVProperties.IsDTVContent">
+                <Bit Name="IsDTVContent" AllowNull="true" FullName="IRecordedTVProperties.IsDTVContent">
                     <summary>
                         Indicates whether the video is DTV.
                     </summary>
@@ -4259,7 +4245,7 @@
                     </remarks>
                     <DefaultNull />
                 </Bit>
-                <Bit Name="IsHDContent" IsNullable="true" FullName="IRecordedTVProperties.IsHDContent">
+                <Bit Name="IsHDContent" AllowNull="true" FullName="IRecordedTVProperties.IsHDContent">
                     <summary>
                         Indicates whether the video is HDTV.
                     </summary>
@@ -4290,7 +4276,7 @@
                     </remarks>
                     <DefaultNull />
                 </Bit>
-                <NVarChar Name="NetworkAffiliation" AllowNull="true" FullName="IRecordedTVProperties.NetworkAffiliation">
+                <NVarChar Name="NetworkAffiliation" MaxLength="256" AllowNull="true" FullName="IRecordedTVProperties.NetworkAffiliation">
                     <summary>
                         Gets the Network Affiliation.
                     </summary>
@@ -4319,7 +4305,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <DateTime Name="OriginalBroadcastDate" IsNullable="true" FullName="IRecordedTVProperties.OriginalBroadcastDate">
+                <DateTime Name="OriginalBroadcastDate" AllowNull="true" FullName="IRecordedTVProperties.OriginalBroadcastDate">
                     <summary>
                         Gets the Original Broadcast Date.
                     </summary>
@@ -4347,7 +4333,7 @@
                     </remarks>
                     <DefaultNull />
                 </DateTime>
-                <NVarChar Name="ProgramDescription" AllowNull="true" FullName="IRecordedTVProperties.ProgramDescription">
+                <Text Name="ProgramDescription" AllowNull="true" FullName="IRecordedTVProperties.ProgramDescription">
                     <summary>
                         Gets the Program Description.
                     </summary>
@@ -4375,8 +4361,8 @@
                         </list>
                     </remarks>
                     <DefaultNull />
-                </NVarChar>
-                <NVarChar Name="StationCallSign" AllowNull="true" FullName="IRecordedTVProperties.StationCallSign">
+                </Text>
+                <NVarChar Name="StationCallSign" MaxLength="32" AllowNull="true" FullName="IRecordedTVProperties.StationCallSign">
                     <summary>
                         Gets the Station Call Sign.
                     </summary>
@@ -4407,7 +4393,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="StationName" AllowNull="true" FullName="IRecordedTVProperties.StationName">
+                <NVarChar Name="StationName" MaxLength="256" AllowNull="true" FullName="IRecordedTVProperties.StationName">
                     <summary>
                         Gets the Station Name.
                     </summary>
@@ -4445,7 +4431,7 @@
                 Represents extended file properties for video files.
             </summary>
             <Properties>
-                <NVarChar Name="Compression" AllowNull="true" FullName="IVideoProperties.Compression">
+                <NVarChar Name="Compression" MaxLength="256" AllowNull="true" FullName="IVideoProperties.Compression">
                     <summary>
                         Indicates the level of compression for the video stream.
                     </summary>
@@ -4506,7 +4492,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <UInt Name="EncodingBitrate" IsNullable="true" FullName="IVideoProperties.EncodingBitrate">
+                <UInt Name="EncodingBitrate" AllowNull="true" FullName="IVideoProperties.EncodingBitrate">
                     <summary>
                         Indicates the data rate in "bits per second" for the video stream.
                     </summary>
@@ -4537,7 +4523,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <UInt Name="FrameHeight" IsNullable="true" FullName="IVideoProperties.FrameHeight">
+                <UInt Name="FrameHeight" AllowNull="true" FullName="IVideoProperties.FrameHeight">
                     <summary>
                         Indicates the frame height for the video stream.
                     </summary>
@@ -4567,7 +4553,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <UInt Name="FrameRate" IsNullable="true" FullName="IVideoProperties.FrameRate">
+                <UInt Name="FrameRate" AllowNull="true" FullName="IVideoProperties.FrameRate">
                     <summary>
                         Indicates the frame rate in "frames per millisecond" for the video stream.
                     </summary>
@@ -4597,7 +4583,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <UInt Name="FrameWidth" IsNullable="true" FullName="IVideoProperties.FrameWidth">
+                <UInt Name="FrameWidth" AllowNull="true" FullName="IVideoProperties.FrameWidth">
                     <summary>
                         Indicates the frame width for the video stream.
                     </summary>
@@ -4627,7 +4613,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <UInt Name="HorizontalAspectRatio" IsNullable="true" FullName="IVideoProperties.HorizontalAspectRatio">
+                <UInt Name="HorizontalAspectRatio" AllowNull="true" FullName="IVideoProperties.HorizontalAspectRatio">
                     <summary>
                         Indicates the horizontal portion of the aspect ratio.
                     </summary>
@@ -4658,7 +4644,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <UShort Name="StreamNumber" IsNullable="true" FullName="IVideoProperties.StreamNumber">
+                <UShort Name="StreamNumber" AllowNull="true" FullName="IVideoProperties.StreamNumber">
                     <summary>
                         Gets the Stream Number.
                     </summary>
@@ -4688,7 +4674,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <NVarChar Name="StreamName" AllowNull="true" FullName="IVideoProperties.StreamName">
+                <NVarChar Name="StreamName" MaxLength="256" AllowNull="true" FullName="IVideoProperties.StreamName">
                     <summary>
                         Gets the name for the video stream..
                     </summary>
@@ -4717,7 +4703,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <UInt Name="VerticalAspectRatio" IsNullable="true" FullName="IVideoProperties.VerticalAspectRatio">
+                <UInt Name="VerticalAspectRatio" AllowNull="true" FullName="IVideoProperties.VerticalAspectRatio">
                     <summary>
                         Indicates the vertical portion of the aspect ratio.
                     </summary>
@@ -4884,7 +4870,7 @@
                         A <see cref="FileCorrelationStatus" /> value that indicates the file's correlation status.
                     </value>
                 </Enum>
-                <DateTime Name="LastHashCalculation" FullName="IFile.LastHashCalculation" IsNullable="true">
+                <DateTime Name="LastHashCalculation" FullName="IFile.LastHashCalculation" AllowNull="true">
                     <summary>
                         Gets the date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file.
                     </summary>
@@ -5013,12 +4999,7 @@
                         The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
                     </value>
                 </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="IFileAccessError" FullName="IFile.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while trying to open or read from the current file.
-                    </summary>
-                    <value>The access errors that occurred while trying to open or read from the current file.</value>
-                </CollectionNavigation>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="IFileAccessError" FullName="IFile.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="IFileAccessError">
@@ -5027,14 +5008,14 @@
             </summary>
             <ExtendsGenericEntity Type="IAccessError{IFile}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="IFile" FullName="IFileAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="IFile" FullName="IFileAccessError.Target">
                     <summary>
                         Gets the target file to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IFile" /> entity that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="IRedundantSet">
@@ -5051,7 +5032,7 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="Reference" FullName="IRedundantSet.Reference">
+                <NVarChar Name="Reference" MaxLength="128" FullName="IRedundantSet.Reference">
                     <summary>
                         Gets the custom reference value.
                     </summary>
@@ -5082,7 +5063,7 @@
             <summary>.</summary>
             <ExtendsEntity Type="IDbEntity"/>
             <Properties>
-                <NVarChar Name="Reference" FullName="IRedundancy.Reference">
+                <NVarChar Name="Reference" MaxLength="128" FullName="IRedundancy.Reference">
                     <summary>
                         Gets the custom reference value.
                     </summary>
@@ -5095,7 +5076,7 @@
                     <value>The custom notes to associate with the current redundancy.</value>
                     <Default></Default>
                 </Text>
-                <UniqueIdentifier Name="FileId" FullName="IRedundancy.FileId" Navigation="File">
+                <UniqueIdentifier Name="FileId" FullName="IRedundancy.FileId" Navigation="File" IsPrimaryKey="true">
                     <summary>
                         Gets the primary key of the file in the that belongs to the redundancy set.
                     </summary>
@@ -5110,7 +5091,7 @@
                     </summary>
                     <value>The file that belongs to the redundancy set.</value>
                 </RelatedEntity>
-                <UniqueIdentifier Name="RedundantSetId" FullName="IRedundancy.RedundantSetId" Navigation="RedundantSet">
+                <UniqueIdentifier Name="RedundantSetId" FullName="IRedundancy.RedundantSetId" Navigation="RedundantSet" IsPrimaryKey="true">
                     <summary>
                         Gets the primary key of the redundancy set file belongs to.
                     </summary>
@@ -5805,14 +5786,15 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                 Base interface for all database entity objects for the database which is hosted on the local machine.
             </summary>
             <Properties>
-                <UniqueIdentifier Name="UpstreamId" IsNullable="true" FullName="ILocalDbEntity.UpstreamId" IsDefaultNull="true">
+                <UniqueIdentifier Name="UpstreamId" AllowNull="true" FullName="ILocalDbEntity.UpstreamId">
                     <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
                     <value>The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
                         otherwise, <see langword="null"/> if there is no corresponding entity.</value>
                     <remarks>If this value is <see langword="null"/>, then <see cref="LastSynchronizedOn"/> should also be <see langword="null"/>.
                         Likewise, if this is not <see langword="null"/>, then <see cref="LastSynchronizedOn"/> should not be <see langword="null"/>, either.</remarks>
+                    <DefaultNull/>
                 </UniqueIdentifier>
-                <DateTime Name="LastSynchronizedOn" IsNullable="true" FullName="ILocalDbEntity.LastSynchronizedOn">
+                <DateTime Name="LastSynchronizedOn" AllowNull="true" FullName="ILocalDbEntity.LastSynchronizedOn">
                     <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
                     <value>The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
                         otherwise, <see langword="null"/> if there is no corresponding entity.</value>
@@ -5826,14 +5808,14 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary></summary>
             <ExtendsGenericEntity Type="IAccessError{ILocalDbEntity}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="ILocalDbEntity" FullName="ILocalAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="ILocalDbEntity" FullName="ILocalAccessError.Target">
                     <summary>
                         Gets the target entity to which the access error applies.
                     </summary>
                     <value>
                         The <see cref="ILocalDbEntity" /> object that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="ILocalFileSystem" RootInterface="IFileSystem">
@@ -5862,36 +5844,16 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             </summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <RelatedEntity Name="FileSystem" Reference="ILocalFileSystem" FullName="ILocalSymbolicName.FileSystem">
-                    <summary>
-                        Gets the file system that this symbolic name refers to.
-                    </summary>
-                    <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
-                </RelatedEntity>
+                <NewRelatedEntity Name="FileSystem" Reference="ILocalFileSystem" FullName="ILocalSymbolicName.FileSystem"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalVolume" RootInterface="IVolume">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <RelatedEntity Name="RootDirectory" Reference="ILocalSubdirectory" FullName="ILocalVolume.RootDirectory">
-                    <summary>
-                        Gets the root directory of this volume.
-                    </summary>
-                    <value>The root directory of this volume.</value>
-                </RelatedEntity>
-                <RelatedEntity Name="FileSystem" Reference="ILocalFileSystem" FullName="ILocalVolume.FileSystem">
-                    <summary>
-                        Gets the file system type.
-                    </summary>
-                    <value>The file system type for this volume.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="AccessErrors" ItemType="ILocalVolumeAccessError" FullName="ILocalVolume.AccessErrors">
-                    <summary>
-                        Gets the access errors for this volume.
-                    </summary>
-                    <value>The access errors that occurred while trying to access this volume.</value>
-                </CollectionNavigation>
+                <NewRelatedEntity Name="RootDirectory" Reference="ILocalSubdirectory" FullName="ILocalVolume.RootDirectory"/>
+                <NewRelatedEntity Name="FileSystem" Reference="ILocalFileSystem" FullName="ILocalVolume.FileSystem"/>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="ILocalVolumeAccessError" FullName="ILocalVolume.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalVolumeAccessError" RootInterface="IVolumeAccessError">
@@ -5901,14 +5863,7 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <ExtendsEntity Type="ILocalAccessError" />
             <ImplementsGenericEntity Type="IAccessError{ILocalVolume}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="ILocalVolume" FullName="ILocalVolumeAccessError.Target">
-                    <summary>
-                        Gets the target volume to which the access error applies.
-                    </summary>
-                    <value>
-                        The <typeparamref name="ILocalVolume" /> entity that this error applies to.
-                    </value>
-                </RelatedEntity>
+                <NewRelatedEntity Name="Target" Reference="ILocalVolume" FullName="ILocalVolumeAccessError.Target"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalCrawlConfiguration" RootInterface="ICrawlConfiguration">
@@ -5917,16 +5872,8 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             </summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <RelatedEntity Name="Root" Reference="ILocalSubdirectory" FullName="ILocalCrawlConfiguration.Root">
-                    <summary>
-                        Gets the starting subdirectory for the configured subdirectory crawl.
-                    </summary>
-                    <value>The root subdirectory of the configured subdirectory crawl.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="Logs" ItemType="ILocalCrawlJobLog" FullName="ILocalCrawlConfiguration.Logs">
-                    <summary>Gets the crawl log entries.</summary>
-                    <value>The crawl log entries.</value>
-                </CollectionNavigation>
+                <NewRelatedEntity Name="Root" Reference="ILocalSubdirectory" FullName="ILocalCrawlConfiguration.Root"/>
+                <NewCollectionNavigation Name="Logs" ItemType="ILocalCrawlJobLog" FullName="ILocalCrawlConfiguration.Logs"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalCrawlJobLog" RootInterface="ICrawlJobLog">
@@ -5935,17 +5882,14 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             </summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <RelatedEntity Name="Configuration" Reference="ILocalCrawlConfiguration" FullName="ILocalCrawlJobLog.Configuration">
-                    <summary>Gets the configuration source for the file system crawl.</summary>
-                    <value>The configuration for the file system crawl.</value>
-                </RelatedEntity>
+                <NewRelatedEntity Name="Configuration" Reference="ILocalCrawlConfiguration" FullName="ILocalCrawlJobLog.Configuration"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalDbFsItem" RootInterface="IDbFsItem">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <RelatedEntity Name="Parent" Reference="ILocalSubdirectory" FullName="ILocalSubdirectory.Parent">
+                <NewRelatedEntity Name="Parent" Reference="ILocalSubdirectory" FullName="ILocalSubdirectory.Parent">
                     <summary>
                         Gets the parent subdirectory.
                     </summary>
@@ -5957,20 +5901,15 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                         then <see cref="ILocalSubdirectory.Volume" /> should not be <see langword="null" />, and vice-versa;
                         otherwise, if the current entity is a <see cref="ILocalFile" />, then this should never be <see langword="null" />.
                     </remarks>
-                </RelatedEntity>
-                <CollectionNavigation Name="AccessErrors" ItemType="ILocalAccessError" FullName="ILocalDbFsItem.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while attempting to access the current file system item.
-                    </summary>
-                    <value>The access errors that occurred while attempting to access the current file system item.</value>
-                </CollectionNavigation>
+                </NewRelatedEntity>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="ILocalAccessError" FullName="ILocalDbFsItem.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectory" RootInterface="ISubdirectory">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbFsItem"/>
             <Properties>
-                <RelatedEntity Name="Volume" Reference="ILocalVolume" FullName="ILocalSubdirectory.Volume">
+                <NewRelatedEntity Name="Volume" Reference="ILocalVolume" FullName="ILocalSubdirectory.Volume">
                     <summary>
                         Gets the parent volume.
                     </summary>
@@ -5980,31 +5919,11 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                     <remarks>
                         If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.
                     </remarks>
-                </RelatedEntity>
-                <RelatedEntity Name="CrawlConfiguration" Reference="ILocalCrawlConfiguration" FullName="ILocalSubdirectory.CrawlConfiguration">
-                    <summary>
-                        Gets the crawl configuration that starts with the current subdirectory.
-                    </summary>
-                    <value>The crawl configuration that starts with the current subdirectory.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalSubdirectory.Files">
-                    <summary>
-                        Gets the files directly contained within this subdirectory.
-                    </summary>
-                    <value>The files directly contained within this subdirectory.</value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="SubDirectories" ItemType="ILocalSubdirectory" FullName="ILocalSubdirectory.SubDirectories">
-                    <summary>
-                        Gets the nested subdirectories directly contained within this subdirectory.
-                    </summary>
-                    <value>The nested subdirectories directly contained within this subdirectory.</value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="ILocalSubdirectoryAccessError" FullName="ILocalSubdirectory.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while attempting to access the current subdirectory.
-                    </summary>
-                    <value>The access errors that occurred while attempting to access the current subdirectory.</value>
-                </CollectionNavigation>
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="CrawlConfiguration" Reference="ILocalCrawlConfiguration" FullName="ILocalSubdirectory.CrawlConfiguration"/>
+                <NewCollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalSubdirectory.Files"/>
+                <NewCollectionNavigation Name="SubDirectories" ItemType="ILocalSubdirectory" FullName="ILocalSubdirectory.SubDirectories"/>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="ILocalSubdirectoryAccessError" FullName="ILocalSubdirectory.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError">
@@ -6012,50 +5931,36 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <ExtendsEntity Type="ILocalAccessError" />
             <ImplementsGenericEntity Type="IAccessError{ILocalSubdirectory}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="ILocalSubdirectory" FullName="ILocalSubdirectoryAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="ILocalSubdirectory" FullName="ILocalSubdirectoryAccessError.Target">
                     <summary>
                         Gets the target subdirectory to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="ISubdirectory" /> entity that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="ILocalBinaryPropertySet" RootInterface="IBinaryPropertySet">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <CollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalBinaryPropertySet.Files">
-                    <summary>
-                        Gets the files which have the same length and cryptographic hash.
-                    </summary>
-                    <value>
-                        The files which have the same length and cryptographic hash..
-                    </value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="RedundantSets" ItemType="ILocalRedundantSet" FullName="ILocalBinaryPropertySet.RedundantSets">
-                    <summary>
-                        Gets the sets of files which were determined to be duplicates.
-                    </summary>
-                    <value>
-                        The sets of files which were determined to be duplicates.
-                    </value>
-                </CollectionNavigation>
+                <NewCollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalBinaryPropertySet.Files"/>
+                <NewCollectionNavigation Name="RedundantSets" ItemType="ILocalRedundantSet" FullName="ILocalBinaryPropertySet.RedundantSets"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalPropertySet" RootInterface="IPropertySet">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <CollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalPropertySet.Files">
+                <NewCollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalPropertySet.Files">
                     <summary>
                         Gets the files that share the same property values as this property set.
                     </summary>
                     <value>
-                        The <see cref="IFile">files</see> that share the same property values as this property set.
+                        The <see cref="ILocalFile">files</see> that share the same property values as this property set.
                     </value>
-                </CollectionNavigation>
+                </NewCollectionNavigation>
             </Properties>
         </Entity>
         <Entity Name="ILocalSummaryPropertySet" RootInterface="ISummaryPropertySet">
@@ -6117,151 +6022,136 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <RelatedEntity Name="BinaryProperties" Reference="ILocalBinaryPropertySet" FullName="ILocalRedundantSet.BinaryProperties">
-                    <summary>
-                        Gets the binary properties in common with all files in the current redundant set.
-                    </summary>
-                    <value>The binary properties in common with all files in the current redundant set.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="Redundancies" ItemType="ILocalRedundancy" FullName="ILocalRedundantSet.Redundancies">
-                    <summary>
-                        Gets the redundancy entities which represent links to redundant files.
-                    </summary>
-                    <value>The redundancy entities which represent links to redundant files.</value>
-                </CollectionNavigation>
+                <NewRelatedEntity Name="BinaryProperties" Reference="ILocalBinaryPropertySet" FullName="ILocalRedundantSet.BinaryProperties"/>
+                <NewCollectionNavigation Name="Redundancies" ItemType="ILocalRedundancy" FullName="ILocalRedundantSet.Redundancies"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalFile" RootInterface="IFile">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbFsItem"/>
             <Properties>
-                <RelatedEntity Name="BinaryProperties" Reference="ILocalBinaryPropertySet" FullName="ILocalFile.BinaryProperties">
+                <NewRelatedEntity Name="BinaryProperties" Reference="ILocalBinaryPropertySet" FullName="ILocalFile.BinaryProperties">
                     <summary>
                         Gets the binary properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
+                        The generic <see cref="ILocalBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="SummaryProperties" Reference="ILocalSummaryPropertySet" FullName="ILocalFile.SummaryProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="SummaryProperties" Reference="ILocalSummaryPropertySet" FullName="ILocalFile.SummaryProperties">
                     <summary>
                         Gets the summary properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
+                        The generic <see cref="ILocaBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="DocumentProperties" Reference="ILocalDocumentPropertySet" FullName="ILocalFile.DocumentProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="DocumentProperties" Reference="ILocalDocumentPropertySet" FullName="ILocalFile.DocumentProperties">
                     <summary>
                         Gets the document properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
+                        The generic <see cref="ILocaDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="AudioProperties" Reference="ILocalAudioPropertySet" FullName="ILocalFile.AudioProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="AudioProperties" Reference="ILocalAudioPropertySet" FullName="ILocalFile.AudioProperties">
                     <summary>
                         Gets the audio properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
+                        The generic <see cref="ILocaAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="DRMProperties" Reference="ILocalDRMPropertySet" FullName="ILocalFile.DRMProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="DRMProperties" Reference="ILocalDRMPropertySet" FullName="ILocalFile.DRMProperties">
                     <summary>
                         Gets the DRM properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
+                        The generic <see cref="ILocaDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="GPSProperties" Reference="ILocalGPSPropertySet" FullName="ILocalFile.GPSProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="GPSProperties" Reference="ILocalGPSPropertySet" FullName="ILocalFile.GPSProperties">
                     <summary>
                         Gets the GPS properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
+                        The generic <see cref="ILocaGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="ImageProperties" Reference="ILocalImagePropertySet" FullName="ILocalFile.ImageProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="ImageProperties" Reference="ILocalImagePropertySet" FullName="ILocalFile.ImageProperties">
                     <summary>
                         Gets the image properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
+                        The generic <see cref="ILocaImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="MediaProperties" Reference="ILocalMediaPropertySet" FullName="ILocalFile.MediaProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="MediaProperties" Reference="ILocalMediaPropertySet" FullName="ILocalFile.MediaProperties">
                     <summary>
                         Gets the media properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
+                        The generic <see cref="ILocaMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="MusicProperties" Reference="ILocalMusicPropertySet" FullName="ILocalFile.MusicProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="MusicProperties" Reference="ILocalMusicPropertySet" FullName="ILocalFile.MusicProperties">
                     <summary>
                         Gets the music properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
+                        The generic <see cref="ILocaMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="PhotoProperties" Reference="ILocalPhotoPropertySet" FullName="ILocalFile.PhotoProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="PhotoProperties" Reference="ILocalPhotoPropertySet" FullName="ILocalFile.PhotoProperties">
                     <summary>
                         Gets the photo properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
+                        The generic <see cref="ILocaPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="RecordedTVProperties" Reference="ILocalRecordedTVPropertySet" FullName="ILocalFile.RecordedTVProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="RecordedTVProperties" Reference="ILocalRecordedTVPropertySet" FullName="ILocalFile.RecordedTVProperties">
                     <summary>
                         Gets the recorded tv properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
+                        The generic <see cref="ILocaRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="VideoProperties" Reference="ILocalVideoPropertySet" FullName="ILocalFile.VideoProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="VideoProperties" Reference="ILocalVideoPropertySet" FullName="ILocalFile.VideoProperties">
                     <summary>
                         Gets the video properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
+                        The generic <see cref="ILocaVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="Redundancy" Reference="ILocalRedundancy" FullName="ILocalFile.Redundancy">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="Redundancy" Reference="ILocalRedundancy" FullName="ILocalFile.Redundancy">
                     <summary>
                         Gets the redundancy item that indicates the membership of a collection of redundant files.
                     </summary>
                     <value>
-                        A <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
+                        A <see cref="ILocaRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
                         or <see langword="null" /> if this file has not been identified as being redundant with any other.
                     </value>
-                </RelatedEntity>
-                <CollectionNavigation Name="BaselineComparisons" ItemType="ILocalComparison" FullName="ILocalFile.BaselineComparisons">
+                </NewRelatedEntity>
+                <NewCollectionNavigation Name="BaselineComparisons" ItemType="ILocalComparison" FullName="ILocalFile.BaselineComparisons">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
                     </summary>
                     <value>
-                        The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
+                        The <see cref="ILocaComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
                     </value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="CorrelativeComparisons" ItemType="ILocalComparison" FullName="ILocalFile.CorrelativeComparisons">
+                </NewCollectionNavigation>
+                <NewCollectionNavigation Name="CorrelativeComparisons" ItemType="ILocalComparison" FullName="ILocalFile.CorrelativeComparisons">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
                     </summary>
                     <value>
-                        The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
+                        The <see cref="ILocaComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
                     </value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="ILocalFileAccessError" FullName="ILocalFile.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while trying to open or read from the current file.
-                    </summary>
-                    <value>The access errors that occurred while trying to open or read from the current file.</value>
-                </CollectionNavigation>
+                </NewCollectionNavigation>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="ILocalFileAccessError" FullName="ILocalFile.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalFileAccessError" RootInterface="IFileAccessError">
@@ -6269,63 +6159,80 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <ExtendsEntity Type="ILocalAccessError" />
             <ImplementsGenericEntity Type="IAccessError{ILocalFile}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="ILocalFile" FullName="ILocalFileAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="ILocalFile" FullName="ILocalFileAccessError.Target">
                     <summary>
                         Gets the target file to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="ILocalFile" /> entity that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="ILocalRedundancy" RootInterface="IRedundancy">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <RelatedEntity Name="File" Reference="ILocalFile" FullName="ILocalRedundancy.File">
+                <NewIdNavRef Name="FileId" FullName="ILocalRedundancy.FileId" Navigation="File">
                     <summary>
-                        Gets the file that belongs to the redundancy set.
+                        Gets the primary key of the file in the that belongs to the redundancy set.
                     </summary>
-                    <value>The file that belongs to the redundancy set.</value>
-                </RelatedEntity>
-                <RelatedEntity Name="RedundantSet" Reference="ILocalRedundantSet" FullName="ILocalRedundancy.RedundantSet">
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalRedundancy.File" /><see cref="ILocalFile">entity</see>.
+                    </value>
+                    <remarks>This is also part of this entity's compound primary key.</remarks>
+                </NewIdNavRef>
+                <NewRelatedEntity Name="File" Reference="ILocalFile" FullName="ILocalRedundancy.File"/>
+                <NewIdNavRef Name="RedundantSetId" FullName="ILocalRedundancy.RedundantSetId" Navigation="RedundantSet">
                     <summary>
-                        Gets the redundancy set.
+                        Gets the primary key of the redundancy set file belongs to.
                     </summary>
-                    <value>The redundancy set.</value>
-                </RelatedEntity>
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalRedundancy.RedundantSet" /><see cref="ILocalRedundantSet">entity</see>.
+                    </value>
+                    <remarks>This is also part of this entity's compound primary key.</remarks>
+                </NewIdNavRef>
+                <NewRelatedEntity Name="RedundantSet" Reference="ILocalRedundantSet" FullName="ILocalRedundancy.RedundantSet"/>
             </Properties>
         </Entity>
         <Entity Name="ILocalComparison" RootInterface="IComparison">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity"/>
             <Properties>
-                <RelatedEntity Name="Baseline" Reference="ILocalFile" FullName="ILocalComparison.Baseline">
+                <NewIdNavRef Name="BaselineId" FullName="ILocalComparison.BaselineId" Navigation="Baseline">
+                    <summary>
+                        Gets the primary key of the baseline file in the comparison.
+                    </summary>
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalComparison.Baseline" /><see cref="IFile">file entity</see>.
+                    </value>
+                    <remarks>This is also part of this entity's compound primary key.</remarks>
+                </NewIdNavRef>
+                <NewRelatedEntity Name="Baseline" Reference="ILocalFile" FullName="ILocalComparison.Baseline">
                     <summary>
                         Gets the baseline file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="ILocalFile" /> that represents the baseline file in the comparison.
                     </value>
-                </RelatedEntity>
-                <UniqueIdentifier Name="CorrelativeId" FullName="ILocalComparison.CorrelativeId" Navigation="Correlative">
+                </NewRelatedEntity>
+                <NewIdNavRef Name="CorrelativeId" FullName="ILocalComparison.CorrelativeId" Navigation="Correlative">
                     <summary>
                         Gets the primary key of the correlative file in the comparison.
                     </summary>
                     <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalComparison.Correlative" /><see cref="ILocalFile">file entity</see>.
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalComparison.Correlative" /><see cref="IFile">file entity</see>.
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
-                </UniqueIdentifier>
-                <RelatedEntity Name="Correlative" Reference="ILocalFile" FullName="ILocalComparison.Correlative">
+                </NewIdNavRef>
+                <NewRelatedEntity Name="Correlative" Reference="ILocalFile" FullName="ILocalComparison.Correlative">
                     <summary>
                         Gets the correlative file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
     </Local>
@@ -6441,14 +6348,14 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary></summary>
             <ExtendsGenericEntity Type="IAccessError{IUpstreamDbEntity}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="IUpstreamDbEntity" FullName="IUpstreamAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="IUpstreamDbEntity" FullName="IUpstreamAccessError.Target">
                     <summary>
                         Gets the target entity to which the access error applies.
                     </summary>
                     <value>
                         The <see cref="IUpstreamDbEntity" /> object that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="IUserProfile" RootInterface="IUpstreamDbEntity">
@@ -6456,31 +6363,31 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                 Base interface for user profile database entities.
             </summary>
             <Properties>
-                <NVarChar Name="DisplayName" FullName="IUserProfile.DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="640" FullName="IUserProfile.DisplayName">
                     <summary>Gets the user's display name</summary>
                     <value>The user's display name</value>
                 </NVarChar>
-                <NVarChar Name="FirstName" FullName="IUserProfile.FirstName">
+                <NVarChar Name="FirstName" MaxLength="128" FullName="IUserProfile.FirstName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="LastName" FullName="IUserProfile.LastName">
+                <NVarChar Name="LastName" MaxLength="128" FullName="IUserProfile.LastName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="MI" FullName="IUserProfile.MI">
+                <NVarChar Name="MI" MaxLength="1" FullName="IUserProfile.MI">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="Suffix" FullName="IUserProfile.Suffix">
+                <NVarChar Name="Suffix" MaxLength="128" FullName="IUserProfile.Suffix">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="Title" FullName="IUserProfile.Title">
+                <NVarChar Name="Title" MaxLength="128" FullName="IUserProfile.Title">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <Int Name="DbPrincipalId" IsNullable="true" FullName="IUserProfile.DbPrincipalId">
+                <Int Name="DbPrincipalId" AllowNull="true" FullName="IUserProfile.DbPrincipalId">
                     <summary></summary>
                     <value></value>
                     <DefaultNull/>
@@ -6511,7 +6418,7 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary>
             </summary>
             <Properties>
-                <NVarChar Name="Name" FullName="IUserGroup.Name">
+                <NVarChar Name="Name" MaxLength="64" FullName="IUserGroup.Name">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -6556,7 +6463,7 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary>
             </summary>
             <Properties>
-                <NVarChar Name="ShortDescription" FullName="IMitigationTask.ShortDescription">
+                <NVarChar Name="ShortDescription" MaxLength="256" FullName="IMitigationTask.ShortDescription">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -6594,7 +6501,7 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary>
             </summary>
             <Properties>
-                <NVarChar Name="DisplayName" FullName="IHostPlatform.DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="256" FullName="IHostPlatform.DisplayName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -6624,15 +6531,15 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary>
             </summary>
             <Properties>
-                <NVarChar Name="DisplayName" FullName="IHostDevice.DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="256" FullName="IHostDevice.DisplayName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="MachineIdentifer" FullName="IHostDevice.MachineIdentifer">
+                <NVarChar Name="MachineIdentifer" MaxLength="1024" FullName="IHostDevice.MachineIdentifer">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="MachineName" FullName="IHostDevice.MachineName">
+                <NVarChar Name="MachineName" MaxLength="256" FullName="IHostDevice.MachineName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -6660,18 +6567,8 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <CollectionNavigation Name="Volumes" ItemType="IUpstreamVolume" FullName="IUpstreamFileSystem.Volumes">
-                    <summary>
-                        Gets the volumes that share this file system type.
-                    </summary>
-                    <value>The volumes that share this file system type.</value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="SymbolicNames" ItemType="IUpstreamSymbolicName" FullName="IUpstreamFileSystem.SymbolicNames">
-                    <summary>
-                        Gets the symbolic names for the current file system type.
-                    </summary>
-                    <value>The symbolic names that are used to identify the current file system type.</value>
-                </CollectionNavigation>
+                <NewCollectionNavigation Name="Volumes" ItemType="IUpstreamVolume" FullName="IUpstreamFileSystem.Volumes"/>
+                <NewCollectionNavigation Name="SymbolicNames" ItemType="IUpstreamSymbolicName" FullName="IUpstreamFileSystem.SymbolicNames"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSymbolicName" RootInterface="ISymbolicName">
@@ -6680,42 +6577,17 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <RelatedEntity Name="FileSystem" Reference="IUpstreamFileSystem" FullName="IUpstreamSymbolicName.FileSystem">
-                    <summary>
-                        Gets the file system that this symbolic name refers to.
-                    </summary>
-                    <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
-                </RelatedEntity>
+                <NewRelatedEntity Name="FileSystem" Reference="IUpstreamFileSystem" FullName="IUpstreamSymbolicName.FileSystem"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamVolume" RootInterface="IVolume">
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <RelatedEntity Name="HostDevice" Reference="IHostDevice" FullName="IUpstreamVolume.HostDevice">
-                    <summary>
-                        Gets the host device for this volume.
-                    </summary>
-                    <value>The host device for this volume.</value>
-                </RelatedEntity>
-                <RelatedEntity Name="RootDirectory" Reference="IUpstreamSubdirectory" FullName="IUpstreamVolume.RootDirectory">
-                    <summary>
-                        Gets the root directory of this volume.
-                    </summary>
-                    <value>The root directory of this volume.</value>
-                </RelatedEntity>
-                <RelatedEntity Name="FileSystem" Reference="IUpstreamFileSystem" FullName="IUpstreamVolume.FileSystem">
-                    <summary>
-                        Gets the file system type.
-                    </summary>
-                    <value>The file system type for this volume.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="AccessErrors" ItemType="IUpstreamVolumeAccessError" FullName="IUpstreamVolume.AccessErrors">
-                    <summary>
-                        Gets the access errors for this volume.
-                    </summary>
-                    <value>The access errors that occurred while trying to access this volume.</value>
-                </CollectionNavigation>
+                <NewRelatedEntity Name="HostDevice" Reference="IHostDevice" FullName="IUpstreamVolume.HostDevice"/>
+                <NewRelatedEntity Name="RootDirectory" Reference="IUpstreamSubdirectory" FullName="IUpstreamVolume.RootDirectory"/>
+                <NewRelatedEntity Name="FileSystem" Reference="IUpstreamFileSystem" FullName="IUpstreamVolume.FileSystem"/>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="IUpstreamVolumeAccessError" FullName="IUpstreamVolume.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamVolumeAccessError" RootInterface="IVolumeAccessError">
@@ -6725,14 +6597,14 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <ExtendsEntity Type="IUpstreamAccessError" />
             <ImplementsGenericEntity Type="IAccessError{IUpstreamVolume}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="IUpstreamVolume" FullName="IUpstreamVolumeAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="IUpstreamVolume" FullName="IUpstreamVolumeAccessError.Target">
                     <summary>
                         Gets the target volume to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IUpstreamVolume" /> entity that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamCrawlConfiguration" RootInterface="ICrawlConfiguration">
@@ -6741,16 +6613,8 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <RelatedEntity Name="Root" Reference="IUpstreamSubdirectory" FullName="IUpstreamCrawlConfiguration.Root">
-                    <summary>
-                        Gets the starting subdirectory for the configured subdirectory crawl.
-                    </summary>
-                    <value>The root subdirectory of the configured subdirectory crawl.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="Logs" ItemType="IUpstreamCrawlJobLog" FullName="IUpstreamCrawlConfiguration.Logs">
-                    <summary>Gets the crawl log entries.</summary>
-                    <value>The crawl log entries.</value>
-                </CollectionNavigation>
+                <NewRelatedEntity Name="Root" Reference="IUpstreamSubdirectory" FullName="IUpstreamCrawlConfiguration.Root"/>
+                <NewCollectionNavigation Name="Logs" ItemType="IUpstreamCrawlJobLog" FullName="IUpstreamCrawlConfiguration.Logs"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamCrawlJobLog" RootInterface="ICrawlJobLog">
@@ -6759,17 +6623,14 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <RelatedEntity Name="Configuration" Reference="IUpstreamCrawlConfiguration" FullName="IUpstreamCrawlJobLog.Configuration">
-                    <summary>Gets the configuration source for the file system crawl.</summary>
-                    <value>The configuration for the file system crawl.</value>
-                </RelatedEntity>
+                <NewRelatedEntity Name="Configuration" Reference="IUpstreamCrawlConfiguration" FullName="IUpstreamCrawlJobLog.Configuration"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamDbFsItem" RootInterface="IDbFsItem">
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <RelatedEntity Name="Parent" Reference="IUpstreamSubdirectory" FullName="IUpstreamSubdirectory.Parent">
+                <NewRelatedEntity Name="Parent" Reference="IUpstreamSubdirectory" FullName="IUpstreamSubdirectory.Parent">
                     <summary>
                         Gets the parent subdirectory.
                     </summary>
@@ -6781,20 +6642,15 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                         then <see cref="IUpstreamSubdirectory.Volume" /> should not be <see langword="null" />, and vice-versa;
                         otherwise, if the current entity is a <see cref="IUpstreamFile" />, then this should never be <see langword="null" />.
                     </remarks>
-                </RelatedEntity>
-                <CollectionNavigation Name="AccessErrors" ItemType="IUpstreamAccessError" FullName="IUpstreamDbFsItem.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while attempting to access the current file system item.
-                    </summary>
-                    <value>The access errors that occurred while attempting to access the current file system item.</value>
-                </CollectionNavigation>
+                </NewRelatedEntity>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="IUpstreamAccessError" FullName="IUpstreamDbFsItem.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSubdirectory" RootInterface="ISubdirectory">
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbFsItem"/>
             <Properties>
-                <RelatedEntity Name="Volume" Reference="IUpstreamVolume" FullName="IUpstreamSubdirectory.Volume">
+                <NewRelatedEntity Name="Volume" Reference="IUpstreamVolume" FullName="IUpstreamSubdirectory.Volume">
                     <summary>
                         Gets the parent volume.
                     </summary>
@@ -6802,33 +6658,13 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
                         The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.
                     </value>
                     <remarks>
-                        If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.
+                        If this is <see langword="null" />, then <see cref="IUpstreamSubdirectory.Parent" /> should not be null, and vice-versa.
                     </remarks>
-                </RelatedEntity>
-                <RelatedEntity Name="CrawlConfiguration" Reference="IUpstreamCrawlConfiguration" FullName="IUpstreamSubdirectory.CrawlConfiguration">
-                    <summary>
-                        Gets the crawl configuration that starts with the current subdirectory.
-                    </summary>
-                    <value>The crawl configuration that starts with the current subdirectory.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamSubdirectory.Files">
-                    <summary>
-                        Gets the files directly contained within this subdirectory.
-                    </summary>
-                    <value>The files directly contained within this subdirectory.</value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="SubDirectories" ItemType="IUpstreamSubdirectory" FullName="IUpstreamSubdirectory.SubDirectories">
-                    <summary>
-                        Gets the nested subdirectories directly contained within this subdirectory.
-                    </summary>
-                    <value>The nested subdirectories directly contained within this subdirectory.</value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="IUpstreamSubdirectoryAccessError" FullName="IUpstreamSubdirectory.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while attempting to access the current subdirectory.
-                    </summary>
-                    <value>The access errors that occurred while attempting to access the current subdirectory.</value>
-                </CollectionNavigation>
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="CrawlConfiguration" Reference="IUpstreamCrawlConfiguration" FullName="IUpstreamSubdirectory.CrawlConfiguration"/>
+                <NewCollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamSubdirectory.Files"/>
+                <NewCollectionNavigation Name="SubDirectories" ItemType="IUpstreamSubdirectory" FullName="IUpstreamSubdirectory.SubDirectories"/>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="IUpstreamSubdirectoryAccessError" FullName="IUpstreamSubdirectory.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError">
@@ -6836,14 +6672,14 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <ExtendsEntity Type="IUpstreamAccessError" />
             <ImplementsGenericEntity Type="IAccessError{IUpstreamSubdirectory}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="IUpstreamSubdirectory" FullName="IUpstreamSubdirectoryAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="IUpstreamSubdirectory" FullName="IUpstreamSubdirectoryAccessError.Target">
                     <summary>
                         Gets the target subdirectory to which the access error applies.
                     </summary>
                     <value>
-                        The <typeparamref name="ISubdirectory" /> entity that this error applies to.
+                        The <typeparamref name="IUpstreamSubdirectory" /> entity that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="ISubdirectoryAction" RootInterface="IUpstreamDbEntity">
@@ -6873,36 +6709,22 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <CollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamBinaryPropertySet.Files">
-                    <summary>
-                        Gets the files which have the same length and cryptographic hash.
-                    </summary>
-                    <value>
-                        The files which have the same length and cryptographic hash..
-                    </value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="RedundantSets" ItemType="IUpstreamRedundantSet" FullName="IUpstreamBinaryPropertySet.RedundantSets">
-                    <summary>
-                        Gets the sets of files which were determined to be duplicates.
-                    </summary>
-                    <value>
-                        The sets of files which were determined to be duplicates.
-                    </value>
-                </CollectionNavigation>
+                <NewCollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamBinaryPropertySet.Files"/>
+                <NewCollectionNavigation Name="RedundantSets" ItemType="IUpstreamRedundantSet" FullName="IUpstreamBinaryPropertySet.RedundantSets"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamPropertySet" RootInterface="IPropertySet">
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <CollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamPropertySet.Files">
+                <NewCollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamPropertySet.Files">
                     <summary>
                         Gets the files that share the same property values as this property set.
                     </summary>
                     <value>
-                        The <see cref="IFile">files</see> that share the same property values as this property set.
+                        The <see cref="IUpstreamFile">files</see> that share the same property values as this property set.
                     </value>
-                </CollectionNavigation>
+                </NewCollectionNavigation>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSummaryPropertySet" RootInterface="ISummaryPropertySet">
@@ -6964,151 +6786,136 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <RelatedEntity Name="BinaryProperties" Reference="IUpstreamBinaryPropertySet" FullName="IUpstreamRedundantSet.BinaryProperties">
-                    <summary>
-                        Gets the binary properties in common with all files in the current redundant set.
-                    </summary>
-                    <value>The binary properties in common with all files in the current redundant set.</value>
-                </RelatedEntity>
-                <CollectionNavigation Name="Redundancies" ItemType="IUpstreamRedundancy" FullName="IUpstreamRedundantSet.Redundancies">
-                    <summary>
-                        Gets the redundancy entities which represent links to redundant files.
-                    </summary>
-                    <value>The redundancy entities which represent links to redundant files.</value>
-                </CollectionNavigation>
+                <NewRelatedEntity Name="BinaryProperties" Reference="IUpstreamBinaryPropertySet" FullName="IUpstreamRedundantSet.BinaryProperties"/>
+                <NewCollectionNavigation Name="Redundancies" ItemType="IUpstreamRedundancy" FullName="IUpstreamRedundantSet.Redundancies"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamFile" RootInterface="IFile">
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbFsItem"/>
             <Properties>
-                <RelatedEntity Name="BinaryProperties" Reference="IUpstreamBinaryPropertySet" FullName="IUpstreamFile.BinaryProperties">
+                <NewRelatedEntity Name="BinaryProperties" Reference="IUpstreamBinaryPropertySet" FullName="IUpstreamFile.BinaryProperties">
                     <summary>
                         Gets the binary properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
+                        The generic <see cref="IUpstreamBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="SummaryProperties" Reference="IUpstreamSummaryPropertySet" FullName="IUpstreamFile.SummaryProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="SummaryProperties" Reference="IUpstreamSummaryPropertySet" FullName="IUpstreamFile.SummaryProperties">
                     <summary>
                         Gets the summary properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
+                        The generic <see cref="IUpstreamBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="DocumentProperties" Reference="IUpstreamDocumentPropertySet" FullName="IUpstreamFile.DocumentProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="DocumentProperties" Reference="IUpstreamDocumentPropertySet" FullName="IUpstreamFile.DocumentProperties">
                     <summary>
                         Gets the document properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
+                        The generic <see cref="IUpstreamDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="AudioProperties" Reference="IUpstreamAudioPropertySet" FullName="IUpstreamFile.AudioProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="AudioProperties" Reference="IUpstreamAudioPropertySet" FullName="IUpstreamFile.AudioProperties">
                     <summary>
                         Gets the audio properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
+                        The generic <see cref="IUpstreamAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="DRMProperties" Reference="IUpstreamDRMPropertySet" FullName="IUpstreamFile.DRMProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="DRMProperties" Reference="IUpstreamDRMPropertySet" FullName="IUpstreamFile.DRMProperties">
                     <summary>
                         Gets the DRM properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
+                        The generic <see cref="IUpstreamDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="GPSProperties" Reference="IUpstreamGPSPropertySet" FullName="IUpstreamFile.GPSProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="GPSProperties" Reference="IUpstreamGPSPropertySet" FullName="IUpstreamFile.GPSProperties">
                     <summary>
                         Gets the GPS properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
+                        The generic <see cref="IUpstreamGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="ImageProperties" Reference="IUpstreamImagePropertySet" FullName="IUpstreamFile.ImageProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="ImageProperties" Reference="IUpstreamImagePropertySet" FullName="IUpstreamFile.ImageProperties">
                     <summary>
                         Gets the image properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
+                        The generic <see cref="IUpstreamImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="MediaProperties" Reference="IUpstreamMediaPropertySet" FullName="IUpstreamFile.MediaProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="MediaProperties" Reference="IUpstreamMediaPropertySet" FullName="IUpstreamFile.MediaProperties">
                     <summary>
                         Gets the media properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
+                        The generic <see cref="IUpstreamMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="MusicProperties" Reference="IUpstreamMusicPropertySet" FullName="IUpstreamFile.MusicProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="MusicProperties" Reference="IUpstreamMusicPropertySet" FullName="IUpstreamFile.MusicProperties">
                     <summary>
                         Gets the music properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
+                        The generic <see cref="IUpstreamMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="PhotoProperties" Reference="IUpstreamPhotoPropertySet" FullName="IUpstreamFile.PhotoProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="PhotoProperties" Reference="IUpstreamPhotoPropertySet" FullName="IUpstreamFile.PhotoProperties">
                     <summary>
                         Gets the photo properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
+                        The generic <see cref="IUpstreamPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="RecordedTVProperties" Reference="IUpstreamRecordedTVPropertySet" FullName="IUpstreamFile.RecordedTVProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="RecordedTVProperties" Reference="IUpstreamRecordedTVPropertySet" FullName="IUpstreamFile.RecordedTVProperties">
                     <summary>
                         Gets the recorded tv properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
+                        The generic <see cref="IUpstreamRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="VideoProperties" Reference="IUpstreamVideoPropertySet" FullName="IUpstreamFile.VideoProperties">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="VideoProperties" Reference="IUpstreamVideoPropertySet" FullName="IUpstreamFile.VideoProperties">
                     <summary>
                         Gets the video properties for the current file.
                     </summary>
                     <value>
-                        The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
+                        The generic <see cref="IUpstreamVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
                     </value>
-                </RelatedEntity>
-                <RelatedEntity Name="Redundancy" Reference="IUpstreamRedundancy" FullName="IUpstreamFile.Redundancy">
+                </NewRelatedEntity>
+                <NewRelatedEntity Name="Redundancy" Reference="IUpstreamRedundancy" FullName="IUpstreamFile.Redundancy">
                     <summary>
                         Gets the redundancy item that indicates the membership of a collection of redundant files.
                     </summary>
                     <value>
-                        A <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
+                        A <see cref="IUpstreamRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
                         or <see langword="null" /> if this file has not been identified as being redundant with any other.
                     </value>
-                </RelatedEntity>
-                <CollectionNavigation Name="BaselineComparisons" ItemType="IUpstreamComparison" FullName="IUpstreamFile.BaselineComparisons">
+                </NewRelatedEntity>
+                <NewCollectionNavigation Name="BaselineComparisons" ItemType="IUpstreamComparison" FullName="IUpstreamFile.BaselineComparisons">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
                     </summary>
                     <value>
-                        The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
+                        The <see cref="IUpstreamComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
                     </value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="CorrelativeComparisons" ItemType="IUpstreamComparison" FullName="IUpstreamFile.CorrelativeComparisons">
+                </NewCollectionNavigation>
+                <NewCollectionNavigation Name="CorrelativeComparisons" ItemType="IUpstreamComparison" FullName="IUpstreamFile.CorrelativeComparisons">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
                     </summary>
                     <value>
-                        The <see cref="IComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
+                        The <see cref="IUpstreamComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
                     </value>
-                </CollectionNavigation>
-                <CollectionNavigation Name="AccessErrors" ItemType="IUpstreamFileAccessError" FullName="IUpstreamFile.AccessErrors">
-                    <summary>
-                        Gets the access errors that occurred while trying to open or read from the current file.
-                    </summary>
-                    <value>The access errors that occurred while trying to open or read from the current file.</value>
-                </CollectionNavigation>
+                </NewCollectionNavigation>
+                <NewCollectionNavigation Name="AccessErrors" ItemType="IUpstreamFileAccessError" FullName="IUpstreamFile.AccessErrors"/>
             </Properties>
         </Entity>
         <Entity Name="IFileAction" RootInterface="IUpstreamDbEntity">
@@ -7139,63 +6946,80 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
             <ExtendsEntity Type="IUpstreamAccessError" />
             <ImplementsGenericEntity Type="IAccessError{IUpstreamFile}" TypeDef="IAccessError{TTarget}"/>
             <Properties>
-                <RelatedEntity Name="Target" Reference="IUpstreamFile" FullName="IUpstreamFileAccessError.Target">
+                <NewRelatedEntity Name="Target" Reference="IUpstreamFile" FullName="IUpstreamFileAccessError.Target">
                     <summary>
                         Gets the target file to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IUpstreamFile" /> entity that this error applies to.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamRedundancy" RootInterface="IRedundancy">
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <RelatedEntity Name="File" Reference="IUpstreamFile" FullName="IUpstreamRedundancy.File">
+                <NewIdNavRef Name="FileId" FullName="IUpstreamRedundancy.FileId" Navigation="File">
                     <summary>
-                        Gets the file that belongs to the redundancy set.
+                        Gets the primary key of the file in the that belongs to the redundancy set.
                     </summary>
-                    <value>The file that belongs to the redundancy set.</value>
-                </RelatedEntity>
-                <RelatedEntity Name="RedundantSet" Reference="IUpstreamRedundantSet" FullName="IUpstreamRedundancy.RedundantSet">
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamRedundancy.File" /><see cref="IUpstreamFile">entity</see>.
+                    </value>
+                    <remarks>This is also part of this entity's compound primary key.</remarks>
+                </NewIdNavRef>
+                <NewRelatedEntity Name="File" Reference="IUpstreamFile" FullName="IUpstreamRedundancy.File"/>
+                <NewIdNavRef Name="RedundantSetId" FullName="IUpstreamRedundancy.RedundantSetId" Navigation="RedundantSet">
                     <summary>
-                        Gets the redundancy set.
+                        Gets the primary key of the redundancy set file belongs to.
                     </summary>
-                    <value>The redundancy set.</value>
-                </RelatedEntity>
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamRedundancy.RedundantSet" /><see cref="IUpstreamRedundantSet">entity</see>.
+                    </value>
+                    <remarks>This is also part of this entity's compound primary key.</remarks>
+                </NewIdNavRef>
+                <NewRelatedEntity Name="RedundantSet" Reference="IUpstreamRedundantSet" FullName="IUpstreamRedundancy.RedundantSet"/>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamComparison" RootInterface="IComparison">
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbEntity"/>
             <Properties>
-                <RelatedEntity Name="Baseline" Reference="IUpstreamFile" FullName="IUpstreamComparison.Baseline">
+                <NewIdNavRef Name="BaselineId" FullName="IUpstreamComparison.BaselineId" Navigation="Baseline">
+                    <summary>
+                        Gets the primary key of the baseline file in the comparison.
+                    </summary>
+                    <value>
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamComparison.Baseline" /><see cref="IFile">file entity</see>.
+                    </value>
+                    <remarks>This is also part of this entity's compound primary key.</remarks>
+                </NewIdNavRef>
+                <NewRelatedEntity Name="Baseline" Reference="IUpstreamFile" FullName="IUpstreamComparison.Baseline">
                     <summary>
                         Gets the baseline file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamFile" /> that represents the baseline file in the comparison.
                     </value>
-                </RelatedEntity>
-                <UniqueIdentifier Name="CorrelativeId" FullName="IUpstreamComparison.CorrelativeId" Navigation="Correlative">
+                </NewRelatedEntity>
+                <NewIdNavRef Name="CorrelativeId" FullName="IUpstreamComparison.CorrelativeId" Navigation="Correlative">
                     <summary>
                         Gets the primary key of the correlative file in the comparison.
                     </summary>
                     <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamComparison.Correlative" /><see cref="IUpstreamFile">file entity</see>.
+                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamComparison.Correlative" /><see cref="IFile">file entity</see>.
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
-                </UniqueIdentifier>
-                <RelatedEntity Name="Correlative" Reference="IUpstreamFile" FullName="IUpstreamComparison.Correlative">
+                </NewIdNavRef>
+                <NewRelatedEntity Name="Correlative" Reference="IUpstreamFile" FullName="IUpstreamComparison.Correlative">
                     <summary>
                         Gets the correlative file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamFile" /> that represents the correlative file, which is the new or changed file in the comparison.
                     </value>
-                </RelatedEntity>
+                </NewRelatedEntity>
             </Properties>
         </Entity>
     </Upstream>

@@ -21,7 +21,7 @@
 <#@ output extension=".sql" #>
 
 <#
-foreach (XElement entityElement in EntitiesDocument.Root.Elements("Local").Elements("Entity").Reverse())
+foreach (XElement entityElement in EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity").Reverse())
 {
 #>
 DROP TABLE IF EXISTS "<#=entityElement.Attribute("Name")?.Value#>";

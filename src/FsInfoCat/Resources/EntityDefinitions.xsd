@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="EntityDefinitions" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <xs:simpleType name="CsIdentifier">
+    <xs:simpleType name="AnyCsIdentifier">
         <xs:restriction base="xs:token">
+            <xs:pattern value="^[A-Z][A-Za-z\d_]*({[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*})?$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CsIdentifier">
+        <xs:restriction base="AnyCsIdentifier">
             <xs:pattern value="^[A-Z][A-Za-z\d_]*$" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="CsGenericIdentifier">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="AnyCsIdentifier">
             <xs:pattern value="^[A-Z][A-Za-z\d_]*{[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*}$" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="AnyCsIdentifier">
-        <xs:union memberTypes="CsIdentifier CsGenericIdentifier"/>
+    <xs:simpleType name="AnyCsTypeName">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)*[A-Z][A-Za-z\d_]*({[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*})?$" />
+        </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="CsTypeName">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="AnyCsTypeName">
             <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)*[A-Z][A-Za-z\d_]*$" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="CsGenericTypeDefinition">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="AnyCsTypeName">
             <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)*[A-Z][A-Za-z\d_]*{[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*}$" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="AnyCsTypeName">
-        <xs:union memberTypes="CsTypeName CsGenericTypeDefinition"/>
+    <xs:simpleType name="CsMemberReference">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="^((?=[A-Za-z\d_]+[.{])[A-Z][A-Za-z\d_]*\.?)+({[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*}\.)?[A-Z][A-Za-z\d_]*" />
+        </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="CsGenericPropertyReference">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="CsMemberReference">
             <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)*[A-Z][A-Za-z\d_]*{[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*}\.*[A-Z][A-Za-z\d_]*$" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="CsPropertyReference">
-        <xs:union memberTypes="CsTypeName CsGenericPropertyReference"/>
+    <xs:simpleType name="CsEnumFieldReference">
+        <xs:restriction base="CsMemberReference">
+            <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)+[A-Z][A-Za-z\d_]*$" />
+        </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="CsIdentifierOrEmpty">
         <xs:union memberTypes="CsIdentifier">
@@ -68,7 +79,7 @@
             </xs:element>
         </xs:sequence>
     </xs:group>
-    <xs:group name="FieldCommentDoc">
+    <xs:group name="BasicCommentDoc">
         <xs:sequence>
             <xs:element name="summary" type="CommentDoc">
                 <xs:annotation>
@@ -82,327 +93,6 @@
         <xs:sequence>
             <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="TypeParam">
-        <xs:complexContent>
-            <xs:extension base="CommentDoc">
-                <xs:attribute name="name" type="CsIdentifier" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="SeeAlso">
-        <xs:complexContent>
-            <xs:extension base="CommentDoc">
-                <xs:attribute name="cref" type="AnyCsTypeName" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="EnumDefinition">
-        <xs:annotation>
-            <xs:documentation>
-                /EntityDefinitions/*/EnumTypes/*
-            </xs:documentation>
-        </xs:annotation>
-        <xs:group ref="FieldCommentDoc" />
-        <xs:attribute name="Name" type="CsIdentifier" use="required">
-            <xs:annotation>
-                <xs:documentation>
-                    The name of the Enum type.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="IsFlags" type="xs:boolean" use="optional" default="false"/>
-    </xs:complexType>
-    <xs:complexType name="ByteValue">
-        <xs:attribute name="Value" type="xs:unsignedByte" use="required" />
-    </xs:complexType>
-    <xs:complexType name="SByteValue">
-        <xs:attribute name="Value" type="xs:byte" use="required" />
-    </xs:complexType>
-    <xs:complexType name="ShortValue">
-        <xs:attribute name="Value" type="xs:short" use="required" />
-    </xs:complexType>
-    <xs:complexType name="UShortValue">
-        <xs:attribute name="Value" type="xs:unsignedShort" use="required" />
-    </xs:complexType>
-    <xs:complexType name="IntValue">
-        <xs:attribute name="Value" type="xs:int" use="required" />
-    </xs:complexType>
-    <xs:complexType name="UIntValue">
-        <xs:attribute name="Value" type="xs:unsignedInt" use="required" />
-    </xs:complexType>
-    <xs:complexType name="LongValue">
-        <xs:attribute name="Value" type="xs:long" use="required" />
-    </xs:complexType>
-    <xs:complexType name="ULongValue">
-        <xs:attribute name="Value" type="xs:unsignedLong" use="required" />
-    </xs:complexType>
-    <xs:complexType name="DoubleValue">
-        <xs:attribute name="Value" type="xs:double" use="required" />
-    </xs:complexType>
-    <xs:complexType name="BooleanValue">
-        <xs:attribute name="Value" type="xs:boolean" use="required" />
-    </xs:complexType>
-    <xs:complexType name="StringValue">
-        <xs:attribute name="Value" type="xs:string" use="required" />
-    </xs:complexType>
-    <xs:complexType name="EnumValue">
-        <xs:attribute name="Value" type="CsTypeName" use="required">
-            <xs:annotation>
-                <xs:documentation>The full name of an Enum field, matching XPath "/EntityDefinitions/*/EnumTypes/@FullName"</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:complexType>
-    <xs:group name="AmbientValue">
-        <xs:choice>
-            <xs:element name="AmbientByte" type="ByteValue" />
-            <xs:element name="AmbientSByte" type="SByteValue" />
-            <xs:element name="AmbientShort" type="ShortValue" />
-            <xs:element name="AmbientUShort" type="UShortValue" />
-            <xs:element name="AmbientInt" type="IntValue" />
-            <xs:element name="AmbientUInt" type="UIntValue" />
-            <xs:element name="AmbientLong" type="LongValue" />
-            <xs:element name="AmbientULong" type="ULongValue" />
-            <xs:element name="AmbientDouble" type="DoubleValue" />
-            <xs:element name="AmbientBoolean" type="BooleanValue" />
-            <xs:element name="AmbientString" type="StringValue" />
-            <xs:element name="AmbientEnum" type="EnumValue" />
-        </xs:choice>
-    </xs:group>
-    <xs:attributeGroup name="ValueTypeProperty">
-        <xs:attribute name="IsDefaultNull" type="xs:boolean" use="optional" default="false">
-            <xs:annotation>
-                <xs:documentation>Indicates whether the default value is null.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-            <xs:annotation>
-                <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:attributeGroup>
-    <xs:attributeGroup name="MemberAttributes">
-        <xs:attribute name="Name" type="CsIdentifier" use="required">
-            <xs:annotation>
-                <xs:documentation>The name of the field or property.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="DisplayNameResource" use="optional" type="CsIdentifierOrEmpty">
-            <xs:annotation>
-                <xs:documentation>The name of the resource for the property's display name.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="DescriptionResource" use="optional" type="CsIdentifier">
-            <xs:annotation>
-                <xs:documentation>The name of the resource for the property's description.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="ResourceType" type="CsTypeName" use="optional">
-            <xs:annotation>
-                <xs:documentation>The type name of the resource for the property display name and/or description.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:attributeGroup>
-    <xs:complexType name="EnumField">
-        <xs:annotation>
-            <xs:documentation>
-                Defines an enum field.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:group ref="FieldCommentDoc" />
-            <xs:group ref="AmbientValue" minOccurs="0"/>
-        </xs:sequence>
-        <xs:attributeGroup ref="MemberAttributes" />
-        <xs:attribute name="FullName" type="CsTypeName" use="optional">
-            <xs:annotation>
-                <xs:documentation>The full name of the enum field.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:complexType>
-    <xs:complexType name="ByteEnumDefinition">
-        <xs:annotation>
-            <xs:documentation>Defines an enum with a byte base value type.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="EnumDefinition">
-                <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="Field">
-                        <xs:annotation>
-                            <xs:documentation>Defines an enum field.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EnumField">
-                                    <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="SByteEnumDefinition">
-        <xs:annotation>
-            <xs:documentation>Defines an enum with an sbyte base value type.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="EnumDefinition">
-                <xs:sequence minOccurs="2" maxOccurs="unbounded">
-                    <xs:element name="Field">
-                        <xs:annotation>
-                            <xs:documentation>Defines an enum field.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EnumField">
-                                    <xs:attribute name="Value" type="xs:byte" use="required"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ShortEnumDefinition">
-        <xs:annotation>
-            <xs:documentation>Defines an enum with a short base value type.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="EnumDefinition">
-                <xs:sequence minOccurs="2" maxOccurs="unbounded">
-                    <xs:element name="Field">
-                        <xs:annotation>
-                            <xs:documentation>Defines an enum field.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EnumField">
-                                    <xs:attribute name="Value" type="xs:short" use="required"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UShortEnumDefinition">
-        <xs:annotation>
-            <xs:documentation>Defines an enum with a ushort base value type.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="EnumDefinition">
-                <xs:sequence minOccurs="2" maxOccurs="unbounded">
-                    <xs:element name="Field">
-                        <xs:annotation>
-                            <xs:documentation>Defines an enum field.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EnumField">
-                                    <xs:attribute name="Value" type="xs:unsignedShort" use="required"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="IntEnumDefinition">
-        <xs:annotation>
-            <xs:documentation>Defines an enum with an int base value type.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="EnumDefinition">
-                <xs:sequence minOccurs="2" maxOccurs="unbounded">
-                    <xs:element name="Field">
-                        <xs:annotation>
-                            <xs:documentation>Defines an enum field.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EnumField">
-                                    <xs:attribute name="Value" type="xs:int" use="required"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UIntEnumDefinition">
-        <xs:annotation>
-            <xs:documentation>Defines an enum with a uiont base value type.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="EnumDefinition">
-                <xs:sequence minOccurs="2" maxOccurs="unbounded">
-                    <xs:element name="Field">
-                        <xs:annotation>
-                            <xs:documentation>Defines an enum field.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EnumField">
-                                    <xs:attribute name="Value" type="xs:unsignedInt" use="required"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="LongEnumDefinition">
-        <xs:annotation>
-            <xs:documentation>Defines an enum with a long base value type.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="EnumDefinition">
-                <xs:sequence minOccurs="2" maxOccurs="unbounded">
-                    <xs:element name="Field">
-                        <xs:annotation>
-                            <xs:documentation>Defines an enum field.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EnumField">
-                                    <xs:attribute name="Value" type="xs:long" use="required"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ULongEnumDefinition">
-        <xs:annotation>
-            <xs:documentation>Defines an enum with a ulong base value type.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="EnumDefinition">
-                <xs:sequence minOccurs="2" maxOccurs="unbounded">
-                    <xs:element name="Field">
-                        <xs:annotation>
-                            <xs:documentation>Defines an enum field.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="EnumField">
-                                    <xs:attribute name="Value" type="xs:unsignedLong" use="required"/>
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
     </xs:complexType>
     <xs:group name="PropertyCommentDoc">
         <xs:sequence>
@@ -419,29 +109,446 @@
             <xs:group ref="DetailsCommentDoc" />
         </xs:sequence>
     </xs:group>
+    <xs:complexType name="TypeParamCommentDoc">
+        <xs:complexContent>
+            <xs:extension base="CommentDoc">
+                <xs:attribute name="name" type="CsIdentifier">
+                    <xs:annotation>
+                        <xs:documentation>The name of the generic type parameter name used in the Name of the current entity that refers a generic entity type.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SeeAlsoCommentDoc">
+        <xs:complexContent>
+            <xs:extension base="CommentDoc">
+                <xs:attribute name="cref" type="AnyCsTypeName" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AmbientValueDefinition">
+        <xs:attribute name="Value" use="required"/>
+    </xs:complexType>
+    <xs:group name="AmbientValue">
+        <xs:choice>
+            <xs:element name="AmbientByte">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientSByte">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:byte" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientShort">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:short" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientUShort">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:unsignedShort" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientInt">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:int" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientUInt">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:unsignedInt" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientLong">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:long" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientULong">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:unsignedLong" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientFloat">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:float" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientDouble">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:double" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientBoolean">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientString">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required" />
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmbientEnum">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="AmbientValueDefinition">
+                            <xs:attribute name="Value" type="CsTypeName" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>The full name of an Enum field, matching XPath "/EntityDefinitions/*/EnumTypes/@FullName"</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:attributeGroup name="MemberAttributes">
+        <xs:attribute name="DisplayNameResource" use="optional" type="CsIdentifierOrEmpty">
+            <xs:annotation>
+                <xs:documentation>The name of the resource for the property's display name.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="DescriptionResource" use="optional" type="CsIdentifier">
+            <xs:annotation>
+                <xs:documentation>The name of the resource for the property's description.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="ResourceType" type="CsTypeName" use="optional">
+            <xs:annotation>
+                <xs:documentation>The type name of the resource for the property display name and/or description.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:complexType name="MemberDefinitionBase">
+        <xs:attribute name="Name" type="CsIdentifier" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of the field or property.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="FullName" type="CsMemberReference" use="required">
+            <xs:annotation>
+                <xs:documentation>The full name to reference the member.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="MemberDefinition">
+        <xs:complexContent>
+            <xs:extension base="MemberDefinitionBase">
+                <xs:attributeGroup ref="MemberAttributes" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumFieldDefinitionBase">
+        <xs:complexContent>
+            <xs:restriction base="MemberDefinition">
+                <xs:attributeGroup ref="MemberAttributes" />
+                <xs:attribute name="FullName" type="CsEnumFieldReference" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The full name to reference the field.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:group name="EnumFieldElements">
+        <xs:sequence>
+            <xs:group ref="BasicCommentDoc" />
+            <xs:group ref="AmbientValue" minOccurs="0"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:complexType name="EnumFieldDefinition">
+        <xs:annotation>
+            <xs:documentation>
+                Defines an enum field.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="EnumFieldDefinitionBase">
+                <xs:group ref="EnumFieldElements" />
+                <xs:attribute name="Value" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:attributeGroup name="EnumTypeAttributes">
+        <xs:attribute name="Name" type="CsIdentifier" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The name of the Enum type.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="IsFlags" type="xs:boolean" use="optional" default="false"/>
+    </xs:attributeGroup>
+    <xs:complexType name="EnumTypeDefinition">
+        <xs:sequence>
+            <xs:group ref="BasicCommentDoc" />
+            <xs:element name="Field" type="EnumFieldDefinition" minOccurs="2" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="EnumTypeAttributes"/>
+    </xs:complexType>
+    <xs:complexType name="ByteEnumDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an enum with a byte base value type.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="EnumTypeDefinition">
+                <xs:sequence>
+                    <xs:group ref="BasicCommentDoc" />
+                    <xs:element name="Field" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:restriction base="EnumFieldDefinition">
+                                    <xs:group ref="EnumFieldElements" />
+                                    <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                                </xs:restriction>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attributeGroup ref="EnumTypeAttributes"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteEnumDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an enum with an sbyte base value type.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="EnumTypeDefinition">
+                <xs:sequence>
+                    <xs:group ref="BasicCommentDoc" />
+                    <xs:element name="Field" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:restriction base="EnumFieldDefinition">
+                                    <xs:group ref="EnumFieldElements" />
+                                    <xs:attribute name="Value" type="xs:byte" use="required"/>
+                                </xs:restriction>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortEnumDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an enum with a short base value type.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="EnumTypeDefinition">
+                <xs:sequence>
+                    <xs:group ref="BasicCommentDoc" />
+                    <xs:element name="Field" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:restriction base="EnumFieldDefinition">
+                                    <xs:group ref="EnumFieldElements" />
+                                    <xs:attribute name="Value" type="xs:short" use="required"/>
+                                </xs:restriction>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortEnumDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an enum with a ushort base value type.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="EnumTypeDefinition">
+                <xs:sequence>
+                    <xs:group ref="BasicCommentDoc" />
+                    <xs:element name="Field" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:restriction base="EnumFieldDefinition">
+                                    <xs:group ref="EnumFieldElements" />
+                                    <xs:attribute name="Value" type="xs:unsignedShort" use="required"/>
+                                </xs:restriction>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntEnumDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an enum with an int base value type.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="EnumTypeDefinition">
+                <xs:sequence>
+                    <xs:group ref="BasicCommentDoc" />
+                    <xs:element name="Field" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:restriction base="EnumFieldDefinition">
+                                    <xs:group ref="EnumFieldElements" />
+                                    <xs:attribute name="Value" type="xs:int" use="required"/>
+                                </xs:restriction>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntEnumDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an enum with a uiont base value type.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="EnumTypeDefinition">
+                <xs:sequence>
+                    <xs:group ref="BasicCommentDoc" />
+                    <xs:element name="Field" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:restriction base="EnumFieldDefinition">
+                                    <xs:group ref="EnumFieldElements" />
+                                    <xs:attribute name="Value" type="xs:unsignedInt" use="required"/>
+                                </xs:restriction>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongEnumDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an enum with a long base value type.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="EnumTypeDefinition">
+                <xs:sequence>
+                    <xs:group ref="BasicCommentDoc" />
+                    <xs:element name="Field" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:restriction base="EnumFieldDefinition">
+                                    <xs:group ref="EnumFieldElements" />
+                                    <xs:attribute name="Value" type="xs:long" use="required"/>
+                                </xs:restriction>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongEnumDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an enum with a ulong base value type.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="EnumTypeDefinition">
+                <xs:sequence>
+                    <xs:group ref="BasicCommentDoc" />
+                    <xs:element name="Field" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:restriction base="EnumFieldDefinition">
+                                    <xs:group ref="EnumFieldElements" />
+                                    <xs:attribute name="Value" type="xs:unsignedLong" use="required"/>
+                                </xs:restriction>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NewEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="MemberDefinitionBase">
+                <xs:group ref="PropertyCommentDoc" minOccurs="0" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="EntityProperty">
-        <xs:group ref="PropertyCommentDoc" />
-        <xs:attributeGroup ref="MemberAttributes" />
-        <xs:attribute name="FullName" type="CsPropertyReference" use="optional">
-            <xs:annotation>
-                <xs:documentation>The full name of the property.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false">
-            <xs:annotation>
-                <xs:documentation>Indicates whether the property is read/write on generic interfaces.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="IsUnique" type="xs:boolean" use="optional" default="false">
-            <xs:annotation>
-                <xs:documentation>Indicates whether to add a unique constraint.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="IsIndexed" type="xs:boolean" use="optional" default="false">
-            <xs:annotation>
-                <xs:documentation>Indicates whether the column is indexed.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+        <xs:complexContent>
+            <xs:extension base="MemberDefinition">
+                <xs:group ref="PropertyCommentDoc" />
+                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates whether the property is read/write on generic interfaces.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="IsUnique" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates whether to add a unique constraint.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="IsIndexed" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates whether the column is indexed.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="ByteProperty">
         <xs:complexContent>
@@ -456,19 +563,15 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                <xs:attribute name="MinValue" type="xs:unsignedByte" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                <xs:attribute name="MaxValue" type="xs:unsignedByte" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -489,13 +592,9 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
                 <xs:attribute name="MinValue" type="xs:byte" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
@@ -522,13 +621,9 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -545,13 +640,9 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -568,19 +659,15 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                <xs:attribute name="MinValue" type="xs:short" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                <xs:attribute name="MaxValue" type="xs:short" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -601,19 +688,15 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                <xs:attribute name="MinValue" type="xs:unsignedShort" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                <xs:attribute name="MaxValue" type="xs:unsignedShort" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -634,19 +717,15 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                <xs:attribute name="MinValue" type="xs:int" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                <xs:attribute name="MaxValue" type="xs:int" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -667,19 +746,15 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                <xs:attribute name="MinValue" type="xs:unsignedInt" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                <xs:attribute name="MaxValue" type="xs:unsignedInt" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -700,19 +775,15 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                <xs:attribute name="MinValue" type="xs:long" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                <xs:attribute name="MaxValue" type="xs:long" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -733,19 +804,15 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                <xs:attribute name="MinValue" type="xs:unsignedLong" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                <xs:attribute name="MaxValue" type="xs:unsignedLong" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -766,19 +833,44 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                <xs:attribute name="MinValue" type="xs:double" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                <xs:attribute name="MaxValue" type="xs:double" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="FloatProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="Default" type="xs:float">
+                        <xs:annotation>
+                            <xs:documentation>The constant default value.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DefaultNull">
+                        <xs:annotation>
+                            <xs:documentation>The default value is null.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:float" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:float" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -799,19 +891,15 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
                 <xs:attribute name="MinLength" type="xs:unsignedShort" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum length.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxLength" type="xs:unsignedShort" use="optional">
+                <xs:attribute name="MaxLength" type="xs:unsignedShort" use="required">
                     <xs:annotation>
                         <xs:documentation>The constant maximum length.</xs:documentation>
                     </xs:annotation>
@@ -832,13 +920,9 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -855,13 +939,9 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -878,31 +958,48 @@
                         <xs:annotation>
                             <xs:documentation>The default value is the current date and time at entity creation.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                     <xs:element name="DefaultNull">
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="UniqueIdentifierProperty">
         <xs:complexContent>
             <xs:extension base="EntityProperty">
+                <xs:sequence>
+                    <xs:element name="DefaultNull" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>The default value is null.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                </xs:sequence>
                 <xs:attribute name="IsPrimaryKey" type="xs:boolean" use="optional" default="false">
                     <xs:annotation>
                         <xs:documentation>Designates column as a primary key if true.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attributeGroup ref="ValueTypeProperty" />
                 <xs:attribute name="Navigation" type="CsIdentifier" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Specifies a property as the navigation property in a foreign key relationship matching XPath "../*/@Name".
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NewIdNavRefProperty">
+        <xs:complexContent>
+            <xs:extension base="NewEntityProperty">
+                <xs:attribute name="Navigation" type="CsIdentifier" use="required">
                     <xs:annotation>
                         <xs:documentation>
                             Specifies a property as the navigation property in a foreign key relationship matching XPath "../*/@Name".
@@ -925,36 +1022,37 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="MD5HashProperty">
         <xs:complexContent>
             <xs:extension base="EntityProperty">
-                <xs:attributeGroup ref="ValueTypeProperty" />
+                <xs:sequence>
+                    <xs:element name="DefaultNull" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>The default value is null.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="ByteValuesProperty">
         <xs:complexContent>
             <xs:extension base="EntityProperty">
-                <xs:attribute name="IsDefaultNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
+                <xs:sequence>
+                    <xs:element name="DefaultNull" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>The default value is null.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -971,13 +1069,9 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -994,16 +1088,12 @@
                         <xs:annotation>
                             <xs:documentation>The default value is null.</xs:documentation>
                         </xs:annotation>
+                        <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
                 <xs:attribute name="Type" type="CsIdentifier" use="required">
                     <xs:annotation>
                         <xs:documentation>The class name of the Enum type.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
             </xs:extension>
@@ -1012,27 +1102,36 @@
     <xs:complexType name="RelatedEntityProperty">
         <xs:complexContent>
             <xs:extension base="EntityProperty">
+                <xs:sequence>
+                    <xs:element name="DefaultNull" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>The default value is null.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                </xs:sequence>
                 <xs:attribute name="Reference" type="CsIdentifier" use="required">
                     <xs:annotation>
                         <xs:documentation>The value of the Name attribute of the related entity.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="PrimaryKey" type="CsPropertyReference" use="optional">
+                <xs:attribute name="PrimaryKey" type="CsMemberReference" use="optional">
                     <xs:annotation>
                         <xs:documentation>The full name of an entity property.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="IsDefaultNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether the default value is null.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
                 <xs:attribute name="IsOneToOne" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NewRelatedEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="NewEntityProperty">
+                <xs:attribute name="Reference" type="CsIdentifier" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The value of the Name attribute of the related entity.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1046,11 +1145,22 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="ForeignKey" type="CsPropertyReference" use="optional">
+                <xs:attribute name="ForeignKey" type="CsMemberReference" use="optional">
                     <xs:annotation>
                         <xs:documentation>
                             THe property full name representing the foreign key,  matching XPath "/EntityDefinitions/*/Entity/Properties/*/@FullName"
                         </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NewNavigationSetProperty">
+        <xs:complexContent>
+            <xs:extension base="NewEntityProperty">
+                <xs:attribute name="ItemType" type="CsIdentifier" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The value of the Name attribute of the related entity.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
             </xs:extension>
@@ -1071,16 +1181,20 @@
             <xs:element name="Long" type="LongProperty" />
             <xs:element name="ULong" type="ULongProperty" />
             <xs:element name="Double" type="DoubleProperty" />
+            <xs:element name="Float" type="FloatProperty" />
             <xs:element name="NVarChar" type="NVarCharProperty" />
             <xs:element name="DateTime" type="DateTimeProperty" />
             <xs:element name="UniqueIdentifier" type="UniqueIdentifierProperty" />
+            <xs:element name="NewIdNavRef" type="NewIdNavRefProperty" />
             <xs:element name="Bit" type="BitProperty" />
             <xs:element name="Text" type="TextProperty" />
             <xs:element name="VolumeIdentifier" type="VolumeIdentifierProperty"/>
             <xs:element name="DriveType" type="DriveTypeProperty"/>
             <xs:element name="Enum" type="EnumProperty"/>
             <xs:element name="RelatedEntity" type="RelatedEntityProperty" />
+            <xs:element name="NewRelatedEntity" type="NewRelatedEntityProperty" />
             <xs:element name="CollectionNavigation" type="NavigationSetProperty"/>
+            <xs:element name="NewCollectionNavigation" type="NewNavigationSetProperty"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="EntityDefinition">
@@ -1090,7 +1204,7 @@
                     <xs:documentation>Summary xml source code documentation.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="typeparam" type="CommentDoc" minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="typeparam" type="TypeParamCommentDoc" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation>Type parameter xml source code documentation.</xs:documentation>
                 </xs:annotation>
@@ -1187,11 +1301,11 @@
                     <xs:field xpath="@Name"/>
                 </xs:unique>
                 <xs:key name="PK_RelatedEntity_Name">
-                    <xs:selector xpath="RelatedEntity" />
+                    <xs:selector xpath="RelatedEntity|NewRelatedEntity" />
                     <xs:field xpath="@Name" />
                 </xs:key>
                 <xs:keyref name="FK_NavigationProperty" refer="PK_RelatedEntity_Name">
-                    <xs:selector xpath="UniqueIdentifier" />
+                    <xs:selector xpath="UniqueIdentifier|NewIdNavRef" />
                     <xs:field xpath="@Navigation" />
                 </xs:keyref>
             </xs:element>
@@ -1199,11 +1313,6 @@
         <xs:attribute name="Name" type="AnyCsIdentifier" use="required">
             <xs:annotation>
                 <xs:documentation>The class name of the entity.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="TypeParam" type="CsIdentifier" use="optional">
-            <xs:annotation>
-                <xs:documentation>The name of the generic type parameter name used in the Name of the current entity that refers a generic entity type.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
@@ -1371,11 +1480,11 @@
             <xs:field xpath="@Name"/>
         </xs:key>
         <xs:keyref name="FK_Root_Entity_RelatedEntity_Reference" refer="PK_RootScope_Entity_Name">
-            <xs:selector xpath="Root/Entity/Properties/RelatedEntity"/>
+            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Root/Entity/Properties/NewRelatedEntity"/>
             <xs:field xpath="@Reference"/>
         </xs:keyref>
         <xs:keyref name="FK_Root_Entity_CollectionNavigation_ItemType" refer="PK_RootScope_Entity_Name">
-            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation"/>
+            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation|Root/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="@ItemType"/>
         </xs:keyref>
         <xs:keyref name="FK_Root_ExtendsEntity_Type" refer="PK_RootScope_Entity_Name">
@@ -1385,6 +1494,10 @@
         <xs:keyref name="FK_Root_ExtendsGenericEntity_TypeDef" refer="PK_RootScope_Entity_Name">
             <xs:selector xpath="Root/Entity/ExtendsGenericEntity"/>
             <xs:field xpath="@TypeDef"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Root_ImplementsEntity_Type" refer="PK_RootScope_Entity_Name">
+            <xs:selector xpath="Root/Entity/ImplementsEntity"/>
+            <xs:field xpath="@Type"/>
         </xs:keyref>
         <xs:keyref name="FK_Root_ImplementsGenericEntity_TypeDef" refer="PK_RootScope_Entity_Name">
             <xs:selector xpath="Root/Entity/ImplementsGenericEntity"/>
@@ -1396,11 +1509,11 @@
             <xs:field xpath="@FullName"/>
         </xs:key>
         <xs:keyref name="FK_Root_RelatedEntity_PrimaryKey" refer="PK_RootScope_Entity_Property_FullName">
-            <xs:selector xpath="Root/Entity/Properties/RelatedEntity"/>
+            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Root/Entity/Properties/NewRelatedEntity"/>
             <xs:field xpath="@PrimaryKey"/>
         </xs:keyref>
         <xs:keyref name="FK_Root_CollectionNavigation_ForeignKey" refer="PK_RootScope_Entity_Property_FullName">
-            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation"/>
+            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation|Root/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="@ForeignKey"/>
         </xs:keyref>
 
@@ -1431,11 +1544,11 @@
             <xs:field xpath="@Name"/>
         </xs:key>
         <xs:keyref name="FK_Local_Entity_RelatedEntity_Reference" refer="PK_LocalScope_Entity_Name">
-            <xs:selector xpath="Local/Entity/Properties/RelatedEntity"/>
+            <xs:selector xpath="Local/Entity/Properties/RelatedEntity|Local/Entity/Properties/NewRelatedEntity"/>
             <xs:field xpath="@Reference"/>
         </xs:keyref>
         <xs:keyref name="FK_Local_Entity_CollectionNavigation_ItemType" refer="PK_LocalScope_Entity_Name">
-            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation"/>
+            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation|Local/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="@ItemType"/>
         </xs:keyref>
         <xs:keyref name="FK_Local_ExtendsEntity_Type" refer="PK_LocalScope_Entity_Name">
@@ -1445,6 +1558,10 @@
         <xs:keyref name="FK_Local_ExtendsGenericEntity_TypeDef" refer="PK_LocalScope_Entity_Name">
             <xs:selector xpath="Local/Entity/ExtendsGenericEntity"/>
             <xs:field xpath="@TypeDef"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Local_ImplementsEntity_Type" refer="PK_LocalScope_Entity_Name">
+            <xs:selector xpath="Local/Entity/ImplementsEntity"/>
+            <xs:field xpath="@Type"/>
         </xs:keyref>
         <xs:keyref name="FK_Local_ImplementsGenericEntity_TypeDef" refer="PK_LocalScope_Entity_Name">
             <xs:selector xpath="Local/Entity/ImplementsGenericEntity"/>
@@ -1460,11 +1577,11 @@
             <xs:field xpath="@FullName"/>
         </xs:key>
         <xs:keyref name="FK_Local_RelatedEntity_PrimaryKey" refer="PK_LocalScope_Entity_Property_FullName">
-            <xs:selector xpath="Local/Entity/Properties/RelatedEntity"/>
+            <xs:selector xpath="Local/Entity/Properties/RelatedEntity|Local/Entity/Properties/NewRelatedEntity"/>
             <xs:field xpath="@PrimaryKey"/>
         </xs:keyref>
         <xs:keyref name="FK_Local_CollectionNavigation_ForeignKey" refer="PK_LocalScope_Entity_Property_FullName">
-            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation"/>
+            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation|Local/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="@ForeignKey"/>
         </xs:keyref>
 
@@ -1495,11 +1612,11 @@
             <xs:field xpath="@Name"/>
         </xs:key>
         <xs:keyref name="FK_Upstream_Entity_RelatedEntity_Reference" refer="PK_UpstreamScope_Entity_Name">
-            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity"/>
+            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity|Upstream/Entity/Properties/NewRelatedEntity"/>
             <xs:field xpath="@Reference"/>
         </xs:keyref>
         <xs:keyref name="FK_Upstream_Entity_CollectionNavigation_ItemType" refer="PK_UpstreamScope_Entity_Name">
-            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation"/>
+            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation|Upstream/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="@ItemType"/>
         </xs:keyref>
         <xs:keyref name="FK_Upstream_ExtendsEntity_Type" refer="PK_UpstreamScope_Entity_Name">
@@ -1509,6 +1626,10 @@
         <xs:keyref name="FK_Upstream_ExtendsGenericEntity_TypeDef" refer="PK_UpstreamScope_Entity_Name">
             <xs:selector xpath="Upstream/Entity/ExtendsGenericEntity"/>
             <xs:field xpath="@TypeDef"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Upstream_ImplementsEntity_Type" refer="PK_UpstreamScope_Entity_Name">
+            <xs:selector xpath="Upstream/Entity/ImplementsEntity"/>
+            <xs:field xpath="@Type"/>
         </xs:keyref>
         <xs:keyref name="FK_Upstream_ImplementsGenericEntity_TypeDef" refer="PK_UpstreamScope_Entity_Name">
             <xs:selector xpath="Upstream/Entity/ImplementsGenericEntity"/>
@@ -1524,11 +1645,11 @@
             <xs:field xpath="@FullName"/>
         </xs:key>
         <xs:keyref name="FK_Upstream_RelatedEntity_PrimaryKey" refer="PK_UpstreamScope_Entity_Property_FullName">
-            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity"/>
+            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity|Upstream/Entity/Properties/NewRelatedEntity"/>
             <xs:field xpath="@PrimaryKey"/>
         </xs:keyref>
         <xs:keyref name="FK_Upstream_CollectionNavigation_ForeignKey" refer="PK_UpstreamScope_Entity_Property_FullName">
-            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation"/>
+            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation|Upstream/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="@ForeignKey"/>
         </xs:keyref>
     </xs:element>

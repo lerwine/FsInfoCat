@@ -1,9 +1,9 @@
 
 DROP TABLE IF EXISTS "ILocalComparison";
 DROP TABLE IF EXISTS "ILocalRedundancy";
-DROP TABLE IF EXISTS "ILocalRedundantSet";
 DROP TABLE IF EXISTS "ILocalFileAccessError";
 DROP TABLE IF EXISTS "ILocalFile";
+DROP TABLE IF EXISTS "ILocalRedundantSet";
 DROP TABLE IF EXISTS "ILocalVideoPropertySet";
 DROP TABLE IF EXISTS "ILocalRecordedTVPropertySet";
 DROP TABLE IF EXISTS "ILocalPhotoPropertySet";
@@ -20,9 +20,11 @@ DROP TABLE IF EXISTS "ILocalBinaryPropertySet";
 DROP TABLE IF EXISTS "ILocalSubdirectoryAccessError";
 DROP TABLE IF EXISTS "ILocalSubdirectory";
 DROP TABLE IF EXISTS "ILocalDbFsItem";
+DROP TABLE IF EXISTS "ILocalCrawlJobLog";
 DROP TABLE IF EXISTS "ILocalCrawlConfiguration";
 DROP TABLE IF EXISTS "ILocalVolumeAccessError";
 DROP TABLE IF EXISTS "ILocalVolume";
 DROP TABLE IF EXISTS "ILocalSymbolicName";
 DROP TABLE IF EXISTS "ILocalFileSystem";
+DROP TABLE IF EXISTS "ILocalAccessError";
 DROP TABLE IF EXISTS "ILocalDbEntity";
