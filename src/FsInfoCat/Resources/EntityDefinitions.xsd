@@ -65,6 +65,11 @@
             <xs:enumeration value="Removable"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="SingleChar">
+        <xs:restriction base="xs:string">
+            <xs:length value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:group name="DetailsCommentDoc">
         <xs:sequence>
             <xs:element name="remarks" type="CommentDoc" minOccurs="0">
@@ -547,6 +552,11 @@
                         <xs:documentation>Indicates whether the column is indexed.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attribute name="ColName" type="CsIdentifier" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Specifies a column name that is different from the property name.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -624,6 +634,16 @@
                         <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
+                <xs:attribute name="MinLength" type="xs:unsignedShort" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum length.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxLength" type="xs:unsignedShort" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum length.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -820,6 +840,35 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    <xs:complexType name="FloatProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="Default" type="xs:float">
+                        <xs:annotation>
+                            <xs:documentation>The constant default value.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DefaultNull">
+                        <xs:annotation>
+                            <xs:documentation>The default value is null.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:float" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:float" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="DoubleProperty">
         <xs:complexContent>
             <xs:extension base="EntityProperty">
@@ -849,11 +898,11 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="FloatProperty">
+    <xs:complexType name="DecimalProperty">
         <xs:complexContent>
             <xs:extension base="EntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
-                    <xs:element name="Default" type="xs:float">
+                    <xs:element name="Default" type="xs:decimal">
                         <xs:annotation>
                             <xs:documentation>The constant default value.</xs:documentation>
                         </xs:annotation>
@@ -865,12 +914,12 @@
                         <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:choice>
-                <xs:attribute name="MinValue" type="xs:float" use="optional">
+                <xs:attribute name="MinValue" type="xs:decimal" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant minimum value.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="MaxValue" type="xs:float" use="optional">
+                <xs:attribute name="MaxValue" type="xs:decimal" use="optional">
                     <xs:annotation>
                         <xs:documentation>The constant maximum value.</xs:documentation>
                     </xs:annotation>
@@ -904,6 +953,25 @@
                         <xs:documentation>The constant maximum length.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="CharProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="Default" type="SingleChar">
+                        <xs:annotation>
+                            <xs:documentation>The constant default value.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DefaultNull">
+                        <xs:annotation>
+                            <xs:documentation>The default value is null.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                </xs:choice>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -957,6 +1025,31 @@
                     <xs:element name="DefaultNow">
                         <xs:annotation>
                             <xs:documentation>The default value is the current date and time at entity creation.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull">
+                        <xs:annotation>
+                            <xs:documentation>The default value is null.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TimeSpanProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="Default" type="xs:duration">
+                        <xs:annotation>
+                            <xs:documentation>The constant default value.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DefaultZero">
+                        <xs:annotation>
+                            <xs:documentation>The default value is zero-value duration.</xs:documentation>
                         </xs:annotation>
                         <xs:complexType></xs:complexType>
                     </xs:element>
@@ -1053,6 +1146,16 @@
                         <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:sequence>
+                <xs:attribute name="MinLength" type="xs:unsignedShort" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum length.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxLength" type="xs:unsignedShort" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum length.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1182,8 +1285,11 @@
             <xs:element name="ULong" type="ULongProperty" />
             <xs:element name="Double" type="DoubleProperty" />
             <xs:element name="Float" type="FloatProperty" />
+            <xs:element name="Decimal" type="DecimalProperty" />
             <xs:element name="NVarChar" type="NVarCharProperty" />
+            <xs:element name="Char" type="CharProperty" />
             <xs:element name="DateTime" type="DateTimeProperty" />
+            <xs:element name="TimeSpan" type="TimeSpanProperty" />
             <xs:element name="UniqueIdentifier" type="UniqueIdentifierProperty" />
             <xs:element name="NewIdNavRef" type="NewIdNavRefProperty" />
             <xs:element name="Bit" type="BitProperty" />
@@ -1335,11 +1441,6 @@
         </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="NamespaceDefinition">
-        <xs:annotation>
-            <xs:documentation>
-                /EntityDefinitions/*
-            </xs:documentation>
-        </xs:annotation>
         <xs:sequence>
             <xs:element name="EnumTypes" minOccurs="0" maxOccurs="1">
                 <xs:complexType>

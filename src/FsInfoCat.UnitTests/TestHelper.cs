@@ -14,12 +14,12 @@ namespace FsInfoCat.UnitTests
     {
         private static readonly object _syncRoot = new();
         //private static Task _ensureLocalDbTestDataTask;
-        private static string _projectDirectory;
         private static SubstituteDrive _lastSubstituteDrive;
         internal const string TestCategory_LocalDb = "LocalDb";
         internal const string TestProperty_Description = "Description";
 
         public static string DbPath { get; private set; }
+        public static string ProjectDirectory { get; private set; }
 
         internal static Local.FileSystem GetVFatFileSystem(Local.LocalDbContext dbContext)
         {
@@ -52,7 +52,7 @@ namespace FsInfoCat.UnitTests
             {
                 if (directoryInfo.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _projectDirectory = directoryInfo.FullName;
+                    ProjectDirectory = directoryInfo.FullName;
                     break;
                 }
             }
@@ -95,7 +95,7 @@ namespace FsInfoCat.UnitTests
             {
                 lock (_syncRoot)
                 {
-                    if (_projectDirectory is null)
+                    if (ProjectDirectory is null)
                         throw new AssertInconclusiveException($"Could not find parent directory with the same name as the test assembly ({Assembly.GetExecutingAssembly().GetName().Name}). Ensure that the subdirectory for the current test project is named accordingly.");
                     char[] usedDrives = DriveInfo.GetDrives().Select(d => d.Name).Where(n => n.Length > 1 && n[1] == ':').Select(n => char.ToUpper(n[0])).ToArray();
                     char driveLetter = 'D';
